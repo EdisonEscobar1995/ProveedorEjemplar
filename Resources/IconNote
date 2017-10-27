@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note default='true' class='icon' xmlns='http://www.lotus.com/dxl' version='9.0'
+ maintenanceversion='1.8' replicaid='052581C60067468E'>
+<noteinfo noteid='11a' unid='A65FDF6EA672B4F0052581C60067469B' sequence='5'>
+<created><datetime>20171027T134802,83-05</datetime></created>
+<modified><datetime>20171027T135054,26-05</datetime></modified>
+<revised><datetime>20171027T135054,25-05</datetime></revised>
+<lastaccessed><datetime>20171027T135054,26-05</datetime></lastaccessed>
+<addedtofile><datetime>20171027T134802,86-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<item name='$Flags'><text>J</text></item>
+<item name='$Daos'><text>0</text></item>
+<item name='$LargeSummary'><text>0</text></item>
+<item name='$TITLE'><text>Proveedor Ejemplar</text></item>
+<item name='IconBitmap' summary='true'>
+<rawitemdata type='6'>
+AiAgAQAA//////gAAB/wAAAP8AAAD/H//4/x//+P8cD/j/HA/4/xwMOP8cD/j/HAf4/xwD+P8f9/
+j/H//4/xwP+P8cD/j/HAw4/xwP+P8cD/j/HA/4/x//+P8f//j/HAA4/xwAOP8EACD/BAAg/4QAIf
+/+AH///wH///+B////x///////8AAAAAAAAAAAAAAAAAAAAAAAAOAAAAAAAAAAAAAOAAAAAA4AAA
+AAAAAAAAAAAOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABHxAAAAAAAAAAAAAAAAAAAeDvAAAAAAAAAAAAAAAAAA4A
+DgAAAAAAAAAAAAAAAAAB8eDgAAAAAAAAAAAAAAAAAAD+DgAAAAAAAAAAAAAAAAAAAOAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREAAAAAAAAAAAAAAAAAABERAA
+AAAAAAAAAAAAAAAAAREQAAAAAAAAAAAAAAAAAAEREAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAAAAAA/gAAAAAA4AAAAADgAAAADxHgAAAADgAAAAAAAA
+AA4A8R4A4AAAAAAAAAAAAAAA8A/wAAAAAAAAAAAAAAAAAA4AAOAAAAAAAAAAAAAAAAAA/uAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAA==
+</rawitemdata></item></note>
+
