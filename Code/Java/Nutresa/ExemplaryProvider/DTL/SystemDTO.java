@@ -1,55 +1,87 @@
 package Nutresa.ExemplaryProvider.DTL;
 
-import java.util.Date;
-
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
-
 public class SystemDTO {
-
-	@Expose
 	private String id;
-	private String host = "";
-	private String sharedFolder = "5";
-	private String form = "frSystem";
-	private Date date;
-	
-	public String getJson() {
-		 date = new Date();
-		 Gson gson = new GsonBuilder()
-	     .enableComplexMapKeySerialization()
-	     .excludeFieldsWithoutExposeAnnotation()
-	     .serializeNulls()
-	     .setDateFormat("Y/m/d")
-	     .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-	     .setPrettyPrinting()
-	     .setVersion(1.0)
-	     .create();
-		System.out.println("Antes");
-		return gson.toJson(this);
-	}
+	private short rotationTime;
+	private String title;
+	private String content;
+	private String image;
+    private String host;
+    private String informationProgram;
+    private String messageByChangeSizeCompany;
+    private String inputPool;
+    
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public short getRotationTime() {
+        return rotationTime;
+    }
+    
+    public void setRotationTime(short rotationTime) {
+        this.rotationTime = rotationTime;
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    public String getContent() {
+        return content;
+    }
+    
+    public void setContent(String content) {
+        this.content = content;
+    }
+    
+    public String getImage() {
+        return image;
+    }
+    
+    public void setImage(String image) {
+        this.image = image;
+    }
+    
+    public String getHost() {
+        return host;
+    }
+    
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-//	public String getForm() {
-//		return form;
-//	}
-//	public String getId() {
-//		return id;
-//	}
-//	public void setId(String id) {
-//		this.id = id;
-//	}
-//	public String getHost() {
-//		return host;
-//	}
-//	public void setHost(String host) {
-//		this.host = host;
-//	}
-//	public String getSharedFolder() {
-//		return sharedFolder;
-//	}
-//	public void setSharedFolder(String sharedFolder) {
-//		this.sharedFolder = sharedFolder;
-//	}
+    public String getInformationProgram() {
+        return informationProgram;
+    }
+
+    public void setInformationProgram(String informationProgram) {
+        this.informationProgram = informationProgram;
+    }
+
+    public String getMessageByChangeSizeCompany() {
+        return messageByChangeSizeCompany;
+    }
+
+    public void setMessageByChangeSizeCompany(String messageByChangeSizeCompany) {
+        this.messageByChangeSizeCompany = messageByChangeSizeCompany;
+    }
+
+    public String getInputPool() {
+        return inputPool;
+    }
+
+    public void setInputPool(String inputPool) {
+        this.inputPool = inputPool;
+    }
+    
+    
 }

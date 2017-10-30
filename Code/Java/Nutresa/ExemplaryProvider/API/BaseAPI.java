@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodNotFoundException;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +27,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
+import com.sap.mw.jco.JCO.AbapException;
 
 //public class BaseAPI extends HttpServlet {
-public class BaseAPI extends DesignerFacesServlet {
+public class BaseAPI extends AbstractXSPServlet {
     private static final long serialVersionUID = 1000L;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -40,12 +42,13 @@ public class BaseAPI extends DesignerFacesServlet {
     protected String message = "";
     private FacesContext facesContext;
     private ParameterProvider provider;
-    
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+
+    protected void doService(HttpServletRequest req, HttpServletResponse res,
+			FacesContext facesContext, ServletOutputStream out)
+			throws Exception {    
         try {
-            request = (HttpServletRequest) servletRequest;
-            response = (HttpServletResponse) servletResponse;
-            facesContext = this.getFacesContext(request, response);
+            request = (HttpServletRequest) req;
+            response = (HttpServletResponse) res;
 
             String reqMethod = request.getMethod().toLowerCase();
             if (reqMethod.equals("options")) {

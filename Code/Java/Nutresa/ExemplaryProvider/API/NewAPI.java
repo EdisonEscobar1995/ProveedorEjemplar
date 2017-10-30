@@ -44,5 +44,16 @@ public class NewAPI extends BaseAPI {
          */
         return g;
     }
+
+    public NewDTO[] getCualquier() {
+        NewDTO[] g = new NewDTO[3];
+        message = "Parametros pasados";
+        /*
+         * g[0] = new NewDTO("dfdfdf", 4, 343, "", "dfdrd"); g[1] = new
+         * NewDTO("sdfdsasdfdfdf", 4, 343, "", "dfdr34534d"); g[2] = new
+         * NewDTO("dfdfd45343525f", 4, 343, "", "dfd34534rd");
+         */
+        return g;
+    }
 }
 
