@@ -1,5 +1,6 @@
 package Nutresa.ExemplaryProvider.DAL;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -16,39 +17,46 @@ public class GenericFactory<T>{
 
 	private Session session;
 	private Database db;
-	private Document SystemDoc;
-	private boolean found;
-	private String unid;
+	private boolean found = false;
 
-	public GenericFactory(String viewName) {
+	public GenericFactory() {
 		session = Factory.getSession();
 		db = session.getCurrentDatabase();
-		BuildDocument(viewName);
 	}
-
-	public GenericFactory(String unid, String viewName) {
-		session = Factory.getSession();
-		db = session.getCurrentDatabase();
-		this.unid = unid;
-		BuildDocument(viewName);
-	}
-
-	public boolean IsFound() {
-		return found;
-	}
-
-	private void BuildDocument(String viewName) {
+	
+	public <T> T get(String viewName, String id){
 		View currentView = db.getView(viewName);
-        // SystemDoc = currentView.getFirstDocumentByKey(unid, true);
-        // found = SystemDoc != null;
+		Document dbDocument = currentView.getFirstDocumentByKey(id,true);
+		return getDto(dbDocument);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getDto(Document dbDocument) {
+		T result = null;
+		try {
+			result = (T) result.getClass().newInstance();
+			if(dbDocument != null){
+				for(Field f : result.getClass().getDeclaredFields()){
+					f.setAccessible(true);
+					f.set(result,dbDocument.getItemValueString(f.getName()));
+				}
+			}
+		} catch (IllegalAccessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InstantiationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return result;
+	}
+	
+/*
 	@SuppressWarnings( { "hiding", "unchecked" })
 	public <T> T GetDocument(T dataIn) {
 		T result = null;
 		try {
 			result = (T) dataIn.getClass().newInstance();
-
 			for (Method method : dataIn.getClass().getMethods()) {
 
 				if (Modifier.isPublic(method.getModifiers())
@@ -127,5 +135,5 @@ public class GenericFactory<T>{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 }
