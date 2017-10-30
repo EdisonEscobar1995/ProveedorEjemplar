@@ -8,6 +8,9 @@ public class SystemAPI extends BaseAPI {
     private SystemDTO systemDTO;
     private SystemBLO systemBLO;
     
+    public SystemAPI() {
+    	this.systemBLO = new SystemBLO();
+    }
     public SystemAPI(SystemBLO systemBLO) {
         this.systemBLO = systemBLO;
     }
