@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='a' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8'
+ replicaid='052581C60067468E' hide='v3' publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='3da' unid='A015DE33ECE96178052581C9007775F2' sequence='7'>
+<created><datetime>20171030T164449,78-05</datetime></created>
+<modified><datetime>20171030T165249,04-05</datetime></modified>
+<revised><datetime>20171030T165249,03-05</datetime></revised>
+<lastaccessed><datetime>20171030T165249,04-05</datetime></lastaccessed>
+<addedtofile><datetime>20171030T164449,85-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20171030T165249,02-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='options'><lotusscript>%REM
+	Agent a
+	Created Oct 30, 2017 by Juan Carlos Gonzalez Arroyave/desarrollo
+	Description: Comments for Agent
+%END REM
+Option Public
+Option Declare
+
+
+</lotusscript></code><code event='initialize'><lotusscript>Sub Initialize
+	Dim ns As New NotesSession
+	Dim db As NotesDatabase
+	Dim nd As NotesDocument
+	Set db = ns.Currentdatabase
+	Set nd = New NotesDocument(db)
+	nd.id = "1234"
+	nd.rotationTime = 2
+	nd.title = "titulo"
+	nd.content = "contenido"
+	nd.host = "host"
+	nd.informationProgram = "información del programa"
+	nd.messageByChangeSizeCompany = "mensaje cambio de compañia"
+	nd.inputPool = "entradilla"
+	Call nd.save(True, False) 
+End Sub</lotusscript></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20171030T165248,92-05</datetime></agentmodified></rundata></agent>
+

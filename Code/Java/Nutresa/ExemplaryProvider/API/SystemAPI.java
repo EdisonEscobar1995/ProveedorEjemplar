@@ -13,12 +13,13 @@ public class SystemAPI extends BaseAPI {
     }
 
     public SystemDTO getSystem(String idSystem){
-        return systemBLO.getSystem(idSystem);
+    	//return systemBLO.getSystem(idSystem);
+        return null;
     }
     
     public RequestReturnDTO postSaveSystem(SystemDTO systemDTO){
-        return systemBLO.SaveSystem(systemDTO);; 
+    	//return systemBLO.SaveSystem(systemDTO);; 
+    	return null;
     }
-    
 }
 
