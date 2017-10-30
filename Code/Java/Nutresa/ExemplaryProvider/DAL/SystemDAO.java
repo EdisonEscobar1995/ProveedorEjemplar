@@ -8,10 +8,11 @@ public class SystemDAO extends GenericFactory<SystemDTO>{
 	
 
 	public SystemDAO() {
+		
 	}
 	
-	public SystemDTO get(String id) {
-		return get(id);
+	public SystemDTO get(String viewName,String id) {
+		return get(viewName,id);
 	}
 	/*
 	public void createSystem(SystemDTO systemDTO) {
