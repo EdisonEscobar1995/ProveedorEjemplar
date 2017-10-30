@@ -8,18 +8,20 @@ public class SystemAPI extends BaseAPI {
     private SystemDTO systemDTO;
     private SystemBLO systemBLO;
     
+    public SystemAPI() {
+    	this.systemBLO = new SystemBLO();
+    }
     public SystemAPI(SystemBLO systemBLO) {
         this.systemBLO = systemBLO;
     }
 
     public SystemDTO getSystem(String idSystem){
-    	//return systemBLO.getSystem(idSystem);
-        return null;
+        return systemBLO.getSystem(idSystem);
     }
     
     public RequestReturnDTO postSaveSystem(SystemDTO systemDTO){
-    	//return systemBLO.SaveSystem(systemDTO);; 
-    	return null;
+        return systemBLO.SaveSystem(systemDTO);
     }
+    
 }
 
