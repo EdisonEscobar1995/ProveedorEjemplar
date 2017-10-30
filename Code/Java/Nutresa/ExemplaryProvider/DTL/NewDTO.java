@@ -4,20 +4,21 @@ import com.google.gson.annotations.Expose;
 
 public class NewDTO {
     @Expose
-    public String a;
+    protected String a;
 
     @Expose
-    public int b;
+    protected int b;
 
     @Expose
-    public float c;
+    protected float c;
 
     @Expose
-    public String d;
+    protected String d;
 
-    public String e;
+    @Expose
+    protected String[] e;
 
-    public NewDTO(String a, int b, float c, String d, String e) {
+    public NewDTO(String a, int b, float c, String d, String[] e) {
         super();
         this.a = a;
         this.b = b;

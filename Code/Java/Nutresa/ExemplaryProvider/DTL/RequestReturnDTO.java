@@ -23,6 +23,17 @@ public class RequestReturnDTO {
         this.message = message;
     }
 
+    public RequestReturnDTO(Object data, String message, boolean status) {
+        this.data = new Object[] { data };
+        this.message = message;
+        this.status = status;
+    }
+
+    public RequestReturnDTO(Object data, String message) {
+        this.data = new Object[] { data };
+        this.message = message;
+    }
+    
     public RequestReturnDTO(String message) {
         this.message = message;
     }
