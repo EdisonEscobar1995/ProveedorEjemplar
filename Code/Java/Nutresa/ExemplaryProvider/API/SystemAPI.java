@@ -17,8 +17,7 @@ public class SystemAPI extends BaseAPI {
     }
     
     public RequestReturnDTO postSaveSystem(SystemDTO systemDTO){
-        systemBLO.SaveSystem(systemDTO);
-        return null; 
+        return systemBLO.SaveSystem(systemDTO);; 
     }
     
 }
