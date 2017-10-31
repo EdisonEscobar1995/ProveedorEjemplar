@@ -14,7 +14,7 @@ public class Parameters {
     private Config requestConfig;
     
     public Parameters(ParameterProvider provider) {
-        requestConfig = provider.getConfig(configName);
+        this.requestConfig = provider.getConfig(configName);
         provider.parseParameters(parameterName);
         params = provider;
     }

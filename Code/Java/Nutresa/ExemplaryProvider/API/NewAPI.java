@@ -26,34 +26,5 @@ public class NewAPI extends BaseAPI {
         return "cualquier 2 parameters " + Tools.print_r(a);
     }
     
-    public String[] postCualquier(NewDTO a, int b) {
-        String[] g = new String[3];
-        message = "Datos procesados correctmente";
-        g[0] = Tools.print_r(a);
-        g[1] = "" + b;
-        return g;
-    }
-    
-    public NewDTO[] getCualquier(String a, String b, String c) {
-        NewDTO[] g = new NewDTO[3];
-        message = "Parametros pasados [" + a + "], [" + b + "], [" + c + "]";
-        /*
-         * g[0] = new NewDTO("dfdfdf", 4, 343, "", "dfdrd"); g[1] = new
-         * NewDTO("sdfdsasdfdfdf", 4, 343, "", "dfdr34534d"); g[2] = new
-         * NewDTO("dfdfd45343525f", 4, 343, "", "dfd34534rd");
-         */
-        return g;
-    }
-
-    public NewDTO[] getCualquier() {
-        NewDTO[] g = new NewDTO[3];
-        message = "Parametros pasados";
-        /*
-         * g[0] = new NewDTO("dfdfdf", 4, 343, "", "dfdrd"); g[1] = new
-         * NewDTO("sdfdsasdfdfdf", 4, 343, "", "dfdr34534d"); g[2] = new
-         * NewDTO("dfdfd45343525f", 4, 343, "", "dfd34534rd");
-         */
-        return g;
-    }
 }
 

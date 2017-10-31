@@ -9,8 +9,7 @@ import java.lang.reflect.Method;
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodNotFoundException;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,10 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ibm.xsp.webapp.DesignerFacesServlet;
 
-//public class BaseAPI extends HttpServlet {
-public class BaseAPI extends DesignerFacesServlet {
+public class BaseAPI extends AbstractXSPServlet {
     private static final long serialVersionUID = 1000L;
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -38,28 +35,26 @@ public class BaseAPI extends DesignerFacesServlet {
     protected Parameters params;        
     
     protected String message = "";
-    private FacesContext facesContext;
     private ParameterProvider provider;
-    
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+
+    protected void doService(HttpServletRequest req, HttpServletResponse res,
+			FacesContext facesContext, ServletOutputStream out)
+			throws Exception {    
         try {
-            request = (HttpServletRequest) servletRequest;
-            response = (HttpServletResponse) servletResponse;
-            facesContext = this.getFacesContext(request, response);
+            request = (HttpServletRequest) req;
+            response = (HttpServletResponse) res;
 
             String reqMethod = request.getMethod().toLowerCase();
             if (reqMethod.equals("options")) {
                 doOptions(request, response);
             } else {
-                processRequest(request, response);
+                processRequest(request, response,facesContext,out);
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             facesContext.responseComplete();
             facesContext.release();
-            response.getWriter().close();
         }
     } 
 
@@ -113,7 +108,7 @@ public class BaseAPI extends DesignerFacesServlet {
         return returnMethod;
     }
     
-    protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest req, HttpServletResponse res, FacesContext facesContext, ServletOutputStream out) throws ServletException, IOException {
         String method = req.getMethod().toLowerCase();
         String action = getAction(req.getPathInfo(), method);
         String apiName = this.getClass().getSimpleName();
@@ -125,7 +120,6 @@ public class BaseAPI extends DesignerFacesServlet {
             this.request = req;
             this.response = res;
             res.setContentType("application/json");
-            PrintWriter out = res.getWriter();
 
             if (method.equals("get")) {
                 provider = new UrlParameterProvider(request.getQueryString());
@@ -153,13 +147,11 @@ public class BaseAPI extends DesignerFacesServlet {
             }
             if (requestReturn != null) {
                 Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-                    .setDateFormat("Y/m/d") // TODO MAF parametrizar
+                    .setDateFormat("Y/m/d")
                     .setPrettyPrinting().create();
 
                 out.print(gson.toJson(requestReturn));
-                out.flush();
             }
-            out.close();
         } catch (NoSuchMethodException e) {
             res.setStatus(404);
         } catch (Exception e) {
@@ -197,21 +189,6 @@ public class BaseAPI extends DesignerFacesServlet {
         return message;
     }
 
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
-
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
-
-    public void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
-
-    public void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
     
     public void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         PrintWriter out = res.getWriter();

@@ -26,18 +26,19 @@ public class UrlParameterProvider implements ParameterProvider {
     }
 
     public void parseParameters(String parameterName) {
-        
         Pattern p = Pattern.compile("(?:([^/]+)=([^/$]*))|(?:([^/]+))");
         Matcher m = p.matcher(url);
-        int i = 0;
+        int i = 1;
+        params.clear();
         while (m.find()) {
-            String name = m.group(1);
-            if (name != null) {
+            String paramName = m.group(1);
+
+            if (paramName != null && !paramName.isEmpty()) {
                 params.put(m.group(1), m.group(2));
             } else if (m.group(3) != null) {
-                params.put("param" + i, m.group(3));
+                params.put("param" + i++, m.group(3).toString());
             }
-        }        
+        }
     }
 
     public Object[] getParameters(Class<?>[] e) throws IllegalAccessException, InstantiationException {
