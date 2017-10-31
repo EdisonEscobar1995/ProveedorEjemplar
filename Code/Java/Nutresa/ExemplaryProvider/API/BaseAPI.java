@@ -54,7 +54,7 @@ public class BaseAPI extends AbstractXSPServlet {
             if (reqMethod.equals("options")) {
                 doOptions(request, response);
             } else {
-                processRequest(request, response);
+                processRequest(request, response,facesContext,out);
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -116,7 +116,7 @@ public class BaseAPI extends AbstractXSPServlet {
         return returnMethod;
     }
     
-    protected void processRequest(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest req, HttpServletResponse res, FacesContext facesContext, ServletOutputStream out) throws ServletException, IOException {
         String method = req.getMethod().toLowerCase();
         String action = getAction(req.getPathInfo(), method);
         String apiName = this.getClass().getSimpleName();
@@ -128,7 +128,7 @@ public class BaseAPI extends AbstractXSPServlet {
             this.request = req;
             this.response = res;
             res.setContentType("application/json");
-            PrintWriter out = res.getWriter();
+            //PrintWriter out = res.getWriter();
 
             if (method.equals("get")) {
                 provider = new UrlParameterProvider(request.getQueryString());
@@ -200,21 +200,6 @@ public class BaseAPI extends AbstractXSPServlet {
         return message;
     }
 
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
-
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
-
-    public void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
-
-    public void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        processRequest(req, res);
-    }
     
     public void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         PrintWriter out = res.getWriter();

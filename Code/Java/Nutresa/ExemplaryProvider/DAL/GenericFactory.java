@@ -27,14 +27,14 @@ public class GenericFactory<T>{
 	public <T> T get(String viewName, String id){
 		View currentView = db.getView(viewName);
 		Document dbDocument = currentView.getFirstDocumentByKey(id,true);
-		return getDto(dbDocument);
+		return getDto(dbDocument,dt);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> T getDto(Document dbDocument) {
+	public <T> T getDto(Document dbDocument, T data) {
 		T result = null;
 		try {
-			result = (T) result.getClass().newInstance();
+			result = (T) data.getClass().newInstance();
 			if(dbDocument != null){
 				for(Field f : result.getClass().getDeclaredFields()){
 					f.setAccessible(true);
