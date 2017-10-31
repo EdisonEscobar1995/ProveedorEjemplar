@@ -1,8 +1,12 @@
 package Nutresa.ExemplaryProvider.DTL;
 
+import com.google.gson.annotations.Expose;
+
 public class SystemDTO {
+	@Expose
 	private String id;
-	private short rotationTime;
+	@Expose
+	private Integer rotationTime;
 	private String title;
 	private String content;
 	private String image;
@@ -19,11 +23,11 @@ public class SystemDTO {
         this.id = id;
     }
     
-    public short getRotationTime() {
+    public Integer getRotationTime() {
         return rotationTime;
     }
     
-    public void setRotationTime(short rotationTime) {
+    public void setRotationTime(Integer rotationTime) {
         this.rotationTime = rotationTime;
     }
     

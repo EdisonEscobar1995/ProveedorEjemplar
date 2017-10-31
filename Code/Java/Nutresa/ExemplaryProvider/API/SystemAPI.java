@@ -1,6 +1,5 @@
 package Nutresa.ExemplaryProvider.API;
-
-import com.google.gson.Gson;
+import java.util.ArrayList;
 
 import Nutresa.ExemplaryProvider.BLL.SystemBLO;
 import Nutresa.ExemplaryProvider.DTL.SystemDTO;
@@ -10,16 +9,31 @@ public class SystemAPI extends BaseAPI{
 	public SystemAPI(){
 	}
 	
-	public Object[] getLoad(){
+	public SystemDTO getSystem(){	
 		SystemBLO systemBLO = new SystemBLO();
-		Object[] obj = {systemBLO.getSystem()};
-		return obj;
+		return systemBLO.get();
 	}
 	
-//	public Object[] save(String json){
-//		Gson gson = new Gson();
-//		SystemBLO systemBLO = new SystemBLO();
-//		systemBLO.saveSystem(gson.fromJson(json, SystemDTO.class));
-//		return null;
-//	}
+	public ArrayList<SystemDTO> getSystemAll(){	
+		SystemBLO systemBLO = new SystemBLO();
+		return systemBLO.getAll();
+	}
+	
+	public boolean getSave(){
+		SystemBLO systemBLO = new SystemBLO();
+		systemBLO.save();
+		return true;
+	}
+	
+	public boolean getUpdate(){
+		SystemBLO systemBLO = new SystemBLO();
+		systemBLO.update();
+		return true;
+	}
+	
+	public boolean getDelete(){
+		SystemBLO systemBLO = new SystemBLO();
+		systemBLO.delete();
+		return true;
+	}	
 }

@@ -10,8 +10,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.MethodNotFoundException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,10 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.ibm.xsp.webapp.DesignerFacesServlet;
-import com.sap.mw.jco.JCO.AbapException;
 
-//public class BaseAPI extends HttpServlet {
 public class BaseAPI extends AbstractXSPServlet {
     private static final long serialVersionUID = 1000L;
     protected HttpServletRequest request;
@@ -40,7 +35,6 @@ public class BaseAPI extends AbstractXSPServlet {
     protected Parameters params;        
     
     protected String message = "";
-    private FacesContext facesContext;
     private ParameterProvider provider;
 
     protected void doService(HttpServletRequest req, HttpServletResponse res,
@@ -57,12 +51,10 @@ public class BaseAPI extends AbstractXSPServlet {
                 processRequest(request, response,facesContext,out);
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             facesContext.responseComplete();
             facesContext.release();
-            response.getWriter().close();
         }
     } 
 
@@ -128,7 +120,6 @@ public class BaseAPI extends AbstractXSPServlet {
             this.request = req;
             this.response = res;
             res.setContentType("application/json");
-            //PrintWriter out = res.getWriter();
 
             if (method.equals("get")) {
                 provider = new UrlParameterProvider(request.getQueryString());
@@ -156,13 +147,11 @@ public class BaseAPI extends AbstractXSPServlet {
             }
             if (requestReturn != null) {
                 Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-                    .setDateFormat("Y/m/d") // TODO MAF parametrizar
+                    .setDateFormat("Y/m/d")
                     .setPrettyPrinting().create();
 
                 out.print(gson.toJson(requestReturn));
-                out.flush();
             }
-            out.close();
         } catch (NoSuchMethodException e) {
             res.setStatus(404);
         } catch (Exception e) {
