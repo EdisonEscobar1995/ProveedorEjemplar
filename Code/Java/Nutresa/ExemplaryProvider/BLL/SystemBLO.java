@@ -8,20 +8,19 @@ import Nutresa.ExemplaryProvider.DTL.ServletResponseDTO;
 import Nutresa.ExemplaryProvider.DTL.SystemDTO;
 
 public class SystemBLO {
-	private SystemDAO systemDAO;
+	private SystemDAO dao;
 
 	public SystemBLO() {
-		this.systemDAO = new SystemDAO();
+		this.dao = new SystemDAO();
 	}
 	
 	@SuppressWarnings("unchecked")
-	public ServletResponseDTO<SystemDTO> get(Map<String, String> param) {
+	public ServletResponseDTO<SystemDTO> get(Map<String, String> parameters) {
 		ServletResponseDTO<SystemDTO> response;
 		try {
-			SystemDTO dto = this.systemDAO.get(param.get("id"));
+			SystemDTO dto = this.dao.get(parameters.get("id"));
 			response = new ServletResponseDTO(true,"sucess",dto);
-		}catch (Exception e) {
-			// TODO: handle exception
+		}catch (Exception exception) {
 			response = new ServletResponseDTO(false,"error");
 		}
 		return response;
@@ -32,10 +31,10 @@ public class SystemBLO {
 		ServletResponseDTO<ArrayList<SystemDTO>> response;
 		ArrayList<SystemDTO> list = new ArrayList<SystemDTO>();
 		try {
-			list = this.systemDAO.get();
+			list = this.dao.getAll();
 			response = new ServletResponseDTO(true,"sucess",list);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		} catch (IllegalAccessException exception) {
+			exception.printStackTrace();
 			response = new ServletResponseDTO(false,"error",list);
 		}
 		return response;
@@ -45,10 +44,10 @@ public class SystemBLO {
 	public ServletResponseDTO<?> save(SystemDTO dto) {
 		ServletResponseDTO<?> response;
 		try {
-			this.systemDAO.save(dto);
+			this.dao.save(dto);
 			response = new ServletResponseDTO(true,"sucess");
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		} catch (IllegalAccessException exception) {
+			exception.printStackTrace();
 			response = new ServletResponseDTO(false,"error");
 		}
 		return response;
@@ -58,21 +57,26 @@ public class SystemBLO {
 	public ServletResponseDTO<?> update(SystemDTO dto) {
 		ServletResponseDTO<?> response;
 		try {
-			this.systemDAO.update(dto,dto.getId());
+			this.dao.update(dto,dto.getId());
 			response = new ServletResponseDTO(true,"sucess");
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+		} catch (IllegalAccessException exception) {
+			exception.printStackTrace();
 			response = new ServletResponseDTO(false,"error");
 		}
 		return response;
 	}
 	
-	public void delete() {
+	@SuppressWarnings("unchecked")
+	public ServletResponseDTO<?> delete(Map<String, String> parameters) {
+		ServletResponseDTO<?> response;
 		try {
-			this.systemDAO.delete("Hola");
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			this.dao.delete(parameters.get("id"));
+			response = new ServletResponseDTO(true,"sucess");
+		} catch (IllegalAccessException exception) {
+			exception.printStackTrace();
+			response = new ServletResponseDTO(false,"error");
 		}
+		return response;
 	}
 
 }

@@ -2,202 +2,102 @@ package Nutresa.ExemplaryProvider.API;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
-import javax.faces.el.MethodNotFoundException;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Nutresa.ExemplaryProvider.DTL.RequestReturnDTO;
-import Nutresa.ExemplaryProvider.Types.JsonParameterProvider;
-import Nutresa.ExemplaryProvider.Types.ParameterProvider;
-import Nutresa.ExemplaryProvider.Types.Parameters;
-import Nutresa.ExemplaryProvider.Types.Tools;
-import Nutresa.ExemplaryProvider.Types.UrlParameterProvider;
+import Nutresa.ExemplaryProvider.DTL.ServletResponseDTO;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.ibm.xsp.extlib.util.ExtLibUtil;
+import com.ibm.xsp.webapp.DesignerFacesServlet;
 
-public class BaseAPI extends AbstractXSPServlet {
-    private static final long serialVersionUID = 1000L;
-    protected HttpServletRequest request;
-    protected HttpServletResponse response;
-    protected JsonObject json;
-    
-    protected boolean status = true;
-    protected Parameters params;        
-    
-    protected String message = "";
-    private ParameterProvider provider;
+public class BaseAPI extends DesignerFacesServlet{
+	
+	protected Class<?> dtoClass;
+	
+	public BaseAPI(Class<?> dtoClass){
+		this.dtoClass = dtoClass;
+	}
+	
+	public void service(final ServletRequest servletRequest,
+			final ServletResponse servletResponse) throws ServletException,
+			IOException {
+		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-    protected void doService(HttpServletRequest req, HttpServletResponse res,
-			FacesContext facesContext, ServletOutputStream out)
-			throws Exception {    
-        try {
-            request = (HttpServletRequest) req;
-            response = (HttpServletResponse) res;
+		response.setContentType("application/json");
+		ServletOutputStream output = response.getOutputStream();
+		FacesContext facesContext = this.getFacesContext(request, response);
+	
+		try {
+			doService(request, response, facesContext, output);
+		} catch (Exception exception) {
+			exception.printStackTrace(new PrintStream(output));
+		} finally {
+			facesContext.responseComplete();
+			facesContext.release();
+			output.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void doService(HttpServletRequest request, HttpServletResponse response,
+			FacesContext facesContext, ServletOutputStream output) throws Exception{
+		
+		int status = 200;
+		ServletResponseDTO servletResponse = null;
+		Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
+        .setDateFormat("Y/m/d").setPrettyPrinting().create();
+		
+		try{
+			String requestMethod = request.getMethod();
+			Map<String, String> parameters = (Map<String, String>)ExtLibUtil.resolveVariable(FacesContext.getCurrentInstance(), "param");
+			String action = parameters.get("action");
+			
+			if( requestMethod.equals("GET") ) {
+				Method method = this.getClass().getMethod(action, Map.class);
+				servletResponse = (ServletResponseDTO) method.invoke(this, parameters);
+				
+			} else if(requestMethod.equals("POST")) {
+				
+				BufferedReader reader = request.getReader();
+				String inputLine = null;
+				StringBuffer stringBuffer = new StringBuffer();
+				while ((inputLine = reader.readLine()) != null) {
+					stringBuffer.append(inputLine);
+				}
+				reader.close(); 
+				Method method = this.getClass().getMethod(action, this.dtoClass);
+				servletResponse = (ServletResponseDTO) method.invoke(this, gson.fromJson(stringBuffer.toString(), this.dtoClass));
+				
+			} else if( requestMethod.equals("OPTIONS") ) {
 
-            String reqMethod = request.getMethod().toLowerCase();
-            if (reqMethod.equals("options")) {
-                doOptions(request, response);
-            } else {
-                processRequest(request, response,facesContext,out);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            facesContext.responseComplete();
-            facesContext.release();
-        }
-    } 
+				response.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+				response.addHeader("Access-Control-Allow-Headers", "*");
+				response.addHeader("Access-Control-Allow-Origin", "*");
+				output.print(" ");
 
-    protected String getPathSegment(String path, int segment) {
-        String[] pathLevels = path.split("/");
-        String segmentString = null;
-        if (pathLevels.length > segment && !pathLevels[segment].isEmpty()) {
-            segmentString = pathLevels[segment].trim();
-        }
-        return segmentString;
-    }
-
-    protected String getAction(String path, String defaultValue) {
-        String action = getPathSegment(path, 3);
-        if (null != action) {
-            action = new String(defaultValue + action.substring(0, 1).toUpperCase() + action.substring(1));
-        } else {
-            action = new String(defaultValue);
-        }
-        return action.trim();
-    }
-    
-    protected Object call(String action, JsonObject json) throws SecurityException, NoSuchMethodException, IllegalAccessException,
-        InstantiationException, IllegalArgumentException, InvocationTargetException, Exception {
-        
-        Object returnMethod = null;
-        params = new Parameters(provider);
-        int jsonParameterSize = params.length();
-        boolean foundMethod = false;
-        
-        Method[] methods = this.getClass().getDeclaredMethods();
-        
-        for (Method method : methods) {
-            if (action.compareTo(method.getName()) == 0) {
-                Class<?>[] parameterType = method.getParameterTypes();
-                int parametersSize = parameterType.length;
-                if (parametersSize == jsonParameterSize) {
-                    Object[] parameterCall = params.getParameters(parameterType);
-                    returnMethod = method.invoke(this, parameterCall);
-                    foundMethod = true;
-                }
-            }
-            if(foundMethod){
-                break;
-            }
-        }
-        if(!foundMethod){
-            throw new MethodNotFoundException("Method: " + this.getClass().getSimpleName() + "." + action + "("
-                + Tools.StringRepeat("?", ',', jsonParameterSize) + ")");
-        }
-        return returnMethod;
-    }
-    
-    protected void processRequest(HttpServletRequest req, HttpServletResponse res, FacesContext facesContext, ServletOutputStream out) throws ServletException, IOException {
-        String method = req.getMethod().toLowerCase();
-        String action = getAction(req.getPathInfo(), method);
-        String apiName = this.getClass().getSimpleName();
-
-        apiName = apiName.substring(0, apiName.length() - 3);
-        RequestReturnDTO requestReturn = null;
-        try {
-            Object returnMethod = null;
-            this.request = req;
-            this.response = res;
-            res.setContentType("application/json");
-
-            if (method.equals("get")) {
-                provider = new UrlParameterProvider(request.getQueryString());
-            } else {
-                json = getContentJson(req);
-                provider = new JsonParameterProvider(json);
-            }
-            try {
-                returnMethod = call(action, json);
-                if (returnMethod != null) {
-                    if (returnMethod.getClass().isArray()) {
-                        requestReturn = new RequestReturnDTO((Object[]) returnMethod, this.getMessage() + apiName, this.getStatus());
-                    } else {
-                        requestReturn = new RequestReturnDTO((Object) returnMethod, this.getMessage() + apiName, this.getStatus());
-                    }
-                }
-            } catch (Exception e) {
-                String message = e.getClass().getName() + ", ";
-                if (e.getCause() != null) {
-                    message += e.getCause().getMessage();
-                } else {
-                    message += e.getMessage();
-                }
-                requestReturn = new RequestReturnDTO(message, false);
-            }
-            if (requestReturn != null) {
-                Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-                    .setDateFormat("Y/m/d")
-                    .setPrettyPrinting().create();
-
-                out.print(gson.toJson(requestReturn));
-            }
-        } catch (NoSuchMethodException e) {
-            res.setStatus(404);
-        } catch (Exception e) {
-            res.setStatus(501);
-        }
-    }
-    
-    protected JsonObject getContentJson(HttpServletRequest req) throws IOException, Exception {
-        JsonObject json = null;
-        StringBuffer stringBuffer = new StringBuffer();
-        if (req.getContentLength() > 0) {
-            BufferedReader reader = req.getReader();
-            String inputLine = null;
-            while ((inputLine = reader.readLine()) != null) {
-                stringBuffer.append(inputLine);
-            }
-            reader.close();
-        }
-        // stringBuffer = new StringBuffer(
-        // "{\"params\":[{\"a\":\"dfdfdf\",\"b\":4,\"c\":343,\"d\":\"\"},{\"a\":\"sdfdsasdfdfdf\",\"b\":4,\"c\":343,\"d\":\"\"},{\"a\":\"dfdfd45343525f\",\"b\":4,\"c\":343,\"d\":\"\"}]}");
-        // stringBuffer = new StringBuffer();
-        // "{\"params\":[{\"a\":\"dfdfdf\",\"b\":4,\"c\":343,\"d\":\"\",\"e\": [\"dfdf\",\"dddfd\",\"rerwr\"]},4]}");
-        // "{\"config\":{\"dateFormat\":\"y/m/d\", \"parameterName\":\"parametros\"}, \"parametros\":[{\"a\":\"dfdfdf\",\"b\":4,\"c\":343,\"d\":\"\",\"e\": [\"dfdf\"]},4]}");
-        if (stringBuffer.length() > 0) {
-            json = new JsonParser().parse(stringBuffer.toString()).getAsJsonObject();
-        }
-        return json;
-    }
-
-    private boolean getStatus() {
-        return status;
-    }
-
-    private String getMessage() {
-        return message;
-    }
-
-    
-    public void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        PrintWriter out = res.getWriter();
-        res.addHeader("Access-Control-Allow-Methods", "HEAD, GET, POST, PUT, PATCH, DELETE");
-        res.addHeader("Access-Control-Allow-Headers", "*");
-        res.addHeader("Access-Control-Allow-Origin", "*");
-        res.setContentType("application/json");
-        out.print(" ");
-        out.flush();
-        out.close();
-    }
+			} else {
+				status = 405;
+				servletResponse = new ServletResponseDTO(false, "what the devil are you trying to do, break the server?");
+			}
+		}catch (Exception exception) {
+			status = 500;
+			servletResponse = new ServletResponseDTO(false, exception.getMessage());
+		}finally{
+			response.setStatus(status);
+			output.print(gson.toJson(servletResponse));
+		}
+		
+	}
 }

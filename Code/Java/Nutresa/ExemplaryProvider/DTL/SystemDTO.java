@@ -7,14 +7,21 @@ public class SystemDTO {
 	private String id;
 	@Expose
 	private Integer rotationTime;
+	@Expose
 	private String title;
+	@Expose
 	private String content;
+	@Expose
 	private String image;
-    private String host;
-    private String informationProgram;
-    private String messageByChangeSizeCompany;
-    private String inputPool;
-    
+	@Expose
+	private String host;
+	@Expose
+	private String informationProgram;
+	@Expose
+	private String messageByChangeSizeCompany;
+	@Expose
+	private String inputPoll;
+	
     public String getId() {
         return id;
     }
@@ -79,13 +86,11 @@ public class SystemDTO {
         this.messageByChangeSizeCompany = messageByChangeSizeCompany;
     }
 
-    public String getInputPool() {
-        return inputPool;
+    public String getInputPoll() {
+        return inputPoll;
     }
 
-    public void setInputPool(String inputPool) {
-        this.inputPool = inputPool;
+    public void setInputPoll(String inputPool) {
+        this.inputPoll = inputPool;
     }
-    
-    
 }
