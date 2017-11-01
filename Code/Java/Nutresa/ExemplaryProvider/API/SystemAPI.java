@@ -1,34 +1,35 @@
 package Nutresa.ExemplaryProvider.API;
 import java.util.ArrayList;
+import java.util.Map;
 
 import Nutresa.ExemplaryProvider.BLL.SystemBLO;
+import Nutresa.ExemplaryProvider.DTL.ServletResponseDTO;
 import Nutresa.ExemplaryProvider.DTL.SystemDTO;
 
-public class SystemAPI extends BaseAPI{
+public class SystemAPI extends GenericAPI{
 	
 	public SystemAPI(){
+		super(SystemDTO.class);
 	}
 	
-	public SystemDTO getSystem(){	
+	public ServletResponseDTO<SystemDTO> getSystem(Map<String, String> param){	
 		SystemBLO systemBLO = new SystemBLO();
-		return systemBLO.get();
+		return systemBLO.get(param);
 	}
 	
-	public ArrayList<SystemDTO> getSystemAll(){	
+	public ServletResponseDTO<ArrayList<SystemDTO>> getSystemAll(){	
 		SystemBLO systemBLO = new SystemBLO();
 		return systemBLO.getAll();
 	}
 	
-	public boolean getSave(){
+	public ServletResponseDTO<?> postSave(SystemDTO dto){		
 		SystemBLO systemBLO = new SystemBLO();
-		systemBLO.save();
-		return true;
+		return systemBLO.save(dto);
 	}
 	
-	public boolean getUpdate(){
+	public ServletResponseDTO<?> getUpdate(SystemDTO dto){
 		SystemBLO systemBLO = new SystemBLO();
-		systemBLO.update();
-		return true;
+		return systemBLO.update(dto);
 	}
 	
 	public boolean getDelete(){

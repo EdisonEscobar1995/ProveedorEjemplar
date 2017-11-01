@@ -2,9 +2,9 @@ package Nutresa.ExemplaryProvider.DTL;
 
 import com.google.gson.annotations.Expose;
 
-public class ServletResponseDTO {
+public class ServletResponseDTO<T> {
     @Expose
-    Object[] data;
+    T data;
 
     @Expose
     String message = "";
@@ -12,22 +12,13 @@ public class ServletResponseDTO {
     @Expose
     boolean status = true;
 
-    public ServletResponseDTO(Object[] data, String message, boolean status) {
+    public ServletResponseDTO(boolean status, String message, T data) {
         this.data = data;
         this.message = message;
         this.status = status;
     }
 
-    public ServletResponseDTO(Object[] data, String message) {
-        this.data = data;
-        this.message = message;
-    }
-
-    public ServletResponseDTO(String message) {
-        this.message = message;
-    }
-
-    public ServletResponseDTO(String message, boolean status) {
+    public ServletResponseDTO(boolean status, String message) {
         this.message = message;
         this.status = status;
     }
