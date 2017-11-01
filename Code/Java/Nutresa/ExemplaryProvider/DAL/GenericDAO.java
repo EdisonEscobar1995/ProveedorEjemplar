@@ -48,8 +48,8 @@ public abstract class GenericDAO<T>{
 	public <T> T castDocument(Document document) {
 		T result = null;
 		try {
-			result = (T) this.daoClass.newInstance();
 			if(document != null){
+				result = (T) this.daoClass.newInstance();
 				for(Field field : this.daoClass.getDeclaredFields()){					
 					field.setAccessible(true);
 					field.set(result,document.getItemValue(field.getName(), field.getType()));
