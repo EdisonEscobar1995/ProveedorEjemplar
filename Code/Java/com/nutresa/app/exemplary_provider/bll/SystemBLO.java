@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.openntf.domino.utils.DominoUtils;
-
 import com.nutresa.app.exemplary_provider.dal.SystemDAO;
 import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.app.exemplary_provider.dtl.SystemDTO;
@@ -25,8 +23,7 @@ public class SystemBLO<T> {
 			SystemDTO dto = this.dao.get(parameters.get("id"));
 			response = new ServletResponseDTO(true, SUCCESS, dto);
 		} catch (Exception exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
 
@@ -40,9 +37,7 @@ public class SystemBLO<T> {
 			list = this.dao.getAll();
 			response = new ServletResponseDTO(true, SUCCESS, list);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage(),
-					list);
+			return new ServletResponseDTO(false, exception, list);
 		}
 		return response;
 	}
@@ -54,8 +49,7 @@ public class SystemBLO<T> {
 			this.dao.save(dto);
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
 	}
@@ -67,8 +61,7 @@ public class SystemBLO<T> {
 			this.dao.update(dto, dto.getId());
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
 	}
@@ -80,8 +73,7 @@ public class SystemBLO<T> {
 			this.dao.delete(parameters.get("id"));
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
 	}

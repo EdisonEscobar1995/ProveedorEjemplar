@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.openntf.domino.utils.DominoUtils;
-
 import com.nutresa.app.exemplary_provider.dal.NotificationDAO;
 import com.nutresa.app.exemplary_provider.dtl.NotificationDTO;
 import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
@@ -26,7 +24,7 @@ public class NotificationBLO<T> {
 			NotificationDTO dto = this.dao.get(parameters.get("id"));
 			response = new ServletResponseDTO(true, SUCCESS, dto);
 		} catch (Exception exception) {
-			return handleException(exception);
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
 
@@ -40,9 +38,7 @@ public class NotificationBLO<T> {
 			list = this.dao.getAll();
 			response = new ServletResponseDTO(true, SUCCESS, list);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage(),
-					list);
+			return new ServletResponseDTO(false, exception, list);
 		}
 		return response;
 	}
@@ -54,7 +50,7 @@ public class NotificationBLO<T> {
 			this.dao.save(dto);
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			return handleException(exception);
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
 	}
@@ -66,7 +62,7 @@ public class NotificationBLO<T> {
 			this.dao.update(dto, dto.getId());
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			return handleException(exception);
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
 	}
@@ -78,14 +74,8 @@ public class NotificationBLO<T> {
 			this.dao.delete(parameters.get("id"));
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			return handleException(exception);
+			return new ServletResponseDTO(false, exception);
 		}
 		return response;
-	}
-
-	@SuppressWarnings("unchecked")
-	private ServletResponseDTO handleException(Exception exception) {
-		DominoUtils.handleException(new Throwable(exception));
-		return new ServletResponseDTO(false, exception.getMessage());
 	}
 }
