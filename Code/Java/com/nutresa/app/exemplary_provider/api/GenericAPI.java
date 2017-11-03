@@ -1,11 +1,12 @@
-package Nutresa.ExemplaryProvider.API;
+package com.nutresa.app.exemplary_provider.api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
 
-import Nutresa.ExemplaryProvider.DTL.ServletResponseDTO;
+import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
+
 
 public class GenericAPI<T, B> extends BaseAPI {
 

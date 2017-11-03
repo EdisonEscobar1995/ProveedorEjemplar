@@ -1,4 +1,4 @@
-package Nutresa.ExemplaryProvider.API;
+package com.nutresa.app.exemplary_provider.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,12 +14,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import Nutresa.ExemplaryProvider.DTL.ServletResponseDTO;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
+import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
 
 public class BaseAPI extends DesignerFacesServlet{
 	

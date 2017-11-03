@@ -1,4 +1,4 @@
-package Nutresa.ExemplaryProvider.DTL;
+package com.nutresa.app.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 

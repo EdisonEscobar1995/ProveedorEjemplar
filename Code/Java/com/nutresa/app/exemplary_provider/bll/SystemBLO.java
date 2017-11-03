@@ -1,11 +1,12 @@
-package Nutresa.ExemplaryProvider.BLL;
+package com.nutresa.app.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import Nutresa.ExemplaryProvider.DAL.SystemDAO;
-import Nutresa.ExemplaryProvider.DTL.ServletResponseDTO;
-import Nutresa.ExemplaryProvider.DTL.SystemDTO;
+import com.nutresa.app.exemplary_provider.dal.SystemDAO;
+import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
+import com.nutresa.app.exemplary_provider.dtl.SystemDTO;
+
 
 public class SystemBLO {
 	private SystemDAO dao;

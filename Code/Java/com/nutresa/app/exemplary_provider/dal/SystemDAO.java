@@ -1,6 +1,6 @@
-package Nutresa.ExemplaryProvider.DAL;
+package com.nutresa.app.exemplary_provider.dal;
 
-import Nutresa.ExemplaryProvider.DTL.SystemDTO;
+import com.nutresa.app.exemplary_provider.dtl.SystemDTO;
 
 public class SystemDAO extends GenericDAO<SystemDTO>{
 	public SystemDAO() {

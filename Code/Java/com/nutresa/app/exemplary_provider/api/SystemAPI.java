@@ -1,11 +1,12 @@
-package Nutresa.ExemplaryProvider.API;
+package com.nutresa.app.exemplary_provider.api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import Nutresa.ExemplaryProvider.BLL.SystemBLO;
-import Nutresa.ExemplaryProvider.DTL.ServletResponseDTO;
-import Nutresa.ExemplaryProvider.DTL.SystemDTO;
+import com.nutresa.app.exemplary_provider.bll.SystemBLO;
+import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
+import com.nutresa.app.exemplary_provider.dtl.SystemDTO;
+
 
 public class SystemAPI extends GenericAPI<SystemDTO, SystemBLO>{
 	

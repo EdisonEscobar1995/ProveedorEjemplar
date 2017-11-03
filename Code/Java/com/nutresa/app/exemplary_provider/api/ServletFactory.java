@@ -1,4 +1,4 @@
-package Nutresa.ExemplaryProvider.API;
+package com.nutresa.app.exemplary_provider.api;
 
 //import java.util.HashMap;
 //import java.util.Iterator;

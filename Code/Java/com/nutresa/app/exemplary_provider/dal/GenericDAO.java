@@ -1,4 +1,4 @@
-package Nutresa.ExemplaryProvider.DAL;
+package com.nutresa.app.exemplary_provider.dal;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
