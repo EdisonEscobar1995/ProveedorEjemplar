@@ -1,81 +1,87 @@
 package com.nutresa.app.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import org.openntf.domino.utils.DominoUtils;
 
 import com.nutresa.app.exemplary_provider.dal.SystemDAO;
 import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.app.exemplary_provider.dtl.SystemDTO;
 
-
-public class SystemBLO {
+public class SystemBLO<T> {
 	private SystemDAO dao;
+	private static final String SUCCESS = "success";
 
 	public SystemBLO() {
 		this.dao = new SystemDAO();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public ServletResponseDTO<SystemDTO> get(Map<String, String> parameters) {
 		ServletResponseDTO<SystemDTO> response;
 		try {
 			SystemDTO dto = this.dao.get(parameters.get("id"));
-			response = new ServletResponseDTO(true,"sucess",dto);
-		}catch (Exception exception) {
-			response = new ServletResponseDTO(false,"error");
+			response = new ServletResponseDTO(true, SUCCESS, dto);
+		} catch (Exception exception) {
+			DominoUtils.handleException(new Throwable(exception));
+			response = new ServletResponseDTO(false, exception.getMessage());
 		}
 		return response;
-		
+
 	}
+
 	@SuppressWarnings("unchecked")
 	public ServletResponseDTO<ArrayList<SystemDTO>> getAll() {
 		ServletResponseDTO<ArrayList<SystemDTO>> response;
-		ArrayList<SystemDTO> list = new ArrayList<SystemDTO>();
+		List<SystemDTO> list = new ArrayList<SystemDTO>();
 		try {
 			list = this.dao.getAll();
-			response = new ServletResponseDTO(true,"sucess",list);
+			response = new ServletResponseDTO(true, SUCCESS, list);
 		} catch (IllegalAccessException exception) {
-			exception.printStackTrace();
-			response = new ServletResponseDTO(false,"error",list);
+			DominoUtils.handleException(new Throwable(exception));
+			response = new ServletResponseDTO(false, exception.getMessage(),
+					list);
 		}
 		return response;
 	}
 
 	@SuppressWarnings("unchecked")
-	public ServletResponseDTO<?> save(SystemDTO dto) {
-		ServletResponseDTO<?> response;
+	public ServletResponseDTO<T> save(SystemDTO dto) {
+		ServletResponseDTO<T> response;
 		try {
 			this.dao.save(dto);
-			response = new ServletResponseDTO(true,"sucess");
+			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			exception.printStackTrace();
-			response = new ServletResponseDTO(false,"error");
+			DominoUtils.handleException(new Throwable(exception));
+			response = new ServletResponseDTO(false, exception.getMessage());
 		}
 		return response;
 	}
 
 	@SuppressWarnings("unchecked")
-	public ServletResponseDTO<?> update(SystemDTO dto) {
-		ServletResponseDTO<?> response;
+	public ServletResponseDTO<T> update(SystemDTO dto) {
+		ServletResponseDTO<T> response;
 		try {
-			this.dao.update(dto,dto.getId());
-			response = new ServletResponseDTO(true,"sucess");
+			this.dao.update(dto, dto.getId());
+			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			exception.printStackTrace();
-			response = new ServletResponseDTO(false,"error");
+			DominoUtils.handleException(new Throwable(exception));
+			response = new ServletResponseDTO(false, exception.getMessage());
 		}
 		return response;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public ServletResponseDTO<?> delete(Map<String, String> parameters) {
-		ServletResponseDTO<?> response;
+	public ServletResponseDTO<T> delete(Map<String, String> parameters) {
+		ServletResponseDTO<T> response;
 		try {
 			this.dao.delete(parameters.get("id"));
-			response = new ServletResponseDTO(true,"sucess");
+			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			exception.printStackTrace();
-			response = new ServletResponseDTO(false,"error");
+			DominoUtils.handleException(new Throwable(exception));
+			response = new ServletResponseDTO(false, exception.getMessage());
 		}
 		return response;
 	}

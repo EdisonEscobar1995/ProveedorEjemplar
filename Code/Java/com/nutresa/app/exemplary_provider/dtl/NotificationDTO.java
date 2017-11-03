@@ -1,6 +1,6 @@
 package com.nutresa.app.exemplary_provider.dtl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
@@ -14,7 +14,7 @@ public class NotificationDTO {
     @Expose
     private String message;
     @Expose
-    private ArrayList<String> notifyTo;
+    private List<String> notifyTo;
     
     public String getBanner() {
         return banner;
@@ -40,11 +40,11 @@ public class NotificationDTO {
         this.message = message;
     }
     
-    public ArrayList<String> getNotifyTo() {
+    public List<String> getNotifyTo() {
         return notifyTo;
     }
     
-    public void setNotifyTo(ArrayList<String> notifyTo) {
+    public void setNotifyTo(List<String> notifyTo) {
         this.notifyTo = notifyTo;
     }
     
