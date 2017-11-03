@@ -26,8 +26,7 @@ public class NotificationBLO<T> {
 			NotificationDTO dto = this.dao.get(parameters.get("id"));
 			response = new ServletResponseDTO(true, SUCCESS, dto);
 		} catch (Exception exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return handleException(exception);
 		}
 		return response;
 
@@ -55,8 +54,7 @@ public class NotificationBLO<T> {
 			this.dao.save(dto);
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return handleException(exception);
 		}
 		return response;
 	}
@@ -68,8 +66,7 @@ public class NotificationBLO<T> {
 			this.dao.update(dto, dto.getId());
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return handleException(exception);
 		}
 		return response;
 	}
@@ -81,10 +78,14 @@ public class NotificationBLO<T> {
 			this.dao.delete(parameters.get("id"));
 			response = new ServletResponseDTO(true, SUCCESS);
 		} catch (IllegalAccessException exception) {
-			DominoUtils.handleException(new Throwable(exception));
-			response = new ServletResponseDTO(false, exception.getMessage());
+			return handleException(exception);
 		}
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
+	private ServletResponseDTO handleException(Exception exception) {
+		DominoUtils.handleException(new Throwable(exception));
+		return new ServletResponseDTO(false, exception.getMessage());
+	}
 }
