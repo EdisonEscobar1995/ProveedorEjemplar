@@ -1,7 +1,5 @@
 package com.nutresa.app.exemplary_provider.dtl;
 
-import org.openntf.domino.utils.DominoUtils;
-
 import com.google.gson.annotations.Expose;
 
 public class ServletResponseDTO<T> {
@@ -24,16 +22,14 @@ public class ServletResponseDTO<T> {
 		this.message = message;
 		this.status = status;
 	}
-	
-	public ServletResponseDTO(boolean status, Exception exception) {
-		DominoUtils.handleException(new Throwable(exception));
+
+	public ServletResponseDTO(boolean status, Exception exception, T data) {
+		this.data = data;
 		this.message = exception.getMessage();
 		this.status = status;
 	}
-	
-	public ServletResponseDTO(boolean status, Exception exception, T data) {
-		DominoUtils.handleException(new Throwable(exception));
-		this.data = data;
+
+	public ServletResponseDTO(boolean status, Exception exception) {
 		this.message = exception.getMessage();
 		this.status = status;
 	}

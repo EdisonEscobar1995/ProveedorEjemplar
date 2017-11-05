@@ -3,6 +3,7 @@ package com.nutresa.app.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class SystemDTO {
+	private String form = "frSystem";
 	@Expose
 	private String id;
 	@Expose
@@ -22,14 +23,14 @@ public class SystemDTO {
 	@Expose
 	private String inputPoll;
 
+	public String getForm() {
+		return form;
+	}
+    
 	public String getId() {
 		return id;
 	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
+	
 	public Integer getRotationTime() {
 		return rotationTime;
 	}

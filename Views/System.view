@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='System' alias='vwSystem' xmlns='http://www.lotus.com/dxl' version='9.0'
+ maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
+ noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='124e' unid='29945C64FE72AEDE052581CF00779D88' sequence='3'>
+<created><datetime>20171105T164631,12-05</datetime></created>
+<modified><datetime>20171105T164731,72-05</datetime></modified>
+<revised><datetime>20171105T164731,71-05</datetime></revised>
+<lastaccessed><datetime>20171105T164814,51-05</datetime></lastaccessed>
+<addedtofile><datetime>20171105T164631,14-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frSystem"</formula></code>
+<column sort='ascending' hidedetailrows='false' itemname='form' width='17.2500'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='Form'><font size='9pt' style='bold'/></columnheader></column></view>
+

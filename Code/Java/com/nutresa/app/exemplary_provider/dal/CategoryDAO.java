@@ -3,8 +3,9 @@ package com.nutresa.app.exemplary_provider.dal;
 import com.nutresa.app.exemplary_provider.dtl.CategoryDTO;
 
 public class CategoryDAO extends GenericDAO<CategoryDTO>{
-    public CategoryDAO() {
+    @SuppressWarnings("static-access")
+	public CategoryDAO() {
         super(CategoryDTO.class);
-        this.viewName = "vwDevIds";
+    	this.viewAll = "vwCategories";
     }
 }

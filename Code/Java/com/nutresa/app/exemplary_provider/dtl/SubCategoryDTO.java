@@ -3,12 +3,17 @@ package com.nutresa.app.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class SubCategoryDTO {
-    @Expose
+    private String form = "frSubCategory";
+	@Expose
     private String id;
     @Expose
     private String idCategory;
     @Expose
     private String name;
+    
+    public String getForm() {
+		return form;
+	}
     
     public String getId() {
         return id;

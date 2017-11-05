@@ -3,6 +3,7 @@ package com.nutresa.app.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class CategoryDTO {
+	private String form = "frCategory";
     @Expose
     private String id;
     @Expose
@@ -11,6 +12,10 @@ public class CategoryDTO {
     private String country;
     @Expose
     private String negotiators;
+    
+	public String getForm() {
+		return form;
+	}
     
     public String getId() {
         return id;
@@ -43,6 +48,4 @@ public class CategoryDTO {
     public void setNegotiators(String negotiators) {
         this.negotiators = negotiators;
     }
-    
-    
 }

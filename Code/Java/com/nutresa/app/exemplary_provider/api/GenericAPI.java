@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.nutresa.app.exemplary_provider.dtl.ServletResponseDTO;
+import com.nutresa.app.exemplary_provider.utils.Common;
 
-public class GenericAPI<T, B> extends BaseAPI {
+public class GenericAPI<T, B> extends BaseAPI<T> {
 
 	private Class<B> bloClass;
 
@@ -35,6 +36,15 @@ public class GenericAPI<T, B> extends BaseAPI {
 		return (ServletResponseDTO<ArrayList<T>>) method.invoke(blo);
 	}
 
+	@SuppressWarnings("unchecked")
+	public ServletResponseDTO<T> save(T dto)
+	throws NoSuchMethodException, IllegalAccessException,
+	InvocationTargetException, InstantiationException {
+		B blo = this.bloClass.newInstance();
+		Method method = Common.getMethod(this.bloClass, "save");
+		return (ServletResponseDTO<T>) method.invoke(blo, dto);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public ServletResponseDTO<T> delete(Map<String, String> parameters)
 	throws NoSuchMethodException, IllegalAccessException,

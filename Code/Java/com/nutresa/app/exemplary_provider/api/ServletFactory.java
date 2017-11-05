@@ -46,8 +46,8 @@ public class ServletFactory implements IServletFactory {
 		return null;
 	}
 
-	public Servlet getWidgetServlet(String servetName) throws ServletException {
-		return module.createServlet(namespace + servetName + apiSuffix,
-				servetName, null);
+	public Servlet getWidgetServlet(String servletName) throws ServletException {
+		return module.createServlet(namespace + servletName + apiSuffix,
+				servletName, null);
 	}
 }
