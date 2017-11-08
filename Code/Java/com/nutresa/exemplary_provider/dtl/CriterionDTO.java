@@ -2,12 +2,12 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class CriterionQuestionDTO {
-    private final String form = "frCriterionQuestion";
+public class CriterionDTO {
+    private static final String form = "frCriterionQuestion";
     @Expose
     private String id;
     @Expose
-    private String idDimension;
+    private DimensionDTO dimension;
     @Expose
     private String name;
 
@@ -23,12 +23,12 @@ public class CriterionQuestionDTO {
         this.name = name;
     }
 
-    public String getIdDimension() {
-        return idDimension;
+    public DimensionDTO getIdDimension() {
+        return dimension;
     }
 
-    public void setIdDimension(String idDimension) {
-        this.idDimension = idDimension;
+    public void setIdDimension(DimensionDTO idDimension) {
+        this.dimension = idDimension;
     }
 
     public String getForm() {

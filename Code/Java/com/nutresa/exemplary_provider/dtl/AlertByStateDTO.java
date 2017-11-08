@@ -3,11 +3,11 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class AlertByStateDTO {
-    private final String form = "AlertByState";
+    private static final String form = "AlertByState";
     @Expose
     private String id;
     @Expose
-    private String alert;
+    private String nameAlert;
     @Expose
     private boolean activated;
     @Expose
@@ -18,11 +18,11 @@ public class AlertByStateDTO {
     private short days;
     
     public String getAlert() {
-        return alert;
+        return nameAlert;
     }
     
     public void setAlert(String alert) {
-        this.alert = alert;
+        this.nameAlert = alert;
     }
     
     public boolean isActivated() {

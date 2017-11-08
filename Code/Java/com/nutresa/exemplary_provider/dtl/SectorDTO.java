@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class SectorDTO {
-    private final String form = "frSector";
+    private static final String form = "frSector";
     @Expose
     private String id;
     @Expose

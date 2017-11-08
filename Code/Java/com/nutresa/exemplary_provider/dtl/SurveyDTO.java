@@ -5,40 +5,21 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 public class SurveyDTO {
-    private final String form = "frSurvey";
+    private static final String form = "frSurvey";
     @Expose
     private String id;
     @Expose
-    private String idCategory;
-    // Si la sub categoría ya tiene una categoría, para que necesita la categoría?
+    private CategoryDTO category;
     @Expose
-    private String idSubCategory;
-    @Expose
-    private String sizeCompany;
+    private SizeCompanyDTO sizeCompany;
     @Expose
     private List<QuestionDTO> question;
     
-    public String getIdCategory() {
-        return idCategory;
-    }
-    
-    public void setIdCategory(String idCategory) {
-        this.idCategory = idCategory;
-    }
-    
-    public String getIdSubCategory() {
-        return idSubCategory;
-    }
-    
-    public void setIdSubCategory(String idSubCategory) {
-        this.idSubCategory = idSubCategory;
-    }
-    
-    public String getSizeCompany() {
+    public SizeCompanyDTO getSizeCompany() {
         return sizeCompany;
     }
     
-    public void setSizeCompany(String sizeCompany) {
+    public void setSizeCompany(SizeCompanyDTO sizeCompany) {
         this.sizeCompany = sizeCompany;
     }
     
@@ -58,4 +39,12 @@ public class SurveyDTO {
         return id;
     }
     
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
+    }
+
 }

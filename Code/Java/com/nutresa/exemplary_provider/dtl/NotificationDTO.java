@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 public class NotificationDTO {
-    private final String form = "frNotification";
+    private static final String form = "frNotification";
     @Expose
     private String id;
     @Expose

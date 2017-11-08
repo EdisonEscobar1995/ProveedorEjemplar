@@ -3,14 +3,13 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class QuestionDTO {
-    private final String form = "frQuestion";
+    private static final String form = "frQuestion";
     @Expose
     private String id;
     @Expose
-    private String idDimension;
-    // Si la dimensión ya está relacionada con el critrio, por qué la pregunta debe tener ambos?
+    private DimensionDTO dimension;
     @Expose
-    private String idCriterion;
+    private CriterionDTO criterion;
     @Expose
     private String wording;
     @Expose
@@ -23,27 +22,25 @@ public class QuestionDTO {
     private String dependOf;
     @Expose
     private String helpText;
-    @Expose
-    private String idSubCategory;
     
     public String getId() {
         return id;
     }
     
-    public String getIdDimension() {
-        return idDimension;
+    public DimensionDTO getIdDimension() {
+        return dimension;
     }
     
-    public void setIdDimension(String idDimension) {
-        this.idDimension = idDimension;
+    public void setIdDimension(DimensionDTO idDimension) {
+        this.dimension = idDimension;
     }
     
-    public String getIdCriterion() {
-        return idCriterion;
+    public CriterionDTO getIdCriterion() {
+        return criterion;
     }
     
-    public void setIdCriterion(String idCriterion) {
-        this.idCriterion = idCriterion;
+    public void setIdCriterion(CriterionDTO idCriterion) {
+        this.criterion = idCriterion;
     }
     
     public String getWording() {
@@ -94,14 +91,6 @@ public class QuestionDTO {
         this.helpText = helpText;
     }
     
-    public String getIdSubCategory() {
-        return idSubCategory;
-    }
-    
-    public void setIdSubCategory(String idSubCategory) {
-        this.idSubCategory = idSubCategory;
-    }
-
     public String getForm() {
         return form;
     }

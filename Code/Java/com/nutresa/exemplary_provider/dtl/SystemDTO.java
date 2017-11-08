@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class SystemDTO {
-	private final String form = "frSystem";
+	private static final String form = "frSystem";
 	@Expose
 	private String id;
 	@Expose
@@ -22,6 +22,10 @@ public class SystemDTO {
 	private String messageByChangeSizeCompany;
 	@Expose
 	private String inputPoll;
+	@Expose
+	private short uploadMaxFilesize;
+	@Expose
+	private SizeCompanyDTO sizeCompany;
 
 	public String getForm() {
 		return form;
@@ -94,4 +98,21 @@ public class SystemDTO {
 	public void setInputPoll(String inputPool) {
 		this.inputPoll = inputPool;
 	}
+
+    public short getUploadMaxFilesize() {
+        return uploadMaxFilesize;
+    }
+
+    public void setUploadMaxFilesize(short uploadMaxFilesize) {
+        this.uploadMaxFilesize = uploadMaxFilesize;
+    }
+
+    public SizeCompanyDTO getSizeCompany() {
+        return sizeCompany;
+    }
+
+    public void setSizeCompany(SizeCompanyDTO sizeCompany) {
+        this.sizeCompany = sizeCompany;
+    }
+	
 }

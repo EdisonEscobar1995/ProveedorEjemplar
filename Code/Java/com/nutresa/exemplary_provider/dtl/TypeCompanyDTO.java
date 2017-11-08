@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class TypeCompanyDTO {
-    private final String form = "frTypeCompany";
+    private static final String form = "frTypeCompany";
     @Expose
     private String id;
     @Expose

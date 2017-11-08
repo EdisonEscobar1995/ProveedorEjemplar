@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8'
  replicaid='052581C4007525A6'>
-<noteinfo noteid='1386' unid='FBA600C004E59440052581D10068964C' sequence='3'>
+<noteinfo noteid='1386' unid='FBA600C004E59440052581D10068964C' sequence='7'>
 <created><datetime>20171107T140222,20-05</datetime></created>
-<modified><datetime>20171107T141053,32-05</datetime></modified>
-<revised><datetime>20171107T141053,31-05</datetime></revised>
-<lastaccessed><datetime>20171107T141053,32-05</datetime></lastaccessed>
+<modified><datetime>20171108T074746,91-05</datetime></modified>
+<revised><datetime>20171108T074746,90-05</datetime></revised>
+<lastaccessed><datetime>20171108T074746,91-05</datetime></lastaccessed>
 <addedtofile><datetime>20171107T140222,21-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby>

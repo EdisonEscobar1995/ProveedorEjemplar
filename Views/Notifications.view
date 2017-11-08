@@ -1,24 +1,33 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Notifications' alias='vwNotifications' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
- noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
- onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
- showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
- showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
- rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
- boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
- allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
- uniquekeys='false'>
-<noteinfo noteid='826' unid='A8539A2F6B5AC7C6052581CD004AD204' sequence='12'>
-<created><datetime>20171103T083714,28-05</datetime></created>
-<modified><datetime>20171105T164109,55-05</datetime></modified>
-<revised><datetime>20171105T164109,54-05</datetime></revised>
-<lastaccessed><datetime>20171105T164617,86-05</datetime></lastaccessed>
-<addedtofile><datetime>20171103T083714,29-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frNotification"</formula></code>
-<column sort='ascending' hidedetailrows='false' itemname='subject' width='17.2500'
- resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='Subject'><font size='9pt' style='bold'/></columnheader></column></view>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8'
+ replicaid='052581C4007525A6'>
+<noteinfo noteid='1236' unid='3236AF3CC4E47753052581D1004A3433' sequence='8'>
+<created><datetime>20171107T083030,27-05</datetime></created>
+<modified><datetime>20171108T074746,99-05</datetime></modified>
+<revised><datetime>20171108T074746,98-05</datetime></revised>
+<lastaccessed><datetime>20171108T074746,99-05</datetime></lastaccessed>
+<addedtofile><datetime>20171107T083030,29-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='$TITLE' sign='true'><text>Notifications|vwNotifications</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+WAAFACIAHgADAAcACQAEAHN1YmplY3QkQ29uZmxpY3QkUkVGBAAEAAAAIgAFAAQAZm9ybQEADgBm
+ck5vdGlmaWNhdGlvbgoCAwAHAA4ACAAJTDFTMlMzUw==
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+FAABAABEAGYAAAAHAHN1YmplY3Q=
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQABAAAACAAAAFZDAQAHAAcAAAAAAIoAAQAACgAAAAAAAAAAAAICAAAAc3ViamVjdFN1YmplY3Qm
+AAEAAAABAQAJAQAACgEBAAoAAAEArSsBAAEAAQAAAAAAAAAAAFdDAQEACQAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAABCAAAAAAABAP///wAFAP///wABAAAAAAAAAAAAAAAA
+AAEA////AAEA////AAAAAQAAAAAAAQAAAAAAAQAAAAAAAAAIAAAAAAABAA==
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text/></item>
+<item name='$DesignerVersion'><text>8.5.3</text></item>
+<item name='$Flags'><text>PY</text></item></note>
 
