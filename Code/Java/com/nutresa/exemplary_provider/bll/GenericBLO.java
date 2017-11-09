@@ -65,7 +65,7 @@ public class GenericBLO<T, D> {
         return dtoList;
     }
 
-    public boolean delete(Map<String, String> parameters) throws Exception {
+    public boolean delete(Map<String, String> parameters) {
         boolean response;
         try {
             D dao;
@@ -75,8 +75,7 @@ public class GenericBLO<T, D> {
             response = true;
         } catch (Exception exception) {
             response = false;
-            throw exception;
-//            DominoUtils.handlCeException(new Throwable(exception));
+            DominoUtils.handleException(new Throwable(exception));
         }
         
         return response;
