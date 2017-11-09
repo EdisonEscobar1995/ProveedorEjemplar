@@ -35,13 +35,13 @@ public abstract class GenericDAO<T> {
 		this.entityForm = "fr" + entity;
 		this.entityView = "vw" + entity;
 	}
-
+	
 	public T get(String id) {
 		View currentView = database.getView(VIEW_IDS);
 		Document document = currentView.getFirstDocumentByKey(id, true);
 		return castDocument(document);
 	}
-
+	
 	public List<T> getAll() throws IllegalAccessException {
 		View view = database.getView(entityView);
 		ViewEntryCollection vec = view.getAllEntries();
@@ -73,12 +73,12 @@ public abstract class GenericDAO<T> {
 		return result;
 	}
 
-	public T save(T dto) throws IllegalAccessException, Exception {
-		Document document = database.createDocument();
-		return this.saveDocument(document, dto, true);
-	}
+    public T save(T dto) throws IllegalAccessException {
+        Document document = database.createDocument();
+        return this.saveDocument(document, dto, true);
+    }
 
-	public T saveProfile(String form, T dto) throws IllegalAccessException, Exception {
+	public T saveProfile(String form, T dto) throws IllegalAccessException {
 		View vw = database.getView(entityView);
 		Document document = vw.getFirstDocumentByKey(form, true);
 		if (document == null) {
@@ -89,9 +89,9 @@ public abstract class GenericDAO<T> {
 		
 		return dto;
 	}
-
+	
 	private T saveDocument(Document document, T dto, boolean newDocument)
-	throws IllegalAccessException, Exception {
+	throws IllegalAccessException {
 		String id = document.getItemValueString("id");
 		if (newDocument){
 			id = document.getMetaversalID();
@@ -109,14 +109,13 @@ public abstract class GenericDAO<T> {
 		    Field field = Common.getField(dto.getClass(), "id");
 		    field.set(dto, id);
 		} else {
-		    // TODO No devolver la gen�rica
-		    throw new Exception("Can not save document");
+            throw new NullPointerException("Can not save document");
 		}
 		
 		return dto;
 	}
-
-	public T update(String id, T dto) throws IllegalAccessException, Exception {
+	
+	public T update(String id, T dto) throws IllegalAccessException {
 		View vw = database.getView(VIEW_IDS);
 		Document document = vw.getFirstDocumentByKey(id, true);
 		if (document != null) {
