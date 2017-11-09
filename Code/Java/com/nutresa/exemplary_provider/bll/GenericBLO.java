@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.openntf.domino.utils.DominoUtils;
+
 import com.nutresa.exemplary_provider.utils.Common;
 
 public class GenericBLO<T, D> {
@@ -63,7 +65,7 @@ public class GenericBLO<T, D> {
         return dtoList;
     }
 
-    public boolean delete(Map<String, String> parameters) {
+    public boolean delete(Map<String, String> parameters) throws Exception {
         boolean response;
         try {
             D dao;
@@ -71,8 +73,10 @@ public class GenericBLO<T, D> {
             Method method = dao.getClass().getMethod("delete", String.class);
             method.invoke(dao, parameters.get("id"));
             response = true;
-        } catch (Exception e) {
+        } catch (Exception exception) {
             response = false;
+            throw exception;
+//            DominoUtils.handlCeException(new Throwable(exception));
         }
         
         return response;
