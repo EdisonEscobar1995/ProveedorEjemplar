@@ -21,12 +21,19 @@ public abstract class GenericDAO<T> {
 	private Database database;
 	private Class<T> dtoClass;
 	private static final String VIEW_IDS = "vwDevIds";
-	protected static String viewAll;
-
+	private String entityForm;
+	protected String entityView;
+	
 	public GenericDAO(Class<T> dtoClass) {
 		this.session = Factory.getSession();
 		this.database = session.getCurrentDatabase();
 		this.dtoClass = dtoClass;
+		
+		String entity = this.getClass().getSimpleName();
+		entity = entity.substring(0, entity.length() - 3);
+		
+		this.entityForm = "fr" + entity;
+		this.entityView = "vw" + entity;
 	}
 
 	public T get(String id) {
@@ -36,7 +43,7 @@ public abstract class GenericDAO<T> {
 	}
 
 	public List<T> getAll() throws IllegalAccessException {
-		View view = database.getView(viewAll);
+		View view = database.getView(entityView);
 		ViewEntryCollection vec = view.getAllEntries();
 		Document document;
 		List<T> list = new ArrayList<T>();
@@ -72,7 +79,7 @@ public abstract class GenericDAO<T> {
 	}
 
 	public T saveProfile(String form, T dto) throws IllegalAccessException, Exception {
-		View vw = database.getView(viewAll);
+		View vw = database.getView(entityView);
 		Document document = vw.getFirstDocumentByKey(form, true);
 		if (document == null) {
 		    dto = this.save(dto);
@@ -94,12 +101,15 @@ public abstract class GenericDAO<T> {
 			field.setAccessible(true);
 			document.replaceItemValue(field.getName(), field.get(dto));
 		}
+		
+		document.replaceItemValue("form", this.entityForm);
 		document.replaceItemValue("id", id);
+		
 		if(document.save(true, false)){
 		    Field field = Common.getField(dto.getClass(), "id");
 		    field.set(dto, id);
 		} else {
-		    // TODO No devolver la genérica
+		    // TODO No devolver la genï¿½rica
 		    throw new Exception("Can not save document");
 		}
 		
