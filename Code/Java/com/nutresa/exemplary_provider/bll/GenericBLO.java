@@ -18,7 +18,7 @@ public class GenericBLO<T, D> {
 
     @SuppressWarnings("unchecked")
     public T get(Map<String, String> parameters) throws IllegalAccessException,
-    InstantiationException, NoSuchMethodException,
+    NoSuchMethodException, InstantiationException,
     InvocationTargetException {
         D dao = this.daoClass.newInstance();
         Method method = dao.getClass().getMethod("get", String.class);
@@ -26,8 +26,8 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> getAll() throws IllegalAccessException,
-    InstantiationException, NoSuchMethodException,
+    public List<T> getAll() throws InstantiationException,
+    NoSuchMethodException, IllegalAccessException,
     InvocationTargetException {
         D dao = this.daoClass.newInstance();
         Method method = dao.getClass().getMethod("getAll");
@@ -35,11 +35,10 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public T save(T dto) throws IllegalAccessException, InstantiationException,
-    NoSuchMethodException, InvocationTargetException {
+    public T save(T dto) throws NoSuchMethodException, IllegalAccessException,
+    InstantiationException, InvocationTargetException {
         Field field = Common.getField(dto.getClass(), "id");
         String id = (String) field.get(dto);
-        field = Common.getField(dto.getClass(), "form");
         Method method = null;
         D dao = this.daoClass.newInstance();
         if ("".equals(id)) {
@@ -54,8 +53,8 @@ public class GenericBLO<T, D> {
     }
 
     public List<T> saveList(List<T> dtoList) throws IllegalAccessException,
-    InstantiationException, NoSuchMethodException,
-    InvocationTargetException {
+    InstantiationException, InvocationTargetException ,
+    NoSuchMethodException{
         int iterator = 0;
         for (T dto : dtoList) {
             dtoList.set(iterator, save(dto));
