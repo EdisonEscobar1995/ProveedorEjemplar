@@ -18,7 +18,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
 
     @SuppressWarnings("unchecked")
     public ServletResponseDTO<T> get(Map<String, String> parameters)
-    throws IllegalAccessException, InstantiationException,
+    throws IllegalAccessException, InstantiationException,  
     NoSuchMethodException, InvocationTargetException {
         B blo = this.bloClass.newInstance();
         Method method = blo.getClass().getMethod("get", Map.class);
