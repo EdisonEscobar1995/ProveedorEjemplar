@@ -64,8 +64,7 @@ public class GenericBLO<T, D> {
     }
 
     public void delete(Map<String, String> parameters)
-    throws IllegalAccessException, InstantiationException,
-    NoSuchMethodException, InvocationTargetException {
+    throws Exception{
         D dao = daoClass.newInstance();
         Method method = dao.getClass().getMethod("delete", String.class);
         method.invoke(dao, parameters.get("id"));

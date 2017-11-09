@@ -24,6 +24,9 @@ public abstract class GenericDAO<T> {
 	private String entityForm;
 	protected String entityView;
 	
+	private static final String PREFIX_FORM = "fr";
+	private static final String PREFIX_VIEW = "vw";
+	
 	public GenericDAO(Class<T> dtoClass) {
 		this.session = Factory.getSession();
 		this.database = session.getCurrentDatabase();
@@ -32,8 +35,8 @@ public abstract class GenericDAO<T> {
 		String entity = this.getClass().getSimpleName();
 		entity = entity.substring(0, entity.length() - 3);
 		
-		this.entityForm = "fr" + entity;
-		this.entityView = "vw" + entity;
+		this.entityForm = PREFIX_FORM + entity;
+		this.entityView = PREFIX_VIEW + entity;
 	}
 	
 	public T get(String id) {
