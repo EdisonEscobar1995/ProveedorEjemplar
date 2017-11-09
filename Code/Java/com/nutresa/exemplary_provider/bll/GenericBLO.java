@@ -63,11 +63,19 @@ public class GenericBLO<T, D> {
         return dtoList;
     }
 
-    public void delete(Map<String, String> parameters)
-    throws Exception{
-        D dao = daoClass.newInstance();
-        Method method = dao.getClass().getMethod("delete", String.class);
-        method.invoke(dao, parameters.get("id"));
+    public boolean delete(Map<String, String> parameters) {
+        boolean response;
+        try {
+            D dao;
+            dao = daoClass.newInstance();
+            Method method = dao.getClass().getMethod("delete", String.class);
+            method.invoke(dao, parameters.get("id"));
+            response = true;
+        } catch (Exception e) {
+            response = false;
+        }
+        
+        return response;
     }
 
 }
