@@ -98,16 +98,14 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     @SuppressWarnings("unchecked")
     private ServletResponseDTO doGet(Method method,
-            Map<String, String> parameters) throws IllegalArgumentException,
-            IllegalAccessException, InvocationTargetException {
+            Map<String, String> parameters) throws IllegalAccessException, InvocationTargetException {
         return (ServletResponseDTO) method.invoke(this, parameters);
     }
 
     @SuppressWarnings("unchecked")
     private ServletResponseDTO doPost(Method method, BufferedReader reader,
             Gson gson) throws IOException, JsonSyntaxException,
-            IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException {
+            IllegalAccessException, InvocationTargetException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
         while ((inputLine = reader.readLine()) != null) {
