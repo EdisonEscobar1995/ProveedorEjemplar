@@ -18,7 +18,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
 
     @SuppressWarnings("unchecked")
     public ServletResponseDTO<T> get(Map<String, String> parameters)
-    throws IllegalAccessException, InstantiationException,  
+    throws IllegalAccessException, InstantiationException,
     NoSuchMethodException, InvocationTargetException {
         B blo = this.bloClass.newInstance();
         Method method = blo.getClass().getMethod("get", Map.class);
@@ -36,7 +36,8 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
 
     @SuppressWarnings("unchecked")
     public ServletResponseDTO<T> save(T dto) throws IllegalAccessException,
-    InstantiationException, NoSuchMethodException, InvocationTargetException {
+    InstantiationException, NoSuchMethodException,
+    InvocationTargetException {
         B blo = this.bloClass.newInstance();
         Method method = Common.getMethod(this.bloClass, "save");
         return new ServletResponseDTO<T>((T) method.invoke(blo, dto));
@@ -44,7 +45,8 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
 
     @SuppressWarnings("unchecked")
     public ServletResponseDTO<T> delete(Map<String, String> parameters)
-    throws Exception {
+    throws IllegalAccessException, InstantiationException,
+    NoSuchMethodException, InvocationTargetException {
         B blo = this.bloClass.newInstance();
         Method method = blo.getClass().getMethod("delete", Map.class);
         return new ServletResponseDTO<T>((T) method.invoke(blo, parameters));

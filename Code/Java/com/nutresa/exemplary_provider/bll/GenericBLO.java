@@ -3,7 +3,6 @@ package com.nutresa.exemplary_provider.bll;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,20 +22,16 @@ public class GenericBLO<T, D> {
     InvocationTargetException {
         D dao = this.daoClass.newInstance();
         Method method = dao.getClass().getMethod("get", String.class);
-        T dto = (T) method.invoke(dao, parameters.get("id"));
-
-        return dto;
+        return (T) method.invoke(dao, parameters.get("id"));
     }
 
     @SuppressWarnings("unchecked")
     public List<T> getAll() throws IllegalAccessException,
     InstantiationException, NoSuchMethodException,
     InvocationTargetException {
-        List<T> list = new ArrayList<T>();
         D dao = this.daoClass.newInstance();
         Method method = dao.getClass().getMethod("getAll");
-        list = (List<T>) method.invoke(dao);
-        return list;
+        return (List<T>) method.invoke(dao);
     }
 
     @SuppressWarnings("unchecked")
@@ -45,7 +40,7 @@ public class GenericBLO<T, D> {
         Field field = Common.getField(dto.getClass(), "id");
         String id = (String) field.get(dto);
         field = Common.getField(dto.getClass(), "form");
-        Method method;
+        Method method = null;
         D dao = this.daoClass.newInstance();
         if ("".equals(id)) {
             method = Common.getMethod(this.daoClass, "save");
