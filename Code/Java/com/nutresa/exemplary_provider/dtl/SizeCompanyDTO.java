@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class SizeCompanyDTO {
-    private static final String form = "frSizeCompany";
+    private static final String FORM = "frSizeCompany";
     @Expose
     private String id;
     @Expose
@@ -18,7 +18,7 @@ public class SizeCompanyDTO {
     }
     
     public String getForm() {
-        return form;
+        return FORM;
     }
     
     public String getId() {

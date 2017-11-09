@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class AlertByStateDTO {
-    private static final String form = "AlertByState";
+    private static final String FORM = "AlertByState";
     @Expose
     private String id;
     @Expose
@@ -58,7 +58,7 @@ public class AlertByStateDTO {
     }
     
     public String getForm() {
-        return form;
+        return FORM;
     }
     
     public String getId() {

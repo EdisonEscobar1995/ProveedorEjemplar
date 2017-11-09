@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import java.util.List;
 
 public class SupplierDTO {
-    private static final String form = "frSupplier";
+    private static final String FORM = "frSupplier";
     private String id;
     private boolean companySizeWasChanged;
     private SurveyDTO survey;
@@ -439,7 +439,7 @@ public class SupplierDTO {
     }
 
     public static String getForm() {
-        return form;
+        return FORM;
     }
 
     public String getId() {

@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class CriterionDTO {
-    private static final String form = "frCriterionQuestion";
+    private static final String FORM = "frCriterionQuestion";
     @Expose
     private String id;
     @Expose
@@ -32,7 +32,7 @@ public class CriterionDTO {
     }
 
     public String getForm() {
-        return form;
+        return FORM;
     }
     
 }

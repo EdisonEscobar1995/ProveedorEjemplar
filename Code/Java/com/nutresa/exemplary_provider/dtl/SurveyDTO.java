@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 public class SurveyDTO {
-    private static final String form = "frSurvey";
+    private static final String FORM = "frSurvey";
     @Expose
     private String id;
     @Expose
@@ -32,7 +32,7 @@ public class SurveyDTO {
     }
     
     public String getForm() {
-        return form;
+        return FORM;
     }
     
     public String getId() {

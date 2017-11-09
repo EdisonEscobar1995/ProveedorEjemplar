@@ -3,7 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class SubCategoryDTO {
-    private static final String form = "frSubCategory";
+    private static final String FORM = "frSubCategory";
 	@Expose
     private String id;
     @Expose
@@ -12,7 +12,7 @@ public class SubCategoryDTO {
     private String name;
     
     public String getForm() {
-		return form;
+		return FORM;
 	}
     
     public String getId() {
