@@ -14,7 +14,7 @@ import com.ibm.designer.runtime.domino.adapter.ServletMatch;
  * key to package.class and key to servletname matching.
  */
 public class ServletFactory implements IServletFactory {
-	private static String namespace = "com.nutresa.app.exemplary_provider.api.";
+	private static String namespace = "com.nutresa.exemplary_provider.api.";
 	private String apiSuffix = "API";
 	private ComponentModule module;
 

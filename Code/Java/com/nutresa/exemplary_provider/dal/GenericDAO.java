@@ -13,6 +13,8 @@ import org.openntf.domino.utils.Factory;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewEntry;
 
+import com.nutresa.exemplary_provider.utils.Common;
+
 public abstract class GenericDAO<T> {
 
 	private Session session;
@@ -45,7 +47,7 @@ public abstract class GenericDAO<T> {
 		return list;
 	}
 
-	public T castDocument(Document document) {
+	private T castDocument(Document document) {
 		T result = null;
 		try {
 			if (document != null) {
@@ -64,42 +66,54 @@ public abstract class GenericDAO<T> {
 		return result;
 	}
 
-	public void save(T dto) throws IllegalAccessException {
+	public T save(T dto) throws IllegalAccessException, Exception {
 		Document document = database.createDocument();
-		this.saveDocument(document, dto, true);
+		return this.saveDocument(document, dto, true);
 	}
 
-	public void saveProfile(String form, T dto) throws IllegalAccessException {
+	public T saveProfile(String form, T dto) throws IllegalAccessException, Exception {
 		View vw = database.getView(viewAll);
 		Document document = vw.getFirstDocumentByKey(form, true);
 		if (document == null) {
-			this.save(dto);
+		    dto = this.save(dto);
 		}else{
-			this.saveDocument(document, dto, false);
+		    dto = this.saveDocument(document, dto, false);
 		}
+		
+		return dto;
 	}
 
-	private void saveDocument(Document document, T dto, boolean newDocument)
-	throws IllegalAccessException {
+	private T saveDocument(Document document, T dto, boolean newDocument)
+	throws IllegalAccessException, Exception {
 		String id = document.getItemValueString("id");
 		if (newDocument){
 			id = document.getMetaversalID();
 		}
+		
 		for (Field field : this.dtoClass.getDeclaredFields()) {
 			field.setAccessible(true);
 			document.replaceItemValue(field.getName(), field.get(dto));
 		}
 		document.replaceItemValue("id", id);
+		if(document.save(true, false)){
+		    Field field = Common.getField(dto.getClass(), "id");
+		    field.set(dto, id);
+		} else {
+		    // TODO No devolver la genérica
+		    throw new Exception("Can not save document");
+		}
 		
-		document.save(true, false);
+		return dto;
 	}
 
-	public void update(String id, T dto) throws IllegalAccessException {
+	public T update(String id, T dto) throws IllegalAccessException, Exception {
 		View vw = database.getView(VIEW_IDS);
 		Document document = vw.getFirstDocumentByKey(id, true);
 		if (document != null) {
-			this.saveDocument(document, dto, false);
+		    dto = this.saveDocument(document, dto, false);
 		}
+		
+		return dto;
 	}
 
 	public void delete(String id) throws IllegalAccessException {

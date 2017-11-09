@@ -3,7 +3,10 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class ServletResponseDTO<T> {
-	@Expose
+    private static final String SUCCESS = "success";
+    private static final String ERROR = "error";
+	
+    @Expose
 	T data;
 
 	@Expose
@@ -11,12 +14,6 @@ public class ServletResponseDTO<T> {
 
 	@Expose
 	boolean status = true;
-
-	public ServletResponseDTO(boolean status, String message, T data) {
-		this.data = data;
-		this.message = message;
-		this.status = status;
-	}
 
 	public ServletResponseDTO(boolean status, String message) {
 		this.message = message;
@@ -33,4 +30,10 @@ public class ServletResponseDTO<T> {
 		this.message = exception.getMessage();
 		this.status = status;
 	}
+
+    public ServletResponseDTO(T data) {
+        this.data = data;
+        this.message = SUCCESS;
+        this.status = true;
+    }
 }

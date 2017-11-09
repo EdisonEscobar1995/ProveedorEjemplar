@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
 
 public class CategoryDTO {
@@ -9,9 +11,11 @@ public class CategoryDTO {
     @Expose
     private String name;
     @Expose
-    private String country;
+    private CountryDTO country;
     @Expose
     private String negotiators;
+    @Expose
+    private List<SubCategoryDTO> subCategories;
     
 	public String getForm() {
 		return form;
@@ -29,11 +33,11 @@ public class CategoryDTO {
         this.name = name;
     }
     
-    public String getCountry() {
+    public CountryDTO getCountry() {
         return country;
     }
     
-    public void setCountry(String country) {
+    public void setCountry(CountryDTO country) {
         this.country = country;
     }
     
@@ -44,4 +48,14 @@ public class CategoryDTO {
     public void setNegotiators(String negotiators) {
         this.negotiators = negotiators;
     }
+
+    public List<SubCategoryDTO> getSubCategories() {
+        return subCategories;
+    }
+
+    public void setSubCategories(List<SubCategoryDTO> subCategories) {
+        this.subCategories = subCategories;
+    }
+    
+    
 }
