@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 
 public class ServletResponseDTO<T> {
     private static final String SUCCESS = "success";
-    private static final String ERROR = "error";
 	
     @Expose
 	T data;
@@ -17,12 +16,6 @@ public class ServletResponseDTO<T> {
 
 	public ServletResponseDTO(boolean status, String message) {
 		this.message = message;
-		this.status = status;
-	}
-
-	public ServletResponseDTO(boolean status, Exception exception, T data) {
-		this.data = data;
-		this.message = exception.getMessage();
 		this.status = status;
 	}
 

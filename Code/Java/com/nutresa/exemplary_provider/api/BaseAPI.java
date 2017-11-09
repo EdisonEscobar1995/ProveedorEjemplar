@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
@@ -96,13 +98,16 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     @SuppressWarnings("unchecked")
     private ServletResponseDTO doGet(Method method,
-            Map<String, String> parameters) throws Exception {
+            Map<String, String> parameters) throws IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
         return (ServletResponseDTO) method.invoke(this, parameters);
     }
 
     @SuppressWarnings("unchecked")
     private ServletResponseDTO doPost(Method method, BufferedReader reader,
-            Gson gson) throws Exception {
+            Gson gson) throws IOException, JsonSyntaxException,
+            IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
         while ((inputLine = reader.readLine()) != null) {
