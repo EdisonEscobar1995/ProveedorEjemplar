@@ -98,7 +98,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     @SuppressWarnings("unchecked")
     private ServletResponseDTO doGet(Method method,
-            Map<String, String> parameters) throws IllegalArgumentException,
+            Map<String, String> parameters) throws RuntimeException,
             IllegalAccessException, InvocationTargetException {
         return (ServletResponseDTO) method.invoke(this, parameters);
     }
@@ -106,7 +106,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     @SuppressWarnings("unchecked")
     private ServletResponseDTO doPost(Method method, BufferedReader reader,
             Gson gson) throws IOException, JsonSyntaxException,
-            IllegalArgumentException, IllegalAccessException,
+            RuntimeException, IllegalAccessException,
             InvocationTargetException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
