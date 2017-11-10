@@ -68,19 +68,20 @@ public class GenericBLO<T, D> {
         return dto;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<T> saveList(List<T> dtoList, Object value,
-            String fieldName) throws HandlerGenericException {
+    public List<T> saveList(List<T> dtoList, String fieldName, String value)
+    throws HandlerGenericException {
         int iterator = 0;
         try {
             for (T dto : dtoList) {
-                dto = (T) Common.setField(dto, fieldName, value);
+                Field field = Common.getField(dto.getClass(), fieldName);
+                field.set(dto, value);
                 dtoList.set(iterator, save(dto));
                 iterator++;
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
+        
         return dtoList;
     }
 

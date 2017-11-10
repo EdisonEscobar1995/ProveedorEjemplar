@@ -1,11 +1,11 @@
 package com.nutresa.exemplary_provider.dal;
 
-import com.nutresa.exemplary_provider.dtl.CategoryDTO;
+import com.nutresa.exemplary_provider.dtl.SubCategoryDTO;
 
-public class SubCategoryDAO extends GenericDAO<CategoryDTO>{
+public class SubCategoryDAO extends GenericDAO<SubCategoryDTO>{
     
 	public SubCategoryDAO() {
-        super(CategoryDTO.class);
+        super(SubCategoryDTO.class);
     	this.entityView = "vwSubCategories";
     }
 }

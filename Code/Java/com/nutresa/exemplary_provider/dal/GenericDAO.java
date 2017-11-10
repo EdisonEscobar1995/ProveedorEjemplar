@@ -98,12 +98,15 @@ public abstract class GenericDAO<T> {
 	throws IllegalAccessException {
 		String id = document.getItemValueString("id");
 		if (newDocument){
-			id = document.getMetaversalID();
+			id = document.getUniversalID();
 		}
 		
+		document.replaceItemValue("prueba", "Prueba");
 		for (Field field : this.dtoClass.getDeclaredFields()) {
 			field.setAccessible(true);
-			document.replaceItemValue(field.getName(), field.get(dto));
+			if(!"id".equals(field.getName())){
+			    document.replaceItemValue(field.getName(), field.get(dto));
+			}
 		}
 		
 		document.replaceItemValue("form", this.entityForm);

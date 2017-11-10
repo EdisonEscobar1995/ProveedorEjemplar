@@ -33,17 +33,4 @@ public class Common {
         return field;
     }
 
-    public static Object setField(Object origin, String name, Object value)
-    throws HandlerGenericException {
-        Field field = getField(origin.getClass(), name);
-        if (null != field) {
-            try {
-                field.set(origin, value);
-            } catch (Exception exception) {
-                throw new HandlerGenericException(exception);
-            }
-        }
-        return origin;
-    }
-
 }
