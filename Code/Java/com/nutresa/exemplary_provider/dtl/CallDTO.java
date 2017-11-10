@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 public class CallDTO {
-    private static final String FORM = "frCall";
     @Expose
     private String id;
     @Expose
@@ -82,10 +81,6 @@ public class CallDTO {
     
     public void setActivated(boolean activated) {
         this.activated = activated;
-    }
-    
-    public static String getForm() {
-        return FORM;
     }
     
     public String getId() {

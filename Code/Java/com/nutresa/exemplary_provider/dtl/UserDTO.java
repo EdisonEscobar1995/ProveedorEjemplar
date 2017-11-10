@@ -1,19 +1,16 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
 
-public class CriterionDTO {
+public abstract class UserDTO {
     @Expose
     private String id;
     @Expose
-    private DimensionDTO dimension;
-    @Expose
     private String name;
+    private List<RolDTO> rol;
 
-    public String getId() {
-        return id;
-    }
-    
     public String getName() {
         return name;
     }
@@ -22,12 +19,17 @@ public class CriterionDTO {
         this.name = name;
     }
 
-    public DimensionDTO getIdDimension() {
-        return dimension;
+    public String getId() {
+        return id;
     }
 
-    public void setIdDimension(DimensionDTO idDimension) {
-        this.dimension = idDimension;
+    public List<RolDTO> getRol() {
+        return rol;
+    }
+
+    public void setRol(List<RolDTO> rol) {
+        this.rol = rol;
     }
     
+
 }

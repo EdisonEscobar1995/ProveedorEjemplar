@@ -5,8 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 public class CategoryDTO {
-    private static final String FORM = "frCategory";
-    @Expose
+	@Expose
     private String id;
     @Expose
     private String name;
@@ -18,11 +17,7 @@ public class CategoryDTO {
     private List<String> negotiators;
     @Expose
     private List<SubCategoryDTO> subCategories;
-
-    public String getForm() {
-        return FORM;
-    }
-
+	
     public String getId() {
         return id;
     }

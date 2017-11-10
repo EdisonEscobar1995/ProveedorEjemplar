@@ -3,7 +3,6 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class AlertDTO {
-    private static final String FORM = "AlertByState";
     @Expose
     private String id;
     @Expose
@@ -55,10 +54,6 @@ public class AlertDTO {
     
     public void setDays(short days) {
         this.days = days;
-    }
-    
-    public String getForm() {
-        return FORM;
     }
     
     public String getId() {

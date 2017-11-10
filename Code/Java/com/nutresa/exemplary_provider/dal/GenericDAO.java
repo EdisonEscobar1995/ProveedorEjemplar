@@ -82,9 +82,9 @@ public abstract class GenericDAO<T> {
         return this.saveDocument(document, dto, true);
     }
 
-	public T saveProfile(String form, T dto) throws IllegalAccessException {
+	public T saveProfile(T dto) throws IllegalAccessException {
 		View vw = database.getView(this.entityView);
-		Document document = vw.getFirstDocumentByKey(form, true);
+		Document document = vw.getFirstDocumentByKey(this.entityForm, true);
 		if (document == null) {
 		    dto = this.save(dto);
 		}else{

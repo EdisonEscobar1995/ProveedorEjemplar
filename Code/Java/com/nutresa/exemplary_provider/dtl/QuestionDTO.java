@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 public class QuestionDTO {
-    private static final String FORM = "frQuestion";
     @Expose
     private String id;
     @Expose
@@ -71,10 +70,6 @@ public class QuestionDTO {
 
     public void setIdCriterion(String idCriterion) {
         this.idCriterion = idCriterion;
-    }
-
-    public String getForm() {
-        return FORM;
     }
 
 }
