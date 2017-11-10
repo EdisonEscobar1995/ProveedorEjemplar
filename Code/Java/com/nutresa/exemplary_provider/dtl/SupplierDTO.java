@@ -10,14 +10,14 @@ public class SupplierDTO {
     // GENERAL INFORMATION
     private boolean participateInSurvey;
     private String name;
-    private SizeCompanyDTO sizeCompany;
+    private CompanySizeDTO sizeCompany;
     private CategoryDTO category;
     private SubCategoryDTO subCategory;
     private List<String> document;
     private String nit;
-    private TypeCompanyDTO typeCompany;
+    private CompanyTypeDTO typeCompany;
     private boolean producerLivestok;
-    private TypeSocietyDTO typeSociety;
+    private SocietyTypeDTO typeSociety;
     private short yearOfEstablishment;
     private String principalAdress;
     private CountryDTO country;
@@ -88,11 +88,11 @@ public class SupplierDTO {
         this.name = name;
     }
 
-    public SizeCompanyDTO getSizeCompany() {
+    public CompanySizeDTO getSizeCompany() {
         return sizeCompany;
     }
 
-    public void setSizeCompany(SizeCompanyDTO sizeCompany) {
+    public void setSizeCompany(CompanySizeDTO sizeCompany) {
         this.sizeCompany = sizeCompany;
     }
 
@@ -128,11 +128,11 @@ public class SupplierDTO {
         this.nit = nit;
     }
 
-    public TypeCompanyDTO getTypeCompany() {
+    public CompanyTypeDTO getTypeCompany() {
         return typeCompany;
     }
 
-    public void setTypeCompany(TypeCompanyDTO typeCompany) {
+    public void setTypeCompany(CompanyTypeDTO typeCompany) {
         this.typeCompany = typeCompany;
     }
 
@@ -144,11 +144,11 @@ public class SupplierDTO {
         this.producerLivestok = producerLivestok;
     }
 
-    public TypeSocietyDTO getTypeSociety() {
+    public SocietyTypeDTO getTypeSociety() {
         return typeSociety;
     }
 
-    public void setTypeSociety(TypeSocietyDTO typeSociety) {
+    public void setTypeSociety(SocietyTypeDTO typeSociety) {
         this.typeSociety = typeSociety;
     }
 

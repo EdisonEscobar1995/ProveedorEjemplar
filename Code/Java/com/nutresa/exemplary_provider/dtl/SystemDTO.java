@@ -25,7 +25,7 @@ public class SystemDTO {
 	@Expose
 	private short uploadMaxFilesize;
 	@Expose
-	private SizeCompanyDTO sizeCompany;
+	private CompanySizeDTO sizeCompany;
 
 	public String getForm() {
 		return FORM;
@@ -107,11 +107,11 @@ public class SystemDTO {
         this.uploadMaxFilesize = uploadMaxFilesize;
     }
 
-    public SizeCompanyDTO getSizeCompany() {
+    public CompanySizeDTO getSizeCompany() {
         return sizeCompany;
     }
 
-    public void setSizeCompany(SizeCompanyDTO sizeCompany) {
+    public void setSizeCompany(CompanySizeDTO sizeCompany) {
         this.sizeCompany = sizeCompany;
     }
 	

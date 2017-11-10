@@ -46,7 +46,7 @@ public abstract class GenericDAO<T> {
 	}
 	
 	public List<T> getAll() throws IllegalAccessException {
-		View view = database.getView(entityView);
+		View view = database.getView(this.entityView);
 		ViewEntryCollection vec = view.getAllEntries();
 		Document document;
 		List<T> list = new ArrayList<T>();
@@ -82,7 +82,7 @@ public abstract class GenericDAO<T> {
     }
 
 	public T saveProfile(String form, T dto) throws IllegalAccessException {
-		View vw = database.getView(entityView);
+		View vw = database.getView(this.entityView);
 		Document document = vw.getFirstDocumentByKey(form, true);
 		if (document == null) {
 		    dto = this.save(dto);

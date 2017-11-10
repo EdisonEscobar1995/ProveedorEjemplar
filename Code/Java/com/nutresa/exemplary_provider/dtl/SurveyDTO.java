@@ -11,15 +11,15 @@ public class SurveyDTO {
     @Expose
     private CategoryDTO category;
     @Expose
-    private SizeCompanyDTO sizeCompany;
+    private CompanySizeDTO sizeCompany;
     @Expose
     private List<QuestionDTO> question;
     
-    public SizeCompanyDTO getSizeCompany() {
+    public CompanySizeDTO getSizeCompany() {
         return sizeCompany;
     }
     
-    public void setSizeCompany(SizeCompanyDTO sizeCompany) {
+    public void setSizeCompany(CompanySizeDTO sizeCompany) {
         this.sizeCompany = sizeCompany;
     }
     
