@@ -23,6 +23,7 @@ public abstract class GenericDAO<T> {
 	private static final String VIEW_IDS = "vwDevIds";
 	private String entityForm;
 	protected String entityView;
+    protected String entity;
 	
 	private static final String PREFIX_FORM = "fr";
 	private static final String PREFIX_VIEW = "vw";
@@ -32,7 +33,7 @@ public abstract class GenericDAO<T> {
 		this.database = session.getCurrentDatabase();
 		this.dtoClass = dtoClass;
 		
-		String entity = this.getClass().getSimpleName();
+		entity = this.getClass().getSimpleName();
 		entity = entity.substring(0, entity.length() - 3);
 		
 		this.entityForm = PREFIX_FORM + entity;
@@ -138,4 +139,9 @@ public abstract class GenericDAO<T> {
 		
 		return response;
 	}
+
+    public String getEntity() {
+        return entity;
+    }
+
 }

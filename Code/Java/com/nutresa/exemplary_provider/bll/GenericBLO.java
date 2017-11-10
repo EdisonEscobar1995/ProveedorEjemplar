@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import org.openntf.domino.utils.DominoUtils;
-
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -29,7 +27,7 @@ public class GenericBLO<T, D> {
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
-        
+
         return response;
     }
 
@@ -44,7 +42,7 @@ public class GenericBLO<T, D> {
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
-        
+
         return response;
     }
 
@@ -70,22 +68,24 @@ public class GenericBLO<T, D> {
         return dto;
     }
 
-    public List<T> saveList(List<T> dtoList) throws HandlerGenericException {
+    @SuppressWarnings("unchecked")
+    public List<T> saveList(List<T> dtoList, Object value,
+            String fieldName) throws HandlerGenericException {
         int iterator = 0;
         try {
             for (T dto : dtoList) {
+                dto = (T) Common.setField(dto, fieldName, value);
                 dtoList.set(iterator, save(dto));
                 iterator++;
             }
-        } catch (HandlerGenericException exception) {
-            DominoUtils.handleException(new Throwable(exception));
-            throw exception;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
-        
         return dtoList;
     }
 
-    public boolean delete(Map<String, String> parameters) throws HandlerGenericException {
+    public boolean delete(Map<String, String> parameters)
+    throws HandlerGenericException {
         boolean response = false;
         D dao;
         try {
@@ -95,7 +95,7 @@ public class GenericBLO<T, D> {
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
-        
+
         return response;
     }
 
