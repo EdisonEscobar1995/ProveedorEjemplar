@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.openntf.domino.utils.DominoUtils;
+
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -76,6 +78,7 @@ public class GenericBLO<T, D> {
                 iterator++;
             }
         } catch (HandlerGenericException exception) {
+            DominoUtils.handleException(new Throwable(exception));
             throw exception;
         }
         
