@@ -75,7 +75,7 @@ public abstract class GenericDAO<T> {
 		}
 		return result;
 	}
-
+	
     public T save(T dto) throws IllegalAccessException {
         Document document = database.createDocument();
         return this.saveDocument(document, dto, true);
@@ -128,11 +128,14 @@ public abstract class GenericDAO<T> {
 		return dto;
 	}
 
-	public void delete(String id) throws IllegalAccessException {
-		View view = database.getView(VIEW_IDS);
+	public boolean delete(String id) throws IllegalAccessException {
+		boolean response = false;
+	    View view = database.getView(VIEW_IDS);
 		Document document = view.getFirstDocumentByKey(id, true);
 		if (document != null) {
-			document.remove(true);
+			response = document.remove(true);
 		}
+		
+		return response;
 	}
 }

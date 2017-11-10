@@ -1,9 +1,8 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.nutresa.exemplary_provider.dal.CategoryDAO;
 import com.nutresa.exemplary_provider.dtl.CategoryDTO;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class CategoryBLO extends GenericBLO<CategoryDTO, CategoryDAO> {
 
@@ -12,15 +11,19 @@ public class CategoryBLO extends GenericBLO<CategoryDTO, CategoryDAO> {
     }
 
     @Override
-    public CategoryDTO save(CategoryDTO dto) throws IllegalAccessException,
-    InstantiationException, NoSuchMethodException,
-    InvocationTargetException {
+    public CategoryDTO save(CategoryDTO dto) throws HandlerGenericException {
         CategoryDAO dao = new CategoryDAO();
-        dto = dao.save(dto);
-        if (dto.getSubCategories() != null) {
-            SubCategoryBLO subCategory = new SubCategoryBLO();
-            dto.setSubCategories(subCategory.saveList(dto.getSubCategories()));
+        try {
+            dto = dao.save(dto);
+            if (dto.getSubCategories() != null) {
+                SubCategoryBLO subCategory = new SubCategoryBLO();
+                dto.setSubCategories(subCategory.saveList(dto
+                        .getSubCategories()));
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
+
         return dto;
     }
 
