@@ -3,7 +3,6 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class QuestionDTO {
-    private static final String FORM = "frQuestion";
     @Expose
     private String id;
     @Expose
@@ -89,10 +88,6 @@ public class QuestionDTO {
     
     public void setHelpText(String helpText) {
         this.helpText = helpText;
-    }
-    
-    public String getForm() {
-        return FORM;
     }
     
 }

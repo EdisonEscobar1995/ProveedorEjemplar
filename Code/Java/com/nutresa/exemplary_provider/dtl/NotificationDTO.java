@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 
 public class NotificationDTO {
-    private static final String FORM = "frNotification";
     @Expose
     private String id;
     @Expose
@@ -16,10 +15,6 @@ public class NotificationDTO {
     private String message;
     @Expose
     private List<String> withCopy;
-
-    public String getForm() {
-        return FORM;
-    }
 
     public String getBanner() {
         return banner;

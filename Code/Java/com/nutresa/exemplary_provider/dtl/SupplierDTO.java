@@ -3,7 +3,6 @@ package com.nutresa.exemplary_provider.dtl;
 import java.util.List;
 
 public class SupplierDTO {
-    private static final String FORM = "frSupplier";
     private String id;
     private boolean companySizeWasChanged;
     private SurveyDTO survey;
@@ -436,10 +435,6 @@ public class SupplierDTO {
 
     public void setChemicalSubstance(boolean chemicalSubstance) {
         this.chemicalSubstance = chemicalSubstance;
-    }
-
-    public static String getForm() {
-        return FORM;
     }
 
     public String getId() {

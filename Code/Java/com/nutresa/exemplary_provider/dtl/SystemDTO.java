@@ -3,7 +3,6 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class SystemDTO {
-	private static final String FORM = "frSystem";
 	@Expose
 	private String id;
 	@Expose
@@ -27,10 +26,6 @@ public class SystemDTO {
 	@Expose
 	private CompanySizeDTO sizeCompany;
 
-	public String getForm() {
-		return FORM;
-	}
-    
 	public String getId() {
 		return id;
 	}

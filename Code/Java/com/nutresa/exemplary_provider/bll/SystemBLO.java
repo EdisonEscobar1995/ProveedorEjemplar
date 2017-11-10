@@ -15,7 +15,7 @@ public class SystemBLO extends GenericBLO<SystemDTO, SystemDAO> {
         try {
             SystemDAO dao = new SystemDAO();
             if ("".equals(dto.getId())) {
-                dto = dao.saveProfile(dto.getForm(), dto);
+                dto = dao.saveProfile(dto);
             } else {
                 dto = dao.update(dto.getId(), dto);
             }

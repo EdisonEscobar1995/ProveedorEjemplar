@@ -3,7 +3,6 @@ package com.nutresa.exemplary_provider.dtl;
 import com.google.gson.annotations.Expose;
 
 public class CriterionDTO {
-    private static final String FORM = "frCriterionQuestion";
     @Expose
     private String id;
     @Expose
@@ -29,10 +28,6 @@ public class CriterionDTO {
 
     public void setIdDimension(DimensionDTO idDimension) {
         this.dimension = idDimension;
-    }
-
-    public String getForm() {
-        return FORM;
     }
     
 }
