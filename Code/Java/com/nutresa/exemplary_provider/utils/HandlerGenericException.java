@@ -2,16 +2,13 @@ package com.nutresa.exemplary_provider.utils;
 
 @SuppressWarnings("serial")
 public class HandlerGenericException extends Exception {
-    private String message;
+    private final String message;
 
     public HandlerGenericException(Exception exception) {
-        handleException(exception);
+        super(exception.getMessage());
+        this.message = exception.getMessage();
     }
     
-    private void handleException(Exception exception){
-        message = exception.getMessage();
-    }
-
     @Override
     public String getMessage() {
         return message;
