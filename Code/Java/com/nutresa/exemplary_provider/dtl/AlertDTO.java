@@ -6,7 +6,7 @@ public class AlertDTO {
     @Expose
     private String id;
     @Expose
-    private String nameAlert;
+    private String name;
     @Expose
     private boolean activated;
     @Expose
@@ -17,11 +17,11 @@ public class AlertDTO {
     private short days;
     
     public String getAlert() {
-        return nameAlert;
+        return name;
     }
     
     public void setAlert(String alert) {
-        this.nameAlert = alert;
+        this.name = alert;
     }
     
     public boolean isActivated() {

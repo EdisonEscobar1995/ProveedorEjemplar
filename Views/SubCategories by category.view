@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Categories' alias='vwCategories' xmlns='http://www.lotus.com/dxl'
+<view name='SubCategories by category' alias='vwSubcategoriesByCategory' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,18 +9,21 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='123a' unid='3FBF02EA52E1046C052581CF00770497' sequence='8'>
-<created><datetime>20171105T163959,59-05</datetime></created>
-<modified><datetime>20171110T175531,60-05</datetime></modified>
-<revised><datetime>20171110T175531,59-05</datetime></revised>
-<lastaccessed><datetime>20171110T175531,60-05</datetime></lastaccessed>
-<addedtofile><datetime>20171105T163959,61-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='1a5e' unid='D6923A9429A6A2F6052581D4007EC2D4' sequence='2'>
+<created><datetime>20171110T180434,12-05</datetime></created>
+<modified><datetime>20171110T180535,75-05</datetime></modified>
+<revised><datetime>20171110T180535,74-05</datetime></revised>
+<lastaccessed><datetime>20171110T180535,75-05</datetime></lastaccessed>
+<addedtofile><datetime>20171110T180434,13-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frCategory"</formula></code><code
+ event='selection'><formula>SELECT form = "frSubCategory"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='idCategory' width='17.2500'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='Id Category'><font size='9pt' style='bold'/></columnheader></column>
 <column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
  showaslinks='false'><columnheader title='Id'><font size='9pt' style='bold'/></columnheader></column></view>
