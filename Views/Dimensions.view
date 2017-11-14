@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='Dimensions' alias='vwDimensions' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C4007525A6' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,18 +9,19 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='1a2a' unid='C50E76B3D007D23D052581D4007E890F' sequence='2'>
-<created><datetime>20171110T180206,23-05</datetime></created>
-<modified><datetime>20171110T180224,20-05</datetime></modified>
-<revised><datetime>20171110T180224,19-05</datetime></revised>
-<lastaccessed><datetime>20171110T180224,20-05</datetime></lastaccessed>
-<addedtofile><datetime>20171110T180206,39-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='1d5a' unid='729977B55ABFA2B8052581D4007FCC14' sequence='2'>
+<created><datetime>20171110T181553,16-05</datetime></created>
+<modified><datetime>20171110T181553,21-05</datetime></modified>
+<revised><datetime>20171110T181553,20-05</datetime></revised>
+<lastaccessed><datetime>20171110T181553,21-05</datetime></lastaccessed>
+<addedtofile><datetime>20171110T181553,19-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frDimension"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
-End Sub</lotusscript></code>
+End Sub
+</lotusscript></code>
 <column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
  showaslinks='false'><columnheader title='Id'><font size='9pt' style='bold'/></columnheader></column></view>
