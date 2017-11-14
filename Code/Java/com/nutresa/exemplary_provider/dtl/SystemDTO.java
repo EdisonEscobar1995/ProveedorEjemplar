@@ -1,98 +1,108 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
 
 public class SystemDTO {
-	@Expose
-	private String id;
-	@Expose
-	private Integer rotationTime;
-	@Expose
-	private String title;
-	@Expose
-	private String content;
-	@Expose
-	private String image;
-	@Expose
-	private String host;
-	@Expose
-	private String informationProgram;
-	@Expose
-	private String messageByChangeSizeCompany;
-	@Expose
-	private String inputPoll;
-	@Expose
-	private short uploadMaxFilesize;
-	@Expose
-	private CompanySizeDTO sizeCompany;
+    @Expose
+    private String id;
+    @Expose
+    private Integer rotationTime;
+    @Expose
+    private String title;
+    @Expose
+    private String content;
+    @Expose
+    private List<String> images;
+    @Expose
+    private String host;
+    @Expose
+    private List<UserDTO> managers;
+    @Expose
+    private List<UserDTO> liberators;
+    @Expose
+    private List<UserDTO> evaluationTeam;
+    @Expose
+    private List<UserDTO> readers;
+    @Expose
+    private String informationProgram;
+    @Expose
+    private String messageByChangeSizeCompany;
+    @Expose
+    private String inputPoll;
+    @Expose
+    private short uploadMaxFilesize;
+    @Expose
+    private List<CompanySizeDTO> sizeCompany;
 
-	public String getId() {
-		return id;
-	}
-	
-	public Integer getRotationTime() {
-		return rotationTime;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setRotationTime(Integer rotationTime) {
-		this.rotationTime = rotationTime;
-	}
+    public Integer getRotationTime() {
+        return rotationTime;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setRotationTime(Integer rotationTime) {
+        this.rotationTime = rotationTime;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public String getImage() {
-		return image;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public List<String> getImage() {
+        return images;
+    }
 
-	public String getHost() {
-		return host;
-	}
+    public void setImage(List<String> images) {
+        this.images = images;
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public String getInformationProgram() {
-		return informationProgram;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public void setInformationProgram(String informationProgram) {
-		this.informationProgram = informationProgram;
-	}
+    public String getInformationProgram() {
+        return informationProgram;
+    }
 
-	public String getMessageByChangeSizeCompany() {
-		return messageByChangeSizeCompany;
-	}
+    public void setInformationProgram(String informationProgram) {
+        this.informationProgram = informationProgram;
+    }
 
-	public void setMessageByChangeSizeCompany(String messageByChangeSizeCompany) {
-		this.messageByChangeSizeCompany = messageByChangeSizeCompany;
-	}
+    public String getMessageByChangeSizeCompany() {
+        return messageByChangeSizeCompany;
+    }
 
-	public String getInputPoll() {
-		return inputPoll;
-	}
+    public void setMessageByChangeSizeCompany(String messageByChangeSizeCompany) {
+        this.messageByChangeSizeCompany = messageByChangeSizeCompany;
+    }
 
-	public void setInputPoll(String inputPool) {
-		this.inputPoll = inputPool;
-	}
+    public String getInputPoll() {
+        return inputPoll;
+    }
+
+    public void setInputPoll(String inputPool) {
+        this.inputPoll = inputPool;
+    }
 
     public short getUploadMaxFilesize() {
         return uploadMaxFilesize;
@@ -102,12 +112,44 @@ public class SystemDTO {
         this.uploadMaxFilesize = uploadMaxFilesize;
     }
 
-    public CompanySizeDTO getSizeCompany() {
+    public List<CompanySizeDTO> getSizeCompany() {
         return sizeCompany;
     }
 
-    public void setSizeCompany(CompanySizeDTO sizeCompany) {
+    public void setSizeCompany(List<CompanySizeDTO> sizeCompany) {
         this.sizeCompany = sizeCompany;
     }
-	
+
+    public List<UserDTO> getManagers() {
+        return managers;
+    }
+
+    public void setManagers(List<UserDTO> managers) {
+        this.managers = managers;
+    }
+
+    public List<UserDTO> getLiberators() {
+        return liberators;
+    }
+
+    public void setLiberators(List<UserDTO> liberators) {
+        this.liberators = liberators;
+    }
+
+    public List<UserDTO> getEvaluationTeam() {
+        return evaluationTeam;
+    }
+
+    public void setEvaluationTeam(List<UserDTO> evaluationTeam) {
+        this.evaluationTeam = evaluationTeam;
+    }
+
+    public List<UserDTO> getReaders() {
+        return readers;
+    }
+
+    public void setReaders(List<UserDTO> readers) {
+        this.readers = readers;
+    }
+
 }
