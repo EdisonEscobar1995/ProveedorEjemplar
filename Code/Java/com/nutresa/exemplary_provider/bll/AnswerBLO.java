@@ -1,9 +1,9 @@
 package com.nutresa.exemplary_provider.bll;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
-import com.nutresa.exemplary_provider.dtl.AnswerDTO;
+import com.nutresa.exemplary_provider.dtl.OptionDTO;
 
-class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
+class AnswerBLO extends GenericBLO<OptionDTO, AnswerDAO> {
 
     public AnswerBLO() {
         super(AnswerDAO.class);

@@ -18,14 +18,6 @@ public class SystemDTO {
     @Expose
     private String host;
     @Expose
-    private List<UserDTO> managers;
-    @Expose
-    private List<UserDTO> liberators;
-    @Expose
-    private List<UserDTO> evaluationTeam;
-    @Expose
-    private List<UserDTO> readers;
-    @Expose
     private String informationProgram;
     @Expose
     private String messageByChangeSizeCompany;
@@ -118,38 +110,6 @@ public class SystemDTO {
 
     public void setSizeCompany(List<CompanySizeDTO> sizeCompany) {
         this.sizeCompany = sizeCompany;
-    }
-
-    public List<UserDTO> getManagers() {
-        return managers;
-    }
-
-    public void setManagers(List<UserDTO> managers) {
-        this.managers = managers;
-    }
-
-    public List<UserDTO> getLiberators() {
-        return liberators;
-    }
-
-    public void setLiberators(List<UserDTO> liberators) {
-        this.liberators = liberators;
-    }
-
-    public List<UserDTO> getEvaluationTeam() {
-        return evaluationTeam;
-    }
-
-    public void setEvaluationTeam(List<UserDTO> evaluationTeam) {
-        this.evaluationTeam = evaluationTeam;
-    }
-
-    public List<UserDTO> getReaders() {
-        return readers;
-    }
-
-    public void setReaders(List<UserDTO> readers) {
-        this.readers = readers;
     }
 
 }

@@ -2,11 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class AlertDTO {
-    @Expose
-    private String id;
-    @Expose
-    private String name;
+public class AlertDTO extends ReferenceDTO{
     @Expose
     private boolean activated;
     @Expose
@@ -15,14 +11,6 @@ public class AlertDTO {
     private String message;
     @Expose
     private short days;
-    
-    public String getAlert() {
-        return name;
-    }
-    
-    public void setAlert(String alert) {
-        this.name = alert;
-    }
     
     public boolean isActivated() {
         return activated;
@@ -54,10 +42,6 @@ public class AlertDTO {
     
     public void setDays(short days) {
         this.days = days;
-    }
-    
-    public String getId() {
-        return id;
     }
     
 }

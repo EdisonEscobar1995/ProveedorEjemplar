@@ -2,17 +2,9 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class SubCategoryDTO {
-    @Expose
-    private String id;
+public class SubCategoryDTO extends ReferenceDTO{
     @Expose
     private String idCategory;
-    @Expose
-    private String name;
-    
-    public String getId() {
-        return id;
-    }
     
     public String getIdCategory() {
         return idCategory;
@@ -20,14 +12,6 @@ public class SubCategoryDTO {
     
     public void setIdCategory(String idCategory) {
         this.idCategory = idCategory;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
     }
     
 }

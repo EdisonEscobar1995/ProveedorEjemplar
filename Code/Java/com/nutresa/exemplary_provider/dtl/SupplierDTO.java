@@ -4,36 +4,39 @@ import java.util.List;
 
 public class SupplierDTO {
     private String id;
-    private boolean companySizeWasChanged;
-    private SurveyDTO survey;
-    // GENERAL INFORMATION
-    private boolean participateInSurvey;
     private String name;
-    private CompanySizeDTO sizeCompany;
+    private String idCompanySize;
+    private CompanySizeDTO companySize;
+    private String idCategory;
     private CategoryDTO category;
+    private String idSubCategory;
     private SubCategoryDTO subCategory;
     private List<String> document;
     private String nit;
-    private CompanyTypeDTO typeCompany;
+    private String idCompanyType;
+    private CompanyTypeDTO companyType;
     private boolean producerLivestok;
-    private SocietyTypeDTO typeSociety;
+    private String idSocietyType;
+    private SocietyTypeDTO societyType;
     private short yearOfEstablishment;
     private String principalAdress;
+    private String idCountry;
     private CountryDTO country;
+    private String idDepartment;
     private DepartmentDTO department;
+    private String idCity;
     private CityDTO city;
     private List<String> branchOffice;
     private String telephone;
     private String fax;
-    private String email;
+    private List<String> emails;
     private String codeZip;
     private String nameLegalAgent;
     private String fullNameContact;
     private String jobPosition;
     private String phoneOfContact;
     private String emailOfContact;
-
-    // COMERCIAL INFORMATION
+    private String idSector;
     private SectorDTO sector;
     private String otherSector;
     private String packagingProvided;
@@ -55,30 +58,6 @@ public class SupplierDTO {
     private boolean globalAgreement;
     private boolean chemicalSubstance;
 
-    public boolean isCompanySizeWasChanged() {
-        return companySizeWasChanged;
-    }
-
-    public void setCompanySizeWasChanged(boolean companySizeWasChanged) {
-        this.companySizeWasChanged = companySizeWasChanged;
-    }
-
-    public SurveyDTO getSurvey() {
-        return survey;
-    }
-
-    public void setSurvey(SurveyDTO survey) {
-        this.survey = survey;
-    }
-
-    public boolean isParticipateInSurvey() {
-        return participateInSurvey;
-    }
-
-    public void setParticipateInSurvey(boolean participateInSurvey) {
-        this.participateInSurvey = participateInSurvey;
-    }
-
     public String getName() {
         return name;
     }
@@ -88,11 +67,11 @@ public class SupplierDTO {
     }
 
     public CompanySizeDTO getSizeCompany() {
-        return sizeCompany;
+        return companySize;
     }
 
     public void setSizeCompany(CompanySizeDTO sizeCompany) {
-        this.sizeCompany = sizeCompany;
+        this.companySize = sizeCompany;
     }
 
     public CategoryDTO getCategory() {
@@ -128,11 +107,11 @@ public class SupplierDTO {
     }
 
     public CompanyTypeDTO getTypeCompany() {
-        return typeCompany;
+        return companyType;
     }
 
     public void setTypeCompany(CompanyTypeDTO typeCompany) {
-        this.typeCompany = typeCompany;
+        this.companyType = typeCompany;
     }
 
     public boolean isProducerLivestok() {
@@ -144,11 +123,11 @@ public class SupplierDTO {
     }
 
     public SocietyTypeDTO getTypeSociety() {
-        return typeSociety;
+        return societyType;
     }
 
     public void setTypeSociety(SocietyTypeDTO typeSociety) {
-        this.typeSociety = typeSociety;
+        this.societyType = typeSociety;
     }
 
     public short getYearOfEstablishment() {
@@ -215,12 +194,12 @@ public class SupplierDTO {
         this.fax = fax;
     }
 
-    public String getEmail() {
-        return email;
+    public List<String> getEmail() {
+        return emails;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(List<String> emails) {
+        this.emails = emails;
     }
 
     public String getCodeZip() {
@@ -439,6 +418,110 @@ public class SupplierDTO {
 
     public String getId() {
         return id;
+    }
+
+    public String getIdCompanySize() {
+        return idCompanySize;
+    }
+
+    public void setIdCompanySize(String idCompanySize) {
+        this.idCompanySize = idCompanySize;
+    }
+
+    public CompanySizeDTO getCompanySize() {
+        return companySize;
+    }
+
+    public void setCompanySize(CompanySizeDTO companySize) {
+        this.companySize = companySize;
+    }
+
+    public String getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(String idCategory) {
+        this.idCategory = idCategory;
+    }
+
+    public String getIdSubCategory() {
+        return idSubCategory;
+    }
+
+    public void setIdSubCategory(String idSubCategory) {
+        this.idSubCategory = idSubCategory;
+    }
+
+    public String getIdCompanyType() {
+        return idCompanyType;
+    }
+
+    public void setIdCompanyType(String idCompanyType) {
+        this.idCompanyType = idCompanyType;
+    }
+
+    public CompanyTypeDTO getCompanyType() {
+        return companyType;
+    }
+
+    public void setCompanyType(CompanyTypeDTO companyType) {
+        this.companyType = companyType;
+    }
+
+    public String getIdSocietyType() {
+        return idSocietyType;
+    }
+
+    public void setIdSocietyType(String idSocietyType) {
+        this.idSocietyType = idSocietyType;
+    }
+
+    public SocietyTypeDTO getSocietyType() {
+        return societyType;
+    }
+
+    public void setSocietyType(SocietyTypeDTO societyType) {
+        this.societyType = societyType;
+    }
+
+    public String getIdCountry() {
+        return idCountry;
+    }
+
+    public void setIdCountry(String idCountry) {
+        this.idCountry = idCountry;
+    }
+
+    public String getIdDepartment() {
+        return idDepartment;
+    }
+
+    public void setIdDepartment(String idDepartment) {
+        this.idDepartment = idDepartment;
+    }
+
+    public String getIdCity() {
+        return idCity;
+    }
+
+    public void setIdCity(String idCity) {
+        this.idCity = idCity;
+    }
+
+    public List<String> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<String> emails) {
+        this.emails = emails;
+    }
+
+    public String getIdSector() {
+        return idSector;
+    }
+
+    public void setIdSector(String idSector) {
+        this.idSector = idSector;
     }
 
 }

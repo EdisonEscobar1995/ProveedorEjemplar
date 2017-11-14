@@ -1,43 +1,61 @@
 package com.nutresa.exemplary_provider.dtl;
 
-import com.google.gson.annotations.Expose;
+import java.util.List;
 
-public abstract class AnswerDTO {
-    @Expose
-    private String id;
-    @Expose
-    private String wording;
-    @Expose
-    private short score;
-    @Expose
-    private String idQuestion;
+public class AnswerDTO {
+    private String idSupplierByCall;
+    private String idOptionSupplier;
+    private String idOptionEvaluator;
+    private String commentSupplier;
+    private String commentEvaluator;
+    private List<String> attached;
 
-    public String getId() {
-        return id;
+    public String getIdSupplierByCall() {
+        return idSupplierByCall;
     }
 
-    public String getWording() {
-        return wording;
+    public void setIdSupplierByCall(String idSupplierByCall) {
+        this.idSupplierByCall = idSupplierByCall;
     }
 
-    public void setWording(String wording) {
-        this.wording = wording;
+    public String getIdOptionSupplier() {
+        return idOptionSupplier;
     }
 
-    public short getScore() {
-        return score;
+    public void setIdOptionSupplier(String idOptionSupplier) {
+        this.idOptionSupplier = idOptionSupplier;
     }
 
-    public void setScore(short score) {
-        this.score = score;
+    public String getIdOptionEvaluator() {
+        return idOptionEvaluator;
     }
 
-    public String getIdQuestion() {
-        return idQuestion;
+    public void setIdOptionEvaluator(String idOptionEvaluator) {
+        this.idOptionEvaluator = idOptionEvaluator;
     }
 
-    public void setIdQuestion(String idQuestion) {
-        this.idQuestion = idQuestion;
+    public String getCommentSupplier() {
+        return commentSupplier;
+    }
+
+    public void setCommentSupplier(String commentSupplier) {
+        this.commentSupplier = commentSupplier;
+    }
+
+    public String getCommentEvaluator() {
+        return commentEvaluator;
+    }
+
+    public void setCommentEvaluator(String commentEvaluator) {
+        this.commentEvaluator = commentEvaluator;
+    }
+
+    public List<String> getAttached() {
+        return attached;
+    }
+
+    public void setAttached(List<String> attached) {
+        this.attached = attached;
     }
 
 }

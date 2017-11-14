@@ -4,11 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class CategoryDTO {
-	@Expose
-    private String id;
-    @Expose
-    private String name;
+public class CategoryDTO extends ReferenceDTO{
     @Expose
     private String idCountry;
     @Expose
@@ -18,18 +14,6 @@ public class CategoryDTO {
     @Expose
     private List<SubCategoryDTO> subCategories;
 	
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public CountryDTO getCountry() {
         return country;
     }

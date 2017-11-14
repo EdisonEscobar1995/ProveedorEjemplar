@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class NotificationDTO {
-    @Expose
-    private String id;
+public class NotificationDTO extends ReferenceDTO{
     @Expose
     private String banner;
     @Expose
@@ -46,14 +44,6 @@ public class NotificationDTO {
 
     public void setWithCopy(List<String> withCopy) {
         this.withCopy = withCopy;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
 }

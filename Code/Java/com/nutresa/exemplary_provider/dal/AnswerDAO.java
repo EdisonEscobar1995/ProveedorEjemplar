@@ -1,11 +1,11 @@
 package com.nutresa.exemplary_provider.dal;
 
-import com.nutresa.exemplary_provider.dtl.AnswerDTO;
+import com.nutresa.exemplary_provider.dtl.OptionDTO;
 
-public class AnswerDAO extends GenericDAO<AnswerDTO> {
+public class AnswerDAO extends GenericDAO<OptionDTO> {
 
     public AnswerDAO() {
-        super(AnswerDTO.class);
+        super(OptionDTO.class);
     }
 
 }

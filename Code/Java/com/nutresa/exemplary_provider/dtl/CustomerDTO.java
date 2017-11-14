@@ -2,19 +2,9 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class CustomerDTO {
-    @Expose
-    private String name;
+public class CustomerDTO extends ReferenceDTO{
     @Expose
     private short percentageOfParticipationInSales;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public short getPercentageOfParticipationInSales() {
         return percentageOfParticipationInSales;
