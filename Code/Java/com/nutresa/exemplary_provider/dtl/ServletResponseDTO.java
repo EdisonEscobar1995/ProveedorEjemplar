@@ -19,9 +19,9 @@ public class ServletResponseDTO<T> {
 		this.status = status;
 	}
 
-	public ServletResponseDTO(boolean status, Exception exception) {
+	public ServletResponseDTO(Exception exception) {
 		this.message = exception.getMessage();
-		this.status = status;
+		this.status = false;
 	}
 
     public ServletResponseDTO(T data) {

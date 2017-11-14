@@ -89,7 +89,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             }
         } catch (Exception exception) {
             status = 500;
-            servletResponse = new ServletResponseDTO(false, exception);
+            servletResponse = new ServletResponseDTO(exception);
         } finally {
             response.setStatus(status);
             output.print(gson.toJson(servletResponse));
