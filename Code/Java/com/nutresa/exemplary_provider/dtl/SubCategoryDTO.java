@@ -2,7 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class SubCategoryDTO extends ReferenceDTO{
+public class SubCategoryDTO extends MasterDTO{
     @Expose
     private String idCategory;
     

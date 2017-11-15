@@ -2,7 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class CustomerDTO extends ReferenceDTO{
+public class CustomerDTO extends MasterDTO{
     @Expose
     private short percentageOfParticipationInSales;
 

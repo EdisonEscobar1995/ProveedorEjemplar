@@ -12,19 +12,11 @@ public class SurveyDTO {
     @Expose
     private CategoryDTO category;
     @Expose
-    private String idSizeCompany;
+    private String idCompanySize;
     @Expose
-    private CompanySizeDTO sizeCompany;
+    private CompanySizeDTO companySize;
     @Expose
     private List<QuestionDTO> question;
-
-    public CompanySizeDTO getSizeCompany() {
-        return sizeCompany;
-    }
-
-    public void setSizeCompany(CompanySizeDTO sizeCompany) {
-        this.sizeCompany = sizeCompany;
-    }
 
     public List<QuestionDTO> getQuestion() {
         return question;
@@ -55,11 +47,19 @@ public class SurveyDTO {
     }
 
     public String getIdSizeCompany() {
-        return idSizeCompany;
+        return idCompanySize;
     }
 
-    public void setIdSizeCompany(String idSizeCompany) {
-        this.idSizeCompany = idSizeCompany;
+    public void setIdSizeCompany(String idCompanySize) {
+        this.idCompanySize = idCompanySize;
+    }
+
+    public void setCompanySize(CompanySizeDTO companySize) {
+        this.companySize = companySize;
+    }
+
+    public CompanySizeDTO getCompanySize() {
+        return companySize;
     }
 
 }

@@ -16,18 +16,18 @@ public class SystemDTO {
     @Expose
     private List<String> images;
     @Expose
-    private String host;
-    @Expose
     private String informationProgram;
     @Expose
     private String messageByChangeSizeCompany;
     @Expose
     private String inputPoll;
     @Expose
+    private String uploadPathApplication;
+    @Expose
     private short uploadMaxFilesize;
     @Expose
-    private List<CompanySizeDTO> sizeCompany;
-
+    private List<String> uploadExtensions;
+    
     public String getId() {
         return id;
     }
@@ -64,14 +64,6 @@ public class SystemDTO {
         this.images = images;
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
     public String getInformationProgram() {
         return informationProgram;
     }
@@ -104,12 +96,20 @@ public class SystemDTO {
         this.uploadMaxFilesize = uploadMaxFilesize;
     }
 
-    public List<CompanySizeDTO> getSizeCompany() {
-        return sizeCompany;
+    public void setUploadExtensions(List<String> uploadExtensions) {
+        this.uploadExtensions = uploadExtensions;
     }
 
-    public void setSizeCompany(List<CompanySizeDTO> sizeCompany) {
-        this.sizeCompany = sizeCompany;
+    public List<String> getUploadExtensions() {
+        return uploadExtensions;
+    }
+
+    public void setUploadPathApplication(String uploadPathApplication) {
+        this.uploadPathApplication = uploadPathApplication;
+    }
+
+    public String getUploadPathApplication() {
+        return uploadPathApplication;
     }
 
 }

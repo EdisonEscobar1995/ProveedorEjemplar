@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class CategoryDTO extends ReferenceDTO{
+public class CategoryDTO extends MasterDTO{
     @Expose
     private String idCountry;
     @Expose

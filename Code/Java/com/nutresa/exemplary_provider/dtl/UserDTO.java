@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public abstract class UserDTO extends ReferenceDTO{
+public abstract class UserDTO extends MasterDTO{
     @Expose
     private List<RolDTO> rol;
 

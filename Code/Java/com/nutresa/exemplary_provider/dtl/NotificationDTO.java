@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class NotificationDTO extends ReferenceDTO{
+public class NotificationDTO extends MasterDTO{
     @Expose
     private String banner;
     @Expose

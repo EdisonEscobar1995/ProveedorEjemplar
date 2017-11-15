@@ -1,5 +1,5 @@
 package com.nutresa.exemplary_provider.dtl;
 
-public class CompanyTypeDTO extends ReferenceDTO{
+public class CompanyTypeDTO extends MasterDTO{
     
 }

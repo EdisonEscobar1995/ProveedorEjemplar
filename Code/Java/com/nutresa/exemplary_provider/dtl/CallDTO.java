@@ -21,11 +21,11 @@ public class CallDTO {
     @Expose
     private Date deadlineToMakeSurveyManagementCommittee;
     @Expose
-    private List<UserDTO> managementCommittee;
+    private List<String> managementCommittee;
     @Expose
     private List<SupplierDTO> supplier;
     @Expose
-    private boolean activated;
+    private boolean active;
 
     public Date getDateToFinishCall() {
         return dateToFinishCall;
@@ -70,20 +70,12 @@ public class CallDTO {
         this.deadlineToMakeSurveyManagementCommittee = deadlineToMakeSurveyManagementCommittee;
     }
 
-    public List<UserDTO> getManagementCommittee() {
+    public List<String> getManagementCommittee() {
         return managementCommittee;
     }
 
-    public void setManagementCommittee(List<UserDTO> managementCommittee) {
+    public void setManagementCommittee(List<String> managementCommittee) {
         this.managementCommittee = managementCommittee;
-    }
-
-    public boolean isActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
     }
 
     public String getId() {
@@ -104,6 +96,14 @@ public class CallDTO {
 
     public void setYear(short year) {
         this.year = year;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
 }

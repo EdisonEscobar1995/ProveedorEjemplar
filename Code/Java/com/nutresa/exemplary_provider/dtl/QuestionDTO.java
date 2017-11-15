@@ -18,15 +18,15 @@ public class QuestionDTO {
     @Expose
     private String wording;
     @Expose
-    private boolean requireAttached;
+    private boolean requireAttachment;
+    @Expose
+    private List<OptionDTO> options;
+    @Expose
+    private String helpText;
     @Expose
     private List<String> dependOfAnswerIds;
     @Expose
     private QuestionDTO dependOfQuestion;
-    @Expose
-    private String helpText;
-    @Expose
-    private List<OptionDTO> answers;
 
     public String getId() {
         return id;
@@ -41,11 +41,11 @@ public class QuestionDTO {
     }
 
     public boolean isRequireAttached() {
-        return requireAttached;
+        return requireAttachment;
     }
 
     public void setRequireAttached(boolean requireAttached) {
-        this.requireAttached = requireAttached;
+        this.requireAttachment = requireAttached;
     }
 
     public String getHelpText() {
@@ -57,27 +57,11 @@ public class QuestionDTO {
     }
 
     public List<OptionDTO> getAnswer() {
-        return answers;
+        return options;
     }
 
     public void setAnswer(List<OptionDTO> answers) {
-        this.answers = answers;
-    }
-
-    public String getIdDimension() {
-        return idDimension;
-    }
-
-    public void setIdDimension(String idDimension) {
-        this.idDimension = idDimension;
-    }
-
-    public DimensionDTO getDimension() {
-        return dimension;
-    }
-
-    public void setDimension(DimensionDTO dimension) {
-        this.dimension = dimension;
+        this.options = answers;
     }
 
     public String getIdCriterion() {
@@ -110,6 +94,22 @@ public class QuestionDTO {
 
     public void setDependOfAnswers(List<String> dependOfAnswerIds) {
         this.dependOfAnswerIds = dependOfAnswerIds;
+    }
+
+    public void setIdDimension(String idDimension) {
+        this.idDimension = idDimension;
+    }
+
+    public String getIdDimension() {
+        return idDimension;
+    }
+
+    public void setDimension(DimensionDTO dimension) {
+        this.dimension = dimension;
+    }
+
+    public DimensionDTO getDimension() {
+        return dimension;
     }
 
 }

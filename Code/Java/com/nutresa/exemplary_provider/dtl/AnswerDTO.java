@@ -4,9 +4,10 @@ import java.util.List;
 
 public class AnswerDTO {
     private String idSupplierByCall;
+    private String idQuestion;
     private String idOptionSupplier;
-    private String idOptionEvaluator;
     private String commentSupplier;
+    private String idOptionEvaluator;
     private String commentEvaluator;
     private List<String> attached;
 
@@ -56,6 +57,14 @@ public class AnswerDTO {
 
     public void setAttached(List<String> attached) {
         this.attached = attached;
+    }
+
+    public void setIdQuestion(String idQuestion) {
+        this.idQuestion = idQuestion;
+    }
+
+    public String getIdQuestion() {
+        return idQuestion;
     }
 
 }
