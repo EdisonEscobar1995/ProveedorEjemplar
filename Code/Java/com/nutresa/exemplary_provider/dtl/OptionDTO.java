@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 
 public abstract class OptionDTO {
     @Expose
+    private String idCall;
+    @Expose
     private String id;
     @Expose
     private String wording;
@@ -38,6 +40,14 @@ public abstract class OptionDTO {
 
     public void setIdQuestion(String idQuestion) {
         this.idQuestion = idQuestion;
+    }
+
+    public String getIdCall() {
+        return idCall;
+    }
+
+    public void setIdCall(String idCall) {
+        this.idCall = idCall;
     }
 
 }
