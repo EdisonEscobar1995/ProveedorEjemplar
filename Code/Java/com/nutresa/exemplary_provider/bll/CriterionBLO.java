@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.CriterionDTO;
 
 public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
 
-	public CriterionBLO() {
-		super(CriterionDAO.class);
-	}
+    public CriterionBLO() {
+        super(CriterionDAO.class);
+    }
 
 }

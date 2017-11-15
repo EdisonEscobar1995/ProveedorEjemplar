@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.SectorDTO;
 
 public class SectorBLO extends GenericBLO<SectorDTO, SectorDAO> {
 
-	public SectorBLO() {
-		super(SectorDAO.class);
-	}
+    public SectorBLO() {
+        super(SectorDAO.class);
+    }
 
 }
