@@ -6,8 +6,6 @@ import com.google.gson.annotations.Expose;
 
 public class QuestionDTO {
     @Expose
-    private String idCall;
-    @Expose
     private String id;
     @Expose
     private String idDimension;
@@ -112,14 +110,6 @@ public class QuestionDTO {
 
     public DimensionDTO getDimension() {
         return dimension;
-    }
-
-    public String getIdCall() {
-        return idCall;
-    }
-
-    public void setIdCall(String idCall) {
-        this.idCall = idCall;
     }
 
     public boolean isRequireAttachment() {

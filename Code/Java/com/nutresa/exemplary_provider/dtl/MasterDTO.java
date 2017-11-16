@@ -4,8 +4,6 @@ import com.google.gson.annotations.Expose;
 
 public abstract class MasterDTO {
     @Expose
-    private String idCall;
-    @Expose
     private String id;
     @Expose
     private String name;
@@ -20,14 +18,6 @@ public abstract class MasterDTO {
 
     public String getId() {
         return id;
-    }
-
-    public String getIdCall() {
-        return idCall;
-    }
-
-    public void setIdCall(String idCall) {
-        this.idCall = idCall;
     }
 
 }

@@ -6,8 +6,6 @@ import com.google.gson.annotations.Expose;
 
 public class SurveyDTO {
     @Expose
-    private String idCall;
-    @Expose
     private String id;
     @Expose
     private String idCategory;
@@ -62,14 +60,6 @@ public class SurveyDTO {
 
     public CompanySizeDTO getCompanySize() {
         return companySize;
-    }
-
-    public String getIdCall() {
-        return idCall;
-    }
-
-    public void setIdCall(String idCall) {
-        this.idCall = idCall;
     }
 
     public String getIdCompanySize() {
