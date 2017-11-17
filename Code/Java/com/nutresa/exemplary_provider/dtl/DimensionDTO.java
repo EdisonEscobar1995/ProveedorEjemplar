@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class DimensionDTO extends MasterDTO{
+public class DimensionDTO extends MasterDTO {
     @Expose
     private List<CriterionDTO> criterions;
 
@@ -15,6 +15,5 @@ public class DimensionDTO extends MasterDTO{
     public void setCriterions(List<CriterionDTO> criterions) {
         this.criterions = criterions;
     }
-    
-    
+
 }

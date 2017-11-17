@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
+import com.nutresa.exemplary_provider.bll.UserBLO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 
@@ -32,9 +33,8 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         this.dtoClass = dtoClass;
     }
 
-    public void service(final ServletRequest servletRequest,
-            final ServletResponse servletResponse) throws ServletException,
-            IOException {
+    public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
+            throws ServletException, IOException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
@@ -54,39 +54,42 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    protected void doService(HttpServletRequest request,
-            HttpServletResponse response, FacesContext facesContext,
+    protected void doService(HttpServletRequest request, HttpServletResponse response, FacesContext facesContext,
             ServletOutputStream output) throws IOException {
 
         int status = 200;
         ServletResponseDTO servletResponse = null;
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization()
-        .excludeFieldsWithoutExposeAnnotation().serializeNulls()
-        .setDateFormat("Y/m/d").setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls().setDateFormat("Y/m/d").setPrettyPrinting().create();
 
         try {
             String requestMethod = request.getMethod();
-            Map<String, String> parameters = (Map<String, String>) ExtLibUtil
-            .resolveVariable(FacesContext.getCurrentInstance(), "param");
+            Map<String, String> parameters = (Map<String, String>) ExtLibUtil.resolveVariable(FacesContext
+                    .getCurrentInstance(), "param");
             String action = parameters.get("action");
 
-            Method method = Common.getMethod(this.getClass(), action);
-            if (null != method) {
-                if ("GET".equals(requestMethod)) {
-                    servletResponse = doGet(method, parameters);
-                } else if ("POST".equals(requestMethod)) {
-                    servletResponse = doPost(method, request.getReader(), gson);
-                } else if ("OPTIONS".equals(requestMethod)) {
-                    doOptions(response, output);
+            UserBLO user = new UserBLO();
+            if (user.havePermissions(this.getClass().getName(), action)) {
+                Method method = Common.getMethod(this.getClass(), action);
+                if (null != method) {
+                    if ("GET".equals(requestMethod)) {
+                        servletResponse = doGet(method, parameters);
+                    } else if ("POST".equals(requestMethod)) {
+                        servletResponse = doPost(method, request.getReader(), gson);
+                    } else if ("OPTIONS".equals(requestMethod)) {
+                        doOptions(response, output);
+                    } else {
+                        status = 405;
+                        servletResponse = new ServletResponseDTO(false,
+                                "What the devil are you trying to do, break the server?");
+                    }
                 } else {
-                    status = 405;
-                    servletResponse = new ServletResponseDTO(false,
-                    "What the devil are you trying to do, break the server?");
+                    servletResponse = new ServletResponseDTO(false, "Action not found");
                 }
             } else {
-                servletResponse = new ServletResponseDTO(false,
-                "Action not found");
+                servletResponse = new ServletResponseDTO(false, "Dont have permissions!");
             }
+
         } catch (Exception exception) {
             status = 500;
             servletResponse = new ServletResponseDTO(exception);
@@ -97,15 +100,14 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doGet(Method method,
-            Map<String, String> parameters) throws IllegalAccessException, InvocationTargetException {
+    private ServletResponseDTO doGet(Method method, Map<String, String> parameters) throws IllegalAccessException,
+            InvocationTargetException {
         return (ServletResponseDTO) method.invoke(this, parameters);
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doPost(Method method, BufferedReader reader,
-            Gson gson) throws IOException, JsonSyntaxException,
-            IllegalAccessException, InvocationTargetException {
+    private ServletResponseDTO doPost(Method method, BufferedReader reader, Gson gson) throws IOException,
+            JsonSyntaxException, IllegalAccessException, InvocationTargetException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
         while ((inputLine = reader.readLine()) != null) {
@@ -113,14 +115,11 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         }
         reader.close();
 
-        return (ServletResponseDTO) method.invoke(this, gson.fromJson(
-                stringBuilder.toString(), this.dtoClass));
+        return (ServletResponseDTO) method.invoke(this, gson.fromJson(stringBuilder.toString(), this.dtoClass));
     }
 
-    private void doOptions(HttpServletResponse response,
-            ServletOutputStream output) throws IOException {
-        response
-        .addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    private void doOptions(HttpServletResponse response, ServletOutputStream output) throws IOException {
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         response.addHeader("Access-Control-Allow-Headers", "*");
         response.addHeader("Access-Control-Allow-Origin", "*");
         output.print(" ");

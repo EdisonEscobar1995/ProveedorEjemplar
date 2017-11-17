@@ -17,134 +17,140 @@ import com.nutresa.exemplary_provider.utils.Common;
 
 public abstract class GenericDAO<T> {
 
-	private Session session;
-	private Database database;
-	private Class<T> dtoClass;
-	private static final String VIEW_IDS = "vwDevIds";
-	private String entityForm;
-	protected String entityView;
+    private Session session;
+    private Database database;
+    private Class<T> dtoClass;
+    private static final String VIEW_IDS = "vwDevIds";
+    private String entityForm;
+    protected String entityView;
     protected String entity;
-	
-	private static final String PREFIX_FORM = "fr";
-	private static final String PREFIX_VIEW = "vw";
-	
-	public GenericDAO(Class<T> dtoClass) {
-		this.session = Factory.getSession();
-		this.database = session.getCurrentDatabase();
-		this.dtoClass = dtoClass;
-		
-		entity = this.getClass().getSimpleName();
-		entity = entity.substring(0, entity.length() - 3);
-		
-		this.entityForm = PREFIX_FORM + entity;
-		this.entityView = PREFIX_VIEW + entity;
-	}
-	
-	public T get(String id) {
-		View currentView = database.getView(VIEW_IDS);
-		Document document = currentView.getFirstDocumentByKey(id, true);
-		return castDocument(document);
-	}
-	
-	public List<T> getAll() throws IllegalAccessException {
-		View view = database.getView(this.entityView);
-		ViewEntryCollection vec = view.getAllEntries();
-		Document document;
-		List<T> list = new ArrayList<T>();
-		for (ViewEntry viewEntry : vec) {
-			document = viewEntry.getDocument();
-			list.add((T) this.castDocument(document));
-		}
-		return list;
-	}
 
-	private T castDocument(Document document) {
-		T result = null;
-		try {
-			if (document != null) {
-				result = this.dtoClass.newInstance();
-				for (Field field : this.dtoClass.getDeclaredFields()) {
-					field.setAccessible(true);
-					field.set(result, document.getItemValue(field.getName(),
-							field.getType()));
-				}
-			}
-		} catch (IllegalAccessException illegalAccessException) {
-			DominoUtils.handleException(new Throwable(illegalAccessException));
-		} catch (InstantiationException instantiationException) {
-			DominoUtils.handleException(new Throwable(instantiationException));
-		}
-		return result;
-	}
-	
+    private static final String PREFIX_FORM = "fr";
+    private static final String PREFIX_VIEW = "vw";
+
+    public GenericDAO(Class<T> dtoClass) {
+        this.session = Factory.getSession();
+        this.database = session.getCurrentDatabase();
+        this.dtoClass = dtoClass;
+
+        entity = this.getClass().getSimpleName();
+        entity = entity.substring(0, entity.length() - 3);
+
+        this.entityForm = PREFIX_FORM + entity;
+        this.entityView = PREFIX_VIEW + entity + "s";
+    }
+
+    public T get(String id) {
+        View currentView = database.getView(VIEW_IDS);
+        Document document = currentView.getFirstDocumentByKey(id, true);
+        return castDocument(document);
+    }
+
+    public List<T> getAll() throws IllegalAccessException {
+        View view = database.getView(this.entityView);
+        ViewEntryCollection vec = view.getAllEntries();
+        Document document;
+        List<T> list = new ArrayList<T>();
+        for (ViewEntry viewEntry : vec) {
+            document = viewEntry.getDocument();
+            list.add((T) this.castDocument(document));
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    private T castDocument(Document document) {
+        T result = null;
+        try {
+            if (document != null) {
+                result = this.dtoClass.newInstance();
+                List<Field> fields = new ArrayList();
+                for (Field field : Common.getAllFields(fields, this.dtoClass)) {
+                    field.setAccessible(true);
+                    field.set(result, document.getItemValue(field.getName(), field.getType()));
+                }
+            }
+        } catch (IllegalAccessException illegalAccessException) {
+            DominoUtils.handleException(new Throwable(illegalAccessException));
+        } catch (InstantiationException instantiationException) {
+            DominoUtils.handleException(new Throwable(instantiationException));
+        }
+        return result;
+    }
+
     public T save(T dto) throws IllegalAccessException {
         Document document = database.createDocument();
         return this.saveDocument(document, dto, true);
     }
 
-	public T saveProfile(T dto) throws IllegalAccessException {
-		View vw = database.getView(this.entityView);
-		Document document = vw.getFirstDocumentByKey(this.entityForm, true);
-		if (document == null) {
-		    dto = this.save(dto);
-		}else{
-		    dto = this.saveDocument(document, dto, false);
-		}
-		
-		return dto;
-	}
-	
-	private T saveDocument(Document document, T dto, boolean newDocument)
-	throws IllegalAccessException {
-		String id = document.getItemValueString("id");
-		if (newDocument){
-			id = document.getUniversalID();
-		}
-		
-		document.replaceItemValue("prueba", "Prueba");
-		for (Field field : this.dtoClass.getDeclaredFields()) {
-			field.setAccessible(true);
-			if(!"id".equals(field.getName())){
-			    document.replaceItemValue(field.getName(), field.get(dto));
-			}
-		}
-		
-		document.replaceItemValue("form", this.entityForm);
-		document.replaceItemValue("id", id);
-		
-		if(document.save(true, false)){
-		    Field field = Common.getField(dto.getClass(), "id");
-		    field.set(dto, id);
-		} else {
-            throw new NullPointerException("Can not save document");
-		}
-		
-		return dto;
-	}
-	
-	public T update(String id, T dto) throws IllegalAccessException {
-		View vw = database.getView(VIEW_IDS);
-		Document document = vw.getFirstDocumentByKey(id, true);
-		if (document != null) {
-		    dto = this.saveDocument(document, dto, false);
-		}
-		
-		return dto;
-	}
+    public T saveProfile(T dto) throws IllegalAccessException {
+        View vw = database.getView(this.entityView);
+        Document document = vw.getFirstDocumentByKey(this.entityForm, true);
+        if (document == null) {
+            dto = this.save(dto);
+        } else {
+            dto = this.saveDocument(document, dto, false);
+        }
 
-	public boolean delete(String id) throws IllegalAccessException {
-		boolean response = false;
-	    View view = database.getView(VIEW_IDS);
-		Document document = view.getFirstDocumentByKey(id, true);
-		if (document != null) {
-			response = document.remove(true);
-		}
-		
-		return response;
-	}
+        return dto;
+    }
+
+    private T saveDocument(Document document, T dto, boolean newDocument) throws IllegalAccessException {
+        String id = document.getItemValueString("id");
+        if (newDocument) {
+            id = document.getUniversalID();
+        }
+
+        document.replaceItemValue("prueba", "Prueba");
+        for (Field field : this.dtoClass.getDeclaredFields()) {
+            field.setAccessible(true);
+            if (!"id".equals(field.getName())) {
+                document.replaceItemValue(field.getName(), field.get(dto));
+            }
+        }
+
+        document.replaceItemValue("form", this.entityForm);
+        document.replaceItemValue("id", id);
+
+        if (document.save(true, false)) {
+            Field field = Common.getField(dto.getClass(), "id");
+            field.set(dto, id);
+        } else {
+            throw new NullPointerException("Can not save document");
+        }
+
+        return dto;
+    }
+
+    public T update(String id, T dto) throws IllegalAccessException {
+        View vw = database.getView(VIEW_IDS);
+        Document document = vw.getFirstDocumentByKey(id, true);
+        if (document != null) {
+            dto = this.saveDocument(document, dto, false);
+        }
+
+        return dto;
+    }
+
+    public boolean delete(String id) throws IllegalAccessException {
+        boolean response = false;
+        View view = database.getView(VIEW_IDS);
+        Document document = view.getFirstDocumentByKey(id, true);
+        if (document != null) {
+            response = document.remove(true);
+        }
+
+        return response;
+    }
 
     public String getEntity() {
         return entity;
+    }
+
+    public T getByView(String key, String viewName) {
+        View currentView = database.getView(viewName);
+        Document document = currentView.getFirstDocumentByKey(key, true);
+        return castDocument(document);
     }
 
 }

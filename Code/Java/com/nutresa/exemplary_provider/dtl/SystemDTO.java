@@ -24,10 +24,14 @@ public class SystemDTO {
     @Expose
     private String uploadPathApplication;
     @Expose
+    private String namesPathApplication;
+    @Expose
+    private String supplierPathApplication;
+    @Expose
     private short uploadMaxFilesize;
     @Expose
     private List<String> uploadExtensions;
-    
+
     public String getId() {
         return id;
     }
@@ -62,6 +66,22 @@ public class SystemDTO {
 
     public void setImage(List<String> images) {
         this.images = images;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public String getSupplierPathApplication() {
+        return supplierPathApplication;
+    }
+
+    public void setSupplierPathApplication(String supplierPathApplication) {
+        this.supplierPathApplication = supplierPathApplication;
     }
 
     public String getInformationProgram() {
@@ -110,6 +130,14 @@ public class SystemDTO {
 
     public String getUploadPathApplication() {
         return uploadPathApplication;
+    }
+
+    public void setNamesPathApplication(String namesPathApplication) {
+        this.namesPathApplication = namesPathApplication;
+    }
+
+    public String getNamesPathApplication() {
+        return namesPathApplication;
     }
 
 }

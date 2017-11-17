@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.NotificationDTO;
 
 public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO> {
 
-	public NotificationBLO() {
-		super(NotificationDAO.class);
-	}
+    public NotificationBLO() {
+        super(NotificationDAO.class);
+    }
 
 }

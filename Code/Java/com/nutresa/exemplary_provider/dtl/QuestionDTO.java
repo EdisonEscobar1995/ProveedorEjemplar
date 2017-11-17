@@ -10,11 +10,7 @@ public class QuestionDTO {
     @Expose
     private String idDimension;
     @Expose
-    private DimensionDTO dimension;
-    @Expose
     private String idCriterion;
-    @Expose
-    private CriterionDTO criterion;
     @Expose
     private String wording;
     @Expose
@@ -72,14 +68,6 @@ public class QuestionDTO {
         this.idCriterion = idCriterion;
     }
 
-    public CriterionDTO getCriterion() {
-        return criterion;
-    }
-
-    public void setCriterion(CriterionDTO criterion) {
-        this.criterion = criterion;
-    }
-
     public QuestionDTO getDependOfQuestion() {
         return dependOfQuestion;
     }
@@ -102,14 +90,6 @@ public class QuestionDTO {
 
     public String getIdDimension() {
         return idDimension;
-    }
-
-    public void setDimension(DimensionDTO dimension) {
-        this.dimension = dimension;
-    }
-
-    public DimensionDTO getDimension() {
-        return dimension;
     }
 
     public boolean isRequireAttachment() {

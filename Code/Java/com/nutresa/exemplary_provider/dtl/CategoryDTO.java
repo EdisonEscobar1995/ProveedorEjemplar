@@ -4,23 +4,30 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class CategoryDTO extends MasterDTO{
+public class CategoryDTO {
+    @Expose
+    private String id;
+    @Expose
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     @Expose
     private String idCountry;
-    @Expose
-    private CountryDTO country;
     @Expose
     private List<String> negotiators;
     @Expose
     private List<SubCategoryDTO> subCategories;
-	
-    public CountryDTO getCountry() {
-        return country;
-    }
-
-    public void setCountry(CountryDTO country) {
-        this.country = country;
-    }
 
     public List<String> getNegotiators() {
         return negotiators;

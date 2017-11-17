@@ -2,22 +2,9 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public abstract class MasterDTO {
+public class MasterDTO {
     @Expose
-    private String id;
+    protected String id;
     @Expose
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
+    protected String name;
 }

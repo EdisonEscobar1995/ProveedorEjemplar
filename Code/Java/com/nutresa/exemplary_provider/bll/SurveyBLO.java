@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.SurveyDTO;
 
 public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
 
-	public SurveyBLO() {
-		super(SurveyDAO.class);
-	}
+    public SurveyBLO() {
+        super(SurveyDAO.class);
+    }
 
 }

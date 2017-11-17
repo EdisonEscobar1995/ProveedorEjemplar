@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.DepartmentDTO;
 
 public class DepartmentBLO extends GenericBLO<DepartmentDTO, DepartmentDAO> {
 
-	public DepartmentBLO() {
-		super(DepartmentDAO.class);
-	}
+    public DepartmentBLO() {
+        super(DepartmentDAO.class);
+    }
 
 }

@@ -4,25 +4,25 @@ import com.google.gson.annotations.Expose;
 
 public class ServletResponseDTO<T> {
     private static final String SUCCESS = "success";
-	
+
     @Expose
-	T data;
+    T data;
 
-	@Expose
-	String message = "";
+    @Expose
+    String message = "";
 
-	@Expose
-	boolean status = true;
+    @Expose
+    boolean status = true;
 
-	public ServletResponseDTO(boolean status, String message) {
-		this.message = message;
-		this.status = status;
-	}
+    public ServletResponseDTO(boolean status, String message) {
+        this.message = message;
+        this.status = status;
+    }
 
-	public ServletResponseDTO(Exception exception) {
-		this.message = exception.getMessage();
-		this.status = false;
-	}
+    public ServletResponseDTO(Exception exception) {
+        this.message = exception.getMessage();
+        this.status = false;
+    }
 
     public ServletResponseDTO(T data) {
         this.data = data;

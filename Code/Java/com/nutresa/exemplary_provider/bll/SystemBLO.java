@@ -11,7 +11,7 @@ public class SystemBLO extends GenericBLO<SystemDTO, SystemDAO> {
     }
 
     @Override
-    public SystemDTO save(SystemDTO dto) throws HandlerGenericException{
+    public SystemDTO save(SystemDTO dto) throws HandlerGenericException {
         try {
             SystemDAO dao = new SystemDAO();
             if ("".equals(dto.getId())) {

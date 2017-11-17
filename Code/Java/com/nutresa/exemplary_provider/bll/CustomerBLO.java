@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.CustomerDTO;
 
 public class CustomerBLO extends GenericBLO<CustomerDTO, CustomerDAO> {
 
-	public CustomerBLO() {
-		super(CustomerDAO.class);
-	}
+    public CustomerBLO() {
+        super(CustomerDAO.class);
+    }
 
 }

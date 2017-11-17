@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.NotificationDTO;
 
 public class NotificationAPI extends GenericAPI<NotificationDTO, NotificationBLO> {
 
-	public NotificationAPI() {
-		super(NotificationDTO.class, NotificationBLO.class);
-	}
+    public NotificationAPI() {
+        super(NotificationDTO.class, NotificationBLO.class);
+    }
 
 }

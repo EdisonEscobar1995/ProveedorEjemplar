@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.SystemDTO;
 
 public class SystemAPI extends GenericAPI<SystemDTO, SystemBLO> {
 
-	public SystemAPI() {
-		super(SystemDTO.class, SystemBLO.class);
-	}
+    public SystemAPI() {
+        super(SystemDTO.class, SystemBLO.class);
+    }
 
 }

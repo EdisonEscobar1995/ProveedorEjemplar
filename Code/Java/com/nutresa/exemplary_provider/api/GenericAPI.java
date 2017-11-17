@@ -22,8 +22,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         try {
             blo = this.bloClass.newInstance();
             Method method = blo.getClass().getMethod("get", Map.class);
-            response = new ServletResponseDTO<T>((T) method.invoke(blo,
-                    parameters));
+            response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters));
         } catch (Exception exception) {
             response = new ServletResponseDTO<T>(exception);
         }
@@ -38,8 +37,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         try {
             blo = this.bloClass.newInstance();
             Method method = blo.getClass().getMethod("getAll");
-            response = new ServletResponseDTO<List<T>>((List<T>) method
-                    .invoke(blo));
+            response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo));
         } catch (Exception exception) {
             response = new ServletResponseDTO<List<T>>(exception);
         }
@@ -69,8 +67,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         try {
             blo = this.bloClass.newInstance();
             Method method = blo.getClass().getMethod("delete", Map.class);
-            response = new ServletResponseDTO<T>((T) method.invoke(blo,
-                    parameters));
+            response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters));
         } catch (Exception exception) {
             response = new ServletResponseDTO<T>(exception);
         }

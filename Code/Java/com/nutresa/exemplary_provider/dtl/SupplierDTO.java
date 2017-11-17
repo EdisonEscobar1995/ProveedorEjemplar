@@ -6,26 +6,18 @@ public class SupplierDTO {
     private String id;
     private String name;
     private String idCompanySize;
-    private CompanySizeDTO companySize;
     private String idCategory;
-    private CategoryDTO category;
     private String idSubCategory;
-    private SubCategoryDTO subCategory;
     private List<String> document;
     private String nit;
     private String idCompanyType;
-    private CompanyTypeDTO companyType;
     private boolean producerLivestok;
     private String idSocietyType;
-    private SocietyTypeDTO societyType;
     private short yearOfEstablishment;
     private String principalAdress;
     private String idCountry;
-    private CountryDTO country;
     private String idDepartment;
-    private DepartmentDTO department;
     private String idCity;
-    private CityDTO city;
     private List<String> branchOffice;
     private String telephone;
     private String fax;
@@ -37,7 +29,6 @@ public class SupplierDTO {
     private String phoneOfContact;
     private String emailOfContact;
     private String idSector;
-    private SectorDTO sector;
     private String otherSector;
     private String packagingProvided;
     private float valueAssets;
@@ -66,30 +57,6 @@ public class SupplierDTO {
         this.name = name;
     }
 
-    public CompanySizeDTO getSizeCompany() {
-        return companySize;
-    }
-
-    public void setSizeCompany(CompanySizeDTO sizeCompany) {
-        this.companySize = sizeCompany;
-    }
-
-    public CategoryDTO getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryDTO category) {
-        this.category = category;
-    }
-
-    public SubCategoryDTO getSubCategory() {
-        return subCategory;
-    }
-
-    public void setSubCategory(SubCategoryDTO subCategory) {
-        this.subCategory = subCategory;
-    }
-
     public List<String> getDocument() {
         return document;
     }
@@ -106,28 +73,12 @@ public class SupplierDTO {
         this.nit = nit;
     }
 
-    public CompanyTypeDTO getTypeCompany() {
-        return companyType;
-    }
-
-    public void setTypeCompany(CompanyTypeDTO typeCompany) {
-        this.companyType = typeCompany;
-    }
-
     public boolean isProducerLivestok() {
         return producerLivestok;
     }
 
     public void setProducerLivestok(boolean producerLivestok) {
         this.producerLivestok = producerLivestok;
-    }
-
-    public SocietyTypeDTO getTypeSociety() {
-        return societyType;
-    }
-
-    public void setTypeSociety(SocietyTypeDTO typeSociety) {
-        this.societyType = typeSociety;
     }
 
     public short getYearOfEstablishment() {
@@ -144,30 +95,6 @@ public class SupplierDTO {
 
     public void setPrincipalAdress(String principalAdress) {
         this.principalAdress = principalAdress;
-    }
-
-    public CountryDTO getCountry() {
-        return country;
-    }
-
-    public void setCountry(CountryDTO country) {
-        this.country = country;
-    }
-
-    public DepartmentDTO getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(DepartmentDTO department) {
-        this.department = department;
-    }
-
-    public CityDTO getCity() {
-        return city;
-    }
-
-    public void setCity(CityDTO city) {
-        this.city = city;
     }
 
     public List<String> getBranchOffice() {
@@ -250,14 +177,6 @@ public class SupplierDTO {
         this.emailOfContact = emailOfContact;
     }
 
-    public SectorDTO getSector() {
-        return sector;
-    }
-
-    public void setSector(SectorDTO sector) {
-        this.sector = sector;
-    }
-
     public String getOtherSector() {
         return otherSector;
     }
@@ -302,8 +221,7 @@ public class SupplierDTO {
         return numberOfSubContratedEmployees;
     }
 
-    public void setNumberOfSubContratedEmployees(
-            int numberOfSubContratedEmployees) {
+    public void setNumberOfSubContratedEmployees(int numberOfSubContratedEmployees) {
         this.numberOfSubContratedEmployees = numberOfSubContratedEmployees;
     }
 
@@ -335,8 +253,7 @@ public class SupplierDTO {
         return participationInSalesWithGroupNutresa;
     }
 
-    public void setParticipationInSalesWithGroupNutresa(
-            short participationInSalesWithGroupNutresa) {
+    public void setParticipationInSalesWithGroupNutresa(short participationInSalesWithGroupNutresa) {
         this.participationInSalesWithGroupNutresa = participationInSalesWithGroupNutresa;
     }
 
@@ -344,8 +261,7 @@ public class SupplierDTO {
         return nameContactPersonInGroupNutresa;
     }
 
-    public void setNameContactPersonInGroupNutresa(
-            String nameContactPersonInGroupNutresa) {
+    public void setNameContactPersonInGroupNutresa(String nameContactPersonInGroupNutresa) {
         this.nameContactPersonInGroupNutresa = nameContactPersonInGroupNutresa;
     }
 
@@ -353,8 +269,7 @@ public class SupplierDTO {
         return emailContactPersonInGroupNutresa;
     }
 
-    public void setEmailContactPersonInGroupNutresa(
-            String emailContactPersonInGroupNutresa) {
+    public void setEmailContactPersonInGroupNutresa(String emailContactPersonInGroupNutresa) {
         this.emailContactPersonInGroupNutresa = emailContactPersonInGroupNutresa;
     }
 
@@ -362,8 +277,7 @@ public class SupplierDTO {
         return phoneContactPersonInGroupNutresa;
     }
 
-    public void setPhoneContactPersonInGroupNutresa(
-            String phoneContactPersonInGroupNutresa) {
+    public void setPhoneContactPersonInGroupNutresa(String phoneContactPersonInGroupNutresa) {
         this.phoneContactPersonInGroupNutresa = phoneContactPersonInGroupNutresa;
     }
 
@@ -371,8 +285,7 @@ public class SupplierDTO {
         return geograficDescriptionOfPrincipalMaterials;
     }
 
-    public void setGeograficDescriptionOfPrincipalMaterials(
-            String geograficDescriptionOfPrincipalMaterials) {
+    public void setGeograficDescriptionOfPrincipalMaterials(String geograficDescriptionOfPrincipalMaterials) {
         this.geograficDescriptionOfPrincipalMaterials = geograficDescriptionOfPrincipalMaterials;
     }
 
@@ -428,14 +341,6 @@ public class SupplierDTO {
         this.idCompanySize = idCompanySize;
     }
 
-    public CompanySizeDTO getCompanySize() {
-        return companySize;
-    }
-
-    public void setCompanySize(CompanySizeDTO companySize) {
-        this.companySize = companySize;
-    }
-
     public String getIdCategory() {
         return idCategory;
     }
@@ -460,28 +365,12 @@ public class SupplierDTO {
         this.idCompanyType = idCompanyType;
     }
 
-    public CompanyTypeDTO getCompanyType() {
-        return companyType;
-    }
-
-    public void setCompanyType(CompanyTypeDTO companyType) {
-        this.companyType = companyType;
-    }
-
     public String getIdSocietyType() {
         return idSocietyType;
     }
 
     public void setIdSocietyType(String idSocietyType) {
         this.idSocietyType = idSocietyType;
-    }
-
-    public SocietyTypeDTO getSocietyType() {
-        return societyType;
-    }
-
-    public void setSocietyType(SocietyTypeDTO societyType) {
-        this.societyType = societyType;
     }
 
     public String getIdCountry() {

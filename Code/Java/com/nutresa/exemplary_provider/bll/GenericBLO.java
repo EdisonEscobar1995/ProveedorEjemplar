@@ -68,8 +68,7 @@ public class GenericBLO<T, D> {
         return dto;
     }
 
-    public List<T> saveList(List<T> dtoList, String fieldName, String value)
-    throws HandlerGenericException {
+    public List<T> saveList(List<T> dtoList, String fieldName, String value) throws HandlerGenericException {
         int iterator = 0;
         try {
             for (T dto : dtoList) {
@@ -81,12 +80,11 @@ public class GenericBLO<T, D> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-        
+
         return dtoList;
     }
 
-    public boolean delete(Map<String, String> parameters)
-    throws HandlerGenericException {
+    public boolean delete(Map<String, String> parameters) throws HandlerGenericException {
         boolean response = false;
         D dao;
         try {

@@ -4,9 +4,9 @@ import com.nutresa.exemplary_provider.dtl.CityDTO;
 
 public class CityDAO extends GenericDAO<CityDTO> {
 
-	public CityDAO(){
-		super(CityDTO.class);
-		this.entityView = "vwCities";
-	}
-	
+    public CityDAO() {
+        super(CityDTO.class);
+        this.entityView = "vwCities";
+    }
+
 }

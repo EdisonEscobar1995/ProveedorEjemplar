@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.SubCategoryDTO;
 
 public class SocietyTypeAPI extends GenericAPI<SubCategoryDTO, SubCategoryBLO> {
 
-	public SocietyTypeAPI() {
-		super(SubCategoryDTO.class, SubCategoryBLO.class);
-	}
+    public SocietyTypeAPI() {
+        super(SubCategoryDTO.class, SubCategoryBLO.class);
+    }
 
 }

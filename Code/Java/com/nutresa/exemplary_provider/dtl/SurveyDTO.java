@@ -14,8 +14,6 @@ public class SurveyDTO {
     @Expose
     private String idCompanySize;
     @Expose
-    private CompanySizeDTO companySize;
-    @Expose
     private List<QuestionDTO> question;
 
     public List<QuestionDTO> getQuestion() {
@@ -52,14 +50,6 @@ public class SurveyDTO {
 
     public void setIdSizeCompany(String idCompanySize) {
         this.idCompanySize = idCompanySize;
-    }
-
-    public void setCompanySize(CompanySizeDTO companySize) {
-        this.companySize = companySize;
-    }
-
-    public CompanySizeDTO getCompanySize() {
-        return companySize;
     }
 
     public String getIdCompanySize() {

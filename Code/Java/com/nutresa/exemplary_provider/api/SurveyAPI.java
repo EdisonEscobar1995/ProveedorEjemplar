@@ -5,8 +5,8 @@ import com.nutresa.exemplary_provider.dtl.SurveyDTO;
 
 public class SurveyAPI extends GenericAPI<SurveyDTO, SurveyBLO> {
 
-	public SurveyAPI() {
-		super(SurveyDTO.class, SurveyBLO.class);
-	}
+    public SurveyAPI() {
+        super(SurveyDTO.class, SurveyBLO.class);
+    }
 
 }

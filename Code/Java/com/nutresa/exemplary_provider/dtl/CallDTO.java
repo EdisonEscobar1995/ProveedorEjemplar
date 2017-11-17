@@ -47,8 +47,7 @@ public class CallDTO {
         return deadlineToMakeSurveyEvaluator;
     }
 
-    public void setDeadlineToMakeSurveyEvaluator(
-            Date deadlineToMakeSurveyEvaluator) {
+    public void setDeadlineToMakeSurveyEvaluator(Date deadlineToMakeSurveyEvaluator) {
         this.deadlineToMakeSurveyEvaluator = deadlineToMakeSurveyEvaluator;
     }
 
@@ -56,8 +55,7 @@ public class CallDTO {
         return deadlineToMakeSurveyTecniqueCommittee;
     }
 
-    public void setDeadlineToMakeSurveyTecniqueCommittee(
-            Date deadlineToMakeSurveyTecniqueCommittee) {
+    public void setDeadlineToMakeSurveyTecniqueCommittee(Date deadlineToMakeSurveyTecniqueCommittee) {
         this.deadlineToMakeSurveyTecniqueCommittee = deadlineToMakeSurveyTecniqueCommittee;
     }
 
@@ -65,8 +63,7 @@ public class CallDTO {
         return deadlineToMakeSurveyManagementCommittee;
     }
 
-    public void setDeadlineToMakeSurveyManagementCommittee(
-            Date deadlineToMakeSurveyManagementCommittee) {
+    public void setDeadlineToMakeSurveyManagementCommittee(Date deadlineToMakeSurveyManagementCommittee) {
         this.deadlineToMakeSurveyManagementCommittee = deadlineToMakeSurveyManagementCommittee;
     }
 
