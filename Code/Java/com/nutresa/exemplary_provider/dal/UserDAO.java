@@ -7,8 +7,4 @@ public class UserDAO extends GenericDAO<UserDTO> {
         super(UserDTO.class);
     }
 
-    public UserDTO getByName(String name) {
-        return getByView(name, "vwUsersByName");
-    }
-
 }

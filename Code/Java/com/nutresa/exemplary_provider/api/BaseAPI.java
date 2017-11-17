@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
-import com.nutresa.exemplary_provider.bll.UserBLO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 
@@ -28,6 +27,10 @@ import org.openntf.domino.utils.DominoUtils;
 public class BaseAPI<T> extends DesignerFacesServlet {
 
     protected Class<T> dtoClass;
+
+    private enum typeRequestMethod {
+        GET, POST, OPTIONS
+    }
 
     public BaseAPI(Class<T> dtoClass) {
         this.dtoClass = dtoClass;
@@ -63,31 +66,32 @@ public class BaseAPI<T> extends DesignerFacesServlet {
                 .serializeNulls().setDateFormat("Y/m/d").setPrettyPrinting().create();
 
         try {
-            String requestMethod = request.getMethod();
+            typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
             Map<String, String> parameters = (Map<String, String>) ExtLibUtil.resolveVariable(FacesContext
                     .getCurrentInstance(), "param");
             String action = parameters.get("action");
 
-            UserBLO user = new UserBLO();
-            if (user.havePermissions(this.getClass().getName(), action)) {
-                Method method = Common.getMethod(this.getClass(), action);
-                if (null != method) {
-                    if ("GET".equals(requestMethod)) {
-                        servletResponse = doGet(method, parameters);
-                    } else if ("POST".equals(requestMethod)) {
-                        servletResponse = doPost(method, request.getReader(), gson);
-                    } else if ("OPTIONS".equals(requestMethod)) {
-                        doOptions(response, output);
-                    } else {
-                        status = 405;
-                        servletResponse = new ServletResponseDTO(false,
-                                "What the devil are you trying to do, break the server?");
-                    }
-                } else {
-                    servletResponse = new ServletResponseDTO(false, "Action not found");
+            Method method = Common.getMethod(this.getClass(), action);
+            if (null != method) {
+                switch (requestMethod) {
+                case GET:
+                    servletResponse = doGet(method, parameters);
+                    break;
+                case POST:
+                    servletResponse = doPost(method, request.getReader(), gson);
+                    break;
+                case OPTIONS:
+                    doOptions(response, output);
+                    break;
+                default:
+                    status = 405;
+                    servletResponse = new ServletResponseDTO(false,
+                            "What the devil are you trying to do, break the server?");
+
+                    break;
                 }
             } else {
-                servletResponse = new ServletResponseDTO(false, "Dont have permissions!");
+                servletResponse = new ServletResponseDTO(false, "Action not found");
             }
 
         } catch (Exception exception) {

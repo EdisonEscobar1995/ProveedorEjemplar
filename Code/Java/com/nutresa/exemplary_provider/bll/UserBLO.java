@@ -9,13 +9,4 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         super(UserDAO.class);
     }
 
-    public boolean havePermissions(String name, String action) {
-        return true;
-    }
-
-    public UserDTO getByName(String name) {
-        UserDAO dao = new UserDAO();
-        return dao.getByName(name);
-    }
-    
 }

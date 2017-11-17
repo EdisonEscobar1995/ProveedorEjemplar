@@ -147,10 +147,4 @@ public abstract class GenericDAO<T> {
         return entity;
     }
 
-    public T getByView(String key, String viewName) {
-        View currentView = database.getView(viewName);
-        Document document = currentView.getFirstDocumentByKey(key, true);
-        return castDocument(document);
-    }
-
 }

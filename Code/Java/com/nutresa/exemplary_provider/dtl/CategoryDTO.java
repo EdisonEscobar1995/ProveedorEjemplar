@@ -9,19 +9,6 @@ public class CategoryDTO {
     private String id;
     @Expose
     private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
     @Expose
     private String idCountry;
     @Expose
@@ -52,5 +39,18 @@ public class CategoryDTO {
     public void setIdCountry(String idCountry) {
         this.idCountry = idCountry;
     }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
 
 }
