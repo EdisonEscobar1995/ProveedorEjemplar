@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.openntf.domino.Database;
@@ -65,7 +66,7 @@ public abstract class GenericDAO<T> {
             if (document != null) {
                 result = this.dtoClass.newInstance();
                 List<Field> fields = new ArrayList();
-                for (Field field : Common.getAllFields(fields, this.dtoClass)) {
+                for (Field field : getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
                     field.set(result, document.getItemValue(field.getName(), field.getType()));
                 }
@@ -145,6 +146,16 @@ public abstract class GenericDAO<T> {
 
     public String getEntity() {
         return entity;
+    }
+
+    private List<Field> getAllFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            getAllFields(fields, type.getSuperclass());
+        }
+
+        return fields;
     }
 
 }
