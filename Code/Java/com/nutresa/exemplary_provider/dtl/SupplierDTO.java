@@ -2,51 +2,98 @@ package com.nutresa.exemplary_provider.dtl;
 
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+
 public class SupplierDTO {
+    @Expose
     private String id;
+    @Expose
     private String name;
+    @Expose
     private String idCompanySize;
+    @Expose
     private String idCategory;
+    @Expose
     private String idSubCategory;
+    @Expose
     private List<String> document;
+    @Expose
     private String nit;
+    @Expose
     private String idCompanyType;
+    @Expose
     private boolean producerLivestok;
+    @Expose
     private String idSocietyType;
+    @Expose
     private short yearOfEstablishment;
+    @Expose
     private String principalAdress;
+    @Expose
     private String idCountry;
+    @Expose
     private String idDepartment;
+    @Expose
     private String idCity;
+    @Expose
     private List<String> branchOffice;
+    @Expose
     private String telephone;
+    @Expose
     private String fax;
+    @Expose
     private List<String> emails;
+    @Expose
     private String codeZip;
+    @Expose
     private String nameLegalAgent;
+    @Expose
     private String fullNameContact;
+    @Expose
     private String jobPosition;
+    @Expose
     private String phoneOfContact;
+    @Expose
     private String emailOfContact;
+    @Expose
     private String idSector;
+    @Expose
     private String otherSector;
+    @Expose
     private String packagingProvided;
+    @Expose
     private float valueAssets;
+    @Expose
     private String attachedFinancialReport;
+    @Expose
     private int numberOfDirectEmployees;
+    @Expose
     private int numberOfSubContratedEmployees;
+    @Expose
     private String webSite;
+    @Expose
     private float annualSalesValue;
+    @Expose
     private List<CustomerDTO> principalCustomer;
+    @Expose
     private short participationInSalesWithGroupNutresa;
+    @Expose
     private String nameContactPersonInGroupNutresa;
+    @Expose
     private String emailContactPersonInGroupNutresa;
+    @Expose
     private String phoneContactPersonInGroupNutresa;
+    @Expose
     private String geograficDescriptionOfPrincipalMaterials;
+    @Expose
     private boolean currentlyExport;
+    @Expose
     private List<String> exportDestination;
+    @Expose
     private List<String> nameCertification;
+    @Expose
     private boolean globalAgreement;
+    @Expose
     private boolean chemicalSubstance;
 
     public String getName() {
