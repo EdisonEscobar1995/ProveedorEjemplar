@@ -6,8 +6,7 @@ public class HandlerGenericException extends Exception {
 
     public HandlerGenericException(Exception exception) {
         super("");
-        String message = Common.getExceptionMessage(exception);
-        this.message = message;
+        this.message = Common.getExceptionMessage(exception);
     }
 
     public HandlerGenericException(String string) {
