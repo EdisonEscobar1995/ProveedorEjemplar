@@ -22,11 +22,15 @@
 			<div>Tipo de estructura</div>
 			<xp:comboBox id="type">
 				<xp:selectItem itemLabel="" itemValue=""></xp:selectItem>
+				<xp:selectItem itemLabel="Dimensiones de preguntas" itemValue="DIM"></xp:selectItem>
+				<xp:selectItem itemLabel="Criterios de preguntas" itemValue="CRI"></xp:selectItem>
+				<xp:selectItem itemLabel="Sectores" itemValue="SEC"></xp:selectItem>
 				<xp:selectItem itemLabel="Tamaños de empresa" itemValue="COS"></xp:selectItem>
 				<xp:selectItem itemLabel="Tipos de empresa" itemValue="COT"></xp:selectItem>
 				<xp:selectItem itemLabel="Tipos de sociedad" itemValue="SOT"></xp:selectItem>
-				<xp:selectItem itemLabel="Dimensiones" itemValue="DIM"></xp:selectItem>
-				<xp:selectItem itemLabel="Sectores" itemValue="SEC"></xp:selectItem>
+				<xp:selectItem itemLabel="Tipos de suministro" itemValue="SUT"></xp:selectItem>
+				<xp:selectItem itemLabel="Categorías del proveedor" itemValue="CAT"></xp:selectItem>
+				<xp:selectItem itemLabel="Subcategorías del proveedor" itemValue="SUB"></xp:selectItem>
 				<xp:this.attrs>
 					<xp:attr name="data-name" value="type">
 					</xp:attr>

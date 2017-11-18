@@ -12,12 +12,40 @@ function importData() {
 	var columnNames;
 	var requiredFields;
 	var defaultFields;
+	var foreignKeys = [];
 	var viewName;
 	
 	try{
 		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
 		
 		switch(type){
+			case "DIM":
+				columnKeys = ["name"];
+				columnNameKeys = ["Dimensión"];
+				columnNames = [{commonName: "Dimensión", technicalName: "name"}];
+				requiredFields = [{commonName: "Dimensión", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frDimension"}];
+				viewName = "vwDimensions";
+				break;
+			case "CRI":
+				columnKeys = ["idDimension", "name"];
+				columnNameKeys = ["Dimensión", "Criterio"];
+				columnNames = [{commonName: "Dimensión", technicalName: "idDimension"},
+				               {commonName: "Criterio", technicalName: "name"}];
+				requiredFields = [{commonName: "Dimensión", technicalName: "idDimension"},
+					               {commonName: "Criterio", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frCriterion"}];
+				foreignKeys = [{technicalName: "idDimension", commonName: "Dimensión", viewName: "vwDimensionsByName"}];
+				viewName = "vwCriterions";
+				break;
+			case "SEC":
+				columnKeys = ["name"];
+				columnNameKeys = ["Sector"];
+				columnNames = [{commonName: "Sector", technicalName: "name"}];
+				requiredFields = [{commonName: "Sector", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frSector"}];
+				viewName = "vwSectors";
+				break;
 			case "COS":
 				columnKeys = ["name"];
 				columnNameKeys = ["Tamaño de empresa"];
@@ -34,22 +62,6 @@ function importData() {
 				defaultFields = [{ key: "form", value: "frCompanyType"}];
 				viewName = "vwCompanyTypes";
 				break;
-			case "DIM":
-				columnKeys = ["name"];
-				columnNameKeys = ["Dimensión"];
-				columnNames = [{commonName: "Dimensión", technicalName: "name"}];
-				requiredFields = [{commonName: "Dimensión", technicalName: "name"}];
-				defaultFields = [{ key: "form", value: "frDimension"}];
-				viewName = "vwDimensions";
-				break;
-			case "SEC":
-				columnKeys = ["name"];
-				columnNameKeys = ["Sector"];
-				columnNames = [{commonName: "Sector", technicalName: "name"}];
-				requiredFields = [{commonName: "Sector", technicalName: "name"}];
-				defaultFields = [{ key: "form", value: "frSector"}];
-				viewName = "vwSectors";
-				break;
 			case "SOT":
 				columnKeys = ["name"];
 				columnNameKeys = ["Tipos de sociedades"];
@@ -58,8 +70,38 @@ function importData() {
 				defaultFields = [{ key: "form", value: "frSocietyType"}];
 				viewName = "vwSocietyTypes";
 				break;
+			case "SUT":
+				columnKeys = ["name"];
+				columnNameKeys = ["Tipos de suministro"];
+				columnNames = [{commonName: "Tipos de suministro", technicalName: "name"}];
+				requiredFields = [{commonName: "Tipos de suministro", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frSupply"}];
+				viewName = "vwSupplies";
+				break;
+			case "CAT":
+				columnKeys = ["idSupply", "name"];
+				columnNameKeys = ["Tipos de suministro", "Categoría"];
+				columnNames = [{commonName: "Tipos de suministro", technicalName: "idSupply"},
+				               {commonName: "Categoría", technicalName: "name"}];
+				requiredFields = [{commonName: "Tipos de suministro", technicalName: "idSupply"},
+					               {commonName: "Categoría", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frCategory"}];
+				foreignKeys = [{technicalName: "idSupply", commonName: "Tipo de suministro", viewName: "vwSuppliesByName"}];
+				viewName = "vwCategories";
+				break;
+			case "SUB":
+				columnKeys = ["idCategory", "name"];
+				columnNameKeys = ["Categoría", "Subcategoría"];
+				columnNames = [{commonName: "Categoría", technicalName: "idCategory"},
+				               {commonName: "Subcategoría", technicalName: "name"}];
+				requiredFields = [{commonName: "Categoría", technicalName: "idCategory"},
+					               {commonName: "Subcategoría", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frSubCategory"}];
+				foreignKeys = [{technicalName: "idCategory", commonName: "Categoría", viewName: "vwCategoriesByName"}];
+				viewName = "vwSubCategories";
+				break;
 		}
-		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields)
+		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys)
 		
 	}catch(e){
 		result.error = e.message;
@@ -69,12 +111,13 @@ function importData() {
 	}	
 }
 
-function importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields) {
+function importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys) {
 	var error = "";
 	var count = 0;	
 	
 	try{
-		var emptyFields;	
+		var emptyFields;
+		var unavailableForeignNames;
 		var savedIds = [];
 		var primaryKeyViolated;
 		var i;
@@ -85,6 +128,8 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		vw.getAllEntries().removeAll(true);
 		
 		var nd:NotesDocument;
+		var vwForeign:NotesView;
+		var ndForeign:NotesDocument;
 		
 		var _data = data;
 		
@@ -92,6 +137,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		var _fila;
 		var repeatedRows = 0;
 		var incompleteRows = 0;
+		var unavailableForeignKeys = 0;
 		
 		for (i in data) {
 			for (j in columnNames){
@@ -104,7 +150,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 			fila = data[i];
 		
 			emptyFields = [];	
-			for(j in requiredFields.length){				
+			for(j in requiredFields){				
 				if (!fila.hasOwnProperty(requiredFields[j].technicalName)){
 					emptyFields.push(requiredFields[j].commonName);					
 				}
@@ -129,38 +175,55 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 					}
 				}
 			}
+			
+			unavailableForeignNames = [];
+			for (j in foreignKeys){
+				vwForeign = sessionAsSigner.getCurrentDatabase().getView(foreignKeys[j].viewName);
+				ndForeign = vwForeign.getDocumentByKey(fila[foreignKeys[j].technicalName], true);
+				if (!ndForeign){
+					unavailableForeignNames.push(foreignKeys[j].commonName)
+				}else{
+					fila[foreignKeys[j].technicalName] = ndForeign.getItemValueString("id");
+					ndForeign.recycle();	
+				}
+				vwForeign.recycle();
+			}
+			if(unavailableForeignNames.length > 0){
+				unavailableForeignKeys ++;
+				response.rows.push({pos: i + 1, error: "Clave foránea inexistente. Verificar la(s) columna(s) " + unavailableForeignNames.join(", ")})
+			}	
+		
 		}
 		
 		if(incompleteRows > 0){
 			error = "Campos requeridos sin diligenciar";
+		}else if (repeatedRows){
+			error = "Violación de clave primaria";
+		}else if (unavailableForeignKeys > 0){
+			error = "Violación de clave foránea";
 		}else{
-			if (repeatedRows){
-				error = "Violación de clave primaria";
-			}else{
+			for (i in data){
+					
+				nd = sessionAsSigner.getCurrentDatabase().createDocument();
 				
-				for (i in data){
+				for (j in defaultFields){
+					nd.replaceItemValue(defaultFields[j].key, defaultFields[j].value);
+				}
+				
+				fila = data[i];
+				for (j in fila){
+					if (fila.hasOwnProperty(j)){
+						nd.replaceItemValue(j, fila[j]);
+					}
+				}
+				
+				nd.replaceItemValue("id", nd.getUniversalID());										
+												
+				nd.save(true, false);						
+				savedIds.push(nd.getItemValueString("id"));
+				nd.recycle();
 						
-					nd = sessionAsSigner.getCurrentDatabase().createDocument();
-					
-					for (k in defaultFields){
-						nd.replaceItemValue(defaultFields[k].key, defaultFields[k].value);
-					}
-					
-					fila = data[i];
-					for (k in fila){
-						if (fila.hasOwnProperty(k)){
-							nd.replaceItemValue(k, fila[k]);
-						}
-					}
-					
-					nd.replaceItemValue("id", nd.getUniversalID());										
-													
-					nd.save(true, false);						
-					savedIds.push(nd.getItemValueString("id"));
-					nd.recycle();
-							
-				}		
-			}
+			}		
 		}
 		
 		if ("" !== error){			
