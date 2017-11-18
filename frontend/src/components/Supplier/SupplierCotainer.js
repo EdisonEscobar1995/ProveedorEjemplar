@@ -1,29 +1,42 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Supplier from './Supplier';
+import getDataSupplier from '../../state/Supplier/action';
 
-function SupplierContainer({ data }) {
-  console.log(data);
-  const colummns = [
-    {
-      title: 'Nombre',
-      dataIndex: 'name',
-      key: 'name',
-    },
-  ];
-  return (
-    <Supplier colummns={colummns} data={data} />
-  );
+class SupplierContainer extends Component {
+  componentDidMount() {
+    this.props.getDataSupplier();
+  }
+  render() {
+    return (
+      <Supplier
+        supplier={this.props.supplier}
+        categories={this.props.categories}
+        companyTypes={this.props.companyTypes}
+        societyTypes={this.props.societyTypes}
+        loading={this.props.loading}
+        error={this.props.error}
+      />
+    );
+  }
 }
 
+const mapStateToProps = state => ({
+  supplier: state.supplier.supplier,
+  categories: state.supplier.categories,
+  companyTypes: state.supplier.companyTypes,
+  societyTypes: state.supplier.societyTypes,
+  loading: state.supplier.loading,
+  error: state.supplier.error,
+});
 
-const mapStateToProps = state => (
-  {
-    loading: state.supplier.loading,
-    data: state.supplier.data,
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getDataSupplier: () => {
+    dispatch(getDataSupplier());
+  },
+});
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(SupplierContainer);

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Row, Col, Form, Input, Select, Upload, Button, Icon } from 'antd';
-// eslint-disable
 import SubTitle from '../shared/SubTitle';
 import Field from './Field';
 
@@ -52,7 +51,11 @@ function DinamicForm({ content, getFieldDecorator }) {
                           {getFieldDecorator(key, {
                             rules: [{ required: true, message: 'Please input your username!' }],
                           })(
-                            <Select showSearch allowClear>
+                            <Select
+                              showSearch
+                              allowClear
+                              notFoundContent="No se encontraron resultados"
+                            >
                               {
                                 options.map(option => (
                                   <Option key={option.id} value={option.id}>{option.text}</Option>
