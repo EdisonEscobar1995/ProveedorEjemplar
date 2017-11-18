@@ -87,42 +87,49 @@ public abstract class GenericDAO<T> {
         Object value = null;
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
-            if (null == numberValue) {
-                numberValue = new Double(0);
-            }
-            switch (com.nutresa.exemplary_provider.utils.Types.getType(type)) {
-            case BYTE:
-                value = numberValue.byteValue();
-                break;
-            case BOOLEAN:
-                value = numberValue.intValue() != 0;
-                break;
-            case CHAR:
-                value = '\u0000';
-                break;
-            case SHORT:
-                value = numberValue.shortValue();
-                break;
-            case INT:
-                value = numberValue.intValue();
-                break;
-            case FLOAT:
-                value = numberValue.floatValue();
-                break;
-            case LONG:
-                value = numberValue.longValue();
-                break;
-            case DOUBLE:
-                value = numberValue;
-                break;
-            default:
-                value = document.getItemValue(name, type);
-                break;
-            }
-        } else {
+            value = getPrimitiveValue(type, numberValue);
+        }
+        if (null == value) {
             value = document.getItemValue(name, type);
         }
         return (T) value;
+    }
+
+    protected static Object getPrimitiveValue(Class<?> type, Double numberValue) {
+        Object value;
+        if (null == numberValue) {
+            numberValue = new Double(0);
+        }
+        switch (com.nutresa.exemplary_provider.utils.Types.getType(type)) {
+        case BYTE:
+            value = numberValue.byteValue();
+            break;
+        case BOOLEAN:
+            value = numberValue.intValue() != 0;
+            break;
+        case CHAR:
+            value = '\u0000';
+            break;
+        case SHORT:
+            value = numberValue.shortValue();
+            break;
+        case INT:
+            value = numberValue.intValue();
+            break;
+        case FLOAT:
+            value = numberValue.floatValue();
+            break;
+        case LONG:
+            value = numberValue.longValue();
+            break;
+        case DOUBLE:
+            value = numberValue;
+            break;
+        default:
+            value = null;
+            break;
+        }
+        return value;
     }
 
     public T save(T dto) throws HandlerGenericException {
