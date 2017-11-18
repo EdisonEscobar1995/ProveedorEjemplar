@@ -8,9 +8,9 @@ import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 import org.openntf.domino.Session;
 import org.openntf.domino.View;
-import org.openntf.domino.utils.Factory;
-import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewEntry;
+import org.openntf.domino.ViewEntryCollection;
+import org.openntf.domino.utils.Factory;
 
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -67,13 +67,57 @@ public abstract class GenericDAO<T> {
                 List<Field> fields = new ArrayList();
                 for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
-                    field.set(result, document.getItemValue(field.getName(), field.getType()));
+                    Object value;
+                    if (field.getType().isPrimitive()) {
+                        value = getValue(document, field.getName(), field.getType());
+                    } else {
+                        value = document.getItemValue(field.getName(), field.getType());
+                    }
+                    field.set(result, value);
                 }
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
         return result;
+    }
+
+    protected Object castProperty() {
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getValue(Document document, String name, Class<?> type) {
+        Object value = null;
+        Double numberValue = document.getItemValue(name, Double.class);
+        switch (com.nutresa.exemplary_provider.utils.Types.getType(type)) {
+        case BYTE:
+            value = numberValue.byteValue();
+            break;
+        case BOOLEAN:
+            value = numberValue.intValue() != 0;
+            break;
+        case CHAR:
+            value = "a";
+            break;
+        case SHORT:
+            value = numberValue.shortValue();
+            break;
+         case INT:
+            value = numberValue.intValue();
+            break;
+        case FLOAT:
+            value = numberValue.floatValue();
+            break;
+        case LONG:
+            value = numberValue.longValue();
+            break;
+        case DOUBLE:
+            value = numberValue.doubleValue();
+            break;
+        }
+        return (T) value;
     }
 
     public T save(T dto) throws HandlerGenericException {
@@ -156,7 +200,6 @@ public abstract class GenericDAO<T> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-
         return response;
     }
 
