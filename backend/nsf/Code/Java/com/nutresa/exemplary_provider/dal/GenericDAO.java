@@ -87,6 +87,9 @@ public abstract class GenericDAO<T> {
         Object value = null;
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
+            if (null == numberValue) {
+                numberValue = new Double(0);
+            }
             value = getPrimitiveValue(type, numberValue);
         }
         if (null == value) {
@@ -97,9 +100,6 @@ public abstract class GenericDAO<T> {
 
     protected static Object getPrimitiveValue(Class<?> type, Double numberValue) {
         Object value;
-        if (null == numberValue) {
-            numberValue = new Double(0);
-        }
         switch (com.nutresa.exemplary_provider.utils.Types.getType(type)) {
         case BYTE:
             value = numberValue.byteValue();
