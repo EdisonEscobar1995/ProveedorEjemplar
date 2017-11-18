@@ -61,6 +61,7 @@ function generalInfo(categories, companyTypes, societyTypes) {
         {
           span: 6,
           type: 'input',
+          inputType: 'number',
           label: 'Número Identificación Tributaria/NIT( Sin dígito Verificación) ',
           key: 'identityNumber',
           required: true,
@@ -352,12 +353,14 @@ const comercialInfo = [
         type: 'input',
         label: 'Valor en activos $',
         key: 'activeValue',
+        required: true,
       },
       {
         span: 12,
         type: 'upload',
         label: 'Soporte de balances o informes financieros del valor en activos',
         key: 'support',
+        required: true,
       },
       {
         span: 6,

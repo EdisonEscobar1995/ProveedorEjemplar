@@ -8,6 +8,8 @@ import {
 const initialState = {
   supplier: {},
   categories: [],
+  companyTypes: [],
+  societyTypes: [],
   loading: false,
 };
 

@@ -17,7 +17,6 @@ function getDataSupplierProgress() {
 }
 
 function getDataSupplierSuccess(supplier, categories, companyTypes, societyTypes) {
-  console.log(companyTypes, societyTypes);
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
@@ -47,7 +46,6 @@ function validateResponse(args) {
 }
 
 function getDataSupplier() {
-  console.log('Aca');
   return (dispatch) => {
     dispatch(getDataSupplierProgress());
     const promises = [

@@ -16,57 +16,49 @@ function DinamicForm({ content, getFieldDecorator }) {
             {
               item.value.map((current) => {
                 let rowValue;
-                const { label, key, span, type, options, value } = current;
+                const { label, key, span, type, inputType, options, value, required } = current;
                 switch (type) {
                   case 'input':
-                    rowValue = (
-                      <Field label={label}>
-                        <Item>
-                          {getFieldDecorator(key, {
-                            rules: [{ required: true, message: 'Please input your username!' }],
-                          })(
-                            <Input />,
-                          )}
-                        </Item>
-                      </Field>
-                    );
-                    break;
                   case 'textarea':
+                  case 'select': {
+                    let fieldContent;
+                    switch (type) {
+                      case 'input':
+                        fieldContent = <Input type={inputType || 'text'} />;
+                        break;
+                      case 'textarea':
+                        fieldContent = <TextArea />;
+                        break;
+                      case 'select':
+                        fieldContent = (<Select
+                          showSearch
+                          allowClear
+                          notFoundContent="No se encontraron resultados"
+                        >
+                          {
+                            options.map(option => (
+                              <Option key={option.id} value={option.id}>{option.text}</Option>
+                            ))
+                          }
+                        </Select>);
+                        break;
+                      default:
+                        fieldContent = '';
+                        break;
+                    }
                     rowValue = (
                       <Field label={label}>
                         <Item>
                           {getFieldDecorator(key, {
-                            rules: [{ required: true, message: 'Please input your username!' }],
+                            rules: [{ required, message: 'Por favor diligencia el campo' }],
                           })(
-                            <TextArea />,
+                            fieldContent,
                           )}
                         </Item>
                       </Field>
                     );
                     break;
-                  case 'select':
-                    rowValue = (
-                      <Field label={label}>
-                        <Item>
-                          {getFieldDecorator(key, {
-                            rules: [{ required: true, message: 'Please input your username!' }],
-                          })(
-                            <Select
-                              showSearch
-                              allowClear
-                              notFoundContent="No se encontraron resultados"
-                            >
-                              {
-                                options.map(option => (
-                                  <Option key={option.id} value={option.id}>{option.text}</Option>
-                                ))
-                              }
-                            </Select>,
-                          )}
-                        </Item>
-                      </Field>
-                    );
-                    break;
+                  }
                   case 'title':
                     rowValue = (
                       <SubTitle text={value} />
@@ -75,7 +67,9 @@ function DinamicForm({ content, getFieldDecorator }) {
                   case 'upload':
                     rowValue = (
                       <Field label={label}>
-                        <Upload>
+                        <Upload
+                          accept=".doc, .png, .jpg, .jpeg, .pdf, .ppt"
+                        >
                           <Button>
                             <Icon type="upload" />Adjuntar archivo
                           </Button>
