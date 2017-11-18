@@ -12,6 +12,8 @@ public class SupplierDTO {
     @Expose
     private String idCompanySize;
     @Expose
+    private String idSupply;
+    @Expose
     private String idCategory;
     @Expose
     private String idSubCategory;
@@ -458,6 +460,14 @@ public class SupplierDTO {
 
     public void setIdSector(String idSector) {
         this.idSector = idSector;
+    }
+
+    public String getIdSupply() {
+        return idSupply;
+    }
+
+    public void setIdSupply(String idSupply) {
+        this.idSupply = idSupply;
     }
 
 }
