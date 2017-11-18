@@ -2,19 +2,18 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 import org.openntf.domino.Session;
 import org.openntf.domino.View;
-import org.openntf.domino.utils.DominoUtils;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewEntry;
 
 import com.nutresa.exemplary_provider.utils.Common;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public abstract class GenericDAO<T> {
 
@@ -41,13 +40,13 @@ public abstract class GenericDAO<T> {
         this.entityView = PREFIX_VIEW + entity + "s";
     }
 
-    public T get(String id) {
+    public T get(String id) throws HandlerGenericException {
         View currentView = database.getView(VIEW_IDS);
         Document document = currentView.getFirstDocumentByKey(id, true);
         return castDocument(document);
     }
 
-    public List<T> getAll() throws IllegalAccessException {
+    public List<T> getAll() throws HandlerGenericException {
         View view = database.getView(this.entityView);
         ViewEntryCollection vec = view.getAllEntries();
         Document document;
@@ -60,31 +59,29 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private T castDocument(Document document) {
+    private T castDocument(Document document) throws HandlerGenericException {
         T result = null;
         try {
             if (document != null) {
                 result = this.dtoClass.newInstance();
                 List<Field> fields = new ArrayList();
-                for (Field field : getAllFields(fields, this.dtoClass)) {
+                for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
                     field.set(result, document.getItemValue(field.getName(), field.getType()));
                 }
             }
-        } catch (IllegalAccessException illegalAccessException) {
-            DominoUtils.handleException(new Throwable(illegalAccessException));
-        } catch (InstantiationException instantiationException) {
-            DominoUtils.handleException(new Throwable(instantiationException));
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
         return result;
     }
 
-    public T save(T dto) throws IllegalAccessException {
+    public T save(T dto) throws HandlerGenericException {
         Document document = database.createDocument();
         return this.saveDocument(document, dto, true);
     }
 
-    public T saveProfile(T dto) throws IllegalAccessException {
+    public T saveProfile(T dto) throws HandlerGenericException {
         View vw = database.getView(this.entityView);
         Document document = vw.getFirstDocumentByKey(this.entityForm, true);
         if (document == null) {
@@ -96,49 +93,60 @@ public abstract class GenericDAO<T> {
         return dto;
     }
 
-    private T saveDocument(Document document, T dto, boolean newDocument) throws IllegalAccessException {
-        String id = document.getItemValueString("id");
-        if (newDocument) {
-            id = document.getUniversalID();
-        }
-
-        document.replaceItemValue("prueba", "Prueba");
-        for (Field field : this.dtoClass.getDeclaredFields()) {
-            field.setAccessible(true);
-            if (!"id".equals(field.getName())) {
-                document.replaceItemValue(field.getName(), field.get(dto));
+    @SuppressWarnings("unchecked")
+    private T saveDocument(Document document, T dto, boolean newDocument) throws HandlerGenericException {
+        try {
+            String id = document.getItemValueString("id");
+            if (newDocument) {
+                id = document.getUniversalID();
             }
-        }
 
-        document.replaceItemValue("form", this.entityForm);
-        document.replaceItemValue("id", id);
+            List<Field> fields = new ArrayList();
+            for (Field field : Common.getAllFields(fields, this.dtoClass)) {
+                field.setAccessible(true);
+                if (!"id".equals(field.getName())) {
+                    document.replaceItemValue(field.getName(), field.get(dto));
+                }
+            }
 
-        if (document.save(true, false)) {
-            Field field = Common.getField(dto.getClass(), "id");
-            field.set(dto, id);
-        } else {
-            throw new NullPointerException("Can not save document");
+            document.replaceItemValue("form", this.entityForm);
+            document.replaceItemValue("id", id);
+
+            if (document.save(true, false)) {
+                Field field = Common.getField(dto.getClass(), "id");
+                field.set(dto, id);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
 
         return dto;
     }
 
-    public T update(String id, T dto) throws IllegalAccessException {
-        View vw = database.getView(VIEW_IDS);
-        Document document = vw.getFirstDocumentByKey(id, true);
-        if (document != null) {
-            dto = this.saveDocument(document, dto, false);
+    public T update(String id, T dto) throws HandlerGenericException {
+        try {
+            View vw = database.getView(VIEW_IDS);
+            Document document = vw.getFirstDocumentByKey(id, true);
+            if (document != null) {
+                dto = this.saveDocument(document, dto, false);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
 
         return dto;
     }
 
-    public boolean delete(String id) throws IllegalAccessException {
+    public boolean delete(String id) throws HandlerGenericException {
         boolean response = false;
-        View view = database.getView(VIEW_IDS);
-        Document document = view.getFirstDocumentByKey(id, true);
-        if (document != null) {
-            response = document.remove(true);
+        try {
+            View view = database.getView(VIEW_IDS);
+            Document document = view.getFirstDocumentByKey(id, true);
+            if (document != null) {
+                response = document.remove(true);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
 
         return response;
@@ -146,16 +154,6 @@ public abstract class GenericDAO<T> {
 
     public String getEntity() {
         return entity;
-    }
-
-    private List<Field> getAllFields(List<Field> fields, Class<?> type) {
-        fields.addAll(Arrays.asList(type.getDeclaredFields()));
-
-        if (type.getSuperclass() != null) {
-            getAllFields(fields, type.getSuperclass());
-        }
-
-        return fields;
     }
 
 }
