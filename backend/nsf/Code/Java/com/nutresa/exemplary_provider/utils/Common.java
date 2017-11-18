@@ -66,4 +66,12 @@ public class Common {
         return message;
     }
     
+    public static boolean isClass(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }
