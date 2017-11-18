@@ -8,6 +8,7 @@ import org.openntf.domino.utils.DominoUtils;
 import com.ibm.designer.runtime.domino.adapter.ComponentModule;
 import com.ibm.designer.runtime.domino.adapter.IServletFactory;
 import com.ibm.designer.runtime.domino.adapter.ServletMatch;
+import com.nutresa.exemplary_provider.utils.Common;
 
 /**
  * The factory (a provider) implements IServletFactory and creates two maps, for
@@ -45,6 +46,10 @@ public class ServletFactory implements IServletFactory {
     }
 
     public Servlet getWidgetServlet(String servletName) throws ServletException {
-        return module.createServlet(namespace + servletName + apiSuffix, servletName, null);
+        if (Common.isClass(namespace + servletName + apiSuffix)) {
+            return module.createServlet(namespace + servletName + apiSuffix, servletName, null);
+        } else {
+            return module.createServlet(namespace + "Error" + apiSuffix, "Error", null);
+        }
     }
 }
