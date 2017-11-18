@@ -22,7 +22,10 @@
 			<div>Tipo de estructura</div>
 			<xp:comboBox id="type">
 				<xp:selectItem itemLabel="" itemValue=""></xp:selectItem>
-				<xp:selectItem itemLabel="Categorías" itemValue="CAT"></xp:selectItem>
+				<xp:selectItem itemLabel="Tamaños de empresa" itemValue="COS"></xp:selectItem>
+				<xp:selectItem itemLabel="Tipos de empresa" itemValue="COT"></xp:selectItem>
+				<xp:selectItem itemLabel="Tipos de sociedad" itemValue="SOT"></xp:selectItem>
+				<xp:selectItem itemLabel="Dimensiones" itemValue="DIM"></xp:selectItem>
 				<xp:selectItem itemLabel="Sectores" itemValue="SEC"></xp:selectItem>
 				<xp:this.attrs>
 					<xp:attr name="data-name" value="type">

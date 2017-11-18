@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 public class CustomerDTO extends MasterDTO {
     @Expose
     private short percentageOfParticipationInSales;
+    @Expose
     private String idSupplier;
 
     public short getPercentageOfParticipationInSales() {

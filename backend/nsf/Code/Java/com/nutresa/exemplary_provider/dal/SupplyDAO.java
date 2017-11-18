@@ -5,6 +5,7 @@ import com.nutresa.exemplary_provider.dtl.SupplyDTO;
 public class SupplyDAO extends GenericDAO<SupplyDTO> {
     public SupplyDAO() {
         super(SupplyDTO.class);
+        this.entityView = "vwSupplies";
     }
 
 }
