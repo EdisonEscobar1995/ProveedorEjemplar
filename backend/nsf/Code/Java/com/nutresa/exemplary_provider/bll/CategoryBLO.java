@@ -15,7 +15,7 @@ public class CategoryBLO extends GenericBLO<CategoryDTO, CategoryDAO> {
         CategoryDAO dao = new CategoryDAO();
         try {
             dto = dao.save(dto);
-            if (dto.getSubCategories() != null) {
+            if (null != dto.getSubCategories()) {
                 SubCategoryBLO subCategory = new SubCategoryBLO();
                 dto.setSubCategories(subCategory.saveList(dto.getSubCategories(), "id" + dao.getEntity(), dto.getId()));
             }

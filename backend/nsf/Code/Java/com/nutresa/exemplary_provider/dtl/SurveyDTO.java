@@ -10,8 +10,6 @@ public class SurveyDTO {
     @Expose
     private String idCategory;
     @Expose
-    private CategoryDTO category;
-    @Expose
     private String idCompanySize;
     @Expose
     private List<QuestionDTO> question;
@@ -26,14 +24,6 @@ public class SurveyDTO {
 
     public String getId() {
         return id;
-    }
-
-    public CategoryDTO getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryDTO category) {
-        this.category = category;
     }
 
     public String getIdCategory() {

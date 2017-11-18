@@ -2,6 +2,8 @@ package com.nutresa.exemplary_provider.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 public class Common {
 
@@ -9,28 +11,68 @@ public class Common {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Method getMethod(Class<?> clazz, String name) {
+    public static Method getMethod(Class<?> clazz, String name) throws HandlerGenericException {
         Method method = null;
-        for (Method methodAux : clazz.getMethods()) {
-            if (methodAux.getName().equals(name)) {
-                method = methodAux;
-                method.setAccessible(true);
-                break;
+        try {
+            for (Method methodAux : clazz.getMethods()) {
+                if (methodAux.getName().equals(name)) {
+                    method = methodAux;
+                    method.setAccessible(true);
+                    break;
+                }
             }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
         return method;
     }
 
-    public static Field getField(Class<?> clazz, String name) {
+    @SuppressWarnings("unchecked")
+    public static Field getField(Class<?> declarationDTO, String name) throws HandlerGenericException {
         Field field = null;
-        for (Field fieldAux : clazz.getDeclaredFields()) {
-            if (fieldAux.getName().equals(name)) {
-                field = fieldAux;
-                field.setAccessible(true);
-                break;
+        try {
+            if (declarationDTO.getSuperclass() != Object.class) {
+                Class superClass = declarationDTO.getSuperclass();
+                field = superClass.getDeclaredField(name);
+            } else {
+                field = declarationDTO.getDeclaredField(name);
             }
+            field.setAccessible(true);
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
+
         return field;
     }
+
+    public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != Object.class) {
+            getAllFields(fields, type.getSuperclass());
+        }
+
+        return fields;
+    }
+
+    public static String getExceptionMessage(Exception exception) {
+        String message = exception.getMessage();
+        if (null == message || message.length() == 0) {
+            message = exception.getCause().getMessage();
+            if (null == message || message.length() == 0) {
+                message = exception.getClass().getSimpleName();
+            }
+        }
+        return message;
+    }
     
+    @SuppressWarnings("squid:S1166")
+    public static boolean isClass(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException exception) {
+            return false;
+        }
+    }
 }

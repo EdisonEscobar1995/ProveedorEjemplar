@@ -5,13 +5,18 @@ public class HandlerGenericException extends Exception {
     private final String message;
 
     public HandlerGenericException(Exception exception) {
-        super(exception.getMessage());
-        this.message = exception.getMessage();
+        super("");
+        this.message = Common.getExceptionMessage(exception);
     }
-    
+
+    public HandlerGenericException(String string) {
+        super(string);
+        this.message = string;
+    }
+
     @Override
     public String getMessage() {
         return message;
     }
-    
+
 }
