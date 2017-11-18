@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 
-public class ErrorAPI<T> extends DesignerFacesServlet {
+public class ErrorAPI extends DesignerFacesServlet {
 
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse) throws ServletException, IOException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
