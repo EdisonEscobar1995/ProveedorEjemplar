@@ -95,6 +95,7 @@ public abstract class GenericDAO<T> {
 
     @SuppressWarnings("unchecked")
     private T saveDocument(Document document, T dto, boolean newDocument) throws HandlerGenericException {
+        HandlerGenericException error = null;
         try {
             String id = document.getItemValueString("id");
             if (newDocument) {
@@ -115,9 +116,16 @@ public abstract class GenericDAO<T> {
             if (document.save(true, false)) {
                 Field field = Common.getField(dto.getClass(), "id");
                 field.set(dto, id);
+            } else {
+                error = new HandlerGenericException("Cant create document");
             }
+
         } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
+            error = new HandlerGenericException(exception);
+        }
+
+        if (null != error) {
+            throw error;
         }
 
         return dto;

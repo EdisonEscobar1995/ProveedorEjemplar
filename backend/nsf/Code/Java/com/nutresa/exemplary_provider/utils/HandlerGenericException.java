@@ -8,10 +8,15 @@ public class HandlerGenericException extends Exception {
         super(exception.getMessage());
         this.message = exception.getMessage();
     }
-    
+
+    public HandlerGenericException(String string) {
+        super(string);
+        this.message = string;
+    }
+
     @Override
     public String getMessage() {
         return message;
     }
-    
+
 }
