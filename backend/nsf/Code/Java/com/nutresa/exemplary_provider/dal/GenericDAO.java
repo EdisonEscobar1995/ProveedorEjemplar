@@ -67,7 +67,7 @@ public abstract class GenericDAO<T> {
                 List<Field> fields = new ArrayList();
                 for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
-                    Object value = document.getItemValue(field.getName(), field.getType());
+                    Object value = getValue(document, field.getName(), field.getType());
                     field.set(result, value);
                 }
             }
@@ -87,6 +87,9 @@ public abstract class GenericDAO<T> {
         Object value = null;
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
+            if (null == numberValue) {
+                numberValue = new Double(0);
+            }
             switch (com.nutresa.exemplary_provider.utils.Types.getType(type)) {
             case BYTE:
                 value = numberValue.byteValue();
@@ -95,7 +98,7 @@ public abstract class GenericDAO<T> {
                 value = numberValue.intValue() != 0;
                 break;
             case CHAR:
-                value = "a";
+                value = '\u0000';
                 break;
             case SHORT:
                 value = numberValue.shortValue();
@@ -110,7 +113,10 @@ public abstract class GenericDAO<T> {
                 value = numberValue.longValue();
                 break;
             case DOUBLE:
-                value = numberValue.doubleValue();
+                value = numberValue;
+                break;
+            default:
+                value = document.getItemValue(name, type);
                 break;
             }
         } else {
@@ -145,12 +151,10 @@ public abstract class GenericDAO<T> {
                 id = document.getUniversalID();
             }
 
-            List<Field> fields = new ArrayList();
+            List<Field> fields = new ArrayList();         
             for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                 field.setAccessible(true);
-                if (!"id".equals(field.getName())) {
-                    document.replaceItemValue(field.getName(), field.get(dto));
-                }
+                document.replaceItemValue(field.getName(), field.get(dto));
             }
 
             document.replaceItemValue("form", this.entityForm);
