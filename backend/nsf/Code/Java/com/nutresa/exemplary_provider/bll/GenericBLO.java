@@ -54,7 +54,7 @@ public class GenericBLO<T, D> {
             id = (String) field.get(dto);
             Method method = null;
             D dao = this.daoClass.newInstance();
-            if ("".equals(id)) {
+            if ("".equals(id) || null == id) {
                 method = Common.getMethod(this.daoClass, "save");
                 dto = (T) method.invoke(dao, dto);
             } else {
