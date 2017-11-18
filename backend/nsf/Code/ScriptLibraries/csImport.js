@@ -87,25 +87,23 @@ function logResult(result){
 	if (result.error){
 		html = html + "<div class='alert alert-danger'>";								
 		html = html + result.error;	
-		html = html + "</div>";	
-	}else if (result.response.rows.length > 0) {
-		html = html + "<div class='alert alert-danger'>";								
-		html = html + "Errores encontrados en la carga del archivo";	
-		html = html + "</div>";	
-		html = html + "<table class='table table-bordered table-condensed'>";
-		html = html + "<tr>";
-		html = html + "<th>Fila</th>";
-		html = html + "<th>Error</th>";
-		html = html + "</tr>";
+		html = html + "</div>";
 		if (result.response.rows.length > 0) {
-			result.response.rows.forEach(function(valor){
-				html = html + "<tr>";
-				html = html + "<td>"+(valor.pos+1)+"</td>";
-				html = html + "<td>"+valor.error+"</td>";
-				html = html + "</tr>"
-			})
+			html = html + "<table class='table table-bordered table-condensed'>";
+			html = html + "<tr>";
+			html = html + "<th>Fila</th>";
+			html = html + "<th>Error</th>";
+			html = html + "</tr>";
+			if (result.response.rows.length > 0) {
+				result.response.rows.forEach(function(valor){
+					html = html + "<tr>";
+					html = html + "<td>"+(valor.pos+1)+"</td>";
+					html = html + "<td>"+valor.error+"</td>";
+					html = html + "</tr>"
+				})
+			}
+			html = html + "</table>";	
 		}
-		html = html + "</table>";	
 	}else if (result.count > 0){
 		html = html + "<div class='alert alert-success'>";								
 		html = html + "Se cargaron exitosamente " + result.count + " registros";
