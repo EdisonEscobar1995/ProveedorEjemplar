@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.utils.Common;
 
 public class ServletResponseDTO<T> {
     private static final String SUCCESS = "success";
@@ -20,7 +21,7 @@ public class ServletResponseDTO<T> {
     }
 
     public ServletResponseDTO(Exception exception) {
-        this.message = exception.getMessage();
+        this.message = Common.getExceptionMessage(exception);
         this.status = false;
     }
 
