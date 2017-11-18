@@ -55,4 +55,15 @@ public class Common {
         return fields;
     }
 
+    public static String getExceptionMessage(Exception exception) {
+        String message = exception.getMessage();
+        if (null == message || message.length() == 0) {
+            message = exception.getCause().getMessage();
+            if (null == message || message.length() == 0) {
+                message = exception.getClass().getSimpleName();
+            }
+        }
+        return message;
+    }
+    
 }
