@@ -67,12 +67,7 @@ public abstract class GenericDAO<T> {
                 List<Field> fields = new ArrayList();
                 for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
-                    Object value;
-                    if (field.getType().isPrimitive()) {
-                        value = getValue(document, field.getName(), field.getType());
-                    } else {
-                        value = document.getItemValue(field.getName(), field.getType());
-                    }
+                    Object value = document.getItemValue(field.getName(), field.getType());
                     field.set(result, value);
                 }
             }
@@ -90,32 +85,36 @@ public abstract class GenericDAO<T> {
     @SuppressWarnings("unchecked")
     public static <T> T getValue(Document document, String name, Class<?> type) {
         Object value = null;
-        Double numberValue = document.getItemValue(name, Double.class);
-        switch (com.nutresa.exemplary_provider.utils.Types.getType(type)) {
-        case BYTE:
-            value = numberValue.byteValue();
-            break;
-        case BOOLEAN:
-            value = numberValue.intValue() != 0;
-            break;
-        case CHAR:
-            value = "a";
-            break;
-        case SHORT:
-            value = numberValue.shortValue();
-            break;
-         case INT:
-            value = numberValue.intValue();
-            break;
-        case FLOAT:
-            value = numberValue.floatValue();
-            break;
-        case LONG:
-            value = numberValue.longValue();
-            break;
-        case DOUBLE:
-            value = numberValue.doubleValue();
-            break;
+        if (type.isPrimitive()) {
+            Double numberValue = document.getItemValue(name, Double.class);
+            switch (com.nutresa.exemplary_provider.utils.Types.getType(type)) {
+            case BYTE:
+                value = numberValue.byteValue();
+                break;
+            case BOOLEAN:
+                value = numberValue.intValue() != 0;
+                break;
+            case CHAR:
+                value = "a";
+                break;
+            case SHORT:
+                value = numberValue.shortValue();
+                break;
+            case INT:
+                value = numberValue.intValue();
+                break;
+            case FLOAT:
+                value = numberValue.floatValue();
+                break;
+            case LONG:
+                value = numberValue.longValue();
+                break;
+            case DOUBLE:
+                value = numberValue.doubleValue();
+                break;
+            }
+        } else {
+            value = document.getItemValue(name, type);
         }
         return (T) value;
     }

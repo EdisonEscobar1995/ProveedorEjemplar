@@ -66,11 +66,12 @@ public class Common {
         return message;
     }
     
+    @SuppressWarnings("squid:S1166")
     public static boolean isClass(String className) {
         try {
             Class.forName(className);
             return true;
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException exception) {
             return false;
         }
     }
