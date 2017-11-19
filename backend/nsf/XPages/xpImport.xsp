@@ -33,6 +33,10 @@
 				<xp:selectItem itemLabel="Tipos de suministro" itemValue="SUT"></xp:selectItem>
 				<xp:selectItem itemLabel="Categorías del proveedor" itemValue="CAT"></xp:selectItem>
 				<xp:selectItem itemLabel="Subcategorías del proveedor" itemValue="SUB"></xp:selectItem>
+				<xp:selectItem itemLabel="Países" itemValue="COU"></xp:selectItem>
+				<xp:selectItem itemLabel="Departamentos" itemValue="DEP"></xp:selectItem>
+				<xp:selectItem itemLabel="Ciudades" itemValue="CIT"></xp:selectItem>
+				<xp:selectItem itemLabel="Otros" itemValue="OTH"></xp:selectItem>
 				<xp:this.attrs>
 					<xp:attr name="data-name" value="type">
 					</xp:attr>

@@ -12,7 +12,7 @@ function importData() {
 	var columnNames;
 	var requiredFields;
 	var defaultFields;
-	var foreignKeys = [];
+	var foreignKey = {};
 	var viewName;
 	
 	try{
@@ -35,7 +35,7 @@ function importData() {
 				requiredFields = [{commonName: "Dimensión", technicalName: "idDimension"},
 					               {commonName: "Criterio", technicalName: "name"}];
 				defaultFields = [{ key: "form", value: "frCriterion"}];
-				foreignKeys = [{technicalName: "idDimension", commonName: "Dimensión", viewName: "vwDimensionsByName"}];
+				foreignKey = {technicalNames: ["idDimension"], commonNames: ["Dimensión"], viewNames: ["vwDimensionsByName"]};
 				viewName = "vwCriterions";
 				break;
 			case "QUE":
@@ -50,8 +50,7 @@ function importData() {
 					               {commonName: "Pregunta", technicalName: "wording"},
 					               {commonName: "Requiere soporte", technicalName: "requireAttachment"}];
 				defaultFields = [{ key: "form", value: "frQuestion"}];
-				foreignKeys = [{technicalName: "idDimension", commonName: "Dimensión", viewName: "vwDimensionsByName"},
-				               {technicalName: "idCriterion", commonName: "Criterio", viewName: "vwCriterionsByName"}];
+				foreignKey = {technicalNames: ["idDimension", "idCriterion"], commonNames: ["Dimensión", "Criterio"], viewNames: ["vwDimensionsByName", "vwCriterionsByName"]};
 				viewName = "vwQuestions";
 				break;
 			case "OPC":
@@ -64,7 +63,7 @@ function importData() {
 					               {commonName: "Respuesta", technicalName: "wording"},
 					               {commonName: "Peso", technicalName: "score"}];
 				defaultFields = [{ key: "form", value: "frOption"}];
-				foreignKeys = [{technicalName: "idQuestion", commonName: "Pregunta", viewName: "vwQuestionsByWording"}];
+				foreignKey = {technicalNames: ["idQuestion"], commonNames: ["Pregunta"], viewNames: ["vwQuestionsByWording"]};
 				viewName = "vwOptions";
 				break;
 			case "SEC":
@@ -115,7 +114,7 @@ function importData() {
 				requiredFields = [{commonName: "Tipos de suministro", technicalName: "idSupply"},
 					               {commonName: "Categoría", technicalName: "name"}];
 				defaultFields = [{ key: "form", value: "frCategory"}];
-				foreignKeys = [{technicalName: "idSupply", commonName: "Tipo de suministro", viewName: "vwSuppliesByName"}];
+				foreignKey = {technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["vwSuppliesByName"]};
 				viewName = "vwCategories";
 				break;
 			case "SUB":
@@ -126,11 +125,44 @@ function importData() {
 				requiredFields = [{commonName: "Categoría", technicalName: "idCategory"},
 					               {commonName: "Subcategoría", technicalName: "name"}];
 				defaultFields = [{ key: "form", value: "frSubCategory"}];
-				foreignKeys = [{technicalName: "idCategory", commonName: "Categoría", viewName: "vwCategoriesByName"}];
+				foreignKey = {technicalNames: ["idCategory"], commonNames: ["Categoría"], viewNames: ["vwCategoriesByName"]};
 				viewName = "vwSubCategories";
 				break;
+				
+			case "COU":
+				columnKeys = ["name"];
+				columnNameKeys = ["Pais"];
+				columnNames = [{commonName: "Pais", technicalName: "name"}];
+				requiredFields = [{commonName: "Pais", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frCountry"}];
+				viewName = "vwCountries";
+				break;
+			case "DEP":
+				columnKeys = ["idCountry", "name"];
+				columnNameKeys = ["Pais", "Departamento"];
+				columnNames = [{commonName: "Pais", technicalName: "idCountry"},
+				               {commonName: "Departamento", technicalName: "name"}];
+				requiredFields = [{commonName: "Pais", technicalName: "idCountry"},
+					               {commonName: "Departamento", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frDepartment"}];
+				foreignKey = {technicalNames: ["idCountry"], commonNames: ["Pais"], viewName: ["vwCountriesByName"]};
+				viewName = "vwDepartments";
+				break;
+			case "CIT":
+				columnKeys = ["idCountry", "idDepartment", "name"];
+				columnNameKeys = ["Pais", "Departamento", "Ciudad"];
+				columnNames = [{commonName: "Pais", technicalName: "idCountry"},
+				               {commonName: "Departamento", technicalName: "idDepartment"},
+				               {commonName: "Ciudad", technicalName: "name"}];
+				requiredFields = [{commonName: "Pais", technicalName: "idCountry"},
+					               {commonName: "Departamento", technicalName: "idDepartment"},
+					               {commonName: "Ciudad", technicalName: "name"}];
+				defaultFields = [{ key: "form", value: "frCity"}];
+				foreignKey = {technicalNames: ["idCountry", "idDepartment"], commonNames: ["Pais", "Departamento"], viewNames: ["vwCountriesByName", "vwDepartmentsByName"]};
+				viewName = "vwCities";
+				break;
 		}
-		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys)
+		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKey)
 		
 	}catch(e){
 		result.error = e.message;
@@ -140,7 +172,7 @@ function importData() {
 	}	
 }
 
-function importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys) {
+function importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKey) {
 	var error = "";
 	var count = 0;	
 	
@@ -167,6 +199,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		var repeatedRows = 0;
 		var incompleteRows = 0;
 		var unavailableForeignKeys = 0;
+		var keys;
 		
 		for (i in data) {
 			for (j in columnNames){
@@ -210,14 +243,28 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 				}
 			}
 			
+			keys = ""
 			unavailableForeignNames = [];
-			for (j in foreignKeys){
-				vwForeign = sessionAsSigner.getCurrentDatabase().getView(foreignKeys[j].viewName);
-				ndForeign = vwForeign.getDocumentByKey(fila[foreignKeys[j].technicalName], true);
+			if (foreignKey.hasOwnProperty("technicalNames")){
+				if (foreignKey.technicalNames.length > 1){
+					for (j = 0; j < foreignKey.technicalNames.length - 1; j++){
+						vwForeign = sessionAsSigner.getCurrentDatabase().getView(foreignKey.viewNames[j]);
+						ndForeign = vwForeign.getDocumentByKey(fila[foreignKey.technicalNames[j]], true);
+						if (ndForeign){
+							fila[foreignKey.technicalNames[j]] = ndForeign.getItemValueString("id");
+							keys += ndForeign.getItemValueString("id");
+							ndForeign.recycle();
+						}
+						vwForeign.recycle();
+					}
+				}
+				keys += fila[foreignKey.technicalNames[foreignKey.technicalNames.length - 1]];
+				vwForeign = sessionAsSigner.getCurrentDatabase().getView(foreignKey.viewNames[foreignKey.viewNames.length - 1]);
+				ndForeign = vwForeign.getDocumentByKey(keys, true);
 				if (!ndForeign){
-					unavailableForeignNames.push(foreignKeys[j].commonName)
+					unavailableForeignNames = foreignKey.commonNames.slice(0);
 				}else{
-					fila[foreignKeys[j].technicalName] = ndForeign.getItemValueString("id");
+					fila[foreignKey.technicalNames[foreignKey.technicalNames.length - 1]] = ndForeign.getItemValueString("id");
 					ndForeign.recycle();	
 				}
 				vwForeign.recycle();

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Criterions by name' alias='vwCriterionsByName' xmlns='http://www.lotus.com/dxl'
+<view name='Departments by name' alias='vwDepartmentsByName' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,21 +9,21 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='2342' unid='5913A2A6C25C1C3C052581DC0074F4B8' sequence='4'>
-<created><datetime>20171118T161728,24-05</datetime></created>
-<modified><datetime>20171119T132958,99-05</datetime></modified>
-<revised><datetime>20171119T132958,98-05</datetime></revised>
-<lastaccessed><datetime>20171119T132958,99-05</datetime></lastaccessed>
-<addedtofile><datetime>20171118T161728,25-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='237e' unid='1EDF1DFBE369082B052581DD005962A9' sequence='3'>
+<created><datetime>20171119T111619,61-05</datetime></created>
+<modified><datetime>20171119T113105,71-05</datetime></modified>
+<revised><datetime>20171119T113105,70-05</datetime></revised>
+<lastaccessed><datetime>20171119T113105,71-05</datetime></lastaccessed>
+<addedtofile><datetime>20171119T111619,62-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frCriterion"</formula></code><code
+ event='selection'><formula>SELECT form = "frDepartment"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
 </lotusscript></code>
 <column sort='ascending' hidedetailrows='false' itemname='$0' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='idDimension + name'><font size='9pt'
- style='bold'/></columnheader><code event='value'><formula>idDimension + name</formula></code></column></view>
+ showaslinks='false'><columnheader title='IdCountry + name'><font size='9pt'
+ style='bold'/></columnheader><code event='value'><formula>idCountry + name</formula></code></column></view>
 
