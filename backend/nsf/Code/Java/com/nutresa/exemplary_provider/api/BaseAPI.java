@@ -75,7 +75,11 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             if (null != method) {
                 switch (requestMethod) {
                 case GET:
-                    servletResponse = doGet(method, parameters);
+                    if (parameters.size() > 1) {
+                        servletResponse = doGet(method, parameters);
+                    } else {
+                        servletResponse = doGet(method);
+                    }
                     break;
                 case POST:
                     servletResponse = doPost(method, request.getReader(), gson);
@@ -101,6 +105,11 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             response.setStatus(status);
             output.print(gson.toJson(servletResponse));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private ServletResponseDTO doGet(Method method) throws IllegalAccessException, InvocationTargetException {
+        return (ServletResponseDTO) method.invoke(this);
     }
 
     @SuppressWarnings("unchecked")

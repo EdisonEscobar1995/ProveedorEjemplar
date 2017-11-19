@@ -59,7 +59,7 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private T castDocument(Document document) throws HandlerGenericException {
+    protected T castDocument(Document document) throws HandlerGenericException {
         T result = null;
         try {
             if (document != null) {
@@ -158,6 +158,14 @@ public abstract class GenericDAO<T> {
         }
 
         return response;
+    }
+    
+    public Database getDatabase() {
+        return database;
+    }
+
+    protected String getNameUserInSession() {
+        return session.getEffectiveUserName();
     }
 
     public String getEntity() {

@@ -1,13 +1,23 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import com.google.gson.annotations.Expose;
+
 public class SupplierByCallDTO {
+    @Expose
     private String id;
+    @Expose
     private String idCall;
+    @Expose
     private String idSurvey;
+    @Expose
     private String idSupplier;
+    @Expose
     private boolean participateInCall;
+    @Expose
     private String reasonForNotParticipation;
+    @Expose
     private boolean lockedByModification;
+    @Expose
     private String oldIdCompanySize;
 
     public String getIdCall() {
