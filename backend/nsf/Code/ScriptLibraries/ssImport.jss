@@ -145,7 +145,7 @@ function importData() {
 				requiredFields = [{commonName: "Pais", technicalName: "idCountry"},
 					               {commonName: "Departamento", technicalName: "name"}];
 				defaultFields = [{ key: "form", value: "frDepartment"}];
-				foreignKey = {technicalNames: ["idCountry"], commonNames: ["Pais"], viewName: ["vwCountriesByName"]};
+				foreignKey = {technicalNames: ["idCountry"], commonNames: ["Pais"], viewNames: ["vwCountriesByName"]};
 				viewName = "vwDepartments";
 				break;
 			case "CIT":
