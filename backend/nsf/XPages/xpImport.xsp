@@ -24,6 +24,8 @@
 				<xp:selectItem itemLabel="" itemValue=""></xp:selectItem>
 				<xp:selectItem itemLabel="Dimensiones de preguntas" itemValue="DIM"></xp:selectItem>
 				<xp:selectItem itemLabel="Criterios de preguntas" itemValue="CRI"></xp:selectItem>
+				<xp:selectItem itemLabel="Preguntas" itemValue="QUE"></xp:selectItem>
+				<xp:selectItem itemLabel="Opciones de respuesta" itemValue="OPC"></xp:selectItem>
 				<xp:selectItem itemLabel="Sectores" itemValue="SEC"></xp:selectItem>
 				<xp:selectItem itemLabel="Tamaños de empresa" itemValue="COS"></xp:selectItem>
 				<xp:selectItem itemLabel="Tipos de empresa" itemValue="COT"></xp:selectItem>

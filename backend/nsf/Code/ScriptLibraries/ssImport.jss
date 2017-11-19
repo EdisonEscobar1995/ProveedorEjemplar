@@ -38,6 +38,35 @@ function importData() {
 				foreignKeys = [{technicalName: "idDimension", commonName: "Dimensión", viewName: "vwDimensionsByName"}];
 				viewName = "vwCriterions";
 				break;
+			case "QUE":
+				columnKeys = ["idDimension", "idCriterion", "wording"];
+				columnNameKeys = ["Dimensión", "Criterio", "Pregunta"];
+				columnNames = [{commonName: "Dimensión", technicalName: "idDimension"},
+				               {commonName: "Criterio", technicalName: "idCriterion"},
+				               {commonName: "Pregunta", technicalName: "wording"},
+				               {commonName: "Requiere soporte", technicalName: "requireAttachment"}];
+				requiredFields = [{commonName: "Dimensión", technicalName: "idDimension"},
+					               {commonName: "Criterio", technicalName: "idCriterion"},
+					               {commonName: "Pregunta", technicalName: "wording"},
+					               {commonName: "Requiere soporte", technicalName: "requireAttachment"}];
+				defaultFields = [{ key: "form", value: "frQuestion"}];
+				foreignKeys = [{technicalName: "idDimension", commonName: "Dimensión", viewName: "vwDimensionsByName"},
+				               {technicalName: "idCriterion", commonName: "Criterio", viewName: "vwCriterionsByName"}];
+				viewName = "vwQuestions";
+				break;
+			case "OPC":
+				columnKeys = ["idQuestion", "wording"];
+				columnNameKeys = ["Pregunta", "Respuesta"];
+				columnNames = [{commonName: "Pregunta", technicalName: "idQuestion"},
+				               {commonName: "Respuesta", technicalName: "wording"},
+				               {commonName: "Peso", technicalName: "score"}];
+				requiredFields = [{commonName: "Pregunta", technicalName: "idQuestion"},
+					               {commonName: "Respuesta", technicalName: "wording"},
+					               {commonName: "Peso", technicalName: "score"}];
+				defaultFields = [{ key: "form", value: "frOption"}];
+				foreignKeys = [{technicalName: "idQuestion", commonName: "Pregunta", viewName: "vwQuestionsByWording"}];
+				viewName = "vwOptions";
+				break;
 			case "SEC":
 				columnKeys = ["name"];
 				columnNameKeys = ["Sector"];
@@ -143,6 +172,11 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 			for (j in columnNames){
 				data[i][columnNames[j].technicalName] = data[i][columnNames[j].commonName];
 				delete data[i][columnNames[j].commonName];
+				if (data[i].hasOwnProperty(columnNames[j].technicalName) && data[i][columnNames[j].technicalName]){
+					data[i][columnNames[j].technicalName] = data[i][columnNames[j].technicalName].trim()
+				}else{
+					data[i][columnNames[j].technicalName] = "";
+				}
 			}
 		}
 		
@@ -242,7 +276,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		count = savedIds.length
 	
 	}catch(e){
-		error = e.message;
+		error = e.message + " fila " + i;
 	}
 	
 	return {
