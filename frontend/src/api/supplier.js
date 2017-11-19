@@ -6,12 +6,8 @@ function getDataSuppliertApi() {
 function saveDataSupplierApi(data) {
   return intance.post('Supplier?action=save', data);
 }
-function updateDataSupplierApi(data) {
-  return intance.post('Supplier?action=update', data);
-}
 
 export {
   getDataSuppliertApi as default,
   saveDataSupplierApi,
-  updateDataSupplierApi,
 };

@@ -53,8 +53,9 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "replace:index": "node scripts/replaceIndexPath.js",
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "node scripts/build.js && npm run replace:index",
     "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {

@@ -3,11 +3,13 @@ import {
   GET_DATA_SUPPLIER_SUCCESS,
   GET_DATA_SUPPLIER_FAILED,
   SAVE_DATA_SUPPLIER_FAILED,
-
 } from './const';
 
 const initialState = {
-  data: [],
+  supplier: {},
+  categories: [],
+  companyTypes: [],
+  societyTypes: [],
   loading: false,
 };
 
@@ -22,7 +24,10 @@ function supplierApp(state = initialState, action) {
     case GET_DATA_SUPPLIER_SUCCESS: {
       return {
         ...state,
-        data: action.data,
+        supplier: action.supplier,
+        categories: action.categories,
+        companyTypes: action.companyTypes,
+        societyTypes: action.societyTypes,
         loading: false,
       };
     }
@@ -32,6 +37,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        error: action.error,
       };
     }
     default: {
