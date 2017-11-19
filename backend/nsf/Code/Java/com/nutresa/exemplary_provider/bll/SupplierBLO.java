@@ -25,4 +25,17 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
         return dto;
     }
+
+    public SupplierDTO getSupplierInSession() throws HandlerGenericException {
+        SupplierDTO supplier = null;
+        SupplierDAO dao = new SupplierDAO();
+        try {
+            supplier = dao.getSupplierInDirectory();
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return supplier;
+    }
+
 }
