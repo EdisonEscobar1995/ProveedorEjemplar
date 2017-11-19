@@ -19,9 +19,11 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         CallDTO call = null;
         try {
             for (SupplierByCallDTO supplierByCall : supplierByCallBLO.getCurrentCallBySupplier()) {
-                call = callDAO.get(supplierByCall.getId());
+                call = callDAO.get(supplierByCall.getIdCall());
                 if (isNotCaduced(call)) {
                     break;
+                } else {
+                    call = null;
                 }
             }
         } catch (HandlerGenericException exception) {
@@ -34,7 +36,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     private boolean isNotCaduced(CallDTO call) {
         Date date = new Date();
         boolean response = false;
-        if (date.compareTo(call.getDateToFinishCall()) > 0) {
+        if (date.compareTo(call.getDateToFinishCall()) < 0) {
             response = true;
         }
 

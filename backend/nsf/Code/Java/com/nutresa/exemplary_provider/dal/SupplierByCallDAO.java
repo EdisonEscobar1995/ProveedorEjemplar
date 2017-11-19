@@ -18,7 +18,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     public List<SupplierByCallDTO> getBySupplier(String idSupplier) throws HandlerGenericException {
         List<SupplierByCallDTO> callsBySupplier = new ArrayList<SupplierByCallDTO>();
         try {
-            View currentView = getDatabase().getView("vwSupplierByCalls");
+            View currentView = getDatabase().getView("vwSupplierByCallsSupplier");
             DocumentCollection documents = currentView.getAllDocumentsByKey(idSupplier, true);
             for (Document document : documents) {
                 callsBySupplier.add(castDocument(document));
