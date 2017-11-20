@@ -28,7 +28,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             throw new HandlerGenericException(exception);
         }
 
-        return null;
+        return users;
     }
 
 }

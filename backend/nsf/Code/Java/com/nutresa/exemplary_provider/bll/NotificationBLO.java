@@ -61,8 +61,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         }
         email.setSubject(notification.getName());
         email.addHTML(body);
-        email.setSenderEmail(notification.SENDER_EMAIL);
-        email.setSenderName(notification.SENDER_NAME);
+        email.setSenderEmail(NotificationDTO.SENDER_EMAIL);
+        email.setSenderName(NotificationDTO.SENDER_NAME);
         email.send();
     }
 
