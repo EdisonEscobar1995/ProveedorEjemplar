@@ -25,7 +25,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 sendTo.add(user.getEmail());
             }
             NotificationDAO notificationDAO = new NotificationDAO();
-            sendNotification(sendTo, notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE"));
+            NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
+            notification.setMessage(notification.getMessage().concat(
+            "<a href='https://www.google.com.co'>Link de consulta</a>"));
+            sendNotification(sendTo, notification);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
