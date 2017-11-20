@@ -52,6 +52,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         DominoEmail email = new DominoEmail();
         body.append(notification.getMessage());
         email.setTo(sendTo);
+        List<String> withCopy = notification.getWithCopy();
+        if (withCopy != null && !withCopy.isEmpty()) {
+            email.setCC(withCopy);
+        }
         email.setSubject(notification.getName());
         email.addHTML(body);
         email.setSenderEmail(notification.SENDER_EMAIL);
