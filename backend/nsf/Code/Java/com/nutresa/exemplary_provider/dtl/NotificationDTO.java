@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class NotificationDTO extends MasterDTO{
+public class NotificationDTO extends MasterDTO {
     @Expose
     private String banner;
     @Expose
@@ -13,6 +13,9 @@ public class NotificationDTO extends MasterDTO{
     private String message;
     @Expose
     private List<String> withCopy;
+    private String alias;
+    public final String SENDER_NAME = "Portal de proveedores";
+    public final String SENDER_EMAIL = "gruponutresa@nutresa.com";
 
     public String getBanner() {
         return banner;
@@ -44,6 +47,10 @@ public class NotificationDTO extends MasterDTO{
 
     public void setWithCopy(List<String> withCopy) {
         this.withCopy = withCopy;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 
 }
