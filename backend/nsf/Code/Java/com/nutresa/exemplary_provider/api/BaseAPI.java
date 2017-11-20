@@ -75,11 +75,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             if (null != method) {
                 switch (requestMethod) {
                 case GET:
-                    if (parameters.size() > 1) {
-                        servletResponse = doGet(method, parameters);
-                    } else {
-                        servletResponse = doGet(method);
-                    }
+                    servletResponse = doGet(method, parameters);
                     break;
                 case POST:
                     servletResponse = doPost(method, request.getReader(), gson);
@@ -108,14 +104,15 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doGet(Method method) throws IllegalAccessException, InvocationTargetException {
-        return (ServletResponseDTO) method.invoke(this);
-    }
-
-    @SuppressWarnings("unchecked")
     private ServletResponseDTO doGet(Method method, Map<String, String> parameters) throws IllegalAccessException,
             InvocationTargetException {
-        return (ServletResponseDTO) method.invoke(this, parameters);
+        ServletResponseDTO response = null;
+        if (parameters.size() > 1) {
+            response = (ServletResponseDTO) method.invoke(this, parameters);
+        } else {
+            response = (ServletResponseDTO) method.invoke(this);
+        }
+        return response;
     }
 
     @SuppressWarnings("unchecked")
