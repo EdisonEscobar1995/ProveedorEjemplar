@@ -1,6 +1,6 @@
 import intance from './instance';
 
-function getDataCompanyTypetApi() {
+function getDataCompanyTypesApi() {
   return intance.get('CompanyType?action=getAll');
 }
 function saveDataCompanyTypeApi(data) {
@@ -8,6 +8,6 @@ function saveDataCompanyTypeApi(data) {
 }
 
 export {
-  getDataCompanyTypetApi as default,
+  getDataCompanyTypesApi as default,
   saveDataCompanyTypeApi,
 };

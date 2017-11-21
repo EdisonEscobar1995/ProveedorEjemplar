@@ -1,11 +1,18 @@
 import React from 'react';
-import { Row, Col, Form, Input, Select, Upload, Button, Icon } from 'antd';
+import { Row, Col, Form, Input, Select, Radio, Upload, Button, Icon } from 'antd';
+import styled from 'styled-components';
 import SubTitle from '../shared/SubTitle';
+import GenericForm from '../shared/GenericForm';
 import Field from './Field';
 
 const { Item } = Form;
 const { Option } = Select;
 const { TextArea } = Input;
+const { Group } = Radio;
+
+const ParagraphStyle = styled.p`
+  margin-bottom: ${props => props.theme.spaces.main};
+`;
 
 function DinamicForm({ content, getFieldDecorator }) {
   return (
@@ -16,31 +23,57 @@ function DinamicForm({ content, getFieldDecorator }) {
             {
               item.value.map((current) => {
                 let rowValue;
-                const { label, key, span, type, inputType, options, value, required } = current;
+                let { label, span } = current;
+                const {
+                  key,
+                  type,
+                  inputType,
+                  options,
+                  value,
+                  required,
+                  colummns,
+                  handleChange,
+                  disabled,
+                } = current;
+                label = label ? `${label}${required ? '(*)' : ''}` : '';
+                span = span || 24;
                 switch (type) {
                   case 'input':
                   case 'textarea':
+                  case 'radio':
                   case 'select': {
                     let fieldContent;
                     switch (type) {
                       case 'input':
-                        fieldContent = <Input type={inputType || 'text'} />;
+                        fieldContent = <Input disabled={disabled} type={inputType || 'text'} />;
                         break;
                       case 'textarea':
-                        fieldContent = <TextArea />;
+                        fieldContent = <TextArea disabled={disabled} />;
                         break;
                       case 'select':
-                        fieldContent = (<Select
-                          showSearch
-                          allowClear
-                          notFoundContent="No se encontraron resultados"
-                        >
+                        fieldContent = (
+                          <Select
+                            disabled={disabled}
+                            showSearch
+                            allowClear
+                            notFoundContent="No se encontraron resultados"
+                            onChange={handleChange}
+                          >
+                            {
+                              options.map(option => (
+                                <Option key={option.id} value={option.id}>{option.name}</Option>
+                              ))
+                            }
+                          </Select>);
+                        break;
+                      case 'radio':
+                        fieldContent = (<Group disabled={disabled}>
                           {
                             options.map(option => (
-                              <Option key={option.id} value={option.id}>{option.text}</Option>
+                              <Radio key={option.id} value={option.id}>{option.name}</Radio>
                             ))
                           }
-                        </Select>);
+                        </Group>);
                         break;
                       default:
                         fieldContent = '';
@@ -64,13 +97,24 @@ function DinamicForm({ content, getFieldDecorator }) {
                       <SubTitle text={value} />
                     );
                     break;
+                  case 'table':
+                    rowValue = (
+                      <GenericForm
+                        loading={false}
+                        colummns={colummns}
+                        data={[]}
+                        actual={{}}
+                      />
+                    );
+                    break;
                   case 'upload':
                     rowValue = (
                       <Field label={label}>
                         <Upload
+                          disabled={disabled}
                           accept=".doc, .png, .jpg, .jpeg, .pdf, .ppt"
                         >
-                          <Button>
+                          <Button disabled={disabled}>
                             <Icon type="upload" />Adjuntar archivo
                           </Button>
                         </Upload>
@@ -78,11 +122,11 @@ function DinamicForm({ content, getFieldDecorator }) {
                     );
                     break;
                   default:
-                    rowValue = (<p>{value}</p>);
+                    rowValue = (<ParagraphStyle>{value}</ParagraphStyle>);
                     break;
                 }
                 return (
-                  <Col key={key} span={span}>
+                  <Col xs={24} sm={24} md={24} lg={span} key={key}>
                     {
                       rowValue
                     }

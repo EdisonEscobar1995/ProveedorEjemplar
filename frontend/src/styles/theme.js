@@ -4,6 +4,9 @@ const theme = {
     secondary: '#7fba00',
     info: '#989898',
   },
+  spaces: {
+    main: '15px',
+  },
   sizes: {
   },
   images: {
