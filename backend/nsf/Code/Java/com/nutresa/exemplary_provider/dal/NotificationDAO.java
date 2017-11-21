@@ -16,7 +16,7 @@ public class NotificationDAO extends GenericDAO<NotificationDTO> {
         NotificationDTO response = null;
         try {
             View currentView = getDatabase().getView("vwNotificationByAlias");
-            Document document = currentView.getFirstDocumentByKey(alias);
+            Document document = currentView.getFirstDocumentByKey(alias, true);
             response = castDocument(document);
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
