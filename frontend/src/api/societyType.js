@@ -1,6 +1,6 @@
 import intance from './instance';
 
-function getDataSocietyTypetApi() {
+function getDataSocietyTypesApi() {
   return intance.get('SocietyType?action=getAll');
 }
 function saveDataSocietyTypeApi(data) {
@@ -8,6 +8,6 @@ function saveDataSocietyTypeApi(data) {
 }
 
 export {
-  getDataSocietyTypetApi as default,
+  getDataSocietyTypesApi as default,
   saveDataSocietyTypeApi,
 };

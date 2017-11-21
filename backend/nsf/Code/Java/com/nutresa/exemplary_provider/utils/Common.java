@@ -29,6 +29,22 @@ public class Common {
         return method;
     }
 
+    public static Method getMethod(Class<?> clazz, String name, int parameterQuantity) throws HandlerGenericException {
+        Method method = null;
+        try {
+            for (Method methodAux : clazz.getMethods()) {
+                if (methodAux.getName().equals(name) && methodAux.getParameterTypes().length == parameterQuantity) {
+                    method = methodAux;
+                    method.setAccessible(true);
+                    break;
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return method;
+    }
+    
     @SuppressWarnings("unchecked")
     public static Field getField(Class<?> declarationDTO, String name) throws HandlerGenericException {
         Field field = null;
@@ -90,5 +106,6 @@ public class Common {
             }
         }
         return stringBuilder.toString();
-    }    
+    }
+
 }

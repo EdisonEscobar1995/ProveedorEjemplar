@@ -24,6 +24,7 @@ import com.google.gson.JsonSyntaxException;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class BaseAPI<T> extends DesignerFacesServlet {
 
@@ -42,7 +43,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        response.setContentType("application/json");
+        response.setContentType("application/json; charset=utf-8");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setCharacterEncoding("UTF-8");
         ServletOutputStream output = response.getOutputStream();
         FacesContext facesContext = this.getFacesContext(request, response);
 
@@ -64,7 +67,8 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         int status = 200;
         ServletResponseDTO servletResponse = null;
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls().setDateFormat("Y/m/d").setPrettyPrinting().create();
+                .serializeNulls()
+            .setDateFormat("Y/m/d").setPrettyPrinting().create();
     
         try {
             typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
@@ -73,14 +77,13 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             String action = parameters.get("action");
             parameters.remove("action");
     
-            Method method = Common.getMethod(this.getClass(), action);
-            if (null != method) {
+            if (null != action) {
                 switch (requestMethod) {
                 case GET:
-                    servletResponse = doGet(method, parameters);
+                    servletResponse = doGet(action, parameters);
                     break;
                 case POST:
-                    servletResponse = doPost(method, request.getReader(), gson);
+                    servletResponse = doPost(action, request.getReader(), gson);
                     break;
                 case OPTIONS:
                     doOptions(response, output);
@@ -101,7 +104,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             servletResponse = new ServletResponseDTO(exception);
         } finally {
             response.setStatus(status);
-            output.print(gson.toJson(servletResponse));
+            String jsonResponse = gson.toJson(servletResponse);
+            byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
+            output.write(utf8JsonString, 0, utf8JsonString.length);            
         }
     }
 
@@ -118,18 +123,26 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doGet(Method method, Map<String, String> parameters) throws IllegalAccessException,
-            InvocationTargetException {
+    private ServletResponseDTO doGet(String action, Map<String, String> parameters) throws IllegalAccessException,
+        InvocationTargetException, HandlerGenericException {
         ServletResponseDTO response = null;
-        response = (ServletResponseDTO) method.invoke(this, parameters);
+        if (parameters.size() == 0) {
+            Method method = Common.getMethod(this.getClass(), action, 0);
+            response = (ServletResponseDTO) method.invoke(this);
+        } else {
+            Method method = Common.getMethod(this.getClass(), action, 1);
+            response = (ServletResponseDTO) method.invoke(this, parameters);
+        }
         return response;
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doPost(Method method, BufferedReader reader, Gson gson) throws IOException,
-            JsonSyntaxException, IllegalAccessException, InvocationTargetException {
+    private ServletResponseDTO doPost(String action, BufferedReader reader, Gson gson) throws IOException,
+            JsonSyntaxException,
+        IllegalAccessException, InvocationTargetException, HandlerGenericException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
+        Method method = Common.getMethod(this.getClass(), action);
         while ((inputLine = reader.readLine()) != null) {
             stringBuilder.append(inputLine);
         }

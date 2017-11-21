@@ -27,7 +27,6 @@ public abstract class GenericDAO<T> {
     private Session session;
     private Database database;
     private Class<T> dtoClass;
-    private static final String VIEW_IDS = "vwDevIds";
     private String entityForm;
     protected String entityView;
     protected String entity;
@@ -48,16 +47,30 @@ public abstract class GenericDAO<T> {
     }
 
     public T get(String id) throws HandlerGenericException {
-        View currentView = database.getView(VIEW_IDS);
+        View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
         return castDocument(document);
     }
 
-    public T getBy(String field, String value) throws HandlerGenericException {
-        // TODO Implemnentar el método para devolver solo un registro filtrado
-        View currentView = database.getView(VIEW_IDS);
-        Document document = currentView.getFirstDocumentByKey(value, true);
+    public T getBy(Map<String, String> parameters) throws HandlerGenericException {
+        View view = getIndexedView(parameters);
+        Document document;
+        if (null == view) {
+            view = database.getView(entityView);
+            String query = getQuerySearch(parameters);
+            int y = view.FTSearch(query, 1);
+            document = view.getFirstDocument();
+        } else {
+            Vector<String> indexedParameters = getIndexedParameters(view, parameters);
+            document = view.getFirstDocumentByKey(indexedParameters, true);
+        }
         return castDocument(document);
+    }
+    
+    public T getBy(String field, String value) throws HandlerGenericException {
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put(field, value);
+        return getBy(filter);
     }
     
     public List<T> getAll() throws HandlerGenericException {
@@ -257,7 +270,7 @@ public abstract class GenericDAO<T> {
 
     public T update(String id, T dto) throws HandlerGenericException {
         try {
-            View vw = database.getView(VIEW_IDS);
+            View vw = database.getView(entityView);
             Document document = vw.getFirstDocumentByKey(id, true);
             if (document != null) {
                 dto = this.saveDocument(document, dto, false);
@@ -272,7 +285,7 @@ public abstract class GenericDAO<T> {
     public boolean delete(String id) throws HandlerGenericException {
         boolean response = false;
         try {
-            View view = database.getView(VIEW_IDS);
+            View view = database.getView(entityView);
             Document document = view.getFirstDocumentByKey(id, true);
             if (document != null) {
                 response = document.remove(true);

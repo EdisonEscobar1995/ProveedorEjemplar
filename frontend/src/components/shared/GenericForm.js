@@ -1,25 +1,42 @@
 import React, { Component } from 'react';
-import { Table, Input, Popconfirm, Form, Button } from 'antd';
+import { Table, Input, Form, Spin, Button } from 'antd';
+import styled from 'styled-components';
+import Confirm from './Confirm';
 
 const { Column } = Table;
 const { Item } = Form;
 
+const ItemStyle = styled(Item)`
+  margin: 0;
+`;
+
 class GenericFormTable extends Component {
   state = {
     data: this.props.data,
+    actual: {},
+  };
+  componentWillReceiveProps(nextData) {
+    this.state.actual = nextData.actual;
+    this.state.data = nextData.data;
+  }
+  setData = (data) => {
+    this.setState({
+      data,
+      actual: {},
+    });
   }
   handleSubmit = (e) => {
     e.preventDefault();
     const row = this.state.row;
     const colummns = this.props.colummns;
-    const validateFields = colummns.map(item => `${row}-${item.dataIndex}`);
+    const validateFields = colummns.map(item => `${row}-${item.key}`);
     this.props.form.validateFields(validateFields);
     const dataForm = this.props.form.getFieldsValue();
     const rowValue = {};
     let send = true;
     colummns.forEach((column) => {
-      const value = dataForm[`${row}-${column.dataIndex}`];
-      rowValue[column.dataIndex] = value;
+      const value = dataForm[`${row}-${column.key}`];
+      rowValue[column.key] = value;
       if (!value) {
         send = false;
       }
@@ -29,8 +46,29 @@ class GenericFormTable extends Component {
       const actualRowValue = newData[row];
       delete newData[row].editable;
       newData[row] = Object.assign(actualRowValue, rowValue);
-      this.setState({ data: newData });
+      this.setData(newData);
+      this.props.saveData(actualRowValue);
     }
+  }
+
+  handleAdd = () => {
+    const { data } = this.state;
+    const newData = {
+      editable: true,
+      key: `${data.length}`,
+    };
+    data.unshift(newData);
+    this.setData(data);
+  }
+
+  deleteRow = (record) => {
+    const { key } = record;
+    const newData = [...this.state.data];
+    const target = newData.filter(item => key !== item.key);
+    this.reloadKeys(target);
+    this.setData(target);
+    delete record.key;
+    // this.props.deleteData(record);
   }
 
   editRow = (key) => {
@@ -38,7 +76,7 @@ class GenericFormTable extends Component {
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
       target.editable = true;
-      this.setState({ data: newData });
+      this.setData(newData);
     }
   }
   cancel(key) {
@@ -46,41 +84,60 @@ class GenericFormTable extends Component {
     const target = newData.filter(item => key === item.key)[0];
     if (target) {
       delete target.editable;
-      this.setState({ data: newData });
+      this.setData(newData);
     }
   }
   selectRow = (row) => {
     this.setState({
       row,
+      actual: {},
     });
+  }
+  reloadKeys = (data) => {
+    data.map((item, index) => {
+      item.key = index;
+      return item;
+    });
+    this.state.data = data;
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSubmit}>
-        <Table dataSource={this.state.data}>
+    const { loading } = this.props;
+    const { data, row, actual } = this.state;
+    if (Object.keys(actual).length > 0) {
+      console.log(actual);
+      console.log(row);
+    }
+    const config = {
+      emptyText: 'No hay contenido para mostrar',
+    };
+    let content = '';
+    if (data.length > 0) {
+      this.reloadKeys(data);
+      content = (
+        <Table locale={config} dataSource={data}>
           {
             this.props.colummns.map(column => (
               (
                 <Column
                   title={column.title}
-                  dataIndex={column.dataIndex}
                   key={column.key}
+                  dataIndex={column.key}
                   render={(text, record) => {
-                    const id = `${record.key}-${column.dataIndex}`;
+                    const id = `${record.key}-${column.key}`;
                     return (
                       record.editable ?
                         (
-                          <Item>
+                          <ItemStyle>
                             {
                               getFieldDecorator(id, {
                                 rules: [{ required: true, message: 'Por favor ingrese un valor' }],
                                 initialValue: text,
                               })(
-                                <Input placeholder="Username" />,
+                                <Input placeholder={column.title} />,
                               )
                             }
-                          </Item>
+                          </ItemStyle>
                         )
                         :
                         (<span>{text}</span>)
@@ -95,37 +152,61 @@ class GenericFormTable extends Component {
             title="Action"
             key="action"
             render={(text, record) => {
-              const { editable } = record;
+              const { editable, id } = record;
               return (
                 <div>
                   {
                     editable ?
-                      <div>
-                        <Button
-                          onClick={() => { this.selectRow(record.key); }}
-                          type="primary"
-                          htmlType="submit"
-                        >
-                          Guardar
-                        </Button>
-                        <Popconfirm okText="Si" cancelText="No" title="Cancelar?" onConfirm={() => this.cancel(record.key)}>
-                          <a>Cancel</a>
-                        </Popconfirm>
-                      </div>
+                      (<Button
+                        shape="circle"
+                        icon="save"
+                        onClick={() => this.selectRow(record.key)}
+                        htmlType="submit"
+                      />)
                       :
-                      <Button
-                        role="button"
-                        onClick={() => { this.editRow(record.key); }}
-                      >Edit</Button>
+                      (<Button
+                        shape="circle"
+                        icon="edit"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          this.editRow(record.key);
+                        }}
+                      />)
+                  }
+                  <Confirm method={() => this.deleteRow(record)}>
+                    <Button
+                      shape="circle"
+                      icon="delete"
+                    />
+                  </Confirm>
+                  {
+                    id && editable ?
+                      <Confirm method={() => this.cancel(record.key)}>
+                        <Button
+                          shape="circle"
+                          icon="close-circle-o"
+                        />
+                      </Confirm>
+                      :
+                      ''
                   }
                 </div>
               );
             }
             }
           />
-
         </Table>
-      </Form>
+      );
+    }
+    return (
+      <Spin spinning={loading}>
+        <Button type="primary" onClick={this.handleAdd}>Add</Button>
+        <Form onSubmit={this.handleSubmit}>
+          {
+            content
+          }
+        </Form>
+      </Spin>
     );
   }
 }
