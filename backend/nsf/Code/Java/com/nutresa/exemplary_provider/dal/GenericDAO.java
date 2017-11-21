@@ -53,14 +53,25 @@ public abstract class GenericDAO<T> {
         return castDocument(document);
     }
 
+    public T getBy(String field, String value) throws HandlerGenericException {
+        // TODO Implemnentar el método para devolver solo un registro filtrado
+        View currentView = database.getView(VIEW_IDS);
+        Document document = currentView.getFirstDocumentByKey(value, true);
+        return castDocument(document);
+    }
+    
     public List<T> getAll() throws HandlerGenericException {
-        View view = database.getView(this.entityView);
-        ViewEntryCollection vec = view.getAllEntries();
-        Document document;
+        View view = database.getView(entityView);
         List<T> list = new ArrayList<T>();
-        for (ViewEntry viewEntry : vec) {
-            document = viewEntry.getDocument();
-            list.add((T) this.castDocument(document));
+        if (null != view) {
+            ViewEntryCollection vec = view.getAllEntries();
+            Document document;
+            for (ViewEntry viewEntry : vec) {
+                document = viewEntry.getDocument();
+                list.add((T) this.castDocument(document));
+            }
+        } else {
+            throw new HandlerGenericException("View " + entityView + " not found");
         }
         return list;
     }
@@ -78,6 +89,13 @@ public abstract class GenericDAO<T> {
         }
         return list;
     }
+    
+    public List<T> getAllBy(String field, String value) throws HandlerGenericException {
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put(field, value);
+        return getAllBy(filter);
+    }
+    
 
     @SuppressWarnings("deprecation")
     protected List<T> getAllDocumentsByKey(View view, Vector<String> indexedParameters) throws HandlerGenericException {
