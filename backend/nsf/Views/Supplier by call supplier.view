@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Supplier by call supplier' alias='vwSupplierByCallsSupplier' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865' showinmenu='false'
+<view name='Supplier by call supplier' alias='vwSuppliersByCallSupplier' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='572' unid='EC0D7D6DF389B40A052581DD006128F0' sequence='2'>
-<created><datetime>20171119T124114,72-05</datetime></created>
-<modified><datetime>20171119T124247,45-05</datetime></modified>
-<revised><datetime>20171119T124247,44-05</datetime></revised>
-<lastaccessed><datetime>20171119T124247,45-05</datetime></lastaccessed>
-<addedtofile><datetime>20171119T124114,73-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='23b2' unid='CBE83D6E61D2DC5B052581DD006661AD' sequence='5'>
+<created><datetime>20171119T133816,77-05</datetime></created>
+<modified><datetime>20171121T171651,41-05</datetime></modified>
+<revised><datetime>20171121T171651,40-05</datetime></revised>
+<lastaccessed><datetime>20171121T171651,41-05</datetime></lastaccessed>
+<addedtofile><datetime>20171119T133816,95-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frSupplierByCall"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

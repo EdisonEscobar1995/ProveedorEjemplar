@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Supplier by call' alias='vwSuppliersByCall' xmlns='http://www.lotus.com/dxl'
+<view name='Import Rol by name' alias='ImportRolByName' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,20 +9,20 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='23b6' unid='C397A0919D57FA15052581DD006661BD' sequence='5'>
-<created><datetime>20171119T133816,93-05</datetime></created>
-<modified><datetime>20171121T171631,22-05</datetime></modified>
-<revised><datetime>20171121T171631,21-05</datetime></revised>
-<lastaccessed><datetime>20171121T171631,22-05</datetime></lastaccessed>
-<addedtofile><datetime>20171119T133816,99-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='24f2' unid='1AFF566FBA47E2AB052581DF006EEBD0' sequence='4'>
+<created><datetime>20171121T151133,28-05</datetime></created>
+<modified><datetime>20171121T151234,96-05</datetime></modified>
+<revised><datetime>20171121T151234,95-05</datetime></revised>
+<lastaccessed><datetime>20171121T151234,96-05</datetime></lastaccessed>
+<addedtofile><datetime>20171121T151133,29-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frSupplierByCall"</formula></code><code
- event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+ event='selection'><formula>SELECT form = "frRol"</formula></code><code event='querypaste'><lotusscript
+>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
 </lotusscript></code>
-<column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
+<column sort='ascending' hidedetailrows='false' itemname='name' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='Id'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='name'><font size='9pt' style='bold'/></columnheader></column></view>
 
