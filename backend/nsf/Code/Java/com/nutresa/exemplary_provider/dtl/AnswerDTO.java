@@ -10,9 +10,13 @@ public class AnswerDTO {
     @Expose
     private String idOptionSupplier;
     @Expose
+    private String responseSupplier;
+    @Expose
     private String commentSupplier;
     @Expose
     private String idOptionEvaluator;
+    @Expose
+    private String responseEvaluator;
     @Expose
     private String commentEvaluator;
     @Expose
@@ -72,6 +76,22 @@ public class AnswerDTO {
 
     public void setIdAttachment(String idAttachment) {
         this.idAttachment = idAttachment;
+    }
+
+    public String getResponseSupplier() {
+        return responseSupplier;
+    }
+
+    public void setResponseSupplier(String responseSupplier) {
+        this.responseSupplier = responseSupplier;
+    }
+
+    public String getResponseEvaluator() {
+        return responseEvaluator;
+    }
+
+    public void setResponseEvaluator(String responseEvaluator) {
+        this.responseEvaluator = responseEvaluator;
     }
 
 }

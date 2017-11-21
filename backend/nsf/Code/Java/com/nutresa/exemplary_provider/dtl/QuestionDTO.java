@@ -14,6 +14,8 @@ public class QuestionDTO {
     @Expose
     private String wording;
     @Expose
+    private String type;
+    @Expose
     private boolean requireAttachment;
     @Expose
     private List<OptionDTO> options;
@@ -114,6 +116,14 @@ public class QuestionDTO {
 
     public void setDependOfAnswerIds(List<String> dependOfAnswerIds) {
         this.dependOfAnswerIds = dependOfAnswerIds;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }
