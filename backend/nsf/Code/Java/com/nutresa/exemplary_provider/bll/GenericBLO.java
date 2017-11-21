@@ -47,6 +47,21 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
+    public List<T> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
+        D dao;
+        List<T> response;
+        try {
+            dao = this.daoClass.newInstance();
+            Method method = dao.getClass().getMethod("getAllBy", Map.class);
+            response = (List<T>) method.invoke(dao, parameters);
+        } catch (Exception e) {
+            throw new HandlerGenericException(e);
+        }
+
+        return response;
+    }
+
+    @SuppressWarnings("unchecked")
     public T save(T dto) throws HandlerGenericException {
         try {
             Field field = Common.getField(dto.getClass(), "id");

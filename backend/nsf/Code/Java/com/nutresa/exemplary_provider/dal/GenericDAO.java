@@ -2,12 +2,19 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
+import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.Session;
 import org.openntf.domino.View;
+import org.openntf.domino.ViewColumn;
 import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.utils.Factory;
@@ -54,6 +61,51 @@ public abstract class GenericDAO<T> {
         for (ViewEntry viewEntry : vec) {
             document = viewEntry.getDocument();
             list.add((T) this.castDocument(document));
+        }
+        return list;
+    }
+    
+    public List<T> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
+        View view = getIndexedView(parameters);
+        List<T> list;
+        if(null == view){
+            view = database.getView(entityView);
+            list = searchDocuments(view, parameters);
+        } else {
+            Vector<String> indexedParameters = getIndexedParameters(view, parameters);
+            list = getAllDocumentsByKey(view, indexedParameters);
+            
+        }
+        return list;
+    }
+
+    @SuppressWarnings("deprecation")
+    protected List<T> getAllDocumentsByKey(View view, Vector<String> indexedParameters) throws HandlerGenericException {
+        List<T> list = new ArrayList<T>();
+        DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
+        
+        for (Document document : documents) {
+            list.add((T) this.castDocument(document));
+        }
+        return list;
+    }
+
+    protected List<T> searchDocuments(View view, Map<String, String> parameters) {
+        Document document;
+        String query = getQuerySearch(parameters);
+        List<T> list = new ArrayList<T>();
+        try {
+            int cantidadDocumentos = view.FTSearch(query);
+            if (0 < cantidadDocumentos) {
+                ViewEntryCollection vec = view.getAllEntries();
+                for (ViewEntry viewEntry : vec) {
+                    document = viewEntry.getDocument();
+                    list.add((T) this.castDocument(document));
+                }
+            }
+        } catch (HandlerGenericException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return list;
     }
@@ -216,5 +268,46 @@ public abstract class GenericDAO<T> {
     public String getEntity() {
         return entity;
     }
+    
+    protected View getIndexedView(Map<String, String> parameters) {
+        List<View> views = database.getViews(entity);
+        View indexedView = null;
+        for (View view : views) {
+            Vector<ViewColumn> columns = view.getColumns();
+            Set<String> keys = new HashMap<String, String>(parameters).keySet();
+            if (columns.size() == parameters.size()) {
+                for (ViewColumn column : columns) {
+                    String columnName = column.getTitle();
+                    if (keys.contains(columnName)) {
+                        keys.remove(columnName);
+                    }
+                }
+                if (keys.size() == 0) {
+                    indexedView = view;
+                    break;
+                }
+            }
+        }
+        return indexedView;
+    }
+    
+    protected Vector<String> getIndexedParameters(View view, Map<String, String> parameters) {
+        Vector<String> indexedParameters = new Vector<String>();
+        Vector<ViewColumn> columns = view.getColumns();
+        for (ViewColumn column : columns) {
+            String columnName = column.getTitle();
+            indexedParameters.add(parameters.get(columnName));
+        }
+        return indexedParameters;
+    }
 
+    protected String getQuerySearch(Map<String, String> parameters) {
+        String[] query = new String[parameters.size()];
+        int i = 0;
+        for (Entry<String, String> parameter : parameters.entrySet()) {
+            query[i] = "[" + parameter.getKey() + "]=" + parameter.getValue();
+            i++;
+        }
+        return Common.join(query, " AND ");
+    }
 }

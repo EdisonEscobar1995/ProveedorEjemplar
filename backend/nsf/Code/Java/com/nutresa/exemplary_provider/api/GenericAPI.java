@@ -34,14 +34,20 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
     public ServletResponseDTO<List<T>> getAll(Map<String, String> parameters) {
         B blo;
         ServletResponseDTO<List<T>> response = null;
+        Method method;
         try {
-            blo = this.bloClass.newInstance();
-            Method method = blo.getClass().getMethod("getAll");
-            response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo));
+            if (parameters.size() > 0) {
+                blo = this.bloClass.newInstance();
+                method = blo.getClass().getMethod("getAllBy", Map.class);
+                response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo, parameters));
+            } else {
+                blo = this.bloClass.newInstance();
+                method = blo.getClass().getMethod("getAll");
+                response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo));
+            }
         } catch (Exception exception) {
             response = new ServletResponseDTO<List<T>>(exception);
         }
-
         return response;
     }
 

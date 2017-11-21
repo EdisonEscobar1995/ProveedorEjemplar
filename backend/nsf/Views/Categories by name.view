@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Categories by name' alias='vwCategoriesByName' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
+<view name='Categories by name' alias='Category|vwCategoriesByName' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='22c2' unid='75C16A848F74205A052581DC0064E2C2' sequence='2'>
-<created><datetime>20171118T132156,50-05</datetime></created>
-<modified><datetime>20171118T132223,15-05</datetime></modified>
-<revised><datetime>20171118T132223,14-05</datetime></revised>
-<lastaccessed><datetime>20171118T132223,15-05</datetime></lastaccessed>
-<addedtofile><datetime>20171118T132156,51-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='15fa' unid='C9AEFB2844C2BFDA052581DC00678381' sequence='7'>
+<created><datetime>20171118T135038,73-05</datetime></created>
+<modified><datetime>20171120T143547,57-05</datetime></modified>
+<revised><datetime>20171120T143547,56-05</datetime></revised>
+<lastaccessed><datetime>20171120T143547,57-05</datetime></lastaccessed>
+<addedtofile><datetime>20171118T135038,76-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frCategory"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

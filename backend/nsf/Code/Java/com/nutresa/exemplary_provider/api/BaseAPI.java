@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
@@ -14,15 +16,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.openntf.domino.utils.DominoUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
-
-import org.openntf.domino.utils.DominoUtils;
 
 public class BaseAPI<T> extends DesignerFacesServlet {
 
@@ -59,18 +60,19 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     @SuppressWarnings("unchecked")
     protected void doService(HttpServletRequest request, HttpServletResponse response, FacesContext facesContext,
             ServletOutputStream output) throws IOException {
-
+    
         int status = 200;
         ServletResponseDTO servletResponse = null;
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls().setDateFormat("Y/m/d").setPrettyPrinting().create();
-
+    
         try {
             typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
-            Map<String, String> parameters = (Map<String, String>) ExtLibUtil.resolveVariable(FacesContext
-                    .getCurrentInstance(), "param");
-            String action = parameters.get("action");
+            LinkedHashMap<String, String> parameters = (LinkedHashMap) getParameters(request);
 
+            String action = parameters.get("action");
+            parameters.remove("action");
+    
             Method method = Common.getMethod(this.getClass(), action);
             if (null != method) {
                 switch (requestMethod) {
@@ -87,13 +89,13 @@ public class BaseAPI<T> extends DesignerFacesServlet {
                     status = 405;
                     servletResponse = new ServletResponseDTO(false,
                             "What the devil are you trying to do, break the server?");
-
+    
                     break;
                 }
             } else {
                 servletResponse = new ServletResponseDTO(false, "Action not found");
             }
-
+    
         } catch (Exception exception) {
             status = 500;
             servletResponse = new ServletResponseDTO(exception);
@@ -101,6 +103,18 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             response.setStatus(status);
             output.print(gson.toJson(servletResponse));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, String> getParameters(HttpServletRequest request) {
+        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String key = (String) parameterNames.nextElement();
+            String val = request.getParameter(key);
+            parameters.put(key, val);
+        }
+        return parameters;
     }
 
     @SuppressWarnings("unchecked")
