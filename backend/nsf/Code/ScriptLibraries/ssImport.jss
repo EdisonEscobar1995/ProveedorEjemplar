@@ -190,6 +190,19 @@ function importData() {
 				               {technicalNames: ["idQuestion"], commonNames: ["Pregunta"], viewNames: ["ImportQuestionsByWording"]}];
 				viewName = "vwQuestionsBySurvey";
 				break;
+			case "NOT":
+				columnKeys = ["alias"];
+				columnNameKeys = ["Nombre"];
+				columnNames = [{commonName: "Nombre", technicalName: "alias"},
+				               {commonName: "Asunto", technicalName: "subject"},
+				               {commonName: "Mensaje", technicalName: "message"}];
+				requiredFields = [{commonName: "Nombre", technicalName: "alias"},
+					               {commonName: "Asunto", technicalName: "subject"},
+					               {commonName: "Mensaje", technicalName: "message"}];
+				defaultFields = [{ key: "form", value: "frNotification"}];
+				viewName = "vwNotifications";
+				break;
+			
 		}
 		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys)
 		
