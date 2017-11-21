@@ -130,7 +130,6 @@ function importData() {
 				foreignKeys = [{technicalNames: ["idCategory"], commonNames: ["Categoría"], viewNames: ["ImportCategoriesByName"]}];
 				viewName = "vwSubCategories";
 				break;
-				
 			case "COU":
 				columnKeys = ["name"];
 				columnNameKeys = ["Pais"];
@@ -202,7 +201,74 @@ function importData() {
 				defaultFields = [{ key: "form", value: "frNotification"}];
 				viewName = "vwNotifications";
 				break;
-			
+			case "ROL":
+				columnKeys = ["name"];
+				columnNameKeys = ["Nombre"];
+				columnNames = [{commonName: "Nombre", technicalName: "name"},
+				               {commonName: "Alias", technicalName: "shortName"}];
+				requiredFields = [{commonName: "Nombre", technicalName: "name"},
+					               {commonName: "Alias", technicalName: "shortName"}];
+				defaultFields = [{ key: "form", value: "frRol"}];
+				viewName = "vwRols";
+				break;
+			case "USE":
+				columnKeys = ["name"];
+				columnNameKeys = ["Nombre"];
+				columnNames = [{commonName: "Nombre", technicalName: "name"},
+				               {commonName: "Roles", technicalName: "idRols"}];
+				requiredFields = [{commonName: "Nombre", technicalName: "name"},
+					               {commonName: "Roles", technicalName: "idRols"}];
+				defaultFields = [{ key: "form", value: "frUser"}];
+				foreignKeys = [{technicalNames: ["idRols"], commonNames: ["Rol"], viewNames: ["ImportRolByName"]}];
+				viewName = "vwUsers";
+				break;
+			case "CAL":
+				columnKeys = ["year"];
+				columnNameKeys = ["Año"];
+				columnNames = [{commonName: "Año", technicalName: "year"}];
+				requiredFields = [{commonName: "Año", technicalName: "year"}];
+				defaultFields = [{ key: "form", value: "frCall"}];
+				viewName = "vwCalls";
+				break;
+			case "SUP":
+				columnKeys = ["businessName"];
+				columnNameKeys = ["Nombre"];
+				columnNames = [{commonName: "Nit", technicalName: "nit"},
+				               {commonName: "Nombre", technicalName: "businessName"},
+				               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+				               {commonName: "Tamaño", technicalName: "idCompanySize"},
+				               {commonName: "Categoría", technicalName: "idCategory"},
+				               {commonName: "Subcategoría", technicalName: "idSubCategory"}];
+				requiredFields = [{commonName: "Nit", technicalName: "nit"},
+					               {commonName: "Nombre", technicalName: "businessName"},
+					               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+					               {commonName: "Tamaño", technicalName: "idCompanySize"},
+					               {commonName: "Categoría", technicalName: "idCategory"},
+					               {commonName: "Subcategoría", technicalName: "idSubCategory"}];
+				defaultFields = [{ key: "form", value: "frSupplier"}];
+				foreignKeys = [{technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
+				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]},
+				               {technicalNames: ["idCategory", "idSubCategory"], commonNames: ["Categoría", "Subcategoría"], viewNames: ["ImportCategoriesByName", "ImportSubCategoriesByName"]}];
+				viewName = "vwSuppliers";
+				break;
+			case "SBC":
+				columnKeys = ["idCall", "idSupplier"];
+				columnNameKeys = ["Convocatoria", "Nombre"];
+				columnNames = [{commonName: "Convocatoria", technicalName: "idCall"},
+				               {commonName: "Nombre", technicalName: "idSupplier"},
+				               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+				               {commonName: "Tamaño", technicalName: "idCompanySize"}];
+				requiredFields = [{commonName: "Convocatoria", technicalName: "idCall"},
+					               {commonName: "Nombre", technicalName: "idSupplier"},
+					               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+					               {commonName: "Tamaño", technicalName: "idCompanySize"}];
+				defaultFields = [{ key: "form", value: "frSupplierByCall"}];
+				foreignKeys = [{technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
+				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]},
+				               {technicalNames: ["idCall"], commonNames: ["Convocatoria"], viewNames: ["ImportCallsByYear"]}];
+				viewName = "vwSuppliersByCall";
+				break;
+				
 		}
 		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys)
 		
@@ -344,8 +410,10 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 					}
 				}
 				
+				println(nd.getItemValueString("idSupply")+nd.getItemValueString("idCompanySize"))
+				
 				nd.replaceItemValue("id", nd.getUniversalID());
-				if (nd.getItemValueString("form") == "frQuestionBySurvey"){
+				if (nd.getItemValueString("form") == "frQuestionBySurvey" || nd.getItemValueString("form") == "frSupplierByCall"){
 					vwForeign = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
 	 				ndForeign = vwForeign.getDocumentByKey(nd.getItemValueString("idSupply")+nd.getItemValueString("idCompanySize"), true);
 	 				if (ndForeign){
@@ -358,6 +426,9 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 	 				}
 				}else if(nd.getItemValueString("form") == "frCity"){
 					nd.removeItem("idCountry");
+				}else if(nd.getItemValueString("form") == "frCall"){
+					nd.removeItem("year");
+					nd.replaceItemValue("year", parseInt(fila[j], 10))
 				}
 												
 				nd.save(true, false);						
@@ -370,7 +441,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		if ("" !== error){			
 			if(savedIds.length > 0){				
 				for(i in savedIds){					
-					nd = sessionAsSigner.getCurrentDatabase().getView("vwDevIds").getDocumentByKey(savedIds[i], true);
+					nd = vw.getDocumentByKey(savedIds[i], true);
 					if(nd){
 						nd.removePermanently(true);
 						nd.recycle();
