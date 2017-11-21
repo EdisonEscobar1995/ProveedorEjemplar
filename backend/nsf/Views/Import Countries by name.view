@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Dimensions by name' alias='vwDimensionsByName' xmlns='http://www.lotus.com/dxl'
+<view name='Import Countries by name' alias='ImportCountriesByName' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,15 +9,15 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='22a6' unid='23BD6A312FA32D63052581DC00640818' sequence='2'>
-<created><datetime>20171118T131236,72-05</datetime></created>
-<modified><datetime>20171118T131312,20-05</datetime></modified>
-<revised><datetime>20171118T131312,19-05</datetime></revised>
-<lastaccessed><datetime>20171118T131312,20-05</datetime></lastaccessed>
-<addedtofile><datetime>20171118T131236,73-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='242a' unid='C64DD7C1EA08FE32052581DD00692DBF' sequence='7'>
+<created><datetime>20171119T140849,91-05</datetime></created>
+<modified><datetime>20171121T070113,47-05</datetime></modified>
+<revised><datetime>20171121T070113,46-05</datetime></revised>
+<lastaccessed><datetime>20171121T070113,47-05</datetime></lastaccessed>
+<addedtofile><datetime>20171119T140849,93-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frDimension"</formula></code><code
+ event='selection'><formula>SELECT form = "frCountry"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub

@@ -33,6 +33,8 @@
 				<xp:selectItem itemLabel="Tipos de suministro" itemValue="SUT"></xp:selectItem>
 				<xp:selectItem itemLabel="Categorías del proveedor" itemValue="CAT"></xp:selectItem>
 				<xp:selectItem itemLabel="Subcategorías del proveedor" itemValue="SUB"></xp:selectItem>
+				<xp:selectItem itemLabel="Encuestas" itemValue="SUR"></xp:selectItem>
+				<xp:selectItem itemLabel="Preguntas por encuesta" itemValue="QBS"></xp:selectItem>
 				<xp:selectItem itemLabel="Países" itemValue="COU"></xp:selectItem>
 				<xp:selectItem itemLabel="Departamentos" itemValue="DEP"></xp:selectItem>
 				<xp:selectItem itemLabel="Ciudades" itemValue="CIT"></xp:selectItem>
