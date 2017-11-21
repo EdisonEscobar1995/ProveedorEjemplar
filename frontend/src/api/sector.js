@@ -1,17 +1,18 @@
 import intance from './instance';
 
-function getDataSectortApi() {
+function getAllSectorApi() {
   return intance.get('Sector?action=getAll');
 }
-function saveDataSectorApi(data) {
+function saveSectorApi(data) {
   return intance.post('Sector?action=save', data);
 }
-function updateDataSectorApi(data) {
-  return intance.post('Sector?action=update', data);
+function deleteSectorApi(data) {
+  const { id } = data;
+  return intance.get(`Sector?action=delete&id=${id}`);
 }
 
 export {
-  getDataSectortApi as default,
-  saveDataSectorApi,
-  updateDataSectorApi,
+  getAllSectorApi,
+  saveSectorApi,
+  deleteSectorApi,
 };

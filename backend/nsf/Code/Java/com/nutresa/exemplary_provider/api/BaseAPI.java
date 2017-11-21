@@ -43,7 +43,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        response.setContentType("application/json");
+        response.setContentType("application/json; charset=utf-8");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setCharacterEncoding("UTF-8");
         ServletOutputStream output = response.getOutputStream();
         FacesContext facesContext = this.getFacesContext(request, response);
 
@@ -65,7 +67,8 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         int status = 200;
         ServletResponseDTO servletResponse = null;
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls().setDateFormat("Y/m/d").setPrettyPrinting().create();
+                .serializeNulls()
+            .setDateFormat("Y/m/d").setPrettyPrinting().create();
     
         try {
             typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
@@ -101,7 +104,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             servletResponse = new ServletResponseDTO(exception);
         } finally {
             response.setStatus(status);
-            output.print(gson.toJson(servletResponse));
+            String jsonResponse = gson.toJson(servletResponse);
+            byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
+            output.write(utf8JsonString, 0, utf8JsonString.length);            
         }
     }
 
