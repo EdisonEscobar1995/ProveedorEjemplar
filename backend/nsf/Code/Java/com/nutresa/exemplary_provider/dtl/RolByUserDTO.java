@@ -2,7 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class UserByRolDTO {
+public class RolByUserDTO {
     @Expose
     private String id;
     @Expose

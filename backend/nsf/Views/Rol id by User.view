@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='User by id rol' alias='vwUsersByIdRol' xmlns='http://www.lotus.com/dxl'
+<view name='Rol id by User' alias='vwRolIdsByUsers' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,15 +9,15 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='666' unid='95E80C14DEC9B5F9052581DF005D0913' sequence='7'>
+<noteinfo noteid='666' unid='95E80C14DEC9B5F9052581DF005D0913' sequence='10'>
 <created><datetime>20171121T115611,71-05</datetime></created>
-<modified><datetime>20171121T162111,20-05</datetime></modified>
-<revised><datetime>20171121T162111,19-05</datetime></revised>
-<lastaccessed><datetime>20171121T162111,20-05</datetime></lastaccessed>
+<modified><datetime>20171121T184105,26-05</datetime></modified>
+<revised><datetime>20171121T184105,25-05</datetime></revised>
+<lastaccessed><datetime>20171121T184105,26-05</datetime></lastaccessed>
 <addedtofile><datetime>20171121T115611,72-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frUserByRol"</formula></code><code
+ event='selection'><formula>SELECT form = "frRolByUser"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
