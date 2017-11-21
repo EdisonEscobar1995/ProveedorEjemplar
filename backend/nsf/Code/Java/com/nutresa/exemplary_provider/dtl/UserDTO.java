@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 public class UserDTO extends MasterDTO {
     @Expose
     private List<String> idRols;
+    @Expose
     private String email;
 
     public String getEmail() {

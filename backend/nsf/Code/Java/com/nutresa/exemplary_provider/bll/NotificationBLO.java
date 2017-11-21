@@ -59,10 +59,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         if (withCopy != null && !withCopy.isEmpty()) {
             email.setCC(withCopy);
         }
-        email.setSubject(notification.getName());
+        email.setSubject(notification.getSubject());
         email.addHTML(body);
-        email.setSenderEmail(NotificationDTO.SENDER_EMAIL);
-        email.setSenderName(NotificationDTO.SENDER_NAME);
+        email.setSenderEmail(NotificationDAO.SENDER_EMAIL);
+        email.setSenderName(NotificationDAO.SENDER_NAME);
         email.send();
     }
 
