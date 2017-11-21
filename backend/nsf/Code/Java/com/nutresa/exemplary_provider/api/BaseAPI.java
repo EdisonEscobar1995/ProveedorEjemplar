@@ -120,7 +120,13 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     @SuppressWarnings("unchecked")
     private ServletResponseDTO doGet(Method method, Map<String, String> parameters) throws IllegalAccessException,
             InvocationTargetException {
-        return (ServletResponseDTO) method.invoke(this, parameters);
+        ServletResponseDTO response = null;
+        if (parameters.size() > 1) {
+            response = (ServletResponseDTO) method.invoke(this, parameters);
+        } else {
+            response = (ServletResponseDTO) method.invoke(this);
+        }
+        return response;
     }
 
     @SuppressWarnings("unchecked")

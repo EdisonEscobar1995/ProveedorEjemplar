@@ -8,7 +8,7 @@ public class SurveyDTO {
     @Expose
     private String id;
     @Expose
-    private String idCategory;
+    private String idSupply;
     @Expose
     private String idCompanySize;
     @Expose
@@ -26,14 +26,6 @@ public class SurveyDTO {
         return id;
     }
 
-    public String getIdCategory() {
-        return idCategory;
-    }
-
-    public void setIdCategory(String idCategory) {
-        this.idCategory = idCategory;
-    }
-
     public String getIdSizeCompany() {
         return idCompanySize;
     }
@@ -48,6 +40,14 @@ public class SurveyDTO {
 
     public void setIdCompanySize(String idCompanySize) {
         this.idCompanySize = idCompanySize;
+    }
+
+    public String getIdSupply() {
+        return idSupply;
+    }
+
+    public void setIdSupply(String idSupply) {
+        this.idSupply = idSupply;
     }
 
 }

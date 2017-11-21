@@ -64,7 +64,9 @@ function readFile(e) {
 				data : JSON.stringify(aData),
 				type : $("[data-name='type']").val()
 		};
+		
 		var result = ajax(url,datos,"POST");
+		
 		var log = $("#log");	
 	
 		log.html(logResult(result));	
@@ -109,10 +111,7 @@ function logResult(result){
 		html = html + "Se cargaron exitosamente " + result.count + " registros";
 		html = html + "</div>";	
 	}
-	
-
 	return html;
-
 }
 
 function ajax(url, data, method, dataType) {
@@ -122,7 +121,7 @@ function ajax(url, data, method, dataType) {
 
 	tmpMethod = method ? method : "POST";
 	tmpDataType = dataType ? dataType : "";
-
+	
 	$.ajax({
 		method: tmpMethod,
 		async: false,
