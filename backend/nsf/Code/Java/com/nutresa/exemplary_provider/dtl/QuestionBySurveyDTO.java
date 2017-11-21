@@ -1,6 +1,6 @@
 package com.nutresa.exemplary_provider.dtl;
 
-public class SurveyByQuestion {
+public class QuestionBySurveyDTO {
     private String id;
     private String idSurvey;
     private String idQuestion;

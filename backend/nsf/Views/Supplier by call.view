@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Categories' alias='Category|vwCategories' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' showinmenu='false'
+<view name='Supplier by call' alias='vwSupplierByCalls' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,15 +9,15 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='5da' unid='1058A579ADC78EBF052581D3005C7936' sequence='11'>
-<created><datetime>20171109T115003,42-05</datetime></created>
-<modified><datetime>20171120T143607,18-05</datetime></modified>
-<revised><datetime>20171120T143607,17-05</datetime></revised>
-<lastaccessed><datetime>20171120T143607,18-05</datetime></lastaccessed>
-<addedtofile><datetime>20171109T115004,10-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frCategory"</formula></code><code
+<noteinfo noteid='4f6' unid='4C466FEBAFB040F4052581DC007AFACB' sequence='6'>
+<created><datetime>20171118T172315,95-05</datetime></created>
+<modified><datetime>20171118T172931,20-05</datetime></modified>
+<revised><datetime>20171118T172931,19-05</datetime></revised>
+<lastaccessed><datetime>20171118T172931,20-05</datetime></lastaccessed>
+<addedtofile><datetime>20171118T172315,97-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frSupplierByCall"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub

@@ -4,9 +4,9 @@ import com.google.gson.annotations.Expose;
 
 public abstract class MasterDTO {
     @Expose
-    public String id;
+    protected String id;
     @Expose
-    public String name;
+    protected String name;
 
     public String getName() {
         return name;

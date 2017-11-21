@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='Import Surveys by supply and companySize' alias='ImportSurveysBySupplyAndCompanySize'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E'
+ showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
+ opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
+ extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
+ headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='248a' unid='5592CF34FAA4284E052581DE0061BD81' sequence='5'>
+<created><datetime>20171120T124735,05-05</datetime></created>
+<modified><datetime>20171121T070148,71-05</datetime></modified>
+<revised><datetime>20171121T070148,70-05</datetime></revised>
+<lastaccessed><datetime>20171121T070148,71-05</datetime></lastaccessed>
+<addedtofile><datetime>20171120T124735,08-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frSurvey"</formula></code><code
+ event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+	Continue = False
+End Sub
+</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='$0' width='17.2500'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='IdSupply + idCompanySize'><font
+ size='9pt' style='bold'/></columnheader><code event='value'><formula>idSupply + idCompanySize</formula></code></column></view>
+

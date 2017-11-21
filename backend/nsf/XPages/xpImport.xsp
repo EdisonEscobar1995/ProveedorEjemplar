@@ -16,7 +16,7 @@
 	<xp:this.afterPageLoad><![CDATA[#{javascript:validateAccess()}]]></xp:this.afterPageLoad>
 
 	<div style="margin:20px 40px">
-		<h1>Importación</h1>
+		<h1>Importación de maestros</h1>
 
 		<div style="margin:20px 0">
 			<div>Tipo de estructura</div>
@@ -24,13 +24,21 @@
 				<xp:selectItem itemLabel="" itemValue=""></xp:selectItem>
 				<xp:selectItem itemLabel="Dimensiones de preguntas" itemValue="DIM"></xp:selectItem>
 				<xp:selectItem itemLabel="Criterios de preguntas" itemValue="CRI"></xp:selectItem>
+				<xp:selectItem itemLabel="Preguntas" itemValue="QUE"></xp:selectItem>
+				<xp:selectItem itemLabel="Opciones de respuesta" itemValue="OPC"></xp:selectItem>
 				<xp:selectItem itemLabel="Sectores" itemValue="SEC"></xp:selectItem>
 				<xp:selectItem itemLabel="Tamaños de empresa" itemValue="COS"></xp:selectItem>
-				<xp:selectItem itemLabel="Tipos de empresa" itemValue="COT"></xp:selectItem>
+				<xp:selectItem itemLabel="Tipos de compañía" itemValue="COT"></xp:selectItem>
 				<xp:selectItem itemLabel="Tipos de sociedad" itemValue="SOT"></xp:selectItem>
 				<xp:selectItem itemLabel="Tipos de suministro" itemValue="SUT"></xp:selectItem>
 				<xp:selectItem itemLabel="Categorías del proveedor" itemValue="CAT"></xp:selectItem>
 				<xp:selectItem itemLabel="Subcategorías del proveedor" itemValue="SUB"></xp:selectItem>
+				<xp:selectItem itemLabel="Encuestas" itemValue="SUR"></xp:selectItem>
+				<xp:selectItem itemLabel="Preguntas por encuesta" itemValue="QBS"></xp:selectItem>
+				<xp:selectItem itemLabel="Países" itemValue="COU"></xp:selectItem>
+				<xp:selectItem itemLabel="Departamentos" itemValue="DEP"></xp:selectItem>
+				<xp:selectItem itemLabel="Ciudades" itemValue="CIT"></xp:selectItem>
+				<xp:selectItem itemLabel="Notificaciones" itemValue="NOT"></xp:selectItem>
 				<xp:this.attrs>
 					<xp:attr name="data-name" value="type">
 					</xp:attr>
@@ -51,6 +59,7 @@
 		<a class="btn btn-success" href="" onClick="loadFile();">Cargar</a>
 
 		<div id="log" style="display:none;margin:20px 0;"></div>
+		
 	</div>
 
 	<xp:text escape="false" id="computedField3">
@@ -61,7 +70,7 @@
 
 	<script src="quick_i18n.js"></script>
 	<script src="xlsx.full.min.js"></script>
-	<script src="csImport?Open&#38;v=1"></script>
+	<script src="csImport?Open&#38;v=2"></script>
 
 	<xp:text escape="false" id="computedField4">
 		<xp:this.value><![CDATA[#{javascript:return "<script>"

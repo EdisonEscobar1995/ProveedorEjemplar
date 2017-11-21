@@ -19,10 +19,17 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
     public ServletResponseDTO<T> get(Map<String, String> parameters) {
         B blo;
         ServletResponseDTO<T> response = null;
+        Method method;
         try {
             blo = this.bloClass.newInstance();
-            Method method = blo.getClass().getMethod("get", Map.class);
-            response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters));
+            if (parameters.size() > 1 || !parameters.containsKey("id")) {
+                method = blo.getClass().getMethod("getBy", Map.class);
+                response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters));
+            } else {
+                blo = this.bloClass.newInstance();
+                method = blo.getClass().getMethod("get", String.class);
+                response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters.get("id")));
+            }
         } catch (Exception exception) {
             response = new ServletResponseDTO<T>(exception);
         }
@@ -34,17 +41,37 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
     public ServletResponseDTO<List<T>> getAll(Map<String, String> parameters) {
         B blo;
         ServletResponseDTO<List<T>> response = null;
+        Method method;
         try {
             blo = this.bloClass.newInstance();
-            Method method = blo.getClass().getMethod("getAll");
+            if (parameters.size() > 0) {
+                method = blo.getClass().getMethod("getAllBy", Map.class);
+                response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo, parameters));
+            } else {
+                response = getAll();
+            }
+        } catch (Exception exception) {
+            response = new ServletResponseDTO<List<T>>(exception);
+        }
+        return response;
+    }
+
+    @SuppressWarnings("unchecked")
+    public ServletResponseDTO<List<T>> getAll() {
+        B blo;
+        ServletResponseDTO<List<T>> response = null;
+        Method method;
+        try {
+            blo = this.bloClass.newInstance();
+            method = blo.getClass().getMethod("getAll");
             response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo));
         } catch (Exception exception) {
             response = new ServletResponseDTO<List<T>>(exception);
         }
-
         return response;
     }
-
+    
+    
     @SuppressWarnings("unchecked")
     public ServletResponseDTO<T> save(T dto) {
         B blo;

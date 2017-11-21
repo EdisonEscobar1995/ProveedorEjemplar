@@ -8,7 +8,7 @@ public class SupplierDTO {
     @Expose
     private String id;
     @Expose
-    private String name;
+    private String businessName;
     @Expose
     private String idCompanySize;
     @Expose
@@ -97,14 +97,6 @@ public class SupplierDTO {
     private boolean globalAgreement;
     @Expose
     private boolean chemicalSubstance;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<String> getDocument() {
         return document;
@@ -468,6 +460,14 @@ public class SupplierDTO {
 
     public void setIdSupply(String idSupply) {
         this.idSupply = idSupply;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 
 }

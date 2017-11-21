@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
@@ -14,15 +16,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.openntf.domino.utils.DominoUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
-
-import org.openntf.domino.utils.DominoUtils;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class BaseAPI<T> extends DesignerFacesServlet {
 
@@ -41,7 +43,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        response.setContentType("application/json");
+        response.setContentType("application/json; charset=utf-8");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setCharacterEncoding("UTF-8");
         ServletOutputStream output = response.getOutputStream();
         FacesContext facesContext = this.getFacesContext(request, response);
 
@@ -59,26 +63,27 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     @SuppressWarnings("unchecked")
     protected void doService(HttpServletRequest request, HttpServletResponse response, FacesContext facesContext,
             ServletOutputStream output) throws IOException {
-
+    
         int status = 200;
         ServletResponseDTO servletResponse = null;
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls().setDateFormat("Y/m/d").setPrettyPrinting().create();
-
+                .serializeNulls()
+            .setDateFormat("Y/m/d").setPrettyPrinting().create();
+    
         try {
             typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
-            Map<String, String> parameters = (Map<String, String>) ExtLibUtil.resolveVariable(FacesContext
-                    .getCurrentInstance(), "param");
-            String action = parameters.get("action");
+            LinkedHashMap<String, String> parameters = (LinkedHashMap) getParameters(request);
 
-            Method method = Common.getMethod(this.getClass(), action);
-            if (null != method) {
+            String action = parameters.get("action");
+            parameters.remove("action");
+    
+            if (null != action) {
                 switch (requestMethod) {
                 case GET:
-                    servletResponse = doGet(method, parameters);
+                    servletResponse = doGet(action, parameters);
                     break;
                 case POST:
-                    servletResponse = doPost(method, request.getReader(), gson);
+                    servletResponse = doPost(action, request.getReader(), gson);
                     break;
                 case OPTIONS:
                     doOptions(response, output);
@@ -87,33 +92,57 @@ public class BaseAPI<T> extends DesignerFacesServlet {
                     status = 405;
                     servletResponse = new ServletResponseDTO(false,
                             "What the devil are you trying to do, break the server?");
-
+    
                     break;
                 }
             } else {
                 servletResponse = new ServletResponseDTO(false, "Action not found");
             }
-
+    
         } catch (Exception exception) {
             status = 500;
             servletResponse = new ServletResponseDTO(exception);
         } finally {
             response.setStatus(status);
-            output.print(gson.toJson(servletResponse));
+            String jsonResponse = gson.toJson(servletResponse);
+            byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
+            output.write(utf8JsonString, 0, utf8JsonString.length);            
         }
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doGet(Method method, Map<String, String> parameters) throws IllegalAccessException,
-            InvocationTargetException {
-        return (ServletResponseDTO) method.invoke(this, parameters);
+    private Map<String, String> getParameters(HttpServletRequest request) {
+        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String key = (String) parameterNames.nextElement();
+            String val = request.getParameter(key);
+            parameters.put(key, val);
+        }
+        return parameters;
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doPost(Method method, BufferedReader reader, Gson gson) throws IOException,
-            JsonSyntaxException, IllegalAccessException, InvocationTargetException {
+    private ServletResponseDTO doGet(String action, Map<String, String> parameters) throws IllegalAccessException,
+        InvocationTargetException, HandlerGenericException {
+        ServletResponseDTO response = null;
+        if (parameters.size() == 0) {
+            Method method = Common.getMethod(this.getClass(), action, 0);
+            response = (ServletResponseDTO) method.invoke(this);
+        } else {
+            Method method = Common.getMethod(this.getClass(), action, 1);
+            response = (ServletResponseDTO) method.invoke(this, parameters);
+        }
+        return response;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ServletResponseDTO doPost(String action, BufferedReader reader, Gson gson) throws IOException,
+            JsonSyntaxException,
+        IllegalAccessException, InvocationTargetException, HandlerGenericException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
+        Method method = Common.getMethod(this.getClass(), action);
         while ((inputLine = reader.readLine()) != null) {
             stringBuilder.append(inputLine);
         }
