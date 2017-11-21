@@ -121,7 +121,11 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     private ServletResponseDTO doGet(Method method, Map<String, String> parameters) throws IllegalAccessException,
             InvocationTargetException {
         ServletResponseDTO response = null;
-        response = (ServletResponseDTO) method.invoke(this, parameters);
+        if (parameters.size() == 0) {
+            response = (ServletResponseDTO) method.invoke(this);
+        } else {
+            response = (ServletResponseDTO) method.invoke(this, parameters);
+        }
         return response;
     }
 
