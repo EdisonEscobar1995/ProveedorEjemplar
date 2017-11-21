@@ -24,6 +24,7 @@ import com.google.gson.JsonSyntaxException;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class BaseAPI<T> extends DesignerFacesServlet {
 
@@ -73,14 +74,13 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             String action = parameters.get("action");
             parameters.remove("action");
     
-            Method method = Common.getMethod(this.getClass(), action);
-            if (null != method) {
+            if (null != action) {
                 switch (requestMethod) {
                 case GET:
-                    servletResponse = doGet(method, parameters);
+                    servletResponse = doGet(action, parameters);
                     break;
                 case POST:
-                    servletResponse = doPost(method, request.getReader(), gson);
+                    servletResponse = doPost(action, request.getReader(), gson);
                     break;
                 case OPTIONS:
                     doOptions(response, output);
@@ -118,22 +118,26 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doGet(Method method, Map<String, String> parameters) throws IllegalAccessException,
-            InvocationTargetException {
+    private ServletResponseDTO doGet(String action, Map<String, String> parameters) throws IllegalAccessException,
+        InvocationTargetException, HandlerGenericException {
         ServletResponseDTO response = null;
         if (parameters.size() == 0) {
+            Method method = Common.getMethod(this.getClass(), action, 0);
             response = (ServletResponseDTO) method.invoke(this);
         } else {
+            Method method = Common.getMethod(this.getClass(), action, 1);
             response = (ServletResponseDTO) method.invoke(this, parameters);
         }
         return response;
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doPost(Method method, BufferedReader reader, Gson gson) throws IOException,
-            JsonSyntaxException, IllegalAccessException, InvocationTargetException {
+    private ServletResponseDTO doPost(String action, BufferedReader reader, Gson gson) throws IOException,
+            JsonSyntaxException,
+        IllegalAccessException, InvocationTargetException, HandlerGenericException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
+        Method method = Common.getMethod(this.getClass(), action);
         while ((inputLine = reader.readLine()) != null) {
             stringBuilder.append(inputLine);
         }

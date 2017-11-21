@@ -18,13 +18,28 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public T get(Map<String, String> parameters) throws HandlerGenericException {
+    public T get(String id) throws HandlerGenericException {
         D dao;
         T response;
         try {
             dao = this.daoClass.newInstance();
             Method method = dao.getClass().getMethod("get", String.class);
-            response = (T) method.invoke(dao, parameters.get("id"));
+            response = (T) method.invoke(dao, id);
+        } catch (Exception e) {
+            throw new HandlerGenericException(e);
+        }
+
+        return response;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T getBy(Map<String, String> parameters) throws HandlerGenericException {
+        D dao;
+        T response;
+        try {
+            dao = this.daoClass.newInstance();
+            Method method = dao.getClass().getMethod("getBy", Map.class);
+            response = (T) method.invoke(dao, parameters);
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
