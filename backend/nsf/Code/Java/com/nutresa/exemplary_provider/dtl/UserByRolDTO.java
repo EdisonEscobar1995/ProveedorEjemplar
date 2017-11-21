@@ -1,7 +1,13 @@
 package com.nutresa.exemplary_provider.dtl;
 
-public abstract class UserByRolDTO extends MasterDTO {
+import com.google.gson.annotations.Expose;
+
+public class UserByRolDTO {
+    @Expose
+    private String id;
+    @Expose
     private String idUser;
+    @Expose
     private String idRol;
 
     public String getIdUser() {
@@ -18,6 +24,10 @@ public abstract class UserByRolDTO extends MasterDTO {
 
     public void setIdRol(String idRol) {
         this.idRol = idRol;
+    }
+
+    public String getId() {
+        return id;
     }
 
 }
