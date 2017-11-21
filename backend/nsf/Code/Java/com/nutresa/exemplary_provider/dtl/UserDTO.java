@@ -9,6 +9,7 @@ public abstract class UserDTO extends MasterDTO {
     private List<String> rolsId;
     @Expose
     private List<RolDTO> rols;
+    private String email;
 
     public List<RolDTO> getRol() {
         return rols;
@@ -24,6 +25,22 @@ public abstract class UserDTO extends MasterDTO {
 
     public List<String> getRolsId() {
         return rolsId;
+    }
+
+    public List<RolDTO> getRols() {
+        return rols;
+    }
+
+    public void setRols(List<RolDTO> rols) {
+        this.rols = rols;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

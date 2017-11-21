@@ -39,4 +39,18 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         return response;
     }
+
+    public void changedCompanySize(String oldIdCompanySize) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        SupplierByCallDTO supplierByCallDTO;
+        try {
+            supplierByCallDTO = getCurrentCallBySupplier();
+            supplierByCallDTO.setOldIdCompanySize(oldIdCompanySize);
+            supplierByCallDTO.setLockedByModification(true);
+            supplierByCallDAO.save(supplierByCallDTO);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+    }
 }

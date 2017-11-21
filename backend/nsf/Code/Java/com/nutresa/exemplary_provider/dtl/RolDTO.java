@@ -1,5 +1,10 @@
 package com.nutresa.exemplary_provider.dtl;
 
-public enum RolDTO {
-    MANAGER, READER, LIBERATOR, EVALUATION_TEAM
+public class RolDTO extends MasterDTO {
+    private String shortName;
+
+    public String getShortName() {
+        return shortName;
+    }
+
 }
