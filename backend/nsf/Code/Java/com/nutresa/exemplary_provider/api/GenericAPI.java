@@ -31,7 +31,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public ServletResponseDTO<List<T>> getAll() {
+    public ServletResponseDTO<List<T>> getAll(Map<String, String> parameters) {
         B blo;
         ServletResponseDTO<List<T>> response = null;
         Method method;

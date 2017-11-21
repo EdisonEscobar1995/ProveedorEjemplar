@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,12 @@ public class GenericBLO<T, D> {
         return response;
     }
 
+    public List<T> getAllBy(String field, String value) throws HandlerGenericException {
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put(field, value);
+        return getAllBy(filter);
+    }
+    
     @SuppressWarnings("unchecked")
     public T save(T dto) throws HandlerGenericException {
         try {
