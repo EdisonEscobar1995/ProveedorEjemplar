@@ -13,6 +13,7 @@ public class Common {
         throw new IllegalStateException("Utility class");
     }
 
+    @Deprecated
     public static Method getMethod(Class<?> clazz, String name) throws HandlerGenericException {
         Method method = null;
         try {
