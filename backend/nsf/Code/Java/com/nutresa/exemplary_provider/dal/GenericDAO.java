@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.openntf.domino.Database;
@@ -54,17 +53,18 @@ public abstract class GenericDAO<T> {
 
     public T getBy(Map<String, String> parameters) throws HandlerGenericException {
         View view = getIndexedView(parameters);
-        Document document;
+        Document document = null;
         if (null == view) {
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
-            int y = view.FTSearch(query, 1);
-            document = view.getFirstDocument();
+            if (view.FTSearch(query, 1) > 0) {
+                document = view.getFirstDocument();
+            }
         } else {
-            Vector<String> indexedParameters = getIndexedParameters(view, parameters);
+            ArrayList<String> indexedParameters = getIndexedParameters(view, parameters);
             document = view.getFirstDocumentByKey(indexedParameters, true);
         }
-        return castDocument(document);
+        return null != document ? castDocument(document) : null;
     }
     
     public T getBy(String field, String value) throws HandlerGenericException {
@@ -96,7 +96,7 @@ public abstract class GenericDAO<T> {
             view = database.getView(entityView);
             list = searchDocuments(view, parameters);
         } else {
-            Vector<String> indexedParameters = getIndexedParameters(view, parameters);
+            ArrayList<String> indexedParameters = getIndexedParameters(view, parameters);
             list = getAllDocumentsByKey(view, indexedParameters);
             
         }
@@ -111,7 +111,7 @@ public abstract class GenericDAO<T> {
     
 
     @SuppressWarnings("deprecation")
-    protected List<T> getAllDocumentsByKey(View view, Vector<String> indexedParameters) throws HandlerGenericException {
+    protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters) throws HandlerGenericException {
         List<T> list = new ArrayList<T>();
         DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
         
@@ -121,22 +121,16 @@ public abstract class GenericDAO<T> {
         return list;
     }
 
-    protected List<T> searchDocuments(View view, Map<String, String> parameters) {
+    protected List<T> searchDocuments(View view, Map<String, String> parameters) throws HandlerGenericException {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
-        try {
-            int cantidadDocumentos = view.FTSearch(query);
-            if (0 < cantidadDocumentos) {
-                ViewEntryCollection vec = view.getAllEntries();
-                for (ViewEntry viewEntry : vec) {
-                    document = viewEntry.getDocument();
-                    list.add((T) this.castDocument(document));
-                }
+        if (view.FTSearch(query) > 0) {
+            ViewEntryCollection vec = view.getAllEntries();
+            for (ViewEntry viewEntry : vec) {
+                document = viewEntry.getDocument();
+                list.add((T) this.castDocument(document));
             }
-        } catch (HandlerGenericException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
         return list;
     }
@@ -312,27 +306,29 @@ public abstract class GenericDAO<T> {
         List<View> views = database.getViews(entity);
         View indexedView = null;
         for (View view : views) {
-            Vector<ViewColumn> columns = view.getColumns();
-            Set<String> keys = new HashMap<String, String>(parameters).keySet();
-            if (columns.size() == parameters.size()) {
-                for (ViewColumn column : columns) {
-                    String columnName = column.getTitle();
-                    if (keys.contains(columnName)) {
-                        keys.remove(columnName);
-                    }
-                }
-                if (keys.size() == 0) {
-                    indexedView = view;
-                    break;
-                }
+            ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
+            Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
+            if (validateColumnsInView(columns, parameterKeys)) {
+                indexedView = view;
+                break;
             }
         }
         return indexedView;
     }
     
-    protected Vector<String> getIndexedParameters(View view, Map<String, String> parameters) {
-        Vector<String> indexedParameters = new Vector<String>();
-        Vector<ViewColumn> columns = view.getColumns();
+    protected boolean validateColumnsInView(ArrayList<ViewColumn> columns, Set<String> keys) {
+        for (ViewColumn column : columns) {
+            String columnName = column.getTitle();
+            if (keys.contains(columnName)) {
+                keys.remove(columnName);
+            }
+        }
+        return keys.isEmpty();
+    }
+    
+    protected ArrayList<String> getIndexedParameters(View view, Map<String, String> parameters) {
+        ArrayList<String> indexedParameters = new ArrayList<String>();
+        ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
         for (ViewColumn column : columns) {
             String columnName = column.getTitle();
             indexedParameters.add(parameters.get(columnName));

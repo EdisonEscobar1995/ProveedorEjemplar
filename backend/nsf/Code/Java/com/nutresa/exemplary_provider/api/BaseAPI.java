@@ -20,7 +20,6 @@ import org.openntf.domino.utils.DominoUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
@@ -115,7 +114,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
-            String key = (String) parameterNames.nextElement();
+            String key = parameterNames.nextElement();
             String val = request.getParameter(key);
             parameters.put(key, val);
         }
@@ -137,9 +136,8 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doPost(String action, BufferedReader reader, Gson gson) throws IOException,
-            JsonSyntaxException,
-        IllegalAccessException, InvocationTargetException, HandlerGenericException {
+    private ServletResponseDTO doPost(String action, BufferedReader reader, Gson gson) throws IOException, IllegalAccessException,
+        InvocationTargetException, HandlerGenericException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
         Method method = Common.getMethod(this.getClass(), action);
