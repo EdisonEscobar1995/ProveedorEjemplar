@@ -6,6 +6,8 @@ public class AnswerDTO {
     @Expose
     private String idSupplierByCall;
     @Expose
+    private String idSurvey;
+    @Expose
     private String idQuestion;
     @Expose
     private String idOptionSupplier;
@@ -92,6 +94,14 @@ public class AnswerDTO {
 
     public void setResponseEvaluator(String responseEvaluator) {
         this.responseEvaluator = responseEvaluator;
+    }
+
+    public String getIdSurvey() {
+        return idSurvey;
+    }
+
+    public void setIdSurvey(String idSurvey) {
+        this.idSurvey = idSurvey;
     }
 
 }
