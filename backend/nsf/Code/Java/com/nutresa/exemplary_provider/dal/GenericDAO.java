@@ -323,10 +323,7 @@ public abstract class GenericDAO<T> {
                 keys.remove(columnName);
             }
         }
-        if (keys.isEmpty()) {
-            return true;
-        }
-        return false;
+        return keys.isEmpty();
     }
     
     protected ArrayList<String> getIndexedParameters(View view, Map<String, String> parameters) {
