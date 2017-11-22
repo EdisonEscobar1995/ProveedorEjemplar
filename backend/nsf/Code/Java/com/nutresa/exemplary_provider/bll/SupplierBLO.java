@@ -47,4 +47,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return supplier;
     }
 
+    public void getSurvey(String idSurvey) {
+//        QuestionBLO questionBLO = new QuestionBLO();
+//        questionBLO.getDimensionsInQuestions(idSurvey);
+
+    }
+
 }
