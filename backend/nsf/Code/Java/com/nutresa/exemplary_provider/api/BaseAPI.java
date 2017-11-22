@@ -68,7 +68,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         ServletResponseDTO servletResponse = null;
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
-            .setDateFormat("Y/m/d").setPrettyPrinting().create();
+            .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
     
         try {
             typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
