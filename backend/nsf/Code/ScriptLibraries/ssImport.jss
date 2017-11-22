@@ -263,9 +263,10 @@ function importData() {
 					               {commonName: "Tipo de suministro", technicalName: "idSupply"},
 					               {commonName: "Tamaño", technicalName: "idCompanySize"}];
 				defaultFields = [{ key: "form", value: "frSupplierByCall"}];
-				foreignKeys = [{technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
-				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]},
-				               {technicalNames: ["idCall"], commonNames: ["Convocatoria"], viewNames: ["ImportCallsByYear"]}];
+				foreignKeys = [{technicalNames: ["idCall"], commonNames: ["Convocatoria"], viewNames: ["ImportCallsByYear"]},
+				               {technicalNames: ["idSupplier"], commonNames: ["Nombre"], viewNames: ["ImportSuppliersByName"]},
+				               {technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
+				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]}];
 				viewName = "vwSuppliersByCall";
 				break;
 				
@@ -312,6 +313,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		var foreignKey;
 		var unavailableForeignKeys = 0;
 		var keys;
+		var surveys;
 		
 		for (i in data) {
 			for (j in columnNames){
@@ -437,7 +439,9 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 					
 				if (nd.getItemValueString("form") == "frQuestionBySurvey"){
 					ndForeign = vwQuestions.getDocumentByKey(nd.getItemValueString("idQuestion"), true);
-	 				ndForeign.replaceItemValue("idSurvey", nd.getItemValueString("idSurvey"))
+					surveys = vectorToArray(ndForeign.getItemValue("idSurvey"))
+					surveys.push(nd.getItemValueString("idSurvey"))
+					ndForeign.replaceItemValue("idSurvey", surveys)
 	 				ndForeign.save(true, false);
 	 				modifiedIds.push(ndForeign.getItemValueString("id"));
 	 				ndForeign.recycle();
@@ -489,6 +493,24 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		response: response,
 		count: count
 	}
+}
+
+function vectorToArray(vector){
+	var array = [];
+	
+	if(vector){
+		if(typeof vector == "string"){
+			return  [vector];
+		}
+		
+		var it = vector.iterator();
+		while (it.hasNext() ) {
+			array.push( it.next() );
+		}
+			
+	}
+	
+	return array;
 }
 
 
