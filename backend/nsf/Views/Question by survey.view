@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Questions by survey' alias='vwQuestionsBySurvey' xmlns='http://www.lotus.com/dxl'
+<view name='Question by survey' alias='Question|vwQuestionsBySurvey' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,12 +9,12 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='742' unid='B6D0BBA80251CCC3052581E0005C288A' sequence='10'>
-<created><datetime>20171122T114636,90-05</datetime></created>
-<modified><datetime>20171122T142825,47-05</datetime></modified>
-<revised><datetime>20171122T142825,46-05</datetime></revised>
-<lastaccessed><datetime>20171122T142825,47-05</datetime></lastaccessed>
-<addedtofile><datetime>20171122T114636,95-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='752' unid='D3393D9830757FBF052581E00070D8E7' sequence='6'>
+<created><datetime>20171122T153235,59-05</datetime></created>
+<modified><datetime>20171122T163826,29-05</datetime></modified>
+<revised><datetime>20171122T163826,28-05</datetime></revised>
+<lastaccessed><datetime>20171122T163826,29-05</datetime></lastaccessed>
+<addedtofile><datetime>20171122T153235,60-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frQuestion"</formula></code><code
@@ -24,16 +24,10 @@ End Sub
 </lotusscript></code>
 <column sort='ascending' hidedetailrows='false' itemname='idSurvey' width='17.2500'
  resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
- showaslinks='false' categorized='true'><columnheader title='idSurvey'><font
- size='9pt' style='bold'/></columnheader></column>
-<column sort='ascending' hidedetailrows='false' itemname='idDimension' width='10'
- resizable='true' separatemultiplevalues='true' sortnoaccent='false' sortnocase='true'
- showaslinks='false' categorized='true'><columnheader title='idDimension'><font
- size='9pt' style='bold'/></columnheader></column>
-<column sort='ascending' hidedetailrows='false' itemname='idCriterion' width='10'
- resizable='true' separatemultiplevalues='true' sortnoaccent='false' sortnocase='true'
- showaslinks='false' categorized='true'><columnheader title='idCriterion'><font
- size='9pt' style='bold'/></columnheader></column>
+ showaslinks='false'><columnheader title='idSurvey'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idDimension' width='17.2500'
+ resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idDimension'><font size='9pt' style='bold'/></columnheader></column>
 <column sort='ascending' hidedetailrows='false' itemname='id' width='10' resizable='true'
  separatemultiplevalues='false' sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
  title='id'><font size='9pt' style='bold'/></columnheader></column></view>

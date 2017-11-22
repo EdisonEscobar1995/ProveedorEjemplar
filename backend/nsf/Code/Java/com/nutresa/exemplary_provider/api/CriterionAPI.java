@@ -1,7 +1,6 @@
 package com.nutresa.exemplary_provider.api;
 
 import java.util.List;
-import java.util.Map;
 
 import com.nutresa.exemplary_provider.bll.CriterionBLO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
@@ -14,16 +13,16 @@ public class CriterionAPI extends GenericAPI<CriterionDTO, CriterionBLO> {
         super(CriterionDTO.class, CriterionBLO.class);
     }
 
-    public ServletResponseDTO<List<CriterionDTO>> getCriterionBySurvey(Map<String, String> parameters) {
+    public ServletResponseDTO<List<CriterionDTO>> getCriterionBySurvey(String idSurvey, String idDimension) {
         CriterionBLO criterionBLO = new CriterionBLO();
         ServletResponseDTO<List<CriterionDTO>> response = null;
         try {
             response = new ServletResponseDTO<List<CriterionDTO>>((List<CriterionDTO>) criterionBLO
-                    .getCriterionsBySurvey(parameters.get("idSurvey"), parameters.get("idDimension")));
+                    .getCriterionsBySurvey(idSurvey, idDimension));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<List<CriterionDTO>>(exception);
         }
-        
+
         return response;
     }
 

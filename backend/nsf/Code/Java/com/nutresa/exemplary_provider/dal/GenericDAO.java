@@ -327,9 +327,13 @@ public abstract class GenericDAO<T> {
     protected ArrayList<String> getIndexedParameters(View view, Map<String, String> parameters) {
         ArrayList<String> indexedParameters = new ArrayList<String>();
         ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
+
         for (ViewColumn column : columns) {
             String columnName = column.getTitle();
             indexedParameters.add(parameters.get(columnName));
+            if(indexedParameters.size() >= parameters.size()){
+                break;
+            }
         }
         return indexedParameters;
     }

@@ -37,4 +37,16 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
         return criterionsId;
     }
 
+    public List<QuestionDTO> getQuestionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
+        QuestionDAO questionDAO = new QuestionDAO();
+        List<QuestionDTO> questions = null;
+        try {
+            questions = questionDAO.getQuestionsBySurvey(idSurvey, idDimension);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return questions;
+    }
+
 }

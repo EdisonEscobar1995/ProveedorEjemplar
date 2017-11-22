@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.CriterionDAO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
