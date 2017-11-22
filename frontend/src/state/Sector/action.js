@@ -1,10 +1,11 @@
 import {
   GET_DATA_SECTOR_PROGRESS,
   GET_DATA_SECTOR_SUCCESS,
-  GET_DATA_SECTOR_FAILED,
+  SAVE_DATA_SECTOR_SUCCESS,
+  DELETE_DATA_SECTOR_SUCCESS,
+  REQUEST_FAILED,
 } from './const';
-import getDataSectortApi from '../../api/sector';
-
+import { getAllSectorApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
 
 function getDataSectorProgress() {
   return {
@@ -18,27 +19,67 @@ function getDataSectorSuccess(data) {
     data,
   };
 }
-
-function getDataSectorFailed() {
+function saveSectorSuccess(actual) {
   return {
-    type: GET_DATA_SECTOR_FAILED,
+    type: SAVE_DATA_SECTOR_SUCCESS,
+    actual,
+  };
+}
+function deleteSectorSuccess(data) {
+  return {
+    type: DELETE_DATA_SECTOR_SUCCESS,
+    data,
   };
 }
 
-function getDataSector() {
+function getFailedRequest() {
+  return {
+    type: REQUEST_FAILED,
+  };
+}
+
+function getAllSector() {
   return (dispatch) => {
     dispatch(getDataSectorProgress());
-    getDataSectortApi()
+    getAllSectorApi()
       .then((respose) => {
         const { data } = respose.data;
         dispatch(getDataSectorSuccess(data));
       })
       .catch(() => {
-        dispatch(getDataSectorFailed());
+        dispatch(getFailedRequest());
+      });
+  };
+}
+function saveSector(clientData) {
+  return (dispatch) => {
+    dispatch(getDataSectorProgress());
+    saveSectorApi(clientData)
+      .then((respose) => {
+        const { data } = respose.data;
+        dispatch(saveSectorSuccess(data));
+      })
+      .catch(() => {
+        dispatch(getFailedRequest());
+      });
+  };
+}
+function deleteSector(clientData) {
+  return (dispatch) => {
+    dispatch(getDataSectorProgress());
+    deleteSectorApi(clientData)
+      .then((respose) => {
+        const { data } = respose.data;
+        dispatch(deleteSectorSuccess(data));
+      })
+      .catch(() => {
+        dispatch(getFailedRequest());
       });
   };
 }
 
 export {
-  getDataSector as default,
+  getAllSector,
+  saveSector,
+  deleteSector,
 };

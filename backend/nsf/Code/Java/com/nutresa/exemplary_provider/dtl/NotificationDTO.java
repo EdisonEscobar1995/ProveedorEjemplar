@@ -13,9 +13,8 @@ public class NotificationDTO extends MasterDTO {
     private String message;
     @Expose
     private List<String> withCopy;
+    @Expose
     private String alias;
-    public static final String SENDER_NAME = "Portal de proveedores";
-    public static final String SENDER_EMAIL = "gruponutresa@nutresa.com";
 
     public String getBanner() {
         return banner;

@@ -8,6 +8,7 @@ if (env !== 'DEV') {
 }
 const instance = axios.create({
   baseURL: baseUrl,
+  headers: { 'Content-type': 'application/json; charset=utf-8' },
 });
 
 export {

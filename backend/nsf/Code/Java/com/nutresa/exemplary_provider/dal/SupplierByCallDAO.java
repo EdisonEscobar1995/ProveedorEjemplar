@@ -13,12 +13,13 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     public SupplierByCallDAO() {
         super(SupplierByCallDTO.class);
+        this.entityView = "vwSuppliersByCall";
     }
 
     public List<SupplierByCallDTO> getBySupplier(String idSupplier) throws HandlerGenericException {
         List<SupplierByCallDTO> callsBySupplier = new ArrayList<SupplierByCallDTO>();
         try {
-            View currentView = getDatabase().getView("vwSupplierByCallsSupplier");
+            View currentView = getDatabase().getView("vwSuppliersByCallSupplier");
             DocumentCollection documents = currentView.getAllDocumentsByKey(idSupplier, true);
             for (Document document : documents) {
                 callsBySupplier.add(castDocument(document));

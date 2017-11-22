@@ -1,9 +1,16 @@
 import React from 'react';
 import GenericForm from '../shared/GenericForm';
 
-function Sector({ colummns, data }) {
+function Sector({ loading, colummns, data, actual, saveData, deleteData }) {
   return (
-    <GenericForm colummns={colummns} data={data} />
+    <GenericForm
+      loading={loading}
+      data={data}
+      actual={actual}
+      colummns={colummns}
+      saveData={saveData}
+      deleteData={deleteData}
+    />
   );
 }
 export default Sector;
