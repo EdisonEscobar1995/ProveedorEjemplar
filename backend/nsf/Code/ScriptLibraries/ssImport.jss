@@ -187,7 +187,7 @@ function importData() {
 				foreignKeys = [{technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
 				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]},
 				               {technicalNames: ["idQuestion"], commonNames: ["Pregunta"], viewNames: ["ImportQuestionsByWording"]}];
-				viewName = "vwQuestionsBySurvey";
+				viewName = "";
 				break;
 			case "NOT":
 				columnKeys = ["alias"];
@@ -288,13 +288,16 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		var emptyFields;
 		var unavailableForeignNames;
 		var savedIds = [];
+		var modifiedIds = [];
 		var primaryKeyViolated;
 		var i;
 		var j;
 		var k;
 		
-		var vw:NotesView = sessionAsSigner.getCurrentDatabase().getView(viewName);
-		vw.getAllEntries().removeAll(true);
+		if (viewName){
+			var vw:NotesView = sessionAsSigner.getCurrentDatabase().getView(viewName);
+			vw.getAllEntries().removeAll(true);
+		}
 		
 		var nd:NotesDocument;
 		var vwForeign:NotesView;
@@ -324,7 +327,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		
 		for(i in data){
 			fila = data[i];
-		
+			
 			emptyFields = [];	
 			for(j in requiredFields){				
 				if (!fila.hasOwnProperty(requiredFields[j].technicalName)){
@@ -395,8 +398,11 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		}else if (unavailableForeignKeys > 0){
 			error = "Violación de clave foránea";
 		}else{
+			var vwSurveys:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
+			var vwQuestions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestions");
+			
 			for (i = 0; i < data.length && !error; i++){
-					
+				
 				nd = sessionAsSigner.getCurrentDatabase().createDocument();
 				
 				for (j in defaultFields){
@@ -410,16 +416,14 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 					}
 				}
 				
-				println(nd.getItemValueString("idSupply")+nd.getItemValueString("idCompanySize"))
-				
 				nd.replaceItemValue("id", nd.getUniversalID());
 				if (nd.getItemValueString("form") == "frQuestionBySurvey" || nd.getItemValueString("form") == "frSupplierByCall"){
-					vwForeign = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
-	 				ndForeign = vwForeign.getDocumentByKey(nd.getItemValueString("idSupply")+nd.getItemValueString("idCompanySize"), true);
+					ndForeign = vwSurveys.getDocumentByKey(nd.getItemValueString("idSupply")+nd.getItemValueString("idCompanySize"), true);
 	 				if (ndForeign){
 	 					nd.replaceItemValue("idSurvey", ndForeign.getItemValueString("id"));
 	 					nd.removeItem("idSupply");
 	 					nd.removeItem("idCompanySize");
+	 					ndForeign.recycle();
 		 			}else{
 	 					error = "Violación de clave foránea";
 	 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. No se encontró una encuesta que coincida con Tipo de suministro y Tamaño"})
@@ -430,11 +434,18 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 					nd.removeItem("year");
 					nd.replaceItemValue("year", parseInt(fila[j], 10))
 				}
-												
-				nd.save(true, false);						
-				savedIds.push(nd.getItemValueString("id"));
-				nd.recycle();
-						
+					
+				if (nd.getItemValueString("form") == "frQuestionBySurvey"){
+					ndForeign = vwQuestions.getDocumentByKey(nd.getItemValueString("idQuestion"), true);
+	 				ndForeign.replaceItemValue("idSurvey", nd.getItemValueString("idSurvey"))
+	 				ndForeign.save(true, false);
+	 				modifiedIds.push(ndForeign.getItemValueString("id"));
+	 				ndForeign.recycle();
+		 		}else{
+					nd.save(true, false);						
+					savedIds.push(nd.getItemValueString("id"));
+					nd.recycle();
+				}
 			}		
 		}
 		
@@ -449,10 +460,26 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 				}
 				savedIds = [];
 			}
+			if(modifiedIds.length > 0){
+				for(i in modifiedIds){					
+ 					ndForeign = vwQuestions.getDocumentByKey(modifiedIds[i], true);
+					if(ndForeign){
+						ndForeign.removeItem("idSurvey");
+						ndForeign.save(true, false);
+						ndForeign.recycle();
+					}
+				}
+ 				modifiedIds = [];
+ 			}
 		}
 		
-		count = savedIds.length
-	
+
+		if (viewName){
+			count = savedIds.length
+		}else{
+			count = modifiedIds.length
+		}
+		
 	}catch(e){
 		error = e.message + " fila " + i;
 	}
