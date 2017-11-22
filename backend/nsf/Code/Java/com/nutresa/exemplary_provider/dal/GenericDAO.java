@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.openntf.domino.Database;
@@ -307,27 +306,32 @@ public abstract class GenericDAO<T> {
         List<View> views = database.getViews(entity);
         View indexedView = null;
         for (View view : views) {
-            Vector<ViewColumn> columns = view.getColumns();
-            Set<String> keys = new HashMap<String, String>(parameters).keySet();
-            if (columns.size() == parameters.size()) {
-                for (ViewColumn column : columns) {
-                    String columnName = column.getTitle();
-                    if (keys.contains(columnName)) {
-                        keys.remove(columnName);
-                    }
-                }
-                if (keys.isEmpty()) {
-                    indexedView = view;
-                    break;
-                }
+            ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
+            Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
+            if (validateColumnsInView(columns, parameterKeys)) {
+                indexedView = view;
+                break;
             }
         }
         return indexedView;
     }
     
+    protected boolean validateColumnsInView(ArrayList<ViewColumn> columns, Set<String> keys) {
+        for (ViewColumn column : columns) {
+            String columnName = column.getTitle();
+            if (keys.contains(columnName)) {
+                keys.remove(columnName);
+            }
+        }
+        if (keys.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+    
     protected ArrayList<String> getIndexedParameters(View view, Map<String, String> parameters) {
         ArrayList<String> indexedParameters = new ArrayList<String>();
-        Vector<ViewColumn> columns = view.getColumns();
+        ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
         for (ViewColumn column : columns) {
             String columnName = column.getTitle();
             indexedParameters.add(parameters.get(columnName));
