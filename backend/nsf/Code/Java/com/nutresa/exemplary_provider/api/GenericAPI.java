@@ -78,7 +78,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         ServletResponseDTO<T> response = null;
         try {
             blo = this.bloClass.newInstance();
-            Method method = Common.getMethod(this.bloClass, "save");
+            Method method = Common.getMethod(this.bloClass, "save", 1);
             response = new ServletResponseDTO<T>((T) method.invoke(blo, dto));
         } catch (Exception exception) {
             response = new ServletResponseDTO<T>(exception);

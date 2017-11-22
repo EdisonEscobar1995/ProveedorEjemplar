@@ -109,8 +109,6 @@ public abstract class GenericDAO<T> {
         return getAllBy(filter);
     }
     
-
-    @SuppressWarnings("deprecation")
     protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters) throws HandlerGenericException {
         List<T> list = new ArrayList<T>();
         DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);

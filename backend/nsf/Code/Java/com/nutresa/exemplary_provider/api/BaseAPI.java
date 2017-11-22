@@ -140,7 +140,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         InvocationTargetException, HandlerGenericException {
         String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
-        Method method = Common.getMethod(this.getClass(), action);
+        Method method = Common.getMethod(this.getClass(), action, 1);
         while ((inputLine = reader.readLine()) != null) {
             stringBuilder.append(inputLine);
         }
