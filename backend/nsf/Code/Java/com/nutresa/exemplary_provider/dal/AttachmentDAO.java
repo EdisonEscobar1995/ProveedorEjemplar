@@ -2,6 +2,10 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.Session;
 import org.openntf.domino.Database;
@@ -19,10 +23,12 @@ public class AttachmentDAO {
 
 	private Session session;
 	private Database database;
-	
+	private String entityView;
+    
 	public AttachmentDAO(){
 		this.session = Factory.getSession();
 		this.database = session.getCurrentDatabase();
+		this.entityView = "vwAttachments";
 	}
 
 	public AttachmentDTO save(List<FileItem> items)
@@ -59,7 +65,7 @@ public class AttachmentDAO {
 	}
 	
 	private Document getDocument(String id){
-		View view = this.database.getView("vwAttachments");
+		View view = this.database.getView(entityView);
 		return view.getFirstDocumentByKey(id, true);
 	}
 	
@@ -67,9 +73,27 @@ public class AttachmentDAO {
 		AttachmentDTO dto = new AttachmentDTO();
 		if (document != null){
 			dto.setId(document.getItemValueString("id"));
-			dto.setUrl("url del documento");
+			dto.setUrl(getAttachmentUrl(document));
 		}
 		return dto;
+	}
+	
+	private String getAttachmentUrl(Document document){
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = facesContext.getExternalContext();
+		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+		String host = request.getServerName();
+		String path = externalContext.getRequestContextPath();
+		
+		String url = "http" + (request.isSecure() ? "s" : "") + "://" + 
+		host + 
+		path +
+		"/" + entityView +
+		"/" + document.getUniversalID() + 
+		"/$FILE" +
+		"/" + session.evaluate("@AttachmentNames", document).elementAt(0);
+		
+		return url;
 	}
 	
 	private void processUploadedFile(FileItem item, MIMEEntity mime)

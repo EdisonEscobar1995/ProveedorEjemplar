@@ -40,6 +40,7 @@ public class AttachmentAPI extends BaseAPI<AttachmentDTO> {
 
 			ServletContext servletContext = this.getServletConfig()
 					.getServletContext();
+			
 			File repository = (File) servletContext
 					.getAttribute("javax.servlet.context.tempdir");
 			factory.setRepository(repository);
