@@ -5,17 +5,23 @@ import { comercialInfo } from './dataPage';
 
 
 class Comercial extends Component {
+  componentDidMount() {
+    const { call, getDimensionsBySurvey } = this.props;
+    const { idSurvey } = call;
+    getDimensionsBySurvey(idSurvey);
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields();
   }
   render() {
     const { getFieldDecorator } = this.props.form;
+    const fields = comercialInfo(this.props);
     return (
       <Form onSubmit={this.handleSubmit}>
         <DinamicForm
           getFieldDecorator={getFieldDecorator}
-          content={comercialInfo}
+          content={fields}
         />
         <Button
           type="primary"

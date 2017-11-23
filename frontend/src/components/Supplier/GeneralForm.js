@@ -13,12 +13,16 @@ class General extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        if (this.props.supplier.participateInCall) {
+        if (this.props.participateInCall) {
           // this.props.next();
+          const { call } = this.props;
+          call.participateInCall = true;
+          const supplier = Object.assign(this.props.supplier, values);
+          this.props.saveDataCallSupplier(call, supplier);
         } else {
           values.participateInCall = false;
           values.lockedByModification = true;
-          this.props.saveDataSupplier(Object.assign(this.props.supplier, values));
+          this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
         }
       }
     });
@@ -27,8 +31,8 @@ class General extends Component {
     this.props.changeParticipate(participateInCall === 'si');
   }
   render() {
-    const { participateInCall, supplier } = this.props;
-    const { lockedByModification } = supplier;
+    const { participateInCall, call } = this.props;
+    const { lockedByModification } = call;
     const { getFieldDecorator } = this.props.form;
     let content = '';
     let buttons = [];

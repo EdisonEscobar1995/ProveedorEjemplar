@@ -5,12 +5,15 @@ import {
   GET_DATA_CATEGORIES_SUCCESS,
   GET_DATA_SUBCATEGORIES_SUCCESS,
   GET_DATA_DEPARTMENTS_SUCCESS,
+  GET_DATA_DIMENSION_SURVEY_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
-  SAVE_DATA_SUPPLIER_SUCCESS,
+  GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
+  SAVE_DATA_SUPPLIER_CALL_SUCCESS,
+  SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
 } from './const';
-import { getDataSuppliertApi, saveDataSupplierApi } from '../../api/supplier';
+import { getDataSuppliertApi, getDataCallSuppliertApi, saveDataSuppliertApi, saveDataCallBySupplierApi } from '../../api/supplier';
 import { getDataSupplyApi } from '../../api/supply';
 import { getDataCategoryBySuplyApi } from '../../api/category';
 import { getDataSubCategoryByCategoryApi } from '../../api/subcategory';
@@ -20,6 +23,8 @@ import getDataSocietyTypesApi from '../../api/societyType';
 import getDataCountriesApi from '../../api/countries';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
+import { getDimensionsBySurveyApi } from '../../api/dimension';
+import { getQuestionsByDimensionApi } from '../../api/question';
 import requestApi from '../../utils/actionUtils';
 
 
@@ -31,6 +36,7 @@ function getDataSupplierProgress() {
 
 function getDataSupplierSuccess(
   supplier,
+  call,
   supply,
   companyTypes,
   companySizes,
@@ -40,6 +46,7 @@ function getDataSupplierSuccess(
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
+    call,
     supply,
     companyTypes,
     companySizes,
@@ -77,9 +84,31 @@ function getDataCitiesByDepartmentSuccess(cities) {
     cities,
   };
 }
-function saveDataSupplierSuccess(supplier) {
+function getDataDimensionsBySuplySuccess(dimensions) {
   return {
-    type: SAVE_DATA_SUPPLIER_SUCCESS,
+    type: GET_DATA_DIMENSION_SURVEY_SUCCESS,
+    dimensions,
+  };
+}
+
+function getDataQuestionsByDimensionSuccess(questions, idDimension) {
+  return {
+    type: GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
+    questions,
+    idDimension,
+  };
+}
+
+function saveDataCallSuccess(call) {
+  return {
+    type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
+    call,
+  };
+}
+function saveDataCallAndSupplerSuccess(call, supplier) {
+  return {
+    type: SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
+    call,
     supplier,
   };
 }
@@ -95,6 +124,7 @@ function getDataSupplier() {
   return (dispatch) => {
     const promises = [
       getDataSuppliertApi(),
+      getDataCallSuppliertApi(),
       getDataSupplyApi(),
       getDataCompanyTypesApi(),
       getDataCompanySizeApi(),
@@ -103,13 +133,15 @@ function getDataSupplier() {
     ];
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
       const supplier = arrayResponse[0].data.data;
-      const supply = arrayResponse[1].data.data;
-      const companyTypes = arrayResponse[2].data.data;
-      const companySizes = arrayResponse[3].data.data;
-      const societyTypes = arrayResponse[4].data.data;
-      const countries = arrayResponse[5].data.data;
+      const call = arrayResponse[1].data.data;
+      const supply = arrayResponse[2].data.data;
+      const companyTypes = arrayResponse[3].data.data;
+      const companySizes = arrayResponse[4].data.data;
+      const societyTypes = arrayResponse[5].data.data;
+      const countries = arrayResponse[6].data.data;
       dispatch(getDataSupplierSuccess(
         supplier,
+        call,
         supply,
         companyTypes,
         companySizes,
@@ -166,15 +198,57 @@ function getDataCitiesByDepartment(clientData) {
       });
   };
 }
-function saveDataSupplier(clientData) {
+function getDimensionsBySurvey(idSurvey) {
   return (dispatch) => {
-    requestApi(dispatch, getDataSupplierProgress, saveDataSupplierApi, clientData)
+    requestApi(dispatch, getDataSupplierProgress, getDimensionsBySurveyApi, idSurvey)
       .then((respone) => {
-        const supplier = respone.data.data;
-        dispatch(saveDataSupplierSuccess(supplier));
+        const dimensions = respone.data.data;
+        dispatch(getDataDimensionsBySuplySuccess(dimensions));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
+  };
+}
+function getQuestionsByDimension(idSurvey, idDimension) {
+  return (dispatch) => {
+    requestApi(dispatch,
+      getDataSupplierProgress,
+      getQuestionsByDimensionApi,
+      { idSurvey, idDimension },
+    )
+      .then((respone) => {
+        const dimensions = respone.data.data;
+        dispatch(getDataQuestionsByDimensionSuccess(dimensions, idDimension));
+      }).catch((err) => {
+        dispatch(getDataFailed(err));
+      });
+  };
+}
+function saveDataCallBySupplier(clientData) {
+  return (dispatch) => {
+    requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
+      .then((respone) => {
+        const call = respone.data.data;
+        dispatch(saveDataCallSuccess(call));
+      }).catch((err) => {
+        dispatch(getDataFailed(err));
+      });
+  };
+}
+
+function saveDataCallSupplier(clientCall, clientSupplier) {
+  return (dispatch) => {
+    const promises = [
+      saveDataCallBySupplierApi(clientCall),
+      saveDataSuppliertApi(clientSupplier),
+    ];
+    requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
+      const call = arrayResponse[0].data.data;
+      const supplier = arrayResponse[1].data.data;
+      dispatch(saveDataCallAndSupplerSuccess(call, supplier));
+    }).catch((err) => {
+      dispatch(getDataFailed(err));
+    });
   };
 }
 
@@ -184,6 +258,9 @@ export {
   getDataSubCategoryByCategory,
   getDataDepartmentsByCountry,
   getDataCitiesByDepartment,
-  saveDataSupplier,
+  getDimensionsBySurvey,
+  getQuestionsByDimension,
+  saveDataCallBySupplier,
+  saveDataCallSupplier,
   changeParticipate,
 };
