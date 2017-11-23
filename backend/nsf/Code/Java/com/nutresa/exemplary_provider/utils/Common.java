@@ -13,22 +13,6 @@ public class Common {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Method getMethod(Class<?> clazz, String name) throws HandlerGenericException {
-        Method method = null;
-        try {
-            for (Method methodAux : clazz.getMethods()) {
-                if (methodAux.getName().equals(name)) {
-                    method = methodAux;
-                    method.setAccessible(true);
-                    break;
-                }
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-        return method;
-    }
-
     public static Method getMethod(Class<?> clazz, String name, int parameterQuantity) throws HandlerGenericException {
         Method method = null;
         try {

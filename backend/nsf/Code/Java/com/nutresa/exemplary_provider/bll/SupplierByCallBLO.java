@@ -47,7 +47,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             supplierByCallDTO = getCurrentCallBySupplier();
             supplierByCallDTO.setOldIdCompanySize(oldIdCompanySize);
             supplierByCallDTO.setLockedByModification(true);
-            supplierByCallDAO.save(supplierByCallDTO);
+            supplierByCallDAO.update(supplierByCallDTO.getId(), supplierByCallDTO);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }

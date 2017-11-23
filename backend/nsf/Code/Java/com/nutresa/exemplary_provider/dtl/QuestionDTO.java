@@ -22,6 +22,8 @@ public class QuestionDTO {
     @Expose
     private String helpText;
     @Expose
+    private List<String> idsSurvey;
+    @Expose
     private List<String> dependOfAnswerIds;
     @Expose
     private QuestionDTO dependOfQuestion;
@@ -124,6 +126,14 @@ public class QuestionDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<String> getIdsSurvey() {
+        return idsSurvey;
+    }
+
+    public void setIdsSurvey(List<String> idsSurvey) {
+        this.idsSurvey = idsSurvey;
     }
 
 }

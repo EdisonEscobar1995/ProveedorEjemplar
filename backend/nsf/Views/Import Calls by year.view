@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='QuestionsBySurvey' alias='vwQuestionsBySurvey' xmlns='http://www.lotus.com/dxl'
+<view name='Import Calls by year' alias='ImportCallsByYear' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,20 +9,21 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='24a2' unid='9485B891C53C46FD052581DE00655EAE' sequence='3'>
-<created><datetime>20171120T132713,74-05</datetime></created>
-<modified><datetime>20171120T233411,18-05</datetime></modified>
-<revised><datetime>20171120T233411,17-05</datetime></revised>
-<lastaccessed><datetime>20171120T233411,18-05</datetime></lastaccessed>
-<addedtofile><datetime>20171120T132713,75-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='252a' unid='1E577102936D20AE052581DF00772F11' sequence='5'>
+<created><datetime>20171121T164148,33-05</datetime></created>
+<modified><datetime>20171121T171744,14-05</datetime></modified>
+<revised><datetime>20171121T171744,13-05</datetime></revised>
+<lastaccessed><datetime>20171121T171744,14-05</datetime></lastaccessed>
+<addedtofile><datetime>20171121T164148,34-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frQuestionBySurvey"</formula></code><code
- event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+ event='selection'><formula>SELECT form = "frCall"</formula></code><code event='querypaste'><lotusscript
+>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
 </lotusscript></code>
-<column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
+<column sort='ascending' hidedetailrows='false' itemname='$0' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='Id'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='year'><font size='9pt' style='bold'/></columnheader><code
+ event='value'><formula>@Text(year)</formula></code></column></view>
 

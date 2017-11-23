@@ -92,10 +92,10 @@ public class GenericBLO<T, D> {
             Method method = null;
             D dao = this.daoClass.newInstance();
             if ("".equals(id) || null == id) {
-                method = Common.getMethod(this.daoClass, "save");
+                method = Common.getMethod(this.daoClass, "save", 1);
                 dto = (T) method.invoke(dao, dto);
             } else {
-                method = Common.getMethod(this.daoClass, "update");
+                method = Common.getMethod(this.daoClass, "update", 2);
                 dto = (T) method.invoke(dao, id, dto);
             }
         } catch (Exception e) {

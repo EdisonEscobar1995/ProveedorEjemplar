@@ -130,7 +130,6 @@ function importData() {
 				foreignKeys = [{technicalNames: ["idCategory"], commonNames: ["Categoría"], viewNames: ["ImportCategoriesByName"]}];
 				viewName = "vwSubCategories";
 				break;
-				
 			case "COU":
 				columnKeys = ["name"];
 				columnNameKeys = ["Pais"];
@@ -188,7 +187,7 @@ function importData() {
 				foreignKeys = [{technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
 				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]},
 				               {technicalNames: ["idQuestion"], commonNames: ["Pregunta"], viewNames: ["ImportQuestionsByWording"]}];
-				viewName = "vwQuestionsBySurvey";
+				viewName = "";
 				break;
 			case "NOT":
 				columnKeys = ["alias"];
@@ -202,7 +201,75 @@ function importData() {
 				defaultFields = [{ key: "form", value: "frNotification"}];
 				viewName = "vwNotifications";
 				break;
-			
+			case "ROL":
+				columnKeys = ["name"];
+				columnNameKeys = ["Nombre"];
+				columnNames = [{commonName: "Nombre", technicalName: "name"},
+				               {commonName: "Alias", technicalName: "shortName"}];
+				requiredFields = [{commonName: "Nombre", technicalName: "name"},
+					               {commonName: "Alias", technicalName: "shortName"}];
+				defaultFields = [{ key: "form", value: "frRol"}];
+				viewName = "vwRols";
+				break;
+			case "USE":
+				columnKeys = ["name"];
+				columnNameKeys = ["Nombre"];
+				columnNames = [{commonName: "Nombre", technicalName: "name"},
+				               {commonName: "Roles", technicalName: "idRols"}];
+				requiredFields = [{commonName: "Nombre", technicalName: "name"},
+					               {commonName: "Roles", technicalName: "idRols"}];
+				defaultFields = [{ key: "form", value: "frUser"}];
+				foreignKeys = [{technicalNames: ["idRols"], commonNames: ["Rol"], viewNames: ["ImportRolByName"]}];
+				viewName = "vwUsers";
+				break;
+			case "CAL":
+				columnKeys = ["year"];
+				columnNameKeys = ["Año"];
+				columnNames = [{commonName: "Año", technicalName: "year"}];
+				requiredFields = [{commonName: "Año", technicalName: "year"}];
+				defaultFields = [{ key: "form", value: "frCall"}];
+				viewName = "vwCalls";
+				break;
+			case "SUP":
+				columnKeys = ["businessName"];
+				columnNameKeys = ["Nombre"];
+				columnNames = [{commonName: "Nit", technicalName: "nit"},
+				               {commonName: "Nombre", technicalName: "businessName"},
+				               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+				               {commonName: "Tamaño", technicalName: "idCompanySize"},
+				               {commonName: "Categoría", technicalName: "idCategory"},
+				               {commonName: "Subcategoría", technicalName: "idSubCategory"}];
+				requiredFields = [{commonName: "Nit", technicalName: "nit"},
+					               {commonName: "Nombre", technicalName: "businessName"},
+					               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+					               {commonName: "Tamaño", technicalName: "idCompanySize"},
+					               {commonName: "Categoría", technicalName: "idCategory"},
+					               {commonName: "Subcategoría", technicalName: "idSubCategory"}];
+				defaultFields = [{ key: "form", value: "frSupplier"}];
+				foreignKeys = [{technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
+				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]},
+				               {technicalNames: ["idCategory", "idSubCategory"], commonNames: ["Categoría", "Subcategoría"], viewNames: ["ImportCategoriesByName", "ImportSubCategoriesByName"]}];
+				viewName = "vwSuppliers";
+				break;
+			case "SBC":
+				columnKeys = ["idCall", "idSupplier"];
+				columnNameKeys = ["Convocatoria", "Nombre"];
+				columnNames = [{commonName: "Convocatoria", technicalName: "idCall"},
+				               {commonName: "Nombre", technicalName: "idSupplier"},
+				               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+				               {commonName: "Tamaño", technicalName: "idCompanySize"}];
+				requiredFields = [{commonName: "Convocatoria", technicalName: "idCall"},
+					               {commonName: "Nombre", technicalName: "idSupplier"},
+					               {commonName: "Tipo de suministro", technicalName: "idSupply"},
+					               {commonName: "Tamaño", technicalName: "idCompanySize"}];
+				defaultFields = [{ key: "form", value: "frSupplierByCall"}];
+				foreignKeys = [{technicalNames: ["idCall"], commonNames: ["Convocatoria"], viewNames: ["ImportCallsByYear"]},
+				               {technicalNames: ["idSupplier"], commonNames: ["Nombre"], viewNames: ["ImportSuppliersByName"]},
+				               {technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]},
+				               {technicalNames: ["idCompanySize"], commonNames: ["Tamaño"], viewNames: ["ImportCompanySizesByName"]}];
+				viewName = "vwSuppliersByCall";
+				break;
+				
 		}
 		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys)
 		
@@ -222,13 +289,16 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		var emptyFields;
 		var unavailableForeignNames;
 		var savedIds = [];
+		var modifiedIds = [];
 		var primaryKeyViolated;
 		var i;
 		var j;
 		var k;
 		
-		var vw:NotesView = sessionAsSigner.getCurrentDatabase().getView(viewName);
-		vw.getAllEntries().removeAll(true);
+		if (viewName){
+			var vw:NotesView = sessionAsSigner.getCurrentDatabase().getView(viewName);
+			vw.getAllEntries().removeAll(true);
+		}
 		
 		var nd:NotesDocument;
 		var vwForeign:NotesView;
@@ -243,6 +313,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		var foreignKey;
 		var unavailableForeignKeys = 0;
 		var keys;
+		var surveys;
 		
 		for (i in data) {
 			for (j in columnNames){
@@ -258,7 +329,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		
 		for(i in data){
 			fila = data[i];
-		
+			
 			emptyFields = [];	
 			for(j in requiredFields){				
 				if (!fila.hasOwnProperty(requiredFields[j].technicalName)){
@@ -329,8 +400,11 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		}else if (unavailableForeignKeys > 0){
 			error = "Violación de clave foránea";
 		}else{
+			var vwSurveys:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
+			var vwQuestions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestions");
+			
 			for (i = 0; i < data.length && !error; i++){
-					
+				
 				nd = sessionAsSigner.getCurrentDatabase().createDocument();
 				
 				for (j in defaultFields){
@@ -345,32 +419,44 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 				}
 				
 				nd.replaceItemValue("id", nd.getUniversalID());
-				if (nd.getItemValueString("form") == "frQuestionBySurvey"){
-					vwForeign = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
-	 				ndForeign = vwForeign.getDocumentByKey(nd.getItemValueString("idSupply")+nd.getItemValueString("idCompanySize"), true);
+				if (nd.getItemValueString("form") == "frQuestionBySurvey" || nd.getItemValueString("form") == "frSupplierByCall"){
+					ndForeign = vwSurveys.getDocumentByKey(nd.getItemValueString("idSupply")+nd.getItemValueString("idCompanySize"), true);
 	 				if (ndForeign){
 	 					nd.replaceItemValue("idSurvey", ndForeign.getItemValueString("id"));
 	 					nd.removeItem("idSupply");
 	 					nd.removeItem("idCompanySize");
+	 					ndForeign.recycle();
 		 			}else{
 	 					error = "Violación de clave foránea";
 	 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. No se encontró una encuesta que coincida con Tipo de suministro y Tamaño"})
 	 				}
 				}else if(nd.getItemValueString("form") == "frCity"){
 					nd.removeItem("idCountry");
+				}else if(nd.getItemValueString("form") == "frCall"){
+					nd.removeItem("year");
+					nd.replaceItemValue("year", parseInt(fila[j], 10))
 				}
-												
-				nd.save(true, false);						
-				savedIds.push(nd.getItemValueString("id"));
-				nd.recycle();
-						
+					
+				if (nd.getItemValueString("form") == "frQuestionBySurvey"){
+					ndForeign = vwQuestions.getDocumentByKey(nd.getItemValueString("idQuestion"), true);
+					surveys = vectorToArray(ndForeign.getItemValue("idSurvey"))
+					surveys.push(nd.getItemValueString("idSurvey"))
+					ndForeign.replaceItemValue("idSurvey", surveys)
+	 				ndForeign.save(true, false);
+	 				modifiedIds.push(ndForeign.getItemValueString("id"));
+	 				ndForeign.recycle();
+		 		}else{
+					nd.save(true, false);						
+					savedIds.push(nd.getItemValueString("id"));
+					nd.recycle();
+				}
 			}		
 		}
 		
 		if ("" !== error){			
 			if(savedIds.length > 0){				
 				for(i in savedIds){					
-					nd = sessionAsSigner.getCurrentDatabase().getView("vwDevIds").getDocumentByKey(savedIds[i], true);
+					nd = vw.getDocumentByKey(savedIds[i], true);
 					if(nd){
 						nd.removePermanently(true);
 						nd.recycle();
@@ -378,10 +464,26 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 				}
 				savedIds = [];
 			}
+			if(modifiedIds.length > 0){
+				for(i in modifiedIds){					
+ 					ndForeign = vwQuestions.getDocumentByKey(modifiedIds[i], true);
+					if(ndForeign){
+						ndForeign.removeItem("idSurvey");
+						ndForeign.save(true, false);
+						ndForeign.recycle();
+					}
+				}
+ 				modifiedIds = [];
+ 			}
 		}
 		
-		count = savedIds.length
-	
+
+		if (viewName){
+			count = savedIds.length
+		}else{
+			count = modifiedIds.length
+		}
+		
 	}catch(e){
 		error = e.message + " fila " + i;
 	}
@@ -391,6 +493,24 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		response: response,
 		count: count
 	}
+}
+
+function vectorToArray(vector){
+	var array = [];
+	
+	if(vector){
+		if(typeof vector == "string"){
+			return  [vector];
+		}
+		
+		var it = vector.iterator();
+		while (it.hasNext() ) {
+			array.push( it.next() );
+		}
+			
+	}
+	
+	return array;
 }
 
 

@@ -39,6 +39,11 @@
 				<xp:selectItem itemLabel="Departamentos" itemValue="DEP"></xp:selectItem>
 				<xp:selectItem itemLabel="Ciudades" itemValue="CIT"></xp:selectItem>
 				<xp:selectItem itemLabel="Notificaciones" itemValue="NOT"></xp:selectItem>
+				<xp:selectItem itemLabel="Roles" itemValue="ROL"></xp:selectItem>
+				<xp:selectItem itemLabel="Usuarios" itemValue="USE"></xp:selectItem>
+				<xp:selectItem itemLabel="Convocatorias" itemValue="CAL"></xp:selectItem>
+				<xp:selectItem itemLabel="Proveedores" itemValue="SUP"></xp:selectItem>
+				<xp:selectItem itemLabel="Proveedores por convocatoria" itemValue="SBC"></xp:selectItem>
 				<xp:this.attrs>
 					<xp:attr name="data-name" value="type">
 					</xp:attr>
