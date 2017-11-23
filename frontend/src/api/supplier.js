@@ -1,13 +1,13 @@
 import intance from './instance';
 
 function getDataSuppliertApi() {
-  return intance.get('Supplier?action=getAll');
+  return intance.get('SupplierByCall?action=currentCall');
 }
 function saveDataSupplierApi(data) {
-  return intance.post('Supplier?action=save', data);
+  return intance.post('SupplierByCall?action=save', data);
 }
 
 export {
-  getDataSuppliertApi as default,
+  getDataSuppliertApi,
   saveDataSupplierApi,
 };

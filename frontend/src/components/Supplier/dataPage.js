@@ -25,7 +25,7 @@ function generalInfo(fields) {
     cities,
     getDataCitiesByDepartment,
   } = fields;
-  const disabled = supplier.disabled;
+  const disabled = supplier.lockedByModification;
   return [
     {
       key: 1.1,
@@ -339,19 +339,27 @@ function generalInfo(fields) {
   ];
 }
 
-
-const noParticipateInfo = [
-  {
-    key: 1.0,
-    value: [
-      {
-        type: 'textarea',
-        label: '¿Por qué no desea participar? ',
-        key: 'answerFailed',
-      },
-    ],
-  },
-];
+function noParticipateInfo(fields) {
+  const {
+    supplier,
+  } = fields;
+  const disabled = supplier.lockedByModification;
+  return [
+    {
+      key: 1.0,
+      value: [
+        {
+          disabled,
+          type: 'textarea',
+          label: '¿Por qué no desea participar? ',
+          key: 'reasonForNotParticipation',
+          required: true,
+          value: supplier.reasonForNotParticipation,
+        },
+      ],
+    },
+  ];
+}
 const comercialInfo = [
   {
     key: 2.4,
