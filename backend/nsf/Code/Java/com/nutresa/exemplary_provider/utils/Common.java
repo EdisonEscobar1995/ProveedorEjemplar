@@ -78,7 +78,7 @@ public class Common {
             Class.forName(className);
             return true;
         } catch (ClassNotFoundException exception) {
-            throw new ServletException();
+            throw new ServletException(exception.getCause());
         }
     }
 
@@ -102,8 +102,7 @@ public class Common {
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         String host = request.getServerName();
         String path = externalContext.getRequestContextPath();
-        String url = "http" + (request.isSecure() ? "s" : "") + "://" + host + path;
-        return url;
+        return "http" + (request.isSecure() ? "s" : "") + "://" + host + path;
     }
 
 }
