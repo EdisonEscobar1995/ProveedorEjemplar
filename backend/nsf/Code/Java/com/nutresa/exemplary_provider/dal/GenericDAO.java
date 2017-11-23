@@ -346,11 +346,10 @@ public abstract class GenericDAO<T> {
         for (ViewColumn column : columns) {
             columnName = column.getTitle();
             if (keys.contains(columnName)) {
-                // keys.remove(columnName);
                 indexColumns[i++] = columnName;
             }
         }
-        if (indexColumns.length == keys.size()) {
+        if (i == keys.size()) {
             indexParameters.put(indexName, indexColumns);
         }
         return indexParameters.containsKey(indexName);
