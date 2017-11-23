@@ -20,7 +20,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
                 supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
                 NotificationBLO notificationBLO = new NotificationBLO();
-                notificationBLO.notifyToLiberator();
+                notificationBLO.notifyChangeCompanySize();
             }
 
             dto = dao.save(dto);
@@ -48,7 +48,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return supplier;
     }
 
-    public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
+    public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension)
+            throws HandlerGenericException {
         QuestionsBySurveyDTO response = new QuestionsBySurveyDTO();
         CriterionBLO criterionBLO = new CriterionBLO();
         QuestionBLO questionsBLO = new QuestionBLO();
