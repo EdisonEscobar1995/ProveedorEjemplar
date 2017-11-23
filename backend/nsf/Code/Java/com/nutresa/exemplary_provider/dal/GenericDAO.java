@@ -36,6 +36,7 @@ public abstract class GenericDAO<T> {
     protected String indexName;
     protected Map<String, View> indexView = new HashMap<String, View>();
     protected HashMap<String, String[]> indexParameters = new HashMap<String, String[]>();
+    protected String defaulView;
 
     public GenericDAO(Class<T> dtoClass) {
         this.session = Factory.getSession();
@@ -56,7 +57,11 @@ public abstract class GenericDAO<T> {
     }
 
     public T getBy(Map<String, String> parameters) throws HandlerGenericException {
-        View view = getIndexedView(parameters);
+        return getBy(parameters, null);
+    }
+
+    public T getBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
+        View view = getIndexedView(parameters, defaultView);
         Document document = null;
         if (null == view) {
             view = database.getView(entityView);
@@ -105,7 +110,11 @@ public abstract class GenericDAO<T> {
     // }
     
     public List<T> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
-        View view = getIndexedView(parameters);
+        return getAllBy(parameters, null);
+    }
+    
+    public List<T> getAllBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
+        View view = getIndexedView(parameters, defaultView);
         List<T> list;
         if(null == view){
             view = database.getView(entityView);
@@ -118,9 +127,13 @@ public abstract class GenericDAO<T> {
     }
     
     public List<T> getAllBy(String field, String value) throws HandlerGenericException {
+        return getAllBy(field, value, null);
+    }
+
+    public List<T> getAllBy(String field, String value, String defaultView) throws HandlerGenericException {
         Map<String, String> filter = new HashMap<String, String>();
         filter.put(field, value);
-        return getAllBy(filter);
+        return getAllBy(filter, defaultView);
     }
     
     protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters) throws HandlerGenericException {
@@ -172,7 +185,7 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getValue(Document document, String name, Class<?> type) {
+    public static <T> T getValue(Document document, String name, Class<?> type) throws IllegalAccessException, InstantiationException {
         Object value = null;
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
@@ -183,8 +196,16 @@ public abstract class GenericDAO<T> {
         }
         if (null == value) {
             value = document.getItemValue(name, type);
+            if (null == value && type.getSimpleName().equals("List")) {
+                value = new ArrayList<T>();
+            }
         }
         return (T) value;
+    }
+    
+    public static boolean isList() {
+
+        return true;
     }
 
     protected static Object getPrimitiveValue(Class<?> type, Double numberValue) {
@@ -314,18 +335,20 @@ public abstract class GenericDAO<T> {
         return entity;
     }
     
-    protected View getIndexedView(Map<String, String> parameters) {
+    protected View getIndexedView(Map<String, String> parameters, String defaultView) {
         View indexedView = null;
         indexName = getIndexName(parameters);
 
         if (!indexView.containsKey(indexName)) {
-            List<View> views = database.getViews(entity);
+            List<View> views = database.getViews(null == defaultView ? entity : defaultView);
             for (View view : views) {
                 ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
                 Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
                 if (validateColumnsInView(columns, parameterKeys)) {
                     indexedView = view;
-                    indexView.put(indexName, view);
+                    if(null != defaultView){
+                        indexView.put(indexName, view);
+                    }
                     break;
                 }
             }
