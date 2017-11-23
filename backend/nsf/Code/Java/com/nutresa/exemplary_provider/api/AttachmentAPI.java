@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -13,6 +12,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.openntf.domino.utils.DominoUtils;
 
 import com.google.gson.Gson;
 import com.ibm.xsp.http.fileupload.FileItem;
@@ -36,9 +37,9 @@ public class AttachmentAPI extends DesignerFacesServlet {
 		FacesContext facesContext = this.getFacesContext(request, response);
 
 		try {
-			doService(request, response, facesContext, output);
-		} catch (Exception e) {
-			e.printStackTrace(new PrintStream(output));
+			doService(request, response, output);
+		} catch (Exception exception) {
+			DominoUtils.handleException(new Throwable(exception));
 		} finally {
 			facesContext.responseComplete();
 			facesContext.release();
@@ -47,8 +48,7 @@ public class AttachmentAPI extends DesignerFacesServlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void doService(HttpServletRequest request, HttpServletResponse response,
-			FacesContext facesContext, ServletOutputStream output)
+	private void doService(HttpServletRequest request, HttpServletResponse response, ServletOutputStream output)
 			throws Exception {
 
 		int status = 200;
@@ -73,7 +73,7 @@ public class AttachmentAPI extends DesignerFacesServlet {
 
 	}
 	
-	private ServletResponseDTO<AttachmentDTO> doPost(HttpServletRequest request) throws Exception{
+	private ServletResponseDTO<AttachmentDTO> doPost(HttpServletRequest request){
 		
 		ServletResponseDTO<AttachmentDTO> response = null;
 		
