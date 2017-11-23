@@ -19,6 +19,15 @@ const routes = [
       import('./pages/Sector').then(module => module.default),
     ),
   },
+  {
+    title: 'Convocatorias',
+    index: 3,
+    path: '/call',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Call').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;
