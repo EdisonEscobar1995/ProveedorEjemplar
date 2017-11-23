@@ -32,6 +32,10 @@ public abstract class GenericDAO<T> {
 
     private static final String PREFIX_FORM = "fr";
     private static final String PREFIX_VIEW = "vw";
+    
+    protected String indexName;
+    protected Map<String, View> indexView = new HashMap<String, View>();
+    protected HashMap<String, String[]> indexParameters = new HashMap<String, String[]>();
 
     public GenericDAO(Class<T> dtoClass) {
         this.session = Factory.getSession();
@@ -88,6 +92,17 @@ public abstract class GenericDAO<T> {
         }
         return list;
     }
+
+    // public List<T> getAllKeys(Collection ids){
+    // return getAllByIds("id", ids);
+    // }
+
+    // public List<T> getAllByIds(String name, Collection ids){
+    // String allIds = ;
+    // HashMap<String, String> filter = new HashMap<String, String>();
+    // filter.put(name, allIds);
+    // return getAllBy();
+    // }
     
     public List<T> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
         View view = getIndexedView(parameters);
@@ -98,7 +113,6 @@ public abstract class GenericDAO<T> {
         } else {
             ArrayList<String> indexedParameters = getIndexedParameters(view, parameters);
             list = getAllDocumentsByKey(view, indexedParameters);
-            
         }
         return list;
     }
@@ -301,38 +315,64 @@ public abstract class GenericDAO<T> {
     }
     
     protected View getIndexedView(Map<String, String> parameters) {
-        List<View> views = database.getViews(entity);
         View indexedView = null;
-        for (View view : views) {
-            ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
-            Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
-            if (validateColumnsInView(columns, parameterKeys)) {
-                indexedView = view;
-                break;
+        indexName = getIndexName(parameters);
+
+        if (!indexView.containsKey(indexName)) {
+            List<View> views = database.getViews(entity);
+            for (View view : views) {
+                ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
+                Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
+                if (validateColumnsInView(columns, parameterKeys)) {
+                    indexedView = view;
+                    indexView.put(indexName, view);
+                    break;
+                }
             }
+        } else {
+            indexedView = indexView.get(indexName);
         }
         return indexedView;
     }
     
+    protected String getIndexName(Map<String, String> parameters) {
+        return parameters.keySet().toString();
+    }
+    
     protected boolean validateColumnsInView(ArrayList<ViewColumn> columns, Set<String> keys) {
+        String[] indexColumns = new String[keys.size()];
+        String columnName;
+        int i = 0;
         for (ViewColumn column : columns) {
-            String columnName = column.getTitle();
+            columnName = column.getTitle();
             if (keys.contains(columnName)) {
-                keys.remove(columnName);
+                // keys.remove(columnName);
+                indexColumns[i++] = columnName;
             }
         }
-        return keys.isEmpty();
+        if (indexColumns.length == keys.size()) {
+            indexParameters.put(indexName, indexColumns);
+        }
+        return indexParameters.containsKey(indexName);
     }
     
     protected ArrayList<String> getIndexedParameters(View view, Map<String, String> parameters) {
         ArrayList<String> indexedParameters = new ArrayList<String>();
-        ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
-
-        for (ViewColumn column : columns) {
-            String columnName = column.getTitle();
-            indexedParameters.add(parameters.get(columnName));
-            if(indexedParameters.size() >= parameters.size()){
-                break;
+        if (!indexParameters.containsKey(indexName)) {
+            ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
+            for (ViewColumn column : columns) {
+                String columnName = column.getTitle();
+                indexedParameters.add(parameters.get(columnName));
+                if (indexedParameters.size() >= parameters.size()) {
+                    break;
+                }
+            }
+        } else {
+            for (String column : indexParameters.get(indexName)) {
+                indexedParameters.add(parameters.get(column));
+                if (indexedParameters.size() >= parameters.size()) {
+                    break;
+                }
             }
         }
         return indexedParameters;
