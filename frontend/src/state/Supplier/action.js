@@ -6,10 +6,11 @@ import {
   GET_DATA_SUBCATEGORIES_SUCCESS,
   GET_DATA_DEPARTMENTS_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
+  SAVE_DATA_SUPPLIER_SUCCESS,
   GET_REQUEST_FAILED,
+  CHANGE_PARTICIPATE,
 } from './const';
-import setMessage from '../Generic/action';
-import getDataSuppliertApi from '../../api/supplier';
+import { getDataSuppliertApi, saveDataSupplierApi } from '../../api/supplier';
 import { getDataSupplyApi } from '../../api/supply';
 import { getDataCategoryBySuplyApi } from '../../api/category';
 import { getDataSubCategoryByCategoryApi } from '../../api/subcategory';
@@ -19,6 +20,7 @@ import getDataSocietyTypesApi from '../../api/societyType';
 import getDataCountriesApi from '../../api/countries';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
+import requestApi from '../../utils/actionUtils';
 
 
 function getDataSupplierProgress() {
@@ -57,6 +59,12 @@ function getDataSubCategorySuccess(subcategories) {
     subcategories,
   };
 }
+function changeParticipate(participateInCall) {
+  return {
+    type: CHANGE_PARTICIPATE,
+    participateInCall,
+  };
+}
 function getDataDepartmentsByCountrySuccess(departments) {
   return {
     type: GET_DATA_DEPARTMENTS_SUCCESS,
@@ -69,41 +77,18 @@ function getDataCitiesByDepartmentSuccess(cities) {
     cities,
   };
 }
+function saveDataSupplierSuccess(supplier) {
+  return {
+    type: SAVE_DATA_SUPPLIER_SUCCESS,
+    supplier,
+  };
+}
 
 function getDataFailed(error) {
   return {
     type: GET_REQUEST_FAILED,
     error,
   };
-}
-
-function validateResponse(args) {
-  const errorMessage = 'Fallo en la respuesta';
-  try {
-    [...args].forEach((element) => {
-      if (!element.data.status) {
-        throw new Error(errorMessage);
-      }
-    });
-  } catch (err) {
-    throw new Error(errorMessage);
-  }
-}
-
-function requestApi(dispatch, apiMethod, clientData) {
-  dispatch(getDataSupplierProgress());
-  return apiMethod(clientData)
-    .then((respone) => {
-      validateResponse(respone);
-      return respone;
-    }).catch((err) => {
-      let error = err;
-      if (typeof err !== 'string') {
-        error = 'Ocurrio un error al procesar la peticion';
-      }
-      dispatch(setMessage(error, 'error'));
-      throw err;
-    });
 }
 
 function getDataSupplier() {
@@ -116,7 +101,7 @@ function getDataSupplier() {
       getDataSocietyTypesApi(),
       getDataCountriesApi(),
     ];
-    requestApi(dispatch, axios.all, promises).then((arrayResponse) => {
+    requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
       const supplier = arrayResponse[0].data.data;
       const supply = arrayResponse[1].data.data;
       const companyTypes = arrayResponse[2].data.data;
@@ -138,7 +123,7 @@ function getDataSupplier() {
 }
 function getDataCategoryBySuply(clientData) {
   return (dispatch) => {
-    requestApi(dispatch, getDataCategoryBySuplyApi, clientData)
+    requestApi(dispatch, getDataSupplierProgress, getDataCategoryBySuplyApi, clientData)
       .then((respone) => {
         const categories = respone.data.data;
         dispatch(getDataCategorySuccess(categories));
@@ -149,7 +134,7 @@ function getDataCategoryBySuply(clientData) {
 }
 function getDataSubCategoryByCategory(clientData) {
   return (dispatch) => {
-    requestApi(dispatch, getDataSubCategoryByCategoryApi, clientData)
+    requestApi(dispatch, getDataSupplierProgress, getDataSubCategoryByCategoryApi, clientData)
       .then((respone) => {
         const subcategories = respone.data.data;
         dispatch(getDataSubCategorySuccess(subcategories));
@@ -161,7 +146,7 @@ function getDataSubCategoryByCategory(clientData) {
 
 function getDataDepartmentsByCountry(clientData) {
   return (dispatch) => {
-    requestApi(dispatch, getDataDepartmentsByCountryApi, clientData)
+    requestApi(dispatch, getDataSupplierProgress, getDataDepartmentsByCountryApi, clientData)
       .then((respone) => {
         const departsments = respone.data.data;
         dispatch(getDataDepartmentsByCountrySuccess(departsments));
@@ -172,10 +157,21 @@ function getDataDepartmentsByCountry(clientData) {
 }
 function getDataCitiesByDepartment(clientData) {
   return (dispatch) => {
-    requestApi(dispatch, getDataCitiesByDepartmentApi, clientData)
+    requestApi(dispatch, getDataSupplierProgress, getDataCitiesByDepartmentApi, clientData)
       .then((respone) => {
         const categories = respone.data.data;
         dispatch(getDataCitiesByDepartmentSuccess(categories));
+      }).catch((err) => {
+        dispatch(getDataFailed(err));
+      });
+  };
+}
+function saveDataSupplier(clientData) {
+  return (dispatch) => {
+    requestApi(dispatch, getDataSupplierProgress, saveDataSupplierApi, clientData)
+      .then((respone) => {
+        const supplier = respone.data.data;
+        dispatch(saveDataSupplierSuccess(supplier));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
@@ -188,4 +184,6 @@ export {
   getDataSubCategoryByCategory,
   getDataDepartmentsByCountry,
   getDataCitiesByDepartment,
+  saveDataSupplier,
+  changeParticipate,
 };

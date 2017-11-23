@@ -11,23 +11,9 @@ const ItemStyle = styled(Item)`
 `;
 
 class GenericFormTable extends Component {
-  state = {
-    data: this.props.data,
-    actual: {},
-  };
-  componentWillReceiveProps(nextData) {
-    this.state.actual = nextData.actual;
-    this.state.data = nextData.data;
-  }
-  setData = (data) => {
-    this.setState({
-      data,
-      actual: {},
-    });
-  }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const row = this.state.row;
+  state = {};
+  getFieldValue = () => {
+    const { row, record } = this.state;
     const colummns = this.props.colummns;
     const validateFields = colummns.map(item => `${row}-${item.key}`);
     this.props.form.validateFields(validateFields);
@@ -41,83 +27,58 @@ class GenericFormTable extends Component {
         send = false;
       }
     });
+    rowValue.id = record.id;
     if (send) {
-      const newData = [...this.state.data];
-      const actualRowValue = newData[row];
-      delete newData[row].editable;
-      newData[row] = Object.assign(actualRowValue, rowValue);
-      this.setData(newData);
-      this.props.saveData(actualRowValue);
+      return {
+        value: rowValue,
+        row,
+      };
+    }
+    return null;
+  }
+  saveData = (e) => {
+    e.preventDefault();
+    const result = this.getFieldValue();
+    if (result) {
+      const { value, row } = result;
+      if (value) {
+        this.props.saveData(value, row);
+      }
     }
   }
-
-  handleAdd = () => {
-    const { data } = this.state;
-    const newData = {
+  selectRow = (row, record) => {
+    this.state.row = row;
+    this.state.record = record;
+  }
+  addData = () => {
+    const data = {
       editable: true,
-      key: `${data.length}`,
     };
-    data.unshift(newData);
-    this.setData(data);
-  }
-
-  deleteRow = (record) => {
-    const { key } = record;
-    const newData = [...this.state.data];
-    const target = newData.filter(item => key !== item.key);
-    this.reloadKeys(target);
-    this.setData(target);
-    delete record.key;
-    // this.props.deleteData(record);
-  }
-
-  editRow = (key) => {
-    const newData = [...this.state.data];
-    const target = newData.filter(item => key === item.key)[0];
-    if (target) {
-      target.editable = true;
-      this.setData(newData);
-    }
-  }
-  cancel(key) {
-    const newData = [...this.state.data];
-    const target = newData.filter(item => key === item.key)[0];
-    if (target) {
-      delete target.editable;
-      this.setData(newData);
-    }
-  }
-  selectRow = (row) => {
-    this.setState({
-      row,
-      actual: {},
+    this.props.colummns.forEach((column) => {
+      data[column.key] = '';
     });
-  }
-  reloadKeys = (data) => {
-    data.map((item, index) => {
-      item.key = index;
-      return item;
-    });
-    this.state.data = data;
+    this.props.addData(data);
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const { loading } = this.props;
-    const { data, row, actual } = this.state;
-    if (Object.keys(actual).length > 0) {
-      console.log(actual);
-      console.log(row);
-    }
+    const {
+      loading,
+      data,
+      colummns,
+      editData,
+      deleteData,
+      cancelData,
+      form,
+    } = this.props;
+    const { getFieldDecorator } = form;
     const config = {
       emptyText: 'No hay contenido para mostrar',
     };
     let content = '';
     if (data.length > 0) {
-      this.reloadKeys(data);
       content = (
         <Table locale={config} dataSource={data}>
           {
-            this.props.colummns.map(column => (
+            colummns.map(column => (
               (
                 <Column
                   title={column.title}
@@ -151,7 +112,7 @@ class GenericFormTable extends Component {
           <Column
             title="Action"
             key="action"
-            render={(text, record) => {
+            render={(text, record, index) => {
               const { editable, id } = record;
               return (
                 <div>
@@ -160,8 +121,8 @@ class GenericFormTable extends Component {
                       (<Button
                         shape="circle"
                         icon="save"
-                        onClick={() => this.selectRow(record.key)}
                         htmlType="submit"
+                        onClick={() => this.selectRow(index, record)}
                       />)
                       :
                       (<Button
@@ -169,11 +130,11 @@ class GenericFormTable extends Component {
                         icon="edit"
                         onClick={(e) => {
                           e.preventDefault();
-                          this.editRow(record.key);
+                          editData(index);
                         }}
                       />)
                   }
-                  <Confirm method={() => this.deleteRow(record)}>
+                  <Confirm method={() => deleteData(record, index)}>
                     <Button
                       shape="circle"
                       icon="delete"
@@ -181,7 +142,7 @@ class GenericFormTable extends Component {
                   </Confirm>
                   {
                     id && editable ?
-                      <Confirm method={() => this.cancel(record.key)}>
+                      <Confirm method={() => cancelData(index)}>
                         <Button
                           shape="circle"
                           icon="close-circle-o"
@@ -200,8 +161,8 @@ class GenericFormTable extends Component {
     }
     return (
       <Spin spinning={loading}>
-        <Button type="primary" onClick={this.handleAdd}>Add</Button>
-        <Form onSubmit={this.handleSubmit}>
+        <Button type="primary" onClick={this.addData}>Add</Button>
+        <Form onSubmit={this.saveData}>
           {
             content
           }
