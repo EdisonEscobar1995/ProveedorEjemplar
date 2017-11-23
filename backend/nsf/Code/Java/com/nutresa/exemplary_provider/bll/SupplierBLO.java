@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
+import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -47,4 +48,16 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return supplier;
     }
 
+    public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
+        QuestionsBySurveyDTO response = new QuestionsBySurveyDTO();
+        CriterionBLO criterionBLO = new CriterionBLO();
+        QuestionBLO questionsBLO = new QuestionBLO();
+        try {
+            response.setCriterion(criterionBLO.getCriterionsBySurvey(idSurvey, idDimension));
+            response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return response;
+    }
 }

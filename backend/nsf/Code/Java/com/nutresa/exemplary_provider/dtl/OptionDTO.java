@@ -2,7 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public abstract class OptionDTO {
+public class OptionDTO {
     @Expose
     private String id;
     @Expose
