@@ -6,6 +6,8 @@ public class AttachmentDTO {
 
 	@Expose
 	private String id;
+	@Expose
+	private String url;
 
 	public void setId(String id) {
 		this.id = id;
@@ -13,6 +15,14 @@ public class AttachmentDTO {
 
 	public String getId() {
 		return id;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUrl() {
+		return url;
 	}
 	
 }

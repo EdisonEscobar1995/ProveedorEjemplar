@@ -5,6 +5,7 @@ import java.util.List;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.Session;
 import org.openntf.domino.Database;
+import org.openntf.domino.View;
 import org.openntf.domino.Document;
 import org.openntf.domino.MIMEEntity;
 import org.openntf.domino.MIMEHeader;
@@ -17,13 +18,17 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class AttachmentDAO {
 
 	private Session session;
+	private Database database;
+	
+	public AttachmentDAO(){
+		this.session = Factory.getSession();
+		this.database = session.getCurrentDatabase();
+	}
 
 	public AttachmentDTO save(List<FileItem> items)
 			throws HandlerGenericException {
-
-		this.session = Factory.getSession();
-		Database database = session.getCurrentDatabase();
-		Document document = database.createDocument();
+		
+		Document document = this.database.createDocument();
 
 		MIMEEntity mime = document.createMIMEEntity("files");
 
@@ -41,12 +46,32 @@ public class AttachmentDAO {
 
 		document.save();
 
+		return castDocument(document);
+	}
+	
+	public AttachmentDTO get(String id){
+		return castDocument(getDocument(id));
+	}
+	
+	public boolean delete(String id){
+		Document document = getDocument(id);
+		return document.remove(true);
+	}
+	
+	private Document getDocument(String id){
+		View view = this.database.getView("vwAttachments");
+		return view.getFirstDocumentByKey(id, true);
+	}
+	
+	private AttachmentDTO castDocument(Document document){
 		AttachmentDTO dto = new AttachmentDTO();
-		dto.setId(document.getUniversalID());
-
+		if (document != null){
+			dto.setId(document.getItemValueString("id"));
+			dto.setUrl("url del documento");
+		}
 		return dto;
 	}
-
+	
 	private void processUploadedFile(FileItem item, MIMEEntity mime)
 			throws HandlerGenericException {
 
