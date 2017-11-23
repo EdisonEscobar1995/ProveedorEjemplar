@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.openntf.domino.utils.DominoUtils;
+
 public class Common {
 
     private static final int JOIN_ELEMENT_SIZE = 50;
@@ -78,6 +80,7 @@ public class Common {
             Class.forName(className);
             return true;
         } catch (Exception exception) {
+            DominoUtils.handleException(new Throwable(exception));
             throw new ServletException(exception.getCause());
         }
     }
