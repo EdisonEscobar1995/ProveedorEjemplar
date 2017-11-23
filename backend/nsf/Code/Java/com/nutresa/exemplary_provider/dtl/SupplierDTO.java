@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -18,7 +19,7 @@ public class SupplierDTO {
     @Expose
     private String idSubCategory;
     @Expose
-    private List<String> document;
+    private List<String> document = new ArrayList<String>();
     @Expose
     private String nit;
     @Expose
@@ -38,13 +39,13 @@ public class SupplierDTO {
     @Expose
     private String idCity;
     @Expose
-    private List<String> branchOffice;
+    private String branchOffice;
     @Expose
     private String telephone;
     @Expose
     private String fax;
     @Expose
-    private List<String> emails;
+    private List<String> emails = new ArrayList<String>();
     @Expose
     private String codeZip;
     @Expose
@@ -90,9 +91,9 @@ public class SupplierDTO {
     @Expose
     private boolean currentlyExport;
     @Expose
-    private List<String> exportDestination;
+    private String exportDestination;
     @Expose
-    private List<String> nameCertification;
+    private String nameCertification;
     @Expose
     private boolean globalAgreement;
     @Expose
@@ -138,11 +139,11 @@ public class SupplierDTO {
         this.principalAdress = principalAdress;
     }
 
-    public List<String> getBranchOffice() {
+    public String getBranchOffice() {
         return branchOffice;
     }
 
-    public void setBranchOffice(List<String> branchOffice) {
+    public void setBranchOffice(String branchOffice) {
         this.branchOffice = branchOffice;
     }
 
@@ -338,19 +339,19 @@ public class SupplierDTO {
         this.currentlyExport = currentlyExport;
     }
 
-    public List<String> getExportDestination() {
+    public String getExportDestination() {
         return exportDestination;
     }
 
-    public void setExportDestination(List<String> exportDestination) {
+    public void setExportDestination(String exportDestination) {
         this.exportDestination = exportDestination;
     }
 
-    public List<String> getNameCertification() {
+    public String getNameCertification() {
         return nameCertification;
     }
 
-    public void setNameCertification(List<String> nameCertification) {
+    public void setNameCertification(String nameCertification) {
         this.nameCertification = nameCertification;
     }
 

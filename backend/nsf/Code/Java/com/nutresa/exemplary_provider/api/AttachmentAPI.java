@@ -1,90 +1,39 @@
 package com.nutresa.exemplary_provider.api;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.openntf.domino.utils.DominoUtils;
 
 import com.google.gson.Gson;
 import com.ibm.xsp.http.fileupload.FileItem;
 import com.ibm.xsp.http.fileupload.disk.DiskFileItemFactory;
 import com.ibm.xsp.http.fileupload.servlet.ServletFileUpload;
-import com.ibm.xsp.webapp.DesignerFacesServlet;
 import com.nutresa.exemplary_provider.bll.AttachmentBLO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 
-public class AttachmentAPI extends DesignerFacesServlet {
+public class AttachmentAPI extends BaseAPI<AttachmentDTO> {
 
-	public void service(final ServletRequest servletRequest,
-			final ServletResponse servletResponse) throws ServletException,
-			IOException {
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
-
-		response.setContentType("application/json");
-		ServletOutputStream output = response.getOutputStream();
-		FacesContext facesContext = this.getFacesContext(request, response);
-
-		try {
-			doService(request, response, output);
-		} catch (Exception exception) {
-			DominoUtils.handleException(new Throwable(exception));
-		} finally {
-			facesContext.responseComplete();
-			facesContext.release();
-			output.close();
-		}
+	public AttachmentAPI() {
+		super(AttachmentDTO.class);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	private void doService(HttpServletRequest request,
-			HttpServletResponse response, ServletOutputStream output)
-			throws IOException {
+	protected ServletResponseDTO doPost(String action,
+			HttpServletRequest request, Gson gson) {
 
-		int status = 200;
-		ServletResponseDTO servletResponse = null;
-		Gson gson = new Gson();
-
-		try {
-			if ("POST".equals(request.getMethod())) {
-				servletResponse = doPost(request);
-			} else {
-				status = 405;
-				servletResponse = new ServletResponseDTO(false,
-						"Method not allowed");
-			}
-
-		} catch (Exception exception) {
-			status = 500;
-			servletResponse = new ServletResponseDTO(exception);
-		} finally {
-			response.setStatus(status);
-			output.println(gson.toJson(servletResponse));
-		}
-
-	}
-
-	private ServletResponseDTO<AttachmentDTO> doPost(HttpServletRequest request) {
-
-		ServletResponseDTO<AttachmentDTO> response = null;
+		ServletResponseDTO response = null;
 
 		try {
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
 			if (!isMultipart) {
-				throw (new Exception(
-						"That's not multipart content: we need that to continue"));
+				throw new Exception(
+						"That's not multipart content: we need that to continue");
 			}
 
 			DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -103,9 +52,22 @@ public class AttachmentAPI extends DesignerFacesServlet {
 			response = new ServletResponseDTO<AttachmentDTO>(blo.save(items));
 
 		} catch (Exception exception) {
-			response = new ServletResponseDTO<AttachmentDTO>(exception);
+			response = new ServletResponseDTO(exception);
 		}
+
 		return response;
+
 	}
+	
+	public ServletResponseDTO<AttachmentDTO> get(Map<String, String> parameters){
+		AttachmentBLO blo = new AttachmentBLO();
+		return new ServletResponseDTO<AttachmentDTO>(blo.get(parameters.get("id")));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ServletResponseDTO delete(Map<String, String> parameters){
+		AttachmentBLO blo = new AttachmentBLO();
+		return new ServletResponseDTO(blo.delete(parameters.get("id")));
+	} 
 
 }

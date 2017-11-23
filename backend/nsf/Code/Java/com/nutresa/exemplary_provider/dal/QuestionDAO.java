@@ -1,10 +1,10 @@
 package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.openntf.domino.Document;
+import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewNavigator;
@@ -39,6 +39,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
 
     public List<String> getCriterionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
         List<String> response = new ArrayList<String>();
+        boolean flag = false;
         try {
             View currentView = getDatabase().getView("vwDimensionsAndCriterionsBySurvey");
             ViewNavigator navigatorDimension = currentView.createViewNavFromCategory(idSurvey);
@@ -46,23 +47,29 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             ViewEntry entryCriterions;
             ViewNavigator navigatorCriterions;
             do {
-                if (entryDimension.isCategory()) {
-                    if (idDimension.equals((String) entryDimension.getColumnValues().elementAt(1))) {
-                        entryDimension = navigatorDimension.getNextCategory();
-                        navigatorCriterions = currentView.createViewNavFrom(entryDimension);
-                        entryCriterions = navigatorCriterions.getFirst();
-                        while (entryCriterions != null) {
-                            response.add((String) entryCriterions.getColumnValues().elementAt(2));
-                            entryCriterions = navigatorCriterions.getNextSibling();
-                        }
-                        entryDimension = null;
-                    }
+                if (entryDimension.isCategory()
+                        && idDimension.equals((String) entryDimension.getColumnValues().elementAt(1))) {
+                    entryDimension = navigatorDimension.getNextCategory();
+                    navigatorCriterions = currentView.createViewNavFrom(entryDimension);
+                    entryCriterions = navigatorCriterions.getFirst();
+                    response = getCriterionInDimension(entryCriterions, navigatorCriterions);
+                    flag = true;
                 }
                 entryDimension = navigatorDimension.getNextSibling();
-            } while (entryDimension != null);
+            } while (entryDimension != null && flag);
 
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
+        }
+
+        return response;
+    }
+
+    private List<String> getCriterionInDimension(ViewEntry entryCriterions, ViewNavigator navigatorCriterions) {
+        List<String> response = new ArrayList<String>();
+        while (entryCriterions != null) {
+            response.add((String) entryCriterions.getColumnValues().elementAt(2));
+            entryCriterions = navigatorCriterions.getNextSibling();
         }
 
         return response;
@@ -72,21 +79,21 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         OptionDAO optionDAO = new OptionDAO();
         try {
-            Map<String, String> filter = new HashMap<String, String>();
-            filter.put("idSurvey", idSurvey);
-            filter.put("idDimension", idDimension);
-            response = getAllBy(filter);
-            for (QuestionDTO question: response) {
-                Map<String, String> filterOption = new HashMap<String, String>();
-                filterOption.put("idQuestion", question.getId());
-                question.setOptions(optionDAO.getAllBy(filterOption));
+            View currentView = getDatabase().getView("vwQuestionsBySurvey");
+            ArrayList<String> filter = new ArrayList<String>();
+            filter.add(idSurvey);
+            filter.add(idDimension);
+            DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+            for (Document document : documents) {
+                QuestionDTO question = castDocument(document);
+                question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
+                response.add(question);
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
 
         return response;
-    }    
-    
-}
+    }
 
+}
