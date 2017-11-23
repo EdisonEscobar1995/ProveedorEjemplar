@@ -19,6 +19,8 @@ public class SupplierByCallDTO {
     private boolean lockedByModification;
     @Expose
     private String oldIdCompanySize;
+    @Expose
+    private String state = "DOING";
 
     public String getIdCall() {
         return idCall;
@@ -74,6 +76,14 @@ public class SupplierByCallDTO {
 
     public void setOldIdCompanySize(String oldIdCompanySize) {
         this.oldIdCompanySize = oldIdCompanySize;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getId() {
