@@ -59,7 +59,9 @@ public class AttachmentAPI extends DesignerFacesServlet {
 		try {
 			if ("POST".equals(request.getMethod())) {
 				servletResponse = doPost(request);
-			} else {
+			} else if ("OPTIONS".equals(request.getMethod())){
+			    doOptions(response, output);
+            }else{
 				status = 405;
 				servletResponse = new ServletResponseDTO(false,
 						"Method not allowed");
@@ -107,5 +109,13 @@ public class AttachmentAPI extends DesignerFacesServlet {
 		}
 		return response;
 	}
+	
+    private void doOptions(HttpServletResponse response, ServletOutputStream output) throws IOException {
+        response.addHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+        response.addHeader("Access-Control-Allow-Headers", "*");
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        output.print(" ");
+    }
+
 
 }
