@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <agent name='Cualquier' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8'
- replicaid='052581DB006A5865' hide='v3' publicaccess='false' designerversion='8.5.3'>
-<noteinfo noteid='582' unid='A273D1DB0BF3C55B052581DD00623CED' sequence='4'>
-<created><datetime>20171119T125301,25-05</datetime></created>
-<modified><datetime>20171121T184654,30-05</datetime></modified>
-<revised><datetime>20171121T184654,29-05</datetime></revised>
-<lastaccessed><datetime>20171121T184654,30-05</datetime></lastaccessed>
-<addedtofile><datetime>20171119T125301,43-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby>
-<designchange><datetime>20171121T184654,24-05</datetime></designchange>
+ replicaid='052581C900646510' hide='v3' publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='1626' unid='2AB331A27A4C87D5052581DE0069A766' sequence='21'>
+<created><datetime>20171120T141401,34-05</datetime></created>
+<modified><datetime>20171123T072642,66-05</datetime></modified>
+<revised><datetime>20171123T072642,65-05</datetime></revised>
+<lastaccessed><datetime>20171123T072642,66-05</datetime></lastaccessed>
+<addedtofile><datetime>20171120T141401,38-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Sergio Andres Escudero Ramirez/O=desarrollo</name></updatedby>
+<designchange><datetime>20171123T072642,46-05</datetime></designchange>
 <trigger type='actionsmenu'/>
 <documentset type='selected'/><code event='action'>
-<simpleaction action='runformula'><formula>FIELD form:="frRolByUser";
+<simpleaction action='runformula'><formula>FIELD participateInCall:="1";
+FIELD lockedByModification:="0";
 SELECT @All</formula></simpleaction></code>
 <rundata processeddocs='0' exitcode='0'>
-<agentmodified><datetime>20171121T184654,27-05</datetime></agentmodified></rundata></agent>
+<agentmodified><datetime>20171123T072642,63-05</datetime></agentmodified></rundata></agent>
 
