@@ -2,7 +2,6 @@ import React from 'react';
 import { Row, Col, Form, Input, Select, Radio, Upload, Button, Icon } from 'antd';
 import styled from 'styled-components';
 import SubTitle from '../shared/SubTitle';
-import GenericForm from '../shared/GenericForm';
 import Field from './Field';
 
 const { Item } = Form;
@@ -31,7 +30,6 @@ function DinamicForm({ content, getFieldDecorator }) {
                   options,
                   value,
                   required,
-                  colummns,
                   handleChange,
                   disabled,
                 } = current;
@@ -84,6 +82,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                         <Item>
                           {getFieldDecorator(key, {
                             rules: [{ required, message: 'Por favor diligencia el campo' }],
+                            initialValue: value,
                           })(
                             fieldContent,
                           )}
@@ -99,12 +98,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                     break;
                   case 'table':
                     rowValue = (
-                      <GenericForm
-                        loading={false}
-                        colummns={colummns}
-                        data={[]}
-                        actual={{}}
-                      />
+                      <h1>Noh</h1>
                     );
                     break;
                   case 'upload':

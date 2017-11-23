@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Sector from './Sector';
-import { getAllSector, saveSector, deleteSector } from '../../state/Sector/action';
+import { getAllSector, addData, saveData, editData, deleteData, cancelData } from '../../state/Sector/action';
 
 class SectorContainer extends Component {
   componentDidMount() {
@@ -17,11 +17,7 @@ class SectorContainer extends Component {
     return (
       <Sector
         colummns={colummns}
-        loading={this.props.loading}
-        data={this.props.data}
-        actual={this.props.actual}
-        saveData={this.props.saveSector}
-        deleteData={this.props.deleteSector}
+        {...this.props}
       />
     );
   }
@@ -32,7 +28,6 @@ const mapStateToProps = state => (
   {
     loading: state.sector.loading,
     data: state.sector.data,
-    actual: state.sector.actual,
   }
 );
 
@@ -40,11 +35,20 @@ const mapDispatchToProps = dispatch => ({
   getAllSector: () => {
     dispatch(getAllSector());
   },
-  saveSector: (data) => {
-    dispatch(saveSector(data));
+  addData: (data) => {
+    dispatch(addData(data));
   },
-  deleteSector: (data) => {
-    dispatch(deleteSector(data));
+  saveData: (data, index) => {
+    dispatch(saveData(data, index));
+  },
+  editData: (index) => {
+    dispatch(editData(index));
+  },
+  deleteData: (data, index) => {
+    dispatch(deleteData(data, index));
+  },
+  cancelData: (index) => {
+    dispatch(cancelData(index));
   },
 });
 

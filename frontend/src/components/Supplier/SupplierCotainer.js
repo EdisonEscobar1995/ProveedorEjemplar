@@ -7,6 +7,8 @@ import {
   getDataSubCategoryByCategory,
   getDataDepartmentsByCountry,
   getDataCitiesByDepartment,
+  saveDataSupplier,
+  changeParticipate,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -24,6 +26,7 @@ class SupplierContainer extends Component {
 
 const mapStateToProps = state => ({
   supplier: state.supplier.supplier,
+  participateInCall: state.supplier.participateInCall,
   supplies: state.supplier.supply,
   categories: state.supplier.categories,
   subcategories: state.supplier.subcategories,
@@ -52,6 +55,12 @@ const mapDispatchToProps = dispatch => ({
   },
   getDataCitiesByDepartment: (data) => {
     dispatch(getDataCitiesByDepartment(data));
+  },
+  saveDataSupplier: (data) => {
+    dispatch(saveDataSupplier(data));
+  },
+  changeParticipate: (participateInCall) => {
+    dispatch(changeParticipate(participateInCall));
   },
 });
 

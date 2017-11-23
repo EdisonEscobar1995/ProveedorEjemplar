@@ -1,15 +1,10 @@
 import React from 'react';
-import GenericForm from '../shared/GenericForm';
+import TableForm from '../shared/TableForm';
 
-function Sector({ loading, colummns, data, actual, saveData, deleteData }) {
+function Sector(props) {
   return (
-    <GenericForm
-      loading={loading}
-      data={data}
-      actual={actual}
-      colummns={colummns}
-      saveData={saveData}
-      deleteData={deleteData}
+    <TableForm
+      {...props}
     />
   );
 }

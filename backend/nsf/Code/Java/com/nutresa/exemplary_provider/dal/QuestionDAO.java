@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openntf.domino.Document;
-import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewNavigator;
@@ -74,33 +72,14 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         OptionDAO optionDAO = new OptionDAO();
         try {
-            View currentView = getDatabase().getView("vwQuestionsBySurvey");
-            ArrayList<String> filter = new ArrayList<String>();
-            filter.add(idSurvey);
-            filter.add(idDimension);
-            DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
-            for (Document document : documents) {
-                QuestionDTO question = castDocument(document);
-                question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
-                response.add(question);
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return response;
-    }
-
-    public List<QuestionDTO> getQuestionsBySurvey1(String idSurvey, String idDimension) throws HandlerGenericException {
-        List<QuestionDTO> response = new ArrayList<QuestionDTO>();
-        OptionDAO optionDAO = new OptionDAO();
-        try {
             Map<String, String> filter = new HashMap<String, String>();
             filter.put("idSurvey", idSurvey);
             filter.put("idDimension", idDimension);
             response = getAllBy(filter);
             for (QuestionDTO question: response) {
-                question.setOptions(optionDAO.getAllBy("idQuestion", question.getId()));
+                Map<String, String> filterOption = new HashMap<String, String>();
+                filterOption.put("idQuestion", question.getId());
+                question.setOptions(optionDAO.getAllBy(filterOption));
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);

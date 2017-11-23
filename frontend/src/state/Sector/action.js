@@ -1,11 +1,11 @@
 import {
   GET_DATA_SECTOR_PROGRESS,
   GET_DATA_SECTOR_SUCCESS,
-  SAVE_DATA_SECTOR_SUCCESS,
-  DELETE_DATA_SECTOR_SUCCESS,
   REQUEST_FAILED,
 } from './const';
+import { addData, saveData, editData, deleteData, cancelData } from '../TableForm/action';
 import { getAllSectorApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
+import requestApi from '../../utils/actionUtils';
 
 function getDataSectorProgress() {
   return {
@@ -19,18 +19,6 @@ function getDataSectorSuccess(data) {
     data,
   };
 }
-function saveSectorSuccess(actual) {
-  return {
-    type: SAVE_DATA_SECTOR_SUCCESS,
-    actual,
-  };
-}
-function deleteSectorSuccess(data) {
-  return {
-    type: DELETE_DATA_SECTOR_SUCCESS,
-    data,
-  };
-}
 
 function getFailedRequest() {
   return {
@@ -40,46 +28,42 @@ function getFailedRequest() {
 
 function getAllSector() {
   return (dispatch) => {
-    dispatch(getDataSectorProgress());
-    getAllSectorApi()
+    requestApi(dispatch, getDataSectorProgress, getAllSectorApi)
       .then((respose) => {
         const { data } = respose.data;
         dispatch(getDataSectorSuccess(data));
-      })
-      .catch(() => {
-        dispatch(getFailedRequest());
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
       });
   };
 }
-function saveSector(clientData) {
+function saveSector(clientData, index) {
   return (dispatch) => {
-    dispatch(getDataSectorProgress());
-    saveSectorApi(clientData)
+    requestApi(dispatch, getDataSectorProgress, saveSectorApi, clientData)
       .then((respose) => {
         const { data } = respose.data;
-        dispatch(saveSectorSuccess(data));
-      })
-      .catch(() => {
-        dispatch(getFailedRequest());
+        dispatch(saveData(data, index));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
       });
   };
 }
-function deleteSector(clientData) {
+function deleteSector(clientData, index) {
   return (dispatch) => {
-    dispatch(getDataSectorProgress());
-    deleteSectorApi(clientData)
-      .then((respose) => {
-        const { data } = respose.data;
-        dispatch(deleteSectorSuccess(data));
-      })
-      .catch(() => {
-        dispatch(getFailedRequest());
+    requestApi(dispatch, getDataSectorProgress, deleteSectorApi, clientData)
+      .then(() => {
+        dispatch(deleteData(index));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
       });
   };
 }
 
 export {
   getAllSector,
-  saveSector,
-  deleteSector,
+  saveSector as saveData,
+  deleteSector as deleteData,
+  addData,
+  editData,
+  cancelData,
 };

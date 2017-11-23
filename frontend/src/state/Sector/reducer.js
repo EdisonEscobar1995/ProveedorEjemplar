@@ -1,16 +1,29 @@
 import {
   GET_DATA_SECTOR_PROGRESS,
   GET_DATA_SECTOR_SUCCESS,
-  SAVE_DATA_SECTOR_SUCCESS,
-  DELETE_DATA_SECTOR_SUCCESS,
   REQUEST_FAILED,
 } from './const';
+import {
+  ADD_DATA,
+  SAVE_DATA,
+  EDIT_DATA,
+  DELETE_DATA,
+  CANCEL_DATA,
+} from '../TableForm/const';
 
 const initialState = {
   data: [],
   actual: {},
   loading: false,
 };
+
+function reloadKeys(data) {
+  const keyData = data.map((item, index) => {
+    item.key = index;
+    return item;
+  });
+  return keyData;
+}
 
 function sectorApp(state = initialState, action) {
   switch (action.type) {
@@ -21,23 +34,61 @@ function sectorApp(state = initialState, action) {
       };
     }
     case GET_DATA_SECTOR_SUCCESS: {
+      const data = reloadKeys(action.data);
       return {
         ...state,
-        data: action.data,
+        data,
         loading: false,
       };
     }
-    case SAVE_DATA_SECTOR_SUCCESS: {
+    case ADD_DATA: {
+      const { data } = state;
+      let newData = [...data];
+      newData.unshift(action.newItem);
+      newData = reloadKeys(newData);
       return {
         ...state,
-        actual: action.actual,
+        data: newData,
+      };
+    }
+    case SAVE_DATA: {
+      const { data, index } = action;
+      const stateData = state.data;
+      let newData = [...stateData];
+      newData[index] = data;
+      newData = reloadKeys(newData);
+      return {
+        ...state,
+        data: newData,
         loading: false,
       };
     }
-    case DELETE_DATA_SECTOR_SUCCESS: {
+    case EDIT_DATA: {
+      const { data } = state;
+      const newData = [...data];
+      newData[action.index].editable = true;
+      return {
+        ...state,
+        data: newData,
+      };
+    }
+    case DELETE_DATA: {
+      const { data } = state;
+      const newData = [...data];
+      newData.splice(action.index, 1);
       return {
         ...state,
         loading: false,
+        data: newData,
+      };
+    }
+    case CANCEL_DATA: {
+      const { data } = state;
+      const newData = [...data];
+      newData[action.index].editable = false;
+      return {
+        ...state,
+        data: newData,
       };
     }
     case REQUEST_FAILED:

@@ -5,11 +5,14 @@ import {
   GET_DATA_SUBCATEGORIES_SUCCESS,
   GET_DATA_DEPARTMENTS_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
+  SAVE_DATA_SUPPLIER_SUCCESS,
   GET_REQUEST_FAILED,
+  CHANGE_PARTICIPATE,
 } from './const';
 
 const initialState = {
   supplier: {},
+  participateInCall: null,
   supply: [],
   categories: [],
   subcategories: [],
@@ -61,9 +64,11 @@ function supplierApp(state = initialState, action) {
       };
     }
     case GET_DATA_SUPPLIER_SUCCESS: {
+      const { participateInCall } = action.supplier;
       return {
         ...state,
         supplier: action.supplier,
+        participateInCall,
         supply: action.supply,
         companySizes: action.companySizes,
         companyTypes: action.companyTypes,
@@ -78,6 +83,21 @@ function supplierApp(state = initialState, action) {
         ...state,
         loading: false,
         error: action.error,
+      };
+    }
+    case SAVE_DATA_SUPPLIER_SUCCESS:
+    {
+      return {
+        ...state,
+        supplier: action.supplier,
+        loading: false,
+      };
+    }
+    case CHANGE_PARTICIPATE:
+    {
+      return {
+        ...state,
+        participateInCall: action.participateInCall,
       };
     }
     default: {
