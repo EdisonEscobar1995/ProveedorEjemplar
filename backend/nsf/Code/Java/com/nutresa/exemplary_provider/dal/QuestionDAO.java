@@ -39,6 +39,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
 
     public List<String> getCriterionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
         List<String> response = new ArrayList<String>();
+        boolean flag = true;
         try {
             View currentView = getDatabase().getView("vwDimensionsAndCriterionsBySurvey");
             ViewNavigator navigatorDimension = currentView.createViewNavFromCategory(idSurvey);
@@ -46,20 +47,19 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             ViewEntry entryCriterions;
             ViewNavigator navigatorCriterions;
             do {
-                if (entryDimension.isCategory()) {
-                    if (idDimension.equals((String) entryDimension.getColumnValues().elementAt(1))) {
-                        entryDimension = navigatorDimension.getNextCategory();
-                        navigatorCriterions = currentView.createViewNavFrom(entryDimension);
-                        entryCriterions = navigatorCriterions.getFirst();
-                        while (entryCriterions != null) {
-                            response.add((String) entryCriterions.getColumnValues().elementAt(2));
-                            entryCriterions = navigatorCriterions.getNextSibling();
-                        }
-                        entryDimension = null;
+                if (entryDimension.isCategory()
+                        && idDimension.equals((String) entryDimension.getColumnValues().elementAt(1))) {
+                    entryDimension = navigatorDimension.getNextCategory();
+                    navigatorCriterions = currentView.createViewNavFrom(entryDimension);
+                    entryCriterions = navigatorCriterions.getFirst();
+                    while (entryCriterions != null) {
+                        response.add((String) entryCriterions.getColumnValues().elementAt(2));
+                        entryCriterions = navigatorCriterions.getNextSibling();
                     }
+                    flag = false;
                 }
                 entryDimension = navigatorDimension.getNextSibling();
-            } while (entryDimension != null);
+            } while (entryDimension != null && flag);
 
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
@@ -76,17 +76,14 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             filter.put("idSurvey", idSurvey);
             filter.put("idDimension", idDimension);
             response = getAllBy(filter);
-            for (QuestionDTO question: response) {
-                Map<String, String> filterOption = new HashMap<String, String>();
-                filterOption.put("idQuestion", question.getId());
-                question.setOptions(optionDAO.getAllBy(filterOption));
+            for (QuestionDTO question : response) {
+                question.setOptions(optionDAO.getAllBy("idQuestion", question.getId()));
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
 
         return response;
-    }    
-    
-}
+    }
 
+}

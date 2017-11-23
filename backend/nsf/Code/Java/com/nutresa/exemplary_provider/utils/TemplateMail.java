@@ -8,6 +8,10 @@ import java.io.InputStreamReader;
 public class TemplateMail {
     private static final String FILE_NAME = "D:/IBM/Domino/data/domino/html/template_email.txt";
 
+    private TemplateMail() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static String getTemplateInFile() throws IOException {
         BufferedReader buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)));
         String line = buffReader.readLine();
