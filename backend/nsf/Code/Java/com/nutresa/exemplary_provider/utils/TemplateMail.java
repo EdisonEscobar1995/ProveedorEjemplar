@@ -13,10 +13,9 @@ public class TemplateMail {
     }
 
     private static String getTemplateInFile() throws HandlerGenericException, IOException {
-        BufferedReader buffReader = null;
+        BufferedReader buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)));
         StringBuilder template = new StringBuilder();
         try {
-            buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)));
             String line = buffReader.readLine();
             while (line != null) {
                 template.append(line);
