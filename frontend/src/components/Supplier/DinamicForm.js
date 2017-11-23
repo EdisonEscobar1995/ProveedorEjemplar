@@ -18,7 +18,7 @@ function DinamicForm({ content, getFieldDecorator }) {
     <div>
       {
         content.map(item => (
-          <Row key={item.key}>
+          <Row key={item.key} align="middle">
             {
               item.value.map((current) => {
                 let rowValue;
@@ -101,12 +101,18 @@ function DinamicForm({ content, getFieldDecorator }) {
                       <h1>Noh</h1>
                     );
                     break;
-                  case 'upload':
+                  case 'upload': {
+                    const { name, action, headers } = current;
                     rowValue = (
                       <Field label={label}>
                         <Upload
+                          name={name}
+                          action={action}
                           disabled={disabled}
                           accept=".doc, .png, .jpg, .jpeg, .pdf, .ppt"
+                          onChange={reponse => console.log(reponse)}
+                          headers={headers}
+                          multiple
                         >
                           <Button disabled={disabled}>
                             <Icon type="upload" />Adjuntar archivo
@@ -114,6 +120,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                         </Upload>
                       </Field>
                     );
+                  }
                     break;
                   default:
                     rowValue = (<ParagraphStyle>{value}</ParagraphStyle>);
