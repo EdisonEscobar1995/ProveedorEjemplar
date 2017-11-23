@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.utils;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class TemplateMail {
@@ -11,8 +12,8 @@ public class TemplateMail {
         throw new IllegalStateException("Utility class");
     }
 
-    private static String getTemplateInFile() throws HandlerGenericException {
-        BufferedReader buffReader;
+    private static String getTemplateInFile() throws HandlerGenericException, IOException {
+        BufferedReader buffReader = null;
         StringBuilder template = new StringBuilder();
         try {
             buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)));
@@ -23,6 +24,8 @@ public class TemplateMail {
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
+        } finally {
+            buffReader.close();
         }
 
         return template.toString();
@@ -33,7 +36,7 @@ public class TemplateMail {
         try {
             template = getTemplateInFile();
             template = template.replace("[MESSAGE_HERE]", message);
-        } catch (HandlerGenericException exception) {
+        } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
         return template;
