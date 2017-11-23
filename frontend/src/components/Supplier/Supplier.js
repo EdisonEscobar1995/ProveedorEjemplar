@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Steps, Spin, Button } from 'antd';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
-import SubTitle from '../shared/SubTitle';
+import Question from './Question';
 
 const { Step } = Steps;
 
@@ -27,7 +27,12 @@ class Supplier extends Component {
     const mapDimensions = dimensions.map(dimension => (
       {
         name: dimension.name,
-        content: <SubTitle text={dimension.id} />,
+        content: <Question
+          idDimension={dimension.id}
+          idSurvey={this.props.call.idSurvey}
+          criterions={dimension.criterions}
+          getQuestionsByDimension={this.props.getQuestionsByDimension}
+        />,
       }
     ));
     return steps.concat(mapDimensions);

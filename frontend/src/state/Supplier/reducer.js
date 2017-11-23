@@ -6,6 +6,7 @@ import {
   GET_DATA_DEPARTMENTS_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
   GET_DATA_DIMENSION_SURVEY_SUCCESS,
+  GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
   SAVE_DATA_SUPPLIER_CALL_SUCCESS,
   SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
   GET_REQUEST_FAILED,
@@ -78,6 +79,7 @@ function supplierApp(state = initialState, action) {
         loading: false,
       };
     case GET_DATA_DIMENSION_SURVEY_SUCCESS:
+    case GET_DATA_QUESTIONS_DIMENSION_SUCCESS:
       return {
         ...state,
         dimensions: action.dimensions,

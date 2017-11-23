@@ -13,7 +13,13 @@ import {
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
 } from './const';
-import { getDataSuppliertApi, getDataCallSuppliertApi, saveDataSuppliertApi, saveDataCallBySupplierApi } from '../../api/supplier';
+import {
+  getDataSuppliertApi,
+  getDataCallSuppliertApi,
+  getDataQuestionsBySurverrApi,
+  saveDataSuppliertApi,
+  saveDataCallBySupplierApi,
+} from '../../api/supplier';
 import { getDataSupplyApi } from '../../api/supply';
 import { getDataCategoryBySuplyApi } from '../../api/category';
 import { getDataSubCategoryByCategoryApi } from '../../api/subcategory';
@@ -24,7 +30,6 @@ import getDataCountriesApi from '../../api/countries';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
-import { getQuestionsByDimensionApi } from '../../api/question';
 import requestApi from '../../utils/actionUtils';
 
 
@@ -91,11 +96,17 @@ function getDataDimensionsBySuplySuccess(dimensions) {
   };
 }
 
-function getDataQuestionsByDimensionSuccess(questions, idDimension) {
+function getDataQuestionsByDimensionSuccess(idDimension, dimensions, data) {
+  const { criterion, questions } = data;
+  dimensions.filter(item => item.id === idDimension)[0].criterions = criterion.map(criteria => (
+    {
+      ...criteria,
+      questions: questions.filter(question => question.idCriterion === criteria.id),
+    }
+  ));
   return {
     type: GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
-    questions,
-    idDimension,
+    dimensions,
   };
 }
 
@@ -210,15 +221,19 @@ function getDimensionsBySurvey(idSurvey) {
   };
 }
 function getQuestionsByDimension(idSurvey, idDimension) {
-  return (dispatch) => {
+  return (dispatch, getActualState) => {
     requestApi(dispatch,
       getDataSupplierProgress,
-      getQuestionsByDimensionApi,
+      getDataQuestionsBySurverrApi,
       { idSurvey, idDimension },
     )
       .then((respone) => {
-        const dimensions = respone.data.data;
-        dispatch(getDataQuestionsByDimensionSuccess(dimensions, idDimension));
+        const questions = respone.data.data;
+        dispatch(getDataQuestionsByDimensionSuccess(
+          idDimension,
+          getActualState().supplier.dimensions,
+          questions,
+        ));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });

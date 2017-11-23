@@ -96,11 +96,6 @@ function DinamicForm({ content, getFieldDecorator }) {
                       <SubTitle text={value} />
                     );
                     break;
-                  case 'table':
-                    rowValue = (
-                      <h1>Noh</h1>
-                    );
-                    break;
                   case 'upload': {
                     const { name, action, headers } = current;
                     rowValue = (
