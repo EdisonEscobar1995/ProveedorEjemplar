@@ -77,7 +77,7 @@ public class Common {
         try {
             Class.forName(className);
             return true;
-        } catch (ClassNotFoundException exception) {
+        } catch (Exception exception) {
             throw new ServletException(exception.getCause());
         }
     }
