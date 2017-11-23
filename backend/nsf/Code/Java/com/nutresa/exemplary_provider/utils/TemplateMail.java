@@ -1,19 +1,25 @@
 package com.nutresa.exemplary_provider.utils;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLConnection;
+
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 public class TemplateMail {
-    private static final String FILE_NAME = "D:/IBM/Domino/data/domino/html/template_email.txt";
+    private static final String FILE_NAME = "/template_email.txt";
 
     private TemplateMail() {
         throw new IllegalStateException("Utility class");
     }
 
     private static String getTemplateInFile() throws HandlerGenericException, IOException {
-        BufferedReader buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)));
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        URLConnection conexion = externalContext.getResource(FILE_NAME).openConnection();
+        BufferedReader buffReader = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
         StringBuilder template = new StringBuilder();
         try {
             String line = buffReader.readLine();
