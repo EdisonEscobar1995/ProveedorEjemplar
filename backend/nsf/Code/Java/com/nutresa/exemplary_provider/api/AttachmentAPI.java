@@ -48,8 +48,9 @@ public class AttachmentAPI extends DesignerFacesServlet {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void doService(HttpServletRequest request, HttpServletResponse response, ServletOutputStream output)
-			throws Exception {
+	private void doService(HttpServletRequest request,
+			HttpServletResponse response, ServletOutputStream output)
+			throws IOException {
 
 		int status = 200;
 		ServletResponseDTO servletResponse = null;
@@ -60,47 +61,48 @@ public class AttachmentAPI extends DesignerFacesServlet {
 				servletResponse = doPost(request);
 			} else {
 				status = 405;
-				servletResponse = new ServletResponseDTO(false,	"Method not allowed");
+				servletResponse = new ServletResponseDTO(false,
+						"Method not allowed");
 			}
 
 		} catch (Exception exception) {
 			status = 500;
-            servletResponse = new ServletResponseDTO(exception);
+			servletResponse = new ServletResponseDTO(exception);
 		} finally {
 			response.setStatus(status);
 			output.println(gson.toJson(servletResponse));
 		}
 
 	}
-	
-	private ServletResponseDTO<AttachmentDTO> doPost(HttpServletRequest request){
-		
+
+	private ServletResponseDTO<AttachmentDTO> doPost(HttpServletRequest request) {
+
 		ServletResponseDTO<AttachmentDTO> response = null;
-		
-		try{
+
+		try {
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-			
+
 			if (!isMultipart) {
 				throw (new Exception(
-				"That's not multipart content: we need that to continue"));
+						"That's not multipart content: we need that to continue"));
 			}
-			
+
 			DiskFileItemFactory factory = new DiskFileItemFactory();
-			
+
 			ServletContext servletContext = this.getServletConfig()
-			.getServletContext();
+					.getServletContext();
 			File repository = (File) servletContext
-			.getAttribute("javax.servlet.context.tempdir");
+					.getAttribute("javax.servlet.context.tempdir");
 			factory.setRepository(repository);
-			
+
 			ServletFileUpload upload = new ServletFileUpload(factory);
-			
+
 			List<FileItem> items = upload.parseRequest(request);
-			
+
 			AttachmentBLO blo = new AttachmentBLO();
 			response = new ServletResponseDTO<AttachmentDTO>(blo.save(items));
-		
-		}catch(Exception exception){
+
+		} catch (Exception exception) {
 			response = new ServletResponseDTO<AttachmentDTO>(exception);
 		}
 		return response;
