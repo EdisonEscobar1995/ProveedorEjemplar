@@ -1,6 +1,5 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +18,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         super(NotificationDAO.class);
     }
 
-    public void notifyToLiberator() throws HandlerGenericException {
+    public void notifyChangeCompanySize() throws HandlerGenericException {
         try {
             List<String> sendTo = new ArrayList<String>();
-            List<UserDTO> users = getUsersLiberators();
+            List<UserDTO> users = getUsersByRolName("LIBERATOR");
             for (UserDTO user : users) {
                 sendTo.add(user.getEmail());
             }
@@ -34,15 +33,30 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
-
     }
 
-    private List<UserDTO> getUsersLiberators() throws HandlerGenericException {
+    public void notifySurveyCompleted() throws HandlerGenericException {
+        try {
+            List<String> sendTo = new ArrayList<String>();
+            List<UserDTO> users = getUsersByRolName("LIBERATOR");
+            users.addAll(getUsersByRolName("ADMINISTRATOR"));
+            for (UserDTO user : users) {
+                sendTo.add(user.getEmail());
+            }
+            NotificationDAO notificationDAO = new NotificationDAO();
+            NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
+            sendNotification(sendTo, notification);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
+
+    private List<UserDTO> getUsersByRolName(String nameRol) throws HandlerGenericException {
         RolBLO rolBLO = new RolBLO();
         UserBLO userBLO = new UserBLO();
         List<UserDTO> users = new ArrayList<UserDTO>();
         try {
-            RolDTO rol = rolBLO.getIdRolLiberator();
+            RolDTO rol = rolBLO.getIdRolLiberator(nameRol);
             users = userBLO.getUsersByRol(rol.getId());
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -67,7 +81,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             email.setSenderEmail(NotificationDAO.SENDER_EMAIL);
             email.setSenderName(NotificationDAO.SENDER_NAME);
             email.send();
-        } catch (IOException exception) {
+        } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
     }

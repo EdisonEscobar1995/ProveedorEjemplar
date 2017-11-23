@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.utils;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class TemplateMail {
@@ -12,21 +11,32 @@ public class TemplateMail {
         throw new IllegalStateException("Utility class");
     }
 
-    private static String getTemplateInFile() throws IOException {
-        BufferedReader buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)));
-        String line = buffReader.readLine();
+    private static String getTemplateInFile() throws HandlerGenericException {
+        BufferedReader buffReader;
         StringBuilder template = new StringBuilder();
-        while (line != null) {
-            template.append(line);
-            line = buffReader.readLine();
+        try {
+            buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_NAME)));
+            String line = buffReader.readLine();
+            while (line != null) {
+                template.append(line);
+                line = buffReader.readLine();
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
         }
 
         return template.toString();
     }
 
-    public static String buildMessage(String message) throws IOException {
-        String template = getTemplateInFile();
-        return template.replace("[MESSAGE_HERE]", message);
+    public static String buildMessage(String message) throws HandlerGenericException {
+        String template = "";
+        try {
+            template = getTemplateInFile();
+            template = template.replace("[MESSAGE_HERE]", message);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return template;
     }
 
 }

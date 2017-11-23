@@ -39,7 +39,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
 
     public List<String> getCriterionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
         List<String> response = new ArrayList<String>();
-        boolean flag = true;
+        boolean flag = false;
         try {
             View currentView = getDatabase().getView("vwDimensionsAndCriterionsBySurvey");
             ViewNavigator navigatorDimension = currentView.createViewNavFromCategory(idSurvey);
@@ -52,8 +52,8 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
                     entryDimension = navigatorDimension.getNextCategory();
                     navigatorCriterions = currentView.createViewNavFrom(entryDimension);
                     entryCriterions = navigatorCriterions.getFirst();
-                    getCriterionInDimension(entryCriterions, navigatorCriterions);
-                    flag = false;
+                    response = getCriterionInDimension(entryCriterions, navigatorCriterions);
+                    flag = true;
                 }
                 entryDimension = navigatorDimension.getNextSibling();
             } while (entryDimension != null && flag);
@@ -71,6 +71,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             response.add((String) entryCriterions.getColumnValues().elementAt(2));
             entryCriterions = navigatorCriterions.getNextSibling();
         }
+
         return response;
     }
 
