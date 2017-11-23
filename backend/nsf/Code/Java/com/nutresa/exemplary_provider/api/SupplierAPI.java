@@ -27,4 +27,16 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         return response;
     }
 
+    public ServletResponseDTO<SupplierDTO> loadInformation() {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        ServletResponseDTO<SupplierDTO> response = null;
+        try {
+            response = new ServletResponseDTO<SupplierDTO>(supplierBLO.getSupplierInSession());
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<SupplierDTO>(exception);
+        }
+
+        return response;
+    }
+
 }
