@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Col, Form, Input, Select, Radio, Upload, Button, Icon } from 'antd';
 import styled from 'styled-components';
-import SubTitle from '../shared/SubTitle';
-import Field from './Field';
+import SubTitle from './SubTitle';
+import Field from '../Supplier/Field';
 
 const { Item } = Form;
 const { Option } = Select;

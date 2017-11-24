@@ -18,13 +18,16 @@ function Menu(props) {
       mode="horizontal"
       defaultSelectedKeys={['2']}
     >
-      {props.routes.map(item => (
-        <ItemStyle key={item.index}>
+      {props.routes.map((item) => {
+        if (item.show === false) {
+          return null;
+        }
+        return (<ItemStyle key={item.index}>
           <Link to={item.path}>
             {item.title}
           </Link>
-        </ItemStyle>
-      ))}
+        </ItemStyle>);
+      })}
     </MenuStyle>
   );
 }

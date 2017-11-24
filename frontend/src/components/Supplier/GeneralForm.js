@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Select, Button, Row, Col } from 'antd';
-import DinamicForm from './DinamicForm';
+import DinamicForm from '../shared/DinamicForm';
 import { generalInfo, noParticipateInfo } from './dataPage';
 import Field from './Field';
 import SubTitle from '../shared/SubTitle';

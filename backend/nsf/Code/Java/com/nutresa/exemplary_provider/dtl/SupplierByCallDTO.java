@@ -20,7 +20,7 @@ public class SupplierByCallDTO {
     @Expose
     private String oldIdCompanySize;
     @Expose
-    private String state = "DOING";
+    private String state = "SUPPLIER";
 
     public String getIdCall() {
         return idCall;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'antd';
-import DinamicForm from './DinamicForm';
+import DinamicForm from '../shared/DinamicForm';
 import { comercialInfo } from './dataPage';
 
 
