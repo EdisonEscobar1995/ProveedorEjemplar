@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as actions from '../../state/Call/action';
 import CallForm from './CallForm';
 
 class CallFormContainer extends Component {
   componentDidMount() {
-    // this.props.getAllCalls();
+    const { match: { params: { id = null } } } = this.props;
+    if (id && typeof id === 'string') {
+      this.props.getCall(id);
+    } else {
+      this.props.clearDataEdit();
+    }
   }
 
   render() {
@@ -16,10 +22,11 @@ class CallFormContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  editData: state.call.editData,
   loading: state.call.loading,
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   actions,
-)(CallFormContainer);
+)(CallFormContainer));

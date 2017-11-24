@@ -34,6 +34,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                   required,
                   handleChange,
                   disabled,
+                  format,
                 } = current;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
                 span = span || 24;
@@ -46,7 +47,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                     let fieldContent;
                     switch (type) {
                       case 'date': {
-                        fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} />;
+                        fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} format={format} />;
                         break;
                       }
                       case 'input':

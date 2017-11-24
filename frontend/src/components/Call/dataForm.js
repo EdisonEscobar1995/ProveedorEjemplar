@@ -1,6 +1,7 @@
+import { getMomentDate, format } from '../../utils/date';
+
 const generalInfo = (fields) => {
   const {
-    /* id, */
     active,
     dateToFinishCall,
     deadlineToMakeSurvey,
@@ -21,7 +22,7 @@ const generalInfo = (fields) => {
           type: 'select',
           label: 'Año',
           key: 'year',
-          value: year,
+          value: year ? year.toString() : '',
           required: true,
           options: [],
         },
@@ -30,7 +31,8 @@ const generalInfo = (fields) => {
           type: 'date',
           label: 'Fecha cierre de convocatoria',
           key: 'dateToFinishCall',
-          value: dateToFinishCall,
+          format,
+          value: dateToFinishCall ? getMomentDate(dateToFinishCall) : dateToFinishCall,
           required: true,
         },
       ],
@@ -43,7 +45,8 @@ const generalInfo = (fields) => {
           type: 'date',
           label: 'Fecha límite para hacer la encuesta',
           key: 'deadlineToMakeSurvey',
-          value: deadlineToMakeSurvey,
+          format,
+          value: deadlineToMakeSurvey ? getMomentDate(deadlineToMakeSurvey) : deadlineToMakeSurvey,
           required: true,
         },
         {
@@ -51,7 +54,10 @@ const generalInfo = (fields) => {
           type: 'date',
           label: 'Fecha límite para encuestas equipo evaluador',
           key: 'deadlineToMakeSurveyEvaluator',
-          value: deadlineToMakeSurveyEvaluator,
+          format,
+          value: deadlineToMakeSurveyEvaluator
+            ? getMomentDate(deadlineToMakeSurveyEvaluator)
+            : deadlineToMakeSurveyEvaluator,
           required: true,
         },
       ],
@@ -64,7 +70,10 @@ const generalInfo = (fields) => {
           type: 'date',
           label: 'Fecha límite para encuesta comité técnico',
           key: 'deadlineToMakeSurveyTecniqueCommittee',
-          value: deadlineToMakeSurveyTecniqueCommittee,
+          format,
+          value: deadlineToMakeSurveyTecniqueCommittee
+            ? getMomentDate(deadlineToMakeSurveyTecniqueCommittee)
+            : deadlineToMakeSurveyTecniqueCommittee,
           required: true,
         },
         {
@@ -72,7 +81,10 @@ const generalInfo = (fields) => {
           type: 'date',
           label: 'Fecha límite para encuesta comité gerencial',
           key: 'deadlineToMakeSurveyManagementCommittee',
-          value: deadlineToMakeSurveyManagementCommittee,
+          format,
+          value: deadlineToMakeSurveyManagementCommittee
+            ? getMomentDate(deadlineToMakeSurveyManagementCommittee)
+            : deadlineToMakeSurveyManagementCommittee,
           required: true,
         },
       ],
@@ -88,11 +100,11 @@ const generalInfo = (fields) => {
           required: true,
           options: [
             {
-              id: 'abierto',
+              id: true,
               name: 'Abierto',
             },
             {
-              id: 'cerrado',
+              id: false,
               name: 'Cerrado',
             },
           ],
