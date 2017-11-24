@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Form } from 'antd';
 import * as actions from '../../state/Call/action';
 import CallForm from './CallForm';
+
+const FormCallHoc = Form.create()(CallForm);
 
 class CallFormContainer extends Component {
   componentDidMount() {
@@ -15,8 +18,9 @@ class CallFormContainer extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
-      <CallForm {...this.props} />
+      <FormCallHoc {...this.props} onSubmit={this.onSubmit} Form={Form} />
     );
   }
 }

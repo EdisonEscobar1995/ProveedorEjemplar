@@ -35,6 +35,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                   handleChange,
                   disabled,
                   format,
+                  rules = [],
                 } = current;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
                 span = span || 24;
@@ -89,7 +90,10 @@ function DinamicForm({ content, getFieldDecorator }) {
                       <Field label={label}>
                         <Item>
                           {getFieldDecorator(key, {
-                            rules: [{ required, message: 'Por favor diligencia el campo' }],
+                            rules: [
+                              { required, message: 'Por favor diligencia el campo' },
+                              ...rules,
+                            ],
                             initialValue: value,
                           })(
                             fieldContent,

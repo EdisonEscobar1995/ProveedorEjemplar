@@ -34,6 +34,11 @@ const generalInfo = (fields) => {
           format,
           value: dateToFinishCall ? getMomentDate(dateToFinishCall) : dateToFinishCall,
           required: true,
+          rules: [{
+            validator: (rule, value, cb) => {
+              cb();
+            },
+          }],
         },
       ],
     },
