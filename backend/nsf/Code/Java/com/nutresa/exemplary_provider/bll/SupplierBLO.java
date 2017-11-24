@@ -14,6 +14,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     public SupplierDTO save(SupplierDTO dto) throws HandlerGenericException {
         SupplierDAO dao = new SupplierDAO();
         SupplierDTO supplier = null;
+        dto.autoSetIdDocuments();
+        dto.autoSetIdAttachedFinancialReport();
         try {
             supplier = dao.get(dto.getId());
             if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {

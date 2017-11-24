@@ -460,8 +460,10 @@ public class SupplierDTO {
         return idDocuments;
     }
 
-    public void setIdDocuments(List<String> idDocuments) {
-        this.idDocuments = idDocuments;
+    public void autoSetIdDocuments() {
+        for (AttachmentDTO document : this.document) {
+            this.idDocuments.add(document.getId());
+        }
     }
 
     public List<AttachmentDTO> getDocument() {
@@ -476,8 +478,10 @@ public class SupplierDTO {
         return idAttachedFinancialReport;
     }
 
-    public void setIdAttachedFinancialReport(List<String> idAttachedFinancialReport) {
-        this.idAttachedFinancialReport = idAttachedFinancialReport;
+    public void autoSetIdAttachedFinancialReport() {
+        for (AttachmentDTO attachment : this.attachedFinancialReport) {
+            this.idAttachedFinancialReport.add(attachment.getId());
+        }
     }
 
     public List<AttachmentDTO> getAttachedFinancialReport() {

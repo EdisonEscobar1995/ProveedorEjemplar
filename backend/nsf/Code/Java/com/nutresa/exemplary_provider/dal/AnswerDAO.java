@@ -25,8 +25,10 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         try {
             View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");
             DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
-            for (Document document : documents) {
-                response.add(castDocument(document));
+            if (documents != null) {
+                for (Document document : documents) {
+                    response.add(castDocument(document));
+                }
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
