@@ -16,6 +16,7 @@ import {
 const initialState = {
   supplier: {},
   call: {},
+  changeIdCompanySize: false,
   participateInCall: null,
   supply: [],
   categories: [],
@@ -56,6 +57,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         categories: action.categories,
+        supplier: action.supplier,
         subcategories: [],
         loading: false,
       };
@@ -68,6 +70,7 @@ function supplierApp(state = initialState, action) {
     case GET_DATA_DEPARTMENTS_SUCCESS:
       return {
         ...state,
+        supplier: action.supplier,
         departments: action.departments,
         cities: [],
         loading: false,
@@ -101,6 +104,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         call: action.call,
+        changeIdCompanySize: action.changeIdCompanySize,
         supplier: action.supplier,
         loading: false,
       };

@@ -31,6 +31,7 @@ function generalInfo(fields) {
     getDataDepartmentsByCountry,
     cities,
     getDataCitiesByDepartment,
+    changeIdCompanySize,
   } = fields;
   const {
     idSupply,
@@ -58,7 +59,9 @@ function generalInfo(fields) {
     phoneOfContact,
     fullNameContact,
   } = supplier;
-  const disabled = call.lockedByModification;
+  console.log(idCategory);
+  console.log(idDepartment);
+  const disabled = call.lockedByModification || changeIdCompanySize;
   return [
     {
       key: 1.1,
@@ -92,10 +95,7 @@ function generalInfo(fields) {
           disabled,
           options: supplies,
           handleChange: (value) => {
-            const data = {
-              id: value,
-            };
-            getDataCategoryBySuply(data);
+            getDataCategoryBySuply(value);
           },
         },
       ],
@@ -112,10 +112,7 @@ function generalInfo(fields) {
           options: categories,
           disabled,
           handleChange: (value) => {
-            const data = {
-              id: value,
-            };
-            getDataSubCategoryByCategory(data);
+            getDataSubCategoryByCategory(value);
           },
         },
         {
@@ -225,10 +222,7 @@ function generalInfo(fields) {
           disabled,
           value: idCountry,
           handleChange: (value) => {
-            const data = {
-              id: value,
-            };
-            getDataDepartmentsByCountry(data);
+            getDataDepartmentsByCountry(value);
           },
         },
         {
@@ -240,10 +234,7 @@ function generalInfo(fields) {
           options: departments,
           disabled,
           handleChange: (value) => {
-            const data = {
-              id: value,
-            };
-            getDataCitiesByDepartment(data);
+            getDataCitiesByDepartment(value);
           },
         },
         {

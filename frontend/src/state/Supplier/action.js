@@ -39,15 +39,16 @@ function getDataSupplierProgress() {
   };
 }
 
-function getDataSupplierSuccess(
-  supplier,
-  call,
-  supply,
-  companyTypes,
-  companySizes,
-  societyTypes,
-  countries,
-) {
+function getDataSupplierSuccess(data) {
+  const {
+    supplier,
+    call,
+    supply,
+    companyTypes,
+    companySizes,
+    societyTypes,
+    countries,
+  } = data;
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
@@ -59,9 +60,10 @@ function getDataSupplierSuccess(
     countries,
   };
 }
-function getDataCategorySuccess(categories) {
+function getDataCategorySuccess(supplier, categories) {
   return {
     type: GET_DATA_CATEGORIES_SUCCESS,
+    supplier,
     categories,
   };
 }
@@ -77,15 +79,17 @@ function changeParticipate(participateInCall) {
     participateInCall,
   };
 }
-function getDataDepartmentsByCountrySuccess(departments) {
+function getDataDepartmentsByCountrySuccess(supplier, departments) {
   return {
     type: GET_DATA_DEPARTMENTS_SUCCESS,
+    supplier,
     departments,
   };
 }
-function getDataCitiesByDepartmentSuccess(cities) {
+function getDataCitiesByDepartmentSuccess(supplier, cities) {
   return {
     type: GET_DATA_CITIES_SUCCESS,
+    supplier,
     cities,
   };
 }
@@ -116,11 +120,12 @@ function saveDataCallSuccess(call) {
     call,
   };
 }
-function saveDataCallAndSupplerSuccess(call, supplier) {
+function saveDataCallAndSupplerSuccess(call, supplier, changeIdCompanySize) {
   return {
     type: SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
     call,
     supplier,
+    changeIdCompanySize,
   };
 }
 
@@ -150,7 +155,7 @@ function getDataSupplier() {
       const companySizes = arrayResponse[4].data.data;
       const societyTypes = arrayResponse[5].data.data;
       const countries = arrayResponse[6].data.data;
-      dispatch(getDataSupplierSuccess(
+      return {
         supplier,
         call,
         supply,
@@ -158,18 +163,43 @@ function getDataSupplier() {
         companySizes,
         societyTypes,
         countries,
-      ));
-    }).catch((err) => {
-      dispatch(getDataFailed(err));
-    });
+      };
+    }).then((data) => {
+      const { supplier } = data;
+      if (supplier.idCategory) {
+        const loca = getDataCategoryBySuplyApi(supplier);
+        console.log(loca);
+        console.log('Hay Category');
+      } else {
+        console.log('No Hay Category');
+      }
+      return data;
+    }).then((data) => {
+      const { supplier } = data;
+      if (supplier.idSubCategory) {
+        console.log('Hay SubCategory');
+      } else {
+        console.log('No Hay SubCategory');
+      }
+      return data;
+    })
+      .then((data) => {
+        dispatch(getDataSupplierSuccess(data));
+      })
+      .catch((err) => {
+        dispatch(getDataFailed(err));
+      });
   };
 }
 function getDataCategoryBySuply(clientData) {
-  return (dispatch) => {
+  return (dispatch, getActualState) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCategoryBySuplyApi, clientData)
       .then((respone) => {
+        const supplier = { ...getActualState().supplier.supplier };
         const categories = respone.data.data;
-        dispatch(getDataCategorySuccess(categories));
+        supplier.idCategory = '';
+        supplier.idSubCategory = '';
+        dispatch(getDataCategorySuccess(supplier, categories));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
@@ -188,22 +218,27 @@ function getDataSubCategoryByCategory(clientData) {
 }
 
 function getDataDepartmentsByCountry(clientData) {
-  return (dispatch) => {
+  return (dispatch, getActualState) => {
     requestApi(dispatch, getDataSupplierProgress, getDataDepartmentsByCountryApi, clientData)
       .then((respone) => {
+        const supplier = { ...getActualState().supplier.supplier };
+        supplier.idDepartment = '';
+        supplier.idCity = '';
         const departsments = respone.data.data;
-        dispatch(getDataDepartmentsByCountrySuccess(departsments));
+        dispatch(getDataDepartmentsByCountrySuccess(supplier, departsments));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
   };
 }
 function getDataCitiesByDepartment(clientData) {
-  return (dispatch) => {
+  return (dispatch, getActualState) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCitiesByDepartmentApi, clientData)
       .then((respone) => {
         const categories = respone.data.data;
-        dispatch(getDataCitiesByDepartmentSuccess(categories));
+        const supplier = { ...getActualState().supplier.supplier };
+        supplier.idCategory = clientData;
+        dispatch(getDataCitiesByDepartmentSuccess(supplier, categories));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
@@ -252,7 +287,7 @@ function saveDataCallBySupplier(clientData) {
 }
 
 function saveDataCallSupplier(clientCall, clientSupplier) {
-  return (dispatch) => {
+  return (dispatch, getActualState) => {
     const promises = [
       saveDataCallBySupplierApi(clientCall),
       saveDataSuppliertApi(clientSupplier),
@@ -260,7 +295,9 @@ function saveDataCallSupplier(clientCall, clientSupplier) {
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
       const call = arrayResponse[0].data.data;
       const supplier = arrayResponse[1].data.data;
-      dispatch(saveDataCallAndSupplerSuccess(call, supplier));
+      const oldSupplies = getActualState().supplier.supplier;
+      const changeIdCompanySize = oldSupplies.idCompanySize !== supplier.idCompanySize;
+      dispatch(saveDataCallAndSupplerSuccess(call, supplier, changeIdCompanySize));
     }).catch((err) => {
       dispatch(getDataFailed(err));
     });
