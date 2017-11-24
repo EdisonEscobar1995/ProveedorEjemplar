@@ -56,7 +56,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     public SupplierByCallDTO finishSurvey(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         SupplierByCallDTO response = null;
-        supplierByCall.setState("SUPPLIER");
+        supplierByCall.setState("EVALUATOR");
         try {
             response = save(supplierByCall);
             NotificationBLO notificationBLO = new NotificationBLO();

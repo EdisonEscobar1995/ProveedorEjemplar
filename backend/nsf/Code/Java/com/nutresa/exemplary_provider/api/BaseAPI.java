@@ -139,12 +139,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     protected ServletResponseDTO doPost(String action, HttpServletRequest request, Gson gson) throws IOException, IllegalAccessException,
     	InvocationTargetException, HandlerGenericException {
     
-    	if (!"application/json".equals(request.getContentType())) {
-    		return new ServletResponseDTO(false,
-            "That's not json content: we need that to continue");
-    	}
- 
-    	BufferedReader reader = request.getReader();
+       	BufferedReader reader = request.getReader();
     	String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
         while ((inputLine = reader.readLine()) != null) {

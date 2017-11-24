@@ -16,14 +16,14 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierDTO supplier = null;
         try {
             supplier = dao.get(dto.getId());
-            if (supplier.getIdCompanySize() != dto.getIdCompanySize()) {
+            if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
                 SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
                 supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifyChangeCompanySize();
             }
 
-            dto = dao.save(dto);
+            dto = dao.update(dto.getId(),dto);
             if (null != dto.getPrincipalCustomer()) {
                 CustomerBLO customer = new CustomerBLO();
                 dto.setPrincipalCustomer(customer.saveList(dto.getPrincipalCustomer(), "id" + dao.getEntity(), dto
