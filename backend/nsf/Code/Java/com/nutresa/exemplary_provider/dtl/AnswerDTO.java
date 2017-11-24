@@ -1,8 +1,12 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
 
 public class AnswerDTO {
+    @Expose
+    private String id;
     @Expose
     private String idSupplierByCall;
     @Expose
@@ -21,8 +25,9 @@ public class AnswerDTO {
     private String responseEvaluator;
     @Expose
     private String commentEvaluator;
+    private List<String> idAttachment;
     @Expose
-    private String idAttachment;
+    private List<AttachmentDTO> attachment;
 
     public String getIdSupplierByCall() {
         return idSupplierByCall;
@@ -72,14 +77,6 @@ public class AnswerDTO {
         return idQuestion;
     }
 
-    public String getIdAttachment() {
-        return idAttachment;
-    }
-
-    public void setIdAttachment(String idAttachment) {
-        this.idAttachment = idAttachment;
-    }
-
     public String getResponseSupplier() {
         return responseSupplier;
     }
@@ -102,6 +99,26 @@ public class AnswerDTO {
 
     public void setIdSurvey(String idSurvey) {
         this.idSurvey = idSurvey;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<String> getIdAttachment() {
+        return idAttachment;
+    }
+
+    public void setIdAttachment(List<String> idAttachment) {
+        this.idAttachment = idAttachment;
+    }
+
+    public List<AttachmentDTO> getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(List<AttachmentDTO> attachment) {
+        this.attachment = attachment;
     }
 
 }

@@ -5,6 +5,13 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.openntf.domino.utils.DominoUtils;
+
 public class Common {
 
     private static final int JOIN_ELEMENT_SIZE = 50;
@@ -28,7 +35,7 @@ public class Common {
         }
         return method;
     }
-    
+
     @SuppressWarnings("unchecked")
     public static Field getField(Class<?> declarationDTO, String name) throws HandlerGenericException {
         Field field = null;
@@ -67,17 +74,17 @@ public class Common {
         }
         return message;
     }
-    
-    @SuppressWarnings("squid:S1166")
-    public static boolean isClass(String className) {
+
+    public static boolean isClass(String className) throws ServletException {
         try {
             Class.forName(className);
             return true;
-        } catch (ClassNotFoundException exception) {
-            return false;
+        } catch (Exception exception) {
+            DominoUtils.handleException(new Throwable(exception));
+            throw new ServletException(exception.getCause());
         }
     }
-    
+
     public static String join(String[] arr, String separator) {
         if (null == arr || 0 == arr.length) {
             return "";
@@ -90,6 +97,15 @@ public class Common {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public static String buildPathResource() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+        String host = request.getServerName();
+        String path = externalContext.getRequestContextPath();
+        return "http" + (request.isSecure() ? "s" : "") + "://" + host + path;
     }
 
 }

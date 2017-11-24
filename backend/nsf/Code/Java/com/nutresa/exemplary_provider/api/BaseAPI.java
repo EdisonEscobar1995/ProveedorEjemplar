@@ -82,7 +82,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
                     servletResponse = doGet(action, parameters);
                     break;
                 case POST:
-                    servletResponse = doPost(action, request.getReader(), gson);
+                    servletResponse = doPost(action, request, gson);
                     break;
                 case OPTIONS:
                     doOptions(response, output);
@@ -90,7 +90,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
                 default:
                     status = 405;
                     servletResponse = new ServletResponseDTO(false,
-                            "What the devil are you trying to do, break the server?");
+                            "Method not allowed");
     
                     break;
                 }
@@ -110,7 +110,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, String> getParameters(HttpServletRequest request) {
+    protected Map<String, String> getParameters(HttpServletRequest request) {
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
@@ -122,7 +122,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doGet(String action, Map<String, String> parameters) throws IllegalAccessException,
+    protected ServletResponseDTO doGet(String action, Map<String, String> parameters) throws IllegalAccessException,
         InvocationTargetException, HandlerGenericException {
         ServletResponseDTO response = null;
         if (parameters.size() == 0) {
@@ -136,20 +136,22 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO doPost(String action, BufferedReader reader, Gson gson) throws IOException, IllegalAccessException,
-        InvocationTargetException, HandlerGenericException {
-        String inputLine = null;
+    protected ServletResponseDTO doPost(String action, HttpServletRequest request, Gson gson) throws IOException, IllegalAccessException,
+    	InvocationTargetException, HandlerGenericException {
+    
+       	BufferedReader reader = request.getReader();
+    	String inputLine = null;
         StringBuilder stringBuilder = new StringBuilder();
-        Method method = Common.getMethod(this.getClass(), action, 1);
         while ((inputLine = reader.readLine()) != null) {
             stringBuilder.append(inputLine);
         }
         reader.close();
 
+        Method method = Common.getMethod(this.getClass(), action, 1);
         return (ServletResponseDTO) method.invoke(this, gson.fromJson(stringBuilder.toString(), this.dtoClass));
     }
 
-    private void doOptions(HttpServletResponse response, ServletOutputStream output) throws IOException {
+    protected void doOptions(HttpServletResponse response, ServletOutputStream output) throws IOException {
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         response.addHeader("Access-Control-Allow-Headers", "*");
         response.addHeader("Access-Control-Allow-Origin", "*");

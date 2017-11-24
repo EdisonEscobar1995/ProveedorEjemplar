@@ -7,7 +7,10 @@ import {
   getDataSubCategoryByCategory,
   getDataDepartmentsByCountry,
   getDataCitiesByDepartment,
-  saveDataSupplier,
+  getDimensionsBySurvey,
+  getQuestionsByDimension,
+  saveDataCallBySupplier,
+  saveDataCallSupplier,
   changeParticipate,
 } from '../../state/Supplier/action';
 
@@ -26,6 +29,8 @@ class SupplierContainer extends Component {
 
 const mapStateToProps = state => ({
   supplier: state.supplier.supplier,
+  changeIdCompanySize: state.supplier.changeIdCompanySize,
+  call: state.supplier.call,
   participateInCall: state.supplier.participateInCall,
   supplies: state.supplier.supply,
   categories: state.supplier.categories,
@@ -36,6 +41,7 @@ const mapStateToProps = state => ({
   countries: state.supplier.countries,
   departments: state.supplier.departments,
   cities: state.supplier.cities,
+  dimensions: state.supplier.dimensions,
   loading: state.supplier.loading,
   error: state.supplier.error,
 });
@@ -56,8 +62,17 @@ const mapDispatchToProps = dispatch => ({
   getDataCitiesByDepartment: (data) => {
     dispatch(getDataCitiesByDepartment(data));
   },
-  saveDataSupplier: (data) => {
-    dispatch(saveDataSupplier(data));
+  getDimensionsBySurvey: (idSurvey) => {
+    dispatch(getDimensionsBySurvey(idSurvey));
+  },
+  getQuestionsByDimension: (idSurvey, idDimension) => {
+    dispatch(getQuestionsByDimension(idSurvey, idDimension));
+  },
+  saveDataCallBySupplier: (data) => {
+    dispatch(saveDataCallBySupplier(data));
+  },
+  saveDataCallSupplier: (call, supplier) => {
+    dispatch(saveDataCallSupplier(call, supplier));
   },
   changeParticipate: (participateInCall) => {
     dispatch(changeParticipate(participateInCall));

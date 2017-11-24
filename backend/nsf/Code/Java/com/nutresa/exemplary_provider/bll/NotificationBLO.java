@@ -39,7 +39,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         try {
             List<String> sendTo = new ArrayList<String>();
             List<UserDTO> users = getUsersByRolName("LIBERATOR");
-            users.addAll(getUsersByRolName("ADMINISTRATOR"));
+            users.addAll(getUsersByRolName("EVALUATOR"));
             for (UserDTO user : users) {
                 sendTo.add(user.getEmail());
             }

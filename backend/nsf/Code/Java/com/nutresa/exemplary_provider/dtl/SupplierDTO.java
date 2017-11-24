@@ -1,6 +1,5 @@
 package com.nutresa.exemplary_provider.dtl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -18,8 +17,9 @@ public class SupplierDTO {
     private String idCategory;
     @Expose
     private String idSubCategory;
+    private List<String> idDocuments;
     @Expose
-    private List<String> document = new ArrayList<String>();
+    private List<AttachmentDTO> document;
     @Expose
     private String nit;
     @Expose
@@ -45,7 +45,7 @@ public class SupplierDTO {
     @Expose
     private String fax;
     @Expose
-    private List<String> emails = new ArrayList<String>();
+    private List<String> emails;
     @Expose
     private String codeZip;
     @Expose
@@ -66,8 +66,9 @@ public class SupplierDTO {
     private String packagingProvided;
     @Expose
     private float valueAssets;
+    private List<String> idAttachedFinancialReport;
     @Expose
-    private String attachedFinancialReport;
+    private List<AttachmentDTO> attachedFinancialReport;
     @Expose
     private int numberOfDirectEmployees;
     @Expose
@@ -98,14 +99,6 @@ public class SupplierDTO {
     private boolean globalAgreement;
     @Expose
     private boolean chemicalSubstance;
-
-    public List<String> getDocument() {
-        return document;
-    }
-
-    public void setDocument(List<String> document) {
-        this.document = document;
-    }
 
     public String getNit() {
         return nit;
@@ -241,14 +234,6 @@ public class SupplierDTO {
 
     public void setValueAssets(float valueAssets) {
         this.valueAssets = valueAssets;
-    }
-
-    public String getAttachedFinancialReport() {
-        return attachedFinancialReport;
-    }
-
-    public void setAttachedFinancialReport(String attachedFinancialReport) {
-        this.attachedFinancialReport = attachedFinancialReport;
     }
 
     public int getNumberOfDirectEmployees() {
@@ -469,6 +454,38 @@ public class SupplierDTO {
 
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
+    }
+
+    public List<String> getIdDocuments() {
+        return idDocuments;
+    }
+
+    public void setIdDocuments(List<String> idDocuments) {
+        this.idDocuments = idDocuments;
+    }
+
+    public List<AttachmentDTO> getDocument() {
+        return document;
+    }
+
+    public void setDocument(List<AttachmentDTO> document) {
+        this.document = document;
+    }
+
+    public List<String> getIdAttachedFinancialReport() {
+        return idAttachedFinancialReport;
+    }
+
+    public void setIdAttachedFinancialReport(List<String> idAttachedFinancialReport) {
+        this.idAttachedFinancialReport = idAttachedFinancialReport;
+    }
+
+    public List<AttachmentDTO> getAttachedFinancialReport() {
+        return attachedFinancialReport;
+    }
+
+    public void setAttachedFinancialReport(List<AttachmentDTO> attachedFinancialReport) {
+        this.attachedFinancialReport = attachedFinancialReport;
     }
 
 }

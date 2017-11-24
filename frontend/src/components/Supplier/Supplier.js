@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Steps, Spin, Button } from 'antd';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
+import Question from './Question';
 
 const { Step } = Steps;
 
@@ -12,6 +13,30 @@ class Supplier extends Component {
       current: 0,
     };
   }
+  getSteps = (dimensions) => {
+    const steps = [
+      {
+        name: 'Informacion General',
+        content: <GeneralForm next={this.next} {...this.props} />,
+      },
+      {
+        name: 'Informacion Comercial',
+        content: <ComercialForm next={this.next} {...this.props} />,
+      },
+    ];
+    const mapDimensions = dimensions.map(dimension => (
+      {
+        name: dimension.name,
+        content: <Question
+          idDimension={dimension.id}
+          idSurvey={this.props.call.idSurvey}
+          criterions={dimension.criterions}
+          getQuestionsByDimension={this.props.getQuestionsByDimension}
+        />,
+      }
+    ));
+    return steps.concat(mapDimensions);
+  }
   next = () => {
     const current = this.state.current + 1;
     this.setState({ current });
@@ -20,31 +45,15 @@ class Supplier extends Component {
     const current = this.state.current - 1;
     this.setState({ current });
   }
+
   render() {
-    const { loading } = this.props;
+    const { loading, dimensions } = this.props;
     const { current } = this.state;
-    const steps = [
-      {
-        title: 'Informacion General',
-        content: <GeneralForm next={this.next} {...this.props} />,
-      },
-      {
-        title: 'Informacion Comercial',
-        content: <ComercialForm next={this.next} />,
-      },
-      {
-        title: 'Investigacion, desarrollo e innovacion',
-        content: <h1>Investigacion, desarrollo e innovacion</h1>,
-      },
-      {
-        title: 'Principios de abastecimiento sostenioble',
-        content: <h1>Principios de abastecimiento sostenioble</h1>,
-      },
-    ];
+    const steps = this.getSteps(dimensions);
     return (
       <Spin spinning={loading}>
         <Steps progressDot current={current}>
-          {steps.map(item => <Step key={item.title} title={item.title} />)}
+          {steps.map(item => <Step key={item.name} title={item.name} />)}
         </Steps>
         {
           this.state.current < steps.length - 1

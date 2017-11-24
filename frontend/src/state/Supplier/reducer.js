@@ -5,13 +5,18 @@ import {
   GET_DATA_SUBCATEGORIES_SUCCESS,
   GET_DATA_DEPARTMENTS_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
-  SAVE_DATA_SUPPLIER_SUCCESS,
+  GET_DATA_DIMENSION_SURVEY_SUCCESS,
+  GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
+  SAVE_DATA_SUPPLIER_CALL_SUCCESS,
+  SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
 } from './const';
 
 const initialState = {
   supplier: {},
+  call: {},
+  changeIdCompanySize: false,
   participateInCall: null,
   supply: [],
   categories: [],
@@ -22,52 +27,23 @@ const initialState = {
   countries: [],
   departments: [],
   cities: [],
+  dimensions: [],
   loading: false,
 };
 
 function supplierApp(state = initialState, action) {
   switch (action.type) {
-    case GET_DATA_SUPPLIER_PROGRESS: {
+    case GET_DATA_SUPPLIER_PROGRESS:
       return {
         ...state,
         loading: true,
       };
-    }
-    case GET_DATA_CATEGORIES_SUCCESS: {
-      return {
-        ...state,
-        categories: action.categories,
-        subcategories: [],
-        loading: false,
-      };
-    }
-    case GET_DATA_SUBCATEGORIES_SUCCESS: {
-      return {
-        ...state,
-        subcategories: action.subcategories,
-        loading: false,
-      };
-    }
-    case GET_DATA_DEPARTMENTS_SUCCESS: {
-      return {
-        ...state,
-        departments: action.departments,
-        cities: [],
-        loading: false,
-      };
-    }
-    case GET_DATA_CITIES_SUCCESS: {
-      return {
-        ...state,
-        cities: action.cities,
-        loading: false,
-      };
-    }
     case GET_DATA_SUPPLIER_SUCCESS: {
-      const { participateInCall } = action.supplier;
+      const { participateInCall } = action.call;
       return {
         ...state,
         supplier: action.supplier,
+        call: action.call,
         participateInCall,
         supply: action.supply,
         companySizes: action.companySizes,
@@ -77,29 +53,66 @@ function supplierApp(state = initialState, action) {
         loading: false,
       };
     }
+    case GET_DATA_CATEGORIES_SUCCESS:
+      return {
+        ...state,
+        categories: action.categories,
+        supplier: action.supplier,
+        subcategories: [],
+        loading: false,
+      };
+    case GET_DATA_SUBCATEGORIES_SUCCESS:
+      return {
+        ...state,
+        subcategories: action.subcategories,
+        loading: false,
+      };
+    case GET_DATA_DEPARTMENTS_SUCCESS:
+      return {
+        ...state,
+        supplier: action.supplier,
+        departments: action.departments,
+        cities: [],
+        loading: false,
+      };
+    case GET_DATA_CITIES_SUCCESS:
+      return {
+        ...state,
+        cities: action.cities,
+        loading: false,
+      };
+    case GET_DATA_DIMENSION_SURVEY_SUCCESS:
+    case GET_DATA_QUESTIONS_DIMENSION_SUCCESS:
+      return {
+        ...state,
+        dimensions: action.dimensions,
+        loading: false,
+      };
     case GET_REQUEST_FAILED:
-    {
       return {
         ...state,
         loading: false,
         error: action.error,
       };
-    }
-    case SAVE_DATA_SUPPLIER_SUCCESS:
-    {
+    case SAVE_DATA_SUPPLIER_CALL_SUCCESS:
       return {
         ...state,
+        call: action.call,
+        loading: false,
+      };
+    case SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS:
+      return {
+        ...state,
+        call: action.call,
+        changeIdCompanySize: action.changeIdCompanySize,
         supplier: action.supplier,
         loading: false,
       };
-    }
     case CHANGE_PARTICIPATE:
-    {
       return {
         ...state,
         participateInCall: action.participateInCall,
       };
-    }
     default: {
       return state;
     }

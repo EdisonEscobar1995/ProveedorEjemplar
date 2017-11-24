@@ -13,4 +13,14 @@ public class AttachmentBLO {
 		return dao.save(items);
 	}
 	
+	public AttachmentDTO get(String id){
+		AttachmentDAO dao = new AttachmentDAO();
+		return dao.get(id);
+	}
+	
+	public boolean delete(String id){
+		AttachmentDAO dao = new AttachmentDAO();
+		return dao.delete(id);
+	}
+	
 }

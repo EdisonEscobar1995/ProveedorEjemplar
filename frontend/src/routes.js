@@ -19,6 +19,35 @@ const routes = [
       import('./pages/Sector').then(module => module.default),
     ),
   },
+  {
+    title: 'Convocatorias',
+    index: 3,
+    path: '/call',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Call').then(module => module.default),
+    ),
+  },
+  {
+    title: 'Convocatorias',
+    index: 4,
+    path: '/call/form',
+    exact: true,
+    show: false,
+    component: asyncComponent(() =>
+      import('./pages/CallForm').then(module => module.default),
+    ),
+  },
+  {
+    title: 'Convocatorias',
+    index: 5,
+    path: '/call/form/:id',
+    exact: true,
+    show: false,
+    component: asyncComponent(() =>
+      import('./pages/CallForm').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

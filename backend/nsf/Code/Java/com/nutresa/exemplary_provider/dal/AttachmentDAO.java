@@ -5,6 +5,7 @@ import java.util.List;
 import org.openntf.domino.utils.Factory;
 import org.openntf.domino.Session;
 import org.openntf.domino.Database;
+import org.openntf.domino.View;
 import org.openntf.domino.Document;
 import org.openntf.domino.MIMEEntity;
 import org.openntf.domino.MIMEHeader;
@@ -12,61 +13,91 @@ import org.openntf.domino.Stream;
 
 import com.ibm.xsp.http.fileupload.FileItem;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AttachmentDAO {
 
-	private Session session;
+    private Session session;
+    private Database database;
+    private String entityView;
 
-	public AttachmentDTO save(List<FileItem> items)
-			throws HandlerGenericException {
+    public AttachmentDAO() {
+        this.session = Factory.getSession();
+        this.database = session.getCurrentDatabase();
+        this.entityView = "vwAttachments";
+    }
 
-		this.session = Factory.getSession();
-		Database database = session.getCurrentDatabase();
-		Document document = database.createDocument();
+    public AttachmentDTO save(List<FileItem> items) throws HandlerGenericException {
 
-		MIMEEntity mime = document.createMIMEEntity("files");
+        Document document = this.database.createDocument();
 
-		for (FileItem item : items) {
-			if (item.isFormField()) {
-				document
-						.replaceItemValue(item.getFieldName(), item.getString());
-			} else {
-				processUploadedFile(item, mime);
-			}
-		}
+        MIMEEntity mime = document.createMIMEEntity("files");
 
-		document.replaceItemValue("form", "frAttachment");
-		document.replaceItemValue("id", document.getUniversalID());
+        for (FileItem item : items) {
+            if (item.isFormField()) {
+                document.replaceItemValue(item.getFieldName(), item.getString());
+            } else {
+                processUploadedFile(item, mime);
+            }
+        }
 
-		document.save();
+        document.replaceItemValue("form", "frAttachment");
+        document.replaceItemValue("id", document.getUniversalID());
 
-		AttachmentDTO dto = new AttachmentDTO();
-		dto.setId(document.getUniversalID());
+        document.save();
 
-		return dto;
-	}
+        return castDocument(document);
+    }
 
-	private void processUploadedFile(FileItem item, MIMEEntity mime)
-			throws HandlerGenericException {
+    public AttachmentDTO get(String id) {
+        return castDocument(getDocument(id));
+    }
 
-		try {
-			MIMEEntity child = mime.createChildEntity();
+    public boolean delete(String id) {
+        Document document = getDocument(id);
+        return document.remove(true);
+    }
 
-			MIMEHeader header = child.createHeader("content-disposition");
-			header.setHeaderVal("attachment;filename=\"" + item.getName()
-					+ "\"");
+    private Document getDocument(String id) {
+        View view = this.database.getView(entityView);
+        return view.getFirstDocumentByKey(id, true);
+    }
 
-			Stream stream = this.session.createStream();
-			stream.write(item.get());
+    private AttachmentDTO castDocument(Document document) {
+        AttachmentDTO dto = new AttachmentDTO();
+        if (document != null) {
+            dto.setId(document.getItemValueString("id"));
+            dto.setUrl(getAttachmentUrl(document));
+        }
+        return dto;
+    }
 
-			child.setContentFromBytes(stream, item.getContentType(),
-					MIMEEntity.ENC_IDENTITY_BINARY);
-			child.decodeContent();
+    private String getAttachmentUrl(Document document) {
+        String url = Common.buildPathResource();
+        url += "/" + entityView + "/" + document.getUniversalID() + "/$FILE" + "/"
+                + session.evaluate("@AttachmentNames", document).elementAt(0);
 
-		} catch (Exception exception) {
-			throw new HandlerGenericException(exception);
-		}
-	}
+        return url;
+    }
+
+    private void processUploadedFile(FileItem item, MIMEEntity mime) throws HandlerGenericException {
+
+        try {
+            MIMEEntity child = mime.createChildEntity();
+
+            MIMEHeader header = child.createHeader("content-disposition");
+            header.setHeaderVal("attachment;filename=\"" + item.getName() + "\"");
+
+            Stream stream = this.session.createStream();
+            stream.write(item.get());
+
+            child.setContentFromBytes(stream, item.getContentType(), MIMEEntity.ENC_IDENTITY_BINARY);
+            child.decodeContent();
+
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
 
 }
