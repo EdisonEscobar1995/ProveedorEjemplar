@@ -1,7 +1,6 @@
 import intance from './instance';
 
-function getDataCitiesByDepartmentApi(data) {
-  const { id } = data;
-  return intance.get(`City?action=getAll&idDepartment=${id}`);
+function getDataCitiesByDepartmentApi(idDepartment) {
+  return intance.get(`City?action=getAll&idDepartment=${idDepartment}`);
 }
 export default getDataCitiesByDepartmentApi;
