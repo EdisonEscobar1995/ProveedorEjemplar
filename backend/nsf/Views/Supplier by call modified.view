@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Supplier by call locked' alias='vwSuppliersByCallLocked' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
+<view name='Supplier by call modified' alias='vwSuppliersByCallModified' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,15 +9,15 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='26a2' unid='41279F707285589F052581E10082F425' sequence='3'>
-<created><datetime>20171123T185021,81-05</datetime></created>
-<modified><datetime>20171123T190428,00-05</datetime></modified>
-<revised><datetime>20171123T190427,99-05</datetime></revised>
-<lastaccessed><datetime>20171123T190428,00-05</datetime></lastaccessed>
-<addedtofile><datetime>20171123T185021,82-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frSupplierByCall" &amp; lockedByModification = "1" &amp; participateInCall = "1"</formula></code><code
+<noteinfo noteid='7f6' unid='7C9B86445D4167DD052581E200576CB2' sequence='7'>
+<created><datetime>20171124T105454,58-05</datetime></created>
+<modified><datetime>20171124T115842,38-05</datetime></modified>
+<revised><datetime>20171124T115842,37-05</datetime></revised>
+<lastaccessed><datetime>20171124T115842,38-05</datetime></lastaccessed>
+<addedtofile><datetime>20171124T105454,62-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frSupplierByCall" &amp; oldIdCompanySize != "" &amp; participateInCall = "1"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub

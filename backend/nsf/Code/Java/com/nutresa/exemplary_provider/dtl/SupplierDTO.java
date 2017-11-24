@@ -76,6 +76,8 @@ public class SupplierDTO {
     @Expose
     private String webSite;
     @Expose
+    private String typeOfCurrency;
+    @Expose
     private float annualSalesValue;
     @Expose
     private List<CustomerDTO> principalCustomer;
@@ -490,6 +492,14 @@ public class SupplierDTO {
 
     public void setAttachedFinancialReport(List<AttachmentDTO> attachedFinancialReport) {
         this.attachedFinancialReport = attachedFinancialReport;
+    }
+
+    public void setTypeOfCurrency(String typeOfCurrency) {
+        this.typeOfCurrency = typeOfCurrency;
+    }
+
+    public String getTypeOfCurrency() {
+        return typeOfCurrency;
     }
 
 }
