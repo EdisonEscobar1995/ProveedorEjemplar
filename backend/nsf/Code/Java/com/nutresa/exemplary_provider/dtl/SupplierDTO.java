@@ -461,8 +461,8 @@ public class SupplierDTO {
     }
 
     public void autoSetIdDocuments() {
-        for (AttachmentDTO document : this.document) {
-            this.idDocuments.add(document.getId());
+        for (AttachmentDTO attachment : this.document) {
+            this.idDocuments.add(attachment.getId());
         }
     }
 
