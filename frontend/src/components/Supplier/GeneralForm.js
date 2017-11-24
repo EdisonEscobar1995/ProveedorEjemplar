@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Select, Button, Row, Col } from 'antd';
-import DinamicForm from './DinamicForm';
+import DinamicForm from '../shared/DinamicForm';
 import { generalInfo, noParticipateInfo } from './dataPage';
 import Field from './Field';
 import SubTitle from '../shared/SubTitle';
@@ -12,13 +12,13 @@ class General extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
         if (this.props.participateInCall) {
           // this.props.next();
-          const { call } = this.props;
+          const { call, supplier } = { ...this.props };
+          let newSupplier = { ...supplier };
+          newSupplier = Object.assign(newSupplier, values);
           call.participateInCall = true;
-          const supplier = Object.assign(this.props.supplier, values);
-          this.props.saveDataCallSupplier(call, supplier);
+          this.props.saveDataCallSupplier(call, newSupplier);
         } else {
           values.participateInCall = false;
           values.lockedByModification = true;

@@ -29,6 +29,7 @@ class SupplierContainer extends Component {
 
 const mapStateToProps = state => ({
   supplier: state.supplier.supplier,
+  changeIdCompanySize: state.supplier.changeIdCompanySize,
   call: state.supplier.call,
   participateInCall: state.supplier.participateInCall,
   supplies: state.supplier.supply,
