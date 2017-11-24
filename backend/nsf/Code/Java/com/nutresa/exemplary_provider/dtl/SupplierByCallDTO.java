@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.Date;
+
 import com.google.gson.annotations.Expose;
 
 public class SupplierByCallDTO {
@@ -18,9 +20,11 @@ public class SupplierByCallDTO {
     @Expose
     private boolean lockedByModification;
     @Expose
+    private Date notifiedLocked;
+    @Expose
     private String oldIdCompanySize;
     @Expose
-    private String state = "SUPPLIER";
+    private String state = "DOING";
 
     public String getIdCall() {
         return idCall;
@@ -88,6 +92,14 @@ public class SupplierByCallDTO {
 
     public String getId() {
         return id;
+    }
+
+    public Date getNotifiedLocked() {
+        return notifiedLocked;
+    }
+
+    public void setNotifiedLocked(Date notifiedLocked) {
+        this.notifiedLocked = notifiedLocked;
     }
 
 }
