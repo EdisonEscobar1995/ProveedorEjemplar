@@ -196,7 +196,7 @@ public abstract class GenericDAO<T> {
         }
         if (null == value) {
             value = document.getItemValue(name, type);
-            if (null == value && type.getSimpleName().equals("List")) {
+            if (null == value && "List".equals(type.getSimpleName())) {
                 value = new ArrayList<T>();
             }
         }

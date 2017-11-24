@@ -43,6 +43,9 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         try {
             View currentView = getDatabase().getView("vwDimensionsAndCriterionsBySurvey");
             ViewNavigator navigatorDimension = currentView.createViewNavFromCategory(idSurvey);
+            if (navigatorDimension == null) {
+                return response;
+            }
             ViewEntry entryDimension = navigatorDimension.getFirst();
             ViewEntry entryCriterions;
             ViewNavigator navigatorCriterions;
@@ -56,7 +59,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
                     flag = true;
                 }
                 entryDimension = navigatorDimension.getNextSibling();
-            } while (entryDimension != null && flag);
+            } while (entryDimension != null && !flag);
 
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
@@ -78,15 +81,17 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
     public List<QuestionDTO> getQuestionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         OptionDAO optionDAO = new OptionDAO();
+        AnswerDAO answerDAO = new AnswerDAO();
         try {
             View currentView = getDatabase().getView("vwQuestionsBySurvey");
-            ArrayList<String> filter = new ArrayList<String>();
-            filter.add(idSurvey);
-            filter.add(idDimension);
-            DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+            ArrayList<String> fiterBySurveyAndDimension = new ArrayList<String>();
+            fiterBySurveyAndDimension.add(idSurvey);
+            fiterBySurveyAndDimension.add(idDimension);
+            DocumentCollection documents = currentView.getAllDocumentsByKey(fiterBySurveyAndDimension, true);
             for (Document document : documents) {
                 QuestionDTO question = castDocument(document);
                 question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
+                question.setAnswer(answerDAO.getAnswerBySurvey(idSurvey, question.getId()));
                 response.add(question);
             }
         } catch (Exception exception) {
