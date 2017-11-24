@@ -1,5 +1,7 @@
 import React from 'react';
-import { Row, Col, Form, Input, Select, Radio, Upload, Button, Icon } from 'antd';
+import {
+  Row, Col, Form, Input, Select, Radio, Upload, Button, Icon, DatePicker,
+} from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
@@ -36,12 +38,17 @@ function DinamicForm({ content, getFieldDecorator }) {
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
                 span = span || 24;
                 switch (type) {
+                  case 'date':
                   case 'input':
                   case 'textarea':
                   case 'radio':
                   case 'select': {
                     let fieldContent;
                     switch (type) {
+                      case 'date': {
+                        fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} />;
+                        break;
+                      }
                       case 'input':
                         fieldContent = <Input disabled={disabled} type={inputType || 'text'} />;
                         break;
