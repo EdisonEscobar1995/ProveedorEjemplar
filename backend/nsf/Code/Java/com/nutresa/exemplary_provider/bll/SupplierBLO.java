@@ -16,38 +16,27 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierDTO supplier = null;
         dto.autoSetIdDocuments();
         dto.autoSetIdAttachedFinancialReport();
-        try {
-            supplier = dao.get(dto.getId());
-            if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
-                SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-                supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
-                NotificationBLO notificationBLO = new NotificationBLO();
-                notificationBLO.notifyChangeCompanySize();
-            }
+        supplier = dao.get(dto.getId());
+        if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
+            NotificationBLO notificationBLO = new NotificationBLO();
+            notificationBLO.notifyChangeCompanySize();
+        }
 
-            dto = dao.update(dto.getId(),dto);
-            if (null != dto.getPrincipalCustomer()) {
-                CustomerBLO customer = new CustomerBLO();
-                dto.setPrincipalCustomer(customer.saveList(dto.getPrincipalCustomer(), "id" + dao.getEntity(), dto
-                        .getId()));
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
+        dto = dao.update(dto.getId(), dto);
+        if (null != dto.getPrincipalCustomer()) {
+            CustomerBLO customer = new CustomerBLO();
+            dto.setPrincipalCustomer(customer.saveList(dto.getPrincipalCustomer(), "id" + dao.getEntity(), dto
+                            .getId()));
         }
 
         return dto;
     }
 
     public SupplierDTO getSupplierInSession() throws HandlerGenericException {
-        SupplierDTO supplier = null;
         SupplierDAO dao = new SupplierDAO();
-        try {
-            supplier = dao.getSupplierInDirectory();
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return supplier;
+        return dao.getSupplierInDirectory();
     }
 
     public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension)
@@ -55,12 +44,13 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         QuestionsBySurveyDTO response = new QuestionsBySurveyDTO();
         CriterionBLO criterionBLO = new CriterionBLO();
         QuestionBLO questionsBLO = new QuestionBLO();
-        try {
-            response.setCriterion(criterionBLO.getCriterionsBySurvey(idSurvey, idDimension));
-            response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
-        }
+        response.setCriterion(criterionBLO.getCriterionsBySurvey(idSurvey, idDimension));
+        response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
         return response;
+    }
+
+    public SupplierDTO update(SupplierDTO supplier) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        return supplierDAO.update(supplier.getId(), supplier);
     }
 }
