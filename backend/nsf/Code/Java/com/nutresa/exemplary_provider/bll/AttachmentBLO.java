@@ -28,13 +28,12 @@ public class AttachmentBLO {
         List<AttachmentDTO> response = new ArrayList<AttachmentDTO>();
         AttachmentDAO attachmentDAO = new AttachmentDAO();
         for (String idDocument : idDocuements) {
-            response.add(attachmentDAO.get(idDocument));
+            AttachmentDTO document = attachmentDAO.get(idDocument);
+            if(null != document){
+                response.add(document);
+            }
         }
-
-        if (response.size() == 0) {
-            response = null;
-        }
-
+        
         return response;
     }
 
