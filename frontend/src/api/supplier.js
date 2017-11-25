@@ -22,7 +22,8 @@ function saveDataSuppliertApi(data) {
 }
 
 function getModifiedSuppliersApi() {
-  return instance.get('Supplier?action=getModifiedSuppliers');
+  // return instance.get('Supplier?action=getModifiedSuppliers');
+  return instance.get('modifiedSuppliers.php');
 }
 
 export {
