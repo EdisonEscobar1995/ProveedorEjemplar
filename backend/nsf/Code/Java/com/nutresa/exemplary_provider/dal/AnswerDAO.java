@@ -44,7 +44,10 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         List<AttachmentDTO> response = new ArrayList<AttachmentDTO>();
         AttachmentDAO attachmentDAO = new AttachmentDAO();
         for (String idDocument : answers.getIdAttachment()) {
-            response.add(attachmentDAO.get(idDocument));
+            AttachmentDTO document = attachmentDAO.get(idDocument);
+            if (null != document) {
+                response.add(document);
+            }
         }
         return response;
     }
@@ -67,7 +70,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         try {
             View currentView = getDatabase().getView("vwAnswersBySupplierByCall");
             DocumentCollection documents = currentView.getAllDocumentsByKey(idSupplierByCall, true);
-            if (documents != null) {
+            if (null != documents) {
                 documents.removeAll(true);
             }
         } catch (Exception exception) {

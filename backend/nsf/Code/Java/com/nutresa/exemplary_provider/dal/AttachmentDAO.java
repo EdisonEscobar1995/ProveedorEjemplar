@@ -66,7 +66,7 @@ public class AttachmentDAO {
 
     private AttachmentDTO castDocument(Document document) {
         AttachmentDTO dto = new AttachmentDTO();
-        if (document != null) {
+        if (null != document) {
             dto.setId(document.getItemValueString("id"));
             dto.setUrl(getAttachmentUrl(document));
             dto.setName(getFileName(document));

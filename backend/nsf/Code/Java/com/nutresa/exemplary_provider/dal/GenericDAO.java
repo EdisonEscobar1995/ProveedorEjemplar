@@ -51,7 +51,7 @@ public abstract class GenericDAO<T> {
         this.entityForm = PREFIX_FORM + entity;
         this.entityView = PREFIX_VIEW + entity + "s";
     }
-    
+
     public T get(String id) throws HandlerGenericException {
         View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
@@ -83,11 +83,11 @@ public abstract class GenericDAO<T> {
         filter.put(field, value);
         return getBy(filter);
     }
-    
+
     public List<Object> getFieldAll(int column) throws HandlerGenericException {
         return getFieldAll(column, entityView);
     }
-        
+
     public List<Object> getFieldAll(int column, String defaultView) throws HandlerGenericException {
         List<Object> list;
         View view = database.getView(defaultView);
@@ -98,7 +98,7 @@ public abstract class GenericDAO<T> {
         }
         return list;
     }
-    
+
     public List<List<Object>> getFieldsAll(int[] columns, String defaultView) throws HandlerGenericException {
         List<List<Object>> list = new ArrayList<List<Object>>();
         View view = database.getView(defaultView);
@@ -111,7 +111,6 @@ public abstract class GenericDAO<T> {
         }
         return list;
     }
-    
 
     public List<T> getAll() throws HandlerGenericException {
         return getAll(entityView);
@@ -159,7 +158,7 @@ public abstract class GenericDAO<T> {
         filter.put(field, value);
         return getAllBy(filter, defaultView);
     }
-    
+
     protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters)
             throws HandlerGenericException {
         List<T> list = new ArrayList<T>();
@@ -189,7 +188,7 @@ public abstract class GenericDAO<T> {
     protected T castDocument(Document document) throws HandlerGenericException {
         T result = null;
         try {
-            if (document != null) {
+            if (null != document) {
                 result = this.dtoClass.newInstance();
                 List<Field> fields = new ArrayList();
                 for (Field field : Common.getAllFields(fields, this.dtoClass)) {
@@ -280,7 +279,7 @@ public abstract class GenericDAO<T> {
     public T saveProfile(T dto) throws HandlerGenericException {
         View vw = database.getView(this.entityView);
         Document document = vw.getFirstDocumentByKey(this.entityForm, true);
-        if (document == null) {
+        if (null != document) {
             dto = this.save(dto);
         } else {
             dto = this.saveDocument(document, dto, false);
@@ -329,7 +328,7 @@ public abstract class GenericDAO<T> {
         try {
             View vw = database.getView(entityView);
             Document document = vw.getFirstDocumentByKey(id, true);
-            if (document != null) {
+            if (null != document) {
                 dto = this.saveDocument(document, dto, false);
             }
         } catch (Exception exception) {
@@ -344,7 +343,7 @@ public abstract class GenericDAO<T> {
         try {
             View view = database.getView(entityView);
             Document document = view.getFirstDocumentByKey(id, true);
-            if (document != null) {
+            if (null != document) {
                 response = document.remove(true);
             }
         } catch (Exception exception) {
@@ -441,7 +440,8 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, List<Object>> getJoinIds(List<T> data, String[] idFieldsName, Class clazz) throws HandlerGenericException {
+    public Map<String, List<Object>> getJoinIds(List<T> data, String[] idFieldsName, Class clazz)
+            throws HandlerGenericException {
         Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
         Map<String, Field> listFields = new HashMap<String, Field>();
 
@@ -450,7 +450,7 @@ public abstract class GenericDAO<T> {
                 Field declaredField = clazz.getDeclaredField("id" + field);
                 declaredField.setAccessible(true);
                 listFields.put(field, declaredField);
-                listIds.put(field, new ArrayList<Object>());    
+                listIds.put(field, new ArrayList<Object>());
             }
             for (T row : data) {
                 for (String field : idFieldsName) {
@@ -462,11 +462,11 @@ public abstract class GenericDAO<T> {
         }
         return listIds;
     }
-    
+
     public List<DTO> getAllByIds(List<Object> list) throws HandlerGenericException {
         return getAllByIds("id", list, false);
     }
-    
+
     public List<DTO> getAllByIds(List<Object> list, boolean uniqueIds) throws HandlerGenericException {
         return getAllByIds("id", list, uniqueIds);
     }
