@@ -19,7 +19,7 @@ import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.utils.Factory;
 
-import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -440,14 +440,14 @@ public abstract class GenericDAO<T> {
         return Common.join(query, " AND ");
     }
 
-    public Map<String, List<Object>> getJoinIds(List<T> data, String[] idFieldsName) throws HandlerGenericException {
+    @SuppressWarnings("unchecked")
+    public Map<String, List<Object>> getJoinIds(List<T> data, String[] idFieldsName, Class clazz) throws HandlerGenericException {
         Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
         Map<String, Field> listFields = new HashMap<String, Field>();
 
         try {
             for (String field : idFieldsName) {
-                
-                Field declaredField = SupplierDTO.class.getDeclaredField("id" + field);
+                Field declaredField = clazz.getDeclaredField("id" + field);
                 declaredField.setAccessible(true);
                 listFields.put(field, declaredField);
                 listIds.put(field, new ArrayList<Object>());    
@@ -461,5 +461,23 @@ public abstract class GenericDAO<T> {
             throw new HandlerGenericException(exception);
         }
         return listIds;
+    }
+    
+    public List<DTO> getAllByIds(List<Object> list) throws HandlerGenericException {
+        return getAllByIds("id", list, false);
+    }
+    
+    public List<DTO> getAllByIds(List<Object> list, boolean uniqueIds) throws HandlerGenericException {
+        return getAllByIds("id", list, uniqueIds);
+    }
+
+    public List<DTO> getAllByIds(String field, List<Object> list) throws HandlerGenericException {
+        return getAllByIds("id", list, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<DTO> getAllByIds(String field, List<Object> list, boolean uniqueIds) throws HandlerGenericException {
+        String ids = Common.getIdsFromList(list, uniqueIds);
+        return (List<DTO>) getAllBy(field, ids);
     }
 }

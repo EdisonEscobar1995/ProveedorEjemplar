@@ -9,6 +9,7 @@ import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.ModifiedSupplierDTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -65,46 +66,29 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     public ModifiedSupplierDTO getModifiedSuppliers() throws HandlerGenericException {
         List<Object> listIds;
         SupplierDAO SupplierDAO = new SupplierDAO(); 
-        Map<String, List<DTO>> response = new HashMap<String, List<DTO>>();
-        
-        ModifiedSupplierDTO response2 = new ModifiedSupplierDTO();
+        SupplierByCallBLO SupplierByCallBLO = new SupplierByCallBLO(); 
+        Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
+        ModifiedSupplierDTO response = new ModifiedSupplierDTO();
         
         try {
+            List<SupplierByCallDTO> supplierByCall = SupplierByCallBLO.getAll();
             listIds = SupplierDAO.getFieldAll(1, "vwSuppliersByCallModified");
             String ids = Common.getIdsFromList(listIds);
             List<SupplierDTO> suppliers = SupplierDAO.getAllBy("id", ids);
             String[] idFieldNames = { "Category", "Country", "Supply", "CompanySize" };
-            Map<String, List<Object>> joinIds = SupplierDAO.getJoinIds(suppliers, idFieldNames);
+            Map<String, List<Object>> masterIds = SupplierDAO.getJoinIds(suppliers, idFieldNames, SupplierDTO.class);
 
-            response = getMasters(idFieldNames, joinIds);
-            response2.setSuppliers(suppliers);
-            response2.setMasters(response);
+            masters = getMasters(idFieldNames, masterIds);
+            response.setSuppliers(suppliers);
+            response.setSuppliersByCall(supplierByCall);
+            response.setMasters(masters);
             
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
-        return response2;
+        return response;
     }
     
-    private Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds) throws HandlerGenericException {
-        Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
-        
-        CategoryBLO CategoryBLO = new CategoryBLO();
-        CountryBLO CountryBLO = new CountryBLO();
-        CompanySizeBLO CompanySizeBLO = new CompanySizeBLO();
-        SupplyBLO SupplyBLO = new SupplyBLO(); 
-
-        try {
-            masters.put("Category", CategoryBLO.getAllBy("id", Common.getIdsFromList(joinIds.get("Category"), true)));
-            masters.put("Country", CountryBLO.getAllBy("id", Common.getIdsFromList(joinIds.get("Country"), true)));
-            masters.put("CompanySize", CompanySizeBLO.getAllBy("id", Common.getIdsFromList(joinIds.get("CompanySize"), true)));
-            masters.put("Supply", SupplyBLO.getAllBy("id", Common.getIdsFromList(joinIds.get("Supply"), true)));
-        } catch (HandlerGenericException e) {
-            throw new HandlerGenericException(e);
-        }
-        return masters;
-    }
-
     public SupplierDTO update(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         return supplierDAO.update(supplier.getId(), supplier);

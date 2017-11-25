@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nutresa.exemplary_provider.dal.GenericDAO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -136,4 +137,49 @@ public class GenericBLO<T, D> {
         return response;
     }
 
+    public List<DTO> getAllByIds(List<Object> list) throws HandlerGenericException {
+        return getAllByIds("id", list, false);
+    }
+    
+    public List<DTO> getAllByIds(List<Object> list, boolean uniqueIds) throws HandlerGenericException {
+        return getAllByIds("id", list, uniqueIds);
+    }
+
+    public List<DTO> getAllByIds(String field, List<Object> list) throws HandlerGenericException {
+        return getAllByIds("id", list, false);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<DTO> getAllByIds(String field, List<Object> list, boolean uniqueIds) throws HandlerGenericException {
+        D dao;
+        List<DTO> response;
+        try {
+            dao = daoClass.newInstance();
+            
+            response = ((GenericDAO) dao).getAllByIds(field, list, uniqueIds);
+            // Method method = dao.getClass().getMethod("getAllByIds",
+            // String.class, List.class, boolean.class);
+            // response = (List<DTO>) method.invoke(field, list, uniqueIds);
+        } catch (Exception e) {
+            throw new HandlerGenericException(e);
+        }
+
+        return response;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds) throws HandlerGenericException {
+        Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
+
+        try {
+            for (String idFieldName : idFieldNames) {
+                GenericBLO blo = BloFactory.getBlo(idFieldName);
+                masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName)));
+            }
+
+        } catch (HandlerGenericException e) {
+            throw new HandlerGenericException(e);
+        }
+        return masters;
+    }
 }

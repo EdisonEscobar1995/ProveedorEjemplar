@@ -130,4 +130,10 @@ public class Common {
         return ids.toString();
     }
     
+    @SuppressWarnings("unchecked")
+    public static String getNamespace(Class<?> clazz) {
+        String name = clazz.getName();
+        String className = clazz.getSimpleName();
+        return name.substring(0, name.length() - className.length());
+    }
 }
