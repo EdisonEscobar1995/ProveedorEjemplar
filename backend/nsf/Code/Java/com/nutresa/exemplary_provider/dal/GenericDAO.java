@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.openntf.domino.Database;
@@ -32,7 +33,7 @@ public abstract class GenericDAO<T> {
 
     private static final String PREFIX_FORM = "fr";
     private static final String PREFIX_VIEW = "vw";
-    
+
     protected String indexName;
     protected Map<String, View> indexView = new HashMap<String, View>();
     protected HashMap<String, String[]> indexParameters = new HashMap<String, String[]>();
@@ -75,13 +76,13 @@ public abstract class GenericDAO<T> {
         }
         return null != document ? castDocument(document) : null;
     }
-    
+
     public T getBy(String field, String value) throws HandlerGenericException {
         Map<String, String> filter = new HashMap<String, String>();
         filter.put(field, value);
         return getBy(filter);
     }
-    
+
     public List<T> getAll() throws HandlerGenericException {
         View view = database.getView(entityView);
         List<T> list = new ArrayList<T>();
@@ -108,15 +109,15 @@ public abstract class GenericDAO<T> {
     // filter.put(name, allIds);
     // return getAllBy();
     // }
-    
+
     public List<T> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
         return getAllBy(parameters, null);
     }
-    
+
     public List<T> getAllBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
         View view = getIndexedView(parameters, defaultView);
         List<T> list;
-        if(null == view){
+        if (null == view) {
             view = database.getView(entityView);
             list = searchDocuments(view, parameters);
         } else {
@@ -125,7 +126,7 @@ public abstract class GenericDAO<T> {
         }
         return list;
     }
-    
+
     public List<T> getAllBy(String field, String value) throws HandlerGenericException {
         return getAllBy(field, value, null);
     }
@@ -135,11 +136,12 @@ public abstract class GenericDAO<T> {
         filter.put(field, value);
         return getAllBy(filter, defaultView);
     }
-    
-    protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters) throws HandlerGenericException {
+
+    protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters)
+            throws HandlerGenericException {
         List<T> list = new ArrayList<T>();
         DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
-        
+
         for (Document document : documents) {
             list.add((T) this.castDocument(document));
         }
@@ -185,7 +187,8 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getValue(Document document, String name, Class<?> type) throws IllegalAccessException, InstantiationException {
+    public static <T> T getValue(Document document, String name, Class<?> type) throws IllegalAccessException,
+            InstantiationException {
         Object value = null;
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
@@ -195,14 +198,19 @@ public abstract class GenericDAO<T> {
             value = getPrimitiveValue(type, numberValue);
         }
         if (null == value) {
-            value = document.getItemValue(name, type);
+            if (type == List.class) {
+                value = document.getItemValue(name, Vector.class);
+            } else {
+                value = document.getItemValue(name, type);
+            }
+            
             if (null == value && "List".equals(type.getSimpleName())) {
                 value = new ArrayList<T>();
             }
         }
         return (T) value;
     }
-    
+
     public static boolean isList() {
 
         return true;
@@ -268,7 +276,7 @@ public abstract class GenericDAO<T> {
                 id = document.getUniversalID();
             }
 
-            List<Field> fields = new ArrayList();         
+            List<Field> fields = new ArrayList();
             for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                 field.setAccessible(true);
                 document.replaceItemValue(field.getName(), field.get(dto));
@@ -322,7 +330,7 @@ public abstract class GenericDAO<T> {
         }
         return response;
     }
-    
+
     public Database getDatabase() {
         return database;
     }
@@ -334,7 +342,7 @@ public abstract class GenericDAO<T> {
     public String getEntity() {
         return entity;
     }
-    
+
     protected View getIndexedView(Map<String, String> parameters, String defaultView) {
         View indexedView = null;
         indexName = getIndexName(parameters);
@@ -346,7 +354,7 @@ public abstract class GenericDAO<T> {
                 Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
                 if (validateColumnsInView(columns, parameterKeys)) {
                     indexedView = view;
-                    if(null != defaultView){
+                    if (null != defaultView) {
                         indexView.put(indexName, view);
                     }
                     break;
@@ -357,11 +365,11 @@ public abstract class GenericDAO<T> {
         }
         return indexedView;
     }
-    
+
     protected String getIndexName(Map<String, String> parameters) {
         return parameters.keySet().toString();
     }
-    
+
     protected boolean validateColumnsInView(ArrayList<ViewColumn> columns, Set<String> keys) {
         String[] indexColumns = new String[keys.size()];
         String columnName;
@@ -377,7 +385,7 @@ public abstract class GenericDAO<T> {
         }
         return indexParameters.containsKey(indexName);
     }
-    
+
     protected ArrayList<String> getIndexedParameters(View view, Map<String, String> parameters) {
         ArrayList<String> indexedParameters = new ArrayList<String>();
         if (!indexParameters.containsKey(indexName)) {
