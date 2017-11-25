@@ -108,4 +108,26 @@ public class Common {
         return "http" + (request.isSecure() ? "s" : "") + "://" + host + path;
     }
 
+    public static String getIdsFromList(List<Object> list) {
+        return getIdsFromList(list, false);
+    }
+
+    public static String getIdsFromList(List<Object> list, boolean uniqueIds) {
+        int size = list.size();
+        if (null == list || 0 == size || (!list.get(0).getClass().isPrimitive() && !(list.get(0) instanceof String))) {
+            return "";
+        }
+        StringBuilder ids = new StringBuilder();
+        ids.append(list.get(0));
+        if (size > 1) {
+            for (int i = 1; i < size; i++) {
+                Object value = list.get(i);
+                if (null != value || (!uniqueIds && ids.indexOf((String) value) == -1)) {
+                    ids.append("|" + value);
+                }
+            }
+        }
+        return ids.toString();
+    }
+    
 }

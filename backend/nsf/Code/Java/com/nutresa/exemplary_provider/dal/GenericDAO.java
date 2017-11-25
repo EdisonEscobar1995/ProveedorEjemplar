@@ -18,6 +18,7 @@ import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.utils.Factory;
 
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -49,7 +50,7 @@ public abstract class GenericDAO<T> {
         this.entityForm = PREFIX_FORM + entity;
         this.entityView = PREFIX_VIEW + entity + "s";
     }
-
+    
     public T get(String id) throws HandlerGenericException {
         View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
@@ -82,8 +83,40 @@ public abstract class GenericDAO<T> {
         return getBy(filter);
     }
     
+    public List<Object> getFieldAll(int column) throws HandlerGenericException {
+        return getFieldAll(column, entityView);
+    }
+        
+    public List<Object> getFieldAll(int column, String defaultView) throws HandlerGenericException {
+        List<Object> list;
+        View view = database.getView(defaultView);
+        if (null != view) {
+            list = view.getColumnValues(column);
+        } else {
+            throw new HandlerGenericException("View " + entityView + " not found");
+        }
+        return list;
+    }
+    
+    public List<List<Object>> getFieldsAll(int[] columns, String defaultView) throws HandlerGenericException {
+        List<List<Object>> list = new ArrayList<List<Object>>();
+        View view = database.getView(defaultView);
+        if (null != view) {
+            for (int column : columns) {
+                list.add(view.getColumnValues(column));
+            }
+        } else {
+            throw new HandlerGenericException("View " + entityView + " not found");
+        }
+        return list;
+    }
+    
     public List<T> getAll() throws HandlerGenericException {
-        View view = database.getView(entityView);
+        return getAll(entityView);
+    }
+
+    public List<T> getAll(String defaultView) throws HandlerGenericException {
+        View view = database.getView(defaultView);
         List<T> list = new ArrayList<T>();
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
@@ -98,17 +131,6 @@ public abstract class GenericDAO<T> {
         return list;
     }
 
-    // public List<T> getAllKeys(Collection ids){
-    // return getAllByIds("id", ids);
-    // }
-
-    // public List<T> getAllByIds(String name, Collection ids){
-    // String allIds = ;
-    // HashMap<String, String> filter = new HashMap<String, String>();
-    // filter.put(name, allIds);
-    // return getAllBy();
-    // }
-    
     public List<T> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
         return getAllBy(parameters, null);
     }
@@ -137,7 +159,7 @@ public abstract class GenericDAO<T> {
     }
     
     protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters) throws HandlerGenericException {
-        List<T> list = new ArrayList<T>();
+        List<T> list = (List<T>) new ArrayList<T>();
         DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
         
         for (Document document : documents) {
@@ -409,4 +431,40 @@ public abstract class GenericDAO<T> {
         }
         return Common.join(query, " AND ");
     }
+
+    public Map<String, List<Object>> getJoinIds(List<T> data, String[] idFieldsName) throws HandlerGenericException {
+        Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
+        Map<String, Field> listFields = new HashMap<String, Field>();
+
+        try {
+            for (String field : idFieldsName) {
+                
+                Field declaredField = SupplierDTO.class.getDeclaredField("id" + field);
+                declaredField.setAccessible(true);
+                listFields.put(field, declaredField);
+                listIds.put(field, new ArrayList<Object>());    
+            }
+            for (T row : data) {
+                for (String field : idFieldsName) {
+                    listIds.get(field).add(listFields.get(field).get(row));
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return listIds;
+    }
+
+    protected Object loadMultiplesIds() {
+        // String namespace = "com.nutresa.exemplary_provider.dal.";
+        // for(String field : fields){
+        // GenericDAO c = Class.forName(namespace + field +
+        // "DAO").newInstance();
+        // c.getAllBy("id", )
+        // }
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    
 }
