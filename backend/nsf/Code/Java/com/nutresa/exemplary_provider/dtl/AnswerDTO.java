@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -109,8 +110,13 @@ public class AnswerDTO {
         return idAttachment;
     }
 
-    public void setIdAttachment(List<String> idAttachment) {
-        this.idAttachment = idAttachment;
+    public void autoSetIdAttachment() {
+        this.idAttachment = new ArrayList<String>();
+        if (null != this.attachment) {
+            for (AttachmentDTO document : this.attachment) {
+                this.idAttachment.add(document.getId());
+            }
+        }
     }
 
     public List<AttachmentDTO> getAttachment() {

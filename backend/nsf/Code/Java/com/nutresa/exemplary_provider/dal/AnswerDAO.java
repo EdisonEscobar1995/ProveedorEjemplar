@@ -8,6 +8,7 @@ import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
+import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AnswerDAO extends GenericDAO<AnswerDTO> {
@@ -27,7 +28,9 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
             DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
             if (documents != null) {
                 for (Document document : documents) {
-                    response.add(castDocument(document));
+                    AnswerDTO answer = castDocument(document);
+                    answer.setAttachment(getAttachmentByAnswer(answer));
+                    response.add(answer);
                 }
             }
         } catch (Exception exception) {
@@ -37,9 +40,19 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         return response;
     }
 
+    private List<AttachmentDTO> getAttachmentByAnswer(AnswerDTO answers) {
+        List<AttachmentDTO> response = new ArrayList<AttachmentDTO>();
+        AttachmentDAO attachmentDAO = new AttachmentDAO();
+        for (String idDocument : answers.getIdAttachment()) {
+            response.add(attachmentDAO.get(idDocument));
+        }
+        return response;
+    }
+
     @Override
     public AnswerDTO save(AnswerDTO answer) throws HandlerGenericException {
         AnswerDTO response = null;
+        answer.autoSetIdAttachment();
         if (answer.getId().isEmpty() || answer.getId() == null) {
             response = super.save(answer);
         } else {
