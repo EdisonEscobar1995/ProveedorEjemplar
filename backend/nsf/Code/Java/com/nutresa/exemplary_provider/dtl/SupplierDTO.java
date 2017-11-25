@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -477,6 +478,7 @@ public class SupplierDTO {
     }
 
     public void autoSetIdDocuments() {
+        this.idDocuments = new ArrayList<String>();
         for (AttachmentDTO attachment : this.document) {
             this.idDocuments.add(attachment.getId());
         }
@@ -495,6 +497,7 @@ public class SupplierDTO {
     }
 
     public void autoSetIdAttachedFinancialReport() {
+        this.idAttachedFinancialReport = new ArrayList<String>();
         for (AttachmentDTO attachment : this.attachedFinancialReport) {
             this.idAttachedFinancialReport.add(attachment.getId());
         }

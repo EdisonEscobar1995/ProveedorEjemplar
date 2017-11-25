@@ -9,8 +9,10 @@ import {
   GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
   SAVE_DATA_SUPPLIER_CALL_SUCCESS,
   SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
+  SAVE_DATA_ANSWER_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
+  UPDATE_DOCUMENTS,
 } from './const';
 
 const initialState = {
@@ -50,6 +52,10 @@ function supplierApp(state = initialState, action) {
         companyTypes: action.companyTypes,
         societyTypes: action.societyTypes,
         countries: action.countries,
+        categories: action.categories,
+        subcategories: action.subcategories,
+        departments: action.departments,
+        cities: action.cities,
         loading: false,
       };
     }
@@ -57,7 +63,6 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         categories: action.categories,
-        supplier: action.supplier,
         subcategories: [],
         loading: false,
       };
@@ -70,7 +75,6 @@ function supplierApp(state = initialState, action) {
     case GET_DATA_DEPARTMENTS_SUCCESS:
       return {
         ...state,
-        supplier: action.supplier,
         departments: action.departments,
         cities: [],
         loading: false,
@@ -108,10 +112,20 @@ function supplierApp(state = initialState, action) {
         supplier: action.supplier,
         loading: false,
       };
+    case SAVE_DATA_ANSWER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
     case CHANGE_PARTICIPATE:
       return {
         ...state,
         participateInCall: action.participateInCall,
+      };
+    case UPDATE_DOCUMENTS:
+      return {
+        ...state,
+        supplier: action.supplier,
       };
     default: {
       return state;

@@ -5,6 +5,7 @@ import {
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
+import message from '../shared/Message';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -15,7 +16,7 @@ const ParagraphStyle = styled.p`
   margin-bottom: ${props => props.theme.spaces.main};
 `;
 
-function DinamicForm({ content, getFieldDecorator }) {
+function DinamicForm({ content, getFieldDecorator, setFields }) {
   return (
     <div>
       {
@@ -34,6 +35,8 @@ function DinamicForm({ content, getFieldDecorator }) {
                   required,
                   handleChange,
                   disabled,
+                  format,
+                  rules = [],
                 } = current;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
                 span = span || 24;
@@ -46,7 +49,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                     let fieldContent;
                     switch (type) {
                       case 'date': {
-                        fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} />;
+                        fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} format={format} />;
                         break;
                       }
                       case 'input':
@@ -55,14 +58,23 @@ function DinamicForm({ content, getFieldDecorator }) {
                       case 'textarea':
                         fieldContent = <TextArea disabled={disabled} />;
                         break;
-                      case 'select':
+                      case 'select': {
+                        const { valuesToClean, mode } = current;
                         fieldContent = (
                           <Select
                             disabled={disabled}
                             showSearch
+                            mode={mode}
                             allowClear
                             notFoundContent="No se encontraron resultados"
-                            onChange={handleChange}
+                            onChange={(selectValue) => {
+                              if (valuesToClean) {
+                                setFields(valuesToClean);
+                              }
+                              if (handleChange) {
+                                handleChange(selectValue);
+                              }
+                            }}
                           >
                             {
                               options.map(option => (
@@ -70,6 +82,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                               ))
                             }
                           </Select>);
+                      }
                         break;
                       case 'radio':
                         fieldContent = (<Group disabled={disabled}>
@@ -88,7 +101,10 @@ function DinamicForm({ content, getFieldDecorator }) {
                       <Field label={label}>
                         <Item>
                           {getFieldDecorator(key, {
-                            rules: [{ required, message: 'Por favor diligencia el campo' }],
+                            rules: [
+                              { required, message: 'Por favor diligencia el campo' },
+                              ...rules,
+                            ],
                             initialValue: value,
                           })(
                             fieldContent,
@@ -104,7 +120,7 @@ function DinamicForm({ content, getFieldDecorator }) {
                     );
                     break;
                   case 'upload': {
-                    const { name, action, headers } = current;
+                    const { name, action, headers, onChange } = current;
                     rowValue = (
                       <Field label={label}>
                         <Upload
@@ -112,7 +128,28 @@ function DinamicForm({ content, getFieldDecorator }) {
                           action={action}
                           disabled={disabled}
                           accept=".doc, .png, .jpg, .jpeg, .pdf, .ppt"
-                          onChange={reponse => console.log(reponse)}
+                          onChange={(info) => {
+                            const { file } = info;
+                            const messageConfig = { text: '', type: 'error' };
+                            if (file.status === 'done') {
+                              const { status, data } = file.response;
+                              if (status) {
+                                messageConfig.text = `${file.name} archivo cargado exitosamente`;
+                                messageConfig.type = 'success';
+                                message(messageConfig);
+                                if (onChange) {
+                                  console.log(info);
+                                  onChange(data);
+                                }
+                              } else {
+                                messageConfig.text = `${file.name} fallo en la carga`;
+                                message(messageConfig);
+                              }
+                            } else if (file.status === 'error') {
+                              messageConfig.text = `${file.name} fallo en la carga`;
+                              message(messageConfig);
+                            }
+                          }}
                           headers={headers}
                           multiple
                         >

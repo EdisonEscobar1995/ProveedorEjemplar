@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
+import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.ModifiedSupplierDTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
@@ -23,38 +24,32 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierDTO supplier = null;
         dto.autoSetIdDocuments();
         dto.autoSetIdAttachedFinancialReport();
-        try {
-            supplier = dao.get(dto.getId());
-            if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
-                SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-                supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
-                NotificationBLO notificationBLO = new NotificationBLO();
-                notificationBLO.notifyChangeCompanySize();
-            }
+        supplier = dao.get(dto.getId());
+        if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
+            NotificationBLO notificationBLO = new NotificationBLO();
+            notificationBLO.notifyChangeCompanySize();
+        }
 
-            dto = dao.update(dto.getId(),dto);
-            if (null != dto.getPrincipalCustomer()) {
-                CustomerBLO customer = new CustomerBLO();
-                dto.setPrincipalCustomer(customer.saveList(dto.getPrincipalCustomer(), "id" + dao.getEntity(), dto
-                        .getId()));
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
+        dto = dao.update(dto.getId(), dto);
+        if (null != dto.getPrincipalCustomer()) {
+            CustomerBLO customer = new CustomerBLO();
+            dto
+                    .setPrincipalCustomer(customer.saveList(dto.getPrincipalCustomer(), "id" + dao.getEntity(), dto
+                            .getId()));
         }
 
         return dto;
     }
 
     public SupplierDTO getSupplierInSession() throws HandlerGenericException {
-        SupplierDTO supplier = null;
+        SupplierDTO response = null;
         SupplierDAO dao = new SupplierDAO();
-        try {
-            supplier = dao.getSupplierInDirectory();
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return supplier;
+        response = dao.getSupplierInDirectory();
+        response.setDocument(getDocuments(response.getIdDocuments()));
+        response.setAttachedFinancialReport(getDocuments(response.getIdAttachedFinancialReport()));
+        return response;
     }
 
     public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension)
@@ -62,12 +57,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         QuestionsBySurveyDTO response = new QuestionsBySurveyDTO();
         CriterionBLO criterionBLO = new CriterionBLO();
         QuestionBLO questionsBLO = new QuestionBLO();
-        try {
-            response.setCriterion(criterionBLO.getCriterionsBySurvey(idSurvey, idDimension));
-            response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
-        }
+        response.setCriterion(criterionBLO.getCriterionsBySurvey(idSurvey, idDimension));
+        response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
         return response;
     }
 
@@ -112,5 +103,15 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             throw new HandlerGenericException(e);
         }
         return masters;
+    }
+
+    public SupplierDTO update(SupplierDTO supplier) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        return supplierDAO.update(supplier.getId(), supplier);
+    }
+
+    private List<AttachmentDTO> getDocuments(List<String> idDocuements) {
+        AttachmentBLO attachmentBLO = new AttachmentBLO();
+        return attachmentBLO.getDocuments(idDocuements);
     }
 }

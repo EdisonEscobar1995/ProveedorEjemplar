@@ -8,6 +8,7 @@ import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
@@ -67,5 +68,30 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         return response;
 
+    }
+
+    public SupplierByCallDTO unlockSupplier(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
+        SupplierByCallDTO response = null;
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        SupplierBLO supplierBLO = new SupplierBLO();
+        NotificationBLO notification = new NotificationBLO();
+        SupplierDTO supplier = null;
+        try {
+            SupplierByCallDTO currentSupplierByCall = get(supplierByCall.getId());
+            currentSupplierByCall.setLockedByModification(false);
+            currentSupplierByCall.setDateLocked(new Date());
+            supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
+            if (!supplierByCall.getOldIdCompanySize().equals(supplier.getIdCompanySize())) {
+                currentSupplierByCall.setOldIdCompanySize(supplier.getIdCompanySize());
+                supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
+                supplierBLO.update(supplier);
+            }
+            response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
+            notification.notifyToSupplierForContinue(supplier.getEmail());
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
     }
 }

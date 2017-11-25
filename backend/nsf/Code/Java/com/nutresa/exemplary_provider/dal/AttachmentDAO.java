@@ -69,16 +69,20 @@ public class AttachmentDAO {
         if (document != null) {
             dto.setId(document.getItemValueString("id"));
             dto.setUrl(getAttachmentUrl(document));
+            dto.setName(getFileName(document));
         }
         return dto;
     }
 
     private String getAttachmentUrl(Document document) {
         String url = Common.buildPathResource();
-        url += "/" + entityView + "/" + document.getUniversalID() + "/$FILE" + "/"
-                + session.evaluate("@AttachmentNames", document).elementAt(0);
+        url += "/" + entityView + "/" + document.getUniversalID() + "/$FILE" + "/" + getFileName(document);
 
         return url;
+    }
+
+    private String getFileName(Document document) {
+        return (String) session.evaluate("@AttachmentNames", document).elementAt(0);
     }
 
     private void processUploadedFile(FileItem item, MIMEEntity mime) throws HandlerGenericException {

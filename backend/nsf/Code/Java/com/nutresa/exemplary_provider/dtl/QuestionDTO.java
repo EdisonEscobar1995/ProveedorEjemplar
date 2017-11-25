@@ -26,7 +26,7 @@ public class QuestionDTO {
     @Expose
     private List<String> dependOfAnswerIds;
     @Expose
-    private QuestionDTO dependOfQuestion;
+    private String dependOfQuestion;
     @Expose
     private List<AnswerDTO> answer;
 
@@ -102,11 +102,11 @@ public class QuestionDTO {
         this.dependOfAnswerIds = dependOfAnswerIds;
     }
 
-    public QuestionDTO getDependOfQuestion() {
+    public String getDependOfQuestion() {
         return dependOfQuestion;
     }
 
-    public void setDependOfQuestion(QuestionDTO dependOfQuestion) {
+    public void setDependOfQuestion(String dependOfQuestion) {
         this.dependOfQuestion = dependOfQuestion;
     }
 

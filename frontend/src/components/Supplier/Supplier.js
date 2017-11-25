@@ -17,25 +17,44 @@ class Supplier extends Component {
     const steps = [
       {
         name: 'Informacion General',
-        content: <GeneralForm next={this.next} {...this.props} />,
+        content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
       },
       {
         name: 'Informacion Comercial',
-        content: <ComercialForm next={this.next} {...this.props} />,
+        content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
       },
     ];
-    const mapDimensions = dimensions.map(dimension => (
-      {
+    const mapDimensions = dimensions.map((dimension) => {
+      const { call, getQuestionsByDimension, saveAnswer } = this.props;
+      const { id, idSurvey } = call;
+      return {
         name: dimension.name,
         content: <Question
+          key={dimension.id}
           idDimension={dimension.id}
-          idSurvey={this.props.call.idSurvey}
+          idSurvey={idSurvey}
+          idCall={id}
           criterions={dimension.criterions}
-          getQuestionsByDimension={this.props.getQuestionsByDimension}
+          getQuestionsByDimension={getQuestionsByDimension}
+          saveAnswer={saveAnswer}
         />,
-      }
-    ));
+      };
+    });
     return steps.concat(mapDimensions);
+  }
+  save = (values) => {
+    if (this.props.participateInCall) {
+      // this.props.next();
+      const { call, supplier } = { ...this.props };
+      let newSupplier = { ...supplier };
+      newSupplier = Object.assign(newSupplier, values);
+      call.participateInCall = true;
+      this.props.saveDataCallSupplier(call, newSupplier);
+    } else {
+      values.participateInCall = false;
+      values.lockedByModification = true;
+      this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
+    }
   }
   next = () => {
     const current = this.state.current + 1;

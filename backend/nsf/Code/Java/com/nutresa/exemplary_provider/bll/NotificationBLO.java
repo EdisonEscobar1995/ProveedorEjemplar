@@ -86,4 +86,15 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         }
     }
 
+    public void notifyToSupplierForContinue(List<String> email) throws HandlerGenericException {
+        try {
+            NotificationDAO notificationDAO = new NotificationDAO();
+            NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+            sendNotification(email, notification);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+    }
+
 }
