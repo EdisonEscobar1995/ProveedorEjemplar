@@ -3,7 +3,7 @@ import { Table } from 'antd';
 
 function ModifiedSuppliers(props) {
   const { data, loading } = props;
-  const { suppliers, categories } = data;
+  const { Suppliers, Masters } = data;
 
   const columns = [{
     title: 'Nombre del proveedor',
@@ -29,15 +29,14 @@ function ModifiedSuppliers(props) {
     dataIndex: 'idCategory',
     key: 'idCategory',
     render(text, record) {
-      const filter = categories.filter(category => category.id === record.idCategory);
-      return filter[0].name;
+      return Masters.Category.find(category => category.id === record.idCategory).name;
     },
   }, {
     title: 'Tamaño de empresa asignado',
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
-      return record.idCompanySize;
+      return Masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
     },
   }, {
     title: 'Tamaño de empresa actual',
@@ -60,7 +59,7 @@ function ModifiedSuppliers(props) {
       <Table
         rowKey={record => record.id}
         loading={loading}
-        dataSource={suppliers}
+        dataSource={Suppliers}
         columns={columns}
       />
     </div>
