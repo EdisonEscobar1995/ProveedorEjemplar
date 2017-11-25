@@ -1,22 +1,28 @@
-import intance from './instance';
+import instance from './instance';
 
 function getDataSuppliertApi() {
-  return intance.get('Supplier?action=loadInformation');
+  return instance.get('Supplier?action=loadInformation');
 }
 
 function getDataCallSuppliertApi() {
-  return intance.get('SupplierByCall?action=currentCall');
+  return instance.get('SupplierByCall?action=currentCall');
 }
+
 function saveDataCallBySupplierApi(data) {
-  return intance.post('SupplierByCall?action=save', data);
+  return instance.post('SupplierByCall?action=save', data);
 }
 
 function getDataQuestionsBySurverrApi(data) {
   const { idSurvey, idDimension } = data;
-  return intance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=${idSurvey}&idDimension=${idDimension}`);
+  return instance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=${idSurvey}&idDimension=${idDimension}`);
 }
+
 function saveDataSuppliertApi(data) {
-  return intance.post('Supplier?action=save', data);
+  return instance.post('Supplier?action=save', data);
+}
+
+function getModifiedSuppliersApi() {
+  return instance.get('Supplier?action=getModifiedSuppliers');
 }
 
 export {
@@ -25,4 +31,5 @@ export {
   getDataQuestionsBySurverrApi,
   saveDataCallBySupplierApi,
   saveDataSuppliertApi,
+  getModifiedSuppliersApi,
 };

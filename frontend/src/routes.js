@@ -48,6 +48,15 @@ const routes = [
       import('./pages/CallForm').then(module => module.default),
     ),
   },
+  {
+    title: 'Proveedores con cambio en el tamaño de empresa',
+    index: 6,
+    path: '/modifiedSuppliers',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ModifiedSuppliers').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

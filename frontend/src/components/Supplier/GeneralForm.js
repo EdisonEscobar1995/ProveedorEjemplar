@@ -12,20 +12,12 @@ class General extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (this.props.participateInCall) {
-          // this.props.next();
-          const { call, supplier } = { ...this.props };
-          let newSupplier = { ...supplier };
-          newSupplier = Object.assign(newSupplier, values);
-          call.participateInCall = true;
-          this.props.saveDataCallSupplier(call, newSupplier);
-        } else {
-          values.participateInCall = false;
-          values.lockedByModification = true;
-          this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
-        }
+        this.props.save(values);
       }
     });
+  }
+  saveDraft = () => {
+    this.props.save(this.props.form.getFieldsValue());
   }
   handleChange= (participateInCall) => {
     this.props.changeParticipate(participateInCall === 'si');
@@ -33,7 +25,7 @@ class General extends Component {
   render() {
     const { participateInCall, call } = this.props;
     const { lockedByModification } = call;
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, setFields } = this.props.form;
     let content = '';
     let buttons = [];
     if (participateInCall === true) {
@@ -42,22 +34,27 @@ class General extends Component {
         {
           key: 1,
           text: 'Guardar',
+          submit: false,
+          onClick: this.saveDraft,
           disabled: lockedByModification,
         },
         {
           key: 2,
           text: 'Continuar',
+          submit: true,
           disabled: lockedByModification,
         },
         {
           key: 3,
           text: 'Enviar',
+          submit: true,
           disabled: lockedByModification,
         },
       ];
       content = (
         <DinamicForm
           getFieldDecorator={getFieldDecorator}
+          setFields={setFields}
           content={fields}
         />
       );
@@ -67,12 +64,14 @@ class General extends Component {
         {
           key: 1,
           text: 'Enviar',
+          submit: true,
           disabled: lockedByModification,
         },
       ];
       content = (
         <DinamicForm
           getFieldDecorator={getFieldDecorator}
+          setFields={setFields}
           content={fields}
         />
       );
@@ -103,7 +102,8 @@ class General extends Component {
                   <Button
                     disabled={button.disabled}
                     type="primary"
-                    htmlType="submit"
+                    onClick={button.onClick}
+                    htmlType={button.submit ? 'submit' : 'button'}
                   >
                     {
                       button.text
