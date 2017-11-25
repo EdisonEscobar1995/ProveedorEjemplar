@@ -28,5 +28,22 @@ function requestApi(dispatch, loadMethod, apiMethod, clientData) {
       throw err;
     });
 }
+function requestApiNotLoading(dispatch, apiMethod, clientData) {
+  return apiMethod(clientData)
+    .then((respone) => {
+      validateResponse(respone);
+      return respone;
+    }).catch((err) => {
+      let error = err;
+      if (typeof err !== 'string') {
+        error = 'Ocurrio un error al procesar la peticion';
+      }
+      dispatch(setMessage(error, 'error'));
+      throw err;
+    });
+}
 
-export default requestApi;
+export {
+  requestApi as default,
+  requestApiNotLoading,
+};

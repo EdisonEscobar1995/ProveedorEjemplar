@@ -10,8 +10,10 @@ import {
   GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
   SAVE_DATA_SUPPLIER_CALL_SUCCESS,
   SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
+  SAVE_DATA_ANSWER_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
+  UPDATE_DOCUMENTS,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -30,7 +32,8 @@ import getDataCountriesApi from '../../api/countries';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
-import requestApi from '../../utils/actionUtils';
+import { saveAnswerApi } from '../../api/answer';
+import requestApi, { requestApiNotLoading } from '../../utils/actionUtils';
 
 
 function getDataSupplierProgress() {
@@ -48,6 +51,10 @@ function getDataSupplierSuccess(data) {
     companySizes,
     societyTypes,
     countries,
+    categories,
+    subcategories,
+    departments,
+    cities,
   } = data;
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
@@ -58,12 +65,15 @@ function getDataSupplierSuccess(data) {
     companySizes,
     societyTypes,
     countries,
+    categories,
+    subcategories,
+    departments,
+    cities,
   };
 }
-function getDataCategorySuccess(supplier, categories) {
+function getDataCategorySuccess(categories) {
   return {
     type: GET_DATA_CATEGORIES_SUCCESS,
-    supplier,
     categories,
   };
 }
@@ -79,17 +89,27 @@ function changeParticipate(participateInCall) {
     participateInCall,
   };
 }
-function getDataDepartmentsByCountrySuccess(supplier, departments) {
+function updateDocuments(document) {
+  return (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    supplier.document.push(document);
+    const newData = {
+      type: UPDATE_DOCUMENTS,
+      supplier,
+    };
+    dispatch(newData);
+  };
+}
+
+function getDataDepartmentsByCountrySuccess(departments) {
   return {
     type: GET_DATA_DEPARTMENTS_SUCCESS,
-    supplier,
     departments,
   };
 }
-function getDataCitiesByDepartmentSuccess(supplier, cities) {
+function getDataCitiesByDepartmentSuccess(cities) {
   return {
     type: GET_DATA_CITIES_SUCCESS,
-    supplier,
     cities,
   };
 }
@@ -102,12 +122,24 @@ function getDataDimensionsBySuplySuccess(dimensions) {
 
 function getDataQuestionsByDimensionSuccess(idDimension, dimensions, data) {
   const { criterion, questions } = data;
-  dimensions.filter(item => item.id === idDimension)[0].criterions = criterion.map(criteria => (
-    {
-      ...criteria,
-      questions: questions.filter(question => question.idCriterion === criteria.id),
-    }
-  ));
+  let result = [];
+  if (criterion.length > 0) {
+    result = criterion.map(criteria => (
+      {
+        ...criteria,
+        questions: questions.filter(question => question.idCriterion === criteria.id),
+      }
+    ));
+  }
+  const noCriterianQuestion = questions.filter(question => question.idCriterion === '');
+  if (noCriterianQuestion.length > 0) {
+    result.unshift({
+      name: '',
+      id: 1,
+      questions: noCriterianQuestion,
+    });
+  }
+  dimensions.filter(item => item.id === idDimension)[0].criterions = result;
   return {
     type: GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
     dimensions,
@@ -118,6 +150,19 @@ function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
+  };
+}
+function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
+  const allDimensions = [...dimensions];
+  const actualDimension = allDimensions.filter(dimension => dimension.id === idDimension)[0];
+  const actualCriterion = actualDimension.criterions
+    .filter(criteria => criteria.id === idCriterion)[0];
+  const actualQuestion = actualCriterion.questions
+    .filter(question => question.id === answer.idQuestion)[0];
+  actualQuestion.answer.push(answer);
+  return {
+    type: SAVE_DATA_ANSWER_SUCCESS,
+    dimensions: allDimensions,
   };
 }
 function saveDataCallAndSupplerSuccess(call, supplier, changeIdCompanySize) {
@@ -134,6 +179,23 @@ function getDataFailed(error) {
     type: GET_REQUEST_FAILED,
     error,
   };
+}
+
+function loadDependingOptions(dispatch, api, data, filterField, valueField) {
+  const { supplier } = data;
+  const filterValue = supplier[filterField];
+  const allData = {
+    ...data,
+  };
+  if (filterValue) {
+    return requestApiNotLoading(dispatch, api, filterValue)
+      .then((respone) => {
+        allData[valueField] = respone.data.data;
+        return allData;
+      });
+  }
+  allData[valueField] = [];
+  return allData;
 }
 
 function getDataSupplier() {
@@ -164,25 +226,10 @@ function getDataSupplier() {
         societyTypes,
         countries,
       };
-    }).then((data) => {
-      const { supplier } = data;
-      if (supplier.idCategory) {
-        const loca = getDataCategoryBySuplyApi(supplier);
-        console.log(loca);
-        console.log('Hay Category');
-      } else {
-        console.log('No Hay Category');
-      }
-      return data;
-    }).then((data) => {
-      const { supplier } = data;
-      if (supplier.idSubCategory) {
-        console.log('Hay SubCategory');
-      } else {
-        console.log('No Hay SubCategory');
-      }
-      return data;
-    })
+    }).then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
+      .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))
+      .then(data => loadDependingOptions(dispatch, getDataDepartmentsByCountryApi, data, 'idCountry', 'departments'))
+      .then(data => loadDependingOptions(dispatch, getDataCitiesByDepartmentApi, data, 'idDepartment', 'cities'))
       .then((data) => {
         dispatch(getDataSupplierSuccess(data));
       })
@@ -191,15 +238,13 @@ function getDataSupplier() {
       });
   };
 }
+
 function getDataCategoryBySuply(clientData) {
-  return (dispatch, getActualState) => {
+  return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCategoryBySuplyApi, clientData)
       .then((respone) => {
-        const supplier = { ...getActualState().supplier.supplier };
         const categories = respone.data.data;
-        supplier.idCategory = '';
-        supplier.idSubCategory = '';
-        dispatch(getDataCategorySuccess(supplier, categories));
+        dispatch(getDataCategorySuccess(categories));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
@@ -218,27 +263,22 @@ function getDataSubCategoryByCategory(clientData) {
 }
 
 function getDataDepartmentsByCountry(clientData) {
-  return (dispatch, getActualState) => {
+  return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataDepartmentsByCountryApi, clientData)
       .then((respone) => {
-        const supplier = { ...getActualState().supplier.supplier };
-        supplier.idDepartment = '';
-        supplier.idCity = '';
         const departsments = respone.data.data;
-        dispatch(getDataDepartmentsByCountrySuccess(supplier, departsments));
+        dispatch(getDataDepartmentsByCountrySuccess(departsments));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
   };
 }
 function getDataCitiesByDepartment(clientData) {
-  return (dispatch, getActualState) => {
+  return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCitiesByDepartmentApi, clientData)
       .then((respone) => {
-        const categories = respone.data.data;
-        const supplier = { ...getActualState().supplier.supplier };
-        supplier.idCategory = clientData;
-        dispatch(getDataCitiesByDepartmentSuccess(supplier, categories));
+        const cities = respone.data.data;
+        dispatch(getDataCitiesByDepartmentSuccess(cities));
       }).catch((err) => {
         dispatch(getDataFailed(err));
       });
@@ -285,6 +325,18 @@ function saveDataCallBySupplier(clientData) {
       });
   };
 }
+function saveAnswer(clientAnswer, idDimension, idCriterion) {
+  return (dispatch, getActualState) => {
+    requestApi(dispatch, getDataSupplierProgress, saveAnswerApi, clientAnswer)
+      .then((respone) => {
+        const answer = respone.data.data;
+        const dimensions = [...getActualState().supplier.dimensions];
+        dispatch(saveAnswerSuccess(dimensions, idDimension, answer, idCriterion));
+      }).catch((err) => {
+        dispatch(getDataFailed(err));
+      });
+  };
+}
 
 function saveDataCallSupplier(clientCall, clientSupplier) {
   return (dispatch, getActualState) => {
@@ -314,5 +366,7 @@ export {
   getQuestionsByDimension,
   saveDataCallBySupplier,
   saveDataCallSupplier,
+  saveAnswer,
   changeParticipate,
+  updateDocuments,
 };

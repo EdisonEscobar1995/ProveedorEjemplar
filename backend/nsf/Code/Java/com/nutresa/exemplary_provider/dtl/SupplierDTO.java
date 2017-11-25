@@ -13,11 +13,19 @@ public class SupplierDTO {
     @Expose
     private String idCompanySize;
     @Expose
+    private CompanySizeDTO companySize;
+    @Expose
     private String idSupply;
+    @Expose
+    private SupplyDTO supply;
     @Expose
     private String idCategory;
     @Expose
+    private CategoryDTO category;
+    @Expose
     private String idSubCategory;
+    @Expose
+    private SubCategoryDTO subCategory;
     private List<String> idDocuments;
     @Expose
     private List<AttachmentDTO> document;
@@ -26,9 +34,13 @@ public class SupplierDTO {
     @Expose
     private String idCompanyType;
     @Expose
+    private CompanyTypeDTO companyType;
+    @Expose
     private boolean producerLivestok;
     @Expose
     private String idSocietyType;
+    @Expose
+    private SocietyTypeDTO societyType;
     @Expose
     private short yearOfEstablishment;
     @Expose
@@ -102,6 +114,8 @@ public class SupplierDTO {
     private boolean globalAgreement;
     @Expose
     private boolean chemicalSubstance;
+    @Expose
+    private String sapCode;
 
     public String getNit() {
         return nit;
@@ -503,6 +517,62 @@ public class SupplierDTO {
 
     public String getTypeOfCurrency() {
         return typeOfCurrency;
+    }
+
+    public CompanySizeDTO getCompanySize() {
+        return this.companySize;
+    }
+
+    public void setCompanySize(CompanySizeDTO companySize) {
+        this.companySize = companySize;
+    }
+
+    public SupplyDTO getSupply() {
+        return this.supply;
+    }
+
+    public void setSupply(SupplyDTO supply) {
+        this.supply = supply;
+    }
+
+    public CategoryDTO getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
+    }
+
+    public SubCategoryDTO getSubCategory() {
+        return this.subCategory;
+    }
+
+    public void setSubCategory(SubCategoryDTO subCategory) {
+        this.subCategory = subCategory;
+    }
+
+    public CompanyTypeDTO getCompanyType() {
+        return this.companyType;
+    }
+
+    public void setCompanyType(CompanyTypeDTO companyType) {
+        this.companyType = companyType;
+    }
+
+    public SocietyTypeDTO getSocietyType() {
+        return this.societyType;
+    }
+
+    public void setSocietyType(SocietyTypeDTO societyType) {
+        this.societyType = societyType;
+    }
+
+    public void setSapCode(String sapCode) {
+        this.sapCode = sapCode;
+    }
+
+    public String getSapCode() {
+        return sapCode;
     }
 
 }

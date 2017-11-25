@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.api;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.bll.SupplierBLO;
+import com.nutresa.exemplary_provider.dtl.ModifiedSupplierDTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
@@ -38,5 +39,18 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
 
         return response;
     }
+
+    public ServletResponseDTO<ModifiedSupplierDTO> getModifiedSuppliers() {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        ServletResponseDTO<ModifiedSupplierDTO> response = null;
+        try {
+            response = new ServletResponseDTO<ModifiedSupplierDTO>(supplierBLO.getModifiedSuppliers());
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<ModifiedSupplierDTO>(exception);
+        }
+
+        return response;
+    }
+
 
 }

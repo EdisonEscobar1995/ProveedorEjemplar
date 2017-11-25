@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -63,13 +64,13 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
+    public List<DTO> getAllBy(Map<String, String> parameters) throws HandlerGenericException {
         D dao;
-        List<T> response;
+        List<DTO> response;
         try {
             dao = this.daoClass.newInstance();
             Method method = dao.getClass().getMethod("getAllBy", Map.class);
-            response = (List<T>) method.invoke(dao, parameters);
+            response = (List<DTO>) method.invoke(dao, parameters);
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
@@ -77,7 +78,7 @@ public class GenericBLO<T, D> {
         return response;
     }
 
-    public List<T> getAllBy(String field, String value) throws HandlerGenericException {
+    public List<DTO> getAllBy(String field, String value) throws HandlerGenericException {
         Map<String, String> filter = new HashMap<String, String>();
         filter.put(field, value);
         return getAllBy(filter);

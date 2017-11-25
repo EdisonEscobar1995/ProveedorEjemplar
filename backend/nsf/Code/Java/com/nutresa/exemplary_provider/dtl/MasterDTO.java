@@ -2,7 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public abstract class MasterDTO {
+public abstract class MasterDTO implements DTO {
     @Expose
     protected String id;
     @Expose
