@@ -28,8 +28,6 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         }
 
         dto = dao.update(dto.getId(), dto);
-        dto.setDocument(getDocuments(dto.getIdDocuments()));
-        dto.setAttachedFinancialReport(getDocuments(dto.getIdAttachedFinancialReport()));
         if (null != dto.getPrincipalCustomer()) {
             CustomerBLO customer = new CustomerBLO();
             dto
@@ -41,8 +39,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     public SupplierDTO getSupplierInSession() throws HandlerGenericException {
+        SupplierDTO response = new SupplierDTO();
         SupplierDAO dao = new SupplierDAO();
-        return dao.getSupplierInDirectory();
+        response = dao.getSupplierInDirectory();
+        response.setDocument(getDocuments(response.getIdDocuments()));
+        response.setAttachedFinancialReport(getDocuments(response.getIdAttachedFinancialReport()));
+        return response;
     }
 
     public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension)
