@@ -62,6 +62,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             response = save(supplierByCall);
             NotificationBLO notificationBLO = new NotificationBLO();
             notificationBLO.notifySurveyCompleted();
+            notificationBLO.notifyToContact(supplierByCall.getIdSupplier());
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }

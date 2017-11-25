@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+import com.nutresa.exemplary_provider.dtl.CustomerDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.ModifiedSupplierDTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
@@ -50,6 +51,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         response = dao.getSupplierInDirectory();
         response.setDocument(getDocuments(response.getIdDocuments()));
         response.setAttachedFinancialReport(getDocuments(response.getIdAttachedFinancialReport()));
+        response.setPrincipalCustomer(getCustomersBySupplier(response.getId()));
         return response;
     }
 
@@ -65,11 +67,11 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
     public ModifiedSupplierDTO getModifiedSuppliers() throws HandlerGenericException {
         List<Object> listIds;
-        SupplierDAO SupplierDAO = new SupplierDAO(); 
-        SupplierByCallBLO SupplierByCallBLO = new SupplierByCallBLO(); 
+        SupplierDAO SupplierDAO = new SupplierDAO();
+        SupplierByCallBLO SupplierByCallBLO = new SupplierByCallBLO();
         Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
         ModifiedSupplierDTO response = new ModifiedSupplierDTO();
-        
+
         try {
             List<SupplierByCallDTO> supplierByCall = SupplierByCallBLO.getAll();
             listIds = SupplierDAO.getFieldAll(1, "vwSuppliersByCallModified");
@@ -82,13 +84,13 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             response.setSuppliers(suppliers);
             response.setSuppliersByCall(supplierByCall);
             response.setMasters(masters);
-            
+
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
         return response;
     }
-    
+
     public SupplierDTO update(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         return supplierDAO.update(supplier.getId(), supplier);
@@ -97,5 +99,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     private List<AttachmentDTO> getDocuments(List<String> idDocuements) {
         AttachmentBLO attachmentBLO = new AttachmentBLO();
         return attachmentBLO.getDocuments(idDocuements);
+    }
+
+    private List<CustomerDTO> getCustomersBySupplier(String idSupplier) throws HandlerGenericException {
+        CustomerBLO customerBLO = new CustomerBLO();
+        return customerBLO.getCustomersBySupplier(idSupplier);
     }
 }

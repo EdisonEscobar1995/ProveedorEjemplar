@@ -16,6 +16,8 @@ public class QuestionDTO {
     @Expose
     private String type;
     @Expose
+    private boolean required;
+    @Expose
     private boolean requireAttachment;
     @Expose
     private List<OptionDTO> options;
@@ -120,6 +122,14 @@ public class QuestionDTO {
 
     public String getId() {
         return id;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public boolean isRequired() {
+        return required;
     }
 
 }
