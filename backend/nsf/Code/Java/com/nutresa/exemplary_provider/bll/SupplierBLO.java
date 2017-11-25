@@ -39,7 +39,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     public SupplierDTO getSupplierInSession() throws HandlerGenericException {
-        SupplierDTO response = new SupplierDTO();
+        SupplierDTO response = null;
         SupplierDAO dao = new SupplierDAO();
         response = dao.getSupplierInDirectory();
         response.setDocument(getDocuments(response.getIdDocuments()));
