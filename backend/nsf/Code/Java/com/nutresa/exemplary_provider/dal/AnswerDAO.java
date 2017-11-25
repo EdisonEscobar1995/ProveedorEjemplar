@@ -53,13 +53,14 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     public AnswerDTO save(AnswerDTO answer) throws HandlerGenericException {
         AnswerDTO response = null;
         answer.autoSetIdAttachment();
-        if (answer.getId() == null || answer.getId().isEmpty()) {
-            response = super.save(answer);
-        } else {
-            response = super.update(answer.getId(), answer);
-        }
-
+        response = super.save(answer);
         return response;
+    }
+
+    @Override
+    public AnswerDTO update(String id, AnswerDTO dto) throws HandlerGenericException {
+        dto.autoSetIdAttachment();
+        return super.update(id, dto);
     }
 
     public void deleteBySupplier(String idSupplierByCall) throws HandlerGenericException {

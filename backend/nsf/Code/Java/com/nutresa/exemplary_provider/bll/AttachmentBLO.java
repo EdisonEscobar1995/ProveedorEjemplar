@@ -30,6 +30,11 @@ public class AttachmentBLO {
         for (String idDocument : idDocuements) {
             response.add(attachmentDAO.get(idDocument));
         }
+
+        if (response.size() == 0) {
+            response = null;
+        }
+
         return response;
     }
 
