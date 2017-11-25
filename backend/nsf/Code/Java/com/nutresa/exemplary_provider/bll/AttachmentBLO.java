@@ -29,7 +29,7 @@ public class AttachmentBLO {
         AttachmentDAO attachmentDAO = new AttachmentDAO();
         for (String idDocument : idDocuements) {
             AttachmentDTO document = attachmentDAO.get(idDocument);
-            if(null != document){
+            if(null != document && null != document.getId()){
                 response.add(document);
             }
         }
