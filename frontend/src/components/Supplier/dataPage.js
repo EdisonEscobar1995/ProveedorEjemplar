@@ -31,6 +31,7 @@ function generalInfo(fields) {
     getDataDepartmentsByCountry,
     cities,
     getDataCitiesByDepartment,
+    updateDocuments,
     changeIdCompanySize,
   } = fields;
   const {
@@ -58,9 +59,8 @@ function generalInfo(fields) {
     jobPosition,
     phoneOfContact,
     fullNameContact,
+    document,
   } = supplier;
-  console.log(idCategory);
-  console.log(idDepartment);
   const disabled = call.lockedByModification || changeIdCompanySize;
   return [
     {
@@ -94,6 +94,14 @@ function generalInfo(fields) {
           required: true,
           disabled,
           options: supplies,
+          valuesToClean: {
+            idCategory: {
+              value: '',
+            },
+            idSubCategory: {
+              value: '',
+            },
+          },
           handleChange: (value) => {
             getDataCategoryBySuply(value);
           },
@@ -111,6 +119,11 @@ function generalInfo(fields) {
           value: idCategory,
           options: categories,
           disabled,
+          valuesToClean: {
+            idSubCategory: {
+              value: '',
+            },
+          },
           handleChange: (value) => {
             getDataSubCategoryByCategory(value);
           },
@@ -129,9 +142,11 @@ function generalInfo(fields) {
           span: 12,
           type: 'upload',
           name: 'file',
-          action: 'http://jcgonzalez.cognox.com/Aplicaciones/ProveedorEjemplar/exemplaryProvider.nsf/xsp/Attachment?action=save',
+          action: 'http://saescudero.cognox.com/Aplicaciones/ProveedorEjemplar/exemplaryProvider.nsf/xsp/Attachment?action=save',
           key: 'file',
           disabled,
+          onChange: updateDocuments,
+          fileList: document,
         },
       ],
     },
@@ -182,7 +197,7 @@ function generalInfo(fields) {
         },
         {
           span: 6,
-          type: 'input',
+          type: 'date',
           label: 'Año de establecimiento',
           key: 'yearOfEstablishment',
           value: yearOfEstablishment,
@@ -221,6 +236,14 @@ function generalInfo(fields) {
           options: countries,
           disabled,
           value: idCountry,
+          valuesToClean: {
+            idDepartment: {
+              value: '',
+            },
+            idCity: {
+              value: '',
+            },
+          },
           handleChange: (value) => {
             getDataDepartmentsByCountry(value);
           },
@@ -233,6 +256,11 @@ function generalInfo(fields) {
           value: idDepartment,
           options: departments,
           disabled,
+          valuesToClean: {
+            idCity: {
+              value: '',
+            },
+          },
           handleChange: (value) => {
             getDataCitiesByDepartment(value);
           },
@@ -293,11 +321,12 @@ function generalInfo(fields) {
         },
         {
           span: 6,
-          type: 'input',
+          type: 'select',
           label: 'E-mail',
           key: 'emails',
           value: emails,
-          inputType: 'mail',
+          mode: 'tags',
+          options: emails,
           disabled,
         },
         {
@@ -516,6 +545,7 @@ function comercialInfo(fields) {
           span: 3,
           type: 'input',
           key: 'valueAssets',
+          inputType: 'number',
           value: valueAssets,
           required: true,
         },
@@ -538,6 +568,7 @@ function comercialInfo(fields) {
         {
           span: 3,
           type: 'input',
+          inputType: 'number',
           key: 'annualSalesValue',
           value: annualSalesValue,
           required: true,
@@ -552,6 +583,7 @@ function comercialInfo(fields) {
           type: 'input',
           label: 'Número de empleados directos',
           key: 'numberOfDirectEmployees',
+          inputType: 'number',
           value: numberOfDirectEmployees,
         },
         {
@@ -559,12 +591,14 @@ function comercialInfo(fields) {
           type: 'input',
           label: 'Número de empleados subcontratados',
           key: 'numberOfSubContratedEmployees',
+          inputType: 'number',
           value: numberOfSubContratedEmployees,
         },
         {
           span: 6,
           type: 'input',
           label: 'Total empleados (Directos + Subcontratados)',
+          inputType: 'number',
           key: 'employeesTotal',
           value: numberOfSubContratedEmployees + numberOfDirectEmployees,
         },
@@ -573,6 +607,7 @@ function comercialInfo(fields) {
           type: 'input',
           label: 'Participación ventas por cliente ',
           key: 'participationInSalesWithGroupNutresa',
+          inputType: 'number',
           value: participationInSalesWithGroupNutresa,
         },
       ],

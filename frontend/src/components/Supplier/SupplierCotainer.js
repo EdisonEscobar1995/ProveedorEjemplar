@@ -12,6 +12,8 @@ import {
   saveDataCallBySupplier,
   saveDataCallSupplier,
   changeParticipate,
+  updateDocuments,
+  saveAnswer,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -73,6 +75,12 @@ const mapDispatchToProps = dispatch => ({
   },
   saveDataCallSupplier: (call, supplier) => {
     dispatch(saveDataCallSupplier(call, supplier));
+  },
+  saveAnswer: (answer, idDimension, idCriterion) => {
+    dispatch(saveAnswer(answer, idDimension, idCriterion));
+  },
+  updateDocuments: (document) => {
+    dispatch(updateDocuments(document));
   },
   changeParticipate: (participateInCall) => {
     dispatch(changeParticipate(participateInCall));
