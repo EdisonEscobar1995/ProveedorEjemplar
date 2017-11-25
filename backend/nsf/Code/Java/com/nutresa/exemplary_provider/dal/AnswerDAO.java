@@ -25,14 +25,40 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         try {
             View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");
             DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
-            for (Document document : documents) {
-                response.add(castDocument(document));
+            if (documents != null) {
+                for (Document document : documents) {
+                    response.add(castDocument(document));
+                }
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
 
         return response;
+    }
+
+    @Override
+    public AnswerDTO save(AnswerDTO answer) throws HandlerGenericException {
+        AnswerDTO response = null;
+        if (answer.getId().isEmpty() || answer.getId() == null) {
+            response = super.save(answer);
+        } else {
+            response = super.update(answer.getId(), answer);
+        }
+
+        return response;
+    }
+
+    public void deleteBySupplier(String idSupplierByCall) throws HandlerGenericException {
+        try {
+            View currentView = getDatabase().getView("vwAnswersBySupplierByCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(idSupplierByCall, true);
+            if (documents != null) {
+                documents.removeAll(true);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
     }
 
 }

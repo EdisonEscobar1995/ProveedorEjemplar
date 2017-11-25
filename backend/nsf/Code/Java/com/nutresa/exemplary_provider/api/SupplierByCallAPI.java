@@ -46,4 +46,16 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         return response;
     }
 
+    public ServletResponseDTO<SupplierByCallDTO> unlockSupplier(SupplierByCallDTO supplierByCall) {
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        ServletResponseDTO<SupplierByCallDTO> response = null;
+        try {
+            response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO.unlockSupplier(supplierByCall));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<SupplierByCallDTO>(exception);
+        }
+        
+        return response;
+    }
+
 }
