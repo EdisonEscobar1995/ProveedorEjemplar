@@ -53,7 +53,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     public AnswerDTO save(AnswerDTO answer) throws HandlerGenericException {
         AnswerDTO response = null;
         answer.autoSetIdAttachment();
-        if (answer.getId().isEmpty() || answer.getId() == null) {
+        if (answer.getId() == null || answer.getId().isEmpty()) {
             response = super.save(answer);
         } else {
             response = super.update(answer.getId(), answer);
