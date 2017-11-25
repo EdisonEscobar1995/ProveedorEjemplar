@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -75,6 +76,8 @@ public class SupplierDTO {
     private int numberOfSubContratedEmployees;
     @Expose
     private String webSite;
+    @Expose
+    private String typeOfCurrency;
     @Expose
     private float annualSalesValue;
     @Expose
@@ -460,8 +463,11 @@ public class SupplierDTO {
         return idDocuments;
     }
 
-    public void setIdDocuments(List<String> idDocuments) {
-        this.idDocuments = idDocuments;
+    public void autoSetIdDocuments() {
+        this.idDocuments = new ArrayList<String>();
+        for (AttachmentDTO attachment : this.document) {
+            this.idDocuments.add(attachment.getId());
+        }
     }
 
     public List<AttachmentDTO> getDocument() {
@@ -476,8 +482,11 @@ public class SupplierDTO {
         return idAttachedFinancialReport;
     }
 
-    public void setIdAttachedFinancialReport(List<String> idAttachedFinancialReport) {
-        this.idAttachedFinancialReport = idAttachedFinancialReport;
+    public void autoSetIdAttachedFinancialReport() {
+        this.idAttachedFinancialReport = new ArrayList<String>();
+        for (AttachmentDTO attachment : this.attachedFinancialReport) {
+            this.idAttachedFinancialReport.add(attachment.getId());
+        }
     }
 
     public List<AttachmentDTO> getAttachedFinancialReport() {
@@ -486,6 +495,14 @@ public class SupplierDTO {
 
     public void setAttachedFinancialReport(List<AttachmentDTO> attachedFinancialReport) {
         this.attachedFinancialReport = attachedFinancialReport;
+    }
+
+    public void setTypeOfCurrency(String typeOfCurrency) {
+        this.typeOfCurrency = typeOfCurrency;
+    }
+
+    public String getTypeOfCurrency() {
+        return typeOfCurrency;
     }
 
 }

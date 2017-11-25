@@ -20,11 +20,13 @@ public class SupplierByCallDTO {
     @Expose
     private boolean lockedByModification;
     @Expose
+    private Date dateLocked;
+    @Expose
     private Date notifiedLocked;
     @Expose
     private String oldIdCompanySize;
     @Expose
-    private String state = "DOING";
+    private String state = "SUPPLIER";
 
     public String getIdCall() {
         return idCall;
@@ -100,6 +102,14 @@ public class SupplierByCallDTO {
 
     public void setNotifiedLocked(Date notifiedLocked) {
         this.notifiedLocked = notifiedLocked;
+    }
+
+    public void setDateLocked(Date dateLocked) {
+        this.dateLocked = dateLocked;
+    }
+
+    public Date getDateLocked() {
+        return dateLocked;
     }
 
 }

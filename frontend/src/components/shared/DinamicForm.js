@@ -11,7 +11,6 @@ const { Item } = Form;
 const { Option } = Select;
 const { TextArea } = Input;
 const { Group } = Radio;
-const { MonthPicker } = DatePicker;
 
 const ParagraphStyle = styled.p`
   margin-bottom: ${props => props.theme.spaces.main};
@@ -36,6 +35,8 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   required,
                   handleChange,
                   disabled,
+                  format,
+                  rules = [],
                 } = current;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
                 span = span || 24;
@@ -48,7 +49,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                     let fieldContent;
                     switch (type) {
                       case 'date': {
-                        fieldContent = <MonthPicker disabled={disabled} format={'YYYY'} style={{ width: '100%' }} />;
+                        fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} format={format} />;
                         break;
                       }
                       case 'input':
@@ -100,7 +101,10 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                       <Field label={label}>
                         <Item>
                           {getFieldDecorator(key, {
-                            rules: [{ required, message: 'Por favor diligencia el campo' }],
+                            rules: [
+                              { required, message: 'Por favor diligencia el campo' },
+                              ...rules,
+                            ],
                             initialValue: value,
                           })(
                             fieldContent,
