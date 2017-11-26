@@ -22,7 +22,7 @@ public class SupplierByCallDTO {
     @Expose
     private Date dateLocked;
     @Expose
-    private Date notifiedLocked;
+    private Date dateUnLocked;
     @Expose
     private String oldIdCompanySize;
     @Expose
@@ -96,12 +96,12 @@ public class SupplierByCallDTO {
         return id;
     }
 
-    public Date getNotifiedLocked() {
-        return notifiedLocked;
+    public Date getDateUnLocked() {
+        return dateUnLocked;
     }
 
-    public void setNotifiedLocked(Date notifiedLocked) {
-        this.notifiedLocked = notifiedLocked;
+    public void setDateUnLocked(Date notifiedLocked) {
+        this.dateUnLocked = notifiedLocked;
     }
 
     public void setDateLocked(Date dateLocked) {

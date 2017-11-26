@@ -24,7 +24,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             View currentView = getDatabase().getView("vwDimensionsAndCriterionsBySurvey");
             ViewNavigator navigator = currentView.createViewNavFromCategory(idSurvey);
             ViewEntry entry = navigator.getFirst();
-            while (entry != null) {
+            while (null != entry) {
                 if (entry.isCategory()) {
                     response.add((String) entry.getColumnValues().elementAt(1));
                 }
@@ -43,7 +43,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         try {
             View currentView = getDatabase().getView("vwDimensionsAndCriterionsBySurvey");
             ViewNavigator navigatorDimension = currentView.createViewNavFromCategory(idSurvey);
-            if (navigatorDimension == null) {
+            if (null == navigatorDimension) {
                 return response;
             }
             ViewEntry entryDimension = navigatorDimension.getFirst();
@@ -59,7 +59,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
                     flag = true;
                 }
                 entryDimension = navigatorDimension.getNextSibling();
-            } while (entryDimension != null && !flag);
+            } while (null != entryDimension && !flag);
 
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
@@ -70,7 +70,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
 
     private List<String> getCriterionInDimension(ViewEntry entryCriterions, ViewNavigator navigatorCriterions) {
         List<String> response = new ArrayList<String>();
-        while (entryCriterions != null) {
+        while (null != entryCriterions) {
             response.add((String) entryCriterions.getColumnValues().elementAt(2));
             entryCriterions = navigatorCriterions.getNextSibling();
         }

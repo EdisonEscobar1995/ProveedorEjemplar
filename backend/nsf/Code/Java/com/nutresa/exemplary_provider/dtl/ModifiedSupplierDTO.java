@@ -7,33 +7,43 @@ import com.google.gson.annotations.Expose;
 
 public class ModifiedSupplierDTO {
     @Expose
-    private List<SupplierDTO> Suppliers;
+    private List<SupplierDTO> suppliers;
     @Expose
-    private List<SupplierByCallDTO> SuppliersByCall;
+    private List<DTO> suppliersByCall;
     @Expose
-    private Map<String, List<DTO>> Masters;
+    private List<Object> years;
+    @Expose
+    private Map<String, List<DTO>> masters;
     
     public List<SupplierDTO> getSuppliers() {
-        return this.Suppliers;
+        return this.suppliers;
     }
     
     public void setSuppliers(List<SupplierDTO> suppliers) {
-        this.Suppliers = suppliers;
+        this.suppliers = suppliers;
     }
 
     public Map<String, List<DTO>> getMasters() {
-        return this.Masters;
+        return this.masters;
     }
   
     public void setMasters(Map<String, List<DTO>> masters) {
-        this.Masters = masters;
+        this.masters = masters;
     }
 
-    public void setSuppliersByCall(List<SupplierByCallDTO> suppliersByCall) {
-        this.SuppliersByCall = suppliersByCall;
+    public void setSuppliersByCall(List<DTO> suppliersByCall) {
+        this.suppliersByCall = suppliersByCall;
     }
 
-    public List<SupplierByCallDTO> getSuppliersByCall() {
-        return SuppliersByCall;
+    public List<DTO> getSuppliersByCall() {
+        return suppliersByCall;
+    }
+
+    public void setYears(List<Object> listYears) {
+        this.years = listYears;
+    }
+
+    public List<Object> getYears() {
+        return years;
     }
 }
