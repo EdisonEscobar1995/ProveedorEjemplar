@@ -34,7 +34,7 @@ public abstract class GenericDAO<T> {
 
     private static final String PREFIX_FORM = "fr";
     private static final String PREFIX_VIEW = "vw";
-    private static final String ERROR_VIEW_NOT_FOUND = "View %view% not found";
+    private static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
     
 
     protected String indexName;
@@ -96,7 +96,7 @@ public abstract class GenericDAO<T> {
         if (null != view) {
             list = view.getColumnValues(column);
         } else {
-            throw new HandlerGenericException(ERROR_VIEW_NOT_FOUND.replace("%view%", entityView));
+            throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, defaultView));
         }
         return list;
     }
@@ -109,7 +109,7 @@ public abstract class GenericDAO<T> {
                 list.add(view.getColumnValues(column));
             }
         } else {
-            throw new HandlerGenericException(ERROR_VIEW_NOT_FOUND.replace("%view%", entityView));
+            throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, defaultView));
         }
         return list;
     }
@@ -129,7 +129,7 @@ public abstract class GenericDAO<T> {
                 list.add((T) this.castDocument(document));
             }
         } else {
-            throw new HandlerGenericException(ERROR_VIEW_NOT_FOUND.replace("%view%", entityView));
+            throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, defaultView));
         }
         return list;
     }
@@ -376,14 +376,14 @@ public abstract class GenericDAO<T> {
                 Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
                 if (validateColumnsInView(columns, parameterKeys)) {
                     indexedView = view;
-                    if (null != defaultView) {
-                        indexView.put(indexName, view);
-                    }
                     break;
                 }
             }
         } else {
             indexedView = indexView.get(indexName);
+        }
+        if (null != indexedView && null != defaultView) {
+            indexView.put(indexName, indexedView);
         }
         return indexedView;
     }

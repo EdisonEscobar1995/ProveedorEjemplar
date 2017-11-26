@@ -139,26 +139,26 @@ public class Common {
     }
     
     @SuppressWarnings("unchecked")
-    public static <T> Map<String, List<Object>> getDtoFields(List<T> data, String[] idEntityNames, Class T)
+    public static <T> Map<String, List<Object>> getDtoFields(List<T> data, String[] idFieldsNames, Class clazz)
         throws HandlerGenericException {
         Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
         Map<String, Field> listFields = new HashMap<String, Field>();
 
         try {
-            for (String entity : idEntityNames) {
+            for (String entity : idFieldsNames) {
                 String field;
                 if (entity.startsWith("[") && entity.endsWith("]")) {
                     field = entity.substring(1, entity.length() - 1);
                 } else {
                     field = "id" + entity;
                 }
-                Field declaredField = T.getDeclaredField(field);
+                Field declaredField = clazz.getDeclaredField(field);
                 declaredField.setAccessible(true);
                 listFields.put(entity, declaredField);
                 listIds.put(entity, new ArrayList<Object>());
             }
             for (Object row : data) {
-                for (String field : idEntityNames) {
+                for (String field : idFieldsNames) {
                     listIds.get(field).add(listFields.get(field).get(row));
                 }
             }

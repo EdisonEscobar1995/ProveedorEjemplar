@@ -1,6 +1,5 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +70,6 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         CallBLO callBLO = new CallBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         ModifiedSupplierDTO response = new ModifiedSupplierDTO();
-        Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
         Map<String, List<Object>> listIds;
         List<Object> listYears;
 
@@ -103,12 +101,11 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             String[] idFieldNames = { "Category", "Country", "Supply", "CompanySize" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
 
-            masters = getMasters(idFieldNames, masterIds);
+            response.setMasters(getMasters(idFieldNames, masterIds));
             response.setSuppliers(suppliers);
             response.setSuppliersByCall(supplierByCall);
             response.setYears(listYears);
             
-            response.setMasters(masters);
 
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
