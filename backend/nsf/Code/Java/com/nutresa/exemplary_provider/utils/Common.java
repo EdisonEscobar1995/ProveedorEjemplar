@@ -2,12 +2,14 @@ package com.nutresa.exemplary_provider.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.openntf.domino.utils.DominoUtils;
@@ -75,13 +77,13 @@ public class Common {
         return message;
     }
 
-    public static boolean isClass(String className) throws ServletException {
+    public static boolean isClass(String className) {
         try {
             Class.forName(className);
             return true;
         } catch (Exception exception) {
             DominoUtils.handleException(new Throwable(exception));
-            throw new ServletException(exception.getCause());
+            return false;
         }
     }
 
@@ -130,10 +132,39 @@ public class Common {
         return ids.toString();
     }
     
-    @SuppressWarnings("unchecked")
     public static String getNamespace(Class<?> clazz) {
         String name = clazz.getName();
         String className = clazz.getSimpleName();
         return name.substring(0, name.length() - className.length());
     }
+    
+    @SuppressWarnings("unchecked")
+    public static <T> Map<String, List<Object>> getDtoFields(List<T> data, String[] idEntityNames, Class T)
+        throws HandlerGenericException {
+        Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
+        Map<String, Field> listFields = new HashMap<String, Field>();
+
+        try {
+            for (String entity : idEntityNames) {
+                String field;
+                if (entity.startsWith("[") && entity.endsWith("]")) {
+                    field = entity.substring(1, entity.length() - 1);
+                } else {
+                    field = "id" + entity;
+                }
+                Field declaredField = T.getDeclaredField(field);
+                declaredField.setAccessible(true);
+                listFields.put(entity, declaredField);
+                listIds.put(entity, new ArrayList<Object>());
+            }
+            for (Object row : data) {
+                for (String field : idEntityNames) {
+                    listIds.get(field).add(listFields.get(field).get(row));
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return listIds;
+    }    
 }

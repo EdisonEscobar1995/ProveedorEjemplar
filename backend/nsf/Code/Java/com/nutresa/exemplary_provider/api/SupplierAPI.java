@@ -40,11 +40,11 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         return response;
     }
 
-    public ServletResponseDTO<ModifiedSupplierDTO> getModifiedSuppliers() {
+    public ServletResponseDTO<ModifiedSupplierDTO> getModifiedSuppliers(Map<String, String> parameters) {
         SupplierBLO supplierBLO = new SupplierBLO();
         ServletResponseDTO<ModifiedSupplierDTO> response = null;
         try {
-            response = new ServletResponseDTO<ModifiedSupplierDTO>(supplierBLO.getModifiedSuppliers());
+            response = new ServletResponseDTO<ModifiedSupplierDTO>(supplierBLO.getModifiedSuppliers(parameters.get("year")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<ModifiedSupplierDTO>(exception);
         }

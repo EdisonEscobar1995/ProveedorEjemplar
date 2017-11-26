@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,13 +51,13 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> getAll() throws HandlerGenericException {
+    public List<DTO> getAll() throws HandlerGenericException {
         D dao;
-        List<T> response;
+        List<DTO> response;
         try {
             dao = this.daoClass.newInstance();
             Method method = dao.getClass().getMethod("getAll");
-            response = (List<T>) method.invoke(dao);
+            response = (List<DTO>) method.invoke(dao);
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
@@ -146,7 +147,7 @@ public class GenericBLO<T, D> {
     }
 
     public List<DTO> getAllByIds(String field, List<Object> list) throws HandlerGenericException {
-        return getAllByIds("id", list, false);
+        return getAllByIds(field, list, false);
     }
     
     @SuppressWarnings("unchecked")
@@ -155,11 +156,7 @@ public class GenericBLO<T, D> {
         List<DTO> response;
         try {
             dao = daoClass.newInstance();
-            
             response = ((GenericDAO) dao).getAllByIds(field, list, uniqueIds);
-            // Method method = dao.getClass().getMethod("getAllByIds",
-            // String.class, List.class, boolean.class);
-            // response = (List<DTO>) method.invoke(field, list, uniqueIds);
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
@@ -176,10 +173,54 @@ public class GenericBLO<T, D> {
                 GenericBLO blo = BloFactory.getBlo(idFieldName);
                 masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName)));
             }
-
         } catch (HandlerGenericException e) {
             throw new HandlerGenericException(e);
         }
         return masters;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Object> getFieldAll(int column) throws HandlerGenericException {
+        List<Object> response = new ArrayList<Object>();
+        D dao;
+        try {
+            dao = daoClass.newInstance();
+            response = ((GenericDAO) dao).getFieldAll(column);
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return response;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Object> getFieldAll(int column, String defaultView) throws HandlerGenericException {
+        List<Object> response = new ArrayList<Object>();
+        D dao;
+        try {
+            dao = daoClass.newInstance();
+            response = ((GenericDAO) dao).getFieldAll(column, defaultView);
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return response;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<DTO> getAllBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
+        D dao;
+        List<DTO> response;
+        try {
+            dao = daoClass.newInstance();
+            response = ((GenericDAO) dao).getAllBy(parameters, defaultView);
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return response;
+    }
+
+    public List<DTO> getAllBy(String field, String value, String defaultView) throws HandlerGenericException {
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put(field, value);
+        return getAllBy(filter, defaultView);
     }
 }

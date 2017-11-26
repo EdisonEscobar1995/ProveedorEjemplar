@@ -9,7 +9,9 @@ public class ModifiedSupplierDTO {
     @Expose
     private List<SupplierDTO> Suppliers;
     @Expose
-    private List<SupplierByCallDTO> SuppliersByCall;
+    private List<DTO> SuppliersByCall;
+    @Expose
+    private List<Object> Years;
     @Expose
     private Map<String, List<DTO>> Masters;
     
@@ -29,11 +31,19 @@ public class ModifiedSupplierDTO {
         this.Masters = masters;
     }
 
-    public void setSuppliersByCall(List<SupplierByCallDTO> suppliersByCall) {
+    public void setSuppliersByCall(List<DTO> suppliersByCall) {
         this.SuppliersByCall = suppliersByCall;
     }
 
-    public List<SupplierByCallDTO> getSuppliersByCall() {
+    public List<DTO> getSuppliersByCall() {
         return SuppliersByCall;
+    }
+
+    public void setYears(List<Object> listYears) {
+        this.Years = listYears;
+    }
+
+    public List<Object> getYears() {
+        return Years;
     }
 }

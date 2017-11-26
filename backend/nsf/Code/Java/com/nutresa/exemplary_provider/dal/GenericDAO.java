@@ -210,8 +210,7 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getValue(Document document, String name, Class<?> type) throws IllegalAccessException,
-            InstantiationException {
+    public static <T> T getValue(Document document, String name, Class<?> type) {
         Object value = null;
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
@@ -439,29 +438,6 @@ public abstract class GenericDAO<T> {
         }
         return Common.join(query, " AND ");
     }
-
-    @SuppressWarnings("unchecked")
-    public Map<String, List<Object>> getJoinIds(List<T> data, String[] idFieldsName, Class clazz) throws HandlerGenericException {
-        Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
-        Map<String, Field> listFields = new HashMap<String, Field>();
-
-        try {
-            for (String field : idFieldsName) {
-                Field declaredField = clazz.getDeclaredField("id" + field);
-                declaredField.setAccessible(true);
-                listFields.put(field, declaredField);
-                listIds.put(field, new ArrayList<Object>());    
-            }
-            for (T row : data) {
-                for (String field : idFieldsName) {
-                    listIds.get(field).add(listFields.get(field).get(row));
-                }
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-        return listIds;
-    }
     
     public List<DTO> getAllByIds(List<Object> list) throws HandlerGenericException {
         return getAllByIds("id", list, false);
@@ -472,7 +448,7 @@ public abstract class GenericDAO<T> {
     }
 
     public List<DTO> getAllByIds(String field, List<Object> list) throws HandlerGenericException {
-        return getAllByIds("id", list, false);
+        return getAllByIds(field, list, false);
     }
 
     @SuppressWarnings("unchecked")
