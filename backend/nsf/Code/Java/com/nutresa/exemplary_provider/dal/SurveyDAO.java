@@ -24,7 +24,7 @@ public class SurveyDAO extends GenericDAO<SurveyDTO> {
         }
 
         if (null == response) {
-            throw new HandlerGenericException("SURVEY_DONT_EXIST");
+            throw new HandlerGenericException("SURVEY_DOES_NOT_EXIST");
         }
 
         return response;
