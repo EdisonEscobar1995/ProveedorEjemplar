@@ -22,8 +22,11 @@ function saveDataSuppliertApi(data) {
 }
 
 function getModifiedSuppliersApi() {
-  // return instance.get('Supplier?action=getModifiedSuppliers');
-  return instance.get('modifiedSuppliers.php');
+  return instance.get('Supplier?action=getModifiedSuppliers');
+}
+
+function unlockSupplierApi(supplierByCall) {
+  return instance.post('SupplierByCall?action=unlockSupplier', supplierByCall);
 }
 
 export {
@@ -33,4 +36,5 @@ export {
   saveDataCallBySupplierApi,
   saveDataSuppliertApi,
   getModifiedSuppliersApi,
+  unlockSupplierApi,
 };
