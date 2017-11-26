@@ -68,6 +68,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     public ModifiedSupplierDTO getModifiedSuppliers(String year) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         CallBLO callBLO = new CallBLO();
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         ModifiedSupplierDTO response = new ModifiedSupplierDTO();
         Map<String, List<Object>> listIds;
@@ -98,10 +99,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
             // Realizar el cruce de los maestros según los datos de los
             // proveedores seleccionados
-            String[] idFieldNames = { "Category", "Country", "Supply", "CompanySize" };
+            String[] idFieldNames = { "Category", "Country", "Supply" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
 
-            response.setMasters(getMasters(idFieldNames, masterIds));
+            Map<String, List<DTO>> masters = getMasters(idFieldNames, masterIds, true);
+            masters.put("CompanySize", companySizeBLO.getAll());
+            response.setMasters(masters);
             response.setSuppliers(suppliers);
             response.setSuppliersByCall(supplierByCall);
             response.setYears(listYears);
