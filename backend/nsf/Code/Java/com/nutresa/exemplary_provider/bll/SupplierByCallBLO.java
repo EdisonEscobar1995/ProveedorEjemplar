@@ -27,7 +27,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             callsBySupplier = supplierByCallDAO.getBySupplier(supplierBLO.getSupplierInSession().getId());
             for (SupplierByCallDTO supplierByCall : callsBySupplier) {
                 call = callDAO.get(supplierByCall.getIdCall());
-                if (call.isNotCaduced(new Date())) {
+                if (call.isNotCaducedDate(call.getDateToFinishCall(), new Date())) {
                     response = supplierByCall;
                     break;
                 } else {
@@ -48,6 +48,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             supplierByCallDTO = getCurrentCallBySupplier();
             supplierByCallDTO.setOldIdCompanySize(oldIdCompanySize);
             supplierByCallDTO.setLockedByModification(true);
+            supplierByCallDTO.setDateLocked(new Date());
             supplierByCallDAO.update(supplierByCallDTO.getId(), supplierByCallDTO);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -58,12 +59,15 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     public SupplierByCallDTO finishSurvey(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         SupplierByCallDTO response = null;
         supplierByCall.setState("EVALUATOR");
-        try {
+        CallBLO callBLO = new CallBLO();
+        CallDTO call = callBLO.get(supplierByCall.getIdCall());
+        if (call.isNotCaducedDate(call.getDeadlineToMakeSurvey(), new Date())) {
             response = save(supplierByCall);
             NotificationBLO notificationBLO = new NotificationBLO();
             notificationBLO.notifySurveyCompleted();
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
+            notificationBLO.notifyToContact(supplierByCall.getIdSupplier());
+        } else {
+            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
         }
 
         return response;
@@ -74,15 +78,18 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO response = null;
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         SupplierBLO supplierBLO = new SupplierBLO();
+        SurveyBLO surveyBLO = new SurveyBLO();
         NotificationBLO notification = new NotificationBLO();
         SupplierDTO supplier = null;
         try {
             SupplierByCallDTO currentSupplierByCall = get(supplierByCall.getId());
             currentSupplierByCall.setLockedByModification(false);
-            currentSupplierByCall.setDateLocked(new Date());
+            currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
             if (!supplierByCall.getOldIdCompanySize().equals(supplier.getIdCompanySize())) {
                 currentSupplierByCall.setOldIdCompanySize(supplier.getIdCompanySize());
+                currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(),
+                        supplier.getIdCompanySize()).getId());
                 supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
                 supplierBLO.update(supplier);
             }

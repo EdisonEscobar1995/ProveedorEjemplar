@@ -479,8 +479,10 @@ public class SupplierDTO {
 
     public void autoSetIdDocuments() {
         this.idDocuments = new ArrayList<String>();
-        for (AttachmentDTO attachment : this.document) {
-            this.idDocuments.add(attachment.getId());
+        if (null != this.document) {
+            for (AttachmentDTO attachment : this.document) {
+                this.idDocuments.add(attachment.getId());
+            }
         }
     }
 
@@ -498,8 +500,10 @@ public class SupplierDTO {
 
     public void autoSetIdAttachedFinancialReport() {
         this.idAttachedFinancialReport = new ArrayList<String>();
-        for (AttachmentDTO attachment : this.attachedFinancialReport) {
-            this.idAttachedFinancialReport.add(attachment.getId());
+        if (null != this.attachedFinancialReport) {
+            for (AttachmentDTO attachment : this.attachedFinancialReport) {
+                this.idAttachedFinancialReport.add(attachment.getId());
+            }
         }
     }
 

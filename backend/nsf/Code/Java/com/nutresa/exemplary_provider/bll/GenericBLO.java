@@ -170,7 +170,7 @@ public class GenericBLO<T, D> {
 
         try {
             for (String idFieldName : idFieldNames) {
-                GenericBLO blo = BloFactory.getBlo(idFieldName);
+                GenericBLO blo = FactoryBLO.getBlo(idFieldName);
                 masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName)));
             }
         } catch (HandlerGenericException e) {

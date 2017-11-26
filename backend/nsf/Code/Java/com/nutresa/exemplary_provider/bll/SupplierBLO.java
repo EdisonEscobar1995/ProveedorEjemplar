@@ -7,6 +7,7 @@ import java.util.Map;
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
+import com.nutresa.exemplary_provider.dtl.CustomerDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.ModifiedSupplierDTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
@@ -51,6 +52,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         response = dao.getSupplierInDirectory();
         response.setDocument(getDocuments(response.getIdDocuments()));
         response.setAttachedFinancialReport(getDocuments(response.getIdAttachedFinancialReport()));
+        response.setPrincipalCustomer(getCustomersBySupplier(response.getId()));
         return response;
     }
 
@@ -107,13 +109,13 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             response.setYears(listYears);
             
             response.setMasters(masters);
-            
+
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
         return response;
     }
-    
+
     public SupplierDTO update(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         return supplierDAO.update(supplier.getId(), supplier);
@@ -122,5 +124,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     private List<AttachmentDTO> getDocuments(List<String> idDocuements) {
         AttachmentBLO attachmentBLO = new AttachmentBLO();
         return attachmentBLO.getDocuments(idDocuements);
+    }
+
+    private List<CustomerDTO> getCustomersBySupplier(String idSupplier) throws HandlerGenericException {
+        CustomerBLO customerBLO = new CustomerBLO();
+        return customerBLO.getCustomersBySupplier(idSupplier);
     }
 }
