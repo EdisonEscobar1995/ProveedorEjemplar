@@ -9,6 +9,8 @@ public class SupplierDTO {
     @Expose
     private String id;
     @Expose
+    private String fullName;
+    @Expose
     private String businessName;
     @Expose
     private String idCompanySize;
@@ -577,6 +579,14 @@ public class SupplierDTO {
 
     public String getSapCode() {
         return sapCode;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
 }
