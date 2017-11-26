@@ -1,11 +1,11 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.CustomerDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.ModifiedSupplierDTO;
@@ -64,26 +64,48 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
         return response;
     }
-
-    public ModifiedSupplierDTO getModifiedSuppliers() throws HandlerGenericException {
-        List<Object> listIds;
-        SupplierDAO SupplierDAO = new SupplierDAO();
-        SupplierByCallBLO SupplierByCallBLO = new SupplierByCallBLO();
-        Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
+        
+    public ModifiedSupplierDTO getModifiedSuppliers(String year) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        CallBLO callBLO = new CallBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         ModifiedSupplierDTO response = new ModifiedSupplierDTO();
+        Map<String, List<Object>> listIds;
+        List<Object> listYears;
 
+        // Cargar todos los años de las convocatorias
+        listYears = callBLO.getFieldAll(0, "vwCallsByYear");
+        // Si no llega el año cargar el primero para devolver los datos de las
+        // las ultimas convocatorias
+        if (null == year || year.isEmpty()) {
+            year = (String) listYears.get(0);
+        }
+        // Cargar todas las convocatorias que tengan el año enviado o el último
+        List<DTO> listCalls = callBLO.getAllBy("year", year);
+        // Extraer los ids de las convocatorias par arealizar el cruce de
+        // proveedor x convocatoria
+        listIds = Common.getDtoFields(listCalls, new String[] { "[id]" }, CallDTO.class);
+        
+        // Consultar los proveedores por convotaria por el id de convocatoria
+        // que se encuentren bloqueados o notificados
+        List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", Common.getIdsFromList(listIds.get("[id]")),
+            "vwSuppliersByCallModifiedIdCall");
         try {
-            List<SupplierByCallDTO> supplierByCall = SupplierByCallBLO.getAll();
-            listIds = SupplierDAO.getFieldAll(1, "vwSuppliersByCallModified");
-            String ids = Common.getIdsFromList(listIds);
-            List<SupplierDTO> suppliers = SupplierDAO.getAllBy("id", ids);
+            // Recuperar los ids de los proveedores
+            listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
+            // Consultar los proveedores que se encuentran bloqueados o
+            // notificados para las convocatorias del año seleccionado
+            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
+            // Realizar el cruce de los maestros según los datos de los
+            // proveedores seleccionados
             String[] idFieldNames = { "Category", "Country", "Supply", "CompanySize" };
-            Map<String, List<Object>> masterIds = SupplierDAO.getJoinIds(suppliers, idFieldNames, SupplierDTO.class);
+            Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
 
-            masters = getMasters(idFieldNames, masterIds);
+            response.setMasters(getMasters(idFieldNames, masterIds));
             response.setSuppliers(suppliers);
             response.setSuppliersByCall(supplierByCall);
-            response.setMasters(masters);
+            response.setYears(listYears);
+            
 
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);

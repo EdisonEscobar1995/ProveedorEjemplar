@@ -34,6 +34,8 @@ public abstract class GenericDAO<T> {
 
     private static final String PREFIX_FORM = "fr";
     private static final String PREFIX_VIEW = "vw";
+    private static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
+    
 
     protected String indexName;
     protected Map<String, View> indexView = new HashMap<String, View>();
@@ -94,7 +96,7 @@ public abstract class GenericDAO<T> {
         if (null != view) {
             list = view.getColumnValues(column);
         } else {
-            throw new HandlerGenericException("View " + entityView + " not found");
+            throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, defaultView));
         }
         return list;
     }
@@ -107,7 +109,7 @@ public abstract class GenericDAO<T> {
                 list.add(view.getColumnValues(column));
             }
         } else {
-            throw new HandlerGenericException("View " + entityView + " not found");
+            throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, defaultView));
         }
         return list;
     }
@@ -127,7 +129,7 @@ public abstract class GenericDAO<T> {
                 list.add((T) this.castDocument(document));
             }
         } else {
-            throw new HandlerGenericException("View " + entityView + " not found");
+            throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, defaultView));
         }
         return list;
     }
@@ -209,8 +211,7 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getValue(Document document, String name, Class<?> type) throws IllegalAccessException,
-            InstantiationException {
+    public static <T> T getValue(Document document, String name, Class<?> type) {
         Object value = null;
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
@@ -375,14 +376,14 @@ public abstract class GenericDAO<T> {
                 Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
                 if (validateColumnsInView(columns, parameterKeys)) {
                     indexedView = view;
-                    if (null != defaultView) {
-                        indexView.put(indexName, view);
-                    }
                     break;
                 }
             }
         } else {
             indexedView = indexView.get(indexName);
+        }
+        if (null != indexedView && null != defaultView) {
+            indexView.put(indexName, indexedView);
         }
         return indexedView;
     }
@@ -472,7 +473,7 @@ public abstract class GenericDAO<T> {
     }
 
     public List<DTO> getAllByIds(String field, List<Object> list) throws HandlerGenericException {
-        return getAllByIds("id", list, false);
+        return getAllByIds(field, list, false);
     }
 
     @SuppressWarnings("unchecked")
