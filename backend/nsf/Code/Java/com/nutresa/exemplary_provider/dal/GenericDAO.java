@@ -277,16 +277,21 @@ public abstract class GenericDAO<T> {
         return this.saveDocument(document, dto, true);
     }
 
-    public T saveProfile(T dto) throws HandlerGenericException {
+    @SuppressWarnings("unchecked")
+    public T saveProfile(T dto) throws HandlerGenericException, IllegalAccessException, InstantiationException {
         View vw = database.getView(this.entityView);
+        T newDto = (T) dto.getClass().newInstance();
         Document document = vw.getFirstDocumentByKey(this.entityForm, true);
         if (null == document) {
-            dto = this.saveDocument(document, dto, false);
+            newDto = this.save(dto);
         } else {
-            dto = this.save(dto);
+            String documentId = document.getItemValueString("id");
+            String dtoId = (String) Common.getFieldValue(dto, "id");
+            if (documentId.equals(dtoId)) {
+                newDto = this.saveDocument(document, dto, false);
+            }
         }
-
-        return dto;
+        return newDto;
     }
 
     @SuppressWarnings("unchecked")
@@ -325,12 +330,15 @@ public abstract class GenericDAO<T> {
         return dto;
     }
 
+    @SuppressWarnings("unchecked")
     public T update(String id, T dto) throws HandlerGenericException {
         try {
             View vw = database.getView(entityView);
             Document document = vw.getFirstDocumentByKey(id, true);
             if (null != document) {
                 dto = this.saveDocument(document, dto, false);
+            } else {
+                dto = (T) dto.getClass().newInstance();
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
