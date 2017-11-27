@@ -14,7 +14,7 @@ class Filters extends Component {
 
   render() {
     const { Form } = this.props;
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, setFields } = this.props.form;
     const fields = filtersInfo(this.props);
 
     return (
@@ -22,6 +22,7 @@ class Filters extends Component {
         <Form>
           <DinamicForm
             getFieldDecorator={getFieldDecorator}
+            setFields={setFields}
             content={fields}
           />
         </Form>
