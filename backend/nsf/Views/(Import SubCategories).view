@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Import SubCategories' alias='SubCategories' xmlns='http://www.lotus.com/dxl'
+<view name='(Import SubCategories)' alias='SubCategories' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='a7ea' unid='7F1309D77EF3FE92052581E10057A4D3' sequence='11'>
+<noteinfo noteid='a7ea' unid='7F1309D77EF3FE92052581E10057A4D3' sequence='12'>
 <created><datetime>20171123T105718,27-05</datetime></created>
-<modified><datetime>20171127T161433,32-05</datetime></modified>
-<revised><datetime>20171127T161433,31-05</datetime></revised>
-<lastaccessed><datetime>20171127T161433,32-05</datetime></lastaccessed>
+<modified><datetime>20171127T181621,93-05</datetime></modified>
+<revised><datetime>20171127T181621,92-05</datetime></revised>
+<lastaccessed><datetime>20171127T181621,93-05</datetime></lastaccessed>
 <addedtofile><datetime>20171123T105718,32-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
