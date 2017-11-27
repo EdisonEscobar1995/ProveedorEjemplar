@@ -166,5 +166,14 @@ public class Common {
             throw new HandlerGenericException(exception);
         }
         return listIds;
+    }
+
+    public static List<String> arrayToList(String[] items) {
+        List<String> list = new ArrayList<String>();
+
+        for (String item : items) {
+            list.add(item);
+        }
+        return list;
     }    
 }
