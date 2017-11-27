@@ -41,7 +41,10 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
-      return masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
+      const oldIdCompanySize = suppliersByCall
+        .find(item => item.idSupplier === record.id)
+        .oldIdCompanySize;
+      return masters.CompanySize.find(companySize => companySize.id === oldIdCompanySize).name;
     },
   }, {
     title: 'Tamaño de empresa actual',
@@ -52,8 +55,9 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
         return (
           <Select
             key={record.id}
+            defaultValue={record.idCompanySize}
             showSearch
-            allowClear
+            allowClear={false}
             notFoundContent="No se encontraron resultados"
             style={{ width: '100%' }}
             onChange={value => setCompanySize({ id: record.id, idCompanySize: value })}
@@ -66,7 +70,7 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
           </Select>
         );
       }
-      return null;
+      return masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
     },
   }, {
     title: 'Estado',
