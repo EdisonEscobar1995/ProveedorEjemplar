@@ -128,4 +128,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         sendNotification(email, notification);
     }
 
+    public void sendInvitation(List<String> emails) throws HandlerGenericException {
+        NotificationDAO notificationDAO = new NotificationDAO();
+        NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+        sendNotification(emails, notification);
+    }
+
 }
