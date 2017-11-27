@@ -1,6 +1,7 @@
 import {
   GET_DATA_MODIFIED_SUPPLIERS_PROGRESS,
   GET_DATA_MODIFIED_SUPPLIERS_SUCCESS,
+  FILTER_SUPPLIERS,
   SET_COMPANY_SIZE,
   UNLOCK_SUPPLIER_SUCCESS,
   REQUEST_FAILED,
@@ -33,6 +34,11 @@ const setCompanySize = data => ({
   data,
 });
 
+const filterSuppliers = data => ({
+  type: FILTER_SUPPLIERS,
+  data,
+});
+
 const getModifiedSuppliers = year => (dispatch) => {
   requestApi(dispatch, getDataModifiedSuppliersProgress, getModifiedSuppliersApi, year)
     .then((response) => {
@@ -61,6 +67,7 @@ const unlockSupplier = supplierByCall => (dispatch) => {
 export {
   getModifiedSuppliers,
   getFailedRequest,
+  filterSuppliers,
   setCompanySize,
   unlockSupplier,
   /*

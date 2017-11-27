@@ -1,13 +1,21 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Row, Col, Button } from 'antd';
 import filtersInfo from './dataForm';
 import DinamicForm from '../shared/DinamicForm';
 
-class Filters extends PureComponent {
+class Filters extends Component {
+  handleFilter = () => {
+    this.props.filterSuppliers(this.props.form.getFieldsValue());
+  };
+
+  handleReset = () => {
+    this.props.form.resetFields();
+  }
+
   render() {
     const { Form } = this.props;
     const { getFieldDecorator } = this.props.form;
-    const fields = filtersInfo(this.props.data);
+    const fields = filtersInfo(this.props);
 
     return (
       <div>
@@ -19,10 +27,10 @@ class Filters extends PureComponent {
         </Form>
         <Row type="flex" justify="center" style={{ marginBottom: '20px' }}>
           <Col span={2}>
-            <Button type="primary">Consultar</Button>
+            <Button type="primary" onClick={this.handleFilter}>Consultar</Button>
           </Col>
           <Col span={2}>
-            <Button type="primary">Limpiar</Button>
+            <Button type="primary" onClick={this.handleReset}>Limpiar</Button>
           </Col>
         </Row>
       </div>
