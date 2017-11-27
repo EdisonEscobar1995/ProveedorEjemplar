@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Tooltip, Button, Input, Upload, Radio } from 'antd';
+import { Table, Tooltip, Button, Input, Radio } from 'antd';
 import styled from 'styled-components';
+import Upload from '../shared/Upload';
 
 const { TextArea } = Input;
 const { Column } = Table;
@@ -14,9 +15,6 @@ const RadioStyle = styled(Radio)`
   white-space: normal;
   margin: 10px 0;
 `;
-const ColumnStyle = styled(Column)`
-  vertical-align: top;
-`;
 
 const RadioGroup = Radio.Group;
 
@@ -25,9 +23,8 @@ class Question extends Component {
     const { idDimension, idSurvey, getQuestionsByDimension } = this.props;
     getQuestionsByDimension(idSurvey, idDimension);
   }
-  onChange = (e, record) => {
-    const idOptionSupplier = e.target.value;
-    const { id, answer, idCriterion } = record; // idquestion
+  onChange = (value, record, fieldName) => {
+    const { id, answer, idCriterion } = record;
     const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
     let actualAnswer = {};
     if (answer.length > 0) {
@@ -37,10 +34,26 @@ class Question extends Component {
       idSupplierByCall: idCall,
       idSurvey,
       idQuestion: id,
-      idOptionSupplier,
     };
     sendAnswer = Object.assign(actualAnswer, sendAnswer);
+    if (fieldName === 'attachment') {
+      if (sendAnswer[fieldName]) {
+        sendAnswer[fieldName].push(value);
+      } else {
+        sendAnswer[fieldName] = [value];
+      }
+    } else {
+      sendAnswer[fieldName] = value;
+    }
     saveAnswer(sendAnswer, idDimension, idCriterion);
+  }
+  getAnswer = (record, fieldName) => {
+    const actualAnswer = record.answer[0];
+    let value;
+    if (actualAnswer) {
+      value = actualAnswer[fieldName];
+    }
+    return value;
   }
   getColumns = () => (
     [
@@ -71,43 +84,67 @@ class Question extends Component {
           if (record.answer.length > 0) {
             value = record.answer[0].idOptionSupplier;
           }
-          return (<RadioGroup
-            value={value}
-            onChange={e => this.onChange(e, record)}
-          >
-            {
-              options.map(option => (
-                <RadioStyle
-                  key={option.id}
-                  value={option.id}
-                >
-                  {option.wording}
-                </RadioStyle>
-              ),
-              )
-            }
-          </RadioGroup>);
+          let renderComponent;
+          if (record.type === 'Cerrada') {
+            renderComponent = (<RadioGroup
+              value={value}
+              onChange={e => this.onChange(e.target.value, record, 'idOptionSupplier')}
+            >
+              {
+                options.map(option => (
+                  <RadioStyle
+                    key={option.id}
+                    value={option.id}
+                  >
+                    {option.wording}
+                  </RadioStyle>
+                ),
+                )
+              }
+            </RadioGroup>);
+          } else {
+            renderComponent = (<TextArea
+              defaultValue={this.getAnswer(record, 'commentSupplier')}
+              onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
+            />);
+          }
+          return renderComponent;
         },
       },
       {
         title: 'Comentario',
         width: '20%',
-        dataIndex: 'idCriterion',
-        key: 'idCriterion',
-        render: () => <TextArea />,
+        dataIndex: 'answer',
+        key: 'commentSupplier',
+        render: (text, record) =>
+          (<TextArea
+            defaultValue={this.getAnswer(record, 'commentSupplier')}
+            onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
+          />),
       },
       {
         title: 'Soporte',
         width: '5%',
-        dataIndex: 'idDimension',
-        key: 'idDimension',
-        render: () => (
-          <Upload>
+        dataIndex: 'answer',
+        key: 'attachment',
+        render: (text, record) => {
+          let actualValue = this.getAnswer(record, 'attachment');
+          if (!actualValue) {
+            actualValue = [];
+          }
+          return (<Upload
+            datakey={record}
+            disabled={false}
+            list={actualValue}
+            multiple
+            onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
+            onRemove={this.onChange}
+          >
             <a>
               Anexar
             </a>
-          </Upload>
-        ),
+          </Upload>);
+        },
       },
     ]
   )
@@ -130,7 +167,8 @@ class Question extends Component {
                   {
                     columns.map(column => (
                       (
-                        <ColumnStyle
+                        <Column
+                          className="hola"
                           width={column.width}
                           title={column.title}
                           key={column.key}

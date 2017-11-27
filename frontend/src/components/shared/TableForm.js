@@ -76,7 +76,7 @@ class GenericFormTable extends Component {
     let content = '';
     if (data.length > 0) {
       content = (
-        <Table locale={config} dataSource={data}>
+        <Table pagination={false} locale={config} dataSource={data}>
           {
             colummns.map(column => (
               (
@@ -95,7 +95,7 @@ class GenericFormTable extends Component {
                                 rules: [{ required: true, message: 'Por favor ingrese un valor' }],
                                 initialValue: text,
                               })(
-                                <Input placeholder={column.title} />,
+                                <Input type={column.type} placeholder={column.title} />,
                               )
                             }
                           </ItemStyle>

@@ -12,8 +12,20 @@ import {
   SAVE_DATA_ANSWER_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
-  UPDATE_DOCUMENTS,
+  UPDATE_ATTACHMENT,
+  DELETE_ATTACHMENT,
 } from './const';
+
+import {
+  ADD_DATA,
+  SAVE_DATA,
+  EDIT_DATA,
+  DELETE_DATA,
+  CANCEL_DATA,
+} from '../TableForm/const';
+
+import reloadKeys from '../../utils/reducerUtils';
+
 
 const initialState = {
   supplier: {},
@@ -30,6 +42,7 @@ const initialState = {
   departments: [],
   cities: [],
   dimensions: [],
+  customers: [],
   loading: false,
 };
 
@@ -122,11 +135,68 @@ function supplierApp(state = initialState, action) {
         ...state,
         participateInCall: action.participateInCall,
       };
-    case UPDATE_DOCUMENTS:
+    case UPDATE_ATTACHMENT: {
       return {
         ...state,
         supplier: action.supplier,
       };
+    }
+    case DELETE_ATTACHMENT:
+      return {
+        ...state,
+        supplier: action.supplier,
+        loading: false,
+      };
+    case ADD_DATA: {
+      const { customers } = state;
+      let newData = [...customers];
+      newData.unshift(action.newItem);
+      newData = reloadKeys(newData);
+      return {
+        ...state,
+        customers: newData,
+      };
+    }
+    case SAVE_DATA: {
+      const { data, index } = action;
+      const stateData = state.customers;
+      let newData = [...stateData];
+      newData[index] = data;
+      newData = reloadKeys(newData);
+      return {
+        ...state,
+        customers: newData,
+        loading: false,
+      };
+    }
+    case EDIT_DATA: {
+      const { customers } = state;
+      const newData = [...customers];
+      newData[action.index].editable = true;
+      return {
+        ...state,
+        customers: newData,
+      };
+    }
+    case DELETE_DATA: {
+      const { customers } = state;
+      const newData = [...customers];
+      newData.splice(action.index, 1);
+      return {
+        ...state,
+        customers: newData,
+        loading: false,
+      };
+    }
+    case CANCEL_DATA: {
+      const { data } = state;
+      const newData = [...data];
+      newData[action.index].editable = false;
+      return {
+        ...state,
+        customers: newData,
+      };
+    }
     default: {
       return state;
     }

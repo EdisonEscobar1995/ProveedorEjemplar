@@ -8,6 +8,20 @@ const defaultOptions = [
     name: 'No',
   },
 ];
+const defaultMoneyType = [
+  {
+    id: 'COP',
+    name: 'COP',
+  },
+  {
+    id: 'USD',
+    name: 'USD',
+  },
+  {
+    id: 'CRC',
+    name: 'CRC',
+  },
+];
 function getValueOption(value) {
   if (value) {
     return (value ? 'si' : 'no');
@@ -31,8 +45,9 @@ function generalInfo(fields) {
     getDataDepartmentsByCountry,
     cities,
     getDataCitiesByDepartment,
-    updateDocuments,
     changeIdCompanySize,
+    updateAttachment,
+    deleteAttachment,
   } = fields;
   const {
     idSupply,
@@ -142,11 +157,11 @@ function generalInfo(fields) {
           span: 12,
           type: 'upload',
           name: 'file',
-          action: 'http://saescudero.cognox.com/Aplicaciones/ProveedorEjemplar/exemplaryProvider.nsf/xsp/Attachment?action=save',
-          key: 'file',
+          key: 'document',
           disabled,
-          onChange: updateDocuments,
           fileList: document,
+          onChange: updateAttachment,
+          onRemove: deleteAttachment,
         },
       ],
     },
@@ -197,7 +212,7 @@ function generalInfo(fields) {
         },
         {
           span: 6,
-          type: 'date',
+          type: 'number',
           label: 'Año de establecimiento',
           key: 'yearOfEstablishment',
           value: yearOfEstablishment,
@@ -441,7 +456,13 @@ function noParticipateInfo(fields) {
 }
 
 function comercialInfo(fields) {
-  const { supplier } = fields;
+  const {
+    supplier,
+    call,
+    changeIdCompanySize,
+    updateAttachment,
+    deleteAttachment,
+  } = fields;
   const {
     idSector,
     otherSector,
@@ -463,7 +484,9 @@ function comercialInfo(fields) {
     exportDestination,
     globalAgreement,
     chemicalSubstance,
+    attachedFinancialReport,
   } = supplier;
+  const disabled = call.lockedByModification || changeIdCompanySize;
   return [
     {
       key: 2.4,
@@ -475,6 +498,7 @@ function comercialInfo(fields) {
           key: 'idSector',
           value: idSector,
           options: [],
+          disabled,
         },
         {
           span: 8,
@@ -482,6 +506,7 @@ function comercialInfo(fields) {
           label: 'Otro cual?',
           key: 'otherSector',
           value: otherSector,
+          disabled,
         },
         {
           span: 8,
@@ -489,6 +514,7 @@ function comercialInfo(fields) {
           label: 'Pagina web',
           key: 'webSite',
           value: webSite,
+          disabled,
         },
       ],
     },
@@ -501,6 +527,7 @@ function comercialInfo(fields) {
           key: 'packagingProvided',
           value: packagingProvided,
           required: true,
+          disabled,
           options: [
             {
               id: 'si',
@@ -535,43 +562,53 @@ function comercialInfo(fields) {
         {
           span: 3,
           type: 'select',
-          label: 'Valor en activos $',
+          label: 'Tipo',
           key: 'valueAssetsOption',
           value: valueAssetsOption,
           required: true,
-          options: [],
+          options: defaultMoneyType,
+          disabled,
         },
         {
           span: 3,
           type: 'input',
+          label: 'Valor en activos $',
           key: 'valueAssets',
           inputType: 'number',
           value: valueAssets,
           required: true,
+          disabled,
         },
         {
           span: 12,
           type: 'upload',
           label: 'Soporte de balances o informes financieros del valor en activos',
-          key: 'support',
+          key: 'attachedFinancialReport',
+          fileList: attachedFinancialReport,
+          onChange: updateAttachment,
+          onRemove: deleteAttachment,
           required: true,
+          disabled,
         },
         {
           span: 3,
           type: 'select',
-          label: 'Valor en ventas anual',
+          label: 'Tipo',
           key: 'annualSalesOption',
           value: annualSalesOption,
           required: true,
-          options: [],
+          options: defaultMoneyType,
+          disabled,
         },
         {
           span: 3,
           type: 'input',
+          label: 'Valor en ventas anual',
           inputType: 'number',
           key: 'annualSalesValue',
           value: annualSalesValue,
           required: true,
+          disabled,
         },
       ],
     },
@@ -585,6 +622,7 @@ function comercialInfo(fields) {
           key: 'numberOfDirectEmployees',
           inputType: 'number',
           value: numberOfDirectEmployees,
+          disabled,
         },
         {
           span: 6,
@@ -593,6 +631,7 @@ function comercialInfo(fields) {
           key: 'numberOfSubContratedEmployees',
           inputType: 'number',
           value: numberOfSubContratedEmployees,
+          disabled,
         },
         {
           span: 6,
@@ -601,6 +640,7 @@ function comercialInfo(fields) {
           inputType: 'number',
           key: 'employeesTotal',
           value: numberOfSubContratedEmployees + numberOfDirectEmployees,
+          disabled,
         },
         {
           span: 6,
@@ -609,6 +649,7 @@ function comercialInfo(fields) {
           key: 'participationInSalesWithGroupNutresa',
           inputType: 'number',
           value: participationInSalesWithGroupNutresa,
+          disabled,
         },
       ],
     },
@@ -620,6 +661,7 @@ function comercialInfo(fields) {
           type: 'title',
           value: 'Contacto con el grupo nutresa',
           key: 'infoFinancial',
+          disabled,
         },
       ],
     },
@@ -632,6 +674,7 @@ function comercialInfo(fields) {
           label: 'Nombre de la persona contacto en Grupo Nutresa (Contacto Comercial y/o Negociador)',
           key: 'nameContactPersonInGroupNutresa',
           value: nameContactPersonInGroupNutresa,
+          disabled,
         },
         {
           span: 8,
@@ -640,6 +683,7 @@ function comercialInfo(fields) {
           label: 'E-mail de la persona contacto en Grupo Nutresa',
           key: 'emailContactPersonInGroupNutresa',
           value: emailContactPersonInGroupNutresa,
+          disabled,
         },
         {
           span: 8,
@@ -648,6 +692,7 @@ function comercialInfo(fields) {
           label: 'Teléfono de la persona contacto en Grupo Nutresa',
           key: 'phoneContactPersonInGroupNutresa',
           value: phoneContactPersonInGroupNutresa,
+          disabled,
         },
       ],
     },
@@ -669,6 +714,7 @@ function comercialInfo(fields) {
           label: 'Describa el origen geográfico de los principales insumos que son utilizadas en los productos que nos provee',
           key: 'geograficDescriptionOfPrincipalMaterials',
           value: geograficDescriptionOfPrincipalMaterials,
+          disabled,
         },
       ],
     },
@@ -692,6 +738,7 @@ function comercialInfo(fields) {
           key: 'currentlyExport',
           value: getValueOption(currentlyExport),
           options: defaultOptions,
+          disabled,
         },
         {
           span: 18,
@@ -699,6 +746,7 @@ function comercialInfo(fields) {
           label: 'Destinos de exportación',
           key: 'exportDestination',
           value: exportDestination,
+          disabled,
         },
       ],
     },
@@ -720,6 +768,7 @@ function comercialInfo(fields) {
           label: 'Nombre las Certificaciones en Sostenibilidad, Calidad e Inocuidad certificadas en su compañía',
           key: 'nameCertification',
           value: nameCertification,
+          disabled,
         },
       ],
     },
@@ -743,6 +792,7 @@ function comercialInfo(fields) {
           key: 'globalAgreement',
           value: getValueOption(globalAgreement),
           options: defaultOptions,
+          disabled,
         },
       ],
     },
@@ -756,6 +806,7 @@ function comercialInfo(fields) {
           key: 'chemicalSubstance',
           valie: getValueOption(chemicalSubstance),
           options: defaultOptions,
+          disabled,
         },
       ],
     },
