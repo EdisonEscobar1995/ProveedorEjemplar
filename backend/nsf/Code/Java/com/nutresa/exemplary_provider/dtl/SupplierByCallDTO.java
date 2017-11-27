@@ -27,6 +27,8 @@ public class SupplierByCallDTO {
     private String oldIdCompanySize;
     @Expose
     private String state = "SUPPLIER";
+    @Expose
+    private boolean invitedToCall;
 
     public String getIdCall() {
         return idCall;
@@ -110,6 +112,14 @@ public class SupplierByCallDTO {
 
     public Date getDateLocked() {
         return dateLocked;
+    }
+
+    public void setInvitedToCall(boolean invitedToCall) {
+        this.invitedToCall = invitedToCall;
+    }
+
+    public boolean isInvitedToCall() {
+        return invitedToCall;
     }
 
 }
