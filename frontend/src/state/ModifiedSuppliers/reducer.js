@@ -1,6 +1,7 @@
 import {
   GET_DATA_MODIFIED_SUPPLIERS_PROGRESS,
   GET_DATA_MODIFIED_SUPPLIERS_SUCCESS,
+  FILTER_SUPPLIERS,
   SET_COMPANY_SIZE,
   UNLOCK_SUPPLIER_SUCCESS,
   REQUEST_FAILED,
@@ -8,6 +9,7 @@ import {
 
 const initialState = {
   data: {},
+  suppliers: [],
   loading: false,
 };
 
@@ -23,7 +25,35 @@ function modifiedSuppliersApp(state = initialState, action) {
       return {
         ...state,
         data: action.data,
+        suppliers: action.data.suppliers,
         loading: false,
+      };
+    }
+    case FILTER_SUPPLIERS: {
+      return {
+        ...state,
+        suppliers: state.data.suppliers.filter((item) => {
+          if (action.data.category !== '' && action.data.category !== item.idCategory) {
+            return false;
+          }
+          if (action.data.country !== '' && action.data.country !== item.idCountry) {
+            return false;
+          }
+          if (action.data.supplier !== '' && action.data.supplier !== item.id) {
+            return false;
+          }
+          if (action.data.supply !== '' && action.data.supply !== item.idSupply) {
+            return false;
+          }
+          if (action.data.state !== '' &&
+            action.data.state === 'Bloqueado' &&
+            !state.data.suppliersByCall
+              .find(supplierByCall => supplierByCall.idSupplier === item.id)
+              .lockedByModification) {
+            return false;
+          }
+          return true;
+        }),
       };
     }
     case SET_COMPANY_SIZE: {

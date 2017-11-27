@@ -1,4 +1,4 @@
-const filtersInfo = (data) => {
+const filtersInfo = ({ data, getModifiedSuppliers }) => {
   const states = [
     {
       id: 'Notificado',
@@ -26,6 +26,8 @@ const filtersInfo = (data) => {
           key: 'year',
           value: years && years.length > 0 ? years[0] : '',
           options: years ? years.map(item => ({ id: item, name: item })) : [],
+          handleChange: getModifiedSuppliers,
+          allowClear: false,
         },
         {
           span: 8,

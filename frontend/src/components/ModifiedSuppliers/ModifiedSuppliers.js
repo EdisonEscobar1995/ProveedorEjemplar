@@ -3,8 +3,8 @@ import { Table, Select, Button } from 'antd';
 
 const { Option } = Select;
 
-function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
-  const { suppliers, suppliersByCall, masters } = data;
+function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSupplier }) {
+  const { suppliersByCall, masters } = data;
 
   const isLocked = id => suppliersByCall
     .find(item => item.idSupplier === id)

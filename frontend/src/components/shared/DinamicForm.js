@@ -25,7 +25,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
             {
               item.value.map((current) => {
                 let rowValue;
-                let { label, span } = current;
+                let { label, span, allowClear } = current;
                 const {
                   key,
                   type,
@@ -38,6 +38,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   format,
                   rules = [],
                 } = current;
+                allowClear = allowClear === undefined ? true : allowClear;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
                 span = span || 24;
                 switch (type) {
@@ -65,7 +66,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                             disabled={disabled}
                             showSearch
                             mode={mode}
-                            allowClear
+                            allowClear={allowClear}
                             notFoundContent="No se encontraron resultados"
                             onChange={(selectValue) => {
                               if (valuesToClean) {
