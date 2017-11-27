@@ -164,14 +164,19 @@ public class GenericBLO<T, D> {
         return response;
     }
     
-    @SuppressWarnings("unchecked")
     public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds) throws HandlerGenericException {
+        return getMasters(idFieldNames, joinIds, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds, boolean uniqueIds)
+        throws HandlerGenericException {
         Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
 
         try {
             for (String idFieldName : idFieldNames) {
                 GenericBLO blo = FactoryBLO.getBlo(idFieldName);
-                masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName)));
+                masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName), uniqueIds));
             }
         } catch (HandlerGenericException e) {
             throw new HandlerGenericException(e);

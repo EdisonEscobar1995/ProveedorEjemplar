@@ -115,7 +115,7 @@ public class Common {
     }
 
     public static String getIdsFromList(List<Object> list, boolean uniqueIds) {
-        int size = list.size();
+        int size = null != list ? list.size() : 0;
         if (null == list || 0 == size || (!list.get(0).getClass().isPrimitive() && !(list.get(0) instanceof String))) {
             return "";
         }

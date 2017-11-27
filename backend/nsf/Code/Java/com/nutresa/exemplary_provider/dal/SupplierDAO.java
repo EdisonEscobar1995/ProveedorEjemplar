@@ -15,7 +15,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
     public SupplierDTO getSupplierInDirectory() throws HandlerGenericException {
         SupplierDTO supplier = null;
         try {
-            View view = getDatabase().getView("vwSuppliersByBusinessName");
+            View view = getDatabase().getView("vwSuppliersByFullName");
             Document document = view.getFirstDocumentByKey(getNameUserInSession(), true);
             supplier = castDocument(document);
         } catch (Exception exception) {

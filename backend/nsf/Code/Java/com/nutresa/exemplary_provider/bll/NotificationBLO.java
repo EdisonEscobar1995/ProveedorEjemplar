@@ -7,10 +7,13 @@ import java.util.Vector;
 import org.openntf.domino.email.DominoEmail;
 
 import com.nutresa.exemplary_provider.dal.NotificationDAO;
+import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
 import com.nutresa.exemplary_provider.dtl.NotificationDTO;
 import com.nutresa.exemplary_provider.dtl.RolDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SupplyDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
+import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 import com.nutresa.exemplary_provider.utils.TemplateMail;
 
@@ -29,15 +32,16 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
+            String pathApplication = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
             notification.setMessage(notification.getMessage().concat(
-                    "<a href='https://www.google.com.co'>Link de consulta</a>"));
+                    "<a href='" + pathApplication + "'>Link de consulta</a>"));
             sendNotification(sendTo, notification);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
     }
 
-    public void notifySurveyCompleted() throws HandlerGenericException {
+    public void notifySurveyCompleted(String idSupplier) throws HandlerGenericException {
         try {
             List<String> sendTo = new ArrayList<String>();
             List<UserDTO> users = getUsersByRolName("LIBERATOR");
@@ -47,10 +51,22 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
+            notification.setMessage(notification.getMessage().concat(buildDetailUserCompletedSurvey(idSupplier)));
             sendNotification(sendTo, notification);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+
+    private String buildDetailUserCompletedSurvey(String idSupplier) throws HandlerGenericException {
+        String detail = "<table><tr><th>Proveedor</th><th>Suministro</th><th>Tamaño de empresa</th></tr><tr><td>%s</td><td>%s</td><td>%s</td></tr></table>";
+        SupplierBLO supplierBLO = new SupplierBLO();
+        SupplierDTO supplier = supplierBLO.get(idSupplier);
+        SupplyBLO supplyBLO = new SupplyBLO();
+        SupplyDTO supply = supplyBLO.get(supplier.getIdSupply());
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        CompanySizeDTO companySize = companySizeBLO.get(supplier.getIdCompanySize());
+        return String.format(detail, supplier.getBusinessName(), supply.getName(), companySize.getName());
     }
 
     private List<UserDTO> getUsersByRolName(String nameRol) throws HandlerGenericException {
@@ -92,6 +108,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         try {
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+            String pathApplication = Common.buildPathResource() + "/dist/index.html";
+            notification.setMessage(notification.getMessage().concat(
+                    "<a href='" + pathApplication + "'>Continuar encuesta</a>"));
             sendNotification(email, notification);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
