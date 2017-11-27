@@ -10,6 +10,7 @@ import {
   DELETE_DATA,
   CANCEL_DATA,
 } from '../TableForm/const';
+import reloadKeys from '../../utils/reducerUtils';
 
 const initialState = {
   data: [],
@@ -17,13 +18,6 @@ const initialState = {
   loading: false,
 };
 
-function reloadKeys(data) {
-  const keyData = data.map((item, index) => {
-    item.key = index;
-    return item;
-  });
-  return keyData;
-}
 
 function sectorApp(state = initialState, action) {
   switch (action.type) {

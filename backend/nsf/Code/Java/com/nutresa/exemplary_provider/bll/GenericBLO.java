@@ -164,6 +164,10 @@ public class GenericBLO<T, D> {
         return response;
     }
     
+    public Map<String, List<DTO>> getMasters(String[] idFieldNames) throws HandlerGenericException {
+        return getMasters(idFieldNames, new HashMap<String, List<Object>>(), false);
+    }
+
     public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds) throws HandlerGenericException {
         return getMasters(idFieldNames, joinIds, false);
     }
@@ -175,8 +179,16 @@ public class GenericBLO<T, D> {
 
         try {
             for (String idFieldName : idFieldNames) {
+                if (null == idFieldName || idFieldName.isEmpty()) {
+                    continue;
+                }
                 GenericBLO blo = FactoryBLO.getBlo(idFieldName);
-                masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName), uniqueIds));
+                List<Object> ids = joinIds.get(idFieldName);
+                if (null != ids && !ids.isEmpty()) {
+                    masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName), uniqueIds));
+                } else {
+                    masters.put(idFieldName, blo.getAll());
+                }
             }
         } catch (HandlerGenericException e) {
             throw new HandlerGenericException(e);

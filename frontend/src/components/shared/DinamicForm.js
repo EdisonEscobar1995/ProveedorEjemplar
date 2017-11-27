@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  Row, Col, Form, Input, Select, Radio, Upload, Button, Icon, DatePicker,
+  Row, Col, Form, Input, Select, Radio, Button, Icon, DatePicker,
 } from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
-import message from '../shared/Message';
+import Upload from '../shared/Upload';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -120,38 +120,16 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                     );
                     break;
                   case 'upload': {
-                    const { name, action, headers, onChange } = current;
+                    const { fileList, onChange, onRemove } = current;
                     rowValue = (
                       <Field label={label}>
                         <Upload
-                          name={name}
-                          action={action}
+                          datakey={key}
+                          list={fileList}
                           disabled={disabled}
-                          accept=".doc, .png, .jpg, .jpeg, .pdf, .ppt"
-                          onChange={(info) => {
-                            const { file } = info;
-                            const messageConfig = { text: '', type: 'error' };
-                            if (file.status === 'done') {
-                              const { status, data } = file.response;
-                              if (status) {
-                                messageConfig.text = `${file.name} archivo cargado exitosamente`;
-                                messageConfig.type = 'success';
-                                message(messageConfig);
-                                if (onChange) {
-                                  console.log(info);
-                                  onChange(data);
-                                }
-                              } else {
-                                messageConfig.text = `${file.name} fallo en la carga`;
-                                message(messageConfig);
-                              }
-                            } else if (file.status === 'error') {
-                              messageConfig.text = `${file.name} fallo en la carga`;
-                              message(messageConfig);
-                            }
-                          }}
-                          headers={headers}
                           multiple
+                          onChange={onChange}
+                          onRemove={onRemove}
                         >
                           <Button disabled={disabled}>
                             <Icon type="upload" />Adjuntar archivo

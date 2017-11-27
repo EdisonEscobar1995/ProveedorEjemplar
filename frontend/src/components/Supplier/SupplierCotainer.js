@@ -12,8 +12,14 @@ import {
   saveDataCallBySupplier,
   saveDataCallSupplier,
   changeParticipate,
-  updateDocuments,
+  updateAttachment,
+  deleteAttachment,
   saveAnswer,
+  addData,
+  saveData,
+  editData,
+  deleteData,
+  cancelData,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -45,6 +51,7 @@ const mapStateToProps = state => ({
   cities: state.supplier.cities,
   dimensions: state.supplier.dimensions,
   loading: state.supplier.loading,
+  customers: state.supplier.customers,
   error: state.supplier.error,
 });
 
@@ -79,11 +86,29 @@ const mapDispatchToProps = dispatch => ({
   saveAnswer: (answer, idDimension, idCriterion) => {
     dispatch(saveAnswer(answer, idDimension, idCriterion));
   },
-  updateDocuments: (document) => {
-    dispatch(updateDocuments(document));
+  updateAttachment: (data, field) => {
+    dispatch(updateAttachment(data, field));
+  },
+  deleteAttachment: (idAtttachment, field) => {
+    dispatch(deleteAttachment(idAtttachment, field));
   },
   changeParticipate: (participateInCall) => {
     dispatch(changeParticipate(participateInCall));
+  },
+  addData: (data) => {
+    dispatch(addData(data));
+  },
+  saveData: (data, index) => {
+    dispatch(saveData(data, index));
+  },
+  editData: (index) => {
+    dispatch(editData(index));
+  },
+  deleteData: (data, index) => {
+    dispatch(deleteData(data, index));
+  },
+  cancelData: (index) => {
+    dispatch(cancelData(index));
   },
 });
 

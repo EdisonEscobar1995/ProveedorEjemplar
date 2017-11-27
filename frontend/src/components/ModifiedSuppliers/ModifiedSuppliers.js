@@ -3,9 +3,12 @@ import { Table, Select, Button } from 'antd';
 
 const { Option } = Select;
 
-function ModifiedSuppliers(props) {
-  const { data, loading } = props;
-  const { Suppliers, SuppliersByCall, Masters } = data;
+function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
+  const { suppliers, suppliersByCall, masters } = data;
+
+  const isLocked = id => suppliersByCall
+    .find(item => item.idSupplier === id)
+    .lockedByModification;
 
   const columns = [{
     title: 'Nombre del proveedor',
@@ -24,41 +27,38 @@ function ModifiedSuppliers(props) {
     dataIndex: 'idSupply',
     key: 'idSupply',
     render(text, record) {
-      return Masters.Supply.find(supply => supply.id === record.idSupply).name;
+      return masters.Supply.find(supply => supply.id === record.idSupply).name;
     },
   }, {
     title: 'Categoría',
     dataIndex: 'idCategory',
     key: 'idCategory',
     render(text, record) {
-      return Masters.Category.find(category => category.id === record.idCategory).name;
+      return masters.Category.find(category => category.id === record.idCategory).name;
     },
   }, {
     title: 'Tamaño de empresa asignado',
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
-      return Masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
+      return masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
     },
   }, {
     title: 'Tamaño de empresa actual',
     dataIndex: 'idCompanySizeSelect',
     key: 'idCompanySizeSelect',
     render(text, record) {
-      const locked = SuppliersByCall
-        .find(item => item.idSupplier === record.id)
-        .lockedByModification;
-      if (locked) {
+      if (isLocked(record.id)) {
         return (
           <Select
             showSearch
             allowClear
             notFoundContent="No se encontraron resultados"
             style={{ width: '100%' }}
-            onChange={value => this.setCompanySize({ id: record.id, companySize: value })}
+            onChange={value => setCompanySize({ id: record.id, idCompanySize: value })}
           >
             {
-              Masters.CompanySize.map(option => (
+              masters.CompanySize.map(option => (
                 <Option key={option.id} value={option.id}>{option.name}</Option>
               ))
             }
@@ -72,23 +72,26 @@ function ModifiedSuppliers(props) {
     dataIndex: 'state',
     key: 'state',
     render(text, record) {
-      return SuppliersByCall.find(item => item.idSupplier === record.id).lockedByModification ? 'Bloqueado' : 'Notificado';
+      return isLocked(record.id) ? 'Bloqueado' : 'Notificado';
     },
   }, {
     title: 'Acción',
-    dataIndex: 'state',
-    key: 'state',
+    dataIndex: 'action',
+    key: 'action',
     render(text, record) {
-      return (
-        <Button
-          shape="circle"
-          icon="mail"
-          onClick={() => {
-            const supplierByCall = SuppliersByCall.find(item => item.idSupplier === record.id);
-            this.unlockSupplier(supplierByCall);
-          }}
-        />
-      );
+      if (isLocked(record.id)) {
+        return (
+          <Button
+            shape="circle"
+            icon="mail"
+            onClick={() => {
+              const supplierByCall = suppliersByCall.find(item => item.idSupplier === record.id);
+              unlockSupplier(supplierByCall);
+            }}
+          />
+        );
+      }
+      return null;
     },
   }];
 
@@ -97,7 +100,7 @@ function ModifiedSuppliers(props) {
       <Table
         rowKey={record => record.id}
         loading={loading}
-        dataSource={Suppliers}
+        dataSource={suppliers}
         columns={columns}
       />
     </div>

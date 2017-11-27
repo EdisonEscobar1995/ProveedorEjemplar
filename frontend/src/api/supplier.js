@@ -21,8 +21,8 @@ function saveDataSuppliertApi(data) {
   return instance.post('Supplier?action=save', data);
 }
 
-function getModifiedSuppliersApi() {
-  return instance.get('Supplier?action=getModifiedSuppliers');
+function getModifiedSuppliersApi(year) {
+  return instance.get(`Supplier?action=getModifiedSuppliers&year=${year}`);
 }
 
 function unlockSupplierApi(supplierByCall) {

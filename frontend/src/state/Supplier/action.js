@@ -13,7 +13,8 @@ import {
   SAVE_DATA_ANSWER_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
-  UPDATE_DOCUMENTS,
+  UPDATE_ATTACHMENT,
+  DELETE_ATTACHMENT,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -32,7 +33,10 @@ import getDataCountriesApi from '../../api/countries';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
+import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi } from '../../api/answer';
+import { getCustomerApi, deleteCustomerApi } from '../../api/customer';
+import { addData, saveData, editData, deleteData, cancelData } from '../TableForm/action';
 import requestApi, { requestApiNotLoading } from '../../utils/actionUtils';
 
 
@@ -89,15 +93,22 @@ function changeParticipate(participateInCall) {
     participateInCall,
   };
 }
-function updateDocuments(document) {
+function updateAttachment(data, field) {
   return (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
-    supplier.document.push(document);
+    supplier[field].push(data);
     const newData = {
-      type: UPDATE_DOCUMENTS,
+      type: UPDATE_ATTACHMENT,
       supplier,
     };
     dispatch(newData);
+  };
+}
+function deleteAttachmentSuccess(supplier, field, idAttachment) {
+  supplier[field].filter(attach => attach.id !== idAttachment);
+  return {
+    type: DELETE_ATTACHMENT,
+    supplier,
   };
 }
 
@@ -174,7 +185,7 @@ function saveDataCallAndSupplerSuccess(call, supplier, changeIdCompanySize) {
   };
 }
 
-function getDataFailed(error) {
+function getFailedRequest(error) {
   return {
     type: GET_REQUEST_FAILED,
     error,
@@ -234,7 +245,7 @@ function getDataSupplier() {
         dispatch(getDataSupplierSuccess(data));
       })
       .catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -246,7 +257,7 @@ function getDataCategoryBySuply(clientData) {
         const categories = respone.data.data;
         dispatch(getDataCategorySuccess(categories));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -257,7 +268,7 @@ function getDataSubCategoryByCategory(clientData) {
         const subcategories = respone.data.data;
         dispatch(getDataSubCategorySuccess(subcategories));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -269,7 +280,7 @@ function getDataDepartmentsByCountry(clientData) {
         const departsments = respone.data.data;
         dispatch(getDataDepartmentsByCountrySuccess(departsments));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -280,7 +291,7 @@ function getDataCitiesByDepartment(clientData) {
         const cities = respone.data.data;
         dispatch(getDataCitiesByDepartmentSuccess(cities));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -291,7 +302,7 @@ function getDimensionsBySurvey(idSurvey) {
         const dimensions = respone.data.data;
         dispatch(getDataDimensionsBySuplySuccess(dimensions));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -310,7 +321,7 @@ function getQuestionsByDimension(idSurvey, idDimension) {
           questions,
         ));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -321,7 +332,7 @@ function saveDataCallBySupplier(clientData) {
         const call = respone.data.data;
         dispatch(saveDataCallSuccess(call));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -333,7 +344,7 @@ function saveAnswer(clientAnswer, idDimension, idCriterion) {
         const dimensions = [...getActualState().supplier.dimensions];
         dispatch(saveAnswerSuccess(dimensions, idDimension, answer, idCriterion));
       }).catch((err) => {
-        dispatch(getDataFailed(err));
+        dispatch(getFailedRequest(err));
       });
   };
 }
@@ -351,8 +362,46 @@ function saveDataCallSupplier(clientCall, clientSupplier) {
       const changeIdCompanySize = oldSupplies.idCompanySize !== supplier.idCompanySize;
       dispatch(saveDataCallAndSupplerSuccess(call, supplier, changeIdCompanySize));
     }).catch((err) => {
-      dispatch(getDataFailed(err));
+      dispatch(getFailedRequest(err));
     });
+  };
+}
+function deleteAttachment(idAttachment, field) {
+  return (dispatch, getActualState) => {
+    requestApi(
+      dispatch,
+      getDataSupplierProgress,
+      deleteAttachmentApi,
+      idAttachment,
+    ).then(() => {
+      const supplier = { ...getActualState().supplier.supplier };
+      dispatch(deleteAttachmentSuccess(supplier, field, idAttachment));
+    }).catch((err) => {
+      dispatch(getFailedRequest(err));
+    });
+  };
+}
+
+function saveSector(clientData, index) {
+  return (dispatch) => {
+    requestApi(dispatch, getDataSupplierProgress, getCustomerApi, clientData)
+      .then((respose) => {
+        const { data } = respose.data;
+        dispatch(saveData(data, index));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  };
+}
+
+function deleteSector(clientData, index) {
+  return (dispatch) => {
+    requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, clientData)
+      .then(() => {
+        dispatch(deleteData(index));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
   };
 }
 
@@ -368,5 +417,11 @@ export {
   saveDataCallSupplier,
   saveAnswer,
   changeParticipate,
-  updateDocuments,
+  updateAttachment,
+  deleteAttachment,
+  saveSector as saveData,
+  deleteSector as deleteData,
+  addData,
+  editData,
+  cancelData,
 };

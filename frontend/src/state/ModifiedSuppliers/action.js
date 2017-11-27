@@ -33,8 +33,8 @@ const setCompanySize = data => ({
   data,
 });
 
-const getAllModifiedSuppliers = () => (dispatch) => {
-  requestApi(dispatch, getDataModifiedSuppliersProgress, getModifiedSuppliersApi)
+const getModifiedSuppliers = year => (dispatch) => {
+  requestApi(dispatch, getDataModifiedSuppliersProgress, getModifiedSuppliersApi, year)
     .then((response) => {
       const { data } = response.data;
       dispatch(getDataModifiedSuppliersSuccess(data));
@@ -59,7 +59,7 @@ const unlockSupplier = supplierByCall => (dispatch) => {
 };
 
 export {
-  getAllModifiedSuppliers,
+  getModifiedSuppliers,
   getFailedRequest,
   setCompanySize,
   unlockSupplier,

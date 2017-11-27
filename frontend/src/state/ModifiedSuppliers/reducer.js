@@ -31,11 +31,11 @@ function modifiedSuppliersApp(state = initialState, action) {
         ...state,
         data: {
           ...state.data,
-          SuppliersByCall: state.data.SuppliersByCall.map(
+          suppliersByCall: state.data.suppliersByCall.map(
             item => (
-              item.idSupplier === action.id ? {
+              item.idSupplier === action.data.id ? {
                 ...item,
-                oldIdCompanySize: action.companySize,
+                oldIdCompanySize: action.data.idCompanySize,
               } : item
             ),
           ),
@@ -48,7 +48,7 @@ function modifiedSuppliersApp(state = initialState, action) {
         ...state,
         data: {
           ...state.data,
-          SuppliersByCall: state.data.SuppliersByCall.map(
+          suppliersByCall: state.data.suppliersByCall.map(
             item => (
               item.id === action.data.id ? {
                 ...item,

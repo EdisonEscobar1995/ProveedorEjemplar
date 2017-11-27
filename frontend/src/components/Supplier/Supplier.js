@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Steps, Spin, Button } from 'antd';
+import { Steps, Spin, Button, Progress } from 'antd';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
 import Question from './Question';
+
 
 const { Step } = Steps;
 
@@ -38,18 +39,47 @@ class Supplier extends Component {
           getQuestionsByDimension={getQuestionsByDimension}
           saveAnswer={saveAnswer}
         />,
+        stepContent: <Progress type="circle" percent={this.calculatePercent(dimension.id)} width={40} />,
       };
     });
     return steps.concat(mapDimensions);
   }
+  calculatePercent = (idDimension) => {
+    let totalQuestions = 0;
+    let responsedQuestion = 0;
+    let total;
+    const actualDimension = this.props.dimensions.find(dimension => dimension.id === idDimension);
+    if (actualDimension.criterions.length > 0) {
+      actualDimension.criterions.forEach((criteria) => {
+        criteria.questions.forEach((question) => {
+          if (question.required) {
+            totalQuestions += 1;
+            if (question.answer.length > 0) {
+              responsedQuestion += 1;
+            }
+          }
+        });
+      });
+      if (totalQuestions !== 0) {
+        total = responsedQuestion / totalQuestions;
+      } else {
+        total = 100;
+      }
+    } else {
+      total = 0;
+    }
+    return total;
+  }
   save = (values) => {
     if (this.props.participateInCall) {
-      // this.props.next();
       const { call, supplier } = { ...this.props };
       let newSupplier = { ...supplier };
       newSupplier = Object.assign(newSupplier, values);
       call.participateInCall = true;
       this.props.saveDataCallSupplier(call, newSupplier);
+      if (!this.props.changeIdCompanySize) {
+        this.next();
+      }
     } else {
       values.participateInCall = false;
       values.lockedByModification = true;
@@ -71,8 +101,12 @@ class Supplier extends Component {
     const steps = this.getSteps(dimensions);
     return (
       <Spin spinning={loading}>
-        <Steps progressDot current={current}>
-          {steps.map(item => <Step key={item.name} title={item.name} />)}
+        <Steps current={current}>
+          {steps.map(item =>
+            (
+              <Step key={item.name} icon={item.stepContent} title={item.name} />
+            ),
+          )}
         </Steps>
         {
           this.state.current < steps.length - 1
