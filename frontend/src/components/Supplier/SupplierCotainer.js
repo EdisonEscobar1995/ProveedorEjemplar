@@ -14,12 +14,13 @@ import {
   changeParticipate,
   updateAttachment,
   deleteAttachment,
+  updateChangeIdCompanySize,
   saveAnswer,
-  addData,
-  saveData,
-  editData,
-  deleteData,
-  cancelData,
+  addDataCustomer,
+  saveDataCustomer,
+  editDataCustomer,
+  deleteDataCustomer,
+  cancelDataCustomer,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -51,7 +52,9 @@ const mapStateToProps = state => ({
   cities: state.supplier.cities,
   dimensions: state.supplier.dimensions,
   loading: state.supplier.loading,
-  customers: state.supplier.customers,
+  principalCustomer: state.supplier.principalCustomer,
+  sectors: state.supplier.sectors,
+  messageChangeCompanySize: state.supplier.messageChangeCompanySize,
   error: state.supplier.error,
 });
 
@@ -95,20 +98,23 @@ const mapDispatchToProps = dispatch => ({
   changeParticipate: (participateInCall) => {
     dispatch(changeParticipate(participateInCall));
   },
+  updateChangeIdCompanySize: (idCompanySize) => {
+    dispatch(updateChangeIdCompanySize(idCompanySize));
+  },
   addData: (data) => {
-    dispatch(addData(data));
+    dispatch(addDataCustomer(data));
   },
   saveData: (data, index) => {
-    dispatch(saveData(data, index));
+    dispatch(saveDataCustomer(data, index));
   },
   editData: (index) => {
-    dispatch(editData(index));
+    dispatch(editDataCustomer(index));
   },
   deleteData: (data, index) => {
-    dispatch(deleteData(data, index));
+    dispatch(deleteDataCustomer(data, index));
   },
   cancelData: (index) => {
-    dispatch(cancelData(index));
+    dispatch(cancelDataCustomer(index));
   },
 });
 

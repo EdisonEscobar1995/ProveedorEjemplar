@@ -20,7 +20,7 @@ class Comercial extends Component {
     });
   }
   render() {
-    const { customers, addData, editData, deleteData, cancelData } = this.props;
+    const { principalCustomer, addData, saveData, editData, deleteData, cancelData } = this.props;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
     const colummns = [
@@ -30,16 +30,17 @@ class Comercial extends Component {
       },
       {
         title: 'Participacion en ventas',
-        key: 'salesParticipation',
+        key: 'percentageOfParticipationInSales',
         type: 'number',
       },
     ];
     return (
       <div>
         <TableForm
-          data={customers}
+          data={principalCustomer}
           colummns={colummns}
           addData={addData}
+          saveData={saveData}
           editData={editData}
           deleteData={deleteData}
           cancelData={cancelData}

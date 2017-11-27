@@ -1,10 +1,10 @@
 import intance from './instance';
 
-const getCustomerApi = () => intance.get('Customer?action=getAll');
+const saveCustomerApi = data => intance.post('Customer?action=save', data);
 
 const deleteCustomerApi = data => intance.get(`Customer?action=delete&id=${data}`);
 
 export {
-  getCustomerApi,
+  saveCustomerApi,
   deleteCustomerApi,
 };
