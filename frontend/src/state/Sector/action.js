@@ -2,8 +2,12 @@ import {
   GET_DATA_SECTOR_PROGRESS,
   GET_DATA_SECTOR_SUCCESS,
   REQUEST_FAILED,
+  ADD_SECTOR,
+  SAVE_SECTOR,
+  EDIT_SECTOR,
+  DELETE_SECTOR,
+  CANCEL_SECTOR,
 } from './const';
-import { addData, saveData, editData, deleteData, cancelData } from '../TableForm/action';
 import { getAllSectorApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
 import requestApi from '../../utils/actionUtils';
 
@@ -26,6 +30,38 @@ function getFailedRequest() {
   };
 }
 
+function addDataSector(newItem) {
+  return {
+    type: ADD_SECTOR,
+    newItem,
+  };
+}
+function editDataSector(index) {
+  return {
+    type: EDIT_SECTOR,
+    index,
+  };
+}
+function saveDataSector(data, index) {
+  return {
+    type: SAVE_SECTOR,
+    data,
+    index,
+  };
+}
+function deleteDataSector(index) {
+  return {
+    type: DELETE_SECTOR,
+    index,
+  };
+}
+function cancelDataSector(index) {
+  return {
+    type: CANCEL_SECTOR,
+    index,
+  };
+}
+
 function getAllSector() {
   return (dispatch) => {
     requestApi(dispatch, getDataSectorProgress, getAllSectorApi)
@@ -42,7 +78,7 @@ function saveSector(clientData, index) {
     requestApi(dispatch, getDataSectorProgress, saveSectorApi, clientData)
       .then((respose) => {
         const { data } = respose.data;
-        dispatch(saveData(data, index));
+        dispatch(saveDataSector(data, index));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -52,7 +88,7 @@ function deleteSector(clientData, index) {
   return (dispatch) => {
     requestApi(dispatch, getDataSectorProgress, deleteSectorApi, clientData)
       .then(() => {
-        dispatch(deleteData(index));
+        dispatch(deleteDataSector(index));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -61,9 +97,9 @@ function deleteSector(clientData, index) {
 
 export {
   getAllSector,
-  saveSector as saveData,
-  deleteSector as deleteData,
-  addData,
-  editData,
-  cancelData,
+  saveSector as saveDataSector,
+  deleteSector as deleteDataSector,
+  addDataSector,
+  editDataSector,
+  cancelDataSector,
 };

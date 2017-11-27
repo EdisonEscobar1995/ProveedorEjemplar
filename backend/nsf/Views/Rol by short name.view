@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Rol by short name' alias='vwRolByShortName' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865' showinmenu='false'
- noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
- onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
- showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
- showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
- rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+<view name='(Rol by short name)' alias='Rol|vwRolByShortName' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
+ showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
+ opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
+ extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
+ headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='596' unid='4DFD213BB11DA197052581DE0056032A' sequence='3'>
-<created><datetime>20171120T103929,06-05</datetime></created>
-<modified><datetime>20171120T104031,90-05</datetime></modified>
-<revised><datetime>20171120T104031,89-05</datetime></revised>
-<lastaccessed><datetime>20171120T104031,90-05</datetime></lastaccessed>
-<addedtofile><datetime>20171120T103929,09-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='16be' unid='15D8055C72FCAF31052581DF004936B5' sequence='15'>
+<created><datetime>20171121T081941,33-05</datetime></created>
+<modified><datetime>20171127T161434,14-05</datetime></modified>
+<revised><datetime>20171127T161434,13-05</datetime></revised>
+<lastaccessed><datetime>20171127T161434,14-05</datetime></lastaccessed>
+<addedtofile><datetime>20171121T081941,45-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frRol"</formula></code><code event='querypaste'><lotusscript
 >Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

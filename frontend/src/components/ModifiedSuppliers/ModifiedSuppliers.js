@@ -51,6 +51,7 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
       if (isLocked(record.id)) {
         return (
           <Select
+            key={record.id}
             showSearch
             allowClear
             notFoundContent="No se encontraron resultados"

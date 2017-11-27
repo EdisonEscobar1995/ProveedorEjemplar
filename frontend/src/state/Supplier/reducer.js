@@ -14,15 +14,13 @@ import {
   CHANGE_PARTICIPATE,
   UPDATE_ATTACHMENT,
   DELETE_ATTACHMENT,
+  UPDATE_CHANGEIDCOMPANYSIZE,
+  ADD_CUSTOMER,
+  EDIT_CUSTOMER,
+  SAVE_CUSTOMER,
+  DELETE_CUSTOMER,
+  CANCEL_CUSTOMER,
 } from './const';
-
-import {
-  ADD_DATA,
-  SAVE_DATA,
-  EDIT_DATA,
-  DELETE_DATA,
-  CANCEL_DATA,
-} from '../TableForm/const';
 
 import reloadKeys from '../../utils/reducerUtils';
 
@@ -42,7 +40,9 @@ const initialState = {
   departments: [],
   cities: [],
   dimensions: [],
-  customers: [],
+  principalCustomer: [],
+  sectors: [],
+  messageChangeCompanySize: 'El tamanio de la empresa ha cambiado, desea continuar?',
   loading: false,
 };
 
@@ -55,6 +55,7 @@ function supplierApp(state = initialState, action) {
       };
     case GET_DATA_SUPPLIER_SUCCESS: {
       const { participateInCall } = action.call;
+      const principalCustomer = reloadKeys(action.principalCustomer);
       return {
         ...state,
         supplier: action.supplier,
@@ -69,6 +70,8 @@ function supplierApp(state = initialState, action) {
         subcategories: action.subcategories,
         departments: action.departments,
         cities: action.cities,
+        sectors: action.sectors,
+        principalCustomer,
         loading: false,
       };
     }
@@ -141,60 +144,67 @@ function supplierApp(state = initialState, action) {
         supplier: action.supplier,
       };
     }
+    case UPDATE_CHANGEIDCOMPANYSIZE: {
+      return {
+        ...state,
+        changeIdCompanySize: action.changeIdCompanySize,
+      };
+    }
     case DELETE_ATTACHMENT:
       return {
         ...state,
         supplier: action.supplier,
         loading: false,
       };
-    case ADD_DATA: {
-      const { customers } = state;
-      let newData = [...customers];
+    case ADD_CUSTOMER: {
+      const { principalCustomer } = state;
+      let newData = [...principalCustomer];
       newData.unshift(action.newItem);
       newData = reloadKeys(newData);
       return {
         ...state,
-        customers: newData,
+        principalCustomer: newData,
       };
     }
-    case SAVE_DATA: {
+    case SAVE_CUSTOMER: {
       const { data, index } = action;
-      const stateData = state.customers;
+      const stateData = state.principalCustomer;
       let newData = [...stateData];
       newData[index] = data;
       newData = reloadKeys(newData);
       return {
         ...state,
-        customers: newData,
+        principalCustomer: newData,
         loading: false,
       };
     }
-    case EDIT_DATA: {
-      const { customers } = state;
-      const newData = [...customers];
+    case EDIT_CUSTOMER: {
+      const { principalCustomer } = state;
+      const newData = [...principalCustomer];
       newData[action.index].editable = true;
       return {
         ...state,
-        customers: newData,
+        principalCustomer: newData,
       };
     }
-    case DELETE_DATA: {
-      const { customers } = state;
-      const newData = [...customers];
+    case DELETE_CUSTOMER: {
+      const { principalCustomer } = state;
+      let newData = [...principalCustomer];
       newData.splice(action.index, 1);
+      newData = reloadKeys(newData);
       return {
         ...state,
-        customers: newData,
+        principalCustomer: newData,
         loading: false,
       };
     }
-    case CANCEL_DATA: {
-      const { data } = state;
-      const newData = [...data];
+    case CANCEL_CUSTOMER: {
+      const { principalCustomer } = state;
+      const newData = [...principalCustomer];
       newData[action.index].editable = false;
       return {
         ...state,
-        customers: newData,
+        principalCustomer: newData,
       };
     }
     default: {

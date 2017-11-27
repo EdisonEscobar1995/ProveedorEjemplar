@@ -55,6 +55,20 @@ public class Common {
 
         return field;
     }
+    
+    public static <T> Object getFieldValue(T dto, String name) throws HandlerGenericException {
+        Object response = null;
+        try {
+            Field field = Common.getField(dto.getClass(), name);
+            if (null != field) {
+                field.setAccessible(true);
+                response = field.get(dto);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return response;
+    }
 
     public static List<Field> getAllFields(List<Field> fields, Class<?> type) {
         fields.addAll(Arrays.asList(type.getDeclaredFields()));

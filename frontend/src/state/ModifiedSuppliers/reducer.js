@@ -7,6 +7,8 @@ import {
   REQUEST_FAILED,
 } from './const';
 
+import { LOCKED, NOTIFIED } from '../../utils/const';
+
 const initialState = {
   data: {},
   suppliers: [],
@@ -24,7 +26,15 @@ function modifiedSuppliersApp(state = initialState, action) {
     case GET_DATA_MODIFIED_SUPPLIERS_SUCCESS: {
       return {
         ...state,
-        data: action.data,
+        data: {
+          ...action.data,
+          suppliersByCall: action.data.suppliersByCall.map(
+            item => ({
+              ...item,
+              oldIdCompanySize: '',
+            }),
+          ),
+        },
         suppliers: action.data.suppliers,
         loading: false,
       };
@@ -45,11 +55,11 @@ function modifiedSuppliersApp(state = initialState, action) {
           if (action.data.supply !== '' && action.data.supply !== item.idSupply) {
             return false;
           }
-          if (action.data.state !== '' &&
-            action.data.state === 'Bloqueado' &&
-            !state.data.suppliersByCall
-              .find(supplierByCall => supplierByCall.idSupplier === item.id)
-              .lockedByModification) {
+          const locked = state.data.suppliersByCall
+            .find(supplierByCall => supplierByCall.idSupplier === item.id)
+            .lockedByModification;
+          if ((action.data.state === LOCKED && !locked) ||
+            (action.data.state === NOTIFIED && locked)) {
             return false;
           }
           return true;
@@ -70,7 +80,6 @@ function modifiedSuppliersApp(state = initialState, action) {
             ),
           ),
         },
-        loading: false,
       };
     }
     case UNLOCK_SUPPLIER_SUCCESS: {

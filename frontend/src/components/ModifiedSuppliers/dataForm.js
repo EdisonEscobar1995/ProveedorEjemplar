@@ -1,12 +1,14 @@
+import { LOCKED, NOTIFIED } from '../../utils/const';
+
 const filtersInfo = ({ data, getModifiedSuppliers }) => {
   const states = [
     {
-      id: 'Notificado',
-      name: 'Notificado',
+      id: LOCKED,
+      name: LOCKED,
     },
     {
-      id: 'Bloqueado',
-      name: 'Bloqueado',
+      id: NOTIFIED,
+      name: NOTIFIED,
     },
   ];
   const {
@@ -28,6 +30,23 @@ const filtersInfo = ({ data, getModifiedSuppliers }) => {
           options: years ? years.map(item => ({ id: item, name: item })) : [],
           handleChange: getModifiedSuppliers,
           allowClear: false,
+          valuesToClean: {
+            supply: {
+              value: '',
+            },
+            category: {
+              value: '',
+            },
+            country: {
+              value: '',
+            },
+            supplier: {
+              value: '',
+            },
+            state: {
+              value: '',
+            },
+          },
         },
         {
           span: 8,

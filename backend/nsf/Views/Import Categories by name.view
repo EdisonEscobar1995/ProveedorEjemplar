@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Import Categories by name' alias='ImportCategoriesByName' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
- noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
- onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
- showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
- showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
- rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+<view name='(Import Categories by name)' alias='ImportCategoriesByName' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
+ showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
+ opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
+ extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
+ headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='24ca' unid='0585B01125783537052581DF005C6B5B' sequence='2'>
-<created><datetime>20171121T114927,95-05</datetime></created>
-<modified><datetime>20171121T114928,01-05</datetime></modified>
-<revised><datetime>20171121T114928,00-05</datetime></revised>
-<lastaccessed><datetime>20171121T114928,01-05</datetime></lastaccessed>
-<addedtofile><datetime>20171121T114927,99-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='17fa' unid='F416A7C97AD462CD052581E0004EB037' sequence='13'>
+<created><datetime>20171122T091929,19-05</datetime></created>
+<modified><datetime>20171127T161433,76-05</datetime></modified>
+<revised><datetime>20171127T161433,75-05</datetime></revised>
+<lastaccessed><datetime>20171127T161433,76-05</datetime></lastaccessed>
+<addedtofile><datetime>20171122T091929,22-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frCategory"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

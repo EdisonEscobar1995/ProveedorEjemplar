@@ -39,10 +39,49 @@ class Supplier extends Component {
           getQuestionsByDimension={getQuestionsByDimension}
           saveAnswer={saveAnswer}
         />,
-        stepContent: <Progress type="circle" percent={this.calculatePercent(dimension.id)} width={40} />,
+        stepContent: this.getProgress(dimension.id),
       };
     });
     return steps.concat(mapDimensions);
+  }
+  getProgress = (dimensionId) => {
+    const percent = this.calculatePercent(dimensionId);
+    let status = 'exception';
+    if (percent === 100) {
+      status = 'success';
+    } else if (percent > 49) {
+      status = 'active';
+    }
+    return (
+      <Progress type="circle" percent={percent} status={status} width={40} />
+    );
+  }
+  getSupplierValues = (values) => {
+    const { supplier } = { ...this.props };
+    let newSupplier = { ...supplier };
+    newSupplier = Object.assign(newSupplier, values);
+    return newSupplier;
+  }
+  save = (values, action) => {
+    if (!this.props.changeIdCompanySize && this.props.participateInCall) {
+      const { call } = { ...this.props };
+      const newSupplier = this.getSupplierValues(values);
+      call.participateInCall = true;
+      this.props.saveDataCallSupplier(call, newSupplier);
+      if (action === 'send') {
+        this.next();
+      }
+    } else if (!this.props.participateInCall) {
+      values.participateInCall = false;
+      values.lockedByModification = true;
+      this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
+    } else {
+      const { call } = { ...this.props };
+      const newSupplier = this.getSupplierValues(values);
+      call.lockedByModification = true;
+      call.participateInCall = true;
+      this.props.saveDataCallSupplier(call, newSupplier);
+    }
   }
   calculatePercent = (idDimension) => {
     let totalQuestions = 0;
@@ -70,22 +109,6 @@ class Supplier extends Component {
     }
     return total;
   }
-  save = (values) => {
-    if (this.props.participateInCall) {
-      const { call, supplier } = { ...this.props };
-      let newSupplier = { ...supplier };
-      newSupplier = Object.assign(newSupplier, values);
-      call.participateInCall = true;
-      this.props.saveDataCallSupplier(call, newSupplier);
-      if (!this.props.changeIdCompanySize) {
-        this.next();
-      }
-    } else {
-      values.participateInCall = false;
-      values.lockedByModification = true;
-      this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
-    }
-  }
   next = () => {
     const current = this.state.current + 1;
     this.setState({ current });
@@ -97,6 +120,7 @@ class Supplier extends Component {
 
   render() {
     const { loading, dimensions } = this.props;
+    console.log(this.props);
     const { current } = this.state;
     const steps = this.getSteps(dimensions);
     return (

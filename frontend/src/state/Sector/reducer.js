@@ -2,14 +2,13 @@ import {
   GET_DATA_SECTOR_PROGRESS,
   GET_DATA_SECTOR_SUCCESS,
   REQUEST_FAILED,
+  ADD_SECTOR,
+  SAVE_SECTOR,
+  EDIT_SECTOR,
+  DELETE_SECTOR,
+  CANCEL_SECTOR,
 } from './const';
-import {
-  ADD_DATA,
-  SAVE_DATA,
-  EDIT_DATA,
-  DELETE_DATA,
-  CANCEL_DATA,
-} from '../TableForm/const';
+
 import reloadKeys from '../../utils/reducerUtils';
 
 const initialState = {
@@ -35,7 +34,7 @@ function sectorApp(state = initialState, action) {
         loading: false,
       };
     }
-    case ADD_DATA: {
+    case ADD_SECTOR: {
       const { data } = state;
       let newData = [...data];
       newData.unshift(action.newItem);
@@ -45,7 +44,7 @@ function sectorApp(state = initialState, action) {
         data: newData,
       };
     }
-    case SAVE_DATA: {
+    case SAVE_SECTOR: {
       const { data, index } = action;
       const stateData = state.data;
       let newData = [...stateData];
@@ -57,7 +56,7 @@ function sectorApp(state = initialState, action) {
         loading: false,
       };
     }
-    case EDIT_DATA: {
+    case EDIT_SECTOR: {
       const { data } = state;
       const newData = [...data];
       newData[action.index].editable = true;
@@ -66,7 +65,7 @@ function sectorApp(state = initialState, action) {
         data: newData,
       };
     }
-    case DELETE_DATA: {
+    case DELETE_SECTOR: {
       const { data } = state;
       const newData = [...data];
       newData.splice(action.index, 1);
@@ -76,7 +75,7 @@ function sectorApp(state = initialState, action) {
         data: newData,
       };
     }
-    case CANCEL_DATA: {
+    case CANCEL_SECTOR: {
       const { data } = state;
       const newData = [...data];
       newData[action.index].editable = false;
