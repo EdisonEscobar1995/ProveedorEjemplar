@@ -2,7 +2,9 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
@@ -80,6 +82,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierBLO supplierBLO = new SupplierBLO();
         SurveyBLO surveyBLO = new SurveyBLO();
         NotificationBLO notification = new NotificationBLO();
+        AnswerBLO answerBLO = new AnswerBLO();
         SupplierDTO supplier = null;
         try {
             SupplierByCallDTO currentSupplierByCall = get(supplierByCall.getId());
@@ -92,13 +95,30 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                         supplier.getIdCompanySize()).getId());
                 supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
                 supplierBLO.update(supplier);
+                answerBLO.deleteAnswers(currentSupplierByCall.getId());
             }
             response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
-            notification.notifyToSupplierForContinue(supplier.getEmail());
+            notification.notifyToSupplierForContinue(supplier.getEmails());
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
 
         return response;
+    }
+
+    public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.getSuppliersByCall(idCall);
+    }
+
+    public void markToInvited(String idSupplier, String idCall) throws HandlerGenericException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("idSupplier", idSupplier);
+        parameters.put("idCall", idCall);
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        SupplierByCallDTO supplierByCall = supplierByCallDAO
+                .getBy(parameters, "vwSuppliersByCallByIdSupplierAndIdCall");
+        supplierByCall.setInvitedToCall(true);
+        supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
 }

@@ -44,7 +44,8 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         SupplierBLO supplierBLO = new SupplierBLO();
         ServletResponseDTO<ModifiedSupplierDTO> response = null;
         try {
-            response = new ServletResponseDTO<ModifiedSupplierDTO>(supplierBLO.getModifiedSuppliers(parameters.get("year")));
+            response = new ServletResponseDTO<ModifiedSupplierDTO>(supplierBLO.getModifiedSuppliers(parameters
+                    .get("year")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<ModifiedSupplierDTO>(exception);
         }
@@ -52,5 +53,16 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         return response;
     }
 
+    public ServletResponseDTO<SupplierDTO> sendInvitation(SupplierDTO supplier) {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        ServletResponseDTO<SupplierDTO> response = null;
+        try {
+            response = new ServletResponseDTO<SupplierDTO>(supplierBLO.sendInvitation(supplier));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<SupplierDTO>(exception);
+        }
+
+        return response;
+    }
 
 }

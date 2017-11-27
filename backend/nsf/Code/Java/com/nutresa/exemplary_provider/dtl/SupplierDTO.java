@@ -80,6 +80,8 @@ public class SupplierDTO {
     @Expose
     private String packagingProvided;
     @Expose
+    private String typeOfCurrencyValueAssets;
+    @Expose
     private float valueAssets;
     private List<String> idAttachedFinancialReport;
     @Expose
@@ -91,7 +93,7 @@ public class SupplierDTO {
     @Expose
     private String webSite;
     @Expose
-    private String typeOfCurrency;
+    private String typeOfCurrencyAnnualSales;
     @Expose
     private float annualSalesValue;
     @Expose
@@ -173,14 +175,6 @@ public class SupplierDTO {
 
     public void setFax(String fax) {
         this.fax = fax;
-    }
-
-    public List<String> getEmail() {
-        return emails;
-    }
-
-    public void setEmail(List<String> emails) {
-        this.emails = emails;
     }
 
     public String getCodeZip() {
@@ -517,14 +511,6 @@ public class SupplierDTO {
         this.attachedFinancialReport = attachedFinancialReport;
     }
 
-    public void setTypeOfCurrency(String typeOfCurrency) {
-        this.typeOfCurrency = typeOfCurrency;
-    }
-
-    public String getTypeOfCurrency() {
-        return typeOfCurrency;
-    }
-
     public CompanySizeDTO getCompanySize() {
         return this.companySize;
     }
@@ -588,5 +574,23 @@ public class SupplierDTO {
     public String getFullName() {
         return fullName;
     }
+
+    public String getTypeOfCurrencyValueAssets() {
+        return typeOfCurrencyValueAssets;
+    }
+
+    public void setTypeOfCurrencyValueAssets(String typeOfCurrencyValueAssets) {
+        this.typeOfCurrencyValueAssets = typeOfCurrencyValueAssets;
+    }
+
+    public String getTypeOfCurrencyAnnualSales() {
+        return typeOfCurrencyAnnualSales;
+    }
+
+    public void setTypeOfCurrencyAnnualSales(String typeOfCurrencyAnnualSales) {
+        this.typeOfCurrencyAnnualSales = typeOfCurrencyAnnualSales;
+    }
+    
+    
 
 }

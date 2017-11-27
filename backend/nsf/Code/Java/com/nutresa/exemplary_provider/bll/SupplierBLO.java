@@ -34,15 +34,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             notificationBLO.notifyChangeCompanySize();
         }
 
-        dto = dao.update(dto.getId(), dto);
-        if (null != dto.getPrincipalCustomer()) {
-            CustomerBLO customer = new CustomerBLO();
-            dto
-                    .setPrincipalCustomer(customer.saveList(dto.getPrincipalCustomer(), "id" + dao.getEntity(), dto
-                            .getId()));
-        }
-
-        return dto;
+        return dao.update(dto.getId(), dto);
     }
 
     public SupplierDTO getSupplierInSession() throws HandlerGenericException {
@@ -64,7 +56,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
         return response;
     }
-        
+
     public ModifiedSupplierDTO getModifiedSuppliers(String year) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         CallBLO callBLO = new CallBLO();
@@ -86,17 +78,18 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         // Extraer los ids de las convocatorias par arealizar el cruce de
         // proveedor x convocatoria
         listIds = Common.getDtoFields(listCalls, new String[] { "[id]" }, CallDTO.class);
-        
+
         // Consultar los proveedores por convotaria por el id de convocatoria
         // que se encuentren bloqueados o notificados
         List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", Common.getIdsFromList(listIds.get("[id]")),
-            "vwSuppliersByCallModifiedIdCall");
+                "vwSuppliersByCallModifiedIdCall");
         try {
             // Recuperar los ids de los proveedores
             listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
             // Consultar los proveedores que se encuentran bloqueados o
             // notificados para las convocatorias del año seleccionado
-            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
+            List<SupplierDTO> suppliers = supplierDAO
+                    .getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
             // Realizar el cruce de los maestros según los datos de los
             // proveedores seleccionados
             String[] idFieldNames = { "Category", "Country", "Supply" };
@@ -108,7 +101,6 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             response.setSuppliers(suppliers);
             response.setSuppliersByCall(supplierByCall);
             response.setYears(listYears);
-            
 
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -129,5 +121,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     private List<CustomerDTO> getCustomersBySupplier(String idSupplier) throws HandlerGenericException {
         CustomerBLO customerBLO = new CustomerBLO();
         return customerBLO.getCustomersBySupplier(idSupplier);
+    }
+
+    public SupplierDTO sendInvitation(SupplierDTO supplier) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        NotificationBLO notification = new NotificationBLO();
+        notification.sendInvitation(supplier.getEmails());
+        return supplierDAO.get(supplier.getId());
     }
 }
