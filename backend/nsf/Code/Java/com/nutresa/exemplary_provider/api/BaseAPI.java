@@ -125,14 +125,22 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     protected ServletResponseDTO doGet(String action, Map<String, String> parameters) throws IllegalAccessException,
         InvocationTargetException, HandlerGenericException {
         ServletResponseDTO response = null;
-        if (parameters.size() == 0) {
-            Method method = Common.getMethod(this.getClass(), action, 0);
+        int parameterSize = parameters.size() == 0 ? 0 : 1;
+        Method method = getActionMethod(action, parameterSize);
+        if (parameterSize == 0) {
             response = (ServletResponseDTO) method.invoke(this);
         } else {
-            Method method = Common.getMethod(this.getClass(), action, 1);
             response = (ServletResponseDTO) method.invoke(this, parameters);
         }
         return response;
+    }
+
+    private Method getActionMethod(String action, int parameters) throws HandlerGenericException {
+        Method method = Common.getMethod(this.getClass(), action, parameters);
+        if (null == method) {
+            throw new HandlerGenericException("Action (" + action + ") method not found for " + parameters + " parameters");
+        }
+        return method;
     }
 
     @SuppressWarnings("unchecked")
@@ -147,7 +155,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         }
         reader.close();
 
-        Method method = Common.getMethod(this.getClass(), action, 1);
+        Method method = getActionMethod(action, 1);                    
         return (ServletResponseDTO) method.invoke(this, gson.fromJson(stringBuilder.toString(), this.dtoClass));
     }
 

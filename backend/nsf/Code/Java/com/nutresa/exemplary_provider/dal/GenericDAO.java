@@ -280,10 +280,10 @@ public abstract class GenericDAO<T> {
     public T saveProfile(T dto) throws HandlerGenericException {
         View vw = database.getView(this.entityView);
         Document document = vw.getFirstDocumentByKey(this.entityForm, true);
-        if (null != document) {
-            dto = this.save(dto);
-        } else {
+        if (null == document) {
             dto = this.saveDocument(document, dto, false);
+        } else {
+            dto = this.save(dto);
         }
 
         return dto;

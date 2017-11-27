@@ -8,6 +8,7 @@ import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
@@ -28,6 +29,26 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             throw new HandlerGenericException(exception);
         }
         return callsBySupplier;
+    }
+
+    public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
+        List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
+        SupplierByCallDTO supplierByCallDTO = null;
+        SupplierDAO supplierDAO = new SupplierDAO();
+        try {
+            View currentView = getDatabase().getView("vwSuppliersByCallIdCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(idCall, true);
+            for (Document document : documents) {
+                supplierByCallDTO = castDocument(document);
+                SupplierDTO supplier = supplierDAO.get(supplierByCallDTO.getIdSupplier());
+                if (null != supplier && null != supplier.getId()) {
+                    suppliers.add(supplier);
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return suppliers;
     }
 
 }

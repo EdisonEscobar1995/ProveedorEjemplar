@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.openntf.domino.email.DominoEmail;
 
@@ -120,12 +119,18 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
     public void notifyToContact(String idSupplier) throws HandlerGenericException {
         SupplierBLO supplierBLO = new SupplierBLO();
-        List<String> email = new Vector<String>();
+        List<String> email = new ArrayList<String>();
         SupplierDTO supplier = supplierBLO.get(idSupplier);
         email.add(supplier.getEmailContactPersonInGroupNutresa());
         NotificationDAO notificationDAO = new NotificationDAO();
         NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
         sendNotification(email, notification);
+    }
+
+    public void sendInvitation(List<String> emails) throws HandlerGenericException {
+        NotificationDAO notificationDAO = new NotificationDAO();
+        NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+        sendNotification(emails, notification);
     }
 
 }
