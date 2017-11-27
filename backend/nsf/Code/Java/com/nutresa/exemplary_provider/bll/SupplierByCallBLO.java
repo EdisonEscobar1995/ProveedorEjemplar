@@ -90,7 +90,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
             if (!supplierByCall.getOldIdCompanySize().equals(supplier.getIdCompanySize())) {
-                currentSupplierByCall.setOldIdCompanySize(supplier.getIdCompanySize());
                 currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(),
                         supplier.getIdCompanySize()).getId());
                 supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());

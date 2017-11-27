@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Supplier by call supplier' alias='SupplierByCall|vwSuppliersByCallSupplier'
+<view name='(Supplier by call supplier)' alias='SupplierByCall|vwSuppliersByCallSupplier'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D'
- showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
  extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='16ba' unid='681B147D94F4DFD4052581DF004936AF' sequence='9'>
+<noteinfo noteid='16ba' unid='681B147D94F4DFD4052581DF004936AF' sequence='14'>
 <created><datetime>20171121T081941,27-05</datetime></created>
-<modified><datetime>20171127T134342,20-05</datetime></modified>
-<revised><datetime>20171127T134342,19-05</datetime></revised>
-<lastaccessed><datetime>20171127T134342,20-05</datetime></lastaccessed>
+<modified><datetime>20171127T161434,32-05</datetime></modified>
+<revised><datetime>20171127T161434,31-05</datetime></revised>
+<lastaccessed><datetime>20171127T161434,32-05</datetime></lastaccessed>
 <addedtofile><datetime>20171121T081941,37-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code

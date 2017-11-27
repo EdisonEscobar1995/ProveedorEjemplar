@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Import Company sizes by name' alias='ImportCompanySizesByName'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E'
- showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+<view name='(Import Company sizes by name)' alias='ImportCompanySizesByName'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D'
+ hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
  extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='2476' unid='2E1039472079C560052581DE005204FC' sequence='4'>
-<created><datetime>20171120T095552,28-05</datetime></created>
-<modified><datetime>20171121T070108,99-05</datetime></modified>
-<revised><datetime>20171121T070108,98-05</datetime></revised>
-<lastaccessed><datetime>20171121T070108,99-05</datetime></lastaccessed>
-<addedtofile><datetime>20171120T095552,29-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='16e6' unid='1C649C77BCCE1B35052581DF00493705' sequence='13'>
+<created><datetime>20171121T081942,13-05</datetime></created>
+<modified><datetime>20171127T161433,78-05</datetime></modified>
+<revised><datetime>20171127T161433,77-05</datetime></revised>
+<lastaccessed><datetime>20171127T161433,78-05</datetime></lastaccessed>
+<addedtofile><datetime>20171121T081942,25-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frCompanySize"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

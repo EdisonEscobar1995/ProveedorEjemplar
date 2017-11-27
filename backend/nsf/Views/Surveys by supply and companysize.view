@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Surveys by supply and companysize' alias='Survey|vwSurveysBySupplyAndCompanySize'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E'
- showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+<view name='(Surveys by supply and companysize)' alias='Survey|vwSurveysBySupplyAndCompanySize'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D'
+ hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
  extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='275e' unid='64F877A05499E573052581E4005B0B84' sequence='2'>
-<created><datetime>20171126T113427,24-05</datetime></created>
-<modified><datetime>20171126T113427,30-05</datetime></modified>
-<revised><datetime>20171126T113427,29-05</datetime></revised>
-<lastaccessed><datetime>20171126T113427,30-05</datetime></lastaccessed>
-<addedtofile><datetime>20171126T113427,28-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='a93e' unid='3323D4DD9B7ECA27052581E40053AA24' sequence='9'>
+<created><datetime>20171126T101350,44-05</datetime></created>
+<modified><datetime>20171127T161434,42-05</datetime></modified>
+<revised><datetime>20171127T161434,41-05</datetime></revised>
+<lastaccessed><datetime>20171127T161434,42-05</datetime></lastaccessed>
+<addedtofile><datetime>20171126T101350,60-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frSurvey"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
