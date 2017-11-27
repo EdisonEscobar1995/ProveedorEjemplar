@@ -6,6 +6,8 @@ public class CustomerDTO extends MasterDTO {
     @Expose
     private short percentageOfParticipationInSales;
     @Expose
+    private short participationInSalesInNutresaGroup;
+    @Expose
     private String idSupplier;
 
     public short getPercentageOfParticipationInSales() {
@@ -22,6 +24,14 @@ public class CustomerDTO extends MasterDTO {
 
     public void setIdSupplier(String idSupplier) {
         this.idSupplier = idSupplier;
+    }
+
+    public void setParticipationInSalesInNutresaGroup(short participationInSalesInNutresaGroup) {
+        this.participationInSalesInNutresaGroup = participationInSalesInNutresaGroup;
+    }
+
+    public short getParticipationInSalesInNutresaGroup() {
+        return participationInSalesInNutresaGroup;
     }
 
 }
