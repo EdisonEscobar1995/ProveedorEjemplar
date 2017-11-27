@@ -116,7 +116,7 @@ public class Common {
 
     public static String getIdsFromList(List<Object> list, boolean uniqueIds) {
         int size = null != list ? list.size() : 0;
-        if (null == list || 0 == size || (!list.get(0).getClass().isPrimitive() && !(list.get(0) instanceof String))) {
+        if (isValidListIds(list, size)) {
             return "";
         }
         StringBuilder ids = new StringBuilder();
@@ -130,6 +130,10 @@ public class Common {
             }
         }
         return ids.toString();
+    }
+
+    private static boolean isValidListIds(List<Object> list, int size) {
+        return (null == list || 0 == size || (!list.get(0).getClass().isPrimitive() && !(list.get(0) instanceof String)));
     }
     
     public static String getNamespace(Class<?> clazz) {
