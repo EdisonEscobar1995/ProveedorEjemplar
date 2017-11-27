@@ -15,7 +15,7 @@ import com.nutresa.exemplary_provider.utils.Common;
  * key to package.class and key to servletname matching.
  */
 public class ServletFactory implements IServletFactory {
-    private static String namespace = "com.nutresa.exemplary_provider.api.";
+    private static String namespace = Common.getNamespace(ServletFactory.class);
     private String apiSuffix = "API";
     private ComponentModule module;
 

@@ -1,9 +1,11 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Select, Button } from 'antd';
+
+const { Option } = Select;
 
 function ModifiedSuppliers(props) {
   const { data, loading } = props;
-  const { Suppliers, Masters } = data;
+  const { Suppliers, SuppliersByCall, Masters } = data;
 
   const columns = [{
     title: 'Nombre del proveedor',
@@ -22,7 +24,7 @@ function ModifiedSuppliers(props) {
     dataIndex: 'idSupply',
     key: 'idSupply',
     render(text, record) {
-      return record.idSupply;
+      return Masters.Supply.find(supply => supply.id === record.idSupply).name;
     },
   }, {
     title: 'Categoría',
@@ -40,17 +42,53 @@ function ModifiedSuppliers(props) {
     },
   }, {
     title: 'Tamaño de empresa actual',
-    dataIndex: 'idCompanySize',
-    key: 'idCompanySize',
+    dataIndex: 'idCompanySizeSelect',
+    key: 'idCompanySizeSelect',
     render(text, record) {
-      return record.idCompanySize;
+      const locked = SuppliersByCall
+        .find(item => item.idSupplier === record.id)
+        .lockedByModification;
+      if (locked) {
+        return (
+          <Select
+            showSearch
+            allowClear
+            notFoundContent="No se encontraron resultados"
+            style={{ width: '100%' }}
+            onChange={value => this.setCompanySize({ id: record.id, companySize: value })}
+          >
+            {
+              Masters.CompanySize.map(option => (
+                <Option key={option.id} value={option.id}>{option.name}</Option>
+              ))
+            }
+          </Select>
+        );
+      }
+      return null;
     },
   }, {
     title: 'Estado',
     dataIndex: 'state',
     key: 'state',
     render(text, record) {
-      return record.state;
+      return SuppliersByCall.find(item => item.idSupplier === record.id).lockedByModification ? 'Bloqueado' : 'Notificado';
+    },
+  }, {
+    title: 'Acción',
+    dataIndex: 'state',
+    key: 'state',
+    render(text, record) {
+      return (
+        <Button
+          shape="circle"
+          icon="mail"
+          onClick={() => {
+            const supplierByCall = SuppliersByCall.find(item => item.idSupplier === record.id);
+            this.unlockSupplier(supplierByCall);
+          }}
+        />
+      );
     },
   }];
 

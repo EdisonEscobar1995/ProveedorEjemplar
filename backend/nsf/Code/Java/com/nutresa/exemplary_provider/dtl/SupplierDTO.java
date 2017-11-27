@@ -9,6 +9,8 @@ public class SupplierDTO {
     @Expose
     private String id;
     @Expose
+    private String fullName;
+    @Expose
     private String businessName;
     @Expose
     private String idCompanySize;
@@ -479,8 +481,10 @@ public class SupplierDTO {
 
     public void autoSetIdDocuments() {
         this.idDocuments = new ArrayList<String>();
-        for (AttachmentDTO attachment : this.document) {
-            this.idDocuments.add(attachment.getId());
+        if (null != this.document) {
+            for (AttachmentDTO attachment : this.document) {
+                this.idDocuments.add(attachment.getId());
+            }
         }
     }
 
@@ -498,8 +502,10 @@ public class SupplierDTO {
 
     public void autoSetIdAttachedFinancialReport() {
         this.idAttachedFinancialReport = new ArrayList<String>();
-        for (AttachmentDTO attachment : this.attachedFinancialReport) {
-            this.idAttachedFinancialReport.add(attachment.getId());
+        if (null != this.attachedFinancialReport) {
+            for (AttachmentDTO attachment : this.attachedFinancialReport) {
+                this.idAttachedFinancialReport.add(attachment.getId());
+            }
         }
     }
 
@@ -573,6 +579,14 @@ public class SupplierDTO {
 
     public String getSapCode() {
         return sapCode;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
 }
