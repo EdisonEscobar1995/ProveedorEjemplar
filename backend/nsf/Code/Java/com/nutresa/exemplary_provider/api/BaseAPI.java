@@ -136,7 +136,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     private Method getActionMethod(String action, int parameters) throws HandlerGenericException {
-        Method method = Common.getMethod(this.getClass(), action, 0);
+        Method method = Common.getMethod(this.getClass(), action, parameters);
         if (null == method) {
             throw new HandlerGenericException("Action (" + action + ") method not found for " + parameters + " parameters");
         }
