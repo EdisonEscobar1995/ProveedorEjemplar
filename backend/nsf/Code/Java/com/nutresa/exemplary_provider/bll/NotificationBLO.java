@@ -32,8 +32,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
             String pathApplication = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
-            notification.setMessage(notification.getMessage().concat(
-                    "<a href='" + pathApplication + "'>Link de consulta</a>"));
+            notification.setMessage(notification.getMessage().concat(buildLink(pathApplication, "Link de consulta")));
             sendNotification(sendTo, notification);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -108,13 +107,16 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
             String pathApplication = Common.buildPathResource() + "/dist/index.html";
-            notification.setMessage(notification.getMessage().concat(
-                    "<a href='" + pathApplication + "'>Continuar encuesta</a>"));
+            notification.setMessage(notification.getMessage().concat(buildLink(pathApplication, "Continuar encuesta")));
             sendNotification(email, notification);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
 
+    }
+
+    private String buildLink(String url, String label) {
+        return "<a href=" + url + ">" + label + "</a>";
     }
 
     public void notifyToContact(String idSupplier) throws HandlerGenericException {
@@ -131,8 +133,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         NotificationDAO notificationDAO = new NotificationDAO();
         String pathApplication = Common.buildPathResource() + "/dist/index.html";
         NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
-        notification.setMessage(notification.getMessage().concat(
-                "<a href='" + pathApplication + "'>Realizar encuesta</a>"));
+        notification.setMessage(notification.getMessage().concat(buildLink(pathApplication, "Realizar encuesta")));
         sendNotification(emails, notification);
     }
 
