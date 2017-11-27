@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Countries' alias='Country|vwCountries' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' showinmenu='false'
- noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
- onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
- showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
- showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
- rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+<view name='(Countries)' alias='Country|vwCountries' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
+ showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
+ opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
+ extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
+ headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='110a' unid='4DAD6704A72CA108052581DA0067DA3A' sequence='20'>
+<noteinfo noteid='110a' unid='4DAD6704A72CA108052581DA0067DA3A' sequence='25'>
 <created><datetime>20171116T135420,74-05</datetime></created>
-<modified><datetime>20171127T133146,04-05</datetime></modified>
-<revised><datetime>20171127T133146,03-05</datetime></revised>
-<lastaccessed><datetime>20171127T133146,04-05</datetime></lastaccessed>
+<modified><datetime>20171127T161433,62-05</datetime></modified>
+<revised><datetime>20171127T161433,61-05</datetime></revised>
+<lastaccessed><datetime>20171127T161433,62-05</datetime></lastaccessed>
 <addedtofile><datetime>20171116T135420,77-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
