@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Answers by survey and question' alias='vwAnswerBySurveyAndQuestion'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865'
+<view name='Answers by survey and question' alias='Answer|vwAnswerBySurveyAndQuestion'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='7ca' unid='442AFF44B020C95D052581E20050CF46' sequence='7'>
-<created><datetime>20171124T094239,42-05</datetime></created>
-<modified><datetime>20171124T143200,58-05</datetime></modified>
-<revised><datetime>20171124T143200,57-05</datetime></revised>
-<lastaccessed><datetime>20171124T143200,58-05</datetime></lastaccessed>
-<addedtofile><datetime>20171124T094239,45-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='a856' unid='CB5C6CC7729D4125052581E20064A817' sequence='8'>
+<created><datetime>20171124T131926,31-05</datetime></created>
+<modified><datetime>20171127T135106,42-05</datetime></modified>
+<revised><datetime>20171127T135106,41-05</datetime></revised>
+<lastaccessed><datetime>20171127T135106,42-05</datetime></lastaccessed>
+<addedtofile><datetime>20171124T131926,40-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frAnswer"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

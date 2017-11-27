@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='5da' unid='1058A579ADC78EBF052581D3005C7936' sequence='11'>
+<noteinfo noteid='5da' unid='1058A579ADC78EBF052581D3005C7936' sequence='15'>
 <created><datetime>20171109T115003,42-05</datetime></created>
-<modified><datetime>20171120T143607,18-05</datetime></modified>
-<revised><datetime>20171120T143607,17-05</datetime></revised>
-<lastaccessed><datetime>20171120T143607,18-05</datetime></lastaccessed>
+<modified><datetime>20171127T132928,78-05</datetime></modified>
+<revised><datetime>20171127T132928,77-05</datetime></revised>
+<lastaccessed><datetime>20171127T132928,78-05</datetime></lastaccessed>
 <addedtofile><datetime>20171109T115004,10-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
@@ -24,5 +24,5 @@ End Sub
 </lotusscript></code>
 <column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='Id'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='id'><font size='9pt' style='bold'/></columnheader></column></view>
 

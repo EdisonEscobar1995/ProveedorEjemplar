@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='Calls by year' alias='Call|vwCallsByYear' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='2752' unid='567D6C89A101970C052581E4005B0B53' sequence='2'>
-<created><datetime>20171126T113426,75-05</datetime></created>
-<modified><datetime>20171126T113427,10-05</datetime></modified>
-<revised><datetime>20171126T113427,09-05</datetime></revised>
-<lastaccessed><datetime>20171126T113427,10-05</datetime></lastaccessed>
-<addedtofile><datetime>20171126T113427,08-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='a91a' unid='33189FD9ADCD3094052581E3007B2314' sequence='6'>
+<created><datetime>20171125T172459,08-05</datetime></created>
+<modified><datetime>20171127T132843,09-05</datetime></modified>
+<revised><datetime>20171127T132843,08-05</datetime></revised>
+<lastaccessed><datetime>20171127T132843,09-05</datetime></lastaccessed>
+<addedtofile><datetime>20171125T172459,09-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frCall"</formula></code><code event='querypaste'><lotusscript
 >Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
@@ -24,6 +24,6 @@ End Sub
 </lotusscript></code>
 <column sort='descending' hidedetailrows='false' itemname='$1' width='10'
  resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
- showaslinks='false'><columnheader title='Year'><font size='9pt' style='bold'/></columnheader><code
+ showaslinks='false'><columnheader title='year'><font size='9pt' style='bold'/></columnheader><code
  event='value'><formula>@Text(year)</formula></code></column></view>
 
