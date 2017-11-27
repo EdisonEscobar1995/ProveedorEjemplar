@@ -82,6 +82,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierBLO supplierBLO = new SupplierBLO();
         SurveyBLO surveyBLO = new SurveyBLO();
         NotificationBLO notification = new NotificationBLO();
+        AnswerBLO answerBLO = new AnswerBLO();
         SupplierDTO supplier = null;
         try {
             SupplierByCallDTO currentSupplierByCall = get(supplierByCall.getId());
@@ -94,6 +95,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                         supplier.getIdCompanySize()).getId());
                 supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
                 supplierBLO.update(supplier);
+                answerBLO.deleteAnswers(currentSupplierByCall.getId());
             }
             response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
             notification.notifyToSupplierForContinue(supplier.getEmails());

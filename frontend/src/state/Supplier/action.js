@@ -15,6 +15,12 @@ import {
   CHANGE_PARTICIPATE,
   UPDATE_ATTACHMENT,
   DELETE_ATTACHMENT,
+  UPDATE_CHANGEIDCOMPANYSIZE,
+  ADD_CUSTOMER,
+  EDIT_CUSTOMER,
+  SAVE_CUSTOMER,
+  DELETE_CUSTOMER,
+  CANCEL_CUSTOMER,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -23,20 +29,15 @@ import {
   saveDataSuppliertApi,
   saveDataCallBySupplierApi,
 } from '../../api/supplier';
-import { getDataSupplyApi } from '../../api/supply';
+import getMasterApi from '../../api/master';
 import { getDataCategoryBySuplyApi } from '../../api/category';
 import { getDataSubCategoryByCategoryApi } from '../../api/subcategory';
-import getDataCompanyTypesApi from '../../api/companyType';
-import { getDataCompanySizeApi } from '../../api/companySize';
-import getDataSocietyTypesApi from '../../api/societyType';
-import getDataCountriesApi from '../../api/countries';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi } from '../../api/answer';
-import { getCustomerApi, deleteCustomerApi } from '../../api/customer';
-import { addData, saveData, editData, deleteData, cancelData } from '../TableForm/action';
+import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
 import requestApi, { requestApiNotLoading } from '../../utils/actionUtils';
 
 
@@ -57,9 +58,11 @@ function getDataSupplierSuccess(data) {
     countries,
     categories,
     subcategories,
+    sectors,
     departments,
     cities,
   } = data;
+  const { principalCustomer } = supplier;
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
@@ -73,6 +76,8 @@ function getDataSupplierSuccess(data) {
     subcategories,
     departments,
     cities,
+    sectors,
+    principalCustomer,
   };
 }
 function getDataCategorySuccess(categories) {
@@ -100,6 +105,17 @@ function updateAttachment(data, field) {
     const newData = {
       type: UPDATE_ATTACHMENT,
       supplier,
+    };
+    dispatch(newData);
+  };
+}
+function updateChangeIdCompanySize(idCompanySize) {
+  return (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const changeIdCompanySize = supplier.idCompanySize !== idCompanySize;
+    const newData = {
+      type: UPDATE_CHANGEIDCOMPANYSIZE,
+      changeIdCompanySize,
     };
     dispatch(newData);
   };
@@ -176,12 +192,11 @@ function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
     dimensions: allDimensions,
   };
 }
-function saveDataCallAndSupplerSuccess(call, supplier, changeIdCompanySize) {
+function saveDataCallAndSupplerSuccess(call, supplier) {
   return {
     type: SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
     call,
     supplier,
-    changeIdCompanySize,
   };
 }
 
@@ -189,6 +204,38 @@ function getFailedRequest(error) {
   return {
     type: GET_REQUEST_FAILED,
     error,
+  };
+}
+
+function addDataCustomer(newItem) {
+  return {
+    type: ADD_CUSTOMER,
+    newItem,
+  };
+}
+function editDataCustomer(index) {
+  return {
+    type: EDIT_CUSTOMER,
+    index,
+  };
+}
+function saveDataCustomer(data, index) {
+  return {
+    type: SAVE_CUSTOMER,
+    data,
+    index,
+  };
+}
+function deleteDataCustomer(index) {
+  return {
+    type: DELETE_CUSTOMER,
+    index,
+  };
+}
+function cancelDataCustomer(index) {
+  return {
+    type: CANCEL_CUSTOMER,
+    index,
   };
 }
 
@@ -211,23 +258,29 @@ function loadDependingOptions(dispatch, api, data, filterField, valueField) {
 
 function getDataSupplier() {
   return (dispatch) => {
+    const masters = [
+      'Supply',
+      'CompanyType',
+      'CompanySize',
+      'SocietyType',
+      'Country',
+      'Sector',
+    ];
     const promises = [
       getDataSuppliertApi(),
       getDataCallSuppliertApi(),
-      getDataSupplyApi(),
-      getDataCompanyTypesApi(),
-      getDataCompanySizeApi(),
-      getDataSocietyTypesApi(),
-      getDataCountriesApi(),
+      getMasterApi(masters),
     ];
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
       const supplier = arrayResponse[0].data.data;
       const call = arrayResponse[1].data.data;
-      const supply = arrayResponse[2].data.data;
-      const companyTypes = arrayResponse[3].data.data;
-      const companySizes = arrayResponse[4].data.data;
-      const societyTypes = arrayResponse[5].data.data;
-      const countries = arrayResponse[6].data.data;
+      const mainMaster = arrayResponse[2].data.data;
+      const supply = mainMaster.Supply;
+      const companyTypes = mainMaster.CompanyType;
+      const companySizes = mainMaster.CompanySize;
+      const societyTypes = mainMaster.SocietyType;
+      const sectors = mainMaster.Sector;
+      const countries = mainMaster.Country;
       return {
         supplier,
         call,
@@ -236,6 +289,7 @@ function getDataSupplier() {
         companySizes,
         societyTypes,
         countries,
+        sectors,
       };
     }).then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
       .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))
@@ -350,7 +404,7 @@ function saveAnswer(clientAnswer, idDimension, idCriterion) {
 }
 
 function saveDataCallSupplier(clientCall, clientSupplier) {
-  return (dispatch, getActualState) => {
+  return (dispatch) => {
     const promises = [
       saveDataCallBySupplierApi(clientCall),
       saveDataSuppliertApi(clientSupplier),
@@ -358,9 +412,9 @@ function saveDataCallSupplier(clientCall, clientSupplier) {
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
       const call = arrayResponse[0].data.data;
       const supplier = arrayResponse[1].data.data;
-      const oldSupplies = getActualState().supplier.supplier;
-      const changeIdCompanySize = oldSupplies.idCompanySize !== supplier.idCompanySize;
-      dispatch(saveDataCallAndSupplerSuccess(call, supplier, changeIdCompanySize));
+      // const oldSupplies = getActualState().supplier.supplier;
+      // const changeIdCompanySize = oldSupplies.idCompanySize !== supplier.idCompanySize;
+      dispatch(saveDataCallAndSupplerSuccess(call, supplier));
     }).catch((err) => {
       dispatch(getFailedRequest(err));
     });
@@ -382,23 +436,28 @@ function deleteAttachment(idAttachment, field) {
   };
 }
 
-function saveSector(clientData, index) {
-  return (dispatch) => {
-    requestApi(dispatch, getDataSupplierProgress, getCustomerApi, clientData)
+function saveCustomer(clientData, index) {
+  return (dispatch, getActualState) => {
+    const mapData = {
+      idSupplier: getActualState().supplier.supplier.id,
+    };
+    const mapedData = Object.assign(clientData, mapData);
+    requestApi(dispatch, getDataSupplierProgress, saveCustomerApi, mapedData)
       .then((respose) => {
         const { data } = respose.data;
-        dispatch(saveData(data, index));
+        dispatch(saveDataCustomer(data, index));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
   };
 }
 
-function deleteSector(clientData, index) {
+function deleteCustomer(clientData, index) {
+  const { id } = clientData;
   return (dispatch) => {
-    requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, clientData)
+    requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, id)
       .then(() => {
-        dispatch(deleteData(index));
+        dispatch(deleteDataCustomer(index));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -419,9 +478,10 @@ export {
   changeParticipate,
   updateAttachment,
   deleteAttachment,
-  saveSector as saveData,
-  deleteSector as deleteData,
-  addData,
-  editData,
-  cancelData,
+  updateChangeIdCompanySize,
+  saveCustomer as saveDataCustomer,
+  deleteCustomer as deleteDataCustomer,
+  addDataCustomer,
+  editDataCustomer,
+  cancelDataCustomer,
 };

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Answer' alias='vwAnswers' xmlns='http://www.lotus.com/dxl' version='9.0'
- maintenanceversion='1.8' replicaid='052581C60067468E' showinmenu='false'
+<view name='Answer' alias='Answer|vwAnswers' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='274e' unid='263A72F3812546A3052581E4005B0B4B' sequence='2'>
-<created><datetime>20171126T113426,67-05</datetime></created>
-<modified><datetime>20171126T113427,06-05</datetime></modified>
-<revised><datetime>20171126T113427,05-05</datetime></revised>
-<lastaccessed><datetime>20171126T113427,06-05</datetime></lastaccessed>
-<addedtofile><datetime>20171126T113427,04-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='a936' unid='C68E65D4E1F6A73D052581E40053AA1C' sequence='4'>
+<created><datetime>20171126T101350,36-05</datetime></created>
+<modified><datetime>20171127T132030,92-05</datetime></modified>
+<revised><datetime>20171127T132030,91-05</datetime></revised>
+<lastaccessed><datetime>20171127T132030,92-05</datetime></lastaccessed>
+<addedtofile><datetime>20171126T101350,52-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frAnswer"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
@@ -24,5 +24,5 @@ End Sub
 </lotusscript></code>
 <column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='Id'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='id'><font size='9pt' style='bold'/></columnheader></column></view>
 

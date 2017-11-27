@@ -101,7 +101,7 @@ class GenericFormTable extends Component {
                           </ItemStyle>
                         )
                         :
-                        (<span>{text}</span>)
+                        (<span>{column.type === 'number' ? text : text }</span>)
                     );
                   }
                   }

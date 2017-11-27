@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Alerts' alias='vwAlerts' xmlns='http://www.lotus.com/dxl' version='9.0'
- maintenanceversion='1.8' replicaid='052581C4007525A6' showinmenu='false'
+<view name='Alerts' alias='Alert|vwAlerts' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' showinmenu='false'
  noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='1d32' unid='76C4EF7475AC9A17052581D4007FC9BB' sequence='2'>
-<created><datetime>20171110T181547,15-05</datetime></created>
-<modified><datetime>20171110T181548,90-05</datetime></modified>
-<revised><datetime>20171110T181548,89-05</datetime></revised>
-<lastaccessed><datetime>20171110T181548,90-05</datetime></lastaccessed>
-<addedtofile><datetime>20171110T181548,85-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='1122' unid='DB921C6189A0311D052581DA0067DA5A' sequence='18'>
+<created><datetime>20171116T135421,06-05</datetime></created>
+<modified><datetime>20171127T132057,88-05</datetime></modified>
+<revised><datetime>20171127T132057,87-05</datetime></revised>
+<lastaccessed><datetime>20171127T132057,88-05</datetime></lastaccessed>
+<addedtofile><datetime>20171116T135421,08-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frAlert"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
@@ -24,5 +24,5 @@ End Sub
 </lotusscript></code>
 <column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='Id'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='id'><font size='9pt' style='bold'/></columnheader></column></view>
 

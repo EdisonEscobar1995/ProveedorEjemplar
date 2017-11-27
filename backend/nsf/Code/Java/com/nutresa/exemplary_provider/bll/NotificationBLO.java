@@ -129,7 +129,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
     public void sendInvitation(List<String> emails) throws HandlerGenericException {
         NotificationDAO notificationDAO = new NotificationDAO();
+        String pathApplication = Common.buildPathResource() + "/dist/index.html";
         NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+        notification.setMessage(notification.getMessage().concat(
+                "<a href='" + pathApplication + "'>Realizar encuesta</a>"));
         sendNotification(emails, notification);
     }
 

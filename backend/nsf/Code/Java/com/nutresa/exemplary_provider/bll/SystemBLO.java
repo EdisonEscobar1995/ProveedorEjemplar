@@ -14,11 +14,7 @@ public class SystemBLO extends GenericBLO<SystemDTO, SystemDAO> {
     public SystemDTO save(SystemDTO dto) throws HandlerGenericException {
         try {
             SystemDAO dao = new SystemDAO();
-            if ("".equals(dto.getId())) {
-                dto = dao.saveProfile(dto);
-            } else {
-                dto = dao.update(dto.getId(), dto);
-            }
+            dto = dao.saveProfile(dto);
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }

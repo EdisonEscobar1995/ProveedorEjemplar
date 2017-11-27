@@ -11,15 +11,15 @@ const defaultOptions = [
 const defaultMoneyType = [
   {
     id: 'COP',
-    name: 'COP',
+    name: 'COP Moneda colombiana',
   },
   {
     id: 'USD',
-    name: 'USD',
+    name: 'USD Moneda EE.UU',
   },
   {
     id: 'CRC',
-    name: 'CRC',
+    name: 'CRC Moneda Costa Rica',
   },
 ];
 function getValueOption(value) {
@@ -45,9 +45,9 @@ function generalInfo(fields) {
     getDataDepartmentsByCountry,
     cities,
     getDataCitiesByDepartment,
-    changeIdCompanySize,
     updateAttachment,
     deleteAttachment,
+    updateChangeIdCompanySize,
   } = fields;
   const {
     idSupply,
@@ -76,7 +76,7 @@ function generalInfo(fields) {
     fullNameContact,
     document,
   } = supplier;
-  const disabled = call.lockedByModification || changeIdCompanySize;
+  const disabled = call.lockedByModification;
   return [
     {
       key: 1.1,
@@ -99,6 +99,9 @@ function generalInfo(fields) {
           required: true,
           options: companySizes,
           disabled,
+          handleChange: (value) => {
+            updateChangeIdCompanySize(value);
+          },
         },
         {
           span: 6,
@@ -212,7 +215,7 @@ function generalInfo(fields) {
         },
         {
           span: 6,
-          type: 'number',
+          type: 'input',
           label: 'Año de establecimiento',
           key: 'yearOfEstablishment',
           value: yearOfEstablishment,
@@ -360,7 +363,7 @@ function generalInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Informacion Legal',
+          value: 'Información Legal',
           key: 'legalInfo',
           disabled,
         },
@@ -385,7 +388,7 @@ function generalInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Informacion persona a contactar',
+          value: 'Información persona a contactar',
           key: 'inforContact',
         },
       ],
@@ -459,7 +462,7 @@ function comercialInfo(fields) {
   const {
     supplier,
     call,
-    changeIdCompanySize,
+    sectors,
     updateAttachment,
     deleteAttachment,
   } = fields;
@@ -469,8 +472,8 @@ function comercialInfo(fields) {
     webSite,
     packagingProvided,
     valueAssets,
-    valueAssetsOption,
-    annualSalesOption,
+    typeOfCurrencyAnualSales,
+    typeOfCurrencyValueAssets,
     annualSalesValue,
     numberOfDirectEmployees,
     numberOfSubContratedEmployees,
@@ -486,7 +489,7 @@ function comercialInfo(fields) {
     chemicalSubstance,
     attachedFinancialReport,
   } = supplier;
-  const disabled = call.lockedByModification || changeIdCompanySize;
+  const disabled = call.lockedByModification;
   return [
     {
       key: 2.4,
@@ -497,7 +500,7 @@ function comercialInfo(fields) {
           label: 'Sector al que pertenece la empresa',
           key: 'idSector',
           value: idSector,
-          options: [],
+          options: sectors,
           disabled,
         },
         {
@@ -551,7 +554,7 @@ function comercialInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Informacion financiera',
+          value: 'Información financiera',
           key: 'infoFinancial',
         },
       ],
@@ -563,8 +566,8 @@ function comercialInfo(fields) {
           span: 3,
           type: 'select',
           label: 'Tipo',
-          key: 'valueAssetsOption',
-          value: valueAssetsOption,
+          key: 'typeOfCurrencyAnualSales',
+          value: typeOfCurrencyAnualSales,
           required: true,
           options: defaultMoneyType,
           disabled,
@@ -594,8 +597,8 @@ function comercialInfo(fields) {
           span: 3,
           type: 'select',
           label: 'Tipo',
-          key: 'annualSalesOption',
-          value: annualSalesOption,
+          key: 'typeOfCurrencyValueAssets',
+          value: typeOfCurrencyValueAssets,
           required: true,
           options: defaultMoneyType,
           disabled,
@@ -640,7 +643,7 @@ function comercialInfo(fields) {
           inputType: 'number',
           key: 'employeesTotal',
           value: numberOfSubContratedEmployees + numberOfDirectEmployees,
-          disabled,
+          disabled: true,
         },
         {
           span: 6,
@@ -777,7 +780,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'title',
-          value: 'Informacion adicional',
+          value: 'Información adicional',
           key: 'aditionalInformation',
         },
       ],
