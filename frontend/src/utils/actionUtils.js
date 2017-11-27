@@ -3,7 +3,7 @@ import setMessage from '../state/Generic/action';
 function validateResponse(args) {
   const errorMessage = 'Fallo en la respuesta';
   const noData = 'No se recibieron datos';
-  if (!args.data) {
+  if (args.data === '') {
     throw new Error(noData);
   }
   try {
