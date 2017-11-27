@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='Question by survey' alias='Question|vwQuestionsBySurvey' xmlns='http://www.lotus.com/dxl'
+<view name='(Question by survey)' alias='Question|vwQuestionsBySurvey' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='188e' unid='833C797B29A84BCC052581E00082D03F' sequence='15'>
+<noteinfo noteid='188e' unid='833C797B29A84BCC052581E00082D03F' sequence='17'>
 <created><datetime>20171122T184849,91-05</datetime></created>
-<modified><datetime>20171127T161433,34-05</datetime></modified>
-<revised><datetime>20171127T161433,33-05</datetime></revised>
-<lastaccessed><datetime>20171127T161433,34-05</datetime></lastaccessed>
+<modified><datetime>20171127T181650,61-05</datetime></modified>
+<revised><datetime>20171127T181650,60-05</datetime></revised>
+<lastaccessed><datetime>20171127T181650,61-05</datetime></lastaccessed>
 <addedtofile><datetime>20171122T184850,01-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
