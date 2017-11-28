@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import com.google.gson.Gson;
 import com.ibm.xsp.http.fileupload.FileItem;
 import com.ibm.xsp.http.fileupload.disk.DiskFileItemFactory;
 import com.ibm.xsp.http.fileupload.servlet.ServletFileUpload;
@@ -24,7 +23,7 @@ public class AttachmentAPI extends BaseAPI<AttachmentDTO> {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected ServletResponseDTO doPost(String action, HttpServletRequest request, Gson gson) {
+    protected ServletResponseDTO doPost(String action, HttpServletRequest request) {
         ServletResponseDTO response = null;
 
         try {

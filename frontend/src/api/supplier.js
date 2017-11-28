@@ -8,6 +8,10 @@ function getDataCallSuppliertApi() {
   return instance.get('SupplierByCall?action=currentCall');
 }
 
+function finishSurveyApi(call) {
+  return instance.post('SupplierByCall?action=finishSurvey', call);
+}
+
 function saveDataCallBySupplierApi(data) {
   return instance.post('SupplierByCall?action=save', data);
 }
@@ -37,4 +41,5 @@ export {
   saveDataSuppliertApi,
   getModifiedSuppliersApi,
   unlockSupplierApi,
+  finishSurveyApi,
 };

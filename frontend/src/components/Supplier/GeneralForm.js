@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import { Form, Select, Button, Row, Col } from 'antd';
+import { Form, Select } from 'antd';
+import styled from 'styled-components';
 import DinamicForm from '../shared/DinamicForm';
 import { generalInfo, noParticipateInfo } from './dataPage';
 import Field from './Field';
+import FormButtons from './FormButtons';
 import SubTitle from '../shared/SubTitle';
-import Confirm from '../shared/Confirm';
+
+const ParagraphStyle = styled.p`
+  margin-bottom:  ${props => props.theme.spaces.main};
+`;
 
 const { Option } = Select;
 
@@ -25,7 +30,7 @@ class General extends Component {
   }
   render() {
     const { participateInCall, call, changeIdCompanySize, system } = this.props;
-    const { messageByChangeSizeCompany } = system;
+    const { messageByChangeSizeCompany, informationProgram } = system;
     const { lockedByModification } = call;
     const { getFieldDecorator, setFields } = this.props.form;
     let valueSelect = '';
@@ -77,6 +82,11 @@ class General extends Component {
     }
     return (
       <div>
+        <ParagraphStyle>
+          {
+            informationProgram
+          }
+        </ParagraphStyle>
         <Field label="Participa del programa ?">
           <Select
             disabled={lockedByModification}
@@ -88,44 +98,19 @@ class General extends Component {
             <Option value="no">No</Option>
           </Select>
         </Field>
-        <SubTitle text="Informaciuon de la empresa" />
-        <p>Los campos marcados con asteriscos(*) son obligatorios</p>
+        <SubTitle text="Información de la empresa" />
+        <ParagraphStyle>
+          Los campos marcados con asterisco(*) son requeridos
+        </ParagraphStyle>
         <Form onSubmit={this.handleSubmit}>
           {
             content
           }
-          <Row type="flex" justify="center">
-            {
-              buttons.map(button => (
-                <Col span={4} key={button.key}>
-                  {
-                    changeIdCompanySize ?
-                      <Confirm title={messageByChangeSizeCompany} method={button.onClick}>
-                        <Button
-                          disabled={button.disabled}
-                          type="primary"
-                        >
-                          {
-                            button.text
-                          }
-                        </Button>
-                      </Confirm>
-                      :
-                      <Button
-                        disabled={button.disabled}
-                        type="primary"
-                        onClick={button.onClick}
-                      >
-                        {
-                          button.text
-                        }
-                      </Button>
-
-                  }
-                </Col>
-              ))
-            }
-          </Row>
+          <FormButtons
+            buttons={buttons}
+            changeIdCompanySize={changeIdCompanySize}
+            messageByChangeSizeCompany={messageByChangeSizeCompany}
+          />
         </Form>
       </div>
     );

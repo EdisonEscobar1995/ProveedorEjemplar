@@ -35,6 +35,7 @@ public abstract class GenericDAO<T> {
     private static final String PREFIX_FORM = "fr";
     private static final String PREFIX_VIEW = "vw";
     private static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
+    private static final String DEBUG_FTSEARCH_MESSAGE = "FTsearch in %s, parameters %s";
     
 
     protected String indexName;
@@ -68,6 +69,7 @@ public abstract class GenericDAO<T> {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
         if (null == view) {
+            System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
             if (view.FTSearch(query, 1) > 0) {
@@ -164,11 +166,21 @@ public abstract class GenericDAO<T> {
     protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters)
             throws HandlerGenericException {
         List<T> list = new ArrayList<T>();
-        DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
+        if (indexedParameters.size() == 1 && indexedParameters.get(0).indexOf(Common.SEPARATOR_LIST, 0) != -1) {
+            String[] ids = indexedParameters.get(0).split(String.valueOf(Common.SEPARATOR_LIST));
 
-        for (Document document : documents) {
-            list.add((T) this.castDocument(document));
+            for (String id : ids) {
+                Document document = view.getFirstDocumentByKey(id, true);
+                list.add((T) this.castDocument(document));
+            }
+        } else {
+            DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
+
+            for (Document document : documents) {
+                list.add((T) this.castDocument(document));
+            }
         }
+        
         return list;
     }
 
@@ -176,6 +188,7 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
+        System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
             for (ViewEntry viewEntry : vec) {
@@ -442,7 +455,11 @@ public abstract class GenericDAO<T> {
         String[] query = new String[parameters.size()];
         int i = 0;
         for (Entry<String, String> parameter : parameters.entrySet()) {
-            query[i] = "[" + parameter.getKey() + "]=" + parameter.getValue();
+            String value = parameter.getValue();
+            if (value.indexOf(Common.SEPARATOR_LIST, 0) != -1) {
+                value = value.replace(Common.SEPARATOR_LIST, '|');
+            }
+            query[i] = "[" + parameter.getKey() + "]=" + 
             i++;
         }
         return Common.join(query, " AND ");

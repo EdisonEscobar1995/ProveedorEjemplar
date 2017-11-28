@@ -9,6 +9,9 @@ const { Item } = Form;
 const ItemStyle = styled(Item)`
   margin: 0;
 `;
+const TableStyle = styled(Table)`
+  margin: ${props => props.theme.spaces.main} 0;
+`;
 
 class GenericFormTable extends Component {
   state = {};
@@ -80,7 +83,7 @@ class GenericFormTable extends Component {
     let content = '';
     if (data.length > 0) {
       content = (
-        <Table pagination={false} locale={config} dataSource={data}>
+        <TableStyle pagination={false} locale={config} dataSource={data}>
           {
             colummns.map(column => (
               (
@@ -117,59 +120,69 @@ class GenericFormTable extends Component {
               )
             ))
           }
-          <Column
-            title="Action"
-            key="action"
-            render={(text, record, index) => {
-              const { editable, id } = record;
-              return (
-                <div>
-                  {
-                    editable ?
-                      (<Button
-                        shape="circle"
-                        icon="save"
-                        htmlType="submit"
-                        onClick={() => this.selectRow(index, record)}
-                      />)
-                      :
-                      (<Button
-                        shape="circle"
-                        icon="edit"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          editData(index);
-                        }}
-                      />)
-                  }
-                  <Confirm method={() => deleteData(record, index)}>
-                    <Button
-                      shape="circle"
-                      icon="delete"
-                    />
-                  </Confirm>
-                  {
-                    id && editable ?
-                      <Confirm method={() => cancelData(index)}>
+          {
+            this.props.disabled ?
+              ''
+              :
+              <Column
+                title="Action"
+                key="action"
+                render={(text, record, index) => {
+                  const { editable, id } = record;
+                  return (
+                    <div>
+                      {
+                        editable ?
+                          (<Button
+                            shape="circle"
+                            icon="save"
+                            htmlType="submit"
+                            onClick={() => this.selectRow(index, record)}
+                          />)
+                          :
+                          (<Button
+                            shape="circle"
+                            icon="edit"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              editData(index);
+                            }}
+                          />)
+                      }
+                      <Confirm method={() => deleteData(record, index)}>
                         <Button
                           shape="circle"
-                          icon="close-circle-o"
+                          icon="delete"
                         />
                       </Confirm>
-                      :
-                      ''
-                  }
-                </div>
-              );
-            }
-            }
-          />
-        </Table>
+                      {
+                        id && editable ?
+                          <Confirm method={() => cancelData(index)}>
+                            <Button
+                              shape="circle"
+                              icon="close-circle-o"
+                            />
+                          </Confirm>
+                          :
+                          ''
+                      }
+                    </div>
+                  );
+                }
+                }
+              />
+          }
+        </TableStyle>
       );
     }
     return (
       <Spin spinning={loading}>
-        <Button type="primary" onClick={this.addData}>Add</Button>
+        {
+          this.props.disabled ?
+            ''
+            :
+            <Button type="primary" onClick={this.addData}>Add</Button>
+        }
         <Form onSubmit={this.saveData}>
           {
             content

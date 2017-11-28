@@ -20,6 +20,8 @@ import {
   SAVE_CUSTOMER,
   DELETE_CUSTOMER,
   CANCEL_CUSTOMER,
+  RELOAD_DIMENSIONS,
+  FINISH_SURVEY,
 } from './const';
 
 import reloadKeys from '../../utils/reducerUtils';
@@ -208,6 +210,15 @@ function supplierApp(state = initialState, action) {
         principalCustomer: newData,
       };
     }
+    case RELOAD_DIMENSIONS:
+      return {
+        ...state,
+        dimensions: action.dimensions,
+      };
+    case FINISH_SURVEY:
+      return {
+        ...state,
+      };
     default: {
       return state;
     }

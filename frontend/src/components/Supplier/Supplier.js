@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Steps, Spin, Button, Progress } from 'antd';
+import { Steps, Spin, Progress } from 'antd';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
 import Question from './Question';
-
+import StepLink from './StepLink';
 
 const { Step } = Steps;
 
@@ -25,8 +25,8 @@ class Supplier extends Component {
         content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
       },
     ];
-    const mapDimensions = dimensions.map((dimension) => {
-      const { call, getQuestionsByDimension, saveAnswer } = this.props;
+    const mapDimensions = dimensions.map((dimension, index) => {
+      const { call, getQuestionsByDimension, saveAnswer, system } = this.props;
       const { id, idSurvey } = call;
       return {
         name: dimension.name,
@@ -35,16 +35,18 @@ class Supplier extends Component {
           idDimension={dimension.id}
           idSurvey={idSurvey}
           idCall={id}
+          system={system}
           criterions={dimension.criterions}
           getQuestionsByDimension={getQuestionsByDimension}
           saveAnswer={saveAnswer}
+          validateQuestions={this.validateQuestions}
         />,
-        stepContent: this.getProgress(dimension.id),
+        stepContent: this.getProgress(dimension.id, index),
       };
     });
     return steps.concat(mapDimensions);
   }
-  getProgress = (dimensionId) => {
+  getProgress = (dimensionId, index) => {
     const percent = this.calculatePercent(dimensionId);
     let status = 'exception';
     if (percent === 100) {
@@ -53,7 +55,9 @@ class Supplier extends Component {
       status = 'active';
     }
     return (
-      <Progress type="circle" percent={percent} status={status} width={40} />
+      <StepLink onClick={() => this.changePage(index)}>
+        <Progress type="circle" percent={percent} status={status} width={40} />
+      </StepLink>
     );
   }
   getSupplierValues = (values) => {
@@ -61,6 +65,10 @@ class Supplier extends Component {
     let newSupplier = { ...supplier };
     newSupplier = Object.assign(newSupplier, values);
     return newSupplier;
+  }
+  changePage = (index) => {
+    const current = (index + 2);
+    this.setState({ current });
   }
   save = (values, action) => {
     if (!this.props.changeIdCompanySize && this.props.participateInCall) {
@@ -83,6 +91,55 @@ class Supplier extends Component {
       this.props.saveDataCallSupplier(call, newSupplier);
     }
   }
+  validateQuestions = () => {
+    const dimesions = [...this.props.dimensions];
+    let send = true;
+    dimesions.forEach((dimension) => {
+      if (dimension.criterions.length === 0) {
+        send = send && false;
+      } else {
+        dimension.criterions.forEach((criteria) => {
+          criteria.questions.forEach((question) => {
+            let errors = {};
+            if (question.required) {
+              if (question.answer.length > 0) {
+                if (question.requireAttachment) {
+                  question.answer.forEach((answer) => {
+                    if (answer.attachment) {
+                      if (answer.attachment.length === 0) {
+                        send = send && false;
+                        errors = {
+                          attachments: true,
+                        };
+                      }
+                    } else {
+                      send = send && false;
+                      errors = {
+                        attachments: true,
+                      };
+                    }
+                  });
+                }
+              } else {
+                send = send && false;
+                errors = {
+                  answers: true,
+                };
+                if (question.requireAttachment) {
+                  errors.attachments = true;
+                }
+              }
+            }
+            question.errors = errors;
+          });
+        });
+      }
+    });
+    if (send) {
+      this.props.finishSurvey();
+    }
+    this.props.reloadDimensions(dimesions);
+  }
   calculatePercent = (idDimension) => {
     let totalQuestions = 0;
     let responsedQuestion = 0;
@@ -100,14 +157,14 @@ class Supplier extends Component {
         });
       });
       if (totalQuestions !== 0) {
-        total = responsedQuestion / totalQuestions;
+        total = (responsedQuestion * 100) / totalQuestions;
       } else {
         total = 100;
       }
     } else {
       total = 0;
     }
-    return total;
+    return Math.round(total);
   }
   next = () => {
     const current = this.state.current + 1;
@@ -120,7 +177,6 @@ class Supplier extends Component {
 
   render() {
     const { loading, dimensions } = this.props;
-    console.log(this.props);
     const { current } = this.state;
     const steps = this.getSteps(dimensions);
     return (
@@ -132,18 +188,6 @@ class Supplier extends Component {
             ),
           )}
         </Steps>
-        {
-          this.state.current < steps.length - 1
-          &&
-          <Button type="primary" onClick={() => this.next()}>Next</Button>
-        }
-        {
-          this.state.current > 0
-          &&
-          <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-            Previous
-          </Button>
-        }
         <div>{steps[this.state.current].content}</div>
       </Spin>
     );
