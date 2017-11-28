@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row, Col, Button } from 'antd';
 import filtersData from './filtersData';
 import DinamicForm from '../shared/DinamicForm';
 
@@ -8,14 +7,10 @@ class Filters extends Component {
     this.props.filterSuppliers(this.props.form.getFieldsValue());
   };
 
-  handleReset = () => {
-    this.props.form.resetFields();
-  }
-
   render() {
     const { Form } = this.props;
     const { getFieldDecorator, setFields } = this.props.form;
-    const fields = filtersData(this.props);
+    const fields = filtersData(this.handleFilter);
 
     return (
       <div>
@@ -26,14 +21,6 @@ class Filters extends Component {
             content={fields}
           />
         </Form>
-        <Row type="flex" justify="center" style={{ marginBottom: '20px' }}>
-          <Col span={2}>
-            <Button type="primary" onClick={this.handleFilter}>Consultar</Button>
-          </Col>
-          <Col span={2}>
-            <Button type="primary" onClick={this.handleReset}>Limpiar</Button>
-          </Col>
-        </Row>
       </div>
     );
   }

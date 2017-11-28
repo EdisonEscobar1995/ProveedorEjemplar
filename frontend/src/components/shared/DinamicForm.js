@@ -22,7 +22,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
     <div>
       {
         content.map(item => (
-          <Row key={item.key} align="middle">
+          <Row key={item.key} align="middle" type="flex">
             {
               item.value.map((current) => {
                 let rowValue;
@@ -149,6 +149,21 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           </Button>
                         </Upload>
                       </Field>
+                    );
+                  }
+                    break;
+                  case 'button': {
+                    const {
+                      buttonType,
+                      handleClick,
+                    } = current;
+                    rowValue = (
+                      <Button
+                        type={buttonType}
+                        onClick={handleClick}
+                      >
+                        {label}
+                      </Button>
                     );
                   }
                     break;

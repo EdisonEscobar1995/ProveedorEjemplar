@@ -1,6 +1,6 @@
 import { LOCKED, NOTIFIED } from '../../utils/const';
 
-const filtersInfo = ({ data, getModifiedSuppliers }) => {
+const filtersData = ({ data, getModifiedSuppliers }) => {
   const states = [
     {
       id: LOCKED,
@@ -101,4 +101,4 @@ const filtersInfo = ({ data, getModifiedSuppliers }) => {
   ];
 };
 
-export default filtersInfo;
+export default filtersData;

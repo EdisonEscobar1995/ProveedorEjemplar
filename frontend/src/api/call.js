@@ -1,15 +1,18 @@
-import intance from './instance';
+import instance from './instance';
 
-const getCallApi = () => intance.get('Call?action=getAll');
+const getCallApi = () => instance.get('Call?action=getAll');
 
-const getCallByIdApi = id => intance.get('Call?action=get', {
+const getCallByIdApi = id => instance.get('Call?action=get', {
   params: { id },
 });
 
-const saveCallApi = data => intance.post('Call?action=save', data);
+const saveCallApi = data => instance.post('Call?action=save', data);
+
+const getSuppliersByCallApi = id => instance.get(`Call?action=getSuppliersInCall&idCall=${id}`);
 
 export {
   getCallApi,
   saveCallApi,
   getCallByIdApi,
+  getSuppliersByCallApi,
 };

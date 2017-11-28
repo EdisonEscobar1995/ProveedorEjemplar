@@ -50,22 +50,18 @@ const getModifiedSuppliers = year => (dispatch) => {
 };
 
 const unlockSupplier = supplierByCall => (dispatch) => {
-  if (supplierByCall.oldIdCompanySize === '') {
-    dispatch(setMessage('Debe seleccionar el tamaño de la empresa', 'error'));
-  } else {
-    requestApi(dispatch, getDataModifiedSuppliersProgress, unlockSupplierApi, supplierByCall)
-      .then((response) => {
-        if (response.status) {
-          dispatch(setMessage('El proveedor ha sido notificado', 'success'));
-          const { data } = response.data;
-          dispatch(unlockSupplierSuccess(data));
-        } else if (response.message === 'SURVEY_DOES_NOT_EXIST') {
-          dispatch(setMessage('No existe una encuesta para el tipo de suministro y tamaño de encuesta seleccionada', 'error'));
-        }
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
-  }
+  requestApi(dispatch, getDataModifiedSuppliersProgress, unlockSupplierApi, supplierByCall)
+    .then((response) => {
+      if (response.status) {
+        dispatch(setMessage('El proveedor ha sido notificado', 'success'));
+        const { data } = response.data;
+        dispatch(unlockSupplierSuccess(data));
+      } else if (response.message === 'SURVEY_DOES_NOT_EXIST') {
+        dispatch(setMessage('No existe una encuesta para el tipo de suministro y tamaño de encuesta seleccionada', 'error'));
+      }
+    }).catch((err) => {
+      dispatch(getFailedRequest(err));
+    });
 };
 
 export {
