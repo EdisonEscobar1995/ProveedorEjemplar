@@ -16,6 +16,7 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         ServletResponseDTO<SupplierByCallDTO> response = null;
         try {
             response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO.getCurrentCallBySupplier());
+            response.addRule("readOnly", supplierByCallBLO.getReadOnly());
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<SupplierByCallDTO>(exception);
         }

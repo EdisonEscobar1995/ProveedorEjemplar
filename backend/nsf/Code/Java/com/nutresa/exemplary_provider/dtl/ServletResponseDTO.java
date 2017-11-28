@@ -1,5 +1,8 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gson.annotations.Expose;
 import com.nutresa.exemplary_provider.utils.Common;
 
@@ -8,6 +11,9 @@ public class ServletResponseDTO<T> {
 
     @Expose
     T data;
+
+    @Expose
+    Map<String, Object> rules = new HashMap<String, Object>();
 
     @Expose
     String message = "";
@@ -30,4 +36,9 @@ public class ServletResponseDTO<T> {
         this.message = SUCCESS;
         this.status = true;
     }
+    
+    public void addRule(String name, Object value) {
+        rules.put(name, value);
+    }
+   
 }
