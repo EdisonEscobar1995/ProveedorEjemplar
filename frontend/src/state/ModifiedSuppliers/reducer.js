@@ -26,15 +26,7 @@ function modifiedSuppliersApp(state = initialState, action) {
     case GET_DATA_MODIFIED_SUPPLIERS_SUCCESS: {
       return {
         ...state,
-        data: {
-          ...action.data,
-          suppliersByCall: action.data.suppliersByCall.map(
-            item => ({
-              ...item,
-              oldIdCompanySize: '',
-            }),
-          ),
-        },
+        data: action.data,
         suppliers: action.data.suppliers,
         loading: false,
       };
