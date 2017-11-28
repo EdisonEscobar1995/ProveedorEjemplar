@@ -54,7 +54,7 @@ const mapStateToProps = state => ({
   loading: state.supplier.loading,
   principalCustomer: state.supplier.principalCustomer,
   sectors: state.supplier.sectors,
-  messageChangeCompanySize: state.supplier.messageChangeCompanySize,
+  system: state.supplier.system,
   error: state.supplier.error,
 });
 

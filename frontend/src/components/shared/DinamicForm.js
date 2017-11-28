@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
 import Upload from '../shared/Upload';
+import baseUrl from '../../utils/api';
 
 const { Item } = Form;
 const { Option } = Select;
@@ -25,12 +26,11 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
             {
               item.value.map((current) => {
                 let rowValue;
-                let { label, span, allowClear } = current;
+                let { label, span, allowClear, options } = current;
                 const {
                   key,
                   type,
                   inputType,
-                  options,
                   value,
                   required,
                   handleChange,
@@ -40,6 +40,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                 } = current;
                 allowClear = allowClear === undefined ? true : allowClear;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
+                options = options || [];
                 span = span || 24;
                 switch (type) {
                   case 'date':
@@ -121,7 +122,14 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                     );
                     break;
                   case 'upload': {
-                    const { fileList, onChange, onRemove } = current;
+                    const {
+                      fileList,
+                      sizeAllowed,
+                      onChange,
+                      onRemove,
+                      uploadMaxFilesize,
+                      uploadExtensions,
+                    } = current;
                     rowValue = (
                       <Field label={label}>
                         <Upload
@@ -129,8 +137,12 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           list={fileList}
                           disabled={disabled}
                           multiple
+                          uploadExtensions={uploadExtensions}
+                          uploadMaxFilesize={uploadMaxFilesize}
+                          sizeAllowed={sizeAllowed}
                           onChange={onChange}
                           onRemove={onRemove}
+                          baseUrl={baseUrl}
                         >
                           <Button disabled={disabled}>
                             <Icon type="upload" />Adjuntar archivo

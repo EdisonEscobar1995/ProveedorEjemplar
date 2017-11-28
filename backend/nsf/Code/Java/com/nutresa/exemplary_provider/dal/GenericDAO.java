@@ -35,6 +35,7 @@ public abstract class GenericDAO<T> {
     private static final String PREFIX_FORM = "fr";
     private static final String PREFIX_VIEW = "vw";
     private static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
+    private static final String DEBUG_FTSEARCH_MESSAGE = "FTsearch in %s, parameters %s";
     
 
     protected String indexName;
@@ -68,6 +69,7 @@ public abstract class GenericDAO<T> {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
         if (null == view) {
+            System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
             if (view.FTSearch(query, 1) > 0) {
@@ -176,6 +178,7 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
+        System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
             for (ViewEntry viewEntry : vec) {

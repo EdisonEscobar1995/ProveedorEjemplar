@@ -16,25 +16,29 @@ class GenericFormTable extends Component {
     const { row, record } = this.state;
     const colummns = this.props.colummns;
     const validateFields = colummns.map(item => `${row}-${item.key}`);
-    this.props.form.validateFields(validateFields);
-    const dataForm = this.props.form.getFieldsValue();
-    const rowValue = {};
-    let send = true;
-    colummns.forEach((column) => {
-      const value = dataForm[`${row}-${column.key}`];
-      rowValue[column.key] = value;
-      if (!value) {
-        send = false;
+    let returnValue = null;
+    this.props.form.validateFields(validateFields, (err) => {
+      if (!err) {
+        const dataForm = this.props.form.getFieldsValue();
+        const rowValue = {};
+        let send = true;
+        colummns.forEach((column) => {
+          const value = dataForm[`${row}-${column.key}`];
+          rowValue[column.key] = value;
+          if (!value) {
+            send = false;
+          }
+        });
+        rowValue.id = record.id;
+        if (send) {
+          returnValue = {
+            value: rowValue,
+            row,
+          };
+        }
       }
     });
-    rowValue.id = record.id;
-    if (send) {
-      return {
-        value: rowValue,
-        row,
-      };
-    }
-    return null;
+    return returnValue;
   }
   saveData = (e) => {
     e.preventDefault();
@@ -86,13 +90,17 @@ class GenericFormTable extends Component {
                   dataIndex={column.key}
                   render={(text, record) => {
                     const id = `${record.key}-${column.key}`;
+                    const rules = column.rules || [];
                     return (
                       record.editable ?
                         (
                           <ItemStyle>
                             {
                               getFieldDecorator(id, {
-                                rules: [{ required: true, message: 'Por favor ingrese un valor' }],
+                                rules: [
+                                  { required: true, message: 'Por favor ingrese un valor' },
+                                  ...rules,
+                                ],
                                 initialValue: text,
                               })(
                                 <Input type={column.type} placeholder={column.title} />,
