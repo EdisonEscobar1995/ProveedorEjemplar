@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Table, Tooltip, Button, Input, Radio } from 'antd';
 import styled from 'styled-components';
 import Upload from '../shared/Upload';
+import FormButtons from './FormButtons';
+import ErrorTable from './ErrorTable';
+import baseUrl from '../../utils/api';
+
 
 const { TextArea } = Input;
 const { Column } = Table;
@@ -10,6 +14,9 @@ const SubtitleStyle = styled.h4`
   color: ${props => props.theme.color.info};
   padding: 15px 0;
   border-top: 1px ${props => props.theme.color.info} solid;
+`;
+const ParagraphStyle = styled.p`
+  margin: ${props => props.theme.spaces.main} 0;
 `;
 const RadioStyle = styled(Radio)`
   white-space: normal;
@@ -58,19 +65,22 @@ class Question extends Component {
   getColumns = () => (
     [
       {
-        title: 'Help',
+        title: 'Ayuda',
         width: '5%',
         dataIndex: 'helpText',
         key: 'helpText',
         render: text => (
-          <Tooltip placement="topRight" title={text}>
-            <Button type="primary" shape="circle" icon="question" />
-          </Tooltip>
+          text ?
+            <Tooltip placement="topRight" title={text}>
+              <Button type="primary" shape="circle" icon="question" />
+            </Tooltip>
+            :
+            ''
         ),
       },
       {
         title: 'Pregunta',
-        width: '50%',
+        width: '35%',
         dataIndex: 'wording',
         key: 'wording',
       },
@@ -84,31 +94,48 @@ class Question extends Component {
           if (record.answer.length > 0) {
             value = record.answer[0].idOptionSupplier;
           }
+          let { errors } = record;
+          if (!errors) {
+            errors = {};
+          }
           let renderComponent;
           if (record.type === 'Cerrada') {
-            renderComponent = (<RadioGroup
-              value={value}
-              onChange={e => this.onChange(e.target.value, record, 'idOptionSupplier')}
-            >
-              {
-                options.map(option => (
-                  <RadioStyle
-                    key={option.id}
-                    value={option.id}
-                  >
-                    {option.wording}
-                  </RadioStyle>
-                ),
-                )
-              }
-            </RadioGroup>);
+            renderComponent = (
+              <RadioGroup
+                disabled={this.props.disabled}
+                value={value}
+                onChange={e => this.onChange(e.target.value, record, 'idOptionSupplier')}
+              >
+                {
+                  options.map(option => (
+                    <RadioStyle
+                      key={option.id}
+                      value={option.id}
+                    >
+                      {option.wording}
+                    </RadioStyle>
+                  ),
+                  )
+                }
+              </RadioGroup>
+            );
           } else {
-            renderComponent = (<TextArea
-              defaultValue={this.getAnswer(record, 'commentSupplier')}
-              onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
-            />);
+            renderComponent = (
+              <TextArea
+                disabled={this.props.disabled}
+                defaultValue={this.getAnswer(record, 'responseSupplier')}
+                onBlur={e => this.onChange(e.target.value, record, 'responseSupplier')}
+              />
+            );
           }
-          return renderComponent;
+          return (
+            <div>
+              {
+                renderComponent
+              }
+              <ErrorTable visible={errors.answers} text="Esta pregunta es obligatoria" />
+            </div>
+          );
         },
       },
       {
@@ -117,14 +144,17 @@ class Question extends Component {
         dataIndex: 'answer',
         key: 'commentSupplier',
         render: (text, record) =>
-          (<TextArea
-            defaultValue={this.getAnswer(record, 'commentSupplier')}
-            onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
-          />),
+          (
+            <TextArea
+              disabled={this.props.disabled}
+              defaultValue={this.getAnswer(record, 'commentSupplier')}
+              onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
+            />
+          ),
       },
       {
         title: 'Soporte',
-        width: '5%',
+        width: '20%',
         dataIndex: 'answer',
         key: 'attachment',
         render: (text, record) => {
@@ -132,27 +162,51 @@ class Question extends Component {
           if (!actualValue) {
             actualValue = [];
           }
-          return (<Upload
-            datakey={record}
-            disabled={false}
-            list={actualValue}
-            multiple
-            onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
-            onRemove={this.onChange}
-          >
-            <a>
-              Anexar
-            </a>
-          </Upload>);
+          let { errors } = record;
+          if (!errors) {
+            errors = {};
+          }
+          return (
+            <div>
+              <Upload
+                datakey={record}
+                disabled={this.props.disabled}
+                list={actualValue}
+                multiple
+                baseUrl={`${baseUrl}Attachment?action=save`}
+                uploadMaxFilesize={this.props.system.uploadMaxFilesize}
+                uploadExtensions={this.props.system.uploadExtensions}
+                onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
+                onRemove={this.onChange}
+              >
+                <a>
+                  Anexar
+                </a>
+              </Upload>
+              <ErrorTable visible={errors.attachments} text="Debe anexar un archivo" />
+            </div>
+          );
         },
       },
     ]
   )
   render() {
-    const { criterions } = this.props;
+    const { criterions, system } = this.props;
     const columns = this.getColumns();
+    const buttons = [
+      {
+        key: 1,
+        text: 'Enviar',
+        onClick: this.props.validateQuestions,
+      },
+    ];
     return (
       <div>
+        <ParagraphStyle>
+          {
+            system.inputPoll
+          }
+        </ParagraphStyle>
         {
           criterions.length > 0 ?
 
@@ -184,7 +238,7 @@ class Question extends Component {
             :
             (<h3>No hay preguntas para esta dimension</h3>)
         }
-
+        <FormButtons buttons={buttons} />
       </div>
     );
   }

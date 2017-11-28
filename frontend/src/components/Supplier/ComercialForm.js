@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Form, Button } from 'antd';
+import { Form } from 'antd';
 import DinamicForm from '../shared/DinamicForm';
 import TableForm from '../shared/TableForm';
 import { comercialInfo, mainCustomers } from './dataPage';
+import FormButtons from './FormButtons';
 
 
 class Comercial extends Component {
@@ -15,15 +16,44 @@ class Comercial extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.save(values);
+        this.props.save(values, 'send');
       }
     });
   }
+  saveDraft = () => {
+    this.props.save(this.props.form.getFieldsValue());
+  }
   render() {
-    const { principalCustomer, addData, saveData, editData, deleteData, cancelData } = this.props;
+    const {
+      principalCustomer,
+      call,
+      system,
+      addData,
+      saveData,
+      editData,
+      deleteData,
+      cancelData,
+      changeIdCompanySize,
+    } = this.props;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
+    const { lockedByModification } = call;
     const colummns = mainCustomers;
+    const { messageByChangeSizeCompany } = system;
+    const buttons = [
+      {
+        key: 1,
+        text: 'Guardar',
+        onClick: this.saveDraft,
+        disabled: lockedByModification,
+      },
+      {
+        key: 2,
+        text: 'Enviar',
+        onClick: this.handleSubmit,
+        disabled: lockedByModification,
+      },
+    ];
     return (
       <div>
         <TableForm
@@ -41,12 +71,11 @@ class Comercial extends Component {
             getFieldDecorator={getFieldDecorator}
             content={fields}
           />
-          <Button
-            type="primary"
-            htmlType="submit"
-          >
-            Enviar
-          </Button>
+          <FormButtons
+            buttons={buttons}
+            changeIdCompanySize={changeIdCompanySize}
+            messageByChangeSizeCompany={messageByChangeSizeCompany}
+          />
         </Form>
       </div>
     );

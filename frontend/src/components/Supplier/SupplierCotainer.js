@@ -21,6 +21,8 @@ import {
   editDataCustomer,
   deleteDataCustomer,
   cancelDataCustomer,
+  reloadDimensions,
+  finishSurvey,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -115,6 +117,12 @@ const mapDispatchToProps = dispatch => ({
   },
   cancelData: (index) => {
     dispatch(cancelDataCustomer(index));
+  },
+  reloadDimensions: (dimensions) => {
+    dispatch(reloadDimensions(dimensions));
+  },
+  finishSurvey: () => {
+    dispatch(finishSurvey());
   },
 });
 

@@ -32,6 +32,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   type,
                   inputType,
                   value,
+                  help,
                   required,
                   handleChange,
                   disabled,
@@ -100,7 +101,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         break;
                     }
                     rowValue = (
-                      <Field label={label}>
+                      <Field label={label} help={help}>
                         <Item>
                           {getFieldDecorator(key, {
                             rules: [
@@ -125,6 +126,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                     const {
                       fileList,
                       sizeAllowed,
+                      max,
                       onChange,
                       onRemove,
                       uploadMaxFilesize,
@@ -137,12 +139,13 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           list={fileList}
                           disabled={disabled}
                           multiple
+                          max={max}
                           uploadExtensions={uploadExtensions}
                           uploadMaxFilesize={uploadMaxFilesize}
                           sizeAllowed={sizeAllowed}
                           onChange={onChange}
                           onRemove={onRemove}
-                          baseUrl={baseUrl}
+                          baseUrl={`${baseUrl}Attachment?action=save`}
                         >
                           <Button disabled={disabled}>
                             <Icon type="upload" />Adjuntar archivo

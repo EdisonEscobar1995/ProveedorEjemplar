@@ -21,6 +21,8 @@ import {
   SAVE_CUSTOMER,
   DELETE_CUSTOMER,
   CANCEL_CUSTOMER,
+  RELOAD_DIMENSIONS,
+  FINISH_SURVEY,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -28,6 +30,7 @@ import {
   getDataQuestionsBySurverrApi,
   saveDataSuppliertApi,
   saveDataCallBySupplierApi,
+  finishSurveyApi,
 } from '../../api/supplier';
 import getMasterApi from '../../api/master';
 import { getDataCategoryBySuplyApi } from '../../api/category';
@@ -98,6 +101,12 @@ function changeParticipate(participateInCall) {
   return {
     type: CHANGE_PARTICIPATE,
     participateInCall,
+  };
+}
+function reloadDimensions(dimensions) {
+  return {
+    type: RELOAD_DIMENSIONS,
+    dimensions,
   };
 }
 function updateAttachment(data, field) {
@@ -189,6 +198,18 @@ function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
   const actualQuestion = actualCriterion.questions
     .filter(question => question.id === answer.idQuestion)[0];
   actualQuestion.answer.push(answer);
+  if (actualQuestion.errors) {
+    if (answer.idOptionSupplier || answer.responseSupplier) {
+      actualQuestion.errors.answers = false;
+    }
+    if (actualQuestion.requireAttachment) {
+      if (answer.attachment) {
+        if (answer.attachment.length > 0) {
+          actualQuestion.errors.attachments = false;
+        }
+      }
+    }
+  }
   return {
     type: SAVE_DATA_ANSWER_SUCCESS,
     dimensions: allDimensions,
@@ -238,6 +259,12 @@ function cancelDataCustomer(index) {
   return {
     type: CANCEL_CUSTOMER,
     index,
+  };
+}
+function finishSurveySucess(data) {
+  return {
+    type: FINISH_SURVEY,
+    data,
   };
 }
 
@@ -358,14 +385,17 @@ function getDataCitiesByDepartment(clientData) {
   };
 }
 function getDimensionsBySurvey(idSurvey) {
-  return (dispatch) => {
-    requestApi(dispatch, getDataSupplierProgress, getDimensionsBySurveyApi, idSurvey)
-      .then((respone) => {
-        const dimensions = respone.data.data;
-        dispatch(getDataDimensionsBySuplySuccess(dimensions));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
+  return (dispatch, getActualState) => {
+    const actualDimensions = getActualState().supplier.dimensions;
+    if (actualDimensions.length === 0) {
+      requestApi(dispatch, getDataSupplierProgress, getDimensionsBySurveyApi, idSurvey)
+        .then((respone) => {
+          const dimensions = respone.data.data;
+          dispatch(getDataDimensionsBySuplySuccess(dimensions));
+        }).catch((err) => {
+          dispatch(getFailedRequest(err));
+        });
+    }
   };
 }
 function getQuestionsByDimension(idSurvey, idDimension) {
@@ -471,6 +501,18 @@ function deleteCustomer(clientData, index) {
       });
   };
 }
+function finishSurvey() {
+  return (dispatch, getActualState) => {
+    const { call } = { ...getActualState().supplier };
+    requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
+      .then((response) => {
+        const data = response.data.data;
+        dispatch(finishSurveySucess(data));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  };
+}
 
 export {
   getDataSupplier,
@@ -492,4 +534,6 @@ export {
   addDataCustomer,
   editDataCustomer,
   cancelDataCustomer,
+  reloadDimensions,
+  finishSurvey,
 };

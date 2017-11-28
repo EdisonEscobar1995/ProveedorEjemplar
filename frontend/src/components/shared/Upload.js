@@ -13,6 +13,7 @@ function Upload(props) {
     uploadMaxFilesize,
     datakey,
     baseUrl,
+    max,
     onChange,
     onRemove,
   } = props;
@@ -32,6 +33,12 @@ function Upload(props) {
       accept={uploadExtensions.join(',')}
       multiple={multiple}
       beforeUpload={(file) => {
+        if (max) {
+          if (list.length >= max) {
+            message({ text: `El maximo número de archivos es ${max}`, type: 'error' });
+            return false;
+          }
+        }
         const isValidSize = file.size / 1024 / 1024 < uploadMaxFilesize;
         if (!isValidSize) {
           message({ text: `El archivo debe ser menor a ${uploadMaxFilesize} MB`, type: 'error' });
@@ -61,13 +68,19 @@ function Upload(props) {
         }
       }}
       onRemove={(file) => {
-        if (onRemove) {
-          onRemove(file.uid, datakey);
+        if (!disabled) {
+          if (onRemove) {
+            onRemove(file.uid, datakey);
+          }
         }
+        return false;
       }}
     >
       {
-        children
+        !disabled ?
+          children
+          :
+          ''
       }
     </UploadAnt>
   );
