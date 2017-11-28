@@ -1,15 +1,17 @@
 package com.nutresa.exemplary_provider.api;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.CharBuffer;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -65,10 +67,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     
         int status = 200;
         ServletResponseDTO servletResponse = null;
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls()
-            .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
-    
+
         try {
             typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
             LinkedHashMap<String, String> parameters = (LinkedHashMap) getParameters(request);
@@ -82,7 +81,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
                     servletResponse = doGet(action, parameters);
                     break;
                 case POST:
-                    servletResponse = doPost(action, request, gson);
+                    servletResponse = doPost(action, request);
                     break;
                 case OPTIONS:
                     doOptions(response, output);
@@ -103,6 +102,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             servletResponse = new ServletResponseDTO(exception);
         } finally {
             response.setStatus(status);
+            Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
+                .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
+            
             String jsonResponse = gson.toJson(servletResponse);
             byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
             output.write(utf8JsonString, 0, utf8JsonString.length);            
@@ -144,19 +146,32 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    protected ServletResponseDTO doPost(String action, HttpServletRequest request, Gson gson) throws IOException, IllegalAccessException,
+    protected ServletResponseDTO doPost(String action, HttpServletRequest request) throws IOException, IllegalAccessException,
     	InvocationTargetException, HandlerGenericException {
     
-       	BufferedReader reader = request.getReader();
-    	String inputLine = null;
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((inputLine = reader.readLine()) != null) {
-            stringBuilder.append(inputLine);
-        }
-        reader.close();
+    	T postBody = getPostBody(request.getInputStream());
 
         Method method = getActionMethod(action, 1);                    
-        return (ServletResponseDTO) method.invoke(this, gson.fromJson(stringBuilder.toString(), this.dtoClass));
+        return (ServletResponseDTO) method.invoke(this, postBody);
+    }
+
+    protected T getPostBody(ServletInputStream InputStream) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        InputStreamReader streamReader = new InputStreamReader(InputStream, "UTF-8");
+
+        CharBuffer charBuffer = CharBuffer.allocate(1024);
+        while (streamReader.read(charBuffer) > 0) {
+            charBuffer.flip();
+            stringBuilder.append(charBuffer.toString());
+            charBuffer.clear();
+        }
+        streamReader.close();
+        
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
+        .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
+        
+        return gson.fromJson(stringBuilder.toString(), this.dtoClass);
     }
 
     protected void doOptions(HttpServletResponse response, ServletOutputStream output) throws IOException {
@@ -165,4 +180,5 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         response.addHeader("Access-Control-Allow-Origin", "*");
         output.print(" ");
     }
+    
 }

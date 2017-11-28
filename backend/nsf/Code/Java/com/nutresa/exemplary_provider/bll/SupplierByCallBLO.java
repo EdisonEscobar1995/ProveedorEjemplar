@@ -105,9 +105,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return response;
     }
 
-    public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
+    public List<SupplierDTO> getSuppliersByCallDontInvited(String idCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        return supplierByCallDAO.getSuppliersByCall(idCall);
+        return supplierByCallDAO.getSuppliersByCallDontInvited(idCall);
     }
 
     public void markToInvited(String idSupplier, String idCall) throws HandlerGenericException {
