@@ -3,10 +3,14 @@ package com.nutresa.exemplary_provider.dtl;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.annotations.Expose;
+
 public class SuppliersInCallDTO {
 
+    @Expose
     List<DTO> suppliers;
     
+    @Expose
     Map<String, List<DTO>> masters;
 
     public List<DTO> getSuppliers() {

@@ -39,12 +39,12 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         SuppliersInCallDTO response = new SuppliersInCallDTO();
         Map<String, List<Object>> listIds;
         SupplierBLO supplierBLO = new SupplierBLO();
-        List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", idCall, "vwSuppliersByCallByIdSupplierAndIdCall");
+        List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", idCall, "vwSuppliersByCallIdCall");
         try {
             listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
             // Consultar los proveedores que se encuentran bloqueados o
             // notificados para las convocatorias del año seleccionado
-            List<DTO> suppliers = supplierBLO.getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")), "vwSuppliers");
+            List<DTO> suppliers = supplierBLO.getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
             // Realizar el cruce de los maestros según los datos de los
             // proveedores seleccionados
             String[] idFieldNames = { "CompanySize", "Supply" };
