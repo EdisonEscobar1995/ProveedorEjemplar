@@ -11,6 +11,9 @@ public class SuppliersInCallDTO {
     List<DTO> suppliers;
     
     @Expose
+    private List<DTO> suppliersByCall;
+
+    @Expose
     Map<String, List<DTO>> masters;
 
     public List<DTO> getSuppliers() {
@@ -27,5 +30,13 @@ public class SuppliersInCallDTO {
 
     public void setMasters(Map<String, List<DTO>> masters) {
         this.masters = masters;
+    }
+
+    public void setSuppliersByCall(List<DTO> suppliersByCall) {
+        this.suppliersByCall = suppliersByCall;
+    }
+
+    public List<DTO> getSuppliersByCall() {
+        return suppliersByCall;
     }
 }
