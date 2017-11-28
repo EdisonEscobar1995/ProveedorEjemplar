@@ -31,6 +31,29 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         return callsBySupplier;
     }
 
+    public List<SupplierDTO> getSuppliersByCallDontInvited(String idCall) throws HandlerGenericException {
+        List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
+        SupplierByCallDTO supplierByCallDTO = null;
+        SupplierDAO supplierDAO = new SupplierDAO();
+        try {
+            View currentView = getDatabase().getView("vwSuppliersByCallIdCall");
+            List<String> filter = new ArrayList<String>();
+            filter.add(idCall);
+            filter.add("0");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+            for (Document document : documents) {
+                supplierByCallDTO = castDocument(document);
+                SupplierDTO supplier = supplierDAO.get(supplierByCallDTO.getIdSupplier());
+                if (null != supplier && null != supplier.getId()) {
+                    suppliers.add(supplier);
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        return suppliers;
+    }
+
     public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
         List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
         SupplierByCallDTO supplierByCallDTO = null;
@@ -50,5 +73,5 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         }
         return suppliers;
     }
-
+    
 }
