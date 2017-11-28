@@ -4,7 +4,18 @@ import message from './Message';
 
 
 function Upload(props) {
-  const { children, list, disabled, multiple, datakey, onChange, onRemove } = props;
+  const {
+    children,
+    list,
+    disabled,
+    multiple,
+    uploadExtensions,
+    uploadMaxFilesize,
+    datakey,
+    baseUrl,
+    onChange,
+    onRemove,
+  } = props;
   const value = list.map(file => (
     {
       uid: file.id,
@@ -16,10 +27,18 @@ function Upload(props) {
   return (
     <UploadAnt
       defaultFileList={value}
-      action="http://saescudero.cognox.com/Aplicaciones/ProveedorEjemplar/exemplaryProvider.nsf/xsp/Attachment?action=save"
+      action={baseUrl}
       disabled={disabled}
-      accept=".doc, .png, .jpg, .jpeg, .pdf, .ppt"
+      accept={uploadExtensions.join(',')}
       multiple={multiple}
+      beforeUpload={(file) => {
+        const isValidSize = file.size / 1024 / 1024 < uploadMaxFilesize;
+        if (!isValidSize) {
+          message({ text: `El archivo debe ser menor a ${uploadMaxFilesize} MB`, type: 'error' });
+          message.error('Image must smaller than 2MB!');
+        }
+        return isValidSize;
+      }}
       onChange={(info) => {
         const { file } = info;
         const messageConfig = { text: '', type: 'error' };

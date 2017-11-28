@@ -1,3 +1,5 @@
+import { intValidation, mailValitation } from '../../utils/rules';
+
 const defaultOptions = [
   {
     id: 'si',
@@ -22,6 +24,7 @@ const defaultMoneyType = [
     name: 'CRC Moneda Costa Rica',
   },
 ];
+
 function getValueOption(value) {
   if (value) {
     return (value ? 'si' : 'no');
@@ -42,6 +45,7 @@ function generalInfo(fields) {
     societyTypes,
     countries,
     departments,
+    system,
     getDataDepartmentsByCountry,
     cities,
     getDataCitiesByDepartment,
@@ -76,6 +80,7 @@ function generalInfo(fields) {
     fullNameContact,
     document,
   } = supplier;
+  const { uploadMaxFilesize, uploadExtensions } = system;
   const disabled = call.lockedByModification;
   return [
     {
@@ -163,6 +168,8 @@ function generalInfo(fields) {
           key: 'document',
           disabled,
           fileList: document,
+          uploadMaxFilesize,
+          uploadExtensions,
           onChange: updateAttachment,
           onRemove: deleteAttachment,
         },
@@ -174,12 +181,14 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          inputType: 'number',
           label: 'Número Identificación Tributaria/NIT( Sin dígito Verificación) ',
           key: 'nit',
           value: nit,
           required: true,
           disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
         {
           span: 6,
@@ -430,6 +439,9 @@ function generalInfo(fields) {
           value: emailOfContact,
           required: true,
           disabled,
+          rules: [
+            { ...mailValitation },
+          ],
         },
       ],
     },
@@ -463,6 +475,7 @@ function comercialInfo(fields) {
     supplier,
     call,
     sectors,
+    system,
     updateAttachment,
     deleteAttachment,
   } = fields;
@@ -489,6 +502,7 @@ function comercialInfo(fields) {
     chemicalSubstance,
     attachedFinancialReport,
   } = supplier;
+  const { uploadMaxFilesize, uploadExtensions } = system;
   const disabled = call.lockedByModification;
   return [
     {
@@ -590,6 +604,8 @@ function comercialInfo(fields) {
           fileList: attachedFinancialReport,
           onChange: updateAttachment,
           onRemove: deleteAttachment,
+          uploadMaxFilesize,
+          uploadExtensions,
           required: true,
           disabled,
         },
@@ -623,9 +639,11 @@ function comercialInfo(fields) {
           type: 'input',
           label: 'Número de empleados directos',
           key: 'numberOfDirectEmployees',
-          inputType: 'number',
           value: numberOfDirectEmployees,
           disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
         {
           span: 6,
@@ -635,6 +653,9 @@ function comercialInfo(fields) {
           inputType: 'number',
           value: numberOfSubContratedEmployees,
           disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
         {
           span: 6,
@@ -648,11 +669,14 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Participación ventas por cliente ',
+          label: 'Participación ventas con el Grupo Nutresa (%)',
           key: 'participationInSalesWithGroupNutresa',
           inputType: 'number',
           value: participationInSalesWithGroupNutresa,
           disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
       ],
     },
@@ -687,6 +711,9 @@ function comercialInfo(fields) {
           key: 'emailContactPersonInGroupNutresa',
           value: emailContactPersonInGroupNutresa,
           disabled,
+          rules: [
+            { ...mailValitation },
+          ],
         },
         {
           span: 8,
@@ -816,8 +843,23 @@ function comercialInfo(fields) {
   ];
 }
 
+const mainCustomers = [
+  {
+    title: 'Nombre',
+    key: 'name',
+  },
+  {
+    title: 'Participación ventas por cliente (%)',
+    key: 'percentageOfParticipationInSales',
+    rules: [
+      { ...intValidation },
+    ],
+  },
+];
+
 export {
   generalInfo,
   noParticipateInfo,
   comercialInfo,
+  mainCustomers,
 };

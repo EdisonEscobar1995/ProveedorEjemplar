@@ -42,7 +42,7 @@ const initialState = {
   dimensions: [],
   principalCustomer: [],
   sectors: [],
-  messageChangeCompanySize: 'El tamanio de la empresa ha cambiado, desea continuar?',
+  system: {},
   loading: false,
 };
 
@@ -72,6 +72,7 @@ function supplierApp(state = initialState, action) {
         cities: action.cities,
         sectors: action.sectors,
         principalCustomer,
+        system: action.system,
         loading: false,
       };
     }

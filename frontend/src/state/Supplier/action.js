@@ -61,6 +61,7 @@ function getDataSupplierSuccess(data) {
     sectors,
     departments,
     cities,
+    system,
   } = data;
   const { principalCustomer } = supplier;
   return {
@@ -78,6 +79,7 @@ function getDataSupplierSuccess(data) {
     cities,
     sectors,
     principalCustomer,
+    system,
   };
 }
 function getDataCategorySuccess(categories) {
@@ -250,6 +252,9 @@ function loadDependingOptions(dispatch, api, data, filterField, valueField) {
       .then((respone) => {
         allData[valueField] = respone.data.data;
         return allData;
+      }).catch(() => {
+        allData[valueField] = [];
+        return allData;
       });
   }
   allData[valueField] = [];
@@ -265,6 +270,7 @@ function getDataSupplier() {
       'SocietyType',
       'Country',
       'Sector',
+      'System',
     ];
     const promises = [
       getDataSuppliertApi(),
@@ -281,6 +287,7 @@ function getDataSupplier() {
       const societyTypes = mainMaster.SocietyType;
       const sectors = mainMaster.Sector;
       const countries = mainMaster.Country;
+      const system = mainMaster.System[0] ? mainMaster.System[0] : {};
       return {
         supplier,
         call,
@@ -290,6 +297,7 @@ function getDataSupplier() {
         societyTypes,
         countries,
         sectors,
+        system,
       };
     }).then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
       .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))

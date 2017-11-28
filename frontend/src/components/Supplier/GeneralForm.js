@@ -24,9 +24,14 @@ class General extends Component {
     this.props.changeParticipate(participateInCall === 'si');
   }
   render() {
-    const { participateInCall, call, changeIdCompanySize, messageChangeCompanySize } = this.props;
+    const { participateInCall, call, changeIdCompanySize, system } = this.props;
+    const { messageByChangeSizeCompany } = system;
     const { lockedByModification } = call;
     const { getFieldDecorator, setFields } = this.props.form;
+    let valueSelect = '';
+    if (participateInCall) {
+      valueSelect = participateInCall ? 'si' : 'no';
+    }
     let content = '';
     let buttons = [];
     if (participateInCall === true) {
@@ -76,7 +81,7 @@ class General extends Component {
           <Select
             disabled={lockedByModification}
             style={{ width: '100%' }}
-            value={participateInCall ? 'si' : 'no'}
+            value={valueSelect}
             onChange={this.handleChange}
           >
             <Option value="si">Si</Option>
@@ -95,7 +100,7 @@ class General extends Component {
                 <Col span={4} key={button.key}>
                   {
                     changeIdCompanySize ?
-                      <Confirm title={messageChangeCompanySize} method={button.onClick}>
+                      <Confirm title={messageByChangeSizeCompany} method={button.onClick}>
                         <Button
                           disabled={button.disabled}
                           type="primary"

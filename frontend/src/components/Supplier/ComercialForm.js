@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Button } from 'antd';
 import DinamicForm from '../shared/DinamicForm';
 import TableForm from '../shared/TableForm';
-import { comercialInfo } from './dataPage';
+import { comercialInfo, mainCustomers } from './dataPage';
 
 
 class Comercial extends Component {
@@ -23,17 +23,7 @@ class Comercial extends Component {
     const { principalCustomer, addData, saveData, editData, deleteData, cancelData } = this.props;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
-    const colummns = [
-      {
-        title: 'Nombre',
-        key: 'name',
-      },
-      {
-        title: 'Participacion en ventas',
-        key: 'percentageOfParticipationInSales',
-        type: 'number',
-      },
-    ];
+    const colummns = mainCustomers;
     return (
       <div>
         <TableForm
