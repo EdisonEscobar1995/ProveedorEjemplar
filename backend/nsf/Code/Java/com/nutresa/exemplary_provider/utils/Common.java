@@ -17,6 +17,7 @@ import org.openntf.domino.utils.DominoUtils;
 public class Common {
 
     private static final int JOIN_ELEMENT_SIZE = 50;
+    public static final char SEPARATOR_LIST = 0x05;
 
     private Common() {
         throw new IllegalStateException("Utility class");
@@ -134,16 +135,23 @@ public class Common {
             return "";
         }
         StringBuilder ids = new StringBuilder();
-        ids.append(list.get(0));
-        if (size > 1) {
-            for (int i = 1; i < size; i++) {
-                Object value = list.get(i);
-                if (null != value || (!uniqueIds && ids.indexOf((String) value) == -1)) {
-                    ids.append("|" + value);
-                }
+        String value;
+        for (int i = 0; i < size; i++) {
+            value = ((String) list.get(i)).trim();
+            if (isValidId(value, ids, uniqueIds)) {
+                ids.append(value).append(SEPARATOR_LIST);
             }
         }
-        return ids.toString();
+        if (ids.length() > 0) {
+            ids.setLength(ids.length() - 1);
+            return ids.toString();
+        } else {
+            return "";
+        }
+    }
+
+    private static boolean isValidId(String value, StringBuilder ids, boolean uniqueIds) {
+        return null != value && !value.isEmpty() && (!uniqueIds || (uniqueIds && ids.indexOf(value) == -1));
     }
 
     private static boolean isValidListIds(List<Object> list, int size) {
@@ -193,5 +201,6 @@ public class Common {
             list.add(item);
         }
         return list;
-    }    
+    }
+
 }
