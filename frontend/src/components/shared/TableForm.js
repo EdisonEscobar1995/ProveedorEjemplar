@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Input, Form, Spin, Button } from 'antd';
+import { Table, Input, Form, Spin, Button, Tooltip } from 'antd';
 import styled from 'styled-components';
 import Confirm from './Confirm';
 
@@ -125,7 +125,7 @@ class GenericFormTable extends Component {
               ''
               :
               <Column
-                title="Action"
+                title="Acción"
                 key="action"
                 render={(text, record, index) => {
                   const { editable, id } = record;
@@ -133,35 +133,47 @@ class GenericFormTable extends Component {
                     <div>
                       {
                         editable ?
-                          (<Button
-                            shape="circle"
-                            icon="save"
-                            htmlType="submit"
-                            onClick={() => this.selectRow(index, record)}
-                          />)
+                          (
+                            <Tooltip title="Guardar">
+                              <Button
+                                shape="circle"
+                                icon="save"
+                                htmlType="submit"
+                                onClick={() => this.selectRow(index, record)}
+                              />
+                            </Tooltip>
+                          )
                           :
-                          (<Button
-                            shape="circle"
-                            icon="edit"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              editData(index);
-                            }}
-                          />)
+                          (
+                            <Tooltip title="Editar">
+                              <Button
+                                shape="circle"
+                                icon="edit"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  editData(index);
+                                }}
+                              />
+                            </Tooltip>
+                          )
                       }
                       <Confirm method={() => deleteData(record, index)}>
-                        <Button
-                          shape="circle"
-                          icon="delete"
-                        />
+                        <Tooltip title="Eliminar">
+                          <Button
+                            shape="circle"
+                            icon="delete"
+                          />
+                        </Tooltip>
                       </Confirm>
                       {
                         id && editable ?
                           <Confirm method={() => cancelData(index)}>
-                            <Button
-                              shape="circle"
-                              icon="close-circle-o"
-                            />
+                            <Tooltip title="Cancelar">
+                              <Button
+                                shape="circle"
+                                icon="close-circle-o"
+                              />
+                            </Tooltip>
                           </Confirm>
                           :
                           ''

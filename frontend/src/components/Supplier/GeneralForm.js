@@ -86,7 +86,7 @@ class General extends Component {
             informationProgram
           }
         </ParagraphStyle>
-        <Field label="Participa del programa ?">
+        <Field label="¿Participa del programa?">
           <Select
             disabled={readOnly}
             style={{ width: '100%' }}
