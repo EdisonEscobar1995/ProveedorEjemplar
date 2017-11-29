@@ -145,6 +145,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         participateInCall: action.participateInCall,
+        dimensions: [],
       };
     case UPDATE_ATTACHMENT: {
       return {
