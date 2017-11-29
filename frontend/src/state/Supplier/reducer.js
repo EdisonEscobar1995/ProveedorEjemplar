@@ -117,6 +117,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        readOnly: true,
         error: action.error,
       };
     case SAVE_DATA_SUPPLIER_CALL_SUCCESS:

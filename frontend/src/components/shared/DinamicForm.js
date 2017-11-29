@@ -18,6 +18,16 @@ const ParagraphStyle = styled.p`
   margin-bottom: ${props => props.theme.spaces.main};
 `;
 
+const ItemStyle = styled(Item)`
+  & .ant-form-item-control {
+    line-height: 16px;
+    color: ${props => props.theme.color.info};
+  }
+`;
+const TextStyle = styled.div`
+  text-align: justify;
+`;
+
 function DinamicForm({ content, getFieldDecorator, setFields }) {
   return (
     <div>
@@ -60,7 +70,11 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         fieldContent = <Input disabled={disabled} type={inputType || 'text'} />;
                         break;
                       case 'textarea':
-                        fieldContent = <TextArea disabled={disabled} />;
+                        if (disabled) {
+                          fieldContent = <TextStyle>{value}</TextStyle>;
+                        } else {
+                          fieldContent = <TextArea disabled={disabled} />;
+                        }
                         break;
                       case 'select': {
                         const { valuesToClean, mode, noSearch } = current;
@@ -132,7 +146,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                     }
                     rowValue = (
                       <Field label={label} help={help}>
-                        <Item>
+                        <ItemStyle>
                           {getFieldDecorator(key, {
                             rules: [
                               { required, message: 'Por favor diligencia el campo' },
@@ -142,7 +156,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           })(
                             fieldContent,
                           )}
-                        </Item>
+                        </ItemStyle>
                       </Field>
                     );
                     break;

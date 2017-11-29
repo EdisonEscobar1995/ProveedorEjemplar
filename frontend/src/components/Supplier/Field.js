@@ -5,11 +5,14 @@ import styled from 'styled-components';
 const ButtonStyle = styled(Button)`
   margin: 2px 8px;
 `;
+const ColStyle = styled(Col)`
+  margin-bottom: 4px;
+`;
 
 function Field({ label, help, children }) {
   return (
     <Row>
-      <Col span={24}>
+      <ColStyle span={24}>
         {label}
         {
           help ?
@@ -19,7 +22,7 @@ function Field({ label, help, children }) {
             :
             ''
         }
-      </Col>
+      </ColStyle>
       <Col span={24}>
         {
           children

@@ -10,7 +10,7 @@ import SurveyText from './SurveyText';
 const { Step } = Steps;
 
 const StepCustomStyle = styled.span`
-  padding: 2px 18px;
+  padding: 0px 15px;
   background: ${props => props.theme.color.primary};
   border-radius: 50%;
 `;
@@ -33,16 +33,20 @@ class Supplier extends Component {
           </StepLink>
         ),
       },
-      {
-        name: 'Información Comercial',
-        content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
-        stepContent: (
-          <StepLink onClick={() => this.changePage(1)}>
-            <StepCustomStyle />
-          </StepLink>
-        ),
-      },
     ];
+    if (this.props.participateInCall) {
+      steps.push(
+        {
+          name: 'Información Comercial',
+          content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
+          stepContent: (
+            <StepLink onClick={() => this.changePage(1)}>
+              <StepCustomStyle />
+            </StepLink>
+          ),
+        },
+      );
+    }
     const mapDimensions = dimensions.map((dimension, index) => {
       const { call, getQuestionsByDimension, saveAnswer, system, readOnly } = this.props;
       const { id, idSurvey } = call;

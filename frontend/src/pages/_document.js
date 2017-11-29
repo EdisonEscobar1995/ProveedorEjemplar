@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout, Icon } from 'antd';
+import { Layout, Breadcrumb, Icon } from 'antd';
 import Menu from '../components/shared/Menu';
 import routes from '../routes';
 
@@ -14,8 +14,15 @@ const HeaderLogoStyle = styled(Header)`
   padding: 0 74px;
 `;
 const ContentStyle = styled(Content)`  
-  padding: 50px;
+  padding: 0 50px;
   background: ${props => props.theme.color.back};
+`;
+const BreadcrumbStyle = styled(Breadcrumb)`  
+  padding: 35px 0;
+  background: ${props => props.theme.color.back};
+`;
+const BreadcrumbItemStyle = styled(Breadcrumb.Item)`  
+  color: ${props => props.theme.color.secondary};
 `;
 const MainContentStyle = styled.div`  
   padding: 24px;
@@ -67,6 +74,9 @@ const IconStyle = styled(Icon)`
   font-size: 30px;
   padding: 0 10px;
 `;
+const IconBreadStyle = styled(Icon)`  
+  margin-right: 6px;
+`;
 
 
 function Document() {
@@ -97,6 +107,10 @@ function Document() {
         <Menu routes={routes} />
       </HeaderStyle>
       <ContentStyle>
+        <BreadcrumbStyle>
+          <BreadcrumbItemStyle><IconBreadStyle type="home" /> Home</BreadcrumbItemStyle>
+          <BreadcrumbItemStyle>Application Center</BreadcrumbItemStyle>
+        </BreadcrumbStyle>
         <MainContentStyle>
           <Switch>
             {routes.map(route => (

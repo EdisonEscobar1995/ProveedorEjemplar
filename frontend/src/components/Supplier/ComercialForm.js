@@ -8,9 +8,11 @@ import FormButtons from './FormButtons';
 
 class Comercial extends Component {
   componentDidMount() {
-    const { call, getDimensionsBySurvey } = this.props;
+    const { call, participateInCall, getDimensionsBySurvey } = this.props;
     const { idSurvey } = call;
-    getDimensionsBySurvey(idSurvey);
+    if (participateInCall) {
+      getDimensionsBySurvey(idSurvey);
+    }
   }
   handleSubmit = (e) => {
     e.preventDefault();
