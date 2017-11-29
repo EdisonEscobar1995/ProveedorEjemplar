@@ -15,6 +15,7 @@ const initialState = {
   data: [],
   editData: {},
   suppliersData: {},
+  suppliers: [],
   loading: false,
   loadingSuppliers: false,
 };
@@ -65,6 +66,7 @@ function callApp(state = initialState, action) {
       return {
         ...state,
         suppliersData: action.data,
+        suppliers: action.data.suppliers,
         loadingSuppliers: false,
       };
     }
@@ -82,11 +84,9 @@ function callApp(state = initialState, action) {
         suppliers: state.suppliersData.suppliers.filter((item) => {
           if (action.data.sapCode !== '' && !item.sapCode.toLowerCase().includes(action.data.sapCode)) {
             return false;
-          }
-          if (action.data.nit !== '' && !item.nit.toLowerCase().includes(action.data.nit)) {
+          } else if (action.data.nit !== '' && !item.nit.toLowerCase().includes(action.data.nit)) {
             return false;
-          }
-          if (action.data.supplier !== '' && !item.businessName.toLowerCase().includes(action.data.supplier)) {
+          } else if (action.data.supplier !== '' && !item.businessName.toLowerCase().includes(action.data.supplier)) {
             return false;
           }
           return true;

@@ -18,8 +18,6 @@ class ModifiedSuppliersContainer extends Component {
       <div>
         <FormCallHoc
           {...this.props}
-          handleFilter={this.handleFilter}
-          handleReset={this.handleReset}
           Form={Form}
         />
         <ModifiedSuppliers

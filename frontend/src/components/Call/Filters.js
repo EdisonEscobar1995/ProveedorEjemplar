@@ -4,6 +4,7 @@ import DinamicForm from '../shared/DinamicForm';
 
 class Filters extends Component {
   handleFilter = () => {
+    console.log('filtering in component');
     this.props.filterSuppliers(this.props.form.getFieldsValue());
   };
 

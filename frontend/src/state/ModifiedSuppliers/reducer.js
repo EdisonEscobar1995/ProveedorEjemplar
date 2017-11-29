@@ -1,7 +1,7 @@
 import {
   GET_DATA_MODIFIED_SUPPLIERS_PROGRESS,
   GET_DATA_MODIFIED_SUPPLIERS_SUCCESS,
-  FILTER_SUPPLIERS,
+  FILTER_MODIFIED_SUPPLIERS,
   SET_COMPANY_SIZE,
   UNLOCK_SUPPLIER_SUCCESS,
   REQUEST_FAILED,
@@ -31,7 +31,7 @@ function modifiedSuppliersApp(state = initialState, action) {
         loading: false,
       };
     }
-    case FILTER_SUPPLIERS: {
+    case FILTER_MODIFIED_SUPPLIERS: {
       return {
         ...state,
         suppliers: state.data.suppliers.filter((item) => {
