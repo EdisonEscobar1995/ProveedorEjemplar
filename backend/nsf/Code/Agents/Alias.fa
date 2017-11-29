@@ -1,18 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
 <agent name='Alias' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8'
  replicaid='052581C60067468E' hide='v3' publicaccess='false' designerversion='8.5.3'>
-<noteinfo noteid='279e' unid='1C6267729AB7699D052581E5006BD772' sequence='13'>
+<noteinfo noteid='279e' unid='1C6267729AB7699D052581E5006BD772' sequence='14'>
 <created><datetime>20171127T143755,06-05</datetime></created>
-<modified><datetime>20171128T212742,43-05</datetime></modified>
-<revised><datetime>20171128T212742,42-05</datetime></revised>
-<lastaccessed><datetime>20171128T212742,43-05</datetime></lastaccessed>
+<modified><datetime>20171128T223548,67-05</datetime></modified>
+<revised><datetime>20171128T223548,66-05</datetime></revised>
+<lastaccessed><datetime>20171128T223548,67-05</datetime></lastaccessed>
 <addedtofile><datetime>20171127T143755,08-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<designchange><datetime>20171128T212742,30-05</datetime></designchange>
+<designchange><datetime>20171128T223548,49-05</datetime></designchange>
 <trigger type='actionsmenu'/>
 <documentset type='selected'/><code event='action'>
-<simpleaction action='runformula'><formula>FIELD lockedByModification :="1";
+<simpleaction action='runformula'><formula>FIELD invitedToCall := "0";
+FIELD lockedByModification :="1";
+FIELD participateInCall := "1";
+FIELD oldIdCompanySize := "D24D557FA7BFA01A052581E00083D264";
 SELECT @All</formula></simpleaction></code>
 <rundata processeddocs='0' exitcode='0'>
-<agentmodified><datetime>20171128T212742,40-05</datetime></agentmodified></rundata></agent>
+<agentmodified><datetime>20171128T223548,51-05</datetime></agentmodified></rundata></agent>
 
