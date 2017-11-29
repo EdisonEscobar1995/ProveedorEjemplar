@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'antd';
-import filtersInfo from './dataForm';
+import filtersData from './filtersData';
 import DinamicForm from '../shared/DinamicForm';
 
 class Filters extends Component {
@@ -15,7 +15,7 @@ class Filters extends Component {
   render() {
     const { Form } = this.props;
     const { getFieldDecorator, setFields } = this.props.form;
-    const fields = filtersInfo(this.props);
+    const fields = filtersData(this.props);
 
     return (
       <div>

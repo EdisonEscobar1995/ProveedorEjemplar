@@ -14,6 +14,10 @@ import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
+
+    private boolean readOnly = false;
+    
+    
     public SupplierByCallBLO() {
         super(SupplierByCallDAO.class);
     }
@@ -39,7 +43,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
-
+        if (null != response && "EVALUATOR".equals(response.getState())) {
+            readOnly = true;
+        }
         return response;
     }
 
@@ -119,5 +125,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 .getBy(parameters, "vwSuppliersByCallByIdSupplierAndIdCall");
         supplierByCall.setInvitedToCall(true);
         supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
+    }
+
+    public boolean getReadOnly() {
+        return readOnly;
     }
 }

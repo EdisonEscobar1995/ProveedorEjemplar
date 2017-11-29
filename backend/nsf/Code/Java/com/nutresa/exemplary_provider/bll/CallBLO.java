@@ -53,6 +53,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             Map<String, List<DTO>> masters = getMasters(idFieldNames, masterIds, true);
             response.setMasters(masters);
             response.setSuppliers(suppliers);
+            response.setSuppliersByCall(supplierByCall);
             
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);

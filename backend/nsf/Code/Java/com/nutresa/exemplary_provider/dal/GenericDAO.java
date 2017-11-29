@@ -459,7 +459,7 @@ public abstract class GenericDAO<T> {
             if (value.indexOf(Common.SEPARATOR_LIST, 0) != -1) {
                 value = value.replace(Common.SEPARATOR_LIST, '|');
             }
-            query[i] = "[" + parameter.getKey() + "]=" + 
+            query[i] = "[" + parameter.getKey() + "]=" + value;
             i++;
         }
         return Common.join(query, " AND ");

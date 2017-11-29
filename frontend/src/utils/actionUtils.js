@@ -6,6 +6,8 @@ function getMessage(type) {
       return 'La fecha excede el tiempo de envio';
     case 'NO_DATA':
       return 'No se recibieron datos';
+    case 'SURVEY_DOES_NOT_EXIST':
+      return 'No existe una encuesta para el tipo de suministro y tamaño de encuesta seleccionada';
     default:
       return 'Ocurrio un error al procesar la peticion';
   }

@@ -38,8 +38,8 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
     },
   }, {
     title: 'Tamaño de empresa asignado',
-    dataIndex: 'idCompanySize',
-    key: 'idCompanySize',
+    dataIndex: 'oldIdCompanySize',
+    key: 'oldIdCompanySize',
     render(text, record) {
       const oldIdCompanySize = suppliersByCall
         .find(item => item.idSupplier === record.id)
@@ -48,8 +48,8 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
     },
   }, {
     title: 'Tamaño de empresa actual',
-    dataIndex: 'idCompanySizeSelect',
-    key: 'idCompanySizeSelect',
+    dataIndex: 'idCompanySize',
+    key: 'idCompanySize',
     render(text, record) {
       if (isLocked(record.id)) {
         return (
