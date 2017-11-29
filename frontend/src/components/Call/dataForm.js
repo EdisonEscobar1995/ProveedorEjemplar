@@ -23,7 +23,7 @@ const generalInfo = (fields) => {
           label: 'Año',
           key: 'year',
           value: year ? year.toString() : '',
-          required: true,
+          disabled: true,
           options: [],
         },
         {
@@ -33,7 +33,7 @@ const generalInfo = (fields) => {
           key: 'dateToFinishCall',
           format,
           value: dateToFinishCall ? getMomentDate(dateToFinishCall) : dateToFinishCall,
-          required: true,
+          disabled: true,
           rules: [{
             validator: (rule, value, cb) => {
               cb();
@@ -52,7 +52,7 @@ const generalInfo = (fields) => {
           key: 'deadlineToMakeSurvey',
           format,
           value: deadlineToMakeSurvey ? getMomentDate(deadlineToMakeSurvey) : deadlineToMakeSurvey,
-          required: true,
+          disabled: true,
         },
         {
           span: 12,
@@ -63,7 +63,7 @@ const generalInfo = (fields) => {
           value: deadlineToMakeSurveyEvaluator
             ? getMomentDate(deadlineToMakeSurveyEvaluator)
             : deadlineToMakeSurveyEvaluator,
-          required: true,
+          disabled: true,
         },
       ],
     },
@@ -79,7 +79,7 @@ const generalInfo = (fields) => {
           value: deadlineToMakeSurveyTecniqueCommittee
             ? getMomentDate(deadlineToMakeSurveyTecniqueCommittee)
             : deadlineToMakeSurveyTecniqueCommittee,
-          required: true,
+          disabled: true,
         },
         {
           span: 12,
@@ -90,7 +90,7 @@ const generalInfo = (fields) => {
           value: deadlineToMakeSurveyManagementCommittee
             ? getMomentDate(deadlineToMakeSurveyManagementCommittee)
             : deadlineToMakeSurveyManagementCommittee,
-          required: true,
+          disabled: true,
         },
       ],
     },
@@ -102,7 +102,7 @@ const generalInfo = (fields) => {
           label: 'Estado',
           key: 'active',
           value: active,
-          required: true,
+          disabled: true,
           options: [
             {
               id: true,

@@ -26,7 +26,7 @@ public class QuestionDTO {
     @Expose
     private List<String> idsSurvey;
     @Expose
-    private List<String> dependOfAnswerIds;
+    private String dependOfOptionId;
     @Expose
     private String dependOfQuestion;
     @Expose
@@ -96,14 +96,6 @@ public class QuestionDTO {
         this.idsSurvey = idsSurvey;
     }
 
-    public List<String> getDependOfAnswerIds() {
-        return dependOfAnswerIds;
-    }
-
-    public void setDependOfAnswerIds(List<String> dependOfAnswerIds) {
-        this.dependOfAnswerIds = dependOfAnswerIds;
-    }
-
     public String getDependOfQuestion() {
         return dependOfQuestion;
     }
@@ -130,6 +122,14 @@ public class QuestionDTO {
 
     public boolean isRequired() {
         return required;
+    }
+
+    public void setDependOfOptionId(String dependOfOptionId) {
+        this.dependOfOptionId = dependOfOptionId;
+    }
+
+    public String getDependOfOptionId() {
+        return dependOfOptionId;
     }
 
 }
