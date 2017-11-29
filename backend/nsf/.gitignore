@@ -8,7 +8,7 @@ Thumbs.db
 *.phd
 *.trc
 *.class
-AppProperties/*
+AppProperties/database.properties
 
 # WebStorm
 .idea
