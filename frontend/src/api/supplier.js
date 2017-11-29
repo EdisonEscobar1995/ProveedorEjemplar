@@ -29,6 +29,10 @@ function getModifiedSuppliersApi(year = '') {
   return instance.get(`Supplier?action=getModifiedSuppliers&year=${year}`);
 }
 
+function notifySupplierApi(supplier) {
+  return instance.post('Supplier?action=sendInvitation', supplier);
+}
+
 function unlockSupplierApi(supplierByCall) {
   return instance.post('SupplierByCall?action=unlockSupplier', supplierByCall);
 }
@@ -40,6 +44,7 @@ export {
   saveDataCallBySupplierApi,
   saveDataSuppliertApi,
   getModifiedSuppliersApi,
+  notifySupplierApi,
   unlockSupplierApi,
   finishSurveyApi,
 };

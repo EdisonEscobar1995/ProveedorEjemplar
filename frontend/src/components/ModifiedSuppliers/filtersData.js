@@ -1,6 +1,6 @@
 import { LOCKED, NOTIFIED } from '../../utils/const';
 
-const filtersData = ({ data, getModifiedSuppliers }) => {
+const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form }) => {
   const states = [
     {
       id: LOCKED,
@@ -55,6 +55,10 @@ const filtersData = ({ data, getModifiedSuppliers }) => {
           key: 'supply',
           value: '',
           options: masters ? masters.Supply : [],
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), supply: value };
+            filterModifiedSuppliers(values);
+          },
         },
         {
           span: 8,
@@ -63,6 +67,10 @@ const filtersData = ({ data, getModifiedSuppliers }) => {
           key: 'category',
           value: '',
           options: masters ? masters.Category : [],
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), category: value };
+            filterModifiedSuppliers(values);
+          },
         },
       ],
     },
@@ -76,6 +84,10 @@ const filtersData = ({ data, getModifiedSuppliers }) => {
           key: 'country',
           value: '',
           options: masters ? masters.Country : [],
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), country: value };
+            filterModifiedSuppliers(values);
+          },
         },
         {
           span: 8,
@@ -87,6 +99,10 @@ const filtersData = ({ data, getModifiedSuppliers }) => {
             item.name = item.businessName;
             return item;
           }) : [],
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), supplier: value };
+            filterModifiedSuppliers(values);
+          },
         },
         {
           span: 8,
@@ -95,6 +111,10 @@ const filtersData = ({ data, getModifiedSuppliers }) => {
           key: 'state',
           value: '',
           options: states,
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), state: value };
+            filterModifiedSuppliers(values);
+          },
         },
       ],
     },
