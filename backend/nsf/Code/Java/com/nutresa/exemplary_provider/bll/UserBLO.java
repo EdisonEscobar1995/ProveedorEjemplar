@@ -2,9 +2,15 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.UserDAO;
+import com.nutresa.exemplary_provider.dtl.AccessByRolDTO;
+import com.nutresa.exemplary_provider.dtl.AccessDTO;
+import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.RolDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
+import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
@@ -23,6 +29,34 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         }
 
         return users;
+    }
+
+    private UserDTO getUserInSession() throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.getUserInSession();
+    }
+
+    public List<DTO> loadAccess() throws HandlerGenericException {
+        UserDTO userInSession = getUserInSession();
+        RolBLO rolBLO = new RolBLO();
+        AccessByRolBLO accessByRolBLO = new AccessByRolBLO();
+        AccessBLO accessBLO = new AccessBLO();
+        List<DTO> listAccess = new ArrayList<DTO>();
+        if (null != userInSession) {
+            List<Object> idRols = new ArrayList<Object>();
+            List<DTO> rols = null;
+            idRols.addAll(userInSession.getIdRols());
+            rols = rolBLO.getAllBy("id", Common.getIdsFromList(idRols));
+            Map<String, List<Object>> list = Common.getDtoFields(rols, new String[] {"[id]"}, RolDTO.class);
+            
+            List<DTO> listAccessByRol = accessByRolBLO.getAllBy("idRol", Common.getIdsFromList(list.get("[id]")));
+            list = Common.getDtoFields(listAccessByRol, new String[] {"[idAccess]"}, AccessByRolDTO.class);
+
+            listAccess = accessBLO.getAllBy("id", Common.getIdsFromList(list.get("[idAccess]")));
+        } else {
+            
+        }
+        return listAccess;
     }
 
 }

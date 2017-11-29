@@ -27,7 +27,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             List<String> sendTo = new ArrayList<String>();
             List<UserDTO> users = getUsersByRolName("LIBERATOR");
             for (UserDTO user : users) {
-                sendTo.add(user.getEmail());
+                sendTo.add(user.getName());
             }
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
@@ -45,7 +45,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             List<UserDTO> users = getUsersByRolName("LIBERATOR");
             users.addAll(getUsersByRolName("EVALUATOR"));
             for (UserDTO user : users) {
-                sendTo.add(user.getEmail());
+                sendTo.add(user.getName());
             }
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
