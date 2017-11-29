@@ -2,6 +2,8 @@ import {
   GET_SUPPLIERS_BY_CALL_PROGRESS,
   GET_SUPPLIERS_BY_CALL_SUCCESS,
   REQUEST_SUPPLIERS_FAILED,
+  SEND_INVITATION_PROGRESS,
+  SEND_INVITATION_SUCCESS,
   FILTER_SUPPLIERS,
   GET_DATA_CALL_PROGRESS,
   GET_DATA_CALL_SUCCESS,
@@ -56,6 +58,7 @@ function callApp(state = initialState, action) {
         loading: false,
       };
     }
+    case SEND_INVITATION_PROGRESS:
     case GET_SUPPLIERS_BY_CALL_PROGRESS: {
       return {
         ...state,
@@ -70,6 +73,7 @@ function callApp(state = initialState, action) {
         loadingSuppliers: false,
       };
     }
+    case SEND_INVITATION_SUCCESS:
     case REQUEST_SUPPLIERS_FAILED:
     {
       return {
