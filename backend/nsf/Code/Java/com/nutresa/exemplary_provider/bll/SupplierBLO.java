@@ -129,4 +129,17 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         notification.sendInvitation(supplier.getEmails());
         return supplierDAO.get(supplier.getId());
     }
+
+    public boolean supplierWasInCall() throws HandlerGenericException {
+        boolean response = false;
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        SupplierDAO supplierDAO = new SupplierDAO();
+        SupplierDTO supplier = supplierDAO.getSupplierInDirectory();
+        if (null != supplier) {
+            if (null != supplierByCallBLO.get(supplier.getId())) {
+                response = true;
+            }
+        }
+        return response;
+    }
 }

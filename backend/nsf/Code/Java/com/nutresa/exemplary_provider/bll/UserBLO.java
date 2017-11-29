@@ -36,27 +36,37 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return userDAO.getUserInSession();
     }
 
-    public List<DTO> loadAccess() throws HandlerGenericException {
+    public List<String> loadAccess() throws HandlerGenericException {
         UserDTO userInSession = getUserInSession();
+        SupplierBLO supplierBLO = new SupplierBLO();
         RolBLO rolBLO = new RolBLO();
         AccessByRolBLO accessByRolBLO = new AccessByRolBLO();
         AccessBLO accessBLO = new AccessBLO();
-        List<DTO> listAccess = new ArrayList<DTO>();
+        List<DTO> rols = null;
+        List<String> response = new ArrayList<String>();
         if (null != userInSession) {
             List<Object> idRols = new ArrayList<Object>();
-            List<DTO> rols = null;
             idRols.addAll(userInSession.getIdRols());
             rols = rolBLO.getAllBy("id", Common.getIdsFromList(idRols));
-            Map<String, List<Object>> list = Common.getDtoFields(rols, new String[] {"[id]"}, RolDTO.class);
-            
-            List<DTO> listAccessByRol = accessByRolBLO.getAllBy("idRol", Common.getIdsFromList(list.get("[id]")));
-            list = Common.getDtoFields(listAccessByRol, new String[] {"[idAccess]"}, AccessByRolDTO.class);
-
-            listAccess = accessBLO.getAllBy("id", Common.getIdsFromList(list.get("[idAccess]")));
         } else {
-            
+            if (supplierBLO.supplierWasInCall()) {
+                rols = rolBLO.getAllBy("name", "SUPPLIER");
+            }
         }
-        return listAccess;
+
+        if (null != rols && rols.size() > 0) {
+            Map<String, List<Object>> list = Common.getDtoFields(rols, new String[] { "[id]" }, RolDTO.class);
+            List<DTO> listAccessByRol = accessByRolBLO.getAllBy("idRol", Common.getIdsFromList(list.get("[id]")));
+            list = Common.getDtoFields(listAccessByRol, new String[] { "[idAccess]" }, AccessByRolDTO.class);
+            List<DTO> listAccess = accessBLO.getAllBy("id", Common.getIdsFromList(list.get("[idAccess]")));
+            for (DTO access : listAccess) {
+                AccessDTO a = (AccessDTO) access;
+                response.add(a.getApi() + "." + a.getAction());
+            }
+
+        }
+
+        return response;
     }
 
 }
