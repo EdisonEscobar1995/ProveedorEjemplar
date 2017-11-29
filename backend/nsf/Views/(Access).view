@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='aa86' unid='34499EC6D6D42F2D052581E700032D40' sequence='7'>
+<noteinfo noteid='aa86' unid='34499EC6D6D42F2D052581E700032D40' sequence='8'>
 <created><datetime>20171128T193441,92-05</datetime></created>
-<modified><datetime>20171128T200929,69-05</datetime></modified>
-<revised><datetime>20171128T200929,68-05</datetime></revised>
-<lastaccessed><datetime>20171128T200929,69-05</datetime></lastaccessed>
+<modified><datetime>20171128T232354,74-05</datetime></modified>
+<revised><datetime>20171128T232354,73-05</datetime></revised>
+<lastaccessed><datetime>20171128T232354,74-05</datetime></lastaccessed>
 <addedtofile><datetime>20171128T193441,93-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
@@ -22,8 +22,7 @@
 	Continue = False
 End Sub
 </lotusscript></code>
-<column sort='ascending' hidedetailrows='false' itemname='$0' width='17.2500'
+<column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='access'><font size='9pt' style='bold'/></columnheader><code
- event='value'><formula>api + "." + action</formula></code></column></view>
+ showaslinks='false'><columnheader title='id'><font size='9pt' style='bold'/></columnheader></column></view>
 

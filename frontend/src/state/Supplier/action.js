@@ -188,11 +188,11 @@ function getDataQuestionsByDimensionSuccess(idDimension, dimensions, data) {
     dimensions,
   };
 }
-
 function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
+    readOnly: call.lockedByModification,
   };
 }
 function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
@@ -271,6 +271,7 @@ function finishSurveySucess(data) {
   return {
     type: FINISH_SURVEY,
     data,
+    readOnly: true,
   };
 }
 
@@ -514,6 +515,7 @@ function finishSurvey() {
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
       .then((response) => {
         const data = response.data.data;
+        dispatch(setMessage('Encuesta enviada con éxito', 'success'));
         dispatch(finishSurveySucess(data));
       }).catch((err) => {
         dispatch(getFailedRequest(err));

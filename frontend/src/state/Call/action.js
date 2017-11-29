@@ -2,6 +2,8 @@ import {
   GET_SUPPLIERS_BY_CALL_PROGRESS,
   GET_SUPPLIERS_BY_CALL_SUCCESS,
   REQUEST_SUPPLIERS_FAILED,
+  SEND_INVITATION_PROGRESS,
+  SEND_INVITATION_SUCCESS,
   FILTER_SUPPLIERS,
   GET_DATA_CALL_PROGRESS,
   GET_DATA_CALL_SUCCESS,
@@ -11,8 +13,9 @@ import {
   REQUEST_FAILED,
 } from './const';
 
-import { getCallApi, getCallByIdApi, saveCallApi, getSuppliersByCallApi } from '../../api/call';
+import { getCallApi, getCallByIdApi, saveCallApi, getSuppliersByCallApi, sendInvitationApi } from '../../api/call';
 import requestApi from '../../utils/actionUtils';
+import setMessage from '../Generic/action';
 
 const getDataCallProgress = () => ({
   type: GET_DATA_CALL_PROGRESS,
@@ -78,11 +81,30 @@ const getSuppliersFailedRequest = () => ({
   type: REQUEST_SUPPLIERS_FAILED,
 });
 
+const sendInvitationProgress = () => ({
+  type: SEND_INVITATION_PROGRESS,
+});
+
+const sendInvitationSuccess = () => ({
+  type: SEND_INVITATION_SUCCESS,
+});
+
 const getSuppliersByCall = id => (dispatch) => {
   requestApi(dispatch, getSuppliersByCallProgress, getSuppliersByCallApi, id)
     .then((respose) => {
       const { data } = respose.data;
       dispatch(getSuppliersByCallSuccess(data));
+    }).catch((err) => {
+      dispatch(getSuppliersFailedRequest(err));
+    });
+};
+
+const sendInvitation = supplier => (dispatch) => {
+  requestApi(dispatch, sendInvitationProgress, sendInvitationApi, supplier)
+    .then((respose) => {
+      dispatch(setMessage('El proveedor ha sido notificado', 'success'));
+      const { data } = respose.data;
+      dispatch(sendInvitationSuccess(data));
     }).catch((err) => {
       dispatch(getSuppliersFailedRequest(err));
     });
@@ -99,4 +121,5 @@ export {
   saveCall as saveData,
   getSuppliersByCall,
   filterSuppliers,
+  sendInvitation,
 };

@@ -9,7 +9,6 @@ function Upload(props) {
     list,
     disabled,
     multiple,
-    uploadExtensions,
     uploadMaxFilesize,
     datakey,
     baseUrl,
@@ -17,14 +16,21 @@ function Upload(props) {
     onChange,
     onRemove,
   } = props;
-  const value = list.map(file => (
-    {
-      uid: file.id,
-      url: file.url,
-      name: file.name,
-      disabled,
-    }
-  ));
+  let { uploadExtensions } = props;
+  if (!uploadExtensions) {
+    uploadExtensions = [];
+  }
+  let value = [];
+  if (list) {
+    value = list.map(file => (
+      {
+        uid: file.id,
+        url: file.url,
+        name: file.name,
+        disabled,
+      }
+    ));
+  }
   return (
     <UploadAnt
       defaultFileList={value}

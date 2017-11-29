@@ -1,21 +1,25 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout } from 'antd';
+import { Layout, Icon } from 'antd';
 import Menu from '../components/shared/Menu';
 import routes from '../routes';
 
 const { Header, Footer, Content } = Layout;
 
 const HeaderStyle = styled(Header)`
-  position: 'fixed';
-  width: '100%';
+  background: ${props => props.theme.color.primary};
+`;
+const HeaderLogoStyle = styled(Header)`
+  padding: 0 74px;
 `;
 const ContentStyle = styled(Content)`  
-  padding: 0 50px;
+  padding: 50px;
+  background: ${props => props.theme.color.back};
 `;
-const MainContesStyle = styled.div`  
+const MainContentStyle = styled.div`  
   padding: 24px;
+  background: ${props => props.theme.color.normal};  
 `;
 const LogoStyle = styled.div`  
   width: 120px;
@@ -32,17 +36,68 @@ const FooterContentStyle = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+const HeaderContentStyle = styled.div`  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const LogStyle = styled.div`  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const InfoStyle = styled.div`  
+  display: flex;
+  flex-direction: row;
+  & > * {
+    line-height: normal;
+  }
+`;
+const WelcomeStyle = styled.h4`
+  color: ${props => props.theme.color.info}
+`;
+const NameStyle = styled.h3`  
+  color: ${props => props.theme.color.primary};
+  margin-bottom: 6px;
+`;
+const CloseStyle = styled.h4`
+  color: ${props => props.theme.color.secondary}
+`;
+const IconStyle = styled(Icon)`  
+  font-size: 30px;
+  padding: 0 10px;
+`;
 
 
 function Document() {
   return (
     <Layout>
+      <HeaderLogoStyle>
+        <HeaderContentStyle>
+          <LogoStyle />
+          <LogStyle>
+            <InfoStyle>
+              <IconStyle type="user" />
+              <div>
+                <WelcomeStyle>
+                  Bienvenido,
+                </WelcomeStyle>
+                <NameStyle>
+                  Usuario
+                </NameStyle>
+                <CloseStyle>
+                  Cerrar session
+                </CloseStyle>
+              </div>
+            </InfoStyle>
+          </LogStyle>
+        </HeaderContentStyle>
+      </HeaderLogoStyle>
       <HeaderStyle>
-        <LogoStyle />
         <Menu routes={routes} />
       </HeaderStyle>
       <ContentStyle>
-        <MainContesStyle>
+        <MainContentStyle>
           <Switch>
             {routes.map(route => (
               <Route
@@ -53,14 +108,13 @@ function Document() {
               />
             ))}
           </Switch>
-        </MainContesStyle>
+        </MainContentStyle>
       </ContentStyle>
       <Footer>
         <FooterContentStyle>
           <span>
             Copyright © 2017 Grupo Nutresa - Todos los derechos reservados | Medellín - Colombia
           </span>
-          <LogoStyle />
         </FooterContentStyle>
       </Footer>
     </Layout>

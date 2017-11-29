@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Button } from 'antd';
 
-function Suppliers({ data, suppliers, loadingSuppliers }) {
+function Suppliers({ data, suppliers, loadingSuppliers, sendInvitation }) {
   const { masters, suppliersByCall } = data;
   const columns = [{
     title: 'Código SAP',
@@ -44,11 +44,12 @@ function Suppliers({ data, suppliers, loadingSuppliers }) {
     title: 'Acción',
     dataIndex: 'action',
     key: 'action',
-    render() {
+    render(text, record) {
       return (
         <Button
           shape="circle"
           icon="mail"
+          onClick={() => sendInvitation(record)}
         />
       );
     },

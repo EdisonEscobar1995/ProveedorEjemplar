@@ -178,7 +178,7 @@ public class Common {
                 } else {
                     field = "id" + entity;
                 }
-                Field declaredField = clazz.getDeclaredField(field);
+                Field declaredField = Common.getField(clazz, field);
                 declaredField.setAccessible(true);
                 listFields.put(entity, declaredField);
                 listIds.put(entity, new ArrayList<Object>());

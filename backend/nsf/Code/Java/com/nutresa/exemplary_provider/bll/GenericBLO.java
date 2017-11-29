@@ -184,10 +184,10 @@ public class GenericBLO<T, D> {
                 }
                 GenericBLO blo = FactoryBLO.getBlo(idFieldName);
                 List<Object> ids = joinIds.get(idFieldName);
-                if (null != ids && !ids.isEmpty()) {
-                    masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName), uniqueIds));
-                } else {
+                if (null == ids) {
                     masters.put(idFieldName, blo.getAll());
+                } else if (!ids.isEmpty()) {
+                    masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName), uniqueIds));
                 }
             }
         } catch (HandlerGenericException e) {

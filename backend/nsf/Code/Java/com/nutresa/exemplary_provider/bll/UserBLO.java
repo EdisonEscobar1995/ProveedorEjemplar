@@ -59,7 +59,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             List<DTO> listAccessByRol = accessByRolBLO.getAllBy("idRol", Common.getIdsFromList(list.get("[id]")));
             list = Common.getDtoFields(listAccessByRol, new String[] { "[idAccess]" }, AccessByRolDTO.class);
             List<DTO> listAccess = accessBLO.getAllBy("id", Common.getIdsFromList(list.get("[idAccess]")));
-            for (DTO access : listAccess) {
+            for (Object access : listAccess) {
                 AccessDTO a = (AccessDTO) access;
                 response.add(a.getApi() + "." + a.getAction());
             }

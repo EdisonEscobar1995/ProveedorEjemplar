@@ -15,6 +15,7 @@ const routes = [
     index: 2,
     path: '/sector',
     exact: true,
+    show: false,
     component: asyncComponent(() =>
       import('./pages/Sector').then(module => module.default),
     ),

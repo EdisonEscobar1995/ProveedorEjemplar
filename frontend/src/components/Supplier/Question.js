@@ -80,13 +80,13 @@ class Question extends Component {
       },
       {
         title: 'Pregunta',
-        width: '35%',
+        width: '15%',
         dataIndex: 'wording',
         key: 'wording',
       },
       {
         title: 'Respuesta del proveedor',
-        width: '20%',
+        width: '30%',
         dataIndex: 'options',
         key: 'options',
         render: (options, record) => {
@@ -121,11 +121,15 @@ class Question extends Component {
             );
           } else {
             renderComponent = (
-              <TextArea
-                disabled={this.props.disabled}
-                defaultValue={this.getAnswer(record, 'responseSupplier')}
-                onBlur={e => this.onChange(e.target.value, record, 'responseSupplier')}
-              />
+              this.props.disabled ?
+                this.getAnswer(record, 'commentSupplier')
+                :
+                (
+                  <TextArea
+                    defaultValue={this.getAnswer(record, 'responseSupplier')}
+                    onBlur={e => this.onChange(e.target.value, record, 'responseSupplier')}
+                  />
+                )
             );
           }
           return (
@@ -140,16 +144,18 @@ class Question extends Component {
       },
       {
         title: 'Comentario',
-        width: '20%',
+        width: '30%',
         dataIndex: 'answer',
         key: 'commentSupplier',
         render: (text, record) =>
           (
-            <TextArea
-              disabled={this.props.disabled}
-              defaultValue={this.getAnswer(record, 'commentSupplier')}
-              onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
-            />
+            this.props.disabled ?
+              this.getAnswer(record, 'commentSupplier')
+              :
+              <TextArea
+                defaultValue={this.getAnswer(record, 'commentSupplier')}
+                onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
+              />
           ),
       },
       {
@@ -241,7 +247,11 @@ class Question extends Component {
             :
             (<h3>No hay preguntas para esta dimension</h3>)
         }
-        <FormButtons buttons={buttons} />
+        <FormButtons
+          showConfirm
+          messageConfirm="¿Está seguro de enviar la encuesta?"
+          buttons={buttons}
+        />
       </div>
     );
   }

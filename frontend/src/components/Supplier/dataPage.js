@@ -599,9 +599,11 @@ function comercialInfo(fields) {
           type: 'input',
           label: 'Valor en activos $',
           key: 'valueAssets',
-          inputType: 'number',
           value: valueAssets,
           disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
         {
           span: 12,
@@ -629,10 +631,12 @@ function comercialInfo(fields) {
           span: 3,
           type: 'input',
           label: 'Valor en ventas anual $',
-          inputType: 'number',
           key: 'annualSalesValue',
           value: annualSalesValue,
           disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
       ],
     },

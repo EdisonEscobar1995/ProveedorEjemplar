@@ -62,8 +62,8 @@ class Comercial extends Component {
           />
           <FormButtons
             buttons={buttons}
-            changeIdCompanySize={changeIdCompanySize}
-            messageByChangeSizeCompany={messageByChangeSizeCompany}
+            showConfirm={changeIdCompanySize}
+            messageConfirm={messageByChangeSizeCompany}
           />
         </Form>
         <TableForm
