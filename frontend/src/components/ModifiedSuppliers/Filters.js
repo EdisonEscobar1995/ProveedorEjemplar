@@ -5,7 +5,7 @@ import DinamicForm from '../shared/DinamicForm';
 
 class Filters extends Component {
   handleFilter = () => {
-    this.props.filterSuppliers(this.props.form.getFieldsValue());
+    this.props.filterModifiedSuppliers(this.props.form.getFieldsValue());
   };
 
   handleReset = () => {

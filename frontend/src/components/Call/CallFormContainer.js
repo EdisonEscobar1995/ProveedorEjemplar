@@ -30,7 +30,6 @@ class CallFormContainer extends Component {
         />
         <FormFiltersHoc
           {...this.props}
-          handleFilter={this.handleFilter}
           Form={Form}
         />
         <Suppliers
@@ -45,6 +44,7 @@ const mapStateToProps = state => ({
   editData: state.call.editData,
   loading: state.call.loading,
   data: state.call.suppliersData,
+  suppliers: state.call.suppliers,
   loadingSuppliers: state.call.loadingSuppliers,
 });
 

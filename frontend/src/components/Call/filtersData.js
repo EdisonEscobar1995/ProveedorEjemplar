@@ -1,4 +1,4 @@
-const filtersData = ({ handleClick }) => ([
+const filtersData = handleClick => ([
   {
     key: 1.1,
     value: [

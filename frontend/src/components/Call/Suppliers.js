@@ -1,8 +1,8 @@
 import React from 'react';
 import { Table, Button } from 'antd';
 
-function Suppliers({ data, loadingSuppliers }) {
-  const { suppliers, masters, suppliersByCall } = data;
+function Suppliers({ data, suppliers, loadingSuppliers }) {
+  const { masters, suppliersByCall } = data;
   const columns = [{
     title: 'Código SAP',
     dataIndex: 'sapCode',
