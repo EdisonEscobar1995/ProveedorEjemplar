@@ -20,7 +20,7 @@ function Field({ label, help, children }) {
             ''
         }
       </Col>
-      <Col span={22}>
+      <Col span={24}>
         {
           children
         }

@@ -30,6 +30,7 @@ import reloadKeys from '../../utils/reducerUtils';
 const initialState = {
   supplier: {},
   call: {},
+  readOnly: false,
   changeIdCompanySize: false,
   participateInCall: null,
   supply: [],
@@ -61,6 +62,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         supplier: action.supplier,
+        readOnly: action.readOnly,
         call: action.call,
         participateInCall,
         supply: action.supply,
@@ -127,6 +129,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         call: action.call,
+        readOnly: state.readOnly || action.readOnly,
         changeIdCompanySize: action.changeIdCompanySize,
         supplier: action.supplier,
         loading: false,
@@ -218,6 +221,7 @@ function supplierApp(state = initialState, action) {
     case FINISH_SURVEY:
       return {
         ...state,
+        loading: false,
       };
     default: {
       return state;

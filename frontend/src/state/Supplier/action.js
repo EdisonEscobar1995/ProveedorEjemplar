@@ -55,6 +55,7 @@ function getDataSupplierSuccess(data) {
   const {
     supplier,
     call,
+    rules,
     supply,
     companyTypes,
     companySizes,
@@ -68,9 +69,12 @@ function getDataSupplierSuccess(data) {
     system,
   } = data;
   const { principalCustomer } = supplier;
+  let { readOnly } = rules;
+  readOnly = readOnly || call.lockedByModification;
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
+    readOnly,
     call,
     supply,
     companyTypes,
@@ -221,6 +225,7 @@ function saveDataCallAndSupplerSuccess(call, supplier) {
     type: SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
     call,
     supplier,
+    readOnly: call.lockedByModification,
   };
 }
 
@@ -308,6 +313,7 @@ function getDataSupplier() {
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
       const supplier = arrayResponse[0].data.data;
       const call = arrayResponse[1].data.data;
+      const rules = arrayResponse[1].data.rules;
       const mainMaster = arrayResponse[2].data.data;
       const supply = mainMaster.Supply;
       const companyTypes = mainMaster.CompanyType;
@@ -319,6 +325,7 @@ function getDataSupplier() {
       return {
         supplier,
         call,
+        rules,
         supply,
         companyTypes,
         companySizes,

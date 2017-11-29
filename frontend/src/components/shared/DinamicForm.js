@@ -23,7 +23,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
     <div>
       {
         content.map(item => (
-          <Row key={item.key} align="middle" type="flex">
+          <Row key={item.key} align="middle" type="flex" gutter={24}>
             {
               item.value.map((current) => {
                 let rowValue;

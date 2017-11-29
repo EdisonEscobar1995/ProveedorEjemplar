@@ -26,18 +26,17 @@ class Comercial extends Component {
   render() {
     const {
       principalCustomer,
-      call,
       system,
       addData,
       saveData,
       editData,
       deleteData,
       cancelData,
+      readOnly,
       changeIdCompanySize,
     } = this.props;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
-    const { lockedByModification } = call;
     const colummns = mainCustomers;
     const { messageByChangeSizeCompany } = system;
     const buttons = [
@@ -45,13 +44,13 @@ class Comercial extends Component {
         key: 1,
         text: 'Guardar',
         onClick: this.saveDraft,
-        disabled: lockedByModification,
+        disabled: readOnly,
       },
       {
         key: 2,
         text: 'Enviar',
         onClick: this.handleSubmit,
-        disabled: lockedByModification,
+        disabled: readOnly,
       },
     ];
     return (
@@ -75,7 +74,7 @@ class Comercial extends Component {
           editData={editData}
           deleteData={deleteData}
           cancelData={cancelData}
-          disabled={call.lockedByModification}
+          disabled={readOnly}
           loading={false}
         />
       </div>

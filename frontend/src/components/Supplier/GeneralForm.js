@@ -29,9 +29,8 @@ class General extends Component {
     this.props.changeParticipate(participateInCall === 'true');
   }
   render() {
-    const { participateInCall, call, changeIdCompanySize, system } = this.props;
+    const { participateInCall, changeIdCompanySize, system, readOnly } = this.props;
     const { messageByChangeSizeCompany, informationProgram } = system;
-    const { lockedByModification } = call;
     const { getFieldDecorator, setFields } = this.props.form;
     let valueSelect = '';
     if (typeof (participateInCall) === 'boolean') {
@@ -46,13 +45,13 @@ class General extends Component {
           key: 1,
           text: 'Guardar',
           onClick: this.saveDraft,
-          disabled: lockedByModification,
+          disabled: readOnly,
         },
         {
           key: 2,
           text: 'Enviar',
           onClick: this.handleSubmit,
-          disabled: lockedByModification,
+          disabled: readOnly,
         },
       ];
       content = (
@@ -68,7 +67,7 @@ class General extends Component {
         {
           key: 1,
           text: 'Enviar',
-          disabled: lockedByModification,
+          disabled: readOnly,
           onClick: this.handleSubmit,
         },
       ];
@@ -89,7 +88,7 @@ class General extends Component {
         </ParagraphStyle>
         <Field label="Participa del programa ?">
           <Select
-            disabled={lockedByModification}
+            disabled={readOnly}
             style={{ width: '100%' }}
             value={valueSelect}
             onChange={this.handleChange}
