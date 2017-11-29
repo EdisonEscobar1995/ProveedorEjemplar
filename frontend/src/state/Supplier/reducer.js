@@ -222,6 +222,7 @@ function supplierApp(state = initialState, action) {
     case FINISH_SURVEY:
       return {
         ...state,
+        readOnly: action.readOnly,
         loading: false,
       };
     default: {

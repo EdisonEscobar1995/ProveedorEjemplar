@@ -241,7 +241,11 @@ class Question extends Component {
             :
             (<h3>No hay preguntas para esta dimension</h3>)
         }
-        <FormButtons buttons={buttons} />
+        <FormButtons
+          showConfirm
+          messageConfirm="¿Está seguro de enviar la encuesta?"
+          buttons={buttons}
+        />
       </div>
     );
   }

@@ -10,7 +10,7 @@ import SurveyText from './SurveyText';
 const { Step } = Steps;
 
 const StepCustomStyle = styled.span`
-  padding: 0px 14px;
+  padding: 2px 18px;
   background: ${props => props.theme.color.primary};
   border-radius: 50%;
 `;
@@ -75,7 +75,13 @@ class Supplier extends Component {
     }
     return (
       <StepLink onClick={() => this.changePage(index + 2)}>
-        <Progress type="circle" percent={percent} status={status} width={40} />
+        <Progress
+          type="circle"
+          percent={percent}
+          status={status}
+          width={40}
+          format={value => (value === 0 ? '?' : value)}
+        />
       </StepLink>
     );
   }
