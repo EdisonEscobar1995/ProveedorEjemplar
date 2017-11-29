@@ -1,8 +1,13 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import com.google.gson.annotations.Expose;
+
 public class AccessByRolDTO {
+    @Expose
     private String id;
+    @Expose
     private String idRol;
+    @Expose
     private String idAccess;
 
     public String getIdRol() {

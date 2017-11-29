@@ -123,6 +123,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         call: action.call,
+        readOnly: state.readOnly || action.readOnly,
         loading: false,
       };
     case SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS:

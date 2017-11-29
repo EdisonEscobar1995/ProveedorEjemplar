@@ -14,7 +14,7 @@ function Field({ label, help, children }) {
         {
           help ?
             <Tooltip placement="top" title={help}>
-              <ButtonStyle size="small" shape="circle" icon="question" />
+              <ButtonStyle type="primary" size="small" shape="circle" icon="question" />
             </Tooltip>
             :
             ''

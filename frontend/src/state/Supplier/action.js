@@ -188,11 +188,11 @@ function getDataQuestionsByDimensionSuccess(idDimension, dimensions, data) {
     dimensions,
   };
 }
-
 function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
+    readOnly: call.lockedByModification,
   };
 }
 function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {

@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
-import { Steps, Spin, Progress, Icon } from 'antd';
+import { Steps, Spin, Progress } from 'antd';
+import styled from 'styled-components';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
 import Question from './Question';
 import StepLink from './StepLink';
+import SurveyText from './SurveyText';
 
 const { Step } = Steps;
+
+const StepCustomStyle = styled.span`
+  padding: 0px 14px;
+  background: ${props => props.theme.color.primary};
+  border-radius: 50%;
+`;
 
 class Supplier extends Component {
   constructor(props) {
@@ -21,7 +29,7 @@ class Supplier extends Component {
         content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
         stepContent: (
           <StepLink onClick={() => this.changePage(0)}>
-            <Icon type="info-circle-o" />
+            <StepCustomStyle />
           </StepLink>
         ),
       },
@@ -30,7 +38,7 @@ class Supplier extends Component {
         content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
         stepContent: (
           <StepLink onClick={() => this.changePage(1)}>
-            <Icon type="info-circle-o" />
+            <StepCustomStyle />
           </StepLink>
         ),
       },
@@ -192,6 +200,7 @@ class Supplier extends Component {
     const steps = this.getSteps(dimensions);
     return (
       <Spin spinning={loading}>
+        <SurveyText />
         <Steps current={current}>
           {steps.map(item =>
             (

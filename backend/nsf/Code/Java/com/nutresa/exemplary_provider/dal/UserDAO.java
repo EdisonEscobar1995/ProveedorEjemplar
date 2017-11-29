@@ -29,4 +29,15 @@ public class UserDAO extends GenericDAO<UserDTO> {
         return usersByRol;
     }
 
+    public UserDTO getUserInSession() throws HandlerGenericException{
+        UserDTO user = null;
+        try {
+            user = getBy("name", getNameUserInSession());
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return user;
+    }
+
 }
