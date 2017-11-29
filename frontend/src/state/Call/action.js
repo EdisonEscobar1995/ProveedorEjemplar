@@ -112,7 +112,7 @@ const sendInvitation = supplier => (dispatch) => {
 const massiveShipmentCall = call => (dispatch) => {
   requestApi(dispatch, sendInvitationProgress, massiveShipmentCallApi, call)
     .then(() => {
-      dispatch(setMessage('Se ha sido notificado todos los proveedores', 'success'));
+      dispatch(setMessage('Se ha notificado a todos los proveedores', 'success'));
       dispatch(sendInvitationSuccess());
     }).catch((err) => {
       dispatch(getSuppliersFailedRequest(err));
