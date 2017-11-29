@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='28b2' unid='DFBAD2A83FAF5F29052581E5007E0460' sequence='7'>
+<noteinfo noteid='28b2' unid='DFBAD2A83FAF5F29052581E5007E0460' sequence='8'>
 <created><datetime>20171127T175626,56-05</datetime></created>
-<modified><datetime>20171128T223242,47-05</datetime></modified>
-<revised><datetime>20171128T223242,46-05</datetime></revised>
-<lastaccessed><datetime>20171128T223242,47-05</datetime></lastaccessed>
+<modified><datetime>20171129T030132,89-05</datetime></modified>
+<revised><datetime>20171129T030132,88-05</datetime></revised>
+<lastaccessed><datetime>20171129T030132,89-05</datetime></lastaccessed>
 <addedtofile><datetime>20171127T175626,61-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
@@ -25,7 +25,8 @@ End Sub
 <column sort='ascending' hidedetailrows='false' itemname='idCall' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
  showaslinks='false'><columnheader title='idCall'><font size='9pt' style='bold'/></columnheader></column>
-<column hidedetailrows='false' itemname='invitedToCall' width='10' resizable='true'
- separatemultiplevalues='false' sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
- title='invitedToCall'><font size='9pt' style='bold'/></columnheader></column></view>
+<column sort='ascending' hidedetailrows='false' itemname='invitedToCall' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
+ showaslinks='false'><columnheader title='invitedToCall'><font size='9pt'
+ style='bold'/></columnheader></column></view>
 
