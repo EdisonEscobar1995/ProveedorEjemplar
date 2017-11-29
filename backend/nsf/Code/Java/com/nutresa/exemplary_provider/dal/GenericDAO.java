@@ -32,10 +32,10 @@ public abstract class GenericDAO<T> {
     protected String entityView;
     protected String entity;
 
-    private static final String PREFIX_FORM = "fr";
-    private static final String PREFIX_VIEW = "vw";
-    private static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
-    private static final String DEBUG_FTSEARCH_MESSAGE = "FTsearch in %s, parameters %s";
+    protected static final String PREFIX_FORM = "fr";
+    protected static final String PREFIX_VIEW = "vw";
+    protected static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
+    protected static final String DEBUG_FTSEARCH_MESSAGE = "FTsearch in %s, parameters %s";
     
 
     protected String indexName;
@@ -145,6 +145,9 @@ public abstract class GenericDAO<T> {
         List<T> list;
         if (null == view) {
             view = database.getView(entityView);
+            if (null == view) {
+                throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, entityView));
+            }
             list = searchDocuments(view, parameters);
         } else {
             ArrayList<String> indexedParameters = getIndexedParameters(view, parameters);

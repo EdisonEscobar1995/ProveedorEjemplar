@@ -10,9 +10,14 @@ const saveCallApi = data => instance.post('Call?action=save', data);
 
 const getSuppliersByCallApi = id => instance.get(`Call?action=getSuppliersInCall&idCall=${id}`);
 
+function sendInvitationApi(supplier) {
+  return instance.post('Supplier?action=sendInvitation', supplier);
+}
+
 export {
   getCallApi,
   saveCallApi,
   getCallByIdApi,
   getSuppliersByCallApi,
+  sendInvitationApi,
 };
