@@ -1,12 +1,12 @@
-import { intValidation, mailValitation } from '../../utils/rules';
+import { intValidation, mailValitation, mailValitationMultiple } from '../../utils/rules';
 
 const defaultOptions = [
   {
-    id: 'si',
+    id: 'true',
     name: 'Si',
   },
   {
-    id: 'no',
+    id: 'false',
     name: 'No',
   },
 ];
@@ -26,8 +26,8 @@ const defaultMoneyType = [
 ];
 
 function getValueOption(value) {
-  if (value) {
-    return (value ? 'si' : 'no');
+  if (typeof (value) === 'boolean') {
+    return value.toString();
   }
   return '';
 }
@@ -93,7 +93,7 @@ function generalInfo(fields) {
           key: 'businessName',
           value: businessName,
           required: true,
-          disabled,
+          disabled: true,
         },
         {
           span: 6,
@@ -115,7 +115,7 @@ function generalInfo(fields) {
           value: idSupply,
           key: 'idSupply',
           required: true,
-          disabled,
+          disabled: true,
           options: supplies,
           valuesToClean: {
             idCategory: {
@@ -161,7 +161,7 @@ function generalInfo(fields) {
           disabled,
         },
         {
-          label: 'Documentos oficiales: Por ejemplo, para Colombia adjuntar RUT y Camara de Comercio o Para Costa Rica adjuntar Cédula y Personaría Jurídica. (Máximo dos documentos)',
+          label: 'Documentos oficiales: Por ejemplo, para Colombia adjuntar RUT y Cámara de Comercio o Para Costa Rica adjuntar Cédula y Personaría Jurídica. (Máximo dos documentos)',
           span: 12,
           type: 'upload',
           name: 'file',
@@ -355,6 +355,10 @@ function generalInfo(fields) {
           value: emails,
           mode: 'tags',
           options: emails,
+          noSearch: true,
+          rules: [
+            { ...mailValitationMultiple },
+          ],
           disabled,
         },
         {
@@ -364,6 +368,9 @@ function generalInfo(fields) {
           key: 'codeZip',
           value: codeZip,
           disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
       ],
     },
@@ -583,7 +590,6 @@ function comercialInfo(fields) {
           label: 'Tipo',
           key: 'typeOfCurrencyValueAssets',
           value: typeOfCurrencyValueAssets,
-          required: true,
           options: defaultMoneyType,
           disabled,
         },
@@ -594,7 +600,6 @@ function comercialInfo(fields) {
           key: 'valueAssets',
           inputType: 'number',
           value: valueAssets,
-          required: true,
           disabled,
         },
         {
@@ -616,18 +621,16 @@ function comercialInfo(fields) {
           label: 'Tipo',
           key: 'typeOfCurrencyAnnualSales',
           value: typeOfCurrencyAnnualSales,
-          required: true,
           options: defaultMoneyType,
           disabled,
         },
         {
           span: 3,
           type: 'input',
-          label: 'Valor en ventas anual',
+          label: 'Valor en ventas anual $',
           inputType: 'number',
           key: 'annualSalesValue',
           value: annualSalesValue,
-          required: true,
           disabled,
         },
       ],
@@ -837,6 +840,18 @@ function comercialInfo(fields) {
           valie: getValueOption(chemicalSubstance),
           options: defaultOptions,
           disabled,
+        },
+      ],
+    },
+    {
+      key: 4.0,
+      value:
+      [
+        {
+          span: 12,
+          type: 'title',
+          value: 'Principales clientes',
+          key: 'mainCustomers',
         },
       ],
     },

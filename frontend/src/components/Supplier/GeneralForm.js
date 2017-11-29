@@ -26,7 +26,7 @@ class General extends Component {
     this.props.save(this.props.form.getFieldsValue());
   }
   handleChange= (participateInCall) => {
-    this.props.changeParticipate(participateInCall === 'si');
+    this.props.changeParticipate(participateInCall === 'true');
   }
   render() {
     const { participateInCall, call, changeIdCompanySize, system } = this.props;
@@ -34,8 +34,8 @@ class General extends Component {
     const { lockedByModification } = call;
     const { getFieldDecorator, setFields } = this.props.form;
     let valueSelect = '';
-    if (participateInCall) {
-      valueSelect = participateInCall ? 'si' : 'no';
+    if (typeof (participateInCall) === 'boolean') {
+      valueSelect = participateInCall ? 'true' : 'false';
     }
     let content = '';
     let buttons = [];
@@ -94,8 +94,8 @@ class General extends Component {
             value={valueSelect}
             onChange={this.handleChange}
           >
-            <Option value="si">Si</Option>
-            <Option value="no">No</Option>
+            <Option value="true">Si</Option>
+            <Option value="false">No</Option>
           </Select>
         </Field>
         <SubTitle text="Información de la empresa" />

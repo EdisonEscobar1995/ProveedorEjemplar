@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
 import Upload from '../shared/Upload';
+import TableForm from '../shared/TableForm';
 import baseUrl from '../../utils/api';
 
 const { Item } = Form;
@@ -62,29 +63,58 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         fieldContent = <TextArea disabled={disabled} />;
                         break;
                       case 'select': {
-                        const { valuesToClean, mode } = current;
-                        fieldContent = (
-                          <Select
-                            disabled={disabled}
-                            showSearch
-                            mode={mode}
-                            allowClear={allowClear}
-                            notFoundContent="No se encontraron resultados"
-                            onChange={(selectValue) => {
-                              if (valuesToClean) {
-                                setFields(valuesToClean);
+                        const { valuesToClean, mode, noSearch } = current;
+                        if (!noSearch) {
+                          fieldContent = (
+                            <Select
+                              disabled={disabled}
+                              showSearch
+                              mode={mode}
+                              allowClear={allowClear}
+                              notFoundContent="No se encontraron resultados"
+                              filterOption={(input, option) => (
+                                option.props.children.toLowerCase()
+                                  .indexOf(input.toLowerCase()) >= 0
+                              )}
+                              onChange={(selectValue) => {
+                                if (valuesToClean) {
+                                  setFields(valuesToClean);
+                                }
+                                if (handleChange) {
+                                  handleChange(selectValue);
+                                }
+                              }}
+                            >
+                              {
+                                options.map(option => (
+                                  <Option key={option.id} value={option.id}>{option.name}</Option>
+                                ))
                               }
-                              if (handleChange) {
-                                handleChange(selectValue);
+                            </Select>);
+                        } else {
+                          fieldContent = (
+                            <Select
+                              disabled={disabled}
+                              showSearch
+                              mode={mode}
+                              allowClear={allowClear}
+                              notFoundContent="No se encontraron resultados"
+                              onChange={(selectValue) => {
+                                if (valuesToClean) {
+                                  setFields(valuesToClean);
+                                }
+                                if (handleChange) {
+                                  handleChange(selectValue);
+                                }
+                              }}
+                            >
+                              {
+                                options.map(option => (
+                                  <Option key={option.id} value={option.id}>{option.name}</Option>
+                                ))
                               }
-                            }}
-                          >
-                            {
-                              options.map(option => (
-                                <Option key={option.id} value={option.id}>{option.name}</Option>
-                              ))
-                            }
-                          </Select>);
+                            </Select>);
+                        }
                       }
                         break;
                       case 'radio':
@@ -122,6 +152,31 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                       <SubTitle text={value} />
                     );
                     break;
+                  case 'table': {
+                    const {
+                      data,
+                      colummns,
+                      addData,
+                      saveData,
+                      editData,
+                      deleteData,
+                      cancelData,
+                      loading,
+                    } = current;
+                    rowValue = (
+                      <TableForm
+                        data={data}
+                        colummns={colummns}
+                        addData={addData}
+                        saveData={saveData}
+                        editData={editData}
+                        deleteData={deleteData}
+                        cancelData={cancelData}
+                        loading={loading}
+                      />
+                    );
+                  }
+                    break;
                   case 'upload': {
                     const {
                       fileList,
@@ -145,7 +200,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           sizeAllowed={sizeAllowed}
                           onChange={onChange}
                           onRemove={onRemove}
-                          baseUrl={`${baseUrl}Attachment?action=save`}
+                          baseUrl={`${baseUrl}/Attachment?action=save`}
                         >
                           <Button disabled={disabled}>
                             <Icon type="upload" />Adjuntar archivo

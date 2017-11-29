@@ -3,7 +3,7 @@ import setMessage from '../state/Generic/action';
 function getMessage(type) {
   switch (type) {
     case 'DATE_TO_MAKE_SURVEY_EXCEEDED':
-      return '';
+      return 'La fecha excede el tiempo de envio';
     case 'NO_DATA':
       return 'No se recibieron datos';
     case 'SURVEY_DOES_NOT_EXIST':

@@ -42,6 +42,7 @@ import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi } from '../../api/answer';
 import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
 import requestApi, { requestApiNotLoading } from '../../utils/actionUtils';
+import setMessage from '../Generic/action';
 
 
 function getDataSupplierProgress() {
@@ -450,8 +451,7 @@ function saveDataCallSupplier(clientCall, clientSupplier) {
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
       const call = arrayResponse[0].data.data;
       const supplier = arrayResponse[1].data.data;
-      // const oldSupplies = getActualState().supplier.supplier;
-      // const changeIdCompanySize = oldSupplies.idCompanySize !== supplier.idCompanySize;
+      dispatch(setMessage('Información almacenada', 'success'));
       dispatch(saveDataCallAndSupplerSuccess(call, supplier));
     }).catch((err) => {
       dispatch(getFailedRequest(err));
