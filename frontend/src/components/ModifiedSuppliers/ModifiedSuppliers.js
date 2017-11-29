@@ -90,8 +90,11 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
             shape="circle"
             icon="mail"
             onClick={() => {
-              const supplierByCall = suppliersByCall.find(item => item.idSupplier === record.id);
-              unlockSupplier(supplierByCall);
+              const id = suppliersByCall
+                .find(item => item.idSupplier === record.id).id;
+              const oldIdCompanySize = data.suppliers
+                .find(item => item.id === record.id).idCompanySize;
+              unlockSupplier({ id, oldIdCompanySize });
             }}
           />
         );

@@ -35,22 +35,19 @@ function modifiedSuppliersApp(state = initialState, action) {
       return {
         ...state,
         suppliers: state.data.suppliers.filter((item) => {
-          if (action.data.category !== '' && action.data.category !== item.idCategory) {
-            return false;
-          }
-          if (action.data.country !== '' && action.data.country !== item.idCountry) {
-            return false;
-          }
-          if (action.data.supplier !== '' && action.data.supplier !== item.id) {
-            return false;
-          }
-          if (action.data.supply !== '' && action.data.supply !== item.idSupply) {
-            return false;
-          }
           const locked = state.data.suppliersByCall
             .find(supplierByCall => supplierByCall.idSupplier === item.id)
             .lockedByModification;
-          if ((action.data.state === LOCKED && !locked) ||
+
+          if (action.data.category !== '' && action.data.category !== item.idCategory) {
+            return false;
+          } else if (action.data.country !== '' && action.data.country !== item.idCountry) {
+            return false;
+          } else if (action.data.supplier !== '' && action.data.supplier !== item.id) {
+            return false;
+          } else if (action.data.supply !== '' && action.data.supply !== item.idSupply) {
+            return false;
+          } else if ((action.data.state === LOCKED && !locked) ||
             (action.data.state === NOTIFIED && locked)) {
             return false;
           }
@@ -63,15 +60,23 @@ function modifiedSuppliersApp(state = initialState, action) {
         ...state,
         data: {
           ...state.data,
-          suppliersByCall: state.data.suppliersByCall.map(
+          suppliers: state.data.suppliers.map(
             item => (
-              item.idSupplier === action.data.id ? {
+              item.id === action.data.id ? {
                 ...item,
-                oldIdCompanySize: action.data.idCompanySize,
+                idCompanySize: action.data.idCompanySize,
               } : item
             ),
           ),
         },
+        suppliers: state.suppliers.map(
+          item => (
+            item.id === action.data.id ? {
+              ...item,
+              idCompanySize: action.data.idCompanySize,
+            } : item
+          ),
+        ),
       };
     }
     case UNLOCK_SUPPLIER_SUCCESS: {
