@@ -191,15 +191,18 @@ class Question extends Component {
     ]
   )
   render() {
-    const { criterions, system } = this.props;
+    const { criterions, system, disabled } = this.props;
     const columns = this.getColumns();
-    const buttons = [
-      {
-        key: 1,
-        text: 'Enviar',
-        onClick: this.props.validateQuestions,
-      },
-    ];
+    let buttons = [];
+    if (!disabled) {
+      buttons = [
+        {
+          key: 1,
+          text: 'Enviar',
+          onClick: this.props.validateQuestions,
+        },
+      ];
+    }
     return (
       <div>
         <ParagraphStyle>

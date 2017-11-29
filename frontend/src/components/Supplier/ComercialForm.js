@@ -75,6 +75,7 @@ class Comercial extends Component {
           editData={editData}
           deleteData={deleteData}
           cancelData={cancelData}
+          disabled={call.lockedByModification}
           loading={false}
         />
       </div>

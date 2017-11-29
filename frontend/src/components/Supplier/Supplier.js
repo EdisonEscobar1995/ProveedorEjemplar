@@ -49,6 +49,7 @@ class Supplier extends Component {
           criterions={dimension.criterions}
           getQuestionsByDimension={getQuestionsByDimension}
           saveAnswer={saveAnswer}
+          disabled={call.lockedByModification}
           validateQuestions={this.validateQuestions}
         />,
         stepContent: this.getProgress(dimension.id, index),
