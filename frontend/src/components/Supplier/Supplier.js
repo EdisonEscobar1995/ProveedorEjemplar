@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Steps, Spin, Progress } from 'antd';
+import { Steps, Spin, Progress, Icon } from 'antd';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
 import Question from './Question';
@@ -17,12 +17,22 @@ class Supplier extends Component {
   getSteps = (dimensions) => {
     const steps = [
       {
-        name: 'Informacion General',
+        name: 'Información General',
         content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
+        stepContent: (
+          <StepLink onClick={() => this.changePage(0)}>
+            <Icon type="info-circle-o" />
+          </StepLink>
+        ),
       },
       {
-        name: 'Informacion Comercial',
+        name: 'Información Comercial',
         content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
+        stepContent: (
+          <StepLink onClick={() => this.changePage(1)}>
+            <Icon type="info-circle-o" />
+          </StepLink>
+        ),
       },
     ];
     const mapDimensions = dimensions.map((dimension, index) => {
@@ -55,7 +65,7 @@ class Supplier extends Component {
       status = 'active';
     }
     return (
-      <StepLink onClick={() => this.changePage(index)}>
+      <StepLink onClick={() => this.changePage(index + 2)}>
         <Progress type="circle" percent={percent} status={status} width={40} />
       </StepLink>
     );
@@ -67,7 +77,7 @@ class Supplier extends Component {
     return newSupplier;
   }
   changePage = (index) => {
-    const current = (index + 2);
+    const current = index;
     this.setState({ current });
   }
   save = (values, action) => {

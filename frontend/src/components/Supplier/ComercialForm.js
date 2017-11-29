@@ -56,16 +56,6 @@ class Comercial extends Component {
     ];
     return (
       <div>
-        <TableForm
-          data={principalCustomer}
-          colummns={colummns}
-          addData={addData}
-          saveData={saveData}
-          editData={editData}
-          deleteData={deleteData}
-          cancelData={cancelData}
-          loading={false}
-        />
         <Form onSubmit={this.handleSubmit}>
           <DinamicForm
             getFieldDecorator={getFieldDecorator}
@@ -77,6 +67,16 @@ class Comercial extends Component {
             messageByChangeSizeCompany={messageByChangeSizeCompany}
           />
         </Form>
+        <TableForm
+          data={principalCustomer}
+          colummns={colummns}
+          addData={addData}
+          saveData={saveData}
+          editData={editData}
+          deleteData={deleteData}
+          cancelData={cancelData}
+          loading={false}
+        />
       </div>
     );
   }

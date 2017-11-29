@@ -181,7 +181,7 @@ class GenericFormTable extends Component {
           this.props.disabled ?
             ''
             :
-            <Button type="primary" onClick={this.addData}>Add</Button>
+            <Button type="primary" onClick={this.addData}>Agregar</Button>
         }
         <Form onSubmit={this.saveData}>
           {

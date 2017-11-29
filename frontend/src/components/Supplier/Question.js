@@ -173,7 +173,7 @@ class Question extends Component {
                 disabled={this.props.disabled}
                 list={actualValue}
                 multiple
-                baseUrl={`${baseUrl}Attachment?action=save`}
+                baseUrl={`${baseUrl}/Attachment?action=save`}
                 uploadMaxFilesize={this.props.system.uploadMaxFilesize}
                 uploadExtensions={this.props.system.uploadExtensions}
                 onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
