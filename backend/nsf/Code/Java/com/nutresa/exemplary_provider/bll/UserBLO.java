@@ -54,7 +54,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             }
         }
 
-        if (null != rols && rols.size() > 0) {
+        if (null != rols && !rols.isEmpty()) {
             Map<String, List<Object>> list = Common.getDtoFields(rols, new String[] { "[id]" }, RolDTO.class);
             List<DTO> listAccessByRol = accessByRolBLO.getAllBy("idRol", Common.getIdsFromList(list.get("[id]")));
             list = Common.getDtoFields(listAccessByRol, new String[] { "[idAccess]" }, AccessByRolDTO.class);

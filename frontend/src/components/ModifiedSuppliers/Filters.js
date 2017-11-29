@@ -10,6 +10,7 @@ class Filters extends Component {
 
   handleReset = () => {
     this.props.form.resetFields();
+    this.props.getModifiedSuppliers();
   }
 
   render() {
@@ -27,9 +28,6 @@ class Filters extends Component {
           />
         </Form>
         <Row type="flex" justify="center" style={{ marginBottom: '20px' }}>
-          <Col span={2}>
-            <Button type="primary" onClick={this.handleFilter}>Consultar</Button>
-          </Col>
           <Col span={2}>
             <Button type="primary" onClick={this.handleReset}>Limpiar</Button>
           </Col>

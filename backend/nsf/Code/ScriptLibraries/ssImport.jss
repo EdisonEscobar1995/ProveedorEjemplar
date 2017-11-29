@@ -231,16 +231,16 @@ function importData() {
 				viewName = "vwCalls";
 				break;
 			case "SUP":
-				columnKeys = ["businessName"];
+				columnKeys = ["fullName"];
 				columnNameKeys = ["Nombre"];
 				columnNames = [{commonName: "Nit", technicalName: "nit"},
-				               {commonName: "Nombre", technicalName: "businessName"},
+				               {commonName: "Nombre", technicalName: "fullName"},
 				               {commonName: "Tipo de suministro", technicalName: "idSupply"},
 				               {commonName: "Tamaño", technicalName: "idCompanySize"},
 				               {commonName: "Categoría", technicalName: "idCategory"},
 				               {commonName: "Subcategoría", technicalName: "idSubCategory"}];
 				requiredFields = [{commonName: "Nit", technicalName: "nit"},
-					               {commonName: "Nombre", technicalName: "businessName"},
+					               {commonName: "Nombre", technicalName: "fullName"},
 					               {commonName: "Tipo de suministro", technicalName: "idSupply"},
 					               {commonName: "Tamaño", technicalName: "idCompanySize"},
 					               {commonName: "Categoría", technicalName: "idCategory"},
@@ -402,7 +402,8 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		}else{
 			var vwSurveys:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
 			var vwQuestions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestions");
-			
+			var businessName:NotesName;	
+		
 			for (i = 0; i < data.length && !error; i++){
 				
 				nd = sessionAsSigner.getCurrentDatabase().createDocument();
@@ -435,6 +436,9 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 				}else if(nd.getItemValueString("form") == "frCall"){
 					nd.removeItem("year");
 					nd.replaceItemValue("year", parseInt(fila[j], 10))
+				}else if(nd.getItemValueString("form") == "frSupplier"){
+					businessName = session.createName(nd.getItemValueString("fullName"));
+					nd.replaceItemValue("businessName", businessName.getCommon());
 				}
 					
 				if (nd.getItemValueString("form") == "frQuestionBySurvey"){
