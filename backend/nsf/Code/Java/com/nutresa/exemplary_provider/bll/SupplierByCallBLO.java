@@ -16,8 +16,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
 
     private boolean readOnly = false;
-    
-    
+
     public SupplierByCallBLO() {
         super(SupplierByCallDAO.class);
     }
@@ -43,6 +42,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+
+        if (null == response) {
+            throw new HandlerGenericException("DONT_HAVE_SURVEY_ASSOCIED");
+        }
+
         if (null != response && "EVALUATOR".equals(response.getState())) {
             readOnly = true;
         }

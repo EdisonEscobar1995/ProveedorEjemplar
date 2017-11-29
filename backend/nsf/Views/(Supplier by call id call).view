@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Supplier by call id call)' alias='vwSuppliersByCallIdCall' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
+ version='9.0' maintenanceversion='1.8' replicaid='052581DB006A5865' hide='web'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='a9be' unid='4AB7CB3652655FA3052581E5006904F7' sequence='8'>
-<created><datetime>20171127T140705,51-05</datetime></created>
-<modified><datetime>20171128T134345,19-05</datetime></modified>
-<revised><datetime>20171128T134345,18-05</datetime></revised>
-<lastaccessed><datetime>20171128T134345,19-05</datetime></lastaccessed>
-<addedtofile><datetime>20171127T140705,63-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='8be' unid='A62AC4E5D8010D55052581E50056F713' sequence='21'>
+<created><datetime>20171127T104953,47-05</datetime></created>
+<modified><datetime>20171129T030053,08-05</datetime></modified>
+<revised><datetime>20171129T030053,07-05</datetime></revised>
+<lastaccessed><datetime>20171129T030053,08-05</datetime></lastaccessed>
+<addedtofile><datetime>20171127T104953,55-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frSupplierByCall"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
@@ -25,8 +25,8 @@ End Sub
 <column sort='ascending' hidedetailrows='false' itemname='idCall' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
  showaslinks='false'><columnheader title='idCall'><font size='9pt' style='bold'/></columnheader></column>
-<column hidedetailrows='false' itemname='$0' width='10' resizable='true' separatemultiplevalues='false'
- sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
+<column sort='ascending' hidedetailrows='false' itemname='$0' width='10' resizable='true'
+ separatemultiplevalues='false' sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
  title='invitedToCall'><font size='9pt' style='bold'/></columnheader><code
  event='value'><formula>@DocNumber</formula></code></column></view>
 
