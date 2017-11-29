@@ -13,7 +13,7 @@ import {
   REQUEST_FAILED,
 } from './const';
 
-import { getCallApi, getCallByIdApi, saveCallApi, getSuppliersByCallApi, sendInvitationApi } from '../../api/call';
+import { getCallApi, getCallByIdApi, saveCallApi, getSuppliersByCallApi, sendInvitationApi, massiveShipmentCallApi } from '../../api/call';
 import requestApi from '../../utils/actionUtils';
 import setMessage from '../Generic/action';
 
@@ -101,10 +101,19 @@ const getSuppliersByCall = id => (dispatch) => {
 
 const sendInvitation = supplier => (dispatch) => {
   requestApi(dispatch, sendInvitationProgress, sendInvitationApi, supplier)
-    .then((respose) => {
+    .then(() => {
       dispatch(setMessage('El proveedor ha sido notificado', 'success'));
-      const { data } = respose.data;
-      dispatch(sendInvitationSuccess(data));
+      dispatch(sendInvitationSuccess());
+    }).catch((err) => {
+      dispatch(getSuppliersFailedRequest(err));
+    });
+};
+
+const massiveShipmentCall = call => (dispatch) => {
+  requestApi(dispatch, sendInvitationProgress, massiveShipmentCallApi, call)
+    .then(() => {
+      dispatch(setMessage('Se ha sido notificado todos los proveedores', 'success'));
+      dispatch(sendInvitationSuccess());
     }).catch((err) => {
       dispatch(getSuppliersFailedRequest(err));
     });
@@ -122,4 +131,5 @@ export {
   getSuppliersByCall,
   filterSuppliers,
   sendInvitation,
+  massiveShipmentCall,
 };

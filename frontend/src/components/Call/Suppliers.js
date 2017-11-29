@@ -1,7 +1,14 @@
 import React from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Row, Col } from 'antd';
+import Confirm from '../shared/Confirm';
 
-function Suppliers({ data, suppliers, loadingSuppliers, sendInvitation }) {
+function Suppliers({
+  editData,
+  data,
+  suppliers,
+  loadingSuppliers,
+  sendInvitation,
+  massiveShipmentCall }) {
   const { masters, suppliersByCall } = data;
   const columns = [{
     title: 'Código SAP',
@@ -63,6 +70,20 @@ function Suppliers({ data, suppliers, loadingSuppliers, sendInvitation }) {
         dataSource={suppliers}
         columns={columns}
       />
+      <Row type="flex" justify="center" style={{ marginBottom: '20px' }}>
+        <Col span={2}>
+          <Confirm
+            title="¿Confirma que desea notificar a todos los proveedores?"
+            method={() => massiveShipmentCall(editData)}
+          >
+            <Button
+              type="primary"
+            >
+              Enviar
+            </Button>
+          </Confirm>
+        </Col>
+      </Row>
     </div>
   );
 }
