@@ -36,7 +36,7 @@ class Supplier extends Component {
       },
     ];
     const mapDimensions = dimensions.map((dimension, index) => {
-      const { call, getQuestionsByDimension, saveAnswer, system } = this.props;
+      const { call, getQuestionsByDimension, saveAnswer, system, readOnly } = this.props;
       const { id, idSurvey } = call;
       return {
         name: dimension.name,
@@ -49,7 +49,7 @@ class Supplier extends Component {
           criterions={dimension.criterions}
           getQuestionsByDimension={getQuestionsByDimension}
           saveAnswer={saveAnswer}
-          disabled={call.lockedByModification}
+          disabled={readOnly}
           validateQuestions={this.validateQuestions}
         />,
         stepContent: this.getProgress(dimension.id, index),

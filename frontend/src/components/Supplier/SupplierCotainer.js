@@ -42,6 +42,7 @@ const mapStateToProps = state => ({
   supplier: state.supplier.supplier,
   changeIdCompanySize: state.supplier.changeIdCompanySize,
   call: state.supplier.call,
+  readOnly: state.supplier.readOnly,
   participateInCall: state.supplier.participateInCall,
   supplies: state.supplier.supply,
   categories: state.supplier.categories,

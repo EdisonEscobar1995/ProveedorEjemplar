@@ -34,7 +34,7 @@ function getValueOption(value) {
 function generalInfo(fields) {
   const {
     supplier,
-    call,
+    readOnly,
     supplies,
     categories,
     getDataCategoryBySuply,
@@ -81,7 +81,7 @@ function generalInfo(fields) {
     document,
   } = supplier;
   const { uploadMaxFilesize, uploadExtensions } = system;
-  const disabled = call.lockedByModification;
+  const disabled = readOnly;
   return [
     {
       key: 1.1,
@@ -459,8 +459,9 @@ function generalInfo(fields) {
 function noParticipateInfo(fields) {
   const {
     call,
+    readOnly,
   } = fields;
-  const disabled = call.lockedByModification;
+  const disabled = readOnly;
   return [
     {
       key: 1.0,
@@ -481,7 +482,7 @@ function noParticipateInfo(fields) {
 function comercialInfo(fields) {
   const {
     supplier,
-    call,
+    readOnly,
     sectors,
     system,
     updateAttachment,
@@ -511,7 +512,7 @@ function comercialInfo(fields) {
     attachedFinancialReport,
   } = supplier;
   const { uploadMaxFilesize, uploadExtensions } = system;
-  const disabled = call.lockedByModification;
+  const disabled = readOnly;
   return [
     {
       key: 2.4,
@@ -837,7 +838,7 @@ function comercialInfo(fields) {
           type: 'select',
           label: 'Si es un Proveedor de sustancias químicas ¿La sustancias químicas que nos provee es considerada una sustancia química peligrosa?',
           key: 'chemicalSubstance',
-          valie: getValueOption(chemicalSubstance),
+          value: getValueOption(chemicalSubstance),
           options: defaultOptions,
           disabled,
         },
