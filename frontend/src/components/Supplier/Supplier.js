@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Steps, Spin, Progress } from 'antd';
+import { Steps, Spin, Progress, notification } from 'antd';
 import styled from 'styled-components';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
@@ -166,9 +166,17 @@ class Supplier extends Component {
     });
     if (send) {
       this.props.finishSurvey();
+    } else {
+      this.openNotification();
     }
     this.props.reloadDimensions(dimesions);
   }
+  openNotification = () => {
+    notification.open({
+      message: 'Alerta',
+      description: 'Aun tiene dimensiones sin diligenciar',
+    });
+  };
   calculatePercent = (idDimension) => {
     let totalQuestions = 0;
     let responsedQuestion = 0;

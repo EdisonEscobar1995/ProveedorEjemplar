@@ -35,7 +35,7 @@ class Question extends Component {
     const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
     let actualAnswer = {};
     if (answer.length > 0) {
-      actualAnswer = answer.filter(item => item.idQuestion === id)[0];
+      actualAnswer = answer.find(item => item.idQuestion === id);
     }
     let sendAnswer = {
       idSupplierByCall: idCall,

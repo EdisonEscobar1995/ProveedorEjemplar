@@ -471,7 +471,6 @@ function noParticipateInfo(fields) {
           type: 'textarea',
           label: '¿Por qué no desea participar? ',
           key: 'reasonForNotParticipation',
-          required: true,
           value: call.reasonForNotParticipation,
         },
       ],
