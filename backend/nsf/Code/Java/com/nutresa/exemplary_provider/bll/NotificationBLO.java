@@ -119,16 +119,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         return "<a href=" + url + ">" + label + "</a>";
     }
 
-    public void notifyToContact(String idSupplier) throws HandlerGenericException {
-        SupplierBLO supplierBLO = new SupplierBLO();
-        List<String> email = new ArrayList<String>();
-        SupplierDTO supplier = supplierBLO.get(idSupplier);
-        email.add(supplier.getEmailContactPersonInGroupNutresa());
-        NotificationDAO notificationDAO = new NotificationDAO();
-        NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
-        sendNotification(email, notification);
-    }
-
     public void sendInvitation(List<String> emails) throws HandlerGenericException {
         NotificationDAO notificationDAO = new NotificationDAO();
         String pathApplication = Common.buildPathResource() + "/dist/index.html";
