@@ -4,12 +4,11 @@ import Confirm from '../shared/Confirm';
 
 function Suppliers({
   editData,
-  data,
-  suppliers,
+  calledSuppliers,
   loadingSuppliers,
   sendInvitation,
   massiveShipmentCall }) {
-  const { masters, suppliersByCall } = data;
+  const { suppliers, suppliersByCall, masters } = calledSuppliers;
   const columns = [{
     title: 'Código SAP',
     dataIndex: 'sapCode',
@@ -67,7 +66,7 @@ function Suppliers({
       <Table
         rowKey={record => record.id}
         loading={loadingSuppliers}
-        dataSource={suppliers}
+        dataSource={suppliers ? suppliers.filter(supplier => supplier.visible) : []}
         columns={columns}
       />
       <Row type="flex" justify="center" style={{ marginBottom: '20px' }}>

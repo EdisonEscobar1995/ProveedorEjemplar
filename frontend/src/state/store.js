@@ -5,6 +5,7 @@ import generic from './Generic/reducer';
 import sector from './Sector/reducer';
 import supplier from './Supplier/reducer';
 import call from './Call/reducer';
+import calledSuppliers from './CalledSuppliers/reducer';
 import modifiedSuppliers from './ModifiedSuppliers/reducer';
 
 const app = combineReducers({
@@ -12,6 +13,7 @@ const app = combineReducers({
   sector,
   supplier,
   call,
+  calledSuppliers,
   modifiedSuppliers,
 });
 
