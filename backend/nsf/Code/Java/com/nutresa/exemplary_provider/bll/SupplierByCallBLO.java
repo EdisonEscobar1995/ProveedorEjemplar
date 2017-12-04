@@ -77,7 +77,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             response = save(supplierByCall);
             NotificationBLO notificationBLO = new NotificationBLO();
             notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
-            notificationBLO.notifyToContact(supplierByCall.getIdSupplier());
         } else {
             throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
         }

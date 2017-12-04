@@ -182,7 +182,7 @@ function getDataQuestionsByDimensionSuccess(idDimension, dimensions, data) {
       questions: noCriterianQuestion,
     });
   }
-  dimensions.filter(item => item.id === idDimension)[0].criterions = result;
+  dimensions.find(item => item.id === idDimension).criterions = result;
   return {
     type: GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
     dimensions,
@@ -197,11 +197,11 @@ function saveDataCallSuccess(call) {
 }
 function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
   const allDimensions = [...dimensions];
-  const actualDimension = allDimensions.filter(dimension => dimension.id === idDimension)[0];
+  const actualDimension = allDimensions.find(dimension => dimension.id === idDimension);
   const actualCriterion = actualDimension.criterions
-    .filter(criteria => criteria.id === idCriterion)[0];
+    .find(criteria => criteria.id === idCriterion);
   const actualQuestion = actualCriterion.questions
-    .filter(question => question.id === answer.idQuestion)[0];
+    .find(question => question.id === answer.idQuestion);
   actualQuestion.answer.push(answer);
   if (actualQuestion.errors) {
     if (answer.idOptionSupplier || answer.responseSupplier) {
