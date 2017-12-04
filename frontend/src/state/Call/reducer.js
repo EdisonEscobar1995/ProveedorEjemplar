@@ -1,25 +1,16 @@
 import {
-  GET_SUPPLIERS_BY_CALL_PROGRESS,
-  GET_SUPPLIERS_BY_CALL_SUCCESS,
-  REQUEST_SUPPLIERS_FAILED,
-  SEND_INVITATION_PROGRESS,
-  SEND_INVITATION_SUCCESS,
-  FILTER_SUPPLIERS,
   GET_DATA_CALL_PROGRESS,
   GET_DATA_CALL_SUCCESS,
   GET_CALL_PROGRESS,
   GET_CALL_SUCCESS,
-  CLEAR_EDIT,
   REQUEST_FAILED,
+  CLEAR_EDIT,
 } from './const';
 
 const initialState = {
   data: [],
   editData: {},
-  suppliersData: {},
-  suppliers: [],
   loading: false,
-  loadingSuppliers: false,
 };
 
 function callApp(state = initialState, action) {
@@ -56,45 +47,6 @@ function callApp(state = initialState, action) {
       return {
         ...state,
         loading: false,
-      };
-    }
-    case SEND_INVITATION_PROGRESS:
-    case GET_SUPPLIERS_BY_CALL_PROGRESS: {
-      return {
-        ...state,
-        loadingSuppliers: true,
-      };
-    }
-    case GET_SUPPLIERS_BY_CALL_SUCCESS: {
-      return {
-        ...state,
-        suppliersData: action.data,
-        suppliers: action.data.suppliers,
-        loadingSuppliers: false,
-      };
-    }
-    case SEND_INVITATION_SUCCESS:
-    case REQUEST_SUPPLIERS_FAILED:
-    {
-      return {
-        ...state,
-        loadingSuppliers: false,
-      };
-    }
-    case FILTER_SUPPLIERS:
-    {
-      return {
-        ...state,
-        suppliers: state.suppliersData.suppliers.filter((item) => {
-          if (action.data.sapCode !== '' && !item.sapCode.toLowerCase().includes(action.data.sapCode)) {
-            return false;
-          } else if (action.data.nit !== '' && !item.nit.toLowerCase().includes(action.data.nit)) {
-            return false;
-          } else if (action.data.supplier !== '' && !item.businessName.toLowerCase().includes(action.data.supplier)) {
-            return false;
-          }
-          return true;
-        }),
       };
     }
     default: {

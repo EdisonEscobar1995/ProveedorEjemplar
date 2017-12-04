@@ -1,4 +1,5 @@
 import setMessage from '../state/Generic/action';
+import { basePath } from './api';
 
 function getMessage(type) {
   switch (type) {
@@ -21,7 +22,9 @@ function validateResponse(args) {
   }
   try {
     [...args].forEach((element) => {
-      if (!element.data.status) {
+      if (element.headers['content-type'].toLowerCase().includes('text/html')) {
+        location.href = `${basePath}?login&redirectto=${basePath}dist/index.html`;
+      } else if (!element.data.status) {
         throw new Error(element.data.message);
       }
     });

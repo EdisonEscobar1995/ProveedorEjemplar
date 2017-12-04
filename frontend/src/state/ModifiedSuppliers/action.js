@@ -42,6 +42,10 @@ const filterModifiedSuppliers = data => ({
 const getModifiedSuppliers = year => (dispatch) => {
   requestApi(dispatch, getDataModifiedSuppliersProgress, getModifiedSuppliersApi, year)
     .then((response) => {
+      response.data.data.suppliers = response.data.data.suppliers.map((item) => {
+        item.visible = true;
+        return item;
+      });
       const { data } = response.data;
       dispatch(getDataModifiedSuppliersSuccess(data));
     }).catch((err) => {

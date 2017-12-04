@@ -29,9 +29,8 @@ class ModifiedSuppliersContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  loading: state.modifiedSuppliers.loading,
   data: state.modifiedSuppliers.data,
-  suppliers: state.modifiedSuppliers.suppliers,
+  loading: state.modifiedSuppliers.loading,
 });
 
 export default connect(

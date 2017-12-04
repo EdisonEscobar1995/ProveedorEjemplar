@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Form } from 'antd';
-import * as actions from '../../state/Call/action';
+import * as callAction from '../../state/Call/action';
+import * as calledSuppliersAction from '../../state/CalledSuppliers/action';
 import CallForm from './CallForm';
 import Filters from './Filters';
 import Suppliers from './Suppliers';
@@ -15,7 +16,7 @@ class CallFormContainer extends Component {
     const { match: { params: { id = null } } } = this.props;
     if (id && typeof id === 'string') {
       this.props.getCall(id);
-      this.props.getSuppliersByCall(id);
+      this.props.getCalledSuppliers(id);
     } else {
       this.props.clearDataEdit();
     }
@@ -29,7 +30,7 @@ class CallFormContainer extends Component {
           Form={Form}
         />
         <FormFiltersHoc
-          {...this.props}
+          filterCalledSuppliers={this.props.filterCalledSuppliers}
           Form={Form}
         />
         <Suppliers
@@ -43,12 +44,16 @@ class CallFormContainer extends Component {
 const mapStateToProps = state => ({
   editData: state.call.editData,
   loading: state.call.loading,
-  data: state.call.suppliersData,
-  suppliers: state.call.suppliers,
-  loadingSuppliers: state.call.loadingSuppliers,
+  calledSuppliers: state.calledSuppliers.data,
+  loadingSuppliers: state.calledSuppliers.loading,
 });
+
+const mapDispatchToProps = {
+  ...callAction,
+  ...calledSuppliersAction,
+};
 
 export default withRouter(connect(
   mapStateToProps,
-  actions,
+  mapDispatchToProps,
 )(CallFormContainer));
