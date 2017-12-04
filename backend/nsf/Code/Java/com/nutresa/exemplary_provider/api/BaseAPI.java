@@ -5,8 +5,11 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
@@ -15,6 +18,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +27,9 @@ import org.openntf.domino.utils.DominoUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
+import com.nutresa.exemplary_provider.bll.TranslationBLO;
+import com.nutresa.exemplary_provider.bll.UserBLO;
+import com.nutresa.exemplary_provider.dal.TranslationDAO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -30,6 +37,8 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class BaseAPI<T> extends DesignerFacesServlet {
 
     protected Class<T> dtoClass;
+    protected HttpServletResponse response;
+    protected HttpServletRequest request;
 
     private enum typeRequestMethod {
         GET, POST, OPTIONS
@@ -41,8 +50,8 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
             throws ServletException, IOException {
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        response = (HttpServletResponse) servletResponse;
+        request = (HttpServletRequest) servletRequest;
 
         response.setContentType("application/json; charset=utf-8");
         response.setHeader("Cache-Control", "no-cache");
@@ -71,30 +80,37 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         try {
             typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
             LinkedHashMap<String, String> parameters = (LinkedHashMap) getParameters(request);
-
+            
+            getClientLanguage(parameters);
             String action = parameters.get("action");
             parameters.remove("action");
-    
-            if (null != action) {
-                switch (requestMethod) {
-                case GET:
-                    servletResponse = doGet(action, parameters);
-                    break;
-                case POST:
-                    servletResponse = doPost(action, request);
-                    break;
-                case OPTIONS:
-                    doOptions(response, output);
-                    break;
-                default:
-                    status = 405;
-                    servletResponse = new ServletResponseDTO(false,
-                            "Method not allowed");
-    
-                    break;
-                }
+
+            List<String> access = getACL();
+            
+            if (requestMethod != typeRequestMethod.OPTIONS && !validateAccess(access, this.getClass().getSimpleName(), action)) {
+                status = 401;
+                servletResponse = new ServletResponseDTO<String>(false, "Access denied.");
             } else {
-                servletResponse = new ServletResponseDTO(false, "Action not found");
+                if (null != action) {
+                    switch (requestMethod) {
+                    case GET:
+                        servletResponse = doGet(action, parameters);
+                        break;
+                    case POST:
+                        servletResponse = doPost(action, request);
+                        break;
+                    case OPTIONS:
+                        doOptions(response, output);
+                        break;
+                    default:
+                        status = 405;
+                        servletResponse = new ServletResponseDTO(false, "Method not allowed");
+
+                        break;
+                    }
+                } else {
+                    servletResponse = new ServletResponseDTO(false, "Action not found");
+                }
             }
     
         } catch (Exception exception) {
@@ -102,13 +118,48 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             servletResponse = new ServletResponseDTO(exception);
         } finally {
             response.setStatus(status);
-            Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-                .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
-            
-            String jsonResponse = gson.toJson(servletResponse);
-            byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
-            output.write(utf8JsonString, 0, utf8JsonString.length);            
+            if (null != servletResponse) {
+                Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
+                    .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
+
+                String jsonResponse = gson.toJson(servletResponse);
+                byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
+                output.write(utf8JsonString, 0, utf8JsonString.length);
+            }
         }
+    }
+
+    private void getClientLanguage(LinkedHashMap<String, String> parameters) {
+        Locale locale = request.getLocale();
+        Cookie[] cookies = request.getCookies();
+        TranslationBLO translationBLO = TranslationBLO.getInstance();
+        String language = translationBLO.getClientLanguage(parameters, locale, cookies);
+        if (null != language) {
+            Cookie langCookie = new Cookie(TranslationDAO.COOKIE_NAME, language);
+            langCookie.setMaxAge(60 * 60 * 4);
+            this.response.addCookie(langCookie);
+        }
+    }
+
+    protected List<String> getACL() throws HandlerGenericException {
+        List<String> access = new ArrayList<String>();
+        if (null == access || access.isEmpty()) {
+            UserBLO userBLO = new UserBLO();
+            access = userBLO.loadAccess();
+        }
+        access.add("*.*");
+        return access;
+    }
+
+    private boolean validateAccess(List<String> access, String api, String action) {
+        boolean response = false;
+        if (access != null) {
+            if (access.contains("*.*") || access.contains(api + ".*") || access.contains("*." + action)
+                || access.contains(api + "." + action)) {
+                response = true;
+            }
+        }
+        return response;
     }
 
     @SuppressWarnings("unchecked")

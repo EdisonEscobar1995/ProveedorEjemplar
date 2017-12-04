@@ -38,17 +38,24 @@ function modifiedSuppliersApp(state = initialState, action) {
             const locked = state.data.suppliersByCall
               .find(supplierByCall => supplierByCall.idSupplier === item.id)
               .lockedByModification;
+            const {
+              supply = '',
+              category = '',
+              country = '',
+              supplier = '',
+            } = action.data;
+            const supplierState = action.data.state ? action.data.state : '';
             let visible = true;
-            if (action.data.category !== '' && action.data.category !== item.idCategory) {
+            if (category !== '' && category !== item.idCategory) {
               visible = false;
-            } else if (action.data.country !== '' && action.data.country !== item.idCountry) {
+            } else if (country !== '' && country !== item.idCountry) {
               visible = false;
-            } else if (action.data.supplier !== '' && action.data.supplier !== item.id) {
+            } else if (supplier !== '' && supplier !== item.id) {
               visible = false;
-            } else if (action.data.supply !== '' && action.data.supply !== item.idSupply) {
+            } else if (supply !== '' && supply !== item.idSupply) {
               visible = false;
-            } else if ((action.data.state === LOCKED && !locked) ||
-              (action.data.state === NOTIFIED && locked)) {
+            } else if ((supplierState === LOCKED && !locked) ||
+              (supplierState === NOTIFIED && locked)) {
               visible = false;
             }
             return {
