@@ -4,10 +4,6 @@ import filtersData from './filtersData';
 import DinamicForm from '../shared/DinamicForm';
 
 class Filters extends Component {
-  handleFilter = () => {
-    this.props.filterModifiedSuppliers(this.props.form.getFieldsValue());
-  };
-
   handleReset = () => {
     this.props.form.resetFields();
     this.props.getModifiedSuppliers();
