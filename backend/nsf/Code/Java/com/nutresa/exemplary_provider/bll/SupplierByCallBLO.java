@@ -11,7 +11,6 @@ import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
-import com.nutresa.exemplary_provider.dtl.SurveyDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
@@ -36,7 +35,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 call = callDAO.get(supplierByCall.getIdCall());
                 if (call.isNotCaducedDate(call.getDateToFinishCall(), new Date())) {
                     response = supplierByCall;
-                    checkSurveyEnable(response, supplier);
                     break;
                 }
             }
@@ -133,19 +131,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     public boolean getReadOnly() {
         return readOnly;
-    }
-
-    private void checkSurveyEnable(SupplierByCallDTO supplierByCall, SupplierDTO supplier)
-            throws HandlerGenericException {
-        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        if (null == supplierByCall.getIdSurvey() || supplierByCall.getIdSurvey().isEmpty()) {
-            SurveyBLO surveyBLO = new SurveyBLO();
-            SurveyDTO survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
-            if (null != survey) {
-                supplierByCall.setIdSurvey(survey.getId());
-                supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
-            }
-        }
     }
 
 }

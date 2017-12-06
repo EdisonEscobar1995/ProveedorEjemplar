@@ -19,6 +19,8 @@ import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.utils.Factory;
 
+import com.nutresa.exemplary_provider.bll.TranslationBLO;
+import com.nutresa.exemplary_provider.bll.TranslationBLO.Translator;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -31,6 +33,8 @@ public abstract class GenericDAO<T> {
     private String entityForm;
     protected String entityView;
     protected String entity;
+    protected Translator translator;
+    protected boolean translatable = false;
 
     protected static final String PREFIX_FORM = "fr";
     protected static final String PREFIX_VIEW = "vw";
@@ -53,9 +57,11 @@ public abstract class GenericDAO<T> {
 
         this.entityForm = PREFIX_FORM + entity;
         this.entityView = PREFIX_VIEW + entity + "s";
+        // translator = new TranslationBLO.Translator();
     }
 
     public T get(String id) throws HandlerGenericException {
+        loadTranslator();
         View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
         return castDocument(document);
@@ -68,6 +74,7 @@ public abstract class GenericDAO<T> {
     public T getBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
+        loadTranslator();
         if (null == view) {
             System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
             view = database.getView(entityView);
@@ -126,6 +133,7 @@ public abstract class GenericDAO<T> {
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
             Document document;
+            loadTranslator();
             for (ViewEntry viewEntry : vec) {
                 document = viewEntry.getDocument();
                 list.add((T) this.castDocument(document));
@@ -169,6 +177,7 @@ public abstract class GenericDAO<T> {
     protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters)
             throws HandlerGenericException {
         List<T> list = new ArrayList<T>();
+        loadTranslator();
         if (indexedParameters.size() == 1 && indexedParameters.get(0).indexOf(Common.SEPARATOR_LIST, 0) != -1) {
             String[] ids = indexedParameters.get(0).split(String.valueOf(Common.SEPARATOR_LIST));
 
@@ -191,6 +200,7 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
+        loadTranslator();
         System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
@@ -208,10 +218,16 @@ public abstract class GenericDAO<T> {
         try {
             if (null != document) {
                 result = this.dtoClass.newInstance();
+                String id = document.getItemValueString("id");
                 List<Field> fields = new ArrayList();
                 for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
-                    Object value = getValue(document, field.getName(), field.getType());
+                    Object value;
+                    if (translator.hasTranslation(id, field.getName())) {
+                        value = translator.getValue(id, field.getName());
+                    } else {
+                        value = getValue(document, field.getName(), field.getType());
+                    }
                     field.set(result, value);
                 }
             }
@@ -219,11 +235,6 @@ public abstract class GenericDAO<T> {
             throw new HandlerGenericException(exception);
         }
         return result;
-    }
-
-    protected Object castProperty() {
-
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -509,4 +520,16 @@ public abstract class GenericDAO<T> {
         String ids = Common.getIdsFromList(list, uniqueIds);
         return (List<DTO>) getAllBy(field, ids);
     }
+
+    private void loadTranslator() {
+        String language = TranslationBLO.getInstance().getLanguage();
+        if (translatable && !"es".equals(language) && null == translator) {
+            if (translatable && !"Translation".equals(entity)) {
+                translator = TranslationBLO.getInstance().getTranslator(language, entity);
+            }
+        } else {
+            translator = TranslationBLO.getInstance().getTranslator();
+        }
+    }
+    
 }
