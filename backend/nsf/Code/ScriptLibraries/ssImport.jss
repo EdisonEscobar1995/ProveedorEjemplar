@@ -479,6 +479,9 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 							nd.removeItem("idSupply");
 		 					nd.removeItem("idCompanySize");
 		 				}
+						if(nd.getItemValueString("form") == "frSupplierByCall"){
+							nd.replaceItemValue("participateInCall", "1");
+						}
 					}else if(nd.getItemValueString("form") == "frCity"){
 						nd.removeItem("idCountry");
 					}else if(nd.getItemValueString("form") == "frCall"){
