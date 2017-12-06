@@ -223,7 +223,7 @@ public abstract class GenericDAO<T> {
                 for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
                     Object value;
-                    if (translator.hasTranslation(id, field.getName())) {
+                    if (null != translator && translator.hasTranslation(id, field.getName())) {
                         value = translator.getValue(id, field.getName());
                     } else {
                         value = getValue(document, field.getName(), field.getType());

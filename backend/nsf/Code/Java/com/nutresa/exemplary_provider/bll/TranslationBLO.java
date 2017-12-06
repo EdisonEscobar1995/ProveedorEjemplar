@@ -85,9 +85,11 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
                 parameters.remove(TranslationDAO.PARAMTER_NAME);
             }
         } else {
-            for (Cookie cookie : cookies) {
-                if (TranslationDAO.COOKIE_NAME.equalsIgnoreCase(cookie.getName())) {
-                    clientLanguage = cookie.getValue();
+            if(null != cookies){
+                for (Cookie cookie : cookies) {
+                    if (TranslationDAO.COOKIE_NAME.equalsIgnoreCase(cookie.getName())) {
+                        clientLanguage = cookie.getValue();
+                    }
                 }
             }
         }

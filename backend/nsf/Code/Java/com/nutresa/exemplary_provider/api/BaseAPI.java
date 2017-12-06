@@ -85,9 +85,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             String action = parameters.get("action");
             parameters.remove("action");
 
-            List<String> access = getACL();
+            //List<String> access = getACL();
             
-            if (requestMethod != typeRequestMethod.OPTIONS && !validateAccess(access, this.getClass().getSimpleName(), action)) {
+            if (requestMethod != typeRequestMethod.OPTIONS && false ){ //!validateAccess(access, this.getClass().getSimpleName(), action)) {
                 status = 401;
                 servletResponse = new ServletResponseDTO<String>(false, "Access denied.");
             } else {
