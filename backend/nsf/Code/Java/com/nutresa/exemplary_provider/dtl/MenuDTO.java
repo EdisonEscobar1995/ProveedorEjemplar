@@ -8,6 +8,8 @@ public class MenuDTO extends MasterDTO{
     @Expose
     private String label;
     @Expose
+    private String url;
+    @Expose
     private List<String> idsRol;
     
     public void setLabel(String label) {
@@ -24,5 +26,13 @@ public class MenuDTO extends MasterDTO{
 
     public List<String> getIdsRol() {
         return idsRol;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }
