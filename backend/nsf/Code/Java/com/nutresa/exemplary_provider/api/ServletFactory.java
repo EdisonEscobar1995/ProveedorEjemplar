@@ -40,9 +40,9 @@ public class ServletFactory implements IServletFactory {
             }
         } catch (Exception exception) {
             DominoUtils.handleException(new Throwable(exception));
+            return new ServletMatch(module.createServlet(namespace + "Error" + apiSuffix, "Error", null), "", "");
         }
-
-        return null;
+        return new ServletMatch(module.createServlet(namespace + "Error" + apiSuffix, "Error", null), "", "");
     }
 
     public Servlet getWidgetServlet(String servletName) throws ServletException {

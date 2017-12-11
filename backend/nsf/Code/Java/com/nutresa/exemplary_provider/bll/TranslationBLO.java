@@ -16,7 +16,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
 
     private static TranslationBLO instance = null;
     private Map<String, HashMap<String, String>> translationTable = new HashMap<String, HashMap<String, String>>();
-    private Translator cleanTranslator = new Translator();
+    private final static Translator cleanTranslator = new Translator();
     private final String defaultLanguage = "es";
     private String language = defaultLanguage; 
     
@@ -74,6 +74,16 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     public String getLanguage() {
         return language;
     }
+
+    public void clearLanguage(String entity) {
+        if (translationTable.containsKey(entity)) {
+            translationTable.remove(entity);
+        }
+    }
+    
+    public void clearLanguage() {
+        translationTable = new HashMap<String, HashMap<String, String>>();
+    }
     
     public String getClientLanguage(Map<String, String> parameters, Locale locale, Cookie[] cookies) {
         String clientLanguage = null;
@@ -125,5 +135,4 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         }
 
     }
-
 }

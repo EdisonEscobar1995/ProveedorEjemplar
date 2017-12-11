@@ -24,4 +24,19 @@ public class TranslationAPI extends GenericAPI<TranslationDTO, TranslationBLO> {
         return new ServletResponseDTO<String>(language);
     }
     
+    public ServletResponseDTO<String> clearLanguage(Map<String, String> parameters) {
+        TranslationBLO translationBLO = TranslationBLO.getInstance();
+        if (parameters.containsKey("entity")) {
+            translationBLO.clearLanguage(parameters.get("entity"));
+        } else {
+            translationBLO.clearLanguage();
+        }
+        return new ServletResponseDTO<String>("Language cleared");
+    }
+
+    public ServletResponseDTO<String> clearLanguage() {
+        TranslationBLO translationBLO = TranslationBLO.getInstance();
+        translationBLO.clearLanguage();
+        return new ServletResponseDTO<String>("Language cleared");
+    }
 }
