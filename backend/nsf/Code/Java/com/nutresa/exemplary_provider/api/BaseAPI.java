@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.api;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
@@ -50,23 +51,33 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
             throws ServletException, IOException {
-        response = (HttpServletResponse) servletResponse;
-        request = (HttpServletRequest) servletRequest;
 
-        response.setContentType("application/json; charset=utf-8");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setCharacterEncoding("UTF-8");
-        ServletOutputStream output = response.getOutputStream();
-        FacesContext facesContext = this.getFacesContext(request, response);
+        ServletOutputStream output = null;
+        FacesContext facesContext = null;
 
         try {
+            response = (HttpServletResponse) servletResponse;
+            request = (HttpServletRequest) servletRequest;
+
+            response.setContentType("application/json; charset=utf-8");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setCharacterEncoding("UTF-8");
+            output = response.getOutputStream();
+            facesContext = this.getFacesContext(request, response);
+            // Factory.getSession().setSessionType(null);
             doService(request, response, facesContext, output);
         } catch (Exception exception) {
             DominoUtils.handleException(new Throwable(exception));
+            exception.printStackTrace(new PrintStream(output));
+            throw new ServletException(exception);
         } finally {
-            facesContext.responseComplete();
-            facesContext.release();
-            output.close();
+            if (null != facesContext) {
+                facesContext.responseComplete();
+                facesContext.release();
+            }
+            if (null != output) {
+                output.close();
+            }
         }
     }
 
@@ -85,9 +96,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             String action = parameters.get("action");
             parameters.remove("action");
 
-            //List<String> access = getACL();
+            List<String> access = getACL();
             
-            if (requestMethod != typeRequestMethod.OPTIONS && false ){ //!validateAccess(access, this.getClass().getSimpleName(), action)) {
+            if (requestMethod != typeRequestMethod.OPTIONS && !validateAccess(access, this.getClass().getSimpleName(), action)) {
                 status = 401;
                 servletResponse = new ServletResponseDTO<String>(false, "Access denied.");
             } else {
