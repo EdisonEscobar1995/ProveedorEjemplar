@@ -1,73 +1,310 @@
-    <style>
-    
-    table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-    }
-    
-    td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-        background-color: #dddddd;
-    }
-    
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Proveedor Ejemplar | Grupo Nutresa</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style type="text/css">
+        body {
+            -webkit-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            -webkit-font-smoothing: antialiased !important;
+        }
+        
+        img {
+            border: 0 !important;
+            outline: none !important;
+        }
+        
+        p {
+            Margin: 0px !important;
+            Padding: 0px !important;
+        }
+        
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0px;
+            mso-table-rspace: 0px;
+        }
+        
+        td,
+        a,
+        span {
+            border-collapse: collapse;
+            mso-line-height-rule: exactly;
+        }
+        
+        span.MsoHyperlink {
+            mso-style-priority: 99;
+            color: inherit;
+        }
+        
+        span.MsoHyperlinkFollowed {
+            mso-style-priority: 99;
+            color: inherit;
+        }
+        
+        .ExternalClass * {
+            line-height: 100%;
+        }
+        
+        .white a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        /*Stylesheed for the devices width between 481px to 599px*/
+        
+        @media only screen and (max-width:600px) {
+            table.wrapper {
+                width: 100% !important;
+            }
+            table.main_table {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+            td.hide,
+            table.hide,
+            span.hide,
+            br.hide {
+                display: none !important;
+            }
+            td.align_cent {
+                text-align: center !important;
+            }
+            img.full_img {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+            img.full_img_logo{
+                width: 100% !important;
+                height: auto !important;
+                max-width: 219px !important;
+            
+            }
+            img.align-center {
+                display: block;
+                margin: 0 auto;
+            }
+            td.height15 {
+                height: 15px !important;
+            }
+            td.height25 {
+                height: 25px !important;
+            }
+            td.width15 {
+                width: 15px !important;
+            }
+            td.font {
+                font-size: 24px !important;
+                line-height: 27px !important;
+            }
+            td.pad {
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+            td.padtop {
+                padding-top: 20px !important;
+            }
+            table.w_284 {
+                width: 284px !important;
+            }
+            td.w_32 {
+                width: 32px !important;
+            }
+            img.w_32 {
+                width: 32px !important;
+                height: auto !important;
+            }
+        }
+        
+        @media only screen and (min-width:481px) and (max-width:599px) {
+            table.wrapper {
+                width: 100% !important;
+            }
+            table.main_table {
+                width: 480px !important;
+                min-width: 480px !important;
+            }
+            td.hide,
+            table.hide,
+            span.hide,
+            br.hide {
+                display: none !important;
+            }
+            td.align_cent {
+                text-align: center !important;
+            }
+            img.full_img {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+            td.height25 {
+                height: 25px !important;
+            }
+            td.height15 {
+                height: 15px !important;
+            }
+            td.width15 {
+                width: 15px !important;
+            }
+            td.font {
+                font-size: 31px !important;
+                line-height: 34px !important;
+            }
+            td.pad {
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+            td.padtop {
+                padding-top: 20px !important;
+            }
+        }
     </style>
-  <body class="">
-    <table border="0" cellpadding="0" cellspacing="0" class="body">
-      <tr>
-        <td>&nbsp;</td>
-        <td class="container">
-          <div class="content">
+</head>
 
-            
-            <span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
-            <table class="main">
+<body bgcolor="#ffffff" style="margin:0px; padding:0px;">
 
-              
-              <tr>
-                <td class="wrapper">
-                  <table border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td>
-                        <p>Hi there,</p>
-                        <p>Sometimes you just want to send a simple HTML email with a simple design and clear call to action. This is it.</p>
-                        <p>[MESSAGE_HERE]</p>
-                        <p>This is a really simple email template. Its sole purpose is to get the recipient to click the button with no distractions.</p>
-                        <p>Good luck! Hope it works.</p>
-                      </td>
-                    </tr>
-                  </table>
+    <!--Full width table start-->
+    <table align="center" bgcolor="#f0f0f0" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+
+            <!-- CABEZOTE -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="main_table" style="table-layout:fixed;width:600px;min-width:640px;" width="640">
+                        <tbody>
+                            <tr>
+                                <td class="width15" width="18">&nbsp;</td>
+                                <td>
+                                    <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td><img src="strip-top.png" class="full_img" alt="" title="" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="height15" height="10" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td><img src="proveedor-ejemplar.png" class="full_img_logo" alt="" title="" style="display: block;margin:auto;" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="height15" height="10" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td><img src="strip-middle.png" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="height15" height="47" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="width15" width="18">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </td>
-              </tr>
+            </tr>
+            <!-- FIN CABEZOTE -->
 
-            
-            </table>
+            <!-- CONTENIDO -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="main_table" style="table-layout:fixed;width:600px;min-width:640px;" width="640">
+                        <tbody>
+                            <tr>
+                                <td class="width15" width="18">&nbsp;</td>
+                                <td>
+                                    <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td class="width15" width="40">&nbsp;</td>
+                                                <td>
+                                                    <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="color: #7c7c7c; font-family: Verdana, Geneva, sans-serif; font-weight: 300; font-size: 14px; line-height: 23px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius, arcu eu rutrum pharetra, est velit commodo dui, et interdum libero nunc id dolor. Etiam euismod dui sit amet sem accumsan, sed molestie sapien facilisis. Vestibulum nibh augue, blandit ac interdum in, vestibulum eu mauris. Aliquam erat volutpat.<br /> <br /> Fusce est ante, eleifend quis venenatis et, aliquet vitae nisi. Quisque a cursus purus. Aliquam eget finibus diam, hendrerit volutpat lorem. Nullam dapibus elit a sem porttitor, et aliquam tortor fringilla. Mauris sagittis, dolor nec mollis tincidunt, magna nibh vehicula augue, mattis ultricies est orci ac mi. Etiam eu nibh non mauris gravida dapibus. Sed bibendum tempor pharetra. Ut pulvinar ipsum sit amet elementum interdum. Curabitur in massa nisi. Etiam ut justo ultrices, facilisis est sed, sagittis quam. Vivamus molestie laoreet augue, at ornare nisi molestie vitae. In sit amet massa ac dui ornare volutpat. Praesent semper velit id nisl mattis, quis fringilla quam laoreet. Vestibulum non congue neque.</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="height15" height="40" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <table cellpadding="0" cellspacing="0" width="100%" style="border-color: #cccccc;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <td bgcolor="#f5f5f5" style="border:1px solid #ccc;color:#37907c; font-family:Verdana, Genevea, sans-serif; font-weight:600; line-height:normal; font-size:14px; padding:10px 14px">Proveedor</td>
+                                                                                <td bgcolor="#f5f5f5" style="border:1px solid #ccc;color:#37907c; font-family:Verdana, Genevea, sans-serif; font-weight:600; line-height:normal; font-size:14px; padding:10px 14px">Tipo de suministro</td>
+                                                                                <td bgcolor="#f5f5f5" style="border:1px solid #ccc;color:#37907c; font-family:Verdana, Genevea, sans-serif; font-weight:600; line-height:normal; font-size:14px; padding:10px 14px">Tamaño de la empresa</td>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <body>
+                                                                            <tr>
+                                                                                <td style="border:1px solid #ccc;color:#7c7c7c;font-family:Verana, Geneva, sans-serif; font-weight:300; line-height:normal; padding:10px 14px;">Cognox S.A.S</td>
+                                                                                <td style="border:1px solid #ccc;color:#7c7c7c;font-family:Verana, Geneva, sans-serif; font-weight:300; line-height:normal; padding:10px 14px;">11</td>
+                                                                                <td style="border:1px solid #ccc;color:#7c7c7c;font-family:Verana, Geneva, sans-serif; font-weight:300; line-height:normal; padding:10px 14px;">Pyme</td>
+                                                                            </tr>
+                                                                        </body>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="height15" height="40" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <table cellpadding="0" cellspacing="0" width="100%">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style="text-align: center;"><a href="#"><img src="btn-continuar.png" alt="" title="" /></a></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="height15" height="40" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td class="width15" width="40">&nbsp;</td>
+                                            </tr>
 
-            
-            <div class="footer">
-              <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td class="content-block">
-                    <span class="apple-link">Company Inc, 3 Abbey Road, San Francisco CA 94102</span>
-                    <br> Don't like these emails? <a href="http://i.imgur.com/CScmqnj.gif">Unsubscribe</a>.
-                  </td>
-                </tr>
-                <tr>
-                  <td class="content-block powered-by">
-                    Powered by <a href="http://htmlemail.io">HTMLemail</a>.
-                  </td>
-                </tr>
-              </table>
-            </div>
-            
-          </div>
-        </td>
-        <td>&nbsp;</td>
-      </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="width15" width="18">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- FIN CONTENIDO -->
+
+            <!-- FOOTER -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="main_table" style="table-layout:fixed;width:600px;min-width:640px;" width="640">
+                        <tbody>
+                            <tr>
+                                <td><img src="footer.png" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- FIN FOOTER -->
+
+        </tbody>
     </table>
-  </body>
+    <!--//Full width table End-->
+
+</body>
+
+</html>
