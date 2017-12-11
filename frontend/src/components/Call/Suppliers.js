@@ -25,6 +25,9 @@ function Suppliers({
     title: 'Correo electrónico',
     dataIndex: 'emails',
     key: 'emails',
+    render(text, record) {
+      return record.emails.map(email => (<div>{email}</div>));
+    },
   }, {
     title: 'Tipo de suministro',
     dataIndex: 'idSupply',
@@ -37,7 +40,8 @@ function Suppliers({
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
-      return masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
+      const companySize = masters.CompanySize.find(item => item.id === record.idCompanySize);
+      return companySize ? companySize.name : '';
     },
   }, {
     title: 'Estado',
