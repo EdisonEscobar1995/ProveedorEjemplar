@@ -36,14 +36,11 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return userDAO.getUserInSession();
     }
 
-    public List<String> loadAccess() throws HandlerGenericException {
+    public List<DTO> getRolsByUser() throws HandlerGenericException {
         UserDTO userInSession = getUserInSession();
         SupplierBLO supplierBLO = new SupplierBLO();
         RolBLO rolBLO = new RolBLO();
-        AccessByRolBLO accessByRolBLO = new AccessByRolBLO();
-        AccessBLO accessBLO = new AccessBLO();
         List<DTO> rols = null;
-        List<String> response = new ArrayList<String>();
         if (null != userInSession) {
             List<Object> idRols = new ArrayList<Object>();
             idRols.addAll(userInSession.getIdRols());
@@ -53,7 +50,14 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
                 rols = rolBLO.getAllBy("name", "SUPPLIER");
             }
         }
+        return rols;
+    }
 
+    public List<String> loadAccess() throws HandlerGenericException {
+        AccessByRolBLO accessByRolBLO = new AccessByRolBLO();
+        AccessBLO accessBLO = new AccessBLO();
+        List<String> response = new ArrayList<String>();
+        List<DTO> rols = getRolsByUser();
         if (null != rols && !rols.isEmpty()) {
             Map<String, List<Object>> list = Common.getDtoFields(rols, new String[] { "[id]" }, RolDTO.class);
             List<DTO> listAccessByRol = accessByRolBLO.getAllBy("idRol", Common.getIdsFromList(list.get("[id]")));
@@ -63,9 +67,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
                 AccessDTO a = (AccessDTO) access;
                 response.add(a.getApi() + "." + a.getAction());
             }
-
         }
-
         return response;
     }
 
