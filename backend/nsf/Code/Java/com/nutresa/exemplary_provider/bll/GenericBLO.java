@@ -35,6 +35,12 @@ public class GenericBLO<T, D> {
         return response;
     }
 
+    public T getBy(String field, String value) throws HandlerGenericException {
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put(field, value);
+        return getBy(filter);
+    }
+    
     @SuppressWarnings("unchecked")
     public T getBy(Map<String, String> parameters) throws HandlerGenericException {
         D dao;

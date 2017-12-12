@@ -135,7 +135,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         SupplierDAO supplierDAO = new SupplierDAO();
         SupplierDTO supplier = supplierDAO.getSupplierInDirectory();
-        if (null != supplier && null != supplierByCallBLO.get(supplier.getId())) {
+        if (null != supplier && null != supplierByCallBLO.getBy("idSupplier", supplier.getId())) {
             response = true;
         }
         return response;
