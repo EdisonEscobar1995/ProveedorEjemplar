@@ -3,18 +3,19 @@ import filtersData from './filtersData';
 import DinamicForm from '../shared/DinamicForm';
 
 class Filters extends Component {
-  handleFilter = () => {
-    this.props.filterSuppliers(this.props.form.getFieldsValue());
-  };
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.filterCalledSuppliers(this.props.form.getFieldsValue());
+  }
 
   render() {
     const { Form } = this.props;
     const { getFieldDecorator, setFields } = this.props.form;
-    const fields = filtersData(this.handleFilter);
+    const fields = filtersData();
 
     return (
       <div>
-        <Form>
+        <Form onSubmit={this.handleSubmit}>
           <DinamicForm
             getFieldDecorator={getFieldDecorator}
             setFields={setFields}

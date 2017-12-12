@@ -3,8 +3,8 @@ import { Table, Select, Button } from 'antd';
 
 const { Option } = Select;
 
-function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSupplier }) {
-  const { suppliersByCall, masters } = data;
+function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
+  const { suppliers, suppliersByCall, masters } = data;
 
   const isLocked = id => suppliersByCall
     .find(item => item.idSupplier === id)
@@ -44,7 +44,9 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
       const oldIdCompanySize = suppliersByCall
         .find(item => item.idSupplier === record.id)
         .oldIdCompanySize;
-      return masters.CompanySize.find(companySize => companySize.id === oldIdCompanySize).name;
+
+      const companySize = masters.CompanySize.find(item => item.id === oldIdCompanySize);
+      return companySize ? companySize.name : '';
     },
   }, {
     title: 'Tamaño de empresa actual',
@@ -70,7 +72,8 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
           </Select>
         );
       }
-      return masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
+      const companySize = masters.CompanySize.find(item => item.id === record.idCompanySize);
+      return companySize ? companySize.name : '';
     },
   }, {
     title: 'Estado',
@@ -108,7 +111,7 @@ function ModifiedSuppliers({ data, suppliers, loading, setCompanySize, unlockSup
       <Table
         rowKey={record => record.id}
         loading={loading}
-        dataSource={suppliers}
+        dataSource={suppliers ? suppliers.filter(item => item.visible) : []}
         columns={columns}
       />
     </div>

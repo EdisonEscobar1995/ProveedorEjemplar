@@ -1,4 +1,4 @@
-const filtersData = handleClick => ([
+const filtersData = () => ([
   {
     key: 1.1,
     value: [
@@ -29,7 +29,7 @@ const filtersData = handleClick => ([
         label: 'Filtrar',
         key: 'filter',
         buttonType: 'primary',
-        handleClick,
+        htmlType: 'submit',
       },
     ],
   },

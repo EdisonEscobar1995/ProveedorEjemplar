@@ -6,6 +6,9 @@ if (NODE_ENV !== 'development') {
   const deployFolder = process.env.REACT_APP_DEPLOY_FOLDER;
   resultUrl = `${location.pathname.split(deployFolder)[0]}xsp`;
 }
+
 const baseUrl = resultUrl;
+
+export const basePath = baseUrl.replace('/xsp', '');
 
 export default baseUrl;

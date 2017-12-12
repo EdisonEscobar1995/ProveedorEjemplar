@@ -4,12 +4,11 @@ import Confirm from '../shared/Confirm';
 
 function Suppliers({
   editData,
-  data,
-  suppliers,
+  calledSuppliers,
   loadingSuppliers,
   sendInvitation,
   massiveShipmentCall }) {
-  const { masters, suppliersByCall } = data;
+  const { suppliers, suppliersByCall, masters } = calledSuppliers;
   const columns = [{
     title: 'Código SAP',
     dataIndex: 'sapCode',
@@ -26,6 +25,9 @@ function Suppliers({
     title: 'Correo electrónico',
     dataIndex: 'emails',
     key: 'emails',
+    render(text, record) {
+      return record.emails.map(email => (<div>{email}</div>));
+    },
   }, {
     title: 'Tipo de suministro',
     dataIndex: 'idSupply',
@@ -38,7 +40,8 @@ function Suppliers({
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
-      return masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
+      const companySize = masters.CompanySize.find(item => item.id === record.idCompanySize);
+      return companySize ? companySize.name : '';
     },
   }, {
     title: 'Estado',
@@ -67,7 +70,7 @@ function Suppliers({
       <Table
         rowKey={record => record.id}
         loading={loadingSuppliers}
-        dataSource={suppliers}
+        dataSource={suppliers ? suppliers.filter(supplier => supplier.visible) : []}
         columns={columns}
       />
       <Row type="flex" justify="center" style={{ marginBottom: '20px' }}>

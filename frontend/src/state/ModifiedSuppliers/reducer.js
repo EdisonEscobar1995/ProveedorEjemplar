@@ -11,7 +11,6 @@ import { LOCKED, NOTIFIED } from '../../utils/const';
 
 const initialState = {
   data: {},
-  suppliers: [],
   loading: false,
 };
 
@@ -27,32 +26,44 @@ function modifiedSuppliersApp(state = initialState, action) {
       return {
         ...state,
         data: action.data,
-        suppliers: action.data.suppliers,
         loading: false,
       };
     }
     case FILTER_MODIFIED_SUPPLIERS: {
       return {
         ...state,
-        suppliers: state.data.suppliers.filter((item) => {
-          const locked = state.data.suppliersByCall
-            .find(supplierByCall => supplierByCall.idSupplier === item.id)
-            .lockedByModification;
-
-          if (action.data.category !== '' && action.data.category !== item.idCategory) {
-            return false;
-          } else if (action.data.country !== '' && action.data.country !== item.idCountry) {
-            return false;
-          } else if (action.data.supplier !== '' && action.data.supplier !== item.id) {
-            return false;
-          } else if (action.data.supply !== '' && action.data.supply !== item.idSupply) {
-            return false;
-          } else if ((action.data.state === LOCKED && !locked) ||
-            (action.data.state === NOTIFIED && locked)) {
-            return false;
-          }
-          return true;
-        }),
+        data: {
+          ...state.data,
+          suppliers: state.data.suppliers.map((item) => {
+            const locked = state.data.suppliersByCall
+              .find(supplierByCall => supplierByCall.idSupplier === item.id)
+              .lockedByModification;
+            const {
+              supply = '',
+              category = '',
+              country = '',
+              supplier = '',
+            } = action.data;
+            const supplierState = action.data.state ? action.data.state : '';
+            let visible = true;
+            if (category !== '' && category !== item.idCategory) {
+              visible = false;
+            } else if (country !== '' && country !== item.idCountry) {
+              visible = false;
+            } else if (supplier !== '' && supplier !== item.id) {
+              visible = false;
+            } else if (supply !== '' && supply !== item.idSupply) {
+              visible = false;
+            } else if ((supplierState === LOCKED && !locked) ||
+              (supplierState === NOTIFIED && locked)) {
+              visible = false;
+            }
+            return {
+              ...item,
+              visible,
+            };
+          }),
+        },
       };
     }
     case SET_COMPANY_SIZE: {
@@ -69,14 +80,6 @@ function modifiedSuppliersApp(state = initialState, action) {
             ),
           ),
         },
-        suppliers: state.suppliers.map(
-          item => (
-            item.id === action.data.id ? {
-              ...item,
-              idCompanySize: action.data.idCompanySize,
-            } : item
-          ),
-        ),
       };
     }
     case UNLOCK_SUPPLIER_SUCCESS: {

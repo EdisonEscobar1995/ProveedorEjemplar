@@ -227,12 +227,12 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   case 'button': {
                     const {
                       buttonType,
-                      handleClick,
+                      htmlType,
                     } = current;
                     rowValue = (
                       <Button
                         type={buttonType}
-                        onClick={handleClick}
+                        htmlType={htmlType}
                       >
                         {label}
                       </Button>

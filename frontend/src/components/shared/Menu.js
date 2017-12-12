@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Menu as MenuAnt } from 'antd';
+import { Menu as MenuAnt, Spin } from 'antd';
 import styled from 'styled-components';
+import routes from '../../routes';
+import getMenuByRol from '../../state/Menu/action';
 
 const { Item } = MenuAnt;
 
@@ -11,10 +14,10 @@ const MenuStyle = styled(MenuAnt)`
 `;
 const ItemStyle = styled(Item)`
   font-size:16px;
-  &  > a {
+  & > a {
     color: ${props => props.theme.color.normal} !Important;
   }
-  &  > a:hover{
+  & > a:hover{
     color: ${props => props.theme.color.normal} !Important;
   }
   &:hover {
@@ -23,28 +26,45 @@ const ItemStyle = styled(Item)`
   & .ant-menu-item-selected {
     border-bottom: 2px solid ${props => props.theme.color.normal} !Important;
   }
-  
 `;
 
-function Menu(props) {
-  return (
-    <MenuStyle
-      mode="horizontal"
-      defaultSelectedKeys={['2']}
-    >
-      {props.routes.map((item) => {
-        if (item.show === false) {
-          return null;
-        }
-        return (
-          <ItemStyle key={item.index}>
-            <Link to={item.path}>
-              {item.title}
-            </Link>
-          </ItemStyle>
-        );
-      })}
-    </MenuStyle>
-  );
+class Menu extends Component {
+  componentDidMount() {
+    this.props.getMenuByRol();
+  }
+
+  render() {
+    return (
+      <Spin spinning={this.props.loading}>
+        <MenuStyle
+          mode="horizontal"
+        >
+          {this.props.menu.map((item) => {
+            const entry = routes.find(route => item.name === route.name);
+            if (item.type === 'menu' && entry) {
+              return (
+                <ItemStyle key={item.id}>
+                  <Link to={entry.path}>
+                    {item.title}
+                  </Link>
+                </ItemStyle>
+              );
+            }
+            return null;
+          })}
+        </MenuStyle>
+      </Spin>
+    );
+  }
 }
-export default Menu;
+
+const mapStateToProps = state => ({
+  menu: state.menu.data,
+  loading: state.menu.loading,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getMenuByRol: () => dispatch(getMenuByRol()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);

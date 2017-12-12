@@ -1,9 +1,8 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 import { Layout, Breadcrumb, Icon } from 'antd';
 import Menu from '../components/shared/Menu';
-import routes from '../routes';
+import Router from '../components/shared/Router';
 
 const { Header, Footer, Content } = Layout;
 
@@ -78,7 +77,6 @@ const IconBreadStyle = styled(Icon)`
   margin-right: 6px;
 `;
 
-
 function Document() {
   return (
     <Layout>
@@ -104,7 +102,7 @@ function Document() {
         </HeaderContentStyle>
       </HeaderLogoStyle>
       <HeaderStyle>
-        <Menu routes={routes} />
+        <Menu />
       </HeaderStyle>
       <ContentStyle>
         <BreadcrumbStyle>
@@ -112,16 +110,7 @@ function Document() {
           <BreadcrumbItemStyle>Application Center</BreadcrumbItemStyle>
         </BreadcrumbStyle>
         <MainContentStyle>
-          <Switch>
-            {routes.map(route => (
-              <Route
-                key={route.index}
-                component={route.component}
-                exact={route.exact === true}
-                path={route.path}
-              />
-            ))}
-          </Switch>
+          <Router />
         </MainContentStyle>
       </ContentStyle>
       <Footer>
