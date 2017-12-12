@@ -8,10 +8,6 @@ public class MenuDTO extends MasterDTO{
     @Expose
     private String title;
     @Expose
-    private String path;
-    @Expose
-    private String component;
-    @Expose
     private String type;
     @Expose
     private List<String> idsRol;
@@ -22,22 +18,6 @@ public class MenuDTO extends MasterDTO{
 
     public void setTitle(String title) {
         this.title = title;
-    }
-    
-    public String getPath() {
-        return this.path;
-    }
-    
-    public void setPath(String path) {
-        this.path = path;
-    }
-    
-    public String getComponent() {
-        return this.component;
-    }
-    
-    public void setComponent(String component) {
-        this.component = component;
     }
     
     public String getType() {
