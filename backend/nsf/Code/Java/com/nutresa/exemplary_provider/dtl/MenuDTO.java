@@ -6,33 +6,33 @@ import com.google.gson.annotations.Expose;
 
 public class MenuDTO extends MasterDTO{
     @Expose
-    private String label;
+    private String title;
     @Expose
-    private String url;
+    private String type;
     @Expose
     private List<String> idsRol;
     
-    public void setLabel(String label) {
-        this.label = label;
+    public String getTitle() {
+        return this.title;
     }
 
-    public String getLabel() {
-        return label;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    public String getType() {
+        return this.type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public List<String> getIdsRol() {
+        return this.idsRol;
+    }
+    
     public void setIdsRol(List<String> idsRol) {
         this.idsRol = idsRol;
-    }
-
-    public List<String> getIdsRol() {
-        return idsRol;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUrl() {
-        return url;
     }
 }
