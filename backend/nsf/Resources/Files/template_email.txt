@@ -183,19 +183,21 @@
                                     <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <tbody>
                                             <tr>
-                                                <td><img src="strip-top.png" class="full_img" alt="" title="" /></td>
+                                                <td><img src="[HEADER_ONE]" class="full_img" alt="" title="" /></td>
                                             </tr>
                                             <tr>
                                                 <td class="height15" height="10" style="font-size:1px; line-height:1px;">&nbsp;</td>
                                             </tr>
                                             <tr>
-                                                <td><img src="proveedor-ejemplar.png" class="full_img_logo" alt="" title="" style="display: block;margin:auto;" /></td>
+                                                <td>
+                                                    <img src="[HEADER_TWO]" class="full_img_logo" alt="" title="" style="display: block;margin:auto;" />
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="height15" height="10" style="font-size:1px; line-height:1px;">&nbsp;</td>
                                             </tr>
                                             <tr>
-                                                <td><img src="strip-middle.png" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
+                                                <td><img src="[HEADER_THREE]" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
                                             </tr>
                                             <tr>
                                                 <td class="height15" height="47" style="font-size:1px; line-height:1px;">&nbsp;</td>
@@ -228,48 +230,16 @@
                                                     <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
                                                         <tbody>
                                                             <tr>
-                                                                <td style="color: #7c7c7c; font-family: Verdana, Geneva, sans-serif; font-weight: 300; font-size: 14px; line-height: 23px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius, arcu eu rutrum pharetra, est velit commodo dui, et interdum libero nunc id dolor. Etiam euismod dui sit amet sem accumsan, sed molestie sapien facilisis. Vestibulum nibh augue, blandit ac interdum in, vestibulum eu mauris. Aliquam erat volutpat.<br /> <br /> Fusce est ante, eleifend quis venenatis et, aliquet vitae nisi. Quisque a cursus purus. Aliquam eget finibus diam, hendrerit volutpat lorem. Nullam dapibus elit a sem porttitor, et aliquam tortor fringilla. Mauris sagittis, dolor nec mollis tincidunt, magna nibh vehicula augue, mattis ultricies est orci ac mi. Etiam eu nibh non mauris gravida dapibus. Sed bibendum tempor pharetra. Ut pulvinar ipsum sit amet elementum interdum. Curabitur in massa nisi. Etiam ut justo ultrices, facilisis est sed, sagittis quam. Vivamus molestie laoreet augue, at ornare nisi molestie vitae. In sit amet massa ac dui ornare volutpat. Praesent semper velit id nisl mattis, quis fringilla quam laoreet. Vestibulum non congue neque.</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="height15" height="40" style="font-size:1px; line-height:1px;">&nbsp;</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <table cellpadding="0" cellspacing="0" width="100%" style="border-color: #cccccc;">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <td bgcolor="#f5f5f5" style="border:1px solid #ccc;color:#37907c; font-family:Verdana, Genevea, sans-serif; font-weight:600; line-height:normal; font-size:14px; padding:10px 14px">Proveedor</td>
-                                                                                <td bgcolor="#f5f5f5" style="border:1px solid #ccc;color:#37907c; font-family:Verdana, Genevea, sans-serif; font-weight:600; line-height:normal; font-size:14px; padding:10px 14px">Tipo de suministro</td>
-                                                                                <td bgcolor="#f5f5f5" style="border:1px solid #ccc;color:#37907c; font-family:Verdana, Genevea, sans-serif; font-weight:600; line-height:normal; font-size:14px; padding:10px 14px">Tamaño de la empresa</td>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <body>
-                                                                            <tr>
-                                                                                <td style="border:1px solid #ccc;color:#7c7c7c;font-family:Verana, Geneva, sans-serif; font-weight:300; line-height:normal; padding:10px 14px;">Cognox S.A.S</td>
-                                                                                <td style="border:1px solid #ccc;color:#7c7c7c;font-family:Verana, Geneva, sans-serif; font-weight:300; line-height:normal; padding:10px 14px;">11</td>
-                                                                                <td style="border:1px solid #ccc;color:#7c7c7c;font-family:Verana, Geneva, sans-serif; font-weight:300; line-height:normal; padding:10px 14px;">Pyme</td>
-                                                                            </tr>
-                                                                        </body>
-                                                                    </table>
+                                                                <td style="color: #7c7c7c; font-family: Verdana, Geneva, sans-serif; font-weight: 300; font-size: 14px; line-height: 23px;">
+                                                                    [MESSAGE_HERE]
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="height15" height="40" style="font-size:1px; line-height:1px;">&nbsp;</td>
                                                             </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <table cellpadding="0" cellspacing="0" width="100%">
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td style="text-align: center;"><a href="#"><img src="btn-continuar.png" alt="" title="" /></a></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="height15" height="40" style="font-size:1px; line-height:1px;">&nbsp;</td>
-                                                            </tr>
+                                                            [TEMPLATE_BY_TABLE_DETAIL]
+                                                            
+                                                            [TEMPLATE_BY_BUTTON]
                                                         </tbody>
                                                     </table>
                                                 </td>
@@ -293,7 +263,7 @@
                     <table align="center" border="0" cellpadding="0" cellspacing="0" class="main_table" style="table-layout:fixed;width:600px;min-width:640px;" width="640">
                         <tbody>
                             <tr>
-                                <td><img src="footer.png" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
+                                <td><img src="[FOOTER]" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
                             </tr>
                         </tbody>
                     </table>

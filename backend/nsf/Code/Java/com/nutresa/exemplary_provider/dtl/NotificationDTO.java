@@ -6,7 +6,9 @@ import com.google.gson.annotations.Expose;
 
 public class NotificationDTO extends MasterDTO {
     @Expose
-    private String banner;
+    private String idBanner;
+    @Expose
+    private String idFooter;
     @Expose
     private String subject;
     @Expose
@@ -15,14 +17,6 @@ public class NotificationDTO extends MasterDTO {
     private List<String> withCopy;
     @Expose
     private String alias;
-
-    public String getBanner() {
-        return banner;
-    }
-
-    public void setBanner(String banner) {
-        this.banner = banner;
-    }
 
     public String getSubject() {
         return subject;
@@ -52,4 +46,20 @@ public class NotificationDTO extends MasterDTO {
         return alias;
     }
 
+    public String getIdBanner() {
+        return idBanner;
+    }
+
+    public void setIdBanner(String idBanner) {
+        this.idBanner = idBanner;
+    }
+
+    public String getIdFooter() {
+        return idFooter;
+    }
+
+    public void setIdFooter(String idFooter) {
+        this.idFooter = idFooter;
+    }
+    
 }

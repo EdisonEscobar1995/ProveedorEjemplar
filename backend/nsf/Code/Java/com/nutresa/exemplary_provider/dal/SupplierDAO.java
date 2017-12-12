@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.dal;
 
+import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 import org.openntf.domino.View;
 
@@ -23,6 +24,24 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         }
 
         return supplier;
+    }
+
+    public String getPassword(SupplierDTO supplier) throws HandlerGenericException {
+        String response = "";
+        try {
+            View vwSystem = getDatabase().getView("vwSystems");
+            Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
+            Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("namesPathApplication"));
+            View vwNames = namesDatabase.getView("($Users)");
+            Document docNames = vwNames.getFirstDocumentByKey(supplier.getNit(), true);
+            if(null != docNames){
+                response = docNames.getItemValueString("Comment");
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+        
+        return response;
     }
 
 }

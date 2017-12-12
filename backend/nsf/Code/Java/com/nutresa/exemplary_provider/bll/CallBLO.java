@@ -26,7 +26,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         suppliers = supplierByCallBLO.getSuppliersByCallDontInvited(idCall);
         for (SupplierDTO supplier : suppliers) {
             NotificationBLO notification = new NotificationBLO();
-            notification.sendInvitation(supplier.getEmails());
+            notification.sendInvitation(supplier);
             supplierByCallBLO.markToInvited(supplier.getId(), idCall);
         }
 

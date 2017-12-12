@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <agent name='Alias' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8'
- replicaid='052581C9005F029D' hide='v3' publicaccess='false' designerversion='8.5.3'>
-<noteinfo noteid='a99a' unid='3AC2A9BA2D3F9C8C052581E4006CA575' sequence='16'>
-<created><datetime>20171126T144642,45-05</datetime></created>
-<modified><datetime>20171206T154502,64-05</datetime></modified>
-<revised><datetime>20171206T154502,63-05</datetime></revised>
-<lastaccessed><datetime>20171206T154502,64-05</datetime></lastaccessed>
-<addedtofile><datetime>20171126T144642,46-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
-<designchange><datetime>20171206T154502,62-05</datetime></designchange>
+ replicaid='052581DB006A5865' hide='v3' publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='8b2' unid='D4E074F6424067ED052581E40068F38F' sequence='25'>
+<created><datetime>20171126T140620,95-05</datetime></created>
+<modified><datetime>20171212T141219,85-05</datetime></modified>
+<revised><datetime>20171212T141219,84-05</datetime></revised>
+<lastaccessed><datetime>20171212T141219,85-05</datetime></lastaccessed>
+<addedtofile><datetime>20171126T140621,13-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<designchange><datetime>20171212T141219,73-05</datetime></designchange>
 <trigger type='actionsmenu'/>
 <documentset type='selected'/><code event='action'>
-<simpleaction action='runformula'><formula>FIELD invitedToCall := "0";
-FIELD lockedByModification :="1";
-FIELD participateInCall := "1";
-FIELD oldIdCompanySize := "D24D557FA7BFA01A052581E00083D264";
-SELECT @All</formula></simpleaction></code></agent>
+<simpleaction action='runformula'><formula>FIELD idBanner := "26B52AAAE37F508E052580C10075A914";
+FIELD idFooter := "26B52AAAE37F508E052580C10075A914";
+SELECT @All</formula></simpleaction></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20171212T141219,74-05</datetime></agentmodified></rundata></agent>
 
