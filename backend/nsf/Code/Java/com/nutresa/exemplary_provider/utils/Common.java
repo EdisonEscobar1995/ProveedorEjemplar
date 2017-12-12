@@ -128,7 +128,6 @@ public class Common {
     public static String getHostName() {
         ExternalContext externalContext = getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        // TODO quitar el puerto
         return "http" + (request.isSecure() ? "s" : "") + "://" + request.getServerName();
     }
 
