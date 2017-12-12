@@ -40,7 +40,6 @@ public abstract class GenericDAO<T> {
     protected static final String PREFIX_VIEW = "vw";
     protected static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
     protected static final String DEBUG_FTSEARCH_MESSAGE = "FTsearch in %s, parameters %s";
-    
 
     protected String indexName;
     protected Map<String, View> indexView = new HashMap<String, View>();
@@ -192,7 +191,7 @@ public abstract class GenericDAO<T> {
                 list.add((T) this.castDocument(document));
             }
         }
-        
+
         return list;
     }
 
@@ -391,6 +390,10 @@ public abstract class GenericDAO<T> {
     public Database getDatabase() {
         return database;
     }
+    
+    public Session getSession() {
+        return session;
+    }
 
     protected String getNameUserInSession() {
         return session.getEffectiveUserName();
@@ -531,5 +534,4 @@ public abstract class GenericDAO<T> {
             translator = TranslationBLO.getInstance().getTranslator();
         }
     }
-    
 }
