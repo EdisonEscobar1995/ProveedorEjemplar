@@ -231,7 +231,6 @@ class Question extends Component {
                     columns.map(column => (
                       (
                         <Column
-                          className="hola"
                           width={column.width}
                           title={column.title}
                           key={column.key}

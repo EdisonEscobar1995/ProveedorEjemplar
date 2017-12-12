@@ -163,14 +163,45 @@ function getDataDimensionsBySuplySuccess(dimensions) {
   };
 }
 
-function getDataQuestionsByDimensionSuccess(idDimension, dimensions, data) {
-  const { criterion, questions } = data;
+const validateAnswer = (question, questions) => {
+  if (question.type === 'Cerrada' && question.answer.length > 0) {
+    return questions.filter(item => question.answer[0].idOptionSupplier === item.dependOfOptionId);
+  }
+  return [];
+};
+
+const searchRecursive = (actualQuestion, filteredQuestion, allQuestions, visibleQuestions) => {
+  let visibles = visibleQuestions;
+  visibles.push(actualQuestion);
+  filteredQuestion.forEach((actual) => {
+    const filtered = validateAnswer(actual, allQuestions);
+    visibles = searchRecursive(actual, filtered, allQuestions, visibles);
+  });
+  return visibles;
+};
+
+const showQuestions = (questions) => {
+  let visibleQuestions = [];
+  questions.forEach((question) => {
+    if (question.dependOfOptionId === '') {
+      const filteredDependency = validateAnswer(question, questions);
+      visibleQuestions = searchRecursive(question, filteredDependency, questions, visibleQuestions);
+    }
+  });
+  return visibleQuestions;
+};
+
+const getDataQuestionsByDimensionSuccess = (idDimension, dimensions, data) => {
+  const { questions } = data;
+  const showedQuestions = showQuestions(questions);
+  const { criterion } = data;
   let result = [];
   if (criterion.length > 0) {
     result = criterion.map(criteria => (
       {
         ...criteria,
-        questions: questions.filter(question => question.idCriterion === criteria.id),
+        questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
+        allQuestions: questions.filter(question => question.idCriterion === criteria.id),
       }
     ));
   }
@@ -179,15 +210,17 @@ function getDataQuestionsByDimensionSuccess(idDimension, dimensions, data) {
     result.unshift({
       name: '',
       id: 1,
-      questions: noCriterianQuestion,
+      questions: showedQuestions.filter(question => question.idCriterion === ''),
+      allQuestions: noCriterianQuestion,
     });
   }
-  dimensions.filter(item => item.id === idDimension)[0].criterions = result;
+  dimensions.find(item => item.id === idDimension).criterions = result;
   return {
     type: GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
     dimensions,
   };
-}
+};
+
 function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
@@ -197,11 +230,15 @@ function saveDataCallSuccess(call) {
 }
 function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
   const allDimensions = [...dimensions];
-  const actualDimension = allDimensions.filter(dimension => dimension.id === idDimension)[0];
+  const actualDimension = allDimensions.find(dimension => dimension.id === idDimension);
   const actualCriterion = actualDimension.criterions
-    .filter(criteria => criteria.id === idCriterion)[0];
-  const actualQuestion = actualCriterion.questions
-    .filter(question => question.id === answer.idQuestion)[0];
+    .find(criteria => criteria.id === idCriterion);
+  const actualIndex = actualCriterion.questions
+    .findIndex(question => question.id === answer.idQuestion);
+  const dependencyQuestions = actualCriterion.allQuestions
+    .filter(question => answer.idOptionSupplier === question.dependOfOptionId);
+  actualCriterion.questions.splice(actualIndex + 1, 0, ...dependencyQuestions);
+  const actualQuestion = actualCriterion.questions[actualIndex];
   actualQuestion.answer.push(answer);
   if (actualQuestion.errors) {
     if (answer.idOptionSupplier || answer.responseSupplier) {
