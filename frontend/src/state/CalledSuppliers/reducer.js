@@ -41,11 +41,11 @@ function calledSuppliersApp(state = initialState, action) {
           ...state.data,
           suppliers: state.data.suppliers.map((item) => {
             let visible = true;
-            if (action.data.sapCode !== '' && !item.sapCode.toLowerCase().includes(action.data.sapCode)) {
+            if (action.data.sapCode !== '' && !item.sapCode.toLowerCase().includes(action.data.sapCode.toLowerCase())) {
               visible = false;
-            } else if (action.data.nit !== '' && !item.nit.toLowerCase().includes(action.data.nit)) {
+            } else if (action.data.nit !== '' && !item.nit.toLowerCase().includes(action.data.nit.toLowerCase())) {
               visible = false;
-            } else if (action.data.supplier !== '' && !item.businessName.toLowerCase().includes(action.data.supplier)) {
+            } else if (action.data.supplier !== '' && !item.businessName.toLowerCase().includes(action.data.supplier.toLowerCase())) {
               visible = false;
             }
             return {

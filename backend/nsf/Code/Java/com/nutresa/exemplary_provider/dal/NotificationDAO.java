@@ -46,7 +46,6 @@ public class NotificationDAO extends GenericDAO<NotificationDTO> {
             Document docFiles = vwFiles.getFirstDocumentByKey(idResource, true);
 
             if (null != docFiles) {
-                // TODO eliminar puerto
                 response = host + "/" + filesPathApplication + "/0/" + docFiles.getUniversalID() + "/$FILE" + "/"
                         + getFileName(docFiles);
             }

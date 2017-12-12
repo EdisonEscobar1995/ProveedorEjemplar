@@ -129,7 +129,7 @@ public class Common {
         ExternalContext externalContext = getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         // TODO quitar el puerto
-        return "http" + (request.isSecure() ? "s" : "") + "://" + request.getServerName() + ":90";
+        return "http" + (request.isSecure() ? "s" : "") + "://" + request.getServerName();
     }
 
     public static String getIdsFromList(List<Object> list) {
