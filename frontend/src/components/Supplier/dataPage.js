@@ -428,6 +428,7 @@ function generalInfo(fields) {
           label: 'Cargo',
           key: 'jobPosition',
           value: jobPosition,
+          required: true,
           disabled,
         },
         {
