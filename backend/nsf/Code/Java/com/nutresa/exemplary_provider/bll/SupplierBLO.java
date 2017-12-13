@@ -126,7 +126,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     public SupplierDTO sendInvitation(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         NotificationBLO notification = new NotificationBLO();
-        notification.sendInvitation(supplier.getEmails());
+        notification.sendInvitation(supplier);
         return supplierDAO.get(supplier.getId());
     }
 
@@ -135,9 +135,15 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         SupplierDAO supplierDAO = new SupplierDAO();
         SupplierDTO supplier = supplierDAO.getSupplierInDirectory();
-        if (null != supplier && null != supplierByCallBLO.get(supplier.getId())) {
+        if (null != supplier && null != supplierByCallBLO.getBy("idSupplier", supplier.getId())) {
             response = true;
         }
         return response;
     }
+
+    public String getPassword(SupplierDTO supplier) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        return supplierDAO.getPassword(supplier);
+    }
+
 }

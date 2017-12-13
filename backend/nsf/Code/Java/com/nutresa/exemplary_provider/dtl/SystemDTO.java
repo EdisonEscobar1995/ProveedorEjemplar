@@ -28,6 +28,8 @@ public class SystemDTO {
     @Expose
     private String supplierPathApplication;
     @Expose
+    private String filesPathApplication;
+    @Expose
     private short uploadMaxFilesize;
     @Expose
     private List<String> uploadExtensions;
@@ -138,6 +140,14 @@ public class SystemDTO {
 
     public String getNamesPathApplication() {
         return namesPathApplication;
+    }
+
+    public void setFilesPathApplication(String filesPathApplication) {
+        this.filesPathApplication = filesPathApplication;
+    }
+
+    public String getFilesPathApplication() {
+        return filesPathApplication;
     }
 
 }

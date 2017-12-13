@@ -1,10 +1,13 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openntf.domino.email.DominoEmail;
 
+import com.nutresa.exemplary_provider.bll.TranslationBLO.Dictionary;
 import com.nutresa.exemplary_provider.dal.NotificationDAO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
 import com.nutresa.exemplary_provider.dtl.NotificationDTO;
@@ -31,9 +34,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
-            String pathApplication = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
-            notification.setMessage(notification.getMessage().concat(buildLink(pathApplication, "Link de consulta")));
-            sendNotification(sendTo, notification);
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
+            notification.setMessage(notification.getMessage());
+            sendNotification(sendTo, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -49,22 +52,26 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
-            notification.setMessage(notification.getMessage().concat(buildDetailUserCompletedSurvey(idSupplier)));
-            sendNotification(sendTo, notification);
+            notification.setMessage(notification.getMessage());
+            sendNotification(sendTo, notification, true, buildDetailUserCompletedSurvey(idSupplier), false, null);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
     }
 
-    private String buildDetailUserCompletedSurvey(String idSupplier) throws HandlerGenericException {
-        String detail = "<table><tr><th>Proveedor</th><th>Suministro</th><th>Tamaño de empresa</th></tr><tr><td>%s</td><td>%s</td><td>%s</td></tr></table>";
+    private Map<String, String> buildDetailUserCompletedSurvey(String idSupplier) throws HandlerGenericException {
+        Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notifications");
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO supplier = supplierBLO.get(idSupplier);
         SupplyBLO supplyBLO = new SupplyBLO();
         SupplyDTO supply = supplyBLO.get(supplier.getIdSupply());
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         CompanySizeDTO companySize = companySizeBLO.get(supplier.getIdCompanySize());
-        return String.format(detail, supplier.getBusinessName(), supply.getName(), companySize.getName());
+        Map<String, String> detail = new HashMap<String, String>();
+        detail.put(dictionary.get("COMPANY_SIZE"), companySize.getName());
+        detail.put(dictionary.get("SUPPLY"), supply.getName());
+        detail.put(dictionary.get("SUPPLIER"), supplier.getBusinessName());
+        return detail;
     }
 
     private List<UserDTO> getUsersByRolName(String nameRol) throws HandlerGenericException {
@@ -82,11 +89,15 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     }
 
     @SuppressWarnings("deprecation")
-    private void sendNotification(List<String> sendTo, NotificationDTO notification) throws HandlerGenericException {
+    private void sendNotification(List<String> sendTo, NotificationDTO notification, boolean requireTableDetail,
+            Map<String, String> dataDetail, boolean requireButton, String linkButton) throws HandlerGenericException {
+        NotificationDAO notificationDAO = new NotificationDAO();
         try {
             StringBuilder body = new StringBuilder();
             DominoEmail email = new DominoEmail();
-            body.append(TemplateMail.buildMessage(notification.getMessage()));
+            body.append(TemplateMail.buildMessage(notification.getMessage(), requireTableDetail, dataDetail,
+                    requireButton, linkButton, notificationDAO.getPublicResource(notification.getIdBanner()),
+                            notificationDAO.getPublicResource(notification.getIdFooter())));
             email.setTo(sendTo);
             List<String> withCopy = notification.getWithCopy();
             if (withCopy != null && !withCopy.isEmpty()) {
@@ -106,25 +117,29 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         try {
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
-            String pathApplication = Common.buildPathResource() + "/dist/index.html";
-            notification.setMessage(notification.getMessage().concat(buildLink(pathApplication, "Continuar encuesta")));
-            sendNotification(email, notification);
+            notification.setMessage(notification.getMessage());
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html";
+            sendNotification(email, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
 
     }
 
-    private String buildLink(String url, String label) {
-        return "<a href=" + url + ">" + label + "</a>";
-    }
-
-    public void sendInvitation(List<String> emails) throws HandlerGenericException {
-        NotificationDAO notificationDAO = new NotificationDAO();
-        String pathApplication = Common.buildPathResource() + "/dist/index.html";
-        NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
-        notification.setMessage(notification.getMessage().concat(buildLink(pathApplication, "Realizar encuesta")));
-        sendNotification(emails, notification);
+    public void sendInvitation(SupplierDTO supplier) throws HandlerGenericException {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        String passwordUser = supplierBLO.getPassword(supplier);
+        if (!passwordUser.isEmpty()) {
+            Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
+            Map<String, String> detail = new HashMap<String, String>();
+            detail.put(dictionary.get("USER"), supplier.getNit());
+            detail.put(dictionary.get("PASSWORD"), passwordUser);
+            NotificationDAO notificationDAO = new NotificationDAO();
+            NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+            notification.setMessage(notification.getMessage());
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html";
+            sendNotification(supplier.getEmails(), notification, true, detail, true, linkOfButton);
+        }
     }
 
 }

@@ -47,7 +47,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             rols = rolBLO.getAllBy("id", Common.getIdsFromList(idRols));
         } else {
             if (supplierBLO.supplierWasInCall()) {
-                rols = rolBLO.getAllBy("name", "SUPPLIER");
+                rols = rolBLO.getAllBy("shortName", "SUPPLIER");
             }
         }
         return rols;

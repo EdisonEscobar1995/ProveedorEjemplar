@@ -7,8 +7,10 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import com.nutresa.exemplary_provider.dal.DictionaryDAO;
 import com.nutresa.exemplary_provider.dal.TranslationDAO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.DictionaryDTO;
 import com.nutresa.exemplary_provider.dtl.TranslationDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -16,9 +18,10 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
 
     private static TranslationBLO instance = null;
     private Map<String, HashMap<String, String>> translationTable = new HashMap<String, HashMap<String, String>>();
+    private Map<String, HashMap<String, String>> dictionaryTable = new HashMap<String, HashMap<String, String>>();
     private final static Translator cleanTranslator = new Translator();
     private final String defaultLanguage = "es";
-    private String language = defaultLanguage; 
+    private String language = defaultLanguage;
     
     public TranslationBLO() {
         super(TranslationDAO.class);
@@ -45,6 +48,20 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         translationTable.put(language + "_" + entity, entityTranslations);
     }
     
+    protected void loadDictionary(String component) throws HandlerGenericException {
+        Map<String, String> filter = new HashMap<String, String>();
+        DictionaryDAO dictionaryDAO = new DictionaryDAO();
+        
+        filter.put("component", component);
+        List<DictionaryDTO> listDictionary = dictionaryDAO.getAllBy(filter);
+        
+        HashMap<String, String> componentDictionary = new HashMap<String, String>();
+        for (DictionaryDTO itemDictionary : listDictionary) {
+            componentDictionary.put(itemDictionary.getName(), itemDictionary.getLabel());
+        }
+        dictionaryTable.put(component, componentDictionary);
+    }
+    
     public Translator getTranslator(String language, String entity) {
         if (!translationTable.containsKey(language + "_" + entity)) {
             try {
@@ -60,7 +77,19 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     public Translator getTranslator() {
         return cleanTranslator;
     }
-    
+
+    public Dictionary getDictionary(String component) {
+        if (!dictionaryTable.containsKey(component)) {
+            try {
+                loadDictionary(component);
+            } catch (HandlerGenericException exception) {
+                // TODO guardar la excepcion
+                exception.printStackTrace();
+            }
+        }
+        return new Dictionary(dictionaryTable.get(component));
+    }
+
     public String setLanguage(String language) {
         language = language.toLowerCase();
         if (null != language && ("en".equals(language) || "es".equals(language))) {
@@ -135,4 +164,27 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         }
 
     }
+    
+    static public class Dictionary {
+
+        private HashMap<String, String> dictionary = null;
+
+        protected Dictionary(HashMap<String, String> dictionary) {
+            this.dictionary = dictionary;
+        }
+
+        public boolean isEmpty() {
+            return null == dictionary || dictionary.size() == 0;
+        }
+
+        public boolean hasTranslation(String name) {
+            return !isEmpty() && dictionary.containsKey(name);
+        }
+
+        public String get(String name) {
+            return hasTranslation(name) ? dictionary.get(name) : name;
+        }
+
+    }
+    
 }

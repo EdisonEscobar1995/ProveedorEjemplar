@@ -56,7 +56,7 @@ public class Common {
 
         return field;
     }
-    
+
     public static <T> Object getFieldValue(T dto, String name) throws HandlerGenericException {
         Object response = null;
         try {
@@ -117,12 +117,18 @@ public class Common {
     }
 
     public static String buildPathResource() {
+        return getHostName() + "/" + getExternalContext().getRequestContextPath();
+    }
+
+    private static ExternalContext getExternalContext() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = facesContext.getExternalContext();
+        return facesContext.getExternalContext();
+    }
+
+    public static String getHostName() {
+        ExternalContext externalContext = getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        String host = request.getServerName();
-        String path = externalContext.getRequestContextPath();
-        return "http" + (request.isSecure() ? "s" : "") + "://" + host + path;
+        return "http" + (request.isSecure() ? "s" : "") + "://" + request.getServerName();
     }
 
     public static String getIdsFromList(List<Object> list) {
@@ -157,16 +163,16 @@ public class Common {
     private static boolean isValidListIds(List<Object> list, int size) {
         return (null == list || 0 == size || (!list.get(0).getClass().isPrimitive() && !(list.get(0) instanceof String)));
     }
-    
+
     public static String getNamespace(Class<?> clazz) {
         String name = clazz.getName();
         String className = clazz.getSimpleName();
         return name.substring(0, name.length() - className.length());
     }
-    
+
     @SuppressWarnings("unchecked")
     public static <T> Map<String, List<Object>> getDtoFields(List<T> data, String[] idFieldsNames, Class clazz)
-        throws HandlerGenericException {
+            throws HandlerGenericException {
         Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
         Map<String, Field> listFields = new HashMap<String, Field>();
 

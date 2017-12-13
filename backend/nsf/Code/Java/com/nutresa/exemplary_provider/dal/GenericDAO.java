@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dal;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +41,6 @@ public abstract class GenericDAO<T> {
     protected static final String PREFIX_VIEW = "vw";
     protected static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
     protected static final String DEBUG_FTSEARCH_MESSAGE = "FTsearch in %s, parameters %s";
-    
 
     protected String indexName;
     protected Map<String, View> indexView = new HashMap<String, View>();
@@ -192,7 +192,7 @@ public abstract class GenericDAO<T> {
                 list.add((T) this.castDocument(document));
             }
         }
-        
+
         return list;
     }
 
@@ -391,6 +391,10 @@ public abstract class GenericDAO<T> {
     public Database getDatabase() {
         return database;
     }
+    
+    public Session getSession() {
+        return session;
+    }
 
     protected String getNameUserInSession() {
         return session.getEffectiveUserName();
@@ -408,7 +412,7 @@ public abstract class GenericDAO<T> {
             List<View> views = database.getViews(null == defaultView ? entity : defaultView);
             for (View view : views) {
                 ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
-                Set<String> parameterKeys = new HashMap<String, String>(parameters).keySet();
+                Set<String> parameterKeys = new LinkedHashMap<String, String>(parameters).keySet();
                 if (validateColumnsInView(columns, parameterKeys)) {
                     indexedView = view;
                     break;
@@ -435,6 +439,8 @@ public abstract class GenericDAO<T> {
             columnName = column.getTitle();
             if (keys.contains(columnName)) {
                 indexColumns[i++] = columnName;
+            } else {
+                break;
             }
         }
         if (i == keys.size()) {
@@ -531,5 +537,4 @@ public abstract class GenericDAO<T> {
             translator = TranslationBLO.getInstance().getTranslator();
         }
     }
-    
 }

@@ -98,9 +98,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
             if (!supplierByCall.getOldIdCompanySize().equals(currentSupplierByCall.getOldIdCompanySize())) {
+                supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
                 currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(),
                         supplier.getIdCompanySize()).getId());
-                supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
                 supplierBLO.update(supplier);
                 answerBLO.deleteAnswers(currentSupplierByCall.getId());
             }
