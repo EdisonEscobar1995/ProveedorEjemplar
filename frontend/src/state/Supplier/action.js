@@ -170,6 +170,20 @@ const validateAnswer = (question, questions) => {
   return [];
 };
 
+const removeRecursive = (
+  actualQuestion, actualIndex, filteredQuestion, visibleQuestions, remove) => {
+  let visibles = [...visibleQuestions];
+  if (remove) {
+    visibles.splice(actualIndex, 1);
+  }
+  filteredQuestion.forEach((actual) => {
+    const index = visibles.findIndex(visiable => actual.id === visiable.id);
+    const filtered = validateAnswer(actual, visibleQuestions);
+    visibles = removeRecursive(actual, index, filtered, visibles, true);
+  });
+  return visibles;
+};
+
 const searchRecursive = (actualQuestion, filteredQuestion, allQuestions, visibleQuestions) => {
   let visibles = visibleQuestions;
   visibles.push(actualQuestion);
@@ -239,7 +253,15 @@ function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
     .filter(question => answer.idOptionSupplier === question.dependOfOptionId);
   actualCriterion.questions.splice(actualIndex + 1, 0, ...dependencyQuestions);
   const actualQuestion = actualCriterion.questions[actualIndex];
-  actualQuestion.answer.push(answer);
+  const filteredDependency = validateAnswer(actualQuestion, actualCriterion.questions);
+  actualCriterion.questions = removeRecursive(
+    actualQuestion,
+    actualIndex,
+    filteredDependency,
+    actualCriterion.questions,
+    false,
+  );
+  actualQuestion.answer[0] = answer;
   if (actualQuestion.errors) {
     if (answer.idOptionSupplier || answer.responseSupplier) {
       actualQuestion.errors.answers = false;
