@@ -25,6 +25,15 @@ const defaultMoneyType = [
   },
 ];
 
+const getAnios = () => {
+  const anios = [];
+  const date = new Date();
+  for (let i = 1950; i <= date.getFullYear(); i += 1) {
+    anios.push({ id: i, name: i });
+  }
+  return anios;
+};
+
 function getValueOption(value) {
   if (typeof (value) === 'boolean') {
     return value.toString();
@@ -225,10 +234,11 @@ function generalInfo(fields) {
         },
         {
           span: 6,
-          type: 'input',
+          type: 'select',
           label: 'Año de establecimiento',
           key: 'yearOfEstablishment',
           value: yearOfEstablishment,
+          options: getAnios(),
           disabled,
         },
       ],

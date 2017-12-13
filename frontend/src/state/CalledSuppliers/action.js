@@ -40,10 +40,9 @@ const getFailedRequest = () => ({
 const getCalledSuppliers = id => (dispatch) => {
   requestApi(dispatch, getCalledSuppliersProgress, getCalledSuppliersApi, id)
     .then((response) => {
-      response.data.data.suppliers = response.data.data.suppliers.map((item) => {
-        item.visible = true;
-        return item;
-      });
+      response.data.data.suppliers = response.data.data.suppliers
+        .sort((a, b) => (a.businessName < b.businessName ? -1 : 1))
+        .map(item => ({ ...item, visible: true }));
       const { data } = response.data;
       dispatch(getCalledSuppliersSuccess(data));
     }).catch((err) => {

@@ -41,7 +41,7 @@ import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi } from '../../api/answer';
 import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
-import requestApi, { requestApiNotLoading } from '../../utils/actionUtils';
+import requestApi, { requestApiNotLoading, sortByField } from '../../utils/actionUtils';
 import setMessage from '../Generic/action';
 
 
@@ -57,17 +57,19 @@ function getDataSupplierSuccess(data) {
     call,
     rules,
     supply,
-    companyTypes,
-    companySizes,
-    societyTypes,
-    countries,
-    categories,
-    subcategories,
-    sectors,
-    departments,
-    cities,
     system,
   } = data;
+
+  const companyTypes = sortByField(data.companyTypes, 'name');
+  const companySizes = sortByField(data.companySizes, 'name');
+  const societyTypes = sortByField(data.societyTypes, 'name');
+  const countries = sortByField(data.countries, 'name');
+  const categories = sortByField(data.categories, 'name');
+  const subcategories = sortByField(data.subcategories, 'name');
+  const sectors = sortByField(data.sectors, 'name');
+  const departments = sortByField(data.departments, 'name');
+  const cities = sortByField(data.cities, 'name');
+
   const { principalCustomer } = supplier;
   let { readOnly } = rules;
   readOnly = readOnly || call.lockedByModification;
@@ -170,6 +172,20 @@ const validateAnswer = (question, questions) => {
   return [];
 };
 
+const removeRecursive = (
+  actualQuestion, actualIndex, filteredQuestion, visibleQuestions, remove) => {
+  let visibles = [...visibleQuestions];
+  if (remove) {
+    visibles.splice(actualIndex, 1);
+  }
+  filteredQuestion.forEach((actual) => {
+    const index = visibles.findIndex(visiable => actual.id === visiable.id);
+    const filtered = validateAnswer(actual, visibleQuestions);
+    visibles = removeRecursive(actual, index, filtered, visibles, true);
+  });
+  return visibles;
+};
+
 const searchRecursive = (actualQuestion, filteredQuestion, allQuestions, visibleQuestions) => {
   let visibles = visibleQuestions;
   visibles.push(actualQuestion);
@@ -239,7 +255,15 @@ function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
     .filter(question => answer.idOptionSupplier === question.dependOfOptionId);
   actualCriterion.questions.splice(actualIndex + 1, 0, ...dependencyQuestions);
   const actualQuestion = actualCriterion.questions[actualIndex];
-  actualQuestion.answer.push(answer);
+  const filteredDependency = validateAnswer(actualQuestion, actualCriterion.questions);
+  actualCriterion.questions = removeRecursive(
+    actualQuestion,
+    actualIndex,
+    filteredDependency,
+    actualCriterion.questions,
+    false,
+  );
+  actualQuestion.answer[0] = answer;
   if (actualQuestion.errors) {
     if (answer.idOptionSupplier || answer.responseSupplier) {
       actualQuestion.errors.answers = false;
@@ -389,7 +413,7 @@ function getDataCategoryBySuply(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCategoryBySuplyApi, clientData)
       .then((respone) => {
-        const categories = respone.data.data;
+        const categories = sortByField(respone.data.data, 'name');
         dispatch(getDataCategorySuccess(categories));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -400,7 +424,7 @@ function getDataSubCategoryByCategory(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataSubCategoryByCategoryApi, clientData)
       .then((respone) => {
-        const subcategories = respone.data.data;
+        const subcategories = sortByField(respone.data.data, 'name');
         dispatch(getDataSubCategorySuccess(subcategories));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -412,7 +436,7 @@ function getDataDepartmentsByCountry(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataDepartmentsByCountryApi, clientData)
       .then((respone) => {
-        const departsments = respone.data.data;
+        const departsments = sortByField(respone.data.data, 'name');
         dispatch(getDataDepartmentsByCountrySuccess(departsments));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -423,7 +447,7 @@ function getDataCitiesByDepartment(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCitiesByDepartmentApi, clientData)
       .then((respone) => {
-        const cities = respone.data.data;
+        const cities = sortByField(respone.data.data, 'name');
         dispatch(getDataCitiesByDepartmentSuccess(cities));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
