@@ -3,8 +3,6 @@ package com.nutresa.exemplary_provider.api;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 
-import org.openntf.domino.utils.DominoUtils;
-
 import com.ibm.designer.runtime.domino.adapter.ComponentModule;
 import com.ibm.designer.runtime.domino.adapter.IServletFactory;
 import com.ibm.designer.runtime.domino.adapter.ServletMatch;
@@ -39,7 +37,6 @@ public class ServletFactory implements IServletFactory {
                 return new ServletMatch(getWidgetServlet(pathLevels[2]), servletPath, pathInfo);
             }
         } catch (Exception exception) {
-            DominoUtils.handleException(new Throwable(exception));
             return new ServletMatch(module.createServlet(namespace + "Error" + apiSuffix, "Error", null), "", "");
         }
         return new ServletMatch(module.createServlet(namespace + "Error" + apiSuffix, "Error", null), "", "");
