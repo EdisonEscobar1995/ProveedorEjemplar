@@ -1,8 +1,12 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.openntf.domino.ext.Name;
+import org.openntf.domino.ext.Name.NamePartKey;
 
 import com.nutresa.exemplary_provider.dal.UserDAO;
 import com.nutresa.exemplary_provider.dtl.AccessByRolDTO;
@@ -69,6 +73,36 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             }
         }
         return response;
+    }
+
+    public Map<String, Object> getUserContext() throws HandlerGenericException {
+        Map<String, Object> userContext = new LinkedHashMap<String, Object>();
+        UserDTO userInSession = getUserInSession();
+        SupplierBLO supplierBLO = new SupplierBLO();
+        RolBLO rolBLO = new RolBLO();
+        List<DTO> rols = null;
+        if (null != userInSession) {
+            List<Object> idRols = new ArrayList<Object>();
+            idRols.addAll(userInSession.getIdRols());
+            rols = rolBLO.getAllBy("id", Common.getIdsFromList(idRols));
+        } else {
+            if (supplierBLO.supplierWasInCall()) {
+                rols = rolBLO.getAllBy("shortName", "SUPPLIER");
+            }
+        }
+        if(null != rols) {
+            MenuBLO menuBLO = new MenuBLO();
+            UserDAO userDAO = new UserDAO();
+            Name dominoUser = userDAO.getDominoUser(); 
+            Map<String, String> userInfo = new LinkedHashMap<String, String>();
+            userInfo.put("name", dominoUser.getNamePart(NamePartKey.Common));
+            userInfo.put("canonical", dominoUser.getNamePart(NamePartKey.Canonical));
+            
+            userContext.put("userInfo", userInfo);
+            userContext.put("rols", rols);
+            userContext.put("menu", menuBLO.getMenusByRol());
+        }
+        return userContext;
     }
 
 }
