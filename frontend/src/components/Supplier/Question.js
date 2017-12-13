@@ -42,7 +42,8 @@ class Question extends Component {
       idSurvey,
       idQuestion: id,
     };
-    sendAnswer = Object.assign(actualAnswer, sendAnswer);
+    const copy = { ...actualAnswer };
+    sendAnswer = Object.assign(copy, sendAnswer);
     if (fieldName === 'attachment') {
       if (sendAnswer[fieldName]) {
         sendAnswer[fieldName].push(value);
