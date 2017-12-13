@@ -19,8 +19,8 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     private static TranslationBLO instance = null;
     private Map<String, HashMap<String, String>> translationTable = new HashMap<String, HashMap<String, String>>();
     private Map<String, HashMap<String, String>> dictionaryTable = new HashMap<String, HashMap<String, String>>();
-    private final static Translator cleanTranslator = new Translator();
-    private final String defaultLanguage = "es";
+    private static final Translator cleanTranslator = new Translator();
+    private static final String defaultLanguage = "es";
     private String language = defaultLanguage;
     
     public TranslationBLO() {
@@ -68,7 +68,6 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
                 loadTranslation(language, entity);
             } catch (HandlerGenericException exception) {
                 // TODO guardar la excepcion
-                exception.printStackTrace();
             }
         }
         return new Translator(translationTable.get(language + "_" + entity));
@@ -84,7 +83,6 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
                 loadDictionary(component);
             } catch (HandlerGenericException exception) {
                 // TODO guardar la excepcion
-                exception.printStackTrace();
             }
         }
         return new Dictionary(dictionaryTable.get(component));
@@ -118,18 +116,15 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         String clientLanguage = null;
         String response = null;
 
-        if (parameters.containsKey(TranslationDAO.PARAMTER_NAME)) {
-            clientLanguage = parameters.get(TranslationDAO.PARAMTER_NAME);
+        if (parameters.containsKey(TranslationDAO.PARAMETER_NAME)) {
+            clientLanguage = parameters.get(TranslationDAO.PARAMETER_NAME);
             if (!parameters.containsValue("setLanguage")) {
-                parameters.remove(TranslationDAO.PARAMTER_NAME);
+                parameters.remove(TranslationDAO.PARAMETER_NAME);
             }
         } else {
-            if(null != cookies){
-                for (Cookie cookie : cookies) {
-                    if (TranslationDAO.COOKIE_NAME.equalsIgnoreCase(cookie.getName())) {
-                        clientLanguage = cookie.getValue();
-                    }
-                }
+            String cookieLanguage = getCookeLanguageValue(cookies);
+            if (null != cookieLanguage) {
+                clientLanguage = cookieLanguage;
             }
         }
         if (null == clientLanguage) {
@@ -139,7 +134,21 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         return clientLanguage.equals(response) ? response : null;
     }
 
-    static public class Translator {
+    private String getCookeLanguageValue(Cookie[] cookies) {
+        String cookieValue = null;
+        if (null != cookies) {
+            for (Cookie cookie : cookies) {
+                if (TranslationDAO.COOKIE_NAME.equalsIgnoreCase(cookie.getName())) {
+                    cookieValue = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+    public static class Translator {
 
         private HashMap<String, String> translations = null;
 
@@ -165,7 +174,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
 
     }
     
-    static public class Dictionary {
+    public static class Dictionary {
 
         private HashMap<String, String> dictionary = null;
 

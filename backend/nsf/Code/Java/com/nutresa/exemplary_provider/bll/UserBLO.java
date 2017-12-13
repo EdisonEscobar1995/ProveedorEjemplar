@@ -77,19 +77,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
 
     public Map<String, Object> getUserContext() throws HandlerGenericException {
         Map<String, Object> userContext = new LinkedHashMap<String, Object>();
-        UserDTO userInSession = getUserInSession();
-        SupplierBLO supplierBLO = new SupplierBLO();
-        RolBLO rolBLO = new RolBLO();
-        List<DTO> rols = null;
-        if (null != userInSession) {
-            List<Object> idRols = new ArrayList<Object>();
-            idRols.addAll(userInSession.getIdRols());
-            rols = rolBLO.getAllBy("id", Common.getIdsFromList(idRols));
-        } else {
-            if (supplierBLO.supplierWasInCall()) {
-                rols = rolBLO.getAllBy("shortName", "SUPPLIER");
-            }
-        }
+        List<DTO> rols = getRolsByUser();
         if(null != rols) {
             MenuBLO menuBLO = new MenuBLO();
             UserDAO userDAO = new UserDAO();

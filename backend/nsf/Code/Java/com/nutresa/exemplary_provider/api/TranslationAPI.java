@@ -17,10 +17,10 @@ public class TranslationAPI extends GenericAPI<TranslationDTO, TranslationBLO> {
     
     public ServletResponseDTO<String> setLanguage(Map<String, String> parameters) {
         TranslationBLO translationBLO = TranslationBLO.getInstance();
-        String language = translationBLO.setLanguage(parameters.get(TranslationDAO.PARAMTER_NAME));
+        String language = translationBLO.setLanguage(parameters.get(TranslationDAO.PARAMETER_NAME));
         Cookie langCookie = new Cookie(TranslationDAO.COOKIE_NAME, language);
         langCookie.setMaxAge(60 * 60 * 4);        
-        this.response.addCookie(langCookie);
+        this.httpResponse.addCookie(langCookie);
         return new ServletResponseDTO<String>(language);
     }
     

@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,8 +39,8 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class BaseAPI<T> extends DesignerFacesServlet {
 
     protected Class<T> dtoClass;
-    protected HttpServletResponse response;
-    protected HttpServletRequest request;
+    protected HttpServletResponse httpResponse;
+    protected HttpServletRequest httpRequest;
 
     private enum typeRequestMethod {
         GET, POST, OPTIONS
@@ -56,16 +57,16 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         FacesContext facesContext = null;
 
         try {
-            response = (HttpServletResponse) servletResponse;
-            request = (HttpServletRequest) servletRequest;
+            httpResponse = (HttpServletResponse) servletResponse;
+            httpRequest = (HttpServletRequest) servletRequest;
 
-            response.setContentType("application/json; charset=utf-8");
-            response.setHeader("Cache-Control", "no-cache");
-            response.setCharacterEncoding("UTF-8");
-            output = response.getOutputStream();
-            facesContext = this.getFacesContext(request, response);
+            httpResponse.setContentType("application/json; charset=utf-8");
+            httpResponse.setHeader("Cache-Control", "no-cache");
+            httpResponse.setCharacterEncoding("UTF-8");
+            output = httpResponse.getOutputStream();
+            facesContext = this.getFacesContext(httpRequest, httpResponse);
             // Factory.getSession().setSessionType(null);
-            doService(request, response, facesContext, output);
+            doService(httpRequest, httpResponse, facesContext, output);
         } catch (Exception exception) {
             DominoUtils.handleException(new Throwable(exception));
             exception.printStackTrace(new PrintStream(output));
@@ -141,14 +142,14 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     private void getClientLanguage(LinkedHashMap<String, String> parameters) {
-        Locale locale = request.getLocale();
-        Cookie[] cookies = request.getCookies();
+        Locale locale = httpRequest.getLocale();
+        Cookie[] cookies = httpRequest.getCookies();
         TranslationBLO translationBLO = TranslationBLO.getInstance();
         String language = translationBLO.getClientLanguage(parameters, locale, cookies);
         if (null != language) {
             Cookie langCookie = new Cookie(TranslationDAO.COOKIE_NAME, language);
             langCookie.setMaxAge(60 * 60 * 4);
-            this.response.addCookie(langCookie);
+            this.httpResponse.addCookie(langCookie);
         }
     }
 
@@ -163,11 +164,10 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     private boolean validateAccess(List<String> access, String api, String action) {
         boolean response = false;
-        if (access != null) {
-            if (access.contains("*.*") || access.contains(api + ".*") || access.contains("*." + action)
-                || access.contains(api + "." + action)) {
+        String[] accessToCheck = new String[] { "*.*", api + ".*", "*." + action, api + "." + action };
+        
+        if (access != null && access.containsAll(Arrays.asList(accessToCheck))) {
                 response = true;
-            }
         }
         return response;
     }
@@ -216,19 +216,31 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         return (ServletResponseDTO) method.invoke(this, postBody);
     }
 
-    protected T getPostBody(ServletInputStream InputStream) throws IOException {
+    protected T getPostBody(ServletInputStream inputStream) throws HandlerGenericException {
         StringBuilder stringBuilder = new StringBuilder();
         
-        InputStreamReader streamReader = new InputStreamReader(InputStream, "UTF-8");
+        InputStreamReader streamReader = null;
+        try {
+            streamReader = new InputStreamReader(inputStream, "UTF-8");
 
-        CharBuffer charBuffer = CharBuffer.allocate(1024);
-        while (streamReader.read(charBuffer) > 0) {
-            charBuffer.flip();
-            stringBuilder.append(charBuffer.toString());
-            charBuffer.clear();
+            CharBuffer charBuffer = CharBuffer.allocate(1024);
+            while (streamReader.read(charBuffer) > 0) {
+                charBuffer.flip();
+                stringBuilder.append(charBuffer.toString());
+                charBuffer.clear();
+            }
+        } catch (IOException exception) {
+            throw new HandlerGenericException(exception); 
+        } finally {
+            if (null != streamReader) {
+                try {
+                    streamReader.close();
+                } catch (IOException exception) {
+                    // TODO almacenar en un log para no lanzar una exception
+                    throw new HandlerGenericException(exception);
+                }
+            }
         }
-        streamReader.close();
-        
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
         .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
         

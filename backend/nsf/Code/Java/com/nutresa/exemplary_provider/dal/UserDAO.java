@@ -45,8 +45,7 @@ public class UserDAO extends GenericDAO<UserDTO> {
     
     public Name getDominoUser() throws HandlerGenericException {
         Session currSess = Factory.getSession();
-        Name currName = currSess.createName(currSess.getEffectiveUserName());
-        return currName;
+        return currSess.createName(currSess.getEffectiveUserName());
     }
 
 }
