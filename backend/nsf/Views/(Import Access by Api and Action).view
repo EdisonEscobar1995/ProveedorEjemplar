@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Import Access by Api and Action)' alias='ImportAccessByApiAndAction'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='3fb96' unid='6A9C62B3DE84B08F052581F500022FB5' sequence='4'>
-<created><datetime>20171212T192352,85-05</datetime></created>
-<modified><datetime>20171212T192434,32-05</datetime></modified>
-<revised><datetime>20171212T192434,31-05</datetime></revised>
-<lastaccessed><datetime>20171212T192434,32-05</datetime></lastaccessed>
-<addedtofile><datetime>20171212T192352,87-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='b64e' unid='E6A3B279EE96CFCD052581F50055376A' sequence='4'>
+<created><datetime>20171213T103047,46-05</datetime></created>
+<modified><datetime>20171214T134929,93-05</datetime></modified>
+<revised><datetime>20171214T134929,92-05</datetime></revised>
+<lastaccessed><datetime>20171214T134929,93-05</datetime></lastaccessed>
+<addedtofile><datetime>20171213T103047,49-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frAccess"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

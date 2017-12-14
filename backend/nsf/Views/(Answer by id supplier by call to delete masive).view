@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(Surveys by supply and companysize)' alias='Survey|vwSurveysBySupplyAndCompanySize'
+<view name='(Answer by id supplier by call to delete masive)' alias='Answer|vwAnswersByIdSupplierByCallToDeleteMasive'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,24 +9,24 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='856' unid='F27650EB8880EC78052581E3007B0C20' sequence='25'>
-<created><datetime>20171125T172400,32-05</datetime></created>
-<modified><datetime>20171214T134931,64-05</datetime></modified>
-<revised><datetime>20171214T134931,63-05</datetime></revised>
-<lastaccessed><datetime>20171214T134931,64-05</datetime></lastaccessed>
-<addedtofile><datetime>20171125T172400,70-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='b706' unid='317BDAD0798A0B4F052581F60059FE31' sequence='4'>
+<created><datetime>20171214T112257,77-05</datetime></created>
+<modified><datetime>20171214T134855,45-05</datetime></modified>
+<revised><datetime>20171214T134855,44-05</datetime></revised>
+<lastaccessed><datetime>20171214T134855,45-05</datetime></lastaccessed>
+<addedtofile><datetime>20171214T112257,78-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frSurvey"</formula></code><code
+ event='selection'><formula>SELECT form = "frAnswer"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
 </lotusscript></code>
-<column sort='ascending' hidedetailrows='false' itemname='idSupply' width='17.2500'
+<column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='idSupply'><font size='9pt' style='bold'/></columnheader></column>
-<column sort='ascending' hidedetailrows='false' itemname='idCompanySize' width='10'
- resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
- showaslinks='false'><columnheader title='idCompanySize'><font size='9pt'
- style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='id'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idSupplierByCall'
+ width='16.5000' resizable='true' separatemultiplevalues='false' sortnoaccent='false'
+ sortnocase='true' showaslinks='false'><columnheader title='idSupplierByCall'><font
+ size='9pt' style='bold'/></columnheader></column></view>
 
