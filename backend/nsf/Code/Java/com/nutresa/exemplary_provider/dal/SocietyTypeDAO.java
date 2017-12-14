@@ -6,6 +6,7 @@ public class SocietyTypeDAO extends GenericDAO<SocietyTypeDTO> {
 
     public SocietyTypeDAO() {
         super(SocietyTypeDTO.class);
+        translatable = true;
     }
 
 }

@@ -223,19 +223,23 @@ public abstract class GenericDAO<T> {
                 List<Field> fields = new ArrayList();
                 for (Field field : Common.getAllFields(fields, this.dtoClass)) {
                     field.setAccessible(true);
-                    Object value;
-                    if (null != translator && translator.hasTranslation(id, field.getName())) {
-                        value = translator.getValue(id, field.getName());
-                    } else {
-                        value = getValue(document, field.getName(), field.getType());
-                    }
-                    field.set(result, value);
+                    field.set(result, getDocumentValue(document, id, field));
                 }
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
         return result;
+    }
+
+    protected Object getDocumentValue(Document document, String id, Field field) {
+        Object value;
+        if (null != translator && translator.hasTranslation(id, field.getName())) {
+            value = translator.getValue(id, field.getName());
+        } else {
+            value = getValue(document, field.getName(), field.getType());
+        }
+        return value;
     }
 
     @SuppressWarnings("unchecked")

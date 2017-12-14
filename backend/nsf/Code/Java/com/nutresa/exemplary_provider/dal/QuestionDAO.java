@@ -16,6 +16,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
 
     public QuestionDAO() {
         super(QuestionDTO.class);
+        translatable = true;
     }
 
     public List<String> getDimensionsBySurvey(String idSurvey) throws HandlerGenericException {

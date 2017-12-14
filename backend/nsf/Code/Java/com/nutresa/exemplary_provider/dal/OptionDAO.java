@@ -13,6 +13,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class OptionDAO extends GenericDAO<OptionDTO> {
     public OptionDAO() {
         super(OptionDTO.class);
+        translatable = true;
     }
 
     public List<OptionDTO> getOptionsByQuestion(String idQuestion) throws HandlerGenericException {
