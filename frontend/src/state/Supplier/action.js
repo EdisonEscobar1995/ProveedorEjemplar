@@ -25,6 +25,7 @@ import {
   FINISH_SURVEY,
   ADD_DIRECT_EMPLOYEES,
   ADD_SUB_EMPLOYEES,
+  SET_SECTOR,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -41,7 +42,7 @@ import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
-import { saveAnswerApi, deleteMasiveAnswersApi } from '../../api/answer';
+import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
 import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
 import requestApi, { requestApiNotLoading, sortByField } from '../../utils/actionUtils';
 import setMessage from '../Generic/action';
@@ -477,7 +478,7 @@ const saveDataCallBySupplier = clientData => (
 );
 
 const deleteAnswers = (dispatch, answers) => (
-  requestApiNotLoading(dispatch, deleteMasiveAnswersApi, { idsToDelete: answers })
+  requestApiNotLoading(dispatch, deleteMassiveAnswersApi, { idsToDelete: answers })
 );
 
 const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
@@ -608,6 +609,12 @@ const setNumberOfSubContratedEmployees = value => (
     value: isNaN(value) ? 0 : parseInt(value, 10),
   }
 );
+const setSector = value => (
+  {
+    type: SET_SECTOR,
+    value,
+  }
+);
 
 export {
   getDataSupplier,
@@ -633,4 +640,5 @@ export {
   finishSurvey,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
+  setSector,
 };

@@ -499,6 +499,7 @@ function comercialInfo(fields) {
     deleteAttachment,
     setNumberOfDirectEmployees,
     setNumberOfSubContratedEmployees,
+    setSector,
   } = fields;
   const {
     idSector,
@@ -523,8 +524,9 @@ function comercialInfo(fields) {
     globalAgreement,
     chemicalSubstance,
     attachedFinancialReport,
+    actualSector,
   } = supplier;
-  const { uploadMaxFilesize, uploadExtensions } = system;
+  const { uploadMaxFilesize, uploadExtensions, otherSectorId } = system;
   const disabled = readOnly;
   return [
     {
@@ -537,6 +539,7 @@ function comercialInfo(fields) {
           key: 'idSector',
           value: idSector,
           options: sectors,
+          handleChange: setSector,
           disabled,
         },
         {
@@ -545,6 +548,8 @@ function comercialInfo(fields) {
           label: '¿Otro cuál?',
           key: 'otherSector',
           value: otherSector,
+          hidden: (actualSector !== otherSectorId),
+          required: true,
           disabled,
         },
         {
