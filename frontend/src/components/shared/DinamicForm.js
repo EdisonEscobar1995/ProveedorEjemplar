@@ -7,7 +7,7 @@ import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
 import Upload from '../shared/Upload';
 import TableForm from '../shared/TableForm';
-import baseUrl from '../../utils/api';
+import { baseUrl } from '../../utils/api';
 
 const { Item } = Form;
 const { Option } = Select;

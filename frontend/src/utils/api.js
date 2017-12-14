@@ -1,14 +1,21 @@
 const NODE_ENV = process.env.NODE_ENV;
+const deployFolder = process.env.REACT_APP_DEPLOY_FOLDER;
 
-let resultUrl = process.env.REACT_APP_URL_API;
+let href = process.env.REACT_APP_URL;
+let pathname = process.env.REACT_APP_PATH;
+let path = href;
 
 if (NODE_ENV !== 'development') {
-  const deployFolder = process.env.REACT_APP_DEPLOY_FOLDER;
-  resultUrl = `${location.pathname.split(deployFolder)[0]}xsp`;
+  href = location.href.split(deployFolder)[0];
+  pathname = location.pathname.split(deployFolder)[0];
+  path = pathname;
 }
 
-const baseUrl = resultUrl;
+const baseUrl = `${path}xsp`;
+const loginUrl = `${href}?login&redirectto=${pathname}${deployFolder}/index.html`;
 
-export const basePath = baseUrl.replace('/xsp', '');
+export {
+  baseUrl,
+  loginUrl,
+};
 
-export default baseUrl;

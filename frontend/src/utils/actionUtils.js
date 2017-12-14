@@ -1,5 +1,5 @@
 import setMessage from '../state/Generic/action';
-import { basePath } from './api';
+import { loginUrl } from './api';
 
 function getMessage(type) {
   switch (type) {
@@ -11,8 +11,10 @@ function getMessage(type) {
       return 'En estos momentos no se encuetran convocatorias abiertas';
     case 'SURVEY_DOES_NOT_EXIST':
       return 'No existe una encuesta para el tipo de suministro y tamaño de encuesta seleccionada';
+    case 'UNAUTHORIZED':
+      return 'Usted no está autorizado para acceder a este sitio';
     default:
-      return 'Ocurrio un error al procesar la peticion';
+      return 'Ocurrio un error al procesar la petición';
   }
 }
 
@@ -23,7 +25,7 @@ function validateResponse(args) {
   try {
     [...args].forEach((element) => {
       if (element.headers['content-type'].toLowerCase().includes('text/html')) {
-        location.href = `${basePath}?login&redirectto=${basePath}dist/index.html`;
+        location.href = loginUrl;
       } else if (!element.data.status) {
         throw new Error(element.data.message);
       }
@@ -43,7 +45,7 @@ const executeApi = (dispatch, apiMethod, clientData) => (
       validateResponse(validateresponse);
       return respone;
     }).catch((err) => {
-      const error = getMessage(err.message);
+      const error = getMessage(err.response.statusText.toUpperCase());
       dispatch(setMessage(error, 'error'));
       throw err;
     })
