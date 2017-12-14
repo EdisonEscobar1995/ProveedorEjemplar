@@ -20,8 +20,8 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     private Map<String, HashMap<String, String>> translationTable = new HashMap<String, HashMap<String, String>>();
     private Map<String, HashMap<String, String>> dictionaryTable = new HashMap<String, HashMap<String, String>>();
     private static final Translator cleanTranslator = new Translator();
-    private static final String defaultLanguage = "es";
-    private String language = defaultLanguage;
+    private static final String DEFAULT_LANGUAGE = "es";
+    private String language = DEFAULT_LANGUAGE;
     
     public TranslationBLO() {
         super(TranslationDAO.class);
@@ -93,7 +93,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         if (null != language && ("en".equals(language) || "es".equals(language))) {
             this.language = language;
         } else {
-            this.language = defaultLanguage;
+            this.language = DEFAULT_LANGUAGE;
         }
         return this.language;
     }
