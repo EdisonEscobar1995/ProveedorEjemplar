@@ -53,6 +53,10 @@ function getDataSupplierProgress() {
   };
 }
 
+function isReadOnly({ lockedByModification, participateInCall }) {
+  return lockedByModification || participateInCall === 'false';
+}
+
 function getDataSupplierSuccess(data) {
   data.supplier.employeesTotal =
   data.supplier.numberOfDirectEmployees +
@@ -78,7 +82,7 @@ function getDataSupplierSuccess(data) {
 
   const { principalCustomer } = supplier;
   let { readOnly } = rules;
-  readOnly = readOnly || call.lockedByModification;
+  readOnly = readOnly || isReadOnly(call);
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
@@ -248,7 +252,7 @@ function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
-    readOnly: call.lockedByModification,
+    readOnly: isReadOnly(call),
   };
 }
 function saveAnswerSuccess(allDimensions) {

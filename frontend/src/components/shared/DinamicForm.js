@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Row, Col, Form, Input, Select, Radio, Button, Icon, DatePicker,
+  Row, Col, Form, Input, InputNumber, Select, Radio, Button, Icon, DatePicker,
 } from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
@@ -57,6 +57,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                 switch (type) {
                   case 'date':
                   case 'input':
+                  case 'inputNumber':
                   case 'textarea':
                   case 'radio':
                   case 'select': {
@@ -76,6 +77,15 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                                 handleChange(inputValue.target.value);
                               }
                             }}
+                          />
+                        );
+                        break;
+                      case 'inputNumber':
+                        fieldContent = (
+                          <InputNumber
+                            min={0}
+                            formatter={numberValue => ` ${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={numberValue => numberValue.replace(/\$\s?|(,*)/g, '')}
                           />
                         );
                         break;

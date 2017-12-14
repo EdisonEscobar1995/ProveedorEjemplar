@@ -609,14 +609,11 @@ function comercialInfo(fields) {
         },
         {
           span: 3,
-          type: 'input',
+          type: 'inputNumber',
           label: 'Valor en activos $',
           key: 'valueAssets',
           value: valueAssets,
           disabled,
-          rules: [
-            { ...intValidation },
-          ],
         },
         {
           span: 12,
@@ -642,14 +639,11 @@ function comercialInfo(fields) {
         },
         {
           span: 3,
-          type: 'input',
+          type: 'inputNumber',
           label: 'Valor en ventas anual $',
           key: 'annualSalesValue',
           value: annualSalesValue,
           disabled,
-          rules: [
-            { ...intValidation },
-          ],
         },
       ],
     },
