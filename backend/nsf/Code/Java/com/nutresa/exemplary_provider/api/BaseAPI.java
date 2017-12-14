@@ -40,8 +40,10 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     protected HttpServletResponse httpResponse;
     protected HttpServletRequest httpRequest;
     protected String dateFomat = "yyyy/MM/dd";
-
-    private enum typeRequestMethod {
+    protected ServletOutputStream output = null;
+    protected int status;
+    
+    private enum TypeRequestMethod {
         GET, POST, OPTIONS
     }
 
@@ -51,8 +53,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
             throws ServletException, IOException {
-
-        ServletOutputStream output = null;
+        
         FacesContext facesContext = null;
 
         try {
@@ -81,13 +82,14 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     @SuppressWarnings("unchecked")
     protected void doService(HttpServletRequest request, HttpServletResponse response, FacesContext facesContext,
-            ServletOutputStream output) throws IOException {
+            ServletOutputStream output)
+        throws IOException {
     
-        int status = 200;
+        status = 200;
         ServletResponseDTO servletResponse = null;
 
         try {
-            typeRequestMethod requestMethod = typeRequestMethod.valueOf(request.getMethod());
+            TypeRequestMethod requestMethod = TypeRequestMethod.valueOf(request.getMethod());
             LinkedHashMap<String, String> parameters = (LinkedHashMap) getParameters(request);
             
             getClientLanguage(parameters);
@@ -96,30 +98,11 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
             List<String> access = getACL();
             
-            if (requestMethod != typeRequestMethod.OPTIONS && !validateAccess(access, this.getClass().getSimpleName(), action)) {
+            if (requestMethod != TypeRequestMethod.OPTIONS && !validateAccess(access, this.getClass().getSimpleName(), action)) {
                 status = 401;
                 servletResponse = new ServletResponseDTO<String>(false, "Access denied.");
             } else {
-                if (null != action) {
-                    switch (requestMethod) {
-                    case GET:
-                        servletResponse = doGet(action, parameters);
-                        break;
-                    case POST:
-                        servletResponse = doPost(action, request);
-                        break;
-                    case OPTIONS:
-                        doOptions(response, output);
-                        break;
-                    default:
-                        status = 405;
-                        servletResponse = new ServletResponseDTO(false, "Method not allowed");
-
-                        break;
-                    }
-                } else {
-                    servletResponse = new ServletResponseDTO(false, "Action not found");
-                }
+                servletResponse = proccessRequest(requestMethod, action, parameters);
             }
     
         } catch (Exception exception) {
@@ -138,6 +121,34 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private ServletResponseDTO proccessRequest(TypeRequestMethod requestMethod, String action, Map<String, String> parameters)
+        throws Exception, HandlerGenericException, IOException {
+        ServletResponseDTO servletResponse = null;
+        if (null != action) {
+            switch (requestMethod) {
+            case GET:
+                servletResponse = doGet(action, parameters);
+                break;
+            case POST:
+                servletResponse = doPost(action, httpRequest);
+                break;
+            case OPTIONS:
+                doOptions(httpResponse, output);
+                break;
+            default:
+                status = 405;
+                servletResponse = new ServletResponseDTO(false, "Method not allowed");
+
+                break;
+            }
+        } else {
+            servletResponse = new ServletResponseDTO(false, "Action not found");
+        }
+        return servletResponse;
+    }
+    
+    
     private void getClientLanguage(LinkedHashMap<String, String> parameters) {
         Locale locale = httpRequest.getLocale();
         Cookie[] cookies = httpRequest.getCookies();

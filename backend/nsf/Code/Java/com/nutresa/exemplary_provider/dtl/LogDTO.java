@@ -94,9 +94,5 @@ public class LogDTO implements DTO {
             return type;
         }
 
-        public String toString() {
-            return type;
-        }
-
     }
 }
