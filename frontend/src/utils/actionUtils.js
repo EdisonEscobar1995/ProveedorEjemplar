@@ -33,9 +33,8 @@ function validateResponse(args) {
   }
 }
 
-function requestApi(dispatch, loadMethod, apiMethod, clientData) {
-  dispatch(loadMethod());
-  return apiMethod(clientData)
+const executeApi = (dispatch, apiMethod, clientData) => (
+  apiMethod(clientData)
     .then((respone) => {
       let validateresponse = respone;
       if (!Array.isArray(respone)) {
@@ -47,26 +46,17 @@ function requestApi(dispatch, loadMethod, apiMethod, clientData) {
       const error = getMessage(err.message);
       dispatch(setMessage(error, 'error'));
       throw err;
-    });
-}
-function requestApiNotLoading(dispatch, apiMethod, clientData) {
-  return apiMethod(clientData)
-    .then((respone) => {
-      let validateresponse = respone;
-      if (!Array.isArray(respone)) {
-        validateresponse = [respone];
-      }
-      validateResponse(validateresponse);
-      return respone;
-    }).catch((err) => {
-      let error = err;
-      if (typeof err !== 'string') {
-        error = getMessage();
-      }
-      dispatch(setMessage(error, 'error'));
-      throw err;
-    });
-}
+    })
+);
+
+const requestApi = (dispatch, loadMethod, apiMethod, clientData) => {
+  dispatch(loadMethod());
+  return executeApi(dispatch, apiMethod, clientData);
+};
+
+const requestApiNotLoading = (dispatch, apiMethod, clientData) => (
+  executeApi(dispatch, apiMethod, clientData)
+);
 
 export {
   requestApi as default,
