@@ -5,7 +5,6 @@ import { Layout, Breadcrumb, Icon } from 'antd';
 import getUserContext from '../state/User/action';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
-import { basePath } from '../utils/api';
 
 const { Header, Footer, Content } = Layout;
 
@@ -86,6 +85,7 @@ class Document extends Component {
   }
 
   render() {
+    const { userInfo, pathInfo } = this.props.data;
     return (
       <Layout>
         <HeaderLogoStyle>
@@ -99,10 +99,10 @@ class Document extends Component {
                     Bienvenido,
                   </WelcomeStyle>
                   <NameStyle>
-                    {this.props.data.userInfo && this.props.data.userInfo.name}
+                    {userInfo && userInfo.name}
                   </NameStyle>
                   <CloseStyle>
-                    <a href={basePath}>
+                    <a href={pathInfo && `${pathInfo.host}${pathInfo.webDbName}?login&redirectto=${pathInfo.webDbName}/dist/index.html`}>
                       Cerrar sesión
                     </a>
                   </CloseStyle>

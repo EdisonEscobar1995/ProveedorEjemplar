@@ -122,9 +122,13 @@ public class Common {
     }
 
     public static String buildPathResource() {
-        return getHostName() + "/" + getExternalContext().getRequestContextPath();
+        return getHostName() + getWebDbName();
     }
 
+    public static String getWebDbName() {
+    	return getExternalContext().getRequestContextPath();    	
+    }
+    
     private static ExternalContext getExternalContext() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         return facesContext.getExternalContext();
