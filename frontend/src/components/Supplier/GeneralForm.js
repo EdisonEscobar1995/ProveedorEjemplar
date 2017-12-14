@@ -26,19 +26,15 @@ class General extends Component {
     this.props.save(this.props.form.getFieldsValue());
   }
   handleChange= (participateInCall) => {
-    this.props.changeParticipate(participateInCall === 'true');
+    this.props.changeParticipate(participateInCall);
   }
   render() {
     const { participateInCall, changeIdCompanySize, system, readOnly } = this.props;
     const { messageByChangeSizeCompany, informationProgram } = system;
     const { getFieldDecorator, setFields } = this.props.form;
-    let valueSelect = '';
-    if (typeof (participateInCall) === 'boolean') {
-      valueSelect = participateInCall ? 'true' : 'false';
-    }
     let content = '';
     let buttons = [];
-    if (participateInCall === true) {
+    if (participateInCall === 'true') {
       const fields = generalInfo(this.props);
       buttons = [
         {
@@ -61,7 +57,7 @@ class General extends Component {
           content={fields}
         />
       );
-    } else if (participateInCall === false) {
+    } else if (participateInCall === 'false') {
       const fields = noParticipateInfo(this.props);
       buttons = [
         {
@@ -90,14 +86,14 @@ class General extends Component {
           <Select
             disabled={readOnly}
             style={{ width: '100%' }}
-            value={valueSelect}
+            value={participateInCall}
             onChange={this.handleChange}
           >
             <Option value="true">Si</Option>
             <Option value="false">No</Option>
           </Select>
         </Field>
-        {participateInCall !== false ? <SubTitle text="Información de la empresa" /> : ''}
+        {participateInCall === 'true' ? <SubTitle text="Información de la empresa" /> : ''}
         <ParagraphStyle>
           Los campos marcados con asterisco(*) son requeridos
         </ParagraphStyle>

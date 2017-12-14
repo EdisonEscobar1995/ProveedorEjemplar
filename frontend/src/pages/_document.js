@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout, Breadcrumb, Icon } from 'antd';
+import { Layout, Icon } from 'antd';
 import getUserContext from '../state/User/action';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
@@ -17,15 +17,8 @@ const HeaderLogoStyle = styled(Header)`
   padding: 0 74px;
 `;
 const ContentStyle = styled(Content)`  
-  padding: 0 50px;
+  padding: 10px 40px 0 40px;
   background: ${props => props.theme.color.back};
-`;
-const BreadcrumbStyle = styled(Breadcrumb)`  
-  padding: 35px 0;
-  background: ${props => props.theme.color.back};
-`;
-const BreadcrumbItemStyle = styled(Breadcrumb.Item)`  
-  color: ${props => props.theme.color.secondary};
 `;
 const MainContentStyle = styled.div`  
   padding: 24px;
@@ -77,9 +70,6 @@ const IconStyle = styled(Icon)`
   font-size: 30px;
   padding: 0 10px;
 `;
-const IconBreadStyle = styled(Icon)`  
-  margin-right: 6px;
-`;
 
 class Document extends Component {
   componentDidMount() {
@@ -117,10 +107,6 @@ class Document extends Component {
           <Menu {...this.props} />
         </HeaderStyle>
         <ContentStyle>
-          <BreadcrumbStyle>
-            <BreadcrumbItemStyle><IconBreadStyle type="home" /> Home</BreadcrumbItemStyle>
-            <BreadcrumbItemStyle>Application Center</BreadcrumbItemStyle>
-          </BreadcrumbStyle>
           <MainContentStyle>
             <Router />
           </MainContentStyle>

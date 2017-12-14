@@ -42,10 +42,12 @@ const filterModifiedSuppliers = data => ({
 const getModifiedSuppliers = year => (dispatch) => {
   requestApi(dispatch, getDataModifiedSuppliersProgress, getModifiedSuppliersApi, year)
     .then((response) => {
-      response.data.data.suppliers = response.data.data.suppliers.map((item) => {
-        item.visible = true;
-        return item;
-      });
+      response.data.data.suppliers = response.data.data.suppliers
+        .sort((a, b) => (a.businessName < b.businessName ? -1 : 1))
+        .map((item) => {
+          item.visible = true;
+          return item;
+        });
       const { data } = response.data;
       dispatch(getDataModifiedSuppliersSuccess(data));
     }).catch((err) => {

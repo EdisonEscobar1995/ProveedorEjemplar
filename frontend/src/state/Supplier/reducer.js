@@ -36,7 +36,7 @@ const initialState = {
   call: {},
   readOnly: false,
   changeIdCompanySize: false,
-  participateInCall: null,
+  participateInCall: '',
   supply: [],
   categories: [],
   subcategories: [],
