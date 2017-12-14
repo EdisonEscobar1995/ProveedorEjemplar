@@ -30,7 +30,7 @@ public class AnswerDTO {
     @Expose
     private List<AttachmentDTO> attachment;
     @Expose
-    private List<String> idToDelete;
+    private List<String> idsToDelete;
 
     public String getIdSupplierByCall() {
         return idSupplierByCall;
@@ -128,8 +128,8 @@ public class AnswerDTO {
         this.attachment = attachment;
     }
 
-    public List<String> getIdToDelete() {
-        return idToDelete;
+    public List<String> getIdsToDelete() {
+        return idsToDelete;
     }
 
 }

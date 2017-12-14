@@ -20,7 +20,7 @@ public class AnswerBLO extends GenericBLO<OptionDTO, AnswerDAO> {
     }
 
     public AnswerDTO deleteMassive(AnswerDTO answer) throws HandlerGenericException {
-        List<String> answerIds = answer.getIdToDelete();
+        List<String> answerIds = answer.getIdsToDelete();
         AnswerDAO answerDAO = new AnswerDAO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         String idSupplierByCall = supplierByCallBLO.getCurrentCallBySupplier().getId();
