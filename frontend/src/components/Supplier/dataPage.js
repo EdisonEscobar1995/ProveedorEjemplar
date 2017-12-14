@@ -542,7 +542,7 @@ function comercialInfo(fields) {
         {
           span: 8,
           type: 'input',
-          label: 'Otro cual?',
+          label: '¿Otro cuál?',
           key: 'otherSector',
           value: otherSector,
           disabled,
