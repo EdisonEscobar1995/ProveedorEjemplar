@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(Logs)' alias='Log|vwLogs' xmlns='http://www.lotus.com/dxl' version='9.0'
+ maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web' showinmenu='false'
+ noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='acca' unid='941387C37AE229C1052581F60018AC0B' sequence='2'>
+<created><datetime>20171213T232929,07-05</datetime></created>
+<modified><datetime>20171213T232957,86-05</datetime></modified>
+<revised><datetime>20171213T232957,85-05</datetime></revised>
+<lastaccessed><datetime>20171213T232957,86-05</datetime></lastaccessed>
+<addedtofile><datetime>20171213T232929,08-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frLog"</formula></code><code event='querypaste'><lotusscript
+>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+	Continue = False
+End Sub
+</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='id' width='10' resizable='true'
+ separatemultiplevalues='false' sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
+ title='id'><font size='9pt' style='bold'/></columnheader></column></view>
+

@@ -67,7 +67,17 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         break;
                       }
                       case 'input':
-                        fieldContent = <Input disabled={disabled} type={inputType || 'text'} />;
+                        fieldContent = (
+                          <Input
+                            disabled={disabled}
+                            type={inputType || 'text'}
+                            onChange={(inputValue) => {
+                              if (handleChange) {
+                                handleChange(inputValue.target.value);
+                              }
+                            }}
+                          />
+                        );
                         break;
                       case 'textarea':
                         if (disabled) {
@@ -77,6 +87,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         }
                         break;
                       case 'select': {
+                        let index = 0;
                         const { valuesToClean, mode, noSearch } = current;
                         if (!noSearch) {
                           fieldContent = (
@@ -100,9 +111,17 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               }}
                             >
                               {
-                                options.map(option => (
-                                  <Option key={option.id} value={option.id}>{option.name}</Option>
-                                ))
+                                options.map((option) => {
+                                  index += 1;
+                                  return (
+                                    <Option
+                                      key={option.id + index}
+                                      value={option.id}
+                                    >
+                                      {option.name}
+                                    </Option>
+                                  );
+                                })
                               }
                             </Select>);
                         } else {
@@ -123,9 +142,17 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               }}
                             >
                               {
-                                options.map(option => (
-                                  <Option key={option.id} value={option.id}>{option.name}</Option>
-                                ))
+                                options.map((option) => {
+                                  index += 1;
+                                  return (
+                                    <Option
+                                      key={option.id + index}
+                                      value={option.id}
+                                    >
+                                      {option.name}
+                                    </Option>
+                                  );
+                                })
                               }
                             </Select>);
                         }

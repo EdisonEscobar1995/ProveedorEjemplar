@@ -71,4 +71,27 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return response;
     }
 
+    public Map<String, Object> getUserContext() throws HandlerGenericException {
+        Map<String, Object> userContext = new LinkedHashMap<String, Object>();
+        List<DTO> rols = getRolsByUser();
+        if(null != rols) {
+            MenuBLO menuBLO = new MenuBLO();
+            UserDAO userDAO = new UserDAO();
+            Name dominoUser = userDAO.getDominoUser(); 
+            Map<String, String> userInfo = new LinkedHashMap<String, String>();
+            userInfo.put("name", dominoUser.getNamePart(NamePartKey.Common));
+            userInfo.put("canonical", dominoUser.getNamePart(NamePartKey.Canonical));
+            
+            Map<String, String> pathInfo = new LinkedHashMap<String, String>();
+            pathInfo.put("host", Common.getHostName());
+            pathInfo.put("webDbName", Common.getWebDbName());
+            
+            userContext.put("userInfo", userInfo);
+            userContext.put("pathInfo", pathInfo);
+            userContext.put("rols", rols);
+            userContext.put("menu", menuBLO.getMenusByRol());
+        }
+        return userContext;
+    }
+
 }

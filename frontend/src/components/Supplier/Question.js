@@ -42,7 +42,8 @@ class Question extends Component {
       idSurvey,
       idQuestion: id,
     };
-    sendAnswer = Object.assign(actualAnswer, sendAnswer);
+    const copy = { ...actualAnswer };
+    sendAnswer = Object.assign(copy, sendAnswer);
     if (fieldName === 'attachment') {
       if (sendAnswer[fieldName]) {
         sendAnswer[fieldName].push(value);
@@ -225,7 +226,7 @@ class Question extends Component {
                 <Table
                   key={criteria.key}
                   pagination={false}
-                  dataSource={criteria.questions}
+                  dataSource={criteria.questions.filter(quiestion => quiestion.visible)}
                 >
                   {
                     columns.map(column => (

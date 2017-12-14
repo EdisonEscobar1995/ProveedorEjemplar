@@ -130,7 +130,7 @@ class Supplier extends Component {
         dimension.criterions.forEach((criteria) => {
           criteria.questions.forEach((question) => {
             let errors = {};
-            if (question.required) {
+            if (question.visible && question.required) {
               if (question.answer.length > 0) {
                 if (question.requireAttachment) {
                   question.answer.forEach((answer) => {

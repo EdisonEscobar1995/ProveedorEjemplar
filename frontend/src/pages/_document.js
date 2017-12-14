@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Layout, Breadcrumb, Icon } from 'antd';
+import getUserContext from '../state/User/action';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
 
@@ -77,51 +79,69 @@ const IconBreadStyle = styled(Icon)`
   margin-right: 6px;
 `;
 
-function Document() {
-  return (
-    <Layout>
-      <HeaderLogoStyle>
-        <HeaderContentStyle>
-          <LogoStyle />
-          <LogStyle>
-            <InfoStyle>
-              <IconStyle type="user" />
-              <div>
-                <WelcomeStyle>
-                  Bienvenido,
-                </WelcomeStyle>
-                <NameStyle>
-                  Usuario
-                </NameStyle>
-                <CloseStyle>
-                  Cerrar session
-                </CloseStyle>
-              </div>
-            </InfoStyle>
-          </LogStyle>
-        </HeaderContentStyle>
-      </HeaderLogoStyle>
-      <HeaderStyle>
-        <Menu />
-      </HeaderStyle>
-      <ContentStyle>
-        <BreadcrumbStyle>
-          <BreadcrumbItemStyle><IconBreadStyle type="home" /> Home</BreadcrumbItemStyle>
-          <BreadcrumbItemStyle>Application Center</BreadcrumbItemStyle>
-        </BreadcrumbStyle>
-        <MainContentStyle>
-          <Router />
-        </MainContentStyle>
-      </ContentStyle>
-      <Footer>
-        <FooterContentStyle>
-          <span>
-            Copyright © 2017 Grupo Nutresa - Todos los derechos reservados | Medellín - Colombia
-          </span>
-        </FooterContentStyle>
-      </Footer>
-    </Layout>
-  );
+class Document extends Component {
+  componentDidMount() {
+    this.props.getUserContext();
+  }
+
+  render() {
+    const { userInfo, pathInfo } = this.props.data;
+    return (
+      <Layout>
+        <HeaderLogoStyle>
+          <HeaderContentStyle>
+            <LogoStyle />
+            <LogStyle>
+              <InfoStyle>
+                <IconStyle type="user" />
+                <div>
+                  <WelcomeStyle>
+                    Bienvenido,
+                  </WelcomeStyle>
+                  <NameStyle>
+                    {userInfo && userInfo.name}
+                  </NameStyle>
+                  <CloseStyle>
+                    <a href={pathInfo && `${pathInfo.host}${pathInfo.webDbName}?login&redirectto=${pathInfo.webDbName}/dist/index.html`}>
+                      Cerrar sesión
+                    </a>
+                  </CloseStyle>
+                </div>
+              </InfoStyle>
+            </LogStyle>
+          </HeaderContentStyle>
+        </HeaderLogoStyle>
+        <HeaderStyle>
+          <Menu {...this.props} />
+        </HeaderStyle>
+        <ContentStyle>
+          <BreadcrumbStyle>
+            <BreadcrumbItemStyle><IconBreadStyle type="home" /> Home</BreadcrumbItemStyle>
+            <BreadcrumbItemStyle>Application Center</BreadcrumbItemStyle>
+          </BreadcrumbStyle>
+          <MainContentStyle>
+            <Router />
+          </MainContentStyle>
+        </ContentStyle>
+        <Footer>
+          <FooterContentStyle>
+            <span>
+              Copyright © 2017 Grupo Nutresa - Todos los derechos reservados | Medellín - Colombia
+            </span>
+          </FooterContentStyle>
+        </Footer>
+      </Layout>
+    );
+  }
 }
 
-export default Document;
+const mapStateToProps = state => ({
+  data: state.user.data,
+  loading: state.user.loading,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getUserContext: () => dispatch(getUserContext()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Document);

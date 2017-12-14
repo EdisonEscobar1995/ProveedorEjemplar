@@ -37,16 +37,21 @@ public class ServletFactory implements IServletFactory {
                 return new ServletMatch(getWidgetServlet(pathLevels[2]), servletPath, pathInfo);
             }
         } catch (Exception exception) {
-            return new ServletMatch(module.createServlet(namespace + "Error" + apiSuffix, "Error", null), "", "");
+            Common.logError("Error loading servlet", exception);
+            return new ServletMatch(getErrorServlet(), "", "");
         }
-        return new ServletMatch(module.createServlet(namespace + "Error" + apiSuffix, "Error", null), "", "");
+        return new ServletMatch(getErrorServlet(), "", "");
     }
 
     public Servlet getWidgetServlet(String servletName) throws ServletException {
         if (Common.isClass(namespace + servletName + apiSuffix)) {
             return module.createServlet(namespace + servletName + apiSuffix, servletName, null);
         } else {
-            return module.createServlet(namespace + "Error" + apiSuffix, "Error", null);
+            return getErrorServlet();
         }
+    }
+    
+    protected Servlet getErrorServlet() throws ServletException {
+        return module.createServlet(namespace + "Error" + apiSuffix, "Error", null);
     }
 }

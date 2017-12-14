@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
+import org.openntf.domino.Session;
 import org.openntf.domino.View;
+import org.openntf.domino.ext.Name;
+import org.openntf.domino.utils.Factory;
 
 import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -38,6 +41,11 @@ public class UserDAO extends GenericDAO<UserDTO> {
         }
 
         return user;
+    }
+    
+    public Name getDominoUser() throws HandlerGenericException {
+        Session currSess = Factory.getSession();
+        return currSess.createName(currSess.getEffectiveUserName());
     }
 
 }

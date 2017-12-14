@@ -6,6 +6,7 @@ public class CompanySizeDAO extends GenericDAO<CompanySizeDTO> {
 
     public CompanySizeDAO() {
         super(CompanySizeDTO.class);
+        translatable = true;
     }
 
 }

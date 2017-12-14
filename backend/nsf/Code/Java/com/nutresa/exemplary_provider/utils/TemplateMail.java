@@ -84,9 +84,8 @@ public class TemplateMail {
         }
 
         String table = "<tr><td><table cellpadding='0' cellspacing='0' width='100%' style='border-color: #cccccc;'>"
-                + "<thead>" + "<tr>" + "[COLUMN_HEADER]" + "</tr>" + "</thead>" + "<body>" + "<tr>" + "[COLUMN_DATA]"
-                + "</tr>" + "</body>" + "</table>" + "</td>" + "</tr>" + "<tr>"
-                + "<td class='height15' height='40' style='font-size:1px; line-height:1px;'>&nbsp;</td>" + "</tr>";
+                + "<thead><tr>[COLUMN_HEADER]</tr></thead><body><tr>[COLUMN_DATA]" + "</tr></body></table></td></tr><tr>"
+            + "<td class='height15' height='40' style='font-size:1px; line-height:1px;'>&nbsp;</td></tr>";
 
         table = table.replace("[COLUMN_HEADER]", rowHead);
         table = table.replace("[COLUMN_DATA]", rowData);
