@@ -310,9 +310,14 @@ public abstract class GenericDAO<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T saveProfile(T dto) throws HandlerGenericException, IllegalAccessException, InstantiationException {
+    public T saveProfile(T dto) throws HandlerGenericException {
         View vw = database.getView(this.entityView);
-        T newDto = (T) dto.getClass().newInstance();
+        T newDto;
+        try {
+            newDto = (T) dto.getClass().newInstance();
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
         Document document = vw.getFirstDocumentByKey(this.entityForm, true);
         if (null == document) {
             newDto = this.save(dto);
