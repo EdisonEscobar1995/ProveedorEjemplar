@@ -10,7 +10,7 @@ class Comercial extends Component {
   componentDidMount() {
     const { call, participateInCall, getDimensionsBySurvey } = this.props;
     const { idSurvey } = call;
-    if (participateInCall) {
+    if (participateInCall === 'true') {
       getDimensionsBySurvey(idSurvey);
     }
   }

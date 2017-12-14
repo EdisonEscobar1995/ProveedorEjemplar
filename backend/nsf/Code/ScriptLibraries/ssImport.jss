@@ -499,7 +499,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		 					nd.removeItem("idCompanySize");
 		 				}
 						if(nd.getItemValueString("form") == "frSupplierByCall"){
-							nd.replaceItemValue("participateInCall", "1");
+							nd.replaceItemValue("participateInCall", "true");
 						}
 					}else if(nd.getItemValueString("form") == "frCity"){
 						nd.removeItem("idCountry");
