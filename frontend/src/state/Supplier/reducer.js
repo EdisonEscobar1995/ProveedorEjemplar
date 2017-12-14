@@ -25,6 +25,7 @@ import {
   ADD_DIRECT_EMPLOYEES,
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
+  SET_EXPORT,
 } from './const';
 
 import reloadKeys from '../../utils/reducerUtils';
@@ -254,6 +255,14 @@ function supplierApp(state = initialState, action) {
         supplier: {
           ...state.supplier,
           actualSector: action.value,
+        },
+      };
+    case SET_EXPORT:
+      return {
+        ...state,
+        supplier: {
+          ...state.supplier,
+          actuallyExport: action.value,
         },
       };
     default: {

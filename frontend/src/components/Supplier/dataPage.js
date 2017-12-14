@@ -500,8 +500,10 @@ function comercialInfo(fields) {
     setNumberOfDirectEmployees,
     setNumberOfSubContratedEmployees,
     setSector,
+    setExport,
   } = fields;
   const {
+    idCategory,
     idSector,
     otherSector,
     webSite,
@@ -525,8 +527,14 @@ function comercialInfo(fields) {
     chemicalSubstance,
     attachedFinancialReport,
     actualSector,
+    actuallyExport,
   } = supplier;
-  const { uploadMaxFilesize, uploadExtensions, otherSectorId } = system;
+  const {
+    uploadMaxFilesize,
+    uploadExtensions,
+    otherSectorId,
+    packagingMaterialCategoryId,
+  } = system;
   const disabled = readOnly;
   return [
     {
@@ -571,6 +579,7 @@ function comercialInfo(fields) {
           key: 'packagingProvided',
           value: packagingProvided,
           required: true,
+          hidden: (idCategory !== packagingMaterialCategoryId),
           disabled,
           options: [
             {
@@ -794,6 +803,7 @@ function comercialInfo(fields) {
           label: '¿Actualmente exporta?',
           key: 'currentlyExport',
           value: getValueOption(currentlyExport),
+          handleChange: setExport,
           options: defaultOptions,
           disabled,
         },
@@ -803,6 +813,8 @@ function comercialInfo(fields) {
           label: 'Destinos de exportación',
           key: 'exportDestination',
           value: exportDestination,
+          hidden: !actuallyExport,
+          required: true,
           disabled,
         },
       ],

@@ -26,6 +26,7 @@ import {
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,
+  setExport,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -136,6 +137,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setSector: (value) => {
     dispatch(setSector(value));
+  },
+  setExport: (value) => {
+    dispatch(setExport(value));
   },
 });
 

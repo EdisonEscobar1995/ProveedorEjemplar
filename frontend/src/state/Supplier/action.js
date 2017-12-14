@@ -26,6 +26,7 @@ import {
   ADD_DIRECT_EMPLOYEES,
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
+  SET_EXPORT,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -58,7 +59,8 @@ const getDataSupplierSuccess = (data) => {
   data.supplier.employeesTotal =
   data.supplier.numberOfDirectEmployees +
   data.supplier.numberOfSubContratedEmployees;
-
+  data.supplier.actualSector = data.supplier.idSector;
+  data.supplier.actuallyExport = data.supplier.currentlyExport;
   const {
     supplier,
     call,
@@ -615,6 +617,12 @@ const setSector = value => (
     value,
   }
 );
+const setExport = value => (
+  {
+    type: SET_EXPORT,
+    value: value === 'true',
+  }
+);
 
 export {
   getDataSupplier,
@@ -641,4 +649,5 @@ export {
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,
+  setExport,
 };
