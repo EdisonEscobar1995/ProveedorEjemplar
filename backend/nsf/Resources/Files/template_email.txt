@@ -183,21 +183,7 @@
                                     <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <tbody>
                                             <tr>
-                                                <td><img src="[HEADER_ONE]" class="full_img" alt="" title="" /></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="height15" height="10" style="font-size:1px; line-height:1px;">&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <img src="[HEADER_TWO]" class="full_img_logo" alt="" title="" style="display: block;margin:auto;" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="height15" height="10" style="font-size:1px; line-height:1px;">&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td><img src="[HEADER_THREE]" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
+                                                <td><img src="[HEADER]" class="full_img" alt="" title="" /></td>
                                             </tr>
                                             <tr>
                                                 <td class="height15" height="47" style="font-size:1px; line-height:1px;">&nbsp;</td>

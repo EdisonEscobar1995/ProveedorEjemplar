@@ -1,7 +1,6 @@
 package com.nutresa.exemplary_provider.api;
 
 import java.util.List;
-import java.util.Map;
 
 import com.nutresa.exemplary_provider.bll.UserBLO;
 import com.nutresa.exemplary_provider.dtl.DTO;
@@ -18,10 +17,5 @@ public class UserAPI extends GenericAPI<UserDTO, UserBLO> {
     public ServletResponseDTO<List<DTO>> getRolsByUser() throws HandlerGenericException {
         UserBLO userBLO = new UserBLO();
         return new ServletResponseDTO<List<DTO>>(userBLO.getRolsByUser());
-    }
-
-    public ServletResponseDTO<Map<String, Object>> getUserContext() throws HandlerGenericException {
-        UserBLO userBLO = new UserBLO();
-        return new ServletResponseDTO<Map<String, Object>>(userBLO.getUserContext());
     }
 }

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<agent name='Alias' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8'
+<agent name='Alias' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9'
  replicaid='052581DB006A5865' hide='v3' publicaccess='false' designerversion='8.5.3'>
 <noteinfo noteid='8b2' unid='D4E074F6424067ED052581E40068F38F' sequence='25'>
 <created><datetime>20171126T140620,95-05</datetime></created>
@@ -14,6 +14,13 @@
 <simpleaction action='runformula'><formula>FIELD idBanner := "26B52AAAE37F508E052580C10075A914";
 FIELD idFooter := "26B52AAAE37F508E052580C10075A914";
 SELECT @All</formula></simpleaction></code>
-<rundata processeddocs='0' exitcode='0'>
-<agentmodified><datetime>20171212T141219,74-05</datetime></agentmodified></rundata></agent>
+<rundata processeddocs='1' exitcode='0'>
+<agentmodified><datetime>20171212T141219,85-05</datetime></agentmodified>
+<agentrun><datetime>20171212T141232,63-05</datetime></agentrun>
+<runlog>Started running agent 'Alias' on 12/12/2017 14:12:32
+Running on selected documents: 1 total
+Found 1 document(s) that match search criteria
+1 document(s) were modified by formula
+Done running agent 'Alias' on 12/12/2017 14:12:32
+</runlog></rundata></agent>
 

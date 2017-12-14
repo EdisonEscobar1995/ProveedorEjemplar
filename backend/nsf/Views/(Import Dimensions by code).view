@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Import Dimensions by code)' alias='ImportDimensionsByCode' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C60067468E' hide='web'
+ version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='2866' unid='2DE51796D6C569A7052581E5007E039B' sequence='4'>
-<created><datetime>20171127T175624,59-05</datetime></created>
-<modified><datetime>20171204T161231,07-05</datetime></modified>
-<revised><datetime>20171204T161231,06-05</datetime></revised>
-<lastaccessed><datetime>20171204T161231,07-05</datetime></lastaccessed>
-<addedtofile><datetime>20171127T175624,61-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='b492' unid='272CE441D69F8A99052581EE00689FDF' sequence='2'>
+<created><datetime>20171206T140246,71-05</datetime></created>
+<modified><datetime>20171206T140246,77-05</datetime></modified>
+<revised><datetime>20171206T140246,76-05</datetime></revised>
+<lastaccessed><datetime>20171206T140246,77-05</datetime></lastaccessed>
+<addedtofile><datetime>20171206T140246,75-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frDimension"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

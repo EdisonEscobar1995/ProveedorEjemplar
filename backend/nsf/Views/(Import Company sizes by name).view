@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Import Company sizes by name)' alias='ImportCompanySizesByName'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='16e6' unid='1C649C77BCCE1B35052581DF00493705' sequence='13'>
-<created><datetime>20171121T081942,13-05</datetime></created>
-<modified><datetime>20171127T161433,78-05</datetime></modified>
-<revised><datetime>20171127T161433,77-05</datetime></revised>
-<lastaccessed><datetime>20171127T161433,78-05</datetime></lastaccessed>
-<addedtofile><datetime>20171121T081942,25-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='61a' unid='30C6E08CA5392AC3052581DF004EEACA' sequence='20'>
+<created><datetime>20171121T092159,14-05</datetime></created>
+<modified><datetime>20171201T133208,65-05</datetime></modified>
+<revised><datetime>20171201T133208,64-05</datetime></revised>
+<lastaccessed><datetime>20171201T133208,65-05</datetime></lastaccessed>
+<addedtofile><datetime>20171121T092159,17-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frCompanySize"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

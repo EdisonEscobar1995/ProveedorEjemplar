@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Supplier by call modified idCall)' alias='SupplierByCall|vwSuppliersByCallModifiedIdCall'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='a926' unid='71C27A54AC1D7CFE052581E300833178' sequence='10'>
-<created><datetime>20171125T185258,80-05</datetime></created>
-<modified><datetime>20171127T161434,28-05</datetime></modified>
-<revised><datetime>20171127T161434,27-05</datetime></revised>
-<lastaccessed><datetime>20171127T161434,28-05</datetime></lastaccessed>
-<addedtofile><datetime>20171125T185258,82-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='86e' unid='54FB530B88373E94052581E40061ABD1' sequence='26'>
+<created><datetime>20171126T124649,77-05</datetime></created>
+<modified><datetime>20171201T133209,69-05</datetime></modified>
+<revised><datetime>20171201T133209,68-05</datetime></revised>
+<lastaccessed><datetime>20171212T170333,44-05</datetime></lastaccessed>
+<addedtofile><datetime>20171126T124649,92-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frSupplierByCall" &amp; oldIdCompanySize != "" &amp; participateInCall = "1"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

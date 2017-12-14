@@ -42,13 +42,10 @@ public class TemplateMail {
     public static String buildMessage(String message, boolean requireTableDetail, Map<String, String> dataDetail,
             boolean requireButton, String linkButton, String pathBanner, String pathFooter) throws HandlerGenericException {
         String template = "";
-        String pathApp = Common.buildPathResource();
         try {
             template = getTemplateInFile();
             template = template.replace("[MESSAGE_HERE]", message);
-            template = template.replace("[HEADER_ONE]", pathApp + "/strip-top.png");
-            template = template.replace("[HEADER_TWO]", pathBanner);
-            template = template.replace("[HEADER_THREE]", pathApp + "/strip-middle.png");
+            template = template.replace("[HEADER]", pathBanner);
 
             if (requireTableDetail) {
                 template = template.replace("[TEMPLATE_BY_TABLE_DETAIL]", buildTableDatail(dataDetail));
@@ -98,13 +95,15 @@ public class TemplateMail {
     }
 
     private static String buildButton(String linkButton) {
-        String pathApp = Common.buildPathResource();
         String templateButton = "<tr><td><table cellpadding='0' cellspacing='0' width='100%'>"
-                + "<tbody><tr><td style='text-align: center;'><a href='[LINK_BUTTON]'>"
-                + "<img src='[BUTTON]'/></a></td></tr></tbody></table></td></tr>"
-                + "<tr><td class='height15' height='40' style='font-size:1px; line-height:1px;'>&nbsp;</td></tr>";
+                + "<tbody><tr><td style='text-align: center;'><a href='[LINK_BUTTON]' "
+                + "style='background-color: #37907c; border: none; color: white; padding: 15px 40px 15px 40px; "
+                + "text-align: center; text-decoration: none; display: inline-block; font-size: 14px; "
+                + "margin: 4px 2px; cursor: pointer; border-radius: 12px; font-family: Verdana, Geneva, sans-serif; "
+                + "font-weight: 300;'>Continuar</a></td></tr></tbody></table>"
+                + "</td></tr><tr><td class='height15' height='40' style='font-size:1px; "
+                + "line-height:1px;'>&nbsp;</td></tr>";
         templateButton = templateButton.replace("[LINK_BUTTON]", linkButton);
-        templateButton = templateButton.replace("[BUTTON]", pathApp + "/btn-continuar.png");
 
         return templateButton;
     }
