@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Upload from '../shared/Upload';
 import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
-import baseUrl from '../../utils/api';
+import { baseUrl } from '../../utils/api';
 
 
 const { TextArea } = Input;
