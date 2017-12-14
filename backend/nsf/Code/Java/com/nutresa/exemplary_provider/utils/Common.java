@@ -219,15 +219,20 @@ public class Common {
     }
 
     public static void logError(String message, Exception exception) {
+        message = null != message ? message : "";
         System.err.println(message + Common.getExceptionMessage(exception));
         System.err.println("Stack trace: " + Common.getStackTrace(exception));
     }
 
     public static String getStackTrace(Exception exception) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        exception.printStackTrace(printWriter);
-        return stringWriter.toString().replace("\\\\", "\\");            
+        String response = "";
+        if (null != exception) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            exception.printStackTrace(printWriter);
+            response = stringWriter.toString().replace("\\\\", "\\");
+        }
+        return response;
     }
 
 }
