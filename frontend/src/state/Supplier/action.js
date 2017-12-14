@@ -23,6 +23,8 @@ import {
   CANCEL_CUSTOMER,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY,
+  ADD_DIRECT_EMPLOYEES,
+  ADD_SUB_EMPLOYEES,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -52,6 +54,10 @@ function getDataSupplierProgress() {
 }
 
 function getDataSupplierSuccess(data) {
+  data.supplier.employeesTotal =
+  data.supplier.numberOfDirectEmployees +
+  data.supplier.numberOfSubContratedEmployees;
+
   const {
     supplier,
     call,
@@ -583,6 +589,19 @@ function finishSurvey() {
       });
   };
 }
+function setNumberOfDirectEmployees(value) {
+  return {
+    type: ADD_DIRECT_EMPLOYEES,
+    value: isNaN(value) ? 0 : parseInt(value, 10),
+  };
+}
+
+function setNumberOfSubContratedEmployees(value) {
+  return {
+    type: ADD_SUB_EMPLOYEES,
+    value: isNaN(value) ? 0 : parseInt(value, 10),
+  };
+}
 
 export {
   getDataSupplier,
@@ -606,4 +625,6 @@ export {
   cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
+  setNumberOfDirectEmployees,
+  setNumberOfSubContratedEmployees,
 };

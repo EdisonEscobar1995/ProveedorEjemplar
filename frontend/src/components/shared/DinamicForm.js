@@ -67,7 +67,17 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         break;
                       }
                       case 'input':
-                        fieldContent = <Input disabled={disabled} type={inputType || 'text'} />;
+                        fieldContent = (
+                          <Input
+                            disabled={disabled}
+                            type={inputType || 'text'}
+                            onChange={(inputValue) => {
+                              if (handleChange) {
+                                handleChange(inputValue.target.value);
+                              }
+                            }}
+                          />
+                        );
                         break;
                       case 'textarea':
                         if (disabled) {
