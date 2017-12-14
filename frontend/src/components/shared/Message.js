@@ -11,11 +11,7 @@ function message({ text = '', type = 'info' }) {
       break;
     }
     case 'error': {
-      messageAnt
-        .config({
-          top: 100,
-          duration: 2,
-        }).error(label);
+      messageAnt.error(label);
       break;
     }
     case 'warning': {

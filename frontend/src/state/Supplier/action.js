@@ -23,6 +23,8 @@ import {
   CANCEL_CUSTOMER,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY,
+  ADD_DIRECT_EMPLOYEES,
+  ADD_SUB_EMPLOYEES,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -39,7 +41,7 @@ import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
-import { saveAnswerApi } from '../../api/answer';
+import { saveAnswerApi, deleteAnswersApi } from '../../api/answer';
 import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
 import requestApi, { requestApiNotLoading, sortByField } from '../../utils/actionUtils';
 import setMessage from '../Generic/action';
@@ -52,6 +54,10 @@ function getDataSupplierProgress() {
 }
 
 function getDataSupplierSuccess(data) {
+  data.supplier.employeesTotal =
+  data.supplier.numberOfDirectEmployees +
+  data.supplier.numberOfSubContratedEmployees;
+
   const {
     supplier,
     call,
@@ -166,42 +172,45 @@ function getDataDimensionsBySuplySuccess(dimensions) {
 }
 
 const validateAnswer = (question, questions) => {
-  if (question.type === 'Cerrada' && question.answer.length > 0) {
-    return questions.filter(item => question.answer[0].idOptionSupplier === item.dependOfOptionId);
+  if (question.type === 'Cerrada') {
+    return questions.filter(item => item.dependOfQuestion === question.id);
   }
   return [];
 };
 
-const removeRecursive = (
-  actualQuestion, actualIndex, filteredQuestion, visibleQuestions, remove) => {
-  let visibles = [...visibleQuestions];
-  if (remove) {
-    visibles.splice(actualIndex, 1);
+const searchChildren = (actualQuestion, childs, allQuestions, isVisible, removeIds) => {
+  if (!isVisible) {
+    if (removeIds && actualQuestion.answer.length > 0) {
+      removeIds.push(actualQuestion.answer[0].id);
+    }
+    actualQuestion.answer = [];
   }
-  filteredQuestion.forEach((actual) => {
-    const index = visibles.findIndex(visiable => actual.id === visiable.id);
-    const filtered = validateAnswer(actual, visibleQuestions);
-    visibles = removeRecursive(actual, index, filtered, visibles, true);
+  actualQuestion.visible = isVisible;
+  childs.forEach((child) => {
+    let visible = false;
+    if (actualQuestion.answer.length > 0) {
+      if (actualQuestion.answer[0].idOptionSupplier === child.dependOfOptionId) {
+        visible = true;
+      }
+    }
+    const filtred = validateAnswer(child, allQuestions);
+    searchChildren(child, filtred, allQuestions, (visible && isVisible), removeIds);
   });
-  return visibles;
 };
 
-const searchRecursive = (actualQuestion, filteredQuestion, allQuestions, visibleQuestions) => {
-  let visibles = visibleQuestions;
-  visibles.push(actualQuestion);
-  filteredQuestion.forEach((actual) => {
-    const filtered = validateAnswer(actual, allQuestions);
-    visibles = searchRecursive(actual, filtered, allQuestions, visibles);
-  });
+const removeRecursive = (actualQuestion, questions, removeIds) => {
+  const visibles = [...questions];
+  const filteredDependency = validateAnswer(actualQuestion, visibles);
+  searchChildren(actualQuestion, filteredDependency, visibles, true, removeIds);
   return visibles;
 };
 
 const showQuestions = (questions) => {
-  let visibleQuestions = [];
-  questions.forEach((question) => {
+  const visibleQuestions = [...questions];
+  visibleQuestions.forEach((question) => {
     if (question.dependOfOptionId === '') {
       const filteredDependency = validateAnswer(question, questions);
-      visibleQuestions = searchRecursive(question, filteredDependency, questions, visibleQuestions);
+      searchChildren(question, filteredDependency, visibleQuestions, true);
     }
   });
   return visibleQuestions;
@@ -217,7 +226,6 @@ const getDataQuestionsByDimensionSuccess = (idDimension, dimensions, data) => {
       {
         ...criteria,
         questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
-        allQuestions: questions.filter(question => question.idCriterion === criteria.id),
       }
     ));
   }
@@ -227,7 +235,6 @@ const getDataQuestionsByDimensionSuccess = (idDimension, dimensions, data) => {
       name: '',
       id: 1,
       questions: showedQuestions.filter(question => question.idCriterion === ''),
-      allQuestions: noCriterianQuestion,
     });
   }
   dimensions.find(item => item.id === idDimension).criterions = result;
@@ -244,38 +251,7 @@ function saveDataCallSuccess(call) {
     readOnly: call.lockedByModification,
   };
 }
-function saveAnswerSuccess(dimensions, idDimension, answer, idCriterion) {
-  const allDimensions = [...dimensions];
-  const actualDimension = allDimensions.find(dimension => dimension.id === idDimension);
-  const actualCriterion = actualDimension.criterions
-    .find(criteria => criteria.id === idCriterion);
-  const actualIndex = actualCriterion.questions
-    .findIndex(question => question.id === answer.idQuestion);
-  const dependencyQuestions = actualCriterion.allQuestions
-    .filter(question => answer.idOptionSupplier === question.dependOfOptionId);
-  actualCriterion.questions.splice(actualIndex + 1, 0, ...dependencyQuestions);
-  const actualQuestion = actualCriterion.questions[actualIndex];
-  const filteredDependency = validateAnswer(actualQuestion, actualCriterion.questions);
-  actualCriterion.questions = removeRecursive(
-    actualQuestion,
-    actualIndex,
-    filteredDependency,
-    actualCriterion.questions,
-    false,
-  );
-  actualQuestion.answer[0] = answer;
-  if (actualQuestion.errors) {
-    if (answer.idOptionSupplier || answer.responseSupplier) {
-      actualQuestion.errors.answers = false;
-    }
-    if (actualQuestion.requireAttachment) {
-      if (answer.attachment) {
-        if (answer.attachment.length > 0) {
-          actualQuestion.errors.attachments = false;
-        }
-      }
-    }
-  }
+function saveAnswerSuccess(allDimensions) {
   return {
     type: SAVE_DATA_ANSWER_SUCCESS,
     dimensions: allDimensions,
@@ -498,18 +474,51 @@ function saveDataCallBySupplier(clientData) {
       });
   };
 }
-function saveAnswer(clientAnswer, idDimension, idCriterion) {
-  return (dispatch, getActualState) => {
+
+const deleteAnswers = (dispatch, answers) => (
+  requestApiNotLoading(dispatch, deleteAnswersApi, { answers })
+);
+
+const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
+  (dispatch, getActualState) => {
     requestApi(dispatch, getDataSupplierProgress, saveAnswerApi, clientAnswer)
       .then((respone) => {
         const answer = respone.data.data;
         const dimensions = [...getActualState().supplier.dimensions];
-        dispatch(saveAnswerSuccess(dimensions, idDimension, answer, idCriterion));
+        const allDimensions = [...dimensions];
+        const actualDimension = allDimensions.find(dimension => dimension.id === idDimension);
+        const actualCriterion = actualDimension.criterions
+          .find(criteria => criteria.id === idCriterion);
+        const actualQuestion = actualCriterion.questions
+          .find(question => question.id === answer.idQuestion);
+        actualQuestion.answer[0] = answer;
+        const removeIds = [];
+        actualCriterion.questions = removeRecursive(
+          actualQuestion,
+          actualCriterion.questions,
+          removeIds,
+        );
+        if (removeIds.length > 0) {
+          deleteAnswers(dispatch, removeIds);
+        }
+        if (actualQuestion.errors) {
+          if (answer.idOptionSupplier || answer.responseSupplier) {
+            actualQuestion.errors.answers = false;
+          }
+          if (actualQuestion.requireAttachment) {
+            if (answer.attachment) {
+              if (answer.attachment.length > 0) {
+                actualQuestion.errors.attachments = false;
+              }
+            }
+          }
+        }
+        dispatch(saveAnswerSuccess(allDimensions));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
+  }
+);
 
 function saveDataCallSupplier(clientCall, clientSupplier) {
   return (dispatch) => {
@@ -583,6 +592,19 @@ function finishSurvey() {
       });
   };
 }
+function setNumberOfDirectEmployees(value) {
+  return {
+    type: ADD_DIRECT_EMPLOYEES,
+    value: isNaN(value) ? 0 : parseInt(value, 10),
+  };
+}
+
+function setNumberOfSubContratedEmployees(value) {
+  return {
+    type: ADD_SUB_EMPLOYEES,
+    value: isNaN(value) ? 0 : parseInt(value, 10),
+  };
+}
 
 export {
   getDataSupplier,
@@ -606,4 +628,6 @@ export {
   cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
+  setNumberOfDirectEmployees,
+  setNumberOfSubContratedEmployees,
 };

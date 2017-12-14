@@ -226,7 +226,7 @@ class Question extends Component {
                 <Table
                   key={criteria.key}
                   pagination={false}
-                  dataSource={criteria.questions}
+                  dataSource={criteria.questions.filter(quiestion => quiestion.visible)}
                 >
                   {
                     columns.map(column => (
