@@ -167,6 +167,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             UserBLO userBLO = new UserBLO();
             access = userBLO.loadAccess();
         }
+        access.add("*.*");
         return access;
     }
 

@@ -29,6 +29,8 @@ public class AnswerDTO {
     private List<String> idAttachment;
     @Expose
     private List<AttachmentDTO> attachment;
+    @Expose
+    private List<String> idsToDelete;
 
     public String getIdSupplierByCall() {
         return idSupplierByCall;
@@ -37,7 +39,6 @@ public class AnswerDTO {
     public void setIdSupplierByCall(String idSupplierByCall) {
         this.idSupplierByCall = idSupplierByCall;
     }
-
     public String getIdOptionSupplier() {
         return idOptionSupplier;
     }
@@ -125,6 +126,10 @@ public class AnswerDTO {
 
     public void setAttachment(List<AttachmentDTO> attachment) {
         this.attachment = attachment;
+    }
+
+    public List<String> getIdsToDelete() {
+        return idsToDelete;
     }
 
 }

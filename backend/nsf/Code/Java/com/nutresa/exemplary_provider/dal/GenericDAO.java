@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dal;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -422,7 +423,8 @@ public abstract class GenericDAO<T> {
             List<View> views = database.getViews(null == defaultView ? entity : defaultView);
             for (View view : views) {
                 ArrayList<ViewColumn> columns = new ArrayList<ViewColumn>(view.getColumns());
-                if (validateColumnsInView(columns, parameters.keySet())) {
+                Set<String> parameterKeys = new LinkedHashMap<String, String>(parameters).keySet();
+                if (validateColumnsInView(columns, parameterKeys)) {
                     indexedView = view;
                     break;
                 }

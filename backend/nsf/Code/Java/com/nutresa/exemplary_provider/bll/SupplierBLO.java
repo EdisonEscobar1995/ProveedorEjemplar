@@ -140,7 +140,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         }
         return response;
     }
-    
+
     public String getPassword(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         return supplierDAO.getPassword(supplier);
