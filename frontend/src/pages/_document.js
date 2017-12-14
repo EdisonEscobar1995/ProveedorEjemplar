@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Layout, Breadcrumb, Icon } from 'antd';
 import getUserContext from '../state/User/action';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
+import { loginUrl } from '../utils/api';
 
 const { Header, Footer, Content } = Layout;
 
@@ -85,7 +87,7 @@ class Document extends Component {
   }
 
   render() {
-    const { userInfo, pathInfo } = this.props.data;
+    const { userInfo } = this.props.data;
     return (
       <Layout>
         <HeaderLogoStyle>
@@ -102,7 +104,7 @@ class Document extends Component {
                     {userInfo && userInfo.name}
                   </NameStyle>
                   <CloseStyle>
-                    <a href={pathInfo && `${pathInfo.host}${pathInfo.webDbName}?login&redirectto=${pathInfo.webDbName}/dist/index.html`}>
+                    <a href={loginUrl}>
                       Cerrar sesión
                     </a>
                   </CloseStyle>
@@ -144,4 +146,4 @@ const mapDispatchToProps = dispatch => ({
   getUserContext: () => dispatch(getUserContext()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Document);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Document));
