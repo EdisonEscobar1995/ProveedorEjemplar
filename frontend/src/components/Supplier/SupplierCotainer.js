@@ -23,6 +23,8 @@ import {
   cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
+  setNumberOfDirectEmployees,
+  setNumberOfSubContratedEmployees,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -124,6 +126,12 @@ const mapDispatchToProps = dispatch => ({
   },
   finishSurvey: () => {
     dispatch(finishSurvey());
+  },
+  setNumberOfDirectEmployees: (value) => {
+    dispatch(setNumberOfDirectEmployees(value));
+  },
+  setNumberOfSubContratedEmployees: (value) => {
+    dispatch(setNumberOfSubContratedEmployees(value));
   },
 });
 

@@ -20,7 +20,7 @@ const columnsCall = [{
   dataIndex: 'active',
   key: 'active',
   render(text, record) {
-    return record.active === true ? 'Active' : 'Inactivo';
+    return record.active === true ? 'Activo' : 'Inactivo';
   },
 }];
 

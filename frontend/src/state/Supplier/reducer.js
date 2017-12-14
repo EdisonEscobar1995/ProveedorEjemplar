@@ -22,6 +22,8 @@ import {
   CANCEL_CUSTOMER,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY,
+  ADD_DIRECT_EMPLOYEES,
+  ADD_SUB_EMPLOYEES,
 } from './const';
 
 import reloadKeys from '../../utils/reducerUtils';
@@ -226,6 +228,24 @@ function supplierApp(state = initialState, action) {
         ...state,
         readOnly: action.readOnly,
         loading: false,
+      };
+    case ADD_DIRECT_EMPLOYEES:
+      return {
+        ...state,
+        supplier: {
+          ...state.supplier,
+          numberOfDirectEmployees: action.value,
+          employeesTotal: state.supplier.numberOfSubContratedEmployees + action.value,
+        },
+      };
+    case ADD_SUB_EMPLOYEES:
+      return {
+        ...state,
+        supplier: {
+          ...state.supplier,
+          numberOfSubContratedEmployees: action.value,
+          employeesTotal: state.supplier.numberOfDirectEmployees + action.value,
+        },
       };
     default: {
       return state;

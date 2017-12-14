@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -164,10 +163,15 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     private boolean validateAccess(List<String> access, String api, String action) {
         boolean response = false;
-        String[] accessToCheck = new String[] { "*.*", api + ".*", "*." + action, api + "." + action };
+        String[] accessToCheck = new String[] { api + "." + action, "*." + action, api + ".*", "*.*" };
         
-        if (access != null && access.containsAll(Arrays.asList(accessToCheck))) {
-                response = true;
+        if (access != null) {
+            for (String check : accessToCheck) {
+                if(access.contains(check)) {
+                    response = true;
+                    break;
+                }
+            }
         }
         return response;
     }

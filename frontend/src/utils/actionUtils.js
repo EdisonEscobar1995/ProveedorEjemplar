@@ -58,7 +58,12 @@ const requestApiNotLoading = (dispatch, apiMethod, clientData) => (
   executeApi(dispatch, apiMethod, clientData)
 );
 
+function sortByField(array, field) {
+  return array.sort((a, b) => (a[field] < b[field] ? -1 : 1));
+}
+
 export {
   requestApi as default,
   requestApiNotLoading,
+  sortByField,
 };

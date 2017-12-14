@@ -97,7 +97,7 @@ class General extends Component {
             <Option value="false">No</Option>
           </Select>
         </Field>
-        <SubTitle text="Información de la empresa" />
+        {participateInCall !== false ? <SubTitle text="Información de la empresa" /> : ''}
         <ParagraphStyle>
           Los campos marcados con asterisco(*) son requeridos
         </ParagraphStyle>

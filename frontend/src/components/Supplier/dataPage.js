@@ -25,6 +25,15 @@ const defaultMoneyType = [
   },
 ];
 
+const getAnios = () => {
+  const anios = [];
+  const date = new Date();
+  for (let i = 1950; i <= date.getFullYear(); i += 1) {
+    anios.push({ id: i.toString(), name: i.toString() });
+  }
+  return anios;
+};
+
 function getValueOption(value) {
   if (typeof (value) === 'boolean') {
     return value.toString();
@@ -225,10 +234,11 @@ function generalInfo(fields) {
         },
         {
           span: 6,
-          type: 'input',
+          type: 'select',
           label: 'Año de establecimiento',
           key: 'yearOfEstablishment',
-          value: yearOfEstablishment,
+          value: yearOfEstablishment.toString(),
+          options: getAnios(),
           disabled,
         },
       ],
@@ -487,6 +497,8 @@ function comercialInfo(fields) {
     system,
     updateAttachment,
     deleteAttachment,
+    setNumberOfDirectEmployees,
+    setNumberOfSubContratedEmployees,
   } = fields;
   const {
     idSector,
@@ -499,6 +511,7 @@ function comercialInfo(fields) {
     annualSalesValue,
     numberOfDirectEmployees,
     numberOfSubContratedEmployees,
+    employeesTotal,
     participationInSalesWithGroupNutresa,
     nameContactPersonInGroupNutresa,
     emailContactPersonInGroupNutresa,
@@ -649,6 +662,7 @@ function comercialInfo(fields) {
           label: 'Número de empleados directos',
           key: 'numberOfDirectEmployees',
           value: numberOfDirectEmployees,
+          handleChange: setNumberOfDirectEmployees,
           disabled,
           rules: [
             { ...intValidation },
@@ -660,6 +674,7 @@ function comercialInfo(fields) {
           label: 'Número de empleados subcontratados',
           key: 'numberOfSubContratedEmployees',
           value: numberOfSubContratedEmployees,
+          handleChange: setNumberOfSubContratedEmployees,
           disabled,
           rules: [
             { ...intValidation },
@@ -671,7 +686,7 @@ function comercialInfo(fields) {
           label: 'Total empleados (Directos + Subcontratados)',
           inputType: 'number',
           key: 'employeesTotal',
-          value: numberOfSubContratedEmployees + numberOfDirectEmployees,
+          value: employeesTotal,
           disabled: true,
         },
         {

@@ -23,6 +23,8 @@ import {
   CANCEL_CUSTOMER,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY,
+  ADD_DIRECT_EMPLOYEES,
+  ADD_SUB_EMPLOYEES,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -41,7 +43,7 @@ import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi, deleteAnswersApi } from '../../api/answer';
 import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
-import requestApi, { requestApiNotLoading } from '../../utils/actionUtils';
+import requestApi, { requestApiNotLoading, sortByField } from '../../utils/actionUtils';
 import setMessage from '../Generic/action';
 
 
@@ -52,22 +54,28 @@ function getDataSupplierProgress() {
 }
 
 function getDataSupplierSuccess(data) {
+  data.supplier.employeesTotal =
+  data.supplier.numberOfDirectEmployees +
+  data.supplier.numberOfSubContratedEmployees;
+
   const {
     supplier,
     call,
     rules,
     supply,
-    companyTypes,
-    companySizes,
-    societyTypes,
-    countries,
-    categories,
-    subcategories,
-    sectors,
-    departments,
-    cities,
     system,
   } = data;
+
+  const companyTypes = sortByField(data.companyTypes, 'name');
+  const companySizes = sortByField(data.companySizes, 'name');
+  const societyTypes = sortByField(data.societyTypes, 'name');
+  const countries = sortByField(data.countries, 'name');
+  const categories = sortByField(data.categories, 'name');
+  const subcategories = sortByField(data.subcategories, 'name');
+  const sectors = sortByField(data.sectors, 'name');
+  const departments = sortByField(data.departments, 'name');
+  const cities = sortByField(data.cities, 'name');
+
   const { principalCustomer } = supplier;
   let { readOnly } = rules;
   readOnly = readOnly || call.lockedByModification;
@@ -381,7 +389,7 @@ function getDataCategoryBySuply(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCategoryBySuplyApi, clientData)
       .then((respone) => {
-        const categories = respone.data.data;
+        const categories = sortByField(respone.data.data, 'name');
         dispatch(getDataCategorySuccess(categories));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -392,7 +400,7 @@ function getDataSubCategoryByCategory(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataSubCategoryByCategoryApi, clientData)
       .then((respone) => {
-        const subcategories = respone.data.data;
+        const subcategories = sortByField(respone.data.data, 'name');
         dispatch(getDataSubCategorySuccess(subcategories));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -404,7 +412,7 @@ function getDataDepartmentsByCountry(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataDepartmentsByCountryApi, clientData)
       .then((respone) => {
-        const departsments = respone.data.data;
+        const departsments = sortByField(respone.data.data, 'name');
         dispatch(getDataDepartmentsByCountrySuccess(departsments));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -415,7 +423,7 @@ function getDataCitiesByDepartment(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCitiesByDepartmentApi, clientData)
       .then((respone) => {
-        const cities = respone.data.data;
+        const cities = sortByField(respone.data.data, 'name');
         dispatch(getDataCitiesByDepartmentSuccess(cities));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -584,6 +592,19 @@ function finishSurvey() {
       });
   };
 }
+function setNumberOfDirectEmployees(value) {
+  return {
+    type: ADD_DIRECT_EMPLOYEES,
+    value: isNaN(value) ? 0 : parseInt(value, 10),
+  };
+}
+
+function setNumberOfSubContratedEmployees(value) {
+  return {
+    type: ADD_SUB_EMPLOYEES,
+    value: isNaN(value) ? 0 : parseInt(value, 10),
+  };
+}
 
 export {
   getDataSupplier,
@@ -607,4 +628,6 @@ export {
   cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
+  setNumberOfDirectEmployees,
+  setNumberOfSubContratedEmployees,
 };

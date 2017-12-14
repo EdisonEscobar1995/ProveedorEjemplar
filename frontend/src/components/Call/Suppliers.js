@@ -26,7 +26,7 @@ function Suppliers({
     dataIndex: 'emails',
     key: 'emails',
     render(text, record) {
-      return record.emails.map(email => (<div>{email}</div>));
+      return record.emails.map(email => (<div key={email}>{email}</div>));
     },
   }, {
     title: 'Tipo de suministro',
