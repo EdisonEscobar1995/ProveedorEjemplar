@@ -123,7 +123,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     @SuppressWarnings("unchecked")
     private ServletResponseDTO proccessRequest(TypeRequestMethod requestMethod, String action, Map<String, String> parameters)
-        throws Exception, HandlerGenericException, IOException {
+        throws HandlerGenericException, IOException, IllegalAccessException, InvocationTargetException {
         ServletResponseDTO servletResponse = null;
         if (null != action) {
             switch (requestMethod) {
