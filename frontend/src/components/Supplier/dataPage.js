@@ -499,8 +499,11 @@ function comercialInfo(fields) {
     deleteAttachment,
     setNumberOfDirectEmployees,
     setNumberOfSubContratedEmployees,
+    setSector,
+    setExport,
   } = fields;
   const {
+    idCategory,
     idSector,
     otherSector,
     webSite,
@@ -523,8 +526,15 @@ function comercialInfo(fields) {
     globalAgreement,
     chemicalSubstance,
     attachedFinancialReport,
+    actualSector,
+    actuallyExport,
   } = supplier;
-  const { uploadMaxFilesize, uploadExtensions } = system;
+  const {
+    uploadMaxFilesize,
+    uploadExtensions,
+    otherSectorId,
+    packagingMaterialCategoryId,
+  } = system;
   const disabled = readOnly;
   return [
     {
@@ -537,14 +547,17 @@ function comercialInfo(fields) {
           key: 'idSector',
           value: idSector,
           options: sectors,
+          handleChange: setSector,
           disabled,
         },
         {
           span: 8,
           type: 'input',
-          label: 'Otro cual?',
+          label: '¿Otro cuál?',
           key: 'otherSector',
           value: otherSector,
+          hidden: (actualSector !== otherSectorId),
+          required: true,
           disabled,
         },
         {
@@ -566,6 +579,7 @@ function comercialInfo(fields) {
           key: 'packagingProvided',
           value: packagingProvided,
           required: true,
+          hidden: (idCategory !== packagingMaterialCategoryId),
           disabled,
           options: [
             {
@@ -783,6 +797,7 @@ function comercialInfo(fields) {
           label: '¿Actualmente exporta?',
           key: 'currentlyExport',
           value: getValueOption(currentlyExport),
+          handleChange: setExport,
           options: defaultOptions,
           disabled,
         },
@@ -792,6 +807,8 @@ function comercialInfo(fields) {
           label: 'Destinos de exportación',
           key: 'exportDestination',
           value: exportDestination,
+          hidden: !actuallyExport,
+          required: true,
           disabled,
         },
       ],

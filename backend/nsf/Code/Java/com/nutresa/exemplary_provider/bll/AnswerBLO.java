@@ -1,6 +1,5 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
@@ -24,14 +23,7 @@ public class AnswerBLO extends GenericBLO<OptionDTO, AnswerDAO> {
         AnswerDAO answerDAO = new AnswerDAO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         String idSupplierByCall = supplierByCallBLO.getCurrentCallBySupplier().getId();
-
-        ArrayList<String> filterForDelete = new ArrayList<String>();
-        for (String answerId : answerIds) {
-            filterForDelete.add(answerId);
-            filterForDelete.add(idSupplierByCall);
-        }
-
-        answerDAO.deleteMassive(filterForDelete);
+        answerDAO.deleteMassive(answerIds, idSupplierByCall);
         return answer;
     }
 }

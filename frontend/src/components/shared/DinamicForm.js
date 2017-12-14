@@ -49,6 +49,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   disabled,
                   format,
                   rules = [],
+                  hidden,
                 } = current;
                 allowClear = allowClear === undefined ? true : allowClear;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
@@ -182,19 +183,26 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         break;
                     }
                     rowValue = (
-                      <Field label={label} help={help}>
-                        <ItemStyle>
-                          {getFieldDecorator(key, {
-                            rules: [
-                              { required, message: 'Por favor diligencia el campo' },
-                              ...rules,
-                            ],
-                            initialValue: value,
-                          })(
-                            fieldContent,
-                          )}
-                        </ItemStyle>
-                      </Field>
+                      <div>
+                        {
+                          !hidden ?
+                            <Field label={label} help={help}>
+                              <ItemStyle>
+                                {getFieldDecorator(key, {
+                                  rules: [
+                                    { required, message: 'Por favor diligencia el campo' },
+                                    ...rules,
+                                  ],
+                                  initialValue: value,
+                                })(
+                                  fieldContent,
+                                )}
+                              </ItemStyle>
+                            </Field>
+                            :
+                            null
+                        }
+                      </div>
                     );
                     break;
                   }
