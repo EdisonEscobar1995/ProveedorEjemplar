@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Alerts)' alias='Alert|vwAlerts' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
+ version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='1122' unid='DB921C6189A0311D052581DA0067DA5A' sequence='23'>
-<created><datetime>20171116T135421,06-05</datetime></created>
-<modified><datetime>20171127T161433,36-05</datetime></modified>
-<revised><datetime>20171127T161433,35-05</datetime></revised>
-<lastaccessed><datetime>20171127T161433,36-05</datetime></lastaccessed>
-<addedtofile><datetime>20171116T135421,08-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='24e' unid='95061AC4F0888CEA052581DB006A7875' sequence='30'>
+<created><datetime>20171117T142256,53-05</datetime></created>
+<modified><datetime>20171214T134928,81-05</datetime></modified>
+<revised><datetime>20171214T134928,80-05</datetime></revised>
+<lastaccessed><datetime>20171214T134928,81-05</datetime></lastaccessed>
+<addedtofile><datetime>20171117T142256,55-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frAlert"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

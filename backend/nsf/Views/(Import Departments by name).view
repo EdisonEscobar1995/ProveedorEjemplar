@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Import Departments by name)' alias='ImportDepartmentsByName'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
@@ -9,14 +9,14 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='16da' unid='F40EB57CE7226199052581DF004936EC' sequence='13'>
-<created><datetime>20171121T081941,88-05</datetime></created>
-<modified><datetime>20171127T161433,84-05</datetime></modified>
-<revised><datetime>20171127T161433,83-05</datetime></revised>
-<lastaccessed><datetime>20171127T161433,84-05</datetime></lastaccessed>
-<addedtofile><datetime>20171121T081942,00-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='626' unid='647FF705D8B0B318052581DF004EEB0F' sequence='22'>
+<created><datetime>20171121T092159,83-05</datetime></created>
+<modified><datetime>20171214T134930,28-05</datetime></modified>
+<revised><datetime>20171214T134930,27-05</datetime></revised>
+<lastaccessed><datetime>20171214T134930,28-05</datetime></lastaccessed>
+<addedtofile><datetime>20171121T092159,88-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frDepartment"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
