@@ -14,7 +14,7 @@ public class SupplierByCallDTO {
     @Expose
     private String idSupplier;
     @Expose
-    private boolean participateInCall;
+    private String participateInCall;
     @Expose
     private String reasonForNotParticipation;
     @Expose
@@ -54,11 +54,11 @@ public class SupplierByCallDTO {
         this.idSupplier = idSupplier;
     }
 
-    public boolean isParticipateInCall() {
+    public String isParticipateInCall() {
         return participateInCall;
     }
 
-    public void setParticipateInCall(boolean participateInCall) {
+    public void setParticipateInCall(String participateInCall) {
         this.participateInCall = participateInCall;
     }
 

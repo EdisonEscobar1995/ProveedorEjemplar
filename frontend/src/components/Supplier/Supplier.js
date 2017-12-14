@@ -34,7 +34,7 @@ class Supplier extends Component {
         ),
       },
     ];
-    if (this.props.participateInCall) {
+    if (this.props.participateInCall === 'true') {
       steps.push(
         {
           name: 'Información Comercial',
@@ -100,23 +100,23 @@ class Supplier extends Component {
     this.setState({ current });
   }
   save = (values, action) => {
-    if (!this.props.changeIdCompanySize && this.props.participateInCall) {
+    if (!this.props.changeIdCompanySize && this.props.participateInCall === 'true') {
       const { call } = { ...this.props };
       const newSupplier = this.getSupplierValues(values);
-      call.participateInCall = true;
+      call.participateInCall = 'true';
       this.props.saveDataCallSupplier(call, newSupplier);
       if (action === 'send') {
         this.next();
       }
-    } else if (!this.props.participateInCall) {
-      values.participateInCall = false;
+    } else if (this.props.participateInCall === 'false') {
+      values.participateInCall = 'false';
       values.lockedByModification = true;
       this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
     } else {
       const { call } = { ...this.props };
       const newSupplier = this.getSupplierValues(values);
       call.lockedByModification = true;
-      call.participateInCall = true;
+      call.participateInCall = 'true';
       this.props.saveDataCallSupplier(call, newSupplier);
     }
   }

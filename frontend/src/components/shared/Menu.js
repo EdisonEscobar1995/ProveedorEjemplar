@@ -35,7 +35,6 @@ function Menu(props) {
       {menu && menu.map((item) => {
         const entry = routes.find(route => item.name === route.name);
         if (item.type === 'menu' && entry) {
-          console.log(entry.path);
           return (
             <ItemStyle key={item.id}>
               <Link to={entry.path}>
