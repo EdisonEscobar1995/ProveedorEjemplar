@@ -70,7 +70,7 @@ public class LogDTO implements DTO {
     }
 
     public void setStackTrace(Exception exception) {
-        this.stackTrace = exception.getStackTrace().toString();
+        this.stackTrace = Common.getStackTrace(exception);
     }
     
     public void setDate(Date date) {

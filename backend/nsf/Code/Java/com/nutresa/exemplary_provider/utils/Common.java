@@ -220,7 +220,7 @@ public class Common {
 
     public static void logError(String message, Exception exception) {
         System.err.println(message + Common.getExceptionMessage(exception));
-        System.err.println("Stack trace: " + getStackTrace(exception));
+        System.err.println("Stack trace: " + Common.getStackTrace(exception));
     }
 
     public static String getStackTrace(Exception exception) {
