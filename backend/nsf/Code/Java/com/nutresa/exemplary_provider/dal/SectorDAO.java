@@ -6,6 +6,7 @@ public class SectorDAO extends GenericDAO<SectorDTO> {
 
     public SectorDAO() {
         super(SectorDTO.class);
+        translatable = true;
     }
 
 }

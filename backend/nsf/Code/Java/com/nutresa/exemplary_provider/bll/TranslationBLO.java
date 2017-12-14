@@ -67,7 +67,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
             try {
                 loadTranslation(language, entity);
             } catch (HandlerGenericException exception) {
-                // TODO guardar la excepcion
+                LogBLO.logError("Translation", "Error loading translator to " + entity, exception);
             }
         }
         return new Translator(translationTable.get(language + "_" + entity));
@@ -82,7 +82,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
             try {
                 loadDictionary(component);
             } catch (HandlerGenericException exception) {
-                // TODO guardar la excepcion
+                LogBLO.logError("Translation", "Error loading dictionary to " + component, exception);
             }
         }
         return new Dictionary(dictionaryTable.get(component));
@@ -176,22 +176,22 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     
     public static class Dictionary {
 
-        private HashMap<String, String> dictionary = null;
+        private HashMap<String, String> dictionaries = null;
 
         protected Dictionary(HashMap<String, String> dictionary) {
-            this.dictionary = dictionary;
+            this.dictionaries = dictionary;
         }
 
         public boolean isEmpty() {
-            return null == dictionary || dictionary.size() == 0;
+            return null == dictionaries || dictionaries.size() == 0;
         }
 
         public boolean hasTranslation(String name) {
-            return !isEmpty() && dictionary.containsKey(name);
+            return !isEmpty() && dictionaries.containsKey(name);
         }
 
         public String get(String name) {
-            return hasTranslation(name) ? dictionary.get(name) : name;
+            return hasTranslation(name) ? dictionaries.get(name) : name;
         }
 
     }

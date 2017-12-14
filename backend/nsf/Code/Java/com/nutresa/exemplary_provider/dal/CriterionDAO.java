@@ -6,6 +6,7 @@ public class CriterionDAO extends GenericDAO<CriterionDTO> {
 
     public CriterionDAO() {
         super(CriterionDTO.class);
+        translatable = true;
     }
 
 }

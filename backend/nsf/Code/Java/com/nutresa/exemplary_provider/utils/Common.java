@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.utils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -82,11 +84,14 @@ public class Common {
     }
 
     public static String getExceptionMessage(Exception exception) {
-        String message = exception.getMessage();
-        if (null == message || message.length() == 0) {
-            message = exception.getCause().getMessage();
+        String message = "";
+        if (null != exception) {
+            message = exception.getMessage();
             if (null == message || message.length() == 0) {
-                message = exception.getClass().getSimpleName();
+                message = exception.getCause().getMessage();
+                if (null == message || message.length() == 0) {
+                    message = exception.getClass().getSimpleName();
+                }
             }
         }
         return message;
@@ -157,7 +162,11 @@ public class Common {
     }
 
     private static boolean isValidId(String value, StringBuilder ids, boolean uniqueIds) {
-        return null != value && !value.isEmpty() && (!uniqueIds || (uniqueIds && ids.indexOf(value) == -1));
+        return null != value && !value.isEmpty() && isUniqueId(value, ids, uniqueIds);
+    }
+
+    private static boolean isUniqueId(String value, StringBuilder ids, boolean uniqueIds) {
+        return (!uniqueIds || (uniqueIds && ids.indexOf(value) == -1));
     }
 
     private static boolean isValidListIds(List<Object> list, int size) {
@@ -172,7 +181,7 @@ public class Common {
 
     @SuppressWarnings("unchecked")
     public static <T> Map<String, List<Object>> getDtoFields(List<T> data, String[] idFieldsNames, Class clazz)
-            throws HandlerGenericException {
+        throws HandlerGenericException {
         Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
         Map<String, Field> listFields = new HashMap<String, Field>();
 
@@ -207,6 +216,23 @@ public class Common {
             list.add(item);
         }
         return list;
+    }
+
+    public static void logError(String message, Exception exception) {
+        message = null != message ? message : "";
+        System.err.println(message + Common.getExceptionMessage(exception));
+        System.err.println("Stack trace: " + Common.getStackTrace(exception));
+    }
+
+    public static String getStackTrace(Exception exception) {
+        String response = "";
+        if (null != exception) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            exception.printStackTrace(printWriter);
+            response = stringWriter.toString().replace("\\\\", "\\");
+        }
+        return response;
     }
 
 }
