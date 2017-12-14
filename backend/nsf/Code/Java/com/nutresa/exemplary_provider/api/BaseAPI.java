@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.api;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
@@ -23,11 +22,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.openntf.domino.utils.DominoUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ibm.xsp.http.io.IOUtils;
 import com.ibm.xsp.webapp.DesignerFacesServlet;
+import com.nutresa.exemplary_provider.bll.LogBLO;
 import com.nutresa.exemplary_provider.bll.TranslationBLO;
 import com.nutresa.exemplary_provider.bll.UserBLO;
 import com.nutresa.exemplary_provider.dal.TranslationDAO;
@@ -40,6 +39,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     protected Class<T> dtoClass;
     protected HttpServletResponse httpResponse;
     protected HttpServletRequest httpRequest;
+    protected String dateFomat = "yyyy/MM/dd";
 
     private enum typeRequestMethod {
         GET, POST, OPTIONS
@@ -58,18 +58,16 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         try {
             httpResponse = (HttpServletResponse) servletResponse;
             httpRequest = (HttpServletRequest) servletRequest;
+            facesContext = this.getFacesContext(httpRequest, httpResponse);
 
             httpResponse.setContentType("application/json; charset=utf-8");
             httpResponse.setHeader("Cache-Control", "no-cache");
             httpResponse.setCharacterEncoding("UTF-8");
             output = httpResponse.getOutputStream();
-            facesContext = this.getFacesContext(httpRequest, httpResponse);
-            // Factory.getSession().setSessionType(null);
+
             doService(httpRequest, httpResponse, facesContext, output);
         } catch (Exception exception) {
-            DominoUtils.handleException(new Throwable(exception));
-            exception.printStackTrace(new PrintStream(output));
-            throw new ServletException(exception);
+            LogBLO.log("Error loading servlet", exception);
         } finally {
             if (null != facesContext) {
                 facesContext.responseComplete();
@@ -131,7 +129,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             response.setStatus(status);
             if (null != servletResponse) {
                 Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-                    .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
+                    .setDateFormat(dateFomat).setPrettyPrinting().create();
 
                 String jsonResponse = gson.toJson(servletResponse);
                 byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
@@ -237,16 +235,11 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             throw new HandlerGenericException(exception); 
         } finally {
             if (null != streamReader) {
-                try {
-                    streamReader.close();
-                } catch (IOException exception) {
-                    // TODO almacenar en un log para no lanzar una exception
-                    throw new HandlerGenericException(exception);
-                }
+                IOUtils.closeQuietly(streamReader);
             }
         }
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-        .setDateFormat("yyyy/MM/dd").setPrettyPrinting().create();
+        .setDateFormat(dateFomat).setPrettyPrinting().create();
         
         return gson.fromJson(stringBuilder.toString(), this.dtoClass);
     }

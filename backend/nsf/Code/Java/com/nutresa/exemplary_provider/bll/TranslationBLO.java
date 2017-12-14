@@ -67,7 +67,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
             try {
                 loadTranslation(language, entity);
             } catch (HandlerGenericException exception) {
-                // TODO guardar la excepcion
+                LogBLO.logError("Translation", "Error loading translator to " + entity, exception);
             }
         }
         return new Translator(translationTable.get(language + "_" + entity));
@@ -82,7 +82,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
             try {
                 loadDictionary(component);
             } catch (HandlerGenericException exception) {
-                // TODO guardar la excepcion
+                LogBLO.logError("Translation", "Error loading dictionary to " + component, exception);
             }
         }
         return new Dictionary(dictionaryTable.get(component));

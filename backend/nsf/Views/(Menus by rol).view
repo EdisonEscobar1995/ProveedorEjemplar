@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(Menu)' alias='Menu|vwMenus' xmlns='http://www.lotus.com/dxl'
+<view name='(Menus by rol)' alias='Menu|vwMenusByRol' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.8' replicaid='052581C9005F029D' hide='web'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,12 +9,12 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='abc6' unid='54203AA73181610A052581F3002C3C3D' sequence='3'>
-<created><datetime>20171211T030310,05-05</datetime></created>
-<modified><datetime>20171211T030406,11-05</datetime></modified>
-<revised><datetime>20171211T030406,10-05</datetime></revised>
-<lastaccessed><datetime>20171211T030406,11-05</datetime></lastaccessed>
-<addedtofile><datetime>20171211T030310,05-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='abd6' unid='2EBBC472DBB732D0052581F300300A41' sequence='7'>
+<created><datetime>20171211T034443,53-05</datetime></created>
+<modified><datetime>20171214T012310,09-05</datetime></modified>
+<revised><datetime>20171214T012310,08-05</datetime></revised>
+<lastaccessed><datetime>20171214T012310,09-05</datetime></lastaccessed>
+<addedtofile><datetime>20171211T034443,55-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Mauricio Alexander Florez Patino/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frMenu"</formula></code><code event='querypaste'><lotusscript
@@ -22,7 +22,10 @@
 	Continue = False
 End Sub
 </lotusscript></code>
-<column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
- resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='id'><font size='9pt' style='bold'/></columnheader></column></view>
+<column sort='ascending' hidedetailrows='false' itemname='idsRol' width='17.2500'
+ resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idsRol'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='id' width='10' resizable='true'
+ separatemultiplevalues='false' sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
+ title='id'><font size='9pt' style='bold'/></columnheader></column></view>
 

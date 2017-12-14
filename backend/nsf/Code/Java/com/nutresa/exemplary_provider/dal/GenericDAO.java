@@ -19,9 +19,11 @@ import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.utils.Factory;
 
+import com.nutresa.exemplary_provider.bll.LogBLO;
 import com.nutresa.exemplary_provider.bll.TranslationBLO;
 import com.nutresa.exemplary_provider.bll.TranslationBLO.Translator;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.LogDTO.ErrorType;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -56,7 +58,6 @@ public abstract class GenericDAO<T> {
 
         this.entityForm = PREFIX_FORM + entity;
         this.entityView = PREFIX_VIEW + entity + "s";
-        // translator = new TranslationBLO.Translator();
     }
 
     public T get(String id) throws HandlerGenericException {
@@ -75,7 +76,7 @@ public abstract class GenericDAO<T> {
         Document document = null;
         loadTranslator();
         if (null == view) {
-            System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
+            LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
             if (view.FTSearch(query, 1) > 0) {
@@ -200,7 +201,8 @@ public abstract class GenericDAO<T> {
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
         loadTranslator();
-        System.out.println(String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
+        LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
+
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
             for (ViewEntry viewEntry : vec) {

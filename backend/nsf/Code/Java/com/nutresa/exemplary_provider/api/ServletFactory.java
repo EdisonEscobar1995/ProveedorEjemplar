@@ -37,6 +37,7 @@ public class ServletFactory implements IServletFactory {
                 return new ServletMatch(getWidgetServlet(pathLevels[2]), servletPath, pathInfo);
             }
         } catch (Exception exception) {
+            Common.logError("Error loading servlet", exception);
             return new ServletMatch(getErrorServlet(), "", "");
         }
         return new ServletMatch(getErrorServlet(), "", "");
