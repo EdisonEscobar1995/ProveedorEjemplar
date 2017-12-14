@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu as MenuAnt, Spin } from 'antd';
+import { Menu as MenuAnt } from 'antd';
 import styled from 'styled-components';
 import routes from '../../routes';
-import getMenuByRol from '../../state/Menu/action';
 
 const { Item } = MenuAnt;
 
@@ -28,43 +26,27 @@ const ItemStyle = styled(Item)`
   }
 `;
 
-class Menu extends Component {
-  componentDidMount() {
-    this.props.getMenuByRol();
-  }
-
-  render() {
-    return (
-      <Spin spinning={this.props.loading}>
-        <MenuStyle
-          mode="horizontal"
-        >
-          {this.props.menu.map((item) => {
-            const entry = routes.find(route => item.name === route.name);
-            if (item.type === 'menu' && entry) {
-              return (
-                <ItemStyle key={item.id}>
-                  <Link to={entry.path}>
-                    {item.title}
-                  </Link>
-                </ItemStyle>
-              );
-            }
-            return null;
-          })}
-        </MenuStyle>
-      </Spin>
-    );
-  }
+function Menu(props) {
+  const { menu } = props.data;
+  return (
+    <MenuStyle
+      mode="horizontal"
+    >
+      {menu && menu.map((item) => {
+        const entry = routes.find(route => item.name === route.name);
+        if (item.type === 'menu' && entry) {
+          return (
+            <ItemStyle key={item.id}>
+              <Link to={entry.path}>
+                {item.title}
+              </Link>
+            </ItemStyle>
+          );
+        }
+        return null;
+      })}
+    </MenuStyle>
+  );
 }
 
-const mapStateToProps = state => ({
-  menu: state.menu.data,
-  loading: state.menu.loading,
-});
-
-const mapDispatchToProps = dispatch => ({
-  getMenuByRol: () => dispatch(getMenuByRol()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+export default Menu;
