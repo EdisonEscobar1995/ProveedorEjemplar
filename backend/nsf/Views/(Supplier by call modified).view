@@ -9,15 +9,15 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='2db4a' unid='C8EB3A512C258962052581E5007E0498' sequence='11'>
+<noteinfo noteid='2db4a' unid='C8EB3A512C258962052581E5007E0498' sequence='12'>
 <created><datetime>20171127T175627,12-05</datetime></created>
-<modified><datetime>20171215T015528,51-05</datetime></modified>
-<revised><datetime>20171215T015528,50-05</datetime></revised>
-<lastaccessed><datetime>20171215T015528,51-05</datetime></lastaccessed>
+<modified><datetime>20171215T044922,24-05</datetime></modified>
+<revised><datetime>20171215T044922,23-05</datetime></revised>
+<lastaccessed><datetime>20171215T044922,24-05</datetime></lastaccessed>
 <addedtofile><datetime>20171127T175627,18-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frSupplierByCall" &amp; oldIdCompanySize != "" &amp; participateInCall = "true"</formula></code><code
+ event='selection'><formula>SELECT form = "frSupplierByCall" &amp; participateInCall = "true" &amp; (@Text(dateLocked) != "" | @Text(dateUnLocked) != "")</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
