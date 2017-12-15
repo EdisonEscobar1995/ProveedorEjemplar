@@ -64,7 +64,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+    }
 
+    public void participateInCall() throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        SupplierByCallDTO supplierByCall = getCurrentCallBySupplier();
+        supplierByCall.setParticipateInCall("true");
+        supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
 
     public SupplierByCallDTO finishSurvey(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
