@@ -54,14 +54,6 @@ public class SupplierByCallDTO {
         this.idSupplier = idSupplier;
     }
 
-    public String isParticipateInCall() {
-        return participateInCall;
-    }
-
-    public void setParticipateInCall(String participateInCall) {
-        this.participateInCall = participateInCall;
-    }
-
     public String getReasonForNotParticipation() {
         return reasonForNotParticipation;
     }
@@ -121,5 +113,13 @@ public class SupplierByCallDTO {
     public boolean isInvitedToCall() {
         return invitedToCall;
     }
+
+	public void setParticipateInCall(String participateInCall) {
+		this.participateInCall = participateInCall;
+	}
+
+	public String getParticipateInCall() {
+		return participateInCall;
+	}
 
 }

@@ -515,6 +515,8 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 						}
 					}else if(nd.getItemValueString("form") == "frCity"){
 						nd.removeItem("idCountry");
+					}else if(nd.getItemValueString("form") == "frQuestion"){
+						nd.replaceItemValue("required", "0");
 					}else if(nd.getItemValueString("form") == "frCall"){
 						nd.replaceItemValue("year", parseInt(nd.getItemValueString("year"), 10))
 						aDate = nd.getItemValueString("dateToFinishCall").split("/");
