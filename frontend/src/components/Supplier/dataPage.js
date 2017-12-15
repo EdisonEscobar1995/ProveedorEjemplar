@@ -621,7 +621,7 @@ function comercialInfo(fields) {
       key: 2.7,
       value: [
         {
-          span: 4,
+          span: 6,
           type: 'select',
           label: 'Moneda',
           key: 'typeOfCurrencyValueAssets',
@@ -630,7 +630,7 @@ function comercialInfo(fields) {
           disabled,
         },
         {
-          span: 4,
+          span: 6,
           type: 'inputNumber',
           label: 'Valor en activos $',
           key: 'valueAssets',
@@ -656,7 +656,7 @@ function comercialInfo(fields) {
       key: 2.8,
       value: [
         {
-          span: 4,
+          span: 6,
           type: 'select',
           label: 'Tipo',
           key: 'typeOfCurrencyAnnualSales',
@@ -665,7 +665,7 @@ function comercialInfo(fields) {
           disabled,
         },
         {
-          span: 4,
+          span: 6,
           type: 'inputNumber',
           label: 'Valor en ventas anual $',
           key: 'annualSalesValue',
@@ -884,18 +884,6 @@ function comercialInfo(fields) {
           value: getValueOption(chemicalSubstance),
           options: defaultOptions,
           disabled,
-        },
-      ],
-    },
-    {
-      key: 4.1,
-      value:
-      [
-        {
-          span: 12,
-          type: 'title',
-          value: 'Principales clientes',
-          key: 'mainCustomers',
         },
       ],
     },

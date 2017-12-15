@@ -27,6 +27,9 @@ const ItemStyle = styled(Item)`
 const TextStyle = styled.div`
   text-align: justify;
 `;
+const InputNumberStyle = styled(InputNumber)`
+  width: 100%;
+`;
 
 function DinamicForm({ content, getFieldDecorator, setFields }) {
   return (
@@ -83,7 +86,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         break;
                       case 'inputNumber':
                         fieldContent = (
-                          <InputNumber
+                          <InputNumberStyle
                             min={0}
                             disabled={disabled}
                             formatter={numberValue => ` ${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}

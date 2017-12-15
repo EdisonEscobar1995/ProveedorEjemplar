@@ -19,6 +19,7 @@ const ContentStyle = styled.div`
 
 const TabsStyle = styled(Tabs)`
   .ant-tabs-bar {
+    border-bottom-color: rgba(217,217,217,.5);
     .ant-tabs-tab{
       margin-right: 20px;
       background-color: ${props => props.theme.color.back};
@@ -154,10 +155,8 @@ class Supplier extends Component {
   }
   save = (values, action) => {
     if (!this.props.changeIdCompanySize && this.props.participateInCall === 'true') {
-      const { call } = { ...this.props };
       const newSupplier = this.getSupplierValues(values);
-      call.participateInCall = 'true';
-      this.props.saveDataCallSupplier(call, newSupplier);
+      this.props.saveDataCallSupplier(newSupplier);
       if (action === 'send') {
         this.next();
       }
@@ -165,10 +164,8 @@ class Supplier extends Component {
       values.participateInCall = 'false';
       this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
     } else {
-      const { call } = { ...this.props };
       const newSupplier = this.getSupplierValues(values);
-      call.participateInCall = 'true';
-      this.props.saveDataCallSupplier(call, newSupplier);
+      this.props.saveDataCallSupplier(newSupplier);
     }
   }
   validateQuestions = () => {

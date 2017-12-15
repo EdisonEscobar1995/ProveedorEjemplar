@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form } from 'antd';
 import DinamicForm from '../shared/DinamicForm';
 import TableForm from '../shared/TableForm';
+import SubTitle from '../shared/SubTitle';
 import { comercialInfo, mainCustomers } from './dataPage';
 import FormButtons from './FormButtons';
 
@@ -57,17 +58,7 @@ class Comercial extends Component {
     ];
     return (
       <div>
-        <Form onSubmit={this.handleSubmit}>
-          <DinamicForm
-            getFieldDecorator={getFieldDecorator}
-            content={fields}
-          />
-          <FormButtons
-            buttons={buttons}
-            showConfirm={changeIdCompanySize}
-            messageConfirm={messageByChangeSizeCompany}
-          />
-        </Form>
+        <SubTitle text="Principales clientes" />
         <TableForm
           data={principalCustomer}
           colummns={colummns}
@@ -79,6 +70,17 @@ class Comercial extends Component {
           disabled={readOnly}
           loading={false}
         />
+        <Form onSubmit={this.handleSubmit}>
+          <DinamicForm
+            getFieldDecorator={getFieldDecorator}
+            content={fields}
+          />
+          <FormButtons
+            buttons={buttons}
+            showConfirm={changeIdCompanySize}
+            messageConfirm={messageByChangeSizeCompany}
+          />
+        </Form>
       </div>
     );
   }

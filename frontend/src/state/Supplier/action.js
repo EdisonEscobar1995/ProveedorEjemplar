@@ -529,20 +529,28 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
   }
 );
 
-const saveDataCallSupplier = (clientCall, clientSupplier) => (
+const saveDataCallSupplier = clientSupplier => (
   (dispatch) => {
-    const promises = [
-      saveDataCallBySupplierApi(clientCall),
-      saveDataSuppliertApi(clientSupplier),
-    ];
-    requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
-      const call = arrayResponse[0].data.data;
-      const supplier = arrayResponse[1].data.data;
-      dispatch(setMessage('Información almacenada', 'success'));
-      dispatch(saveDataCallAndSupplerSuccess(call, supplier));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
-    });
+    requestApi(dispatch, getDataSupplierProgress, saveDataSuppliertApi, clientSupplier)
+      .then((response) => {
+        const supplier = response.data.data;
+        return supplier;
+      }).then(supplier => (
+        requestApiNotLoading(dispatch, getDataCallSuppliertApi)
+          .then((response) => {
+            const call = response.data.data;
+            return {
+              call,
+              supplier,
+            };
+          })
+      )).then(({ call, supplier }) => {
+        dispatch(setMessage('Información almacenada', 'success'));
+        dispatch(saveDataCallAndSupplerSuccess(call, supplier));
+      })
+      .catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
   }
 );
 const deleteAttachment = (idAttachment, field) => (

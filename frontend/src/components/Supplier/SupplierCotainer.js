@@ -90,8 +90,8 @@ const mapDispatchToProps = dispatch => ({
   saveDataCallBySupplier: (data) => {
     dispatch(saveDataCallBySupplier(data));
   },
-  saveDataCallSupplier: (call, supplier) => {
-    dispatch(saveDataCallSupplier(call, supplier));
+  saveDataCallSupplier: (supplier) => {
+    dispatch(saveDataCallSupplier(supplier));
   },
   saveAnswer: (answer, idDimension, idCriterion) => {
     dispatch(saveAnswer(answer, idDimension, idCriterion));
