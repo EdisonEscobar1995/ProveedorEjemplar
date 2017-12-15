@@ -1,7 +1,26 @@
 import React from 'react';
 import { Upload as UploadAnt } from 'antd';
+import styled from 'styled-components';
 import message from './Message';
 import UploadButton from './UploadButton';
+
+const UploadStyle = styled(UploadAnt)`
+  .anticon-cross  {
+    border-radius: 100px;
+    background: #37907c;
+    width: 20px;
+    height: 20px;
+    color: white;
+  }
+  
+  .ant-upload-list-item {
+    height: auto;
+  }
+  
+  .ant-upload-list-item-name {
+    white-space: normal;
+  }
+`;
 
 function Upload(props) {
   const {
@@ -33,7 +52,8 @@ function Upload(props) {
     ));
   }
   return (
-    <UploadAnt
+    <UploadStyle
+      defaultFileList={value}
       action={baseUrl}
       disabled={disabled}
       accept={uploadExtensions.join(',')}
@@ -95,7 +115,6 @@ function Upload(props) {
         }
         return false;
       }}
-      defaultFileList={value}
     >
       {
         !disabled ?
@@ -103,7 +122,7 @@ function Upload(props) {
           :
           null
       }
-    </UploadAnt>
+    </UploadStyle>
   );
 }
 export default Upload;

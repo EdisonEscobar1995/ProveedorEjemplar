@@ -2,6 +2,15 @@ import asyncComponent from './AsyncComponent';
 
 const routes = [
   {
+    index: 0,
+    name: 'HOME',
+    path: '/',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Home').then(module => module.default),
+    ),
+  },
+  {
     index: 1,
     name: 'SUPPLIER',
     path: '/supplier',

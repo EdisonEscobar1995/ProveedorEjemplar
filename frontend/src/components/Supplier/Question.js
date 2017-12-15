@@ -33,7 +33,7 @@ const ParagraphStyle = styled.p`
   word-break: break-word;
   margin: ${props => props.theme.spaces.main} 0;
 `;
-const RadioStyle = styled(Radio)`
+const RadioStyle = styled(Radio) `
   white-space: normal;
   margin: 10px 0;
 `;
@@ -46,29 +46,31 @@ class Question extends Component {
     getQuestionsByDimension(idSurvey, idDimension);
   }
   onChange = (value, record, fieldName) => {
-    const { id, answer, idCriterion } = record;
-    const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
-    let actualAnswer = {};
-    if (answer.length > 0) {
-      actualAnswer = answer.find(item => item.idQuestion === id);
-    }
-    let sendAnswer = {
-      idSupplierByCall: idCall,
-      idSurvey,
-      idQuestion: id,
-    };
-    const copy = { ...actualAnswer };
-    sendAnswer = Object.assign(copy, sendAnswer);
-    if (fieldName === 'attachment') {
-      if (sendAnswer[fieldName]) {
-        sendAnswer[fieldName].push(value);
-      } else {
-        sendAnswer[fieldName] = [value];
+    if (value) {
+      const { id, answer, idCriterion } = record;
+      const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
+      let actualAnswer = {};
+      if (answer.length > 0) {
+        actualAnswer = answer.find(item => item.idQuestion === id);
       }
-    } else {
-      sendAnswer[fieldName] = value;
+      let sendAnswer = {
+        idSupplierByCall: idCall,
+        idSurvey,
+        idQuestion: id,
+      };
+      const copy = { ...actualAnswer };
+      sendAnswer = Object.assign(copy, sendAnswer);
+      if (fieldName === 'attachment') {
+        if (sendAnswer[fieldName]) {
+          sendAnswer[fieldName].push(value);
+        } else {
+          sendAnswer[fieldName] = [value];
+        }
+      } else {
+        sendAnswer[fieldName] = value;
+      }
+      saveAnswer(sendAnswer, idDimension, idCriterion);
     }
-    saveAnswer(sendAnswer, idDimension, idCriterion);
   }
   getAnswer = (record, fieldName) => {
     const actualAnswer = record.answer[0];
@@ -142,6 +144,7 @@ class Question extends Component {
                 :
                 (
                   <TextArea
+                    rows={10}
                     defaultValue={this.getAnswer(record, 'responseSupplier')}
                     onBlur={e => this.onChange(e.target.value, record, 'responseSupplier')}
                   />
@@ -169,6 +172,7 @@ class Question extends Component {
               this.getAnswer(record, 'commentSupplier')
               :
               <TextArea
+                rows={10}
                 defaultValue={this.getAnswer(record, 'commentSupplier')}
                 onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
               />

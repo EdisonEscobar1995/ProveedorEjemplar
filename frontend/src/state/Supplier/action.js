@@ -55,6 +55,10 @@ const getDataSupplierProgress = () => (
   }
 );
 
+function isReadOnly({ lockedByModification, participateInCall }) {
+  return lockedByModification || participateInCall === 'false';
+}
+
 const getDataSupplierSuccess = (data) => {
   data.supplier.employeesTotal =
   data.supplier.numberOfDirectEmployees +
@@ -81,7 +85,7 @@ const getDataSupplierSuccess = (data) => {
 
   const { principalCustomer } = supplier;
   let { readOnly } = rules;
-  readOnly = readOnly || call.lockedByModification;
+  readOnly = readOnly || isReadOnly(call);
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
@@ -252,7 +256,7 @@ function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
-    readOnly: call.lockedByModification,
+    readOnly: isReadOnly(call),
   };
 }
 function saveAnswerSuccess(allDimensions) {
@@ -472,6 +476,7 @@ const saveDataCallBySupplier = clientData => (
     requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
       .then((respone) => {
         const call = respone.data.data;
+        setMessage('Información guardada exitosamente', 'success');
         dispatch(saveDataCallSuccess(call));
       }).catch((err) => {
         dispatch(getFailedRequest(err));

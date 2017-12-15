@@ -372,7 +372,7 @@ function generalInfo(fields) {
           key: 'emails',
           value: emails,
           mode: 'tags',
-          options: emails,
+          options: emails.map(item => ({ id: item, name: item })),
           noSearch: true,
           rules: [
             { ...mailValitationMultiple },
@@ -631,14 +631,11 @@ function comercialInfo(fields) {
         },
         {
           span: 4,
-          type: 'input',
+          type: 'inputNumber',
           label: 'Valor en activos $',
           key: 'valueAssets',
           value: valueAssets,
           disabled,
-          rules: [
-            { ...intValidation },
-          ],
         },
         {
           span: 8,
@@ -669,14 +666,11 @@ function comercialInfo(fields) {
         },
         {
           span: 4,
-          type: 'input',
+          type: 'inputNumber',
           label: 'Valor en ventas anual $',
           key: 'annualSalesValue',
           value: annualSalesValue,
           disabled,
-          rules: [
-            { ...intValidation },
-          ],
         },
       ],
     },
