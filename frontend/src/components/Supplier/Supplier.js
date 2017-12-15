@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Steps, Spin, Progress, notification } from 'antd';
+import { Tabs, Spin, Progress, notification } from 'antd';
 import styled from 'styled-components';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
@@ -7,12 +7,25 @@ import Question from './Question';
 import StepLink from './StepLink';
 import SurveyText from './SurveyText';
 
-const { Step } = Steps;
+const TabPane = Tabs.TabPane;
 
 const StepCustomStyle = styled.span`
   padding: 0px 15px;
   background: ${props => props.theme.color.primary};
   border-radius: 50%;
+`;
+
+const TabsStyle = styled(Tabs)`
+  .ant-tabs-bar {
+    .ant-tabs-tab{
+      background-color: ${props => props.theme.color.back};
+      color: ${props => props.theme.color.info};
+    }
+    .ant-tabs-tab-active{
+      background-color: ${props => props.theme.color.primary};
+      color: ${props => props.theme.color.normal};
+    }
+  }
 `;
 
 class Supplier extends Component {
@@ -178,23 +191,30 @@ class Supplier extends Component {
   calculatePercent = (idDimension) => {
     let totalQuestions = 0;
     let responsedQuestion = 0;
+    let totalResponses = 0;
     let total;
     const actualDimension = this.props.dimensions.find(dimension => dimension.id === idDimension);
     if (actualDimension.criterions.length > 0) {
       actualDimension.criterions.forEach((criteria) => {
         criteria.questions.forEach((question) => {
+          const isAnswered = question.answer.length > 0;
           if (question.required) {
             totalQuestions += 1;
-            if (question.answer.length > 0) {
+            if (isAnswered) {
               responsedQuestion += 1;
             }
           }
+          if (isAnswered) {
+            totalResponses += 1;
+          }
         });
       });
-      if (totalQuestions !== 0) {
+      if (totalQuestions > 0) {
         total = (responsedQuestion * 100) / totalQuestions;
-      } else {
+      } else if (totalResponses > 0) {
         total = 100;
+      } else {
+        total = 0;
       }
     } else {
       total = 0;
@@ -217,14 +237,19 @@ class Supplier extends Component {
     return (
       <Spin spinning={loading}>
         <SurveyText />
-        <Steps current={current}>
-          {steps.map(item =>
-            (
-              <Step key={item.name} icon={item.stepContent} title={item.name} />
-            ),
+        <TabsStyle defaultActiveKey={current.toString()} animated={false}>
+          {steps.map((item, index) => {
+            const key = index.toString();
+            return (
+              <TabPane tab={item.name} key={key}>
+                {
+                  item.content
+                }
+              </TabPane>
+            );
+          },
           )}
-        </Steps>
-        <div>{steps[this.state.current].content}</div>
+        </TabsStyle>
       </Spin>
     );
   }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class MenuDTO extends MasterDTO{
+public class MenuDTO extends MasterDTO {
     @Expose
     private String title;
     @Expose
