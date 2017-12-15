@@ -305,6 +305,17 @@ function importData() {
 				viewName = "vwAccessByRols";
 				break;
 				
+			case "MEN":
+				columnKeys = ["name", "title", "type", "idsRol"];
+				columnNameKeys = ["NAME", "TITLE", "TYPE", "IDSROL"];
+				columnNames = [{commonName: "NAME", technicalName: "name"},
+				               {commonName: "TITLE", technicalName: "title"},
+				               {commonName: "TYPE", technicalName: "type"},
+				               {commonName: "IDSROL", technicalName: "idsRol"}];
+				defaultFields = [{ key: "form", value: "frMenu"}];
+				viewName = "vwMenus";
+				break;
+				
 		}
 		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys, translationData)
 		
@@ -445,6 +456,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 			var vwQuestions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestions");
 			var vwSuppliers:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSuppliersBySapCode");
 			var vwAccess:Notesview = sessionAsSigner.getCurrentDatabase().getView("ImportAccessByApiAndAction");
+			var vwRols:Notesview = sessionAsSigner.getCurrentDatabase().getView("ImportRolByShortName");
 			vwSuppliers.setAutoUpdate(true);
 			var fullName:NotesName;	
 			var aDate;
@@ -528,6 +540,19 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		 					error = "Violación de clave foránea";
 		 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. No se encontró un documento de acceso que coincida con API y ACTION"})
 		 				}
+					}else if(nd.getItemValueString("form") == "frMenu"){
+						idsRol = nd.getItemValueString("idsRol").split(",");
+						for (j in idsRol){
+							ndForeign = vwRols.getDocumentByKey(idsRol[j], true);
+							if(ndForeign){
+								idsRol[j] = ndForeign.getItemValueString("id");
+								ndForeign.recycle();
+							}else{
+			 					error = "Violación de clave foránea";
+			 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. No se encontró el rol " + idsRol[j]})
+			 				}
+						}						
+						nd.replaceItemValue("idsRol", idsRol);
 					}
 						
 					if (nd.getItemValueString("form") == "frQuestionBySurvey"){

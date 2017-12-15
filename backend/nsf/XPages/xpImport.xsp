@@ -46,6 +46,7 @@
 				<xp:selectItem itemLabel="22. Proveedores por convocatoria" itemValue="SBC"></xp:selectItem>
 				<xp:selectItem itemLabel="23. Accesos" itemValue="ACC"></xp:selectItem>
 				<xp:selectItem itemLabel="24. Accesos por rol" itemValue="ABR"></xp:selectItem>
+				<xp:selectItem itemLabel="25. Menus" itemValue="MEN"></xp:selectItem>
 				<xp:this.attrs>
 					<xp:attr name="data-name" value="type">
 					</xp:attr>
