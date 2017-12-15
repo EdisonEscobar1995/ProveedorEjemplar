@@ -23,6 +23,14 @@ const defaultMoneyType = [
     id: 'CRC',
     name: 'CRC Moneda Costa Rica',
   },
+  {
+    id: 'CLP',
+    name: 'Moneda de Chile',
+  },
+  {
+    id: 'PEN',
+    name: 'PEN Moneda de Perú',
+  },
 ];
 
 const getAnios = () => {
@@ -613,16 +621,16 @@ function comercialInfo(fields) {
       key: 2.7,
       value: [
         {
-          span: 3,
+          span: 4,
           type: 'select',
-          label: 'Tipo',
+          label: 'Moneda',
           key: 'typeOfCurrencyValueAssets',
           value: typeOfCurrencyValueAssets,
           options: defaultMoneyType,
           disabled,
         },
         {
-          span: 3,
+          span: 4,
           type: 'input',
           label: 'Valor en activos $',
           key: 'valueAssets',
@@ -633,7 +641,7 @@ function comercialInfo(fields) {
           ],
         },
         {
-          span: 12,
+          span: 8,
           type: 'upload',
           label: 'Soporte de balances o informes financieros del valor en activos',
           key: 'attachedFinancialReport',
@@ -645,8 +653,13 @@ function comercialInfo(fields) {
           required: true,
           disabled,
         },
+      ],
+    },
+    {
+      key: 2.8,
+      value: [
         {
-          span: 3,
+          span: 4,
           type: 'select',
           label: 'Tipo',
           key: 'typeOfCurrencyAnnualSales',
@@ -655,7 +668,7 @@ function comercialInfo(fields) {
           disabled,
         },
         {
-          span: 3,
+          span: 4,
           type: 'input',
           label: 'Valor en ventas anual $',
           key: 'annualSalesValue',
@@ -668,7 +681,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 2.8,
+      key: 2.9,
       value: [
         {
           span: 6,
@@ -717,7 +730,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 2.9,
+      key: 3.0,
       value: [
         {
           span: 12,
@@ -729,7 +742,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.0,
+      key: 3.1,
       value: [
         {
           span: 8,
@@ -763,7 +776,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.1,
+      key: 3.2,
       value: [
         {
           type: 'title',
@@ -773,7 +786,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.2,
+      key: 3.3,
       value: [
         {
           type: 'textarea',
@@ -785,7 +798,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.3,
+      key: 3.4,
       value: [
         {
           type: 'title',
@@ -795,7 +808,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.4,
+      key: 3.5,
       value: [
         {
           span: 6,
@@ -820,7 +833,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.5,
+      key: 3.6,
       value: [
         {
           type: 'title',
@@ -830,7 +843,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.6,
+      key: 3.7,
       value: [
         {
           type: 'textarea',
@@ -842,7 +855,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.7,
+      key: 3.8,
       value: [
         {
           type: 'title',
@@ -852,7 +865,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.8,
+      key: 3.9,
       value: [
         {
           span: 12,
@@ -867,7 +880,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 3.9,
+      key: 4.0,
       value: [
         {
           span: 12,
@@ -881,7 +894,7 @@ function comercialInfo(fields) {
       ],
     },
     {
-      key: 4.0,
+      key: 4.1,
       value:
       [
         {

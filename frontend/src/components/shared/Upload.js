@@ -1,6 +1,7 @@
 import React from 'react';
 import { Upload as UploadAnt } from 'antd';
 import message from './Message';
+import UploadButton from './UploadButton';
 
 function Upload(props) {
   const {
@@ -15,6 +16,7 @@ function Upload(props) {
     onChange,
     onRemove,
   } = props;
+  const content = children || <UploadButton />;
   let { uploadExtensions } = props;
   if (!uploadExtensions) {
     uploadExtensions = [];
@@ -97,9 +99,9 @@ function Upload(props) {
     >
       {
         !disabled ?
-          children
+          content
           :
-          ''
+          null
       }
     </UploadAnt>
   );
