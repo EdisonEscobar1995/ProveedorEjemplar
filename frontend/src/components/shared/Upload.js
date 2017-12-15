@@ -2,6 +2,7 @@ import React from 'react';
 import { Upload as UploadAnt } from 'antd';
 import styled from 'styled-components';
 import message from './Message';
+import UploadButton from './UploadButton';
 
 const UploadStyle = styled(UploadAnt)`
   .anticon-cross  {
@@ -34,6 +35,7 @@ function Upload(props) {
     onChange,
     onRemove,
   } = props;
+  const content = children || <UploadButton />;
   let { uploadExtensions } = props;
   if (!uploadExtensions) {
     uploadExtensions = [];
@@ -116,9 +118,9 @@ function Upload(props) {
     >
       {
         !disabled ?
-          children
+          content
           :
-          ''
+          null
       }
     </UploadStyle>
   );

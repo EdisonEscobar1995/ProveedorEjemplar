@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Row, Col, Form, Input, InputNumber, Select, Radio, Button, Icon, DatePicker,
+  Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker,
 } from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
@@ -254,11 +254,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           onChange={onChange}
                           onRemove={onRemove}
                           baseUrl={`${baseUrl}/Attachment?action=save`}
-                        >
-                          <Button disabled={disabled}>
-                            <Icon type="upload" />Adjuntar archivo
-                          </Button>
-                        </Upload>
+                        />
                       </Field>
                     );
                   }

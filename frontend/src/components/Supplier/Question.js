@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Tooltip, Button, Input, Radio } from 'antd';
+import { Table, Tooltip, Button, Input, Radio, Icon } from 'antd';
 import styled from 'styled-components';
 import Upload from '../shared/Upload';
 import FormButtons from './FormButtons';
@@ -10,12 +10,27 @@ import { baseUrl } from '../../utils/api';
 const { TextArea } = Input;
 const { Column } = Table;
 
+const TableStyle = styled(Table)`
+  color:red;
+  .ant-table-body > table .ant-table-tbody > tr > td{
+    word-break: break-word;
+  }
+`;
+
 const SubtitleStyle = styled.h4`
-  color: ${props => props.theme.color.info};
-  padding: 15px 0;
-  border-top: 1px ${props => props.theme.color.info} solid;
+  display: inline-block;
+  color: inherit;
+  margin: 0 10px;
+`;
+const SectionStyle = styled.div`
+  color: ${props => props.theme.color.normal};
+  padding: 15px;
+  opacity: 0.6;
+  background: ${props => props.theme.color.primary};
+  color: ${props => props.theme.color.normal};
 `;
 const ParagraphStyle = styled.p`
+  word-break: break-word;
   margin: ${props => props.theme.spaces.main} 0;
 `;
 const RadioStyle = styled(Radio) `
@@ -189,11 +204,7 @@ class Question extends Component {
                 uploadExtensions={this.props.system.uploadExtensions}
                 onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
                 onRemove={this.onChange}
-              >
-                <a>
-                  Anexar
-                </a>
-              </Upload>
+              />
               <ErrorTable visible={errors.attachments} text="Debe anexar un archivo" />
             </div>
           );
@@ -223,11 +234,13 @@ class Question extends Component {
         </ParagraphStyle>
         {
           criterions.length > 0 ?
-
             criterions.map(criteria => (
               <div key={criteria.id}>
-                <SubtitleStyle>{criteria.name}</SubtitleStyle>
-                <Table
+                <SectionStyle>
+                  <Icon type="tag-o" />
+                  <SubtitleStyle>{criteria.name}</SubtitleStyle>
+                </SectionStyle>
+                <TableStyle
                   key={criteria.key}
                   pagination={false}
                   dataSource={criteria.questions.filter(quiestion => quiestion.visible)}
@@ -245,7 +258,7 @@ class Question extends Component {
                       )
                     ))
                   }
-                </Table>
+                </TableStyle>
               </div>
             ))
             :
