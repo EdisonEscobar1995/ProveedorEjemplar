@@ -149,7 +149,7 @@ class Supplier extends Component {
     return newSupplier;
   }
   changePage = (index) => {
-    const current = index;
+    const current = parseInt(index, 10);
     this.setState({ current });
   }
   save = (values, action) => {
@@ -225,7 +225,7 @@ class Supplier extends Component {
     this.props.reloadDimensions(dimesions);
   }
   openNotification = () => {
-    setMessage('Aun tiene dimensiones sin diligenciar', 'info');
+    setMessage({ text: 'Aun tiene dimensiones sin diligenciar', type: 'info' });
   };
 
   calculatePercent = (idDimension) => {
@@ -277,7 +277,7 @@ class Supplier extends Component {
     return (
       <Spin spinning={loading}>
         <SurveyText />
-        <TabsStyle defaultActiveKey={current.toString()} animated={false}>
+        <TabsStyle activeKey={current.toString()} animated={false} onTabClick={this.changePage}>
           {steps.map((item, index) => {
             const key = index.toString();
             return (
