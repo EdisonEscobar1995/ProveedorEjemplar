@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Tabs, Spin, Progress, notification } from 'antd';
+import { Tabs, Spin, Progress } from 'antd';
 import styled from 'styled-components';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
 import Question from './Question';
 import StepLink from './StepLink';
 import SurveyText from './SurveyText';
+import setMessage from '../shared/Message';
 
 const TabPane = Tabs.TabPane;
 
@@ -175,19 +176,19 @@ class Supplier extends Component {
         });
       }
     });
+
     if (send) {
       this.props.finishSurvey();
     } else {
       this.openNotification();
     }
+
     this.props.reloadDimensions(dimesions);
   }
   openNotification = () => {
-    notification.open({
-      message: 'Alerta',
-      description: 'Aun tiene dimensiones sin diligenciar',
-    });
+    setMessage('Aun tiene dimensiones sin diligenciar', 'info');
   };
+
   calculatePercent = (idDimension) => {
     let totalQuestions = 0;
     let responsedQuestion = 0;
