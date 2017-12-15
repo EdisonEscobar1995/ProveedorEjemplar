@@ -139,6 +139,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               mode={mode}
                               allowClear={allowClear}
                               notFoundContent="No se encontraron resultados"
+                              filterOption={selectValue => selectValue.startsWith(' ') || selectValue.endsWith(' ')}
                               onChange={(selectValue) => {
                                 if (valuesToClean) {
                                   setFields(valuesToClean);
