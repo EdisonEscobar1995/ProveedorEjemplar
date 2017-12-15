@@ -4,26 +4,72 @@ import styled from 'styled-components';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
 import Question from './Question';
-import StepLink from './StepLink';
 import SurveyText from './SurveyText';
 
 const TabPane = Tabs.TabPane;
 
-const StepCustomStyle = styled.span`
-  padding: 0px 15px;
-  background: ${props => props.theme.color.primary};
-  border-radius: 50%;
+const TitleStyle = styled.span`
+  margin-left: 10px;
+`;
+
+const ContentStyle = styled.div`
+  padding: 7px 0 12px 0;
 `;
 
 const TabsStyle = styled(Tabs)`
   .ant-tabs-bar {
     .ant-tabs-tab{
+      margin-right: 20px;
       background-color: ${props => props.theme.color.back};
       color: ${props => props.theme.color.info};
+      &:before {
+        content: " ";
+        width: 0;
+        height: 0;
+        left: -18px;
+        border-left: 18px solid transparent;
+        border-top: 28px solid ${props => props.theme.color.back};
+        border-bottom: 28px solid ${props => props.theme.color.back};
+        position: absolute;
+        top: 0;
+      }
+      &:after {
+        content: " ";
+        width: 0;
+        right: -18px;
+        height: 0;
+        border-left: 18px solid ${props => props.theme.color.back};
+        border-top: 28px solid transparent;
+        border-bottom: 28px solid transparent;
+        position: absolute;
+        top: 0;
+      }
     }
     .ant-tabs-tab-active{
       background-color: ${props => props.theme.color.primary};
       color: ${props => props.theme.color.normal};
+      &:before {
+        content: " ";
+        width: 0;
+        height: 0;
+        left: -18px;
+        border-left: 18px solid transparent;
+        border-top: 28px solid ${props => props.theme.color.primary};
+        border-bottom: 28px solid ${props => props.theme.color.primary};
+        position: absolute;
+        top: 0;
+      }
+      &:after {
+        content: " ";
+        width: 0;
+        right: -18px;
+        height: 0;
+        border-left: 18px solid ${props => props.theme.color.primary};
+        border-top: 28px solid transparent;
+        border-bottom: 28px solid transparent;
+        position: absolute;
+        top: 0;
+      }
     }
   }
 `;
@@ -40,11 +86,7 @@ class Supplier extends Component {
       {
         name: 'Información General',
         content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
-        stepContent: (
-          <StepLink onClick={() => this.changePage(0)}>
-            <StepCustomStyle />
-          </StepLink>
-        ),
+        stepContent: <ContentStyle>Información General</ContentStyle>,
       },
     ];
     if (this.props.participateInCall === 'true') {
@@ -52,15 +94,11 @@ class Supplier extends Component {
         {
           name: 'Información Comercial',
           content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
-          stepContent: (
-            <StepLink onClick={() => this.changePage(1)}>
-              <StepCustomStyle />
-            </StepLink>
-          ),
+          stepContent: <ContentStyle>Información Comercial</ContentStyle>,
         },
       );
     }
-    const mapDimensions = dimensions.map((dimension, index) => {
+    const mapDimensions = dimensions.map((dimension) => {
       const { call, getQuestionsByDimension, saveAnswer, system, readOnly } = this.props;
       const { id, idSurvey } = call;
       return {
@@ -77,12 +115,12 @@ class Supplier extends Component {
           disabled={readOnly}
           validateQuestions={this.validateQuestions}
         />,
-        stepContent: this.getProgress(dimension.id, index),
+        stepContent: this.getProgress(dimension.id, dimension.name),
       };
     });
     return steps.concat(mapDimensions);
   }
-  getProgress = (dimensionId, index) => {
+  getProgress = (dimensionId, name) => {
     const percent = this.calculatePercent(dimensionId);
     let status = 'exception';
     if (percent === 100) {
@@ -91,7 +129,7 @@ class Supplier extends Component {
       status = 'active';
     }
     return (
-      <StepLink onClick={() => this.changePage(index + 2)}>
+      <div>
         <Progress
           type="circle"
           percent={percent}
@@ -99,7 +137,8 @@ class Supplier extends Component {
           width={40}
           format={value => (value === 0 ? '?' : value)}
         />
-      </StepLink>
+        <TitleStyle>{name}</TitleStyle>
+      </div>
     );
   }
   getSupplierValues = (values) => {
@@ -198,7 +237,7 @@ class Supplier extends Component {
       actualDimension.criterions.forEach((criteria) => {
         criteria.questions.forEach((question) => {
           const isAnswered = question.answer.length > 0;
-          if (question.required) {
+          if (question.visible && question.required) {
             totalQuestions += 1;
             if (isAnswered) {
               responsedQuestion += 1;
@@ -241,11 +280,7 @@ class Supplier extends Component {
           {steps.map((item, index) => {
             const key = index.toString();
             return (
-              <TabPane tab={item.name} key={key}>
-                {
-                  item.content
-                }
-              </TabPane>
+              <TabPane tab={item.stepContent} key={key}>{item.content}</TabPane>
             );
           },
           )}
