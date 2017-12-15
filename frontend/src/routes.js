@@ -27,6 +27,7 @@ const routes = [
     component: asyncComponent(() =>
       import('./pages/Sector').then(module => module.default),
     ),
+    hidden: true,
   },
   {
     index: 3,

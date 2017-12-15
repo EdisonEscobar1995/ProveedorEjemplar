@@ -33,7 +33,7 @@ function Menu(props) {
       mode="horizontal"
     >
       {menu && menu.map((item) => {
-        const entry = routes.find(route => item.name === route.name);
+        const entry = routes.find(route => item.name === route.name && !route.hidden);
         if (item.type === 'menu' && entry) {
           return (
             <ItemStyle key={item.id}>

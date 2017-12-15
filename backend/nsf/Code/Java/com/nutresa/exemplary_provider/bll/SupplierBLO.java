@@ -27,8 +27,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         dto.autoSetIdDocuments();
         dto.autoSetIdAttachedFinancialReport();
         supplier = dao.get(dto.getId());
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        supplierByCallBLO.participateInCall();
         if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
-            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
             NotificationBLO notificationBLO = new NotificationBLO();
             notificationBLO.notifyChangeCompanySize();

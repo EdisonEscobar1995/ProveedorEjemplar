@@ -64,7 +64,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+    }
 
+    public void participateInCall() throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        SupplierByCallDTO supplierByCall = getCurrentCallBySupplier();
+        supplierByCall.setParticipateInCall("true");
+        supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
 
     public SupplierByCallDTO finishSurvey(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
@@ -101,11 +107,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
                 currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(),
                         supplier.getIdCompanySize()).getId());
+                notification.notifyToSupplierForContinue(supplier.getEmails());
                 supplierBLO.update(supplier);
+                response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
                 answerBLO.deleteAnswers(currentSupplierByCall.getId());
             }
-            response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
-            notification.notifyToSupplierForContinue(supplier.getEmails());
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
