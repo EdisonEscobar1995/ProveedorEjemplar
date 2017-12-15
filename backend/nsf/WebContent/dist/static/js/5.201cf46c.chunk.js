@@ -1,2 +1,0 @@
-webpackJsonp([5],{960:function(e,t,s){"use strict";function n(){return i.a.createElement("div",{style:{display:"flex",justifyContent:"center"}},i.a.createElement("img",{src:"assets/images/LogoApp.png",alt:"assets/images/LogoApp.png"}))}Object.defineProperty(t,"__esModule",{value:!0});var a=s(0),i=s.n(a);t.default=n}});
-//# sourceMappingURL=5.201cf46c.chunk.js.map
