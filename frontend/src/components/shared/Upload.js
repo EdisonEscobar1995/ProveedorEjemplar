@@ -7,7 +7,7 @@ import UploadButton from './UploadButton';
 const UploadStyle = styled(UploadAnt)`
   .anticon-cross  {
     border-radius: 100px;
-    background: #37907c;
+    background: ${props => props.theme.color.primary};
     width: 20px;
     height: 20px;
     color: white;
