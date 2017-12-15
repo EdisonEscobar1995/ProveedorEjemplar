@@ -110,12 +110,10 @@ class Supplier extends Component {
       }
     } else if (this.props.participateInCall === 'false') {
       values.participateInCall = 'false';
-      values.lockedByModification = true;
       this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
     } else {
       const { call } = { ...this.props };
       const newSupplier = this.getSupplierValues(values);
-      call.lockedByModification = true;
       call.participateInCall = 'true';
       this.props.saveDataCallSupplier(call, newSupplier);
     }

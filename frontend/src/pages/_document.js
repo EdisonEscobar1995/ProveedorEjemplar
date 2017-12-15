@@ -26,8 +26,8 @@ const MainContentStyle = styled.div`
 `;
 const LogoStyle = styled.div`  
   width: 120px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
+  height: 59px;
+  margin: 0;
   float: left;
   background-image: url(${props => props.theme.images.logo});
   background-repeat: no-repeat;

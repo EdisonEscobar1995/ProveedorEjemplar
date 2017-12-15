@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Row, Col, Form, Input, Select, Radio, Button, Icon, DatePicker,
+  Row, Col, Form, Input, InputNumber, Select, Radio, Button, Icon, DatePicker,
 } from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
@@ -49,6 +49,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   disabled,
                   format,
                   rules = [],
+                  hidden,
                 } = current;
                 allowClear = allowClear === undefined ? true : allowClear;
                 label = label ? `${label}${required ? '(*)' : ''}` : '';
@@ -57,6 +58,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                 switch (type) {
                   case 'date':
                   case 'input':
+                  case 'inputNumber':
                   case 'textarea':
                   case 'radio':
                   case 'select': {
@@ -79,6 +81,15 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           />
                         );
                         break;
+                      case 'inputNumber':
+                        fieldContent = (
+                          <InputNumber
+                            min={0}
+                            formatter={numberValue => ` ${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            parser={numberValue => numberValue.replace(/\$\s?|(,*)/g, '')}
+                          />
+                        );
+                        break;
                       case 'textarea':
                         if (disabled) {
                           fieldContent = <TextStyle>{value}</TextStyle>;
@@ -87,7 +98,6 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         }
                         break;
                       case 'select': {
-                        let index = 0;
                         const { valuesToClean, mode, noSearch } = current;
                         if (!noSearch) {
                           fieldContent = (
@@ -111,17 +121,14 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               }}
                             >
                               {
-                                options.map((option) => {
-                                  index += 1;
-                                  return (
-                                    <Option
-                                      key={option.id + index}
-                                      value={option.id}
-                                    >
-                                      {option.name}
-                                    </Option>
-                                  );
-                                })
+                                options.map(option => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.name}
+                                  </Option>
+                                ))
                               }
                             </Select>);
                         } else {
@@ -142,17 +149,14 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               }}
                             >
                               {
-                                options.map((option) => {
-                                  index += 1;
-                                  return (
-                                    <Option
-                                      key={option.id + index}
-                                      value={option.id}
-                                    >
-                                      {option.name}
-                                    </Option>
-                                  );
-                                })
+                                options.map(option => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.name}
+                                  </Option>
+                                ))
                               }
                             </Select>);
                         }
@@ -172,19 +176,26 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         break;
                     }
                     rowValue = (
-                      <Field label={label} help={help}>
-                        <ItemStyle>
-                          {getFieldDecorator(key, {
-                            rules: [
-                              { required, message: 'Por favor diligencia el campo' },
-                              ...rules,
-                            ],
-                            initialValue: value,
-                          })(
-                            fieldContent,
-                          )}
-                        </ItemStyle>
-                      </Field>
+                      <div>
+                        {
+                          !hidden ?
+                            <Field label={label} help={help}>
+                              <ItemStyle>
+                                {getFieldDecorator(key, {
+                                  rules: [
+                                    { required, message: 'Por favor diligencia el campo' },
+                                    ...rules,
+                                  ],
+                                  initialValue: value,
+                                })(
+                                  fieldContent,
+                                )}
+                              </ItemStyle>
+                            </Field>
+                            :
+                            null
+                        }
+                      </div>
                     );
                     break;
                   }

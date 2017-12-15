@@ -13,7 +13,7 @@ const UploadStyle = styled(UploadAnt)`
   }
   
   .ant-upload-list-item {
-    height: 90px;
+    height: auto;
   }
   
   .ant-upload-list-item-name {
@@ -55,6 +55,7 @@ function Upload(props) {
       action={baseUrl}
       disabled={disabled}
       accept={uploadExtensions.join(',')}
+      showUploadList={value.length > 0}
       multiple={multiple}
       beforeUpload={(file) => {
         if (max) {
@@ -63,10 +64,16 @@ function Upload(props) {
             return false;
           }
         }
+        const nameFile = file.name.split('.');
+        const nameExtension = nameFile[nameFile.length - 1];
+        const extension = `.${nameExtension}`;
+        if (uploadExtensions.indexOf(extension) < 0) {
+          message({ text: `Extensión ${extension} no válida`, type: 'error' });
+          return false;
+        }
         const isValidSize = file.size / 1024 / 1024 < uploadMaxFilesize;
         if (!isValidSize) {
           message({ text: `El archivo debe ser menor a ${uploadMaxFilesize} MB`, type: 'error' });
-          message.error('Image must smaller than 2MB!');
         }
         return isValidSize;
       }}
@@ -94,7 +101,14 @@ function Upload(props) {
       onRemove={(file) => {
         if (!disabled) {
           if (onRemove) {
-            onRemove(file.uid, datakey);
+            const response = file.response;
+            let id;
+            if (response) {
+              id = response.data.id;
+            } else {
+              id = file.uid;
+            }
+            onRemove(id, datakey);
           }
         }
         return false;

@@ -78,10 +78,20 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         }
     }
 
-    public void deleteMassive(ArrayList<String> paramToDelete) throws HandlerGenericException {
+    public void deleteMassive(List<String> paramToDelete, String idSupplierByCall ) throws HandlerGenericException {
         try {
             View currentView = getDatabase().getView("vwAnswersByIdSupplierByCallToDeleteMasive");
-            DocumentCollection documents = currentView.getAllDocumentsByKey(paramToDelete, true);
+            DocumentCollection documents = getDatabase().createDocumentCollection();
+            ArrayList<String> filter;
+            for (String idAnswer : paramToDelete) {
+            	filter = new ArrayList<String>(2);
+            	filter.add(idAnswer);
+            	filter.add(idSupplierByCall);
+            	Document answer = currentView.getFirstDocumentByKey(filter, true);
+            	if(null != answer){
+            		documents.add(answer);  
+            	}
+			}
             if (null != documents) {
                 documents.removeAll(true);
             }

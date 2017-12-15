@@ -25,6 +25,8 @@ import {
   FINISH_SURVEY,
   ADD_DIRECT_EMPLOYEES,
   ADD_SUB_EMPLOYEES,
+  SET_SECTOR,
+  SET_EXPORT,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -41,23 +43,28 @@ import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
-import { saveAnswerApi, deleteAnswersApi } from '../../api/answer';
+import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
 import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
 import requestApi, { requestApiNotLoading, sortByField } from '../../utils/actionUtils';
 import setMessage from '../Generic/action';
 
 
-function getDataSupplierProgress() {
-  return {
+const getDataSupplierProgress = () => (
+  {
     type: GET_DATA_SUPPLIER_PROGRESS,
-  };
+  }
+);
+
+function isReadOnly({ lockedByModification, participateInCall }) {
+  return lockedByModification || participateInCall === 'false';
 }
 
-function getDataSupplierSuccess(data) {
+const getDataSupplierSuccess = (data) => {
   data.supplier.employeesTotal =
   data.supplier.numberOfDirectEmployees +
   data.supplier.numberOfSubContratedEmployees;
-
+  data.supplier.actualSector = data.supplier.idSector;
+  data.supplier.actuallyExport = data.supplier.currentlyExport;
   const {
     supplier,
     call,
@@ -78,7 +85,7 @@ function getDataSupplierSuccess(data) {
 
   const { principalCustomer } = supplier;
   let { readOnly } = rules;
-  readOnly = readOnly || call.lockedByModification;
+  readOnly = readOnly || isReadOnly(call);
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
@@ -97,13 +104,14 @@ function getDataSupplierSuccess(data) {
     principalCustomer,
     system,
   };
-}
-function getDataCategorySuccess(categories) {
-  return {
+};
+
+const getDataCategorySuccess = categories => (
+  {
     type: GET_DATA_CATEGORIES_SUCCESS,
     categories,
-  };
-}
+  }
+);
 function getDataSubCategorySuccess(subcategories) {
   return {
     type: GET_DATA_SUBCATEGORIES_SUCCESS,
@@ -248,7 +256,7 @@ function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
-    readOnly: call.lockedByModification,
+    readOnly: isReadOnly(call),
   };
 }
 function saveAnswerSuccess(allDimensions) {
@@ -396,8 +404,8 @@ function getDataCategoryBySuply(clientData) {
       });
   };
 }
-function getDataSubCategoryByCategory(clientData) {
-  return (dispatch) => {
+const getDataSubCategoryByCategory = clientData => (
+  (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataSubCategoryByCategoryApi, clientData)
       .then((respone) => {
         const subcategories = sortByField(respone.data.data, 'name');
@@ -405,11 +413,11 @@ function getDataSubCategoryByCategory(clientData) {
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
+  }
+);
 
-function getDataDepartmentsByCountry(clientData) {
-  return (dispatch) => {
+const getDataDepartmentsByCountry = clientData => (
+  (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataDepartmentsByCountryApi, clientData)
       .then((respone) => {
         const departsments = sortByField(respone.data.data, 'name');
@@ -417,10 +425,10 @@ function getDataDepartmentsByCountry(clientData) {
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
-function getDataCitiesByDepartment(clientData) {
-  return (dispatch) => {
+  }
+);
+const getDataCitiesByDepartment = clientData => (
+  (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, getDataCitiesByDepartmentApi, clientData)
       .then((respone) => {
         const cities = sortByField(respone.data.data, 'name');
@@ -428,10 +436,10 @@ function getDataCitiesByDepartment(clientData) {
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
-function getDimensionsBySurvey(idSurvey) {
-  return (dispatch, getActualState) => {
+  }
+);
+const getDimensionsBySurvey = idSurvey => (
+  (dispatch, getActualState) => {
     const actualDimensions = getActualState().supplier.dimensions;
     if (actualDimensions.length === 0) {
       requestApi(dispatch, getDataSupplierProgress, getDimensionsBySurveyApi, idSurvey)
@@ -442,10 +450,10 @@ function getDimensionsBySurvey(idSurvey) {
           dispatch(getFailedRequest(err));
         });
     }
-  };
-}
-function getQuestionsByDimension(idSurvey, idDimension) {
-  return (dispatch, getActualState) => {
+  }
+);
+const getQuestionsByDimension = (idSurvey, idDimension) => (
+  (dispatch, getActualState) => {
     requestApi(dispatch,
       getDataSupplierProgress,
       getDataQuestionsBySurverrApi,
@@ -461,10 +469,10 @@ function getQuestionsByDimension(idSurvey, idDimension) {
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
-function saveDataCallBySupplier(clientData) {
-  return (dispatch) => {
+  }
+);
+const saveDataCallBySupplier = clientData => (
+  (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
       .then((respone) => {
         const call = respone.data.data;
@@ -473,11 +481,11 @@ function saveDataCallBySupplier(clientData) {
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
+  }
+);
 
 const deleteAnswers = (dispatch, answers) => (
-  requestApiNotLoading(dispatch, deleteAnswersApi, { answers })
+  requestApiNotLoading(dispatch, deleteMassiveAnswersApi, { idsToDelete: answers })
 );
 
 const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
@@ -521,8 +529,8 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
   }
 );
 
-function saveDataCallSupplier(clientCall, clientSupplier) {
-  return (dispatch) => {
+const saveDataCallSupplier = (clientCall, clientSupplier) => (
+  (dispatch) => {
     const promises = [
       saveDataCallBySupplierApi(clientCall),
       saveDataSuppliertApi(clientSupplier),
@@ -535,10 +543,10 @@ function saveDataCallSupplier(clientCall, clientSupplier) {
     }).catch((err) => {
       dispatch(getFailedRequest(err));
     });
-  };
-}
-function deleteAttachment(idAttachment, field) {
-  return (dispatch, getActualState) => {
+  }
+);
+const deleteAttachment = (idAttachment, field) => (
+  (dispatch, getActualState) => {
     requestApi(
       dispatch,
       getDataSupplierProgress,
@@ -550,11 +558,11 @@ function deleteAttachment(idAttachment, field) {
     }).catch((err) => {
       dispatch(getFailedRequest(err));
     });
-  };
-}
+  }
+);
 
-function saveCustomer(clientData, index) {
-  return (dispatch, getActualState) => {
+const saveCustomer = (clientData, index) => (
+  (dispatch, getActualState) => {
     const mapData = {
       idSupplier: getActualState().supplier.supplier.id,
     };
@@ -566,10 +574,11 @@ function saveCustomer(clientData, index) {
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
+  }
+);
 
-function deleteCustomer(clientData, index) {
+
+const deleteCustomer = (clientData, index) => {
   const { id } = clientData;
   return (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, id)
@@ -579,9 +588,9 @@ function deleteCustomer(clientData, index) {
         dispatch(getFailedRequest(err));
       });
   };
-}
-function finishSurvey() {
-  return (dispatch, getActualState) => {
+};
+const finishSurvey = () => (
+  (dispatch, getActualState) => {
     const { call } = { ...getActualState().supplier };
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
       .then((response) => {
@@ -591,21 +600,34 @@ function finishSurvey() {
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
-  };
-}
-function setNumberOfDirectEmployees(value) {
-  return {
+  }
+);
+
+const setNumberOfDirectEmployees = value => (
+  {
     type: ADD_DIRECT_EMPLOYEES,
     value: isNaN(value) ? 0 : parseInt(value, 10),
-  };
-}
+  }
+);
 
-function setNumberOfSubContratedEmployees(value) {
-  return {
+const setNumberOfSubContratedEmployees = value => (
+  {
     type: ADD_SUB_EMPLOYEES,
     value: isNaN(value) ? 0 : parseInt(value, 10),
-  };
-}
+  }
+);
+const setSector = value => (
+  {
+    type: SET_SECTOR,
+    value,
+  }
+);
+const setExport = value => (
+  {
+    type: SET_EXPORT,
+    value: value === 'true',
+  }
+);
 
 export {
   getDataSupplier,
@@ -631,4 +653,6 @@ export {
   finishSurvey,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
+  setSector,
+  setExport,
 };
