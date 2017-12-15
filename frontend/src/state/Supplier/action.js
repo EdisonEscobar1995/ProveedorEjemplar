@@ -468,6 +468,7 @@ function saveDataCallBySupplier(clientData) {
     requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
       .then((respone) => {
         const call = respone.data.data;
+        setMessage('Información guardada exitosamente', 'success');
         dispatch(saveDataCallSuccess(call));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
