@@ -98,7 +98,6 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         }
                         break;
                       case 'select': {
-                        let index = 0;
                         const { valuesToClean, mode, noSearch } = current;
                         if (!noSearch) {
                           fieldContent = (
@@ -122,17 +121,14 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               }}
                             >
                               {
-                                options.map((option) => {
-                                  index += 1;
-                                  return (
-                                    <Option
-                                      key={option.id + index}
-                                      value={option.id}
-                                    >
-                                      {option.name}
-                                    </Option>
-                                  );
-                                })
+                                options.map(option => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.name}
+                                  </Option>
+                                ))
                               }
                             </Select>);
                         } else {
@@ -153,17 +149,14 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               }}
                             >
                               {
-                                options.map((option) => {
-                                  index += 1;
-                                  return (
-                                    <Option
-                                      key={option.id + index}
-                                      value={option.id}
-                                    >
-                                      {option.name}
-                                    </Option>
-                                  );
-                                })
+                                options.map(option => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {option.name}
+                                  </Option>
+                                ))
                               }
                             </Select>);
                         }

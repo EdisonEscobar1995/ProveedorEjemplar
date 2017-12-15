@@ -364,7 +364,7 @@ function generalInfo(fields) {
           key: 'emails',
           value: emails,
           mode: 'tags',
-          options: emails,
+          options: emails.map(item => ({ id: item, name: item })),
           noSearch: true,
           rules: [
             { ...mailValitationMultiple },
