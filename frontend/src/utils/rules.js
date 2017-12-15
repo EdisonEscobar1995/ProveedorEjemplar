@@ -12,9 +12,8 @@ const validateEmail = (values) => {
 
 const mailValitationMultiple = {
   validator: (rule, values, cb) => {
-    let filteredValues = values;
-    filteredValues = filteredValues.filter(item => item);
-    const resultTotal = validateEmail(filteredValues);
+    console.log(values);
+    const resultTotal = validateEmail(values);
     if (!resultTotal) {
       cb(emailMessage);
     }
