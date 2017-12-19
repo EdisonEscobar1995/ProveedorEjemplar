@@ -37,6 +37,7 @@ class Comercial extends Component {
       cancelData,
       readOnly,
       changeIdCompanySize,
+      next,
     } = this.props;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
@@ -46,14 +47,25 @@ class Comercial extends Component {
       {
         key: 1,
         text: 'Guardar',
+        buttoncolor: 'buttonFirst',
         onClick: this.saveDraft,
+        disabled: readOnly,
+      },
+      {
+        key: 3,
+        text: 'Continuar',
+        buttoncolor: 'buttonSecond',
+        onClick: next,
         disabled: readOnly,
       },
       {
         key: 2,
         text: 'Enviar',
+        buttoncolor: 'buttonThird',
         onClick: this.handleSubmit,
         disabled: readOnly,
+        showConfirm: changeIdCompanySize,
+        messageConfirm: messageByChangeSizeCompany,
       },
     ];
     return (
@@ -77,8 +89,6 @@ class Comercial extends Component {
           />
           <FormButtons
             buttons={buttons}
-            showConfirm={changeIdCompanySize}
-            messageConfirm={messageByChangeSizeCompany}
           />
         </Form>
       </div>

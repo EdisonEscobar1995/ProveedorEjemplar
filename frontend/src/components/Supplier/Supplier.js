@@ -116,6 +116,7 @@ class Supplier extends Component {
           saveAnswer={saveAnswer}
           disabled={readOnly}
           validateQuestions={this.validateQuestions}
+          next={this.next}
         />,
         stepContent: this.getProgress(dimension.id, dimension.name),
       };
@@ -259,8 +260,13 @@ class Supplier extends Component {
     return Math.round(total);
   }
   next = () => {
-    const current = this.state.current + 1;
-    this.setState({ current });
+    const { current } = this.state;
+    const { dimensions } = this.props;
+    let nextCurrent = current + 1;
+    if (dimensions.length + 2 === current + 1) {
+      nextCurrent = 0;
+    }
+    this.setState({ current: nextCurrent });
   }
   prev = () => {
     const current = this.state.current - 1;

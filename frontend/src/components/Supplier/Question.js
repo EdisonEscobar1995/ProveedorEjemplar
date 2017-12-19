@@ -29,10 +29,6 @@ const SectionStyle = styled.div`
   background: ${props => props.theme.color.primary};
   color: ${props => props.theme.color.normal};
 `;
-const ParagraphStyle = styled.p`
-  word-break: break-word;
-  margin: ${props => props.theme.spaces.main} 0;
-`;
 const RadioStyle = styled(Radio) `
   white-space: normal;
   margin: 10px 0;
@@ -213,25 +209,29 @@ class Question extends Component {
     ]
   )
   render() {
-    const { criterions, system, disabled } = this.props;
+    const { criterions, disabled, next } = this.props;
     const columns = this.getColumns();
     let buttons = [];
     if (!disabled) {
       buttons = [
         {
+          key: 3,
+          text: 'Continuar',
+          buttoncolor: 'buttonSecond',
+          onClick: next,
+        },
+        {
           key: 1,
           text: 'Enviar',
+          buttoncolor: 'buttonThird',
           onClick: this.props.validateQuestions,
+          showConfirm: true,
+          messageConfirm: '¿Está seguro de enviar la encuesta?',
         },
       ];
     }
     return (
       <div>
-        <ParagraphStyle>
-          {
-            system.inputPoll
-          }
-        </ParagraphStyle>
         {
           criterions.length > 0 ?
             criterions.map(criteria => (
@@ -265,8 +265,6 @@ class Question extends Component {
             (<h3>No hay preguntas para esta dimension</h3>)
         }
         <FormButtons
-          showConfirm
-          messageConfirm="¿Está seguro de enviar la encuesta?"
           buttons={buttons}
         />
       </div>

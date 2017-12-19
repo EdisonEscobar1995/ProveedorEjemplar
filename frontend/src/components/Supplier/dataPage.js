@@ -25,7 +25,7 @@ const defaultMoneyType = [
   },
   {
     id: 'CLP',
-    name: 'Moneda de Chile',
+    name: 'CLP Moneda de Chile',
   },
   {
     id: 'PEN',
@@ -258,7 +258,7 @@ function generalInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Ubicacion',
+          value: 'Ubicación',
           key: 'location',
         },
       ],
@@ -658,7 +658,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Tipo',
+          label: 'Moneda',
           key: 'typeOfCurrencyAnnualSales',
           value: typeOfCurrencyAnnualSales,
           options: defaultMoneyType,
@@ -741,7 +741,7 @@ function comercialInfo(fields) {
         {
           span: 8,
           type: 'input',
-          label: 'Nombre de la persona contacto en Grupo Nutresa (Contacto Comercial y/o Negociador)',
+          label: 'Contacto en Grupo Nutresa (Contacto Comercial y/o Negociador)',
           key: 'nameContactPersonInGroupNutresa',
           value: nameContactPersonInGroupNutresa,
           disabled,
@@ -796,7 +796,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'title',
-          value: 'Exportacion',
+          value: 'Exportación',
           key: 'exports',
         },
       ],
