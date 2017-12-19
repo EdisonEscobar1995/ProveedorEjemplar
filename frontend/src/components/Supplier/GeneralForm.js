@@ -43,6 +43,8 @@ class General extends Component {
           buttoncolor: 'buttonFirst',
           onClick: this.saveDraft,
           disabled: readOnly,
+          showConfirm: changeIdCompanySize,
+          messageConfirm: messageByChangeSizeCompany,
         },
         {
           key: 3,
