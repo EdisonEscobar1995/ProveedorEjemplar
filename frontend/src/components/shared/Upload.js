@@ -53,7 +53,10 @@ class Upload extends Component {
         } else {
           id = file.uid;
         }
-        onRemove(id, this.props.datakey);
+        const isUploaded = id.split(',').length > 0;
+        if (!isUploaded) {
+          onRemove(id, this.props.datakey);
+        }
       }
     } else {
       this.props.onChange();
