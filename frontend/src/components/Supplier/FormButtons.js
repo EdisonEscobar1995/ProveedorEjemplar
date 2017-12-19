@@ -1,35 +1,45 @@
 import React from 'react';
 import { Button, Row, Col } from 'antd';
+import styled from 'styled-components';
 import Confirm from '../shared/Confirm';
 
-function FormButtons({ buttons, showConfirm, messageConfirm }) {
+const ButtonStyle = styled(Button)`
+  background: ${props => props.theme.color[props.buttoncolor]};
+  color: ${props => props.theme.color.normal};
+  width: 100%;
+  &:hover, :focus {
+    background: ${props => props.theme.color[props.buttoncolor]};
+    color: ${props => props.theme.color.normal};
+  }
+`;
+function FormButtons({ buttons }) {
   return (
-    <Row type="flex" justify="center">
+    <Row type="flex" justify="center" gutter={5}>
       {
         buttons.map(button => (
-          <Col span={4} key={button.key}>
+          <Col span={2} key={button.key}>
             {
-              showConfirm ?
-                <Confirm title={messageConfirm} method={button.onClick}>
-                  <Button
+              buttons.showConfirm ?
+                <Confirm title={buttons.messageConfirm} method={button.onClick}>
+                  <ButtonStyle
                     disabled={button.disabled}
-                    type="primary"
+                    buttoncolor={button.buttoncolor}
                   >
                     {
                       button.text
                     }
-                  </Button>
+                  </ButtonStyle>
                 </Confirm>
                 :
-                <Button
+                <ButtonStyle
                   disabled={button.disabled}
-                  type="primary"
                   onClick={button.onClick}
+                  buttoncolor={button.buttoncolor}
                 >
                   {
                     button.text
                   }
-                </Button>
+                </ButtonStyle>
 
             }
           </Col>

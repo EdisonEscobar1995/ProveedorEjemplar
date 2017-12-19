@@ -11,10 +11,13 @@
 		switch(action){
 			case "import":
 				importData();
-			break;						
+				break;						
+			case "resetDataCXIBM01":
+				resetDataCXIBM01();					
+				break;
 			default:
 				error();
-			break;
+				break;
 		}
 }]]></xp:this.afterRenderResponse>	
 

@@ -36,7 +36,7 @@ const LogoStyle = styled.div`
 
 const FooterContentStyle = styled.div`  
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 `;
 const HeaderContentStyle = styled.div`  
@@ -62,6 +62,7 @@ const WelcomeStyle = styled.h4`
 const NameStyle = styled.h3`  
   color: ${props => props.theme.color.primary};
   margin-bottom: 6px;
+  font-family: LatoBold;
 `;
 const CloseStyle = styled.h4`
   color: ${props => props.theme.color.secondary}
@@ -113,9 +114,9 @@ class Document extends Component {
         </ContentStyle>
         <Footer>
           <FooterContentStyle>
-            <span>
+            <div>
               Copyright © 2017 Grupo Nutresa - Todos los derechos reservados | Medellín - Colombia
-            </span>
+            </div>
           </FooterContentStyle>
         </Footer>
       </Layout>

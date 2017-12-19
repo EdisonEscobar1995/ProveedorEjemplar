@@ -29,7 +29,7 @@ class General extends Component {
     this.props.changeParticipate(participateInCall);
   }
   render() {
-    const { participateInCall, changeIdCompanySize, system, readOnly } = this.props;
+    const { participateInCall, changeIdCompanySize, system, readOnly, next } = this.props;
     const { messageByChangeSizeCompany, informationProgram } = system;
     const { getFieldDecorator, setFields } = this.props.form;
     let content = '';
@@ -40,14 +40,25 @@ class General extends Component {
         {
           key: 1,
           text: 'Guardar',
+          buttoncolor: 'buttonFirst',
           onClick: this.saveDraft,
+          disabled: readOnly,
+        },
+        {
+          key: 3,
+          text: 'Continuar',
+          buttoncolor: 'buttonSecond',
+          onClick: next,
           disabled: readOnly,
         },
         {
           key: 2,
           text: 'Enviar',
+          buttoncolor: 'buttonThird',
           onClick: this.handleSubmit,
           disabled: readOnly,
+          showConfirm: changeIdCompanySize,
+          messageConfirm: messageByChangeSizeCompany,
         },
       ];
       content = (
@@ -103,8 +114,6 @@ class General extends Component {
           }
           <FormButtons
             buttons={buttons}
-            showConfirm={changeIdCompanySize}
-            messageConfirm={messageByChangeSizeCompany}
           />
         </Form>
       </div>

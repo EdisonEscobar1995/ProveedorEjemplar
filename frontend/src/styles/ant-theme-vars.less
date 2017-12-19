@@ -1,5 +1,23 @@
 @import "~antd/lib/style/index.less";
 @import "~antd/lib/style/components.less";
+
+@src-fonts: "/assets/fonts/Lato";
+@fa-version: "1.1";
+
+@font-face {
+  font-family: 'LatoRegular';
+  src: url('@{src-fonts}-Regular.ttf?v=@{fa-version}') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LatoBold';
+  src: url('@{src-fonts}-Bold.ttf?v=@{fa-version}') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @primary-color            : #37907c;
 @layout-header-background : #FFF;
 @layout-body-background   : #FFF;
@@ -8,4 +26,6 @@
 @progress-remaining-color: #FFF;
 @progress-default-color: yellow;
 @success-color          : green;
+@font-family            : 'LatoRegular', sans-serif, @font-family-no-number;
+@font-size-base         : 13px;
 
