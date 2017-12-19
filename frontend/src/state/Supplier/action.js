@@ -156,7 +156,9 @@ function reloadDimensions(dimensions) {
 function updateAttachment(data, field) {
   return (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
-    supplier[field].push(data);
+    if (data) {
+      supplier[field].push(data);
+    }
     const newData = {
       type: UPDATE_ATTACHMENT,
       supplier,
@@ -175,8 +177,7 @@ function updateChangeIdCompanySize(idCompanySize) {
     dispatch(newData);
   };
 }
-function deleteAttachmentSuccess(supplier, field, idAttachment) {
-  supplier[field].filter(attach => attach.id !== idAttachment);
+function deleteAttachmentSuccess(supplier) {
   return {
     type: DELETE_ATTACHMENT,
     supplier,
@@ -586,7 +587,8 @@ const deleteAttachment = (idAttachment, field) => (
       idAttachment,
     ).then(() => {
       const supplier = { ...getActualState().supplier.supplier };
-      dispatch(deleteAttachmentSuccess(supplier, field, idAttachment));
+      supplier[field] = supplier[field].filter(attach => attach.id !== idAttachment);
+      dispatch(deleteAttachmentSuccess(supplier));
     }).catch((err) => {
       dispatch(getFailedRequest(err));
     });
@@ -613,12 +615,16 @@ const saveCustomer = (clientData, index) => (
 const deleteCustomer = (clientData, index) => {
   const { id } = clientData;
   return (dispatch) => {
-    requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, id)
-      .then(() => {
-        dispatch(deleteDataCustomer(index));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
+    if (id) {
+      requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, id)
+        .then(() => {
+          dispatch(deleteDataCustomer(index));
+        }).catch((err) => {
+          dispatch(getFailedRequest(err));
+        });
+    } else {
+      dispatch(deleteDataCustomer(index));
+    }
   };
 };
 const finishSurvey = () => (

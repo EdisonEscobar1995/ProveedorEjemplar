@@ -9,9 +9,8 @@ import { baseUrl } from '../../utils/api';
 
 const { TextArea } = Input;
 const { Column } = Table;
-
+const RadioGroup = Radio.Group;
 const TableStyle = styled(Table)`
-  color:red;
   .ant-table-body > table .ant-table-tbody > tr > td{
     word-break: break-word;
   }
@@ -23,7 +22,6 @@ const SubtitleStyle = styled.h4`
   margin: 0 10px;
 `;
 const SectionStyle = styled.div`
-  color: ${props => props.theme.color.normal};
   padding: 15px;
   opacity: 0.6;
   background: ${props => props.theme.color.primary};
@@ -34,14 +32,12 @@ const RadioStyle = styled(Radio) `
   margin: 10px 0;
 `;
 
-const RadioGroup = Radio.Group;
-
 class Question extends Component {
   componentDidMount() {
     const { idDimension, idSurvey, getQuestionsByDimension } = this.props;
     getQuestionsByDimension(idSurvey, idDimension);
   }
-  onChange = (value, record, fieldName) => {
+  onChange = (value, record, fieldName, action) => {
     if (value) {
       const { id, answer, idCriterion } = record;
       const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
@@ -57,7 +53,9 @@ class Question extends Component {
       const copy = { ...actualAnswer };
       sendAnswer = Object.assign(copy, sendAnswer);
       if (fieldName === 'attachment') {
-        if (sendAnswer[fieldName]) {
+        if (action === 'delete') {
+          sendAnswer[fieldName] = sendAnswer[fieldName].filter(attach => attach.id !== value);
+        } else if (sendAnswer[fieldName]) {
           sendAnswer[fieldName].push(value);
         } else {
           sendAnswer[fieldName] = [value];
@@ -199,7 +197,7 @@ class Question extends Component {
                 uploadMaxFilesize={this.props.system.uploadMaxFilesize}
                 uploadExtensions={this.props.system.uploadExtensions}
                 onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
-                onRemove={this.onChange}
+                onRemove={(value, rowValue) => this.onChange(value, rowValue, 'attachment', 'delete')}
               />
               <ErrorTable visible={errors.attachments} text="Debe anexar un archivo" />
             </div>
