@@ -6,7 +6,7 @@ const ButtonStyle = styled(Button)`
   font-weight: normal;
   background-color: ${props => props.theme.color.secondary};
   color: ${props => props.theme.color.normal};
-  &:hover{
+  &:hover, :focus {
     background-color: ${props => props.theme.color.secondary};
     color: ${props => props.theme.color.normal};
     border-color: ${props => props.theme.color.secondary};

@@ -17,15 +17,20 @@
   font-weight: normal;
   font-style: normal;
 }
+@progress-color-common    : #E4DC29;
+@normal-color-common      : #FFF;
 
 @primary-color            : #37907c;
-@layout-header-background : #FFF;
-@layout-body-background   : #FFF;
+@layout-header-background : @normal-color-common;
+@layout-body-background   : @normal-color-common;
 @layout-footer-background : #f0f0f0;
 @text-color               : #404040;
-@progress-remaining-color: #FFF;
-@progress-default-color: yellow;
-@success-color          : green;
-@font-family            : 'LatoRegular', sans-serif, @font-family-no-number;
-@font-size-base         : 13px;
+@progress-remaining-color : @normal-color-common;
+@progress-default-color   : @progress-color-common;
+@success-color            : @progress-color-common;
+@font-family              : 'LatoRegular', sans-serif, @font-family-no-number;
+@font-size-base           : 13px;
 
+.ant-progress-text{
+  font-size: 0.9em;
+}

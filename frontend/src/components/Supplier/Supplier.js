@@ -20,18 +20,21 @@ const ContentStyle = styled.div`
 const TabsStyle = styled(Tabs)`
   .ant-tabs-bar {
     border-bottom-color: rgba(217,217,217,.5);
+    color: ${props => props.theme.color.normal};
     .ant-tabs-tab{
       margin-right: 20px;
-      background-color: ${props => props.theme.color.back};
-      color: ${props => props.theme.color.info};
+      background-color: ${props => props.theme.color.tabNormal};
+      &:hover{
+        color: ${props => props.theme.color.normal};
+      }
       &:before {
         content: " ";
         width: 0;
         height: 0;
         left: -18px;
         border-left: 18px solid transparent;
-        border-top: 28px solid ${props => props.theme.color.back};
-        border-bottom: 28px solid ${props => props.theme.color.back};
+        border-top: 28px solid ${props => props.theme.color.tabNormal};
+        border-bottom: 28px solid ${props => props.theme.color.tabNormal};
         position: absolute;
         top: 0;
       }
@@ -40,7 +43,7 @@ const TabsStyle = styled(Tabs)`
         width: 0;
         right: -18px;
         height: 0;
-        border-left: 18px solid ${props => props.theme.color.back};
+        border-left: 18px solid ${props => props.theme.color.tabNormal};
         border-top: 28px solid transparent;
         border-bottom: 28px solid transparent;
         position: absolute;
@@ -125,20 +128,21 @@ class Supplier extends Component {
   }
   getProgress = (dimensionId, name) => {
     const percent = this.calculatePercent(dimensionId);
-    let status = 'exception';
-    if (percent === 100) {
-      status = 'success';
-    } else if (percent > 49) {
-      status = 'active';
-    }
+    const status = 'success';
+    // if (percent === 100) {
+    //   status = 'success';
+    // } else if (percent > 49) {
+    //   status = 'active';
+    // }
     return (
       <div>
         <Progress
+          strokeWidth={10}
           type="circle"
           percent={percent}
           status={status}
           width={40}
-          format={value => (value === 0 ? '?' : value)}
+          format={value => (value === 0 ? '?' : `${value}%`)}
         />
         <TitleStyle>{name}</TitleStyle>
       </div>

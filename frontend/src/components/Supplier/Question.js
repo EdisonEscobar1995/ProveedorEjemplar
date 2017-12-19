@@ -37,7 +37,7 @@ class Question extends Component {
     const { idDimension, idSurvey, getQuestionsByDimension } = this.props;
     getQuestionsByDimension(idSurvey, idDimension);
   }
-  onChange = (value, record, fieldName) => {
+  onChange = (value, record, fieldName, action) => {
     if (value) {
       const { id, answer, idCriterion } = record;
       const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
@@ -53,7 +53,9 @@ class Question extends Component {
       const copy = { ...actualAnswer };
       sendAnswer = Object.assign(copy, sendAnswer);
       if (fieldName === 'attachment') {
-        if (sendAnswer[fieldName]) {
+        if (action === 'delete') {
+          sendAnswer[fieldName] = sendAnswer[fieldName].filter(attach => attach.id !== value);
+        } else if (sendAnswer[fieldName]) {
           sendAnswer[fieldName].push(value);
         } else {
           sendAnswer[fieldName] = [value];
@@ -195,7 +197,7 @@ class Question extends Component {
                 uploadMaxFilesize={this.props.system.uploadMaxFilesize}
                 uploadExtensions={this.props.system.uploadExtensions}
                 onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
-                onRemove={this.onChange}
+                onRemove={(value, rowValue) => this.onChange(value, rowValue, 'attachment', 'delete')}
               />
               <ErrorTable visible={errors.attachments} text="Debe anexar un archivo" />
             </div>
