@@ -172,29 +172,32 @@ function importData() {
 				}
 				break;
 			case "COU":
-				columnKeys = ["name"];
-				columnNameKeys = ["País"];
-				columnNames = [{commonName: "País", technicalName: "name"}];
+				columnKeys = ["code", "name"];
+				columnNameKeys = ["PAIS", "NOMBRE PAIS"];
+				columnNames = [{commonName: "PAIS", technicalName: "code"},
+				               {commonName: "NOMBRE PAIS", technicalName: "name"}];
 				defaultFields = [{ key: "form", value: "frCountry"}];
 				viewName = "vwCountries";
 				break;
 			case "DEP":
-				columnKeys = ["idCountry", "name"];
-				columnNameKeys = ["Pais", "Departamento"];
-				columnNames = [{commonName: "Pais", technicalName: "idCountry"},
-				               {commonName: "Departamento", technicalName: "name"}];
+				columnKeys = ["idCountry", "code", "name"];
+				columnNameKeys = ["PAIS", "REGION", "NOMBRE REGION"];
+				columnNames = [{commonName: "PAIS", technicalName: "idCountry"},
+				               {commonName: "REGION", technicalName: "code"},
+				               {commonName: "NOMBRE REGION", technicalName: "name"}];
 				defaultFields = [{ key: "form", value: "frDepartment"}];
-				foreignKeys = [{technicalNames: ["idCountry"], commonNames: ["Pais"], viewNames: ["ImportCountriesByName"]}];
+				foreignKeys = [{technicalNames: ["idCountry"], commonNames: ["Pais"], viewNames: ["ImportCountriesByCode"]}];
 				viewName = "vwDepartments";
 				break;
 			case "CIT":
-				columnKeys = ["idCountry", "idDepartment", "name"];
-				columnNameKeys = ["País", "Departamento", "Municipio"];
-				columnNames = [{commonName: "País", technicalName: "idCountry"},
-				               {commonName: "Departamento", technicalName: "idDepartment"},
-				               {commonName: "Municipio", technicalName: "name"}];
+				columnKeys = ["idCountry", "idDepartment", "code", "name"];
+				columnNameKeys = ["PAIS", "REGION", "POBLACION", "NOMBRE POBLACION"];
+				columnNames = [{commonName: "PAIS", technicalName: "idCountry"},
+				               {commonName: "REGION", technicalName: "idDepartment"},
+				               {commonName: "POBLACION", technicalName: "code"},
+				               {commonName: "NOMBRE POBLACION", technicalName: "name"}];
 				defaultFields = [{ key: "form", value: "frCity"}];
-				foreignKeys = [{technicalNames: ["idCountry", "idDepartment"], commonNames: ["Pais", "Departamento"], viewNames: ["ImportCountriesByName", "ImportDepartmentsByName"]}];
+				foreignKeys = [{technicalNames: ["idCountry", "idDepartment"], commonNames: ["Pais", "Departamento"], viewNames: ["ImportCountriesByCode", "ImportDepartmentsByCode"]}];
 				viewName = "vwCities";
 				break;
 			case "SUR":
@@ -672,4 +675,51 @@ function vectorToArray(vector){
 	return array;
 }
 
+function resetDataCXIBM01(){
+	var error = "";
+	try{
+		var writer = headerResponse("text/html", {"Cache-Control" : "no-cache"});
+	
+		var vwSuppliers:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSuppliersByName");
+		var vwSuppliersByCall:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallSupplier");
+		var answers:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwAnswers");
+		var ndSupplier:NotesDocument;
+		var ndSupplierByCall:NotesDocument;
+		var idSupplier;
+		
+		for (var i = 3; i <= 5; i++){
+			ndSupplier = vwSuppliers.getDocumentByKey("CN=Usuario "+i+"/O=desarrollo", true);
+			ndSupplier.replaceItemValue("idCompanySize", "");
+			ndSupplier.replaceItemValue("emails", "Usuario"+i+"@desarrollo.com")
+			ndSupplier.save(true, false);
+		
+			idSupplier = ndSupplier.getItemValueString("id");
+			
+			ndSupplierByCall = vwSuppliersByCall.getDocumentByKey(idSupplier, true);
+			ndSupplierByCall.replaceItemValue("participateInCall", "");
+			ndSupplierByCall.replaceItemValue("idSurvey", "");
+			ndSupplierByCall.replaceItemValue("invitedToCall", "0");
+			ndSupplierByCall.replaceItemValue("lockedByModification", "0");
+			ndSupplierByCall.replaceItemValue("oldIdCompanySize", "");
+			ndSupplierByCall.replaceItemValue("reasonForNotParticipation", "");
+			ndSupplierByCall.replaceItemValue("idSurvey", "");
+			ndSupplierByCall.replaceItemValue("state", "");
+			ndSupplierByCall.save(true, false);
+			
+			ndSupplier.recycle();
+			ndSupplierByCall.recycle();
+		}
+		
+		answers.getAllEntries().removeAll(true);
+	}catch (e){
+		error = e.message
+	}finally {
+		var response = "Los datos han sido reseteados"
+		if (error !== ""){
+			response = error
+		}
+		writer.write("<div>"+response+"<div>");
+		footerResponse(writer)
+	}
+}
 
