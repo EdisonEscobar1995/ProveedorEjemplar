@@ -243,6 +243,7 @@ function importData() {
 				columnKeys = ["name"];
 				columnNameKeys = ["Nombre"];
 				columnNames = [{commonName: "Nombre", technicalName: "name"},
+				               {commonName: "Email", technicalName: "email"},
 				               {commonName: "Roles", technicalName: "idRols"}];
 				defaultFields = [{ key: "form", value: "frUser"}];
 				foreignKeys = [{technicalNames: ["idRols"], commonNames: ["Rol"], viewNames: ["ImportRolByName"]}];
