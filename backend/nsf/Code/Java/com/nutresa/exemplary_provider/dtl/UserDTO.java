@@ -7,6 +7,8 @@ import com.google.gson.annotations.Expose;
 public class UserDTO extends MasterDTO {
     @Expose
     private List<String> idRols;
+    @Expose
+    private String email;
 
     public List<String> getIdRols() {
         return idRols;
@@ -14,6 +16,14 @@ public class UserDTO extends MasterDTO {
 
     public void setIdRols(List<String> idRols) {
         this.idRols = idRols;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
 }
