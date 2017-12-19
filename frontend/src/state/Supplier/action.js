@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { notification } from 'antd';
 import {
   GET_DATA_SUPPLIER_PROGRESS,
   GET_DATA_SUPPLIER_SUCCESS,
@@ -58,6 +59,28 @@ const getDataSupplierProgress = () => (
 function isReadOnly({ lockedByModification, participateInCall }) {
   return lockedByModification || participateInCall === 'false';
 }
+
+const openNotificationWithIcon = (type) => {
+  let messageToShow = '';
+  let descriptionToShow = '';
+
+  switch (type) {
+    case 'success':
+      messageToShow = 'Guardado exitoso';
+      descriptionToShow = 'Respuesta guardada.';
+      break;
+    case 'error':
+    default:
+      messageToShow = 'Error guardando';
+      descriptionToShow = 'La respuesta no pudo ser guardada';
+      break;
+  }
+
+  notification[type]({
+    message: messageToShow,
+    description: descriptionToShow,
+  });
+};
 
 const getDataSupplierSuccess = (data) => {
   data.supplier.employeesTotal =
@@ -523,6 +546,7 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
           }
         }
         dispatch(saveAnswerSuccess(allDimensions));
+        openNotificationWithIcon('success');
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
