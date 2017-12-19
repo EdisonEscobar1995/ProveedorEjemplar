@@ -128,12 +128,12 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
     public void sendInvitation(SupplierDTO supplier) throws HandlerGenericException {
         SupplierBLO supplierBLO = new SupplierBLO();
-        String passwordUser = supplierBLO.getPassword(supplier);
-        if (!passwordUser.isEmpty()) {
+        Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
+        if (!informationInOtherDataBase.isEmpty()) {
             Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
             Map<String, String> detail = new HashMap<String, String>();
-            detail.put(dictionary.get("USER"), supplier.getNit());
-            detail.put(dictionary.get("PASSWORD"), passwordUser);
+            detail.put(dictionary.get("USER"), informationInOtherDataBase.get("userName"));
+            detail.put(dictionary.get("PASSWORD"), informationInOtherDataBase.get("password"));
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
             notification.setMessage(notification.getMessage());

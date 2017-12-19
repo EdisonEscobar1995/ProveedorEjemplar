@@ -67,14 +67,14 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         Map<String, List<Object>> listIds;
         List<Object> listYears;
 
-        // Cargar todos los años de las convocatorias
+        // Cargar todos los a�os de las convocatorias
         listYears = callBLO.getFieldAll(0, "vwCallsByYear");
-        // Si no llega el año cargar el primero para devolver los datos de las
+        // Si no llega el a�o cargar el primero para devolver los datos de las
         // las ultimas convocatorias
         if (null == year || year.isEmpty()) {
             year = (String) listYears.get(0);
         }
-        // Cargar todas las convocatorias que tengan el año enviado o el último
+        // Cargar todas las convocatorias que tengan el a�o enviado o el �ltimo
         List<DTO> listCalls = callBLO.getAllBy("year", year);
         // Extraer los ids de las convocatorias par arealizar el cruce de
         // proveedor x convocatoria
@@ -88,10 +88,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             // Recuperar los ids de los proveedores
             listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
             // Consultar los proveedores que se encuentran bloqueados o
-            // notificados para las convocatorias del año seleccionado
+            // notificados para las convocatorias del a�o seleccionado
             List<SupplierDTO> suppliers = supplierDAO
                     .getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
-            // Realizar el cruce de los maestros según los datos de los
+            // Realizar el cruce de los maestros seg�n los datos de los
             // proveedores seleccionados
             String[] idFieldNames = { "Category", "Country", "Supply" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
@@ -142,9 +142,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return response;
     }
 
-    public String getPassword(SupplierDTO supplier) throws HandlerGenericException {
+    public Map<String, String> getInformationInOtherDataBase(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
-        return supplierDAO.getPassword(supplier);
+        return supplierDAO.getInformationInOtherDataBase(supplier);
     }
 
 }
