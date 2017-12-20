@@ -107,7 +107,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
                 currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(),
                         supplier.getIdCompanySize()).getId());
-                notification.notifyToSupplierForContinue(supplier.getEmails());
+                notification.notifyToSupplierForContinue(supplier.getEmailOfContact());
                 supplierBLO.update(supplier);
                 response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
                 answerBLO.deleteAnswers(currentSupplierByCall.getId());
