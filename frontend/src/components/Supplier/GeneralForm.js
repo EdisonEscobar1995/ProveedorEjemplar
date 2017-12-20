@@ -18,11 +18,29 @@ class General extends Component {
       }
     });
   }
+  validateContactInfo = () => {
+    let response = true;
+    this.props.form.validateFields([
+      'fullNameContact',
+      'jobPosition',
+      'phoneOfContact',
+      'emailOfContact',
+    ], (err) => {
+      if (err) {
+        response = false;
+      }
+    });
+    return response;
+  }
   saveDraft = () => {
-    this.props.save(this.props.form.getFieldsValue());
+    if (this.validateContactInfo() === true) {
+      this.props.save(this.props.form.getFieldsValue());
+    }
   }
   continue = () => {
-    this.props.save(this.props.form.getFieldsValue(), 'send');
+    if (this.validateContactInfo() === true) {
+      this.props.save(this.props.form.getFieldsValue(), 'send');
+    }
   }
   handleChange= (participateInCall) => {
     this.props.changeParticipate(participateInCall);
