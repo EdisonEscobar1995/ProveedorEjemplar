@@ -7,12 +7,11 @@ import message from '../shared/Message';
 import { comercialInfo, mainCustomers } from './dataPage';
 import FormButtons from './FormButtons';
 
-
 class Comercial extends Component {
   componentDidMount() {
     const config = {
       type: 'warning',
-      text: 'Supplier.validateInfo',
+      text: 'Verifique la información ingresada en el campo tamaño de la empresa',
     };
     message(config);
     const { call, participateInCall, getDimensionsBySurvey } = this.props;
@@ -32,6 +31,9 @@ class Comercial extends Component {
   saveDraft = () => {
     this.props.save(this.props.form.getFieldsValue());
   }
+  continue = () => {
+    this.props.save(this.props.form.getFieldsValue(), 'send');
+  }
   render() {
     const {
       principalCustomer,
@@ -43,7 +45,6 @@ class Comercial extends Component {
       cancelData,
       readOnly,
       changeIdCompanySize,
-      next,
     } = this.props;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
@@ -63,7 +64,7 @@ class Comercial extends Component {
         key: 3,
         text: 'Button.continue',
         buttoncolor: 'buttonSecond',
-        onClick: next,
+        onClick: this.continue,
         disabled: readOnly,
       },
       {
