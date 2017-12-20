@@ -113,13 +113,15 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         }
     }
 
-    public void notifyToSupplierForContinue(List<String> email) throws HandlerGenericException {
+    public void notifyToSupplierForContinue(String email) throws HandlerGenericException {
         try {
+            List<String> emails = new ArrayList<String>();
+            emails.add(email);
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
             notification.setMessage(notification.getMessage());
             String linkOfButton = Common.buildPathResource() + "/dist/index.html";
-            sendNotification(email, notification, false, null, true, linkOfButton);
+            sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
