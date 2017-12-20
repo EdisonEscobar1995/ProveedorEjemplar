@@ -57,14 +57,14 @@ class GenericFormTable extends Component {
     this.state.row = row;
     this.state.record = record;
   }
-  addData = () => {
+  addData = (index) => {
     const data = {
       editable: true,
     };
     this.props.colummns.forEach((column) => {
       data[column.key] = '';
     });
-    this.props.addData(data);
+    this.props.addData(data, index);
   }
   render() {
     const {
@@ -81,120 +81,125 @@ class GenericFormTable extends Component {
       emptyText: 'No hay contenido para mostrar',
     };
     let content = '';
-    if (data.length > 0) {
-      content = (
-        <TableStyle pagination={false} locale={config} dataSource={data}>
-          {
-            colummns.map(column => (
-              (
-                <Column
-                  title={column.title}
-                  key={column.key}
-                  dataIndex={column.key}
-                  render={(text, record) => {
-                    const id = `${record.key}-${column.key}`;
-                    const rules = column.rules || [];
-                    return (
-                      record.editable ?
-                        (
-                          <ItemStyle>
-                            {
-                              getFieldDecorator(id, {
-                                rules: [
-                                  { required: true, message: 'Por favor ingrese un valor' },
-                                  ...rules,
-                                ],
-                                initialValue: text,
-                              })(
-                                <Input type={column.type} placeholder={column.title} />,
-                              )
-                            }
-                          </ItemStyle>
-                        )
-                        :
-                        (<span>{text}</span>)
-                    );
-                  }
-                  }
-                />
-              )
-            ))
-          }
-          {
-            this.props.disabled ?
-              ''
-              :
+    if (data.length === 0) {
+      this.addData(0);
+    }
+    content = (
+      <TableStyle pagination={false} locale={config} dataSource={data}>
+        {
+          colummns.map(column => (
+            (
               <Column
-                title="Acción"
-                key="action"
-                render={(text, record, index) => {
-                  const { editable, id } = record;
+                title={column.title}
+                key={column.key}
+                dataIndex={column.key}
+                render={(text, record) => {
+                  const id = `${record.key}-${column.key}`;
+                  const rules = column.rules || [];
                   return (
-                    <div>
-                      {
-                        editable ?
-                          (
-                            <Tooltip title="Guardar">
-                              <Button
-                                shape="circle"
-                                icon="save"
-                                htmlType="submit"
-                                onClick={() => this.selectRow(index, record)}
-                              />
-                            </Tooltip>
-                          )
-                          :
-                          (
-                            <Tooltip title="Editar">
-                              <Button
-                                shape="circle"
-                                icon="edit"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  editData(index);
-                                }}
-                              />
-                            </Tooltip>
-                          )
-                      }
-                      <Confirm method={() => deleteData(record, index)}>
-                        <Tooltip title="Eliminar">
-                          <Button
-                            shape="circle"
-                            icon="delete"
-                          />
-                        </Tooltip>
-                      </Confirm>
-                      {
-                        id && editable ?
-                          <Confirm method={() => cancelData(index)}>
-                            <Tooltip title="Cancelar">
-                              <Button
-                                shape="circle"
-                                icon="close-circle-o"
-                              />
-                            </Tooltip>
-                          </Confirm>
-                          :
-                          ''
-                      }
-                    </div>
+                    record.editable ?
+                      (
+                        <ItemStyle>
+                          {
+                            getFieldDecorator(id, {
+                              rules: [
+                                { required: true, message: 'Por favor ingrese un valor' },
+                                ...rules,
+                              ],
+                              initialValue: text,
+                            })(
+                              <Input type={column.type} placeholder={column.title} />,
+                            )
+                          }
+                        </ItemStyle>
+                      )
+                      :
+                      (<span>{text}</span>)
                   );
                 }
                 }
               />
-          }
-        </TableStyle>
-      );
-    }
-    return (
-      <Spin spinning={loading}>
+            )
+          ))
+        }
         {
           this.props.disabled ?
             ''
             :
-            <Button type="primary" onClick={this.addData}>Agregar</Button>
+            <Column
+              title="Acción"
+              key="action"
+              render={(text, record, index) => {
+                const { editable, id } = record;
+                return (
+                  <div>
+                    {
+                      editable ?
+                        (
+                          <Tooltip title="Guardar">
+                            <Button
+                              shape="circle"
+                              icon="save"
+                              htmlType="submit"
+                              onClick={() => this.selectRow(index, record)}
+                            />
+                          </Tooltip>
+                        )
+                        :
+                        (
+                          <Tooltip title="Editar">
+                            <Button
+                              shape="circle"
+                              icon="edit"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                editData(index);
+                              }}
+                            />
+                          </Tooltip>
+                        )
+                    }
+                    <Confirm method={() => deleteData(record, index)}>
+                      <Tooltip title="Eliminar">
+                        <Button
+                          shape="circle"
+                          icon="delete"
+                        />
+                      </Tooltip>
+                    </Confirm>
+                    <Tooltip title="Agregar">
+                      <Button
+                        shape="circle"
+                        icon="plus"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          this.addData(index);
+                        }}
+                      />
+                    </Tooltip>
+                    {
+                      id && editable ?
+                        <Confirm method={() => cancelData(index)}>
+                          <Tooltip title="Cancelar">
+                            <Button
+                              shape="circle"
+                              icon="close-circle-o"
+                            />
+                          </Tooltip>
+                        </Confirm>
+                        :
+                        ''
+                    }
+                  </div>
+                );
+              }
+              }
+            />
         }
+      </TableStyle>
+    );
+    return (
+      <Spin spinning={loading}>
         <Form onSubmit={this.saveData}>
           {
             content

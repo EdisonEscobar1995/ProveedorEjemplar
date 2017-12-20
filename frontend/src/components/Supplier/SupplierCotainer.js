@@ -108,8 +108,8 @@ const mapDispatchToProps = dispatch => ({
   updateChangeIdCompanySize: (idCompanySize) => {
     dispatch(updateChangeIdCompanySize(idCompanySize));
   },
-  addData: (data) => {
-    dispatch(addDataCustomer(data));
+  addData: (data, index) => {
+    dispatch(addDataCustomer(data, index));
   },
   saveData: (data, index) => {
     dispatch(saveDataCustomer(data, index));

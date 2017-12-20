@@ -30,10 +30,11 @@ function getFailedRequest() {
   };
 }
 
-function addDataSector(newItem) {
+function addDataSector(newItem, index) {
   return {
     type: ADD_SECTOR,
     newItem,
+    index,
   };
 }
 function editDataSector(index) {

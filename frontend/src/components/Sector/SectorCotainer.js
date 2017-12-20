@@ -35,8 +35,8 @@ const mapDispatchToProps = dispatch => ({
   getAllSector: () => {
     dispatch(getAllSector());
   },
-  addData: (data) => {
-    dispatch(addDataSector(data));
+  addData: (data, index) => {
+    dispatch(addDataSector(data, index));
   },
   saveData: (data, index) => {
     dispatch(saveDataSector(data, index));

@@ -37,7 +37,7 @@ function sectorApp(state = initialState, action) {
     case ADD_SECTOR: {
       const { data } = state;
       let newData = [...data];
-      newData.unshift(action.newItem);
+      newData.splice(action.index, 0, action.newItem);
       newData = reloadKeys(newData);
       return {
         ...state,

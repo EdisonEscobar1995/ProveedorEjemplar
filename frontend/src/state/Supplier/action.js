@@ -305,10 +305,11 @@ function getFailedRequest(error) {
   };
 }
 
-function addDataCustomer(newItem) {
+function addDataCustomer(newItem, index) {
   return {
     type: ADD_CUSTOMER,
     newItem,
+    index,
   };
 }
 function editDataCustomer(index) {
