@@ -76,6 +76,7 @@ class General extends Component {
         {
           key: 1,
           text: 'Enviar',
+          buttoncolor: 'buttonThird',
           disabled: readOnly,
           onClick: this.handleSubmit,
         },
