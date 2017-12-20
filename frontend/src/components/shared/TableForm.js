@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Table, Input, Form, Spin, Button, Tooltip } from 'antd';
+import { Table, Input, Form, Spin, Button } from 'antd';
 import styled from 'styled-components';
 import Confirm from './Confirm';
+import Tooltip from './Tooltip';
+import FormattedMessage from './FormattedMessage';
 
 const { Column } = Table;
 const { Item } = Form;
@@ -77,13 +79,10 @@ class GenericFormTable extends Component {
       form,
     } = this.props;
     const { getFieldDecorator } = form;
-    const config = {
-      emptyText: 'No hay contenido para mostrar',
-    };
     let content = '';
     if (data.length > 0) {
       content = (
-        <TableStyle pagination={false} locale={config} dataSource={data}>
+        <TableStyle pagination={false} dataSource={data}>
           {
             colummns.map(column => (
               (
@@ -125,7 +124,7 @@ class GenericFormTable extends Component {
               ''
               :
               <Column
-                title="Acción"
+                title={<FormattedMessage id="Table.action" />}
                 key="action"
                 render={(text, record, index) => {
                   const { editable, id } = record;
@@ -134,7 +133,7 @@ class GenericFormTable extends Component {
                       {
                         editable ?
                           (
-                            <Tooltip title="Guardar">
+                            <Tooltip title="Button.save">
                               <Button
                                 shape="circle"
                                 icon="save"
@@ -145,7 +144,7 @@ class GenericFormTable extends Component {
                           )
                           :
                           (
-                            <Tooltip title="Editar">
+                            <Tooltip title="Button.edit">
                               <Button
                                 shape="circle"
                                 icon="edit"
@@ -158,7 +157,7 @@ class GenericFormTable extends Component {
                           )
                       }
                       <Confirm method={() => deleteData(record, index)}>
-                        <Tooltip title="Eliminar">
+                        <Tooltip title="Button.delete">
                           <Button
                             shape="circle"
                             icon="delete"
@@ -168,7 +167,7 @@ class GenericFormTable extends Component {
                       {
                         id && editable ?
                           <Confirm method={() => cancelData(index)}>
-                            <Tooltip title="Cancelar">
+                            <Tooltip title="Button.cancel">
                               <Button
                                 shape="circle"
                                 icon="close-circle-o"
