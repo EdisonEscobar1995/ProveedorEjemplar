@@ -33,13 +33,18 @@ const LogoStyle = styled.div`
   background-image: url(${props => props.theme.images.logo});
   background-repeat: no-repeat;
   background-size: contain;
-`;
+  `;
 
-const FooterContentStyle = styled.div`  
+const FooterContentStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 `;
+
+const FooterStyle = styled(Footer)`
+  padding: 0;
+`;
+
 const HeaderContentStyle = styled.div`  
   display: flex;
   justify-content: space-between;
@@ -113,13 +118,11 @@ class Document extends Component {
             <Router />
           </MainContentStyle>
         </ContentStyle>
-        <Footer>
+        <FooterStyle>
           <FooterContentStyle>
-            <div>
-              Copyright © 2017 Grupo Nutresa - Todos los derechos reservados | Medellín - Colombia
-            </div>
+            <img src="assets/images/footer.png" alt="footer" style={{ maxWidth: '100%' }} />
           </FooterContentStyle>
-        </Footer>
+        </FooterStyle>
       </Layout>
     );
   }

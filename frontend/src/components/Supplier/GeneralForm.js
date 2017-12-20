@@ -39,6 +39,8 @@ class General extends Component {
           buttoncolor: 'buttonFirst',
           onClick: this.saveDraft,
           disabled: readOnly,
+          showConfirm: changeIdCompanySize,
+          messageConfirm: messageByChangeSizeCompany,
         },
         {
           key: 3,
@@ -70,6 +72,7 @@ class General extends Component {
         {
           key: 1,
           text: 'Button.send',
+          buttoncolor: 'buttonThird',
           disabled: readOnly,
           onClick: this.handleSubmit,
         },

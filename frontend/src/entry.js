@@ -66,6 +66,7 @@ const enMessages = {
   'Supplier.validateInfo': 'Verifique la información ingresada en el campo tamaño de la empresa',
   'Supplier.reasonForNotParticipation': '¿Por qué no desea participar? ',
   'Button.save': 'Guardar',
+  'Button.add': 'Agregar',
   'Button.continue': 'Continuar',
   'Button.send': 'Enviar',
   'Button.edit': 'Editar',

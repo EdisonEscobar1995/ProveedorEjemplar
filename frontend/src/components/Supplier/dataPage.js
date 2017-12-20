@@ -480,6 +480,13 @@ function noParticipateInfo(fields) {
     call,
     readOnly,
   } = fields;
+
+  const {
+    reasonForNotParticipation,
+    nameWhoSayDontParticipate,
+    emailWhoSayDontParticipate,
+  } = call;
+
   const disabled = readOnly;
   return [
     {
@@ -490,7 +497,36 @@ function noParticipateInfo(fields) {
           type: 'textarea',
           label: 'Supplier.reasonForNotParticipation',
           key: 'reasonForNotParticipation',
-          value: call.reasonForNotParticipation,
+          value: reasonForNotParticipation,
+        },
+      ],
+    },
+    {
+      key: 2.0,
+      value: [
+        {
+          disabled,
+          type: 'input',
+          label: 'Nombre del participante ',
+          required: true,
+          key: 'nameWhoSayDontParticipate',
+          value: nameWhoSayDontParticipate,
+        },
+      ],
+    },
+    {
+      key: 3.0,
+      value: [
+        {
+          disabled,
+          type: 'input',
+          label: 'Email del participante ',
+          required: true,
+          key: 'emailWhoSayDontParticipate',
+          value: emailWhoSayDontParticipate,
+          rules: [
+            { ...mailValitation },
+          ],
         },
       ],
     },

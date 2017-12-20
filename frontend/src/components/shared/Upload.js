@@ -73,7 +73,8 @@ class Upload extends Component {
     const nameFile = file.name.split('.');
     const nameExtension = nameFile[nameFile.length - 1];
     const extension = `.${nameExtension}`;
-    if (this.props.uploadExtensions.indexOf(extension) < 0) {
+    if (this.props.uploadExtensions.indexOf(extension) < 0
+      && this.props.uploadExtensions.indexOf(extension.toLowerCase()) < 0) {
       message({ text: `Extensión ${extension} no válida`, type: 'error' });
       return false;
     }

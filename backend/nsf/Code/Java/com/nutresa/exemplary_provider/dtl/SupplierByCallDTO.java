@@ -18,6 +18,10 @@ public class SupplierByCallDTO {
     @Expose
     private String reasonForNotParticipation;
     @Expose
+    private String nameWhoSayDontParticipate;
+    @Expose
+    private String emailWhoSayDontParticipate;
+    @Expose
     private boolean lockedByModification;
     @Expose
     private Date dateLocked;
@@ -114,12 +118,28 @@ public class SupplierByCallDTO {
         return invitedToCall;
     }
 
-	public void setParticipateInCall(String participateInCall) {
-		this.participateInCall = participateInCall;
-	}
+    public void setParticipateInCall(String participateInCall) {
+        this.participateInCall = participateInCall;
+    }
 
-	public String getParticipateInCall() {
-		return participateInCall;
-	}
+    public String getParticipateInCall() {
+        return participateInCall;
+    }
+
+    public void setNameWhoSayDontParticipate(String nameWhoSayDontParticipate) {
+        this.nameWhoSayDontParticipate = nameWhoSayDontParticipate;
+    }
+
+    public String getNameWhoSayDontParticipate() {
+        return nameWhoSayDontParticipate;
+    }
+
+    public void setEmailWhoSayDontParticipate(String emailWhoSayDontParticipate) {
+        this.emailWhoSayDontParticipate = emailWhoSayDontParticipate;
+    }
+
+    public String getEmailWhoSayDontParticipate() {
+        return emailWhoSayDontParticipate;
+    }
 
 }

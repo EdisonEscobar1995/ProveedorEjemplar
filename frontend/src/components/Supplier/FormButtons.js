@@ -20,8 +20,8 @@ function FormButtons({ buttons }) {
         buttons.map(button => (
           <Col span={2} key={button.key}>
             {
-              buttons.showConfirm ?
-                <Confirm title={buttons.messageConfirm} method={button.onClick}>
+              button.showConfirm ?
+                <Confirm title={button.messageConfirm} method={button.onClick}>
                   <ButtonStyle
                     disabled={button.disabled}
                     buttoncolor={button.buttoncolor}

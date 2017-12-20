@@ -172,7 +172,7 @@ function supplierApp(state = initialState, action) {
     case ADD_CUSTOMER: {
       const { principalCustomer } = state;
       let newData = [...principalCustomer];
-      newData.unshift(action.newItem);
+      newData.splice(action.index, 0, action.newItem);
       newData = reloadKeys(newData);
       return {
         ...state,

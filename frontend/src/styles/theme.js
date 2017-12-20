@@ -17,6 +17,7 @@ const theme = {
   images: {
     logo: 'assets/images/LogoApp.png',
     surveyIcon: 'assets/images/SurveyIcon.png',
+    footer: 'assets/images/footer.png',
   },
 };
 export default theme;
