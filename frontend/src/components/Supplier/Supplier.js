@@ -256,6 +256,7 @@ class Supplier extends Component {
     return Math.round(total);
   }
   next = () => {
+    window.scrollTo(0, 0);
     const { current } = this.state;
     const { dimensions } = this.props;
     let nextCurrent = current + 1;
