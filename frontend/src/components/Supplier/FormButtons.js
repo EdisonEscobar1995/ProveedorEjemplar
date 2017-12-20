@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Row, Col } from 'antd';
 import styled from 'styled-components';
+import FormattedMessage from '../shared/FormattedMessage';
 import Confirm from '../shared/Confirm';
 
 const ButtonStyle = styled(Button)`
@@ -25,9 +26,7 @@ function FormButtons({ buttons }) {
                     disabled={button.disabled}
                     buttoncolor={button.buttoncolor}
                   >
-                    {
-                      button.text
-                    }
+                    <FormattedMessage id={button.text} />
                   </ButtonStyle>
                 </Confirm>
                 :
@@ -36,9 +35,7 @@ function FormButtons({ buttons }) {
                   onClick={button.onClick}
                   buttoncolor={button.buttoncolor}
                 >
-                  {
-                    button.text
-                  }
+                  <FormattedMessage id={button.text} />
                 </ButtonStyle>
 
             }

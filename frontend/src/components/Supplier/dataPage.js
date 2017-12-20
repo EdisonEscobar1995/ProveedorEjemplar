@@ -106,7 +106,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Nombre o Razón social',
+          label: 'Supplier.businessName',
           key: 'businessName',
           value: businessName,
           required: true,
@@ -115,7 +115,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Tamaño de la empresa',
+          label: 'Supplier.idCompanySize',
           key: 'idCompanySize',
           value: idCompanySize,
           required: true,
@@ -128,7 +128,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Suministros',
+          label: 'Supplier.idSupply',
           value: idSupply,
           key: 'idSupply',
           required: true,
@@ -154,7 +154,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Categoría',
+          label: 'Supplier.idCategory',
           key: 'idCategory',
           value: idCategory,
           options: categories,
@@ -171,14 +171,14 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Tipo de subcategoría',
+          label: 'Supplier.idSubCategory',
           key: 'idSubCategory',
           value: idSubCategory,
           options: subcategories,
           disabled,
         },
         {
-          label: 'Documentos oficiales: Por ejemplo, para Colombia adjuntar RUT y Cámara de Comercio o Para Costa Rica adjuntar Cédula y Personaría Jurídica. (Máximo dos documentos)',
+          label: 'Supplier.document',
           span: 12,
           type: 'upload',
           name: 'file',
@@ -199,7 +199,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Número Identificación Tributaria/NIT( Sin dígito Verificación) ',
+          label: 'Supplier.nit',
           key: 'nit',
           value: nit,
           required: true,
@@ -211,7 +211,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Tipo de compañía',
+          label: 'Supplier.idCompanyType',
           key: 'idCompanyType',
           value: idCompanyType,
           options: companyTypes,
@@ -225,7 +225,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: '¿Es productor pecuario?',
+          label: 'Supplier.producerLivestok',
           key: 'producerLivestok',
           value: getValueOption(producerLivestok),
           options: defaultOptions,
@@ -234,7 +234,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Tipo de sociedad',
+          label: 'Supplier.idSocietyType',
           key: 'idSocietyType',
           value: idSocietyType,
           options: societyTypes,
@@ -243,7 +243,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Año de establecimiento',
+          label: 'Supplier.yearOfEstablishment',
           key: 'yearOfEstablishment',
           value: yearOfEstablishment.toString(),
           options: getAnios(),
@@ -258,7 +258,7 @@ function generalInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Ubicación',
+          value: 'Supplier.location',
           key: 'location',
         },
       ],
@@ -269,7 +269,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Dirección principal',
+          label: 'Supplier.principalAdress',
           key: 'principalAdress',
           value: principalAdress,
           disabled,
@@ -277,7 +277,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'País',
+          label: 'Supplier.idCountry',
           key: 'idCountry',
           options: countries,
           disabled,
@@ -297,7 +297,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Departamento',
+          label: 'Supplier.idDepartment',
           key: 'idDepartment',
           value: idDepartment,
           options: departments,
@@ -314,7 +314,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Ciudad',
+          label: 'Supplier.idCity',
           key: 'idCity',
           value: idCity,
           options: cities,
@@ -327,7 +327,7 @@ function generalInfo(fields) {
       value: [
         {
           type: 'textarea',
-          label: 'Sucursales, Plantas o Centros Alternos (Ubicación)',
+          label: 'Supplier.branchOffice',
           key: 'branchOffice',
           value: branchOffice,
           disabled,
@@ -340,7 +340,7 @@ function generalInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Contacto',
+          value: 'Supplier.contact',
           key: 'contact',
           disabled,
         },
@@ -352,7 +352,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Teléfono(s)',
+          label: 'Supplier.telephone',
           key: 'telephone',
           value: telephone,
           disabled,
@@ -360,7 +360,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Fax',
+          label: 'Supplier.fax',
           value: fax,
           key: 'fax',
           disabled,
@@ -368,7 +368,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'E-mail',
+          label: 'Supplier.emails',
           key: 'emails',
           value: emails,
           mode: 'tags',
@@ -382,7 +382,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'ZIP Code',
+          label: 'Supplier.codeZip',
           key: 'codeZip',
           value: codeZip,
           disabled,
@@ -398,7 +398,7 @@ function generalInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Información Legal',
+          value: 'Supplier.legalInfo',
           key: 'legalInfo',
           disabled,
         },
@@ -410,7 +410,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Representante Legal',
+          label: 'Supplier.nameLegalAgent',
           key: 'nameLegalAgent',
           value: nameLegalAgent,
           disabled,
@@ -423,7 +423,7 @@ function generalInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Información persona a contactar',
+          value: 'Supplier.inforContact',
           key: 'inforContact',
         },
       ],
@@ -434,7 +434,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Nombre completo',
+          label: 'Supplier.fullNameContact',
           key: 'fullNameContact',
           value: fullNameContact,
           required: true,
@@ -443,7 +443,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Cargo',
+          label: 'Supplier.jobPosition',
           key: 'jobPosition',
           value: jobPosition,
           required: true,
@@ -452,7 +452,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Teléfono',
+          label: 'Supplier.phoneOfContact',
           key: 'phoneOfContact',
           value: phoneOfContact,
           required: true,
@@ -461,7 +461,7 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'E-mail',
+          label: 'Supplier.emailOfContact',
           key: 'emailOfContact',
           value: emailOfContact,
           required: true,
@@ -488,7 +488,7 @@ function noParticipateInfo(fields) {
         {
           disabled,
           type: 'textarea',
-          label: '¿Por qué no desea participar? ',
+          label: 'Supplier.reasonForNotParticipation',
           key: 'reasonForNotParticipation',
           value: call.reasonForNotParticipation,
         },
@@ -551,7 +551,7 @@ function comercialInfo(fields) {
         {
           span: 8,
           type: 'select',
-          label: 'Sector al que pertenece la empresa',
+          label: 'Supplier.idSector',
           key: 'idSector',
           value: idSector,
           options: sectors,
@@ -561,7 +561,7 @@ function comercialInfo(fields) {
         {
           span: 8,
           type: 'input',
-          label: '¿Otro cuál?',
+          label: 'Supplier.otherSector',
           key: 'otherSector',
           value: otherSector,
           hidden: (actualSector !== otherSectorId),
@@ -571,7 +571,7 @@ function comercialInfo(fields) {
         {
           span: 8,
           type: 'input',
-          label: 'Pagina web',
+          label: 'Supplier.webSite',
           key: 'webSite',
           value: webSite,
           disabled,
@@ -583,7 +583,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'radio',
-          label: 'Si es un Proveedor de Empaque ¿El empaque que nos suministra tiene contacto directo con el alimento?',
+          label: 'Supplier.packagingProvided',
           key: 'packagingProvided',
           value: packagingProvided,
           required: true,
@@ -612,7 +612,7 @@ function comercialInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Información financiera',
+          value: 'Supplier.infoFinancial',
           key: 'infoFinancial',
         },
       ],
@@ -623,7 +623,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Moneda',
+          label: 'Supplier.typeOfCurrencyValueAssets',
           key: 'typeOfCurrencyValueAssets',
           value: typeOfCurrencyValueAssets,
           options: defaultMoneyType,
@@ -632,7 +632,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'inputNumber',
-          label: 'Valor en activos $',
+          label: 'Supplier.valueAssets',
           key: 'valueAssets',
           value: valueAssets,
           disabled,
@@ -640,7 +640,7 @@ function comercialInfo(fields) {
         {
           span: 8,
           type: 'upload',
-          label: 'Soporte de balances o informes financieros del valor en activos',
+          label: 'Supplier.attachedFinancialReport',
           key: 'attachedFinancialReport',
           fileList: attachedFinancialReport,
           onChange: updateAttachment,
@@ -658,7 +658,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Moneda',
+          label: 'Supplier.typeOfCurrencyAnnualSales',
           key: 'typeOfCurrencyAnnualSales',
           value: typeOfCurrencyAnnualSales,
           options: defaultMoneyType,
@@ -667,7 +667,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'inputNumber',
-          label: 'Valor en ventas anual $',
+          label: 'Supplier.annualSalesValue',
           key: 'annualSalesValue',
           value: annualSalesValue,
           disabled,
@@ -680,7 +680,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Número de empleados directos',
+          label: 'Supplier.numberOfDirectEmployees',
           key: 'numberOfDirectEmployees',
           value: numberOfDirectEmployees,
           handleChange: setNumberOfDirectEmployees,
@@ -692,7 +692,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Número de empleados subcontratados',
+          label: 'Supplier.numberOfSubContratedEmployees',
           key: 'numberOfSubContratedEmployees',
           value: numberOfSubContratedEmployees,
           handleChange: setNumberOfSubContratedEmployees,
@@ -704,7 +704,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Total empleados (Directos + Subcontratados)',
+          label: 'Supplier.employeesTotal',
           inputType: 'number',
           key: 'employeesTotal',
           value: employeesTotal,
@@ -713,7 +713,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'input',
-          label: 'Participación ventas con el Grupo Nutresa (%)',
+          label: 'Supplier.participationInSalesWithGroupNutresa',
           key: 'participationInSalesWithGroupNutresa',
           value: participationInSalesWithGroupNutresa,
           disabled,
@@ -729,8 +729,8 @@ function comercialInfo(fields) {
         {
           span: 12,
           type: 'title',
-          value: 'Contacto con el grupo nutresa',
-          key: 'infoFinancial',
+          value: 'Supplier.contactNutresaGroup',
+          key: 'contactNutresaGroup',
           disabled,
         },
       ],
@@ -741,7 +741,7 @@ function comercialInfo(fields) {
         {
           span: 8,
           type: 'input',
-          label: 'Contacto en Grupo Nutresa (Contacto Comercial y/o Negociador)',
+          label: 'Supplier.nameContactPersonInGroupNutresa',
           key: 'nameContactPersonInGroupNutresa',
           value: nameContactPersonInGroupNutresa,
           disabled,
@@ -750,7 +750,7 @@ function comercialInfo(fields) {
           span: 8,
           type: 'input',
           inputType: 'mail',
-          label: 'E-mail de la persona contacto en Grupo Nutresa',
+          label: 'Supplier.emailContactPersonInGroupNutresa',
           key: 'emailContactPersonInGroupNutresa',
           value: emailContactPersonInGroupNutresa,
           disabled,
@@ -762,7 +762,7 @@ function comercialInfo(fields) {
           span: 8,
           type: 'input',
           inputType: 'mail',
-          label: 'Teléfono de la persona contacto en Grupo Nutresa',
+          label: 'Supplier.phoneContactPersonInGroupNutresa',
           key: 'phoneContactPersonInGroupNutresa',
           value: phoneContactPersonInGroupNutresa,
           disabled,
@@ -774,7 +774,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'title',
-          value: 'Insumos',
+          value: 'Supplier.supplies',
           key: 'supplies',
         },
       ],
@@ -784,7 +784,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'textarea',
-          label: 'Describa el origen geográfico de los principales insumos que son utilizadas en los productos que nos provee',
+          label: 'Supplier.geograficDescriptionOfPrincipalMaterials',
           key: 'geograficDescriptionOfPrincipalMaterials',
           value: geograficDescriptionOfPrincipalMaterials,
           disabled,
@@ -796,7 +796,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'title',
-          value: 'Exportación',
+          value: 'Supplier.exports',
           key: 'exports',
         },
       ],
@@ -807,7 +807,7 @@ function comercialInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: '¿Actualmente exporta?',
+          label: 'Supplier.currentlyExport',
           key: 'currentlyExport',
           value: getValueOption(currentlyExport),
           handleChange: setExport,
@@ -817,7 +817,7 @@ function comercialInfo(fields) {
         {
           span: 18,
           type: 'input',
-          label: 'Destinos de exportación',
+          label: 'Supplier.exportDestination',
           key: 'exportDestination',
           value: exportDestination,
           hidden: !actuallyExport,
@@ -831,7 +831,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'title',
-          value: 'Certificaciones',
+          value: 'Supplier.certifications',
           key: 'certifications',
         },
       ],
@@ -841,7 +841,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'textarea',
-          label: 'Nombre las Certificaciones en Sostenibilidad, Calidad e Inocuidad certificadas en su compañía',
+          label: 'Supplier.nameCertification',
           key: 'nameCertification',
           value: nameCertification,
           disabled,
@@ -853,7 +853,7 @@ function comercialInfo(fields) {
       value: [
         {
           type: 'title',
-          value: 'Información adicional',
+          value: 'Supplier.aditionalInformation',
           key: 'aditionalInformation',
         },
       ],
@@ -864,9 +864,9 @@ function comercialInfo(fields) {
         {
           span: 12,
           type: 'select',
-          label: 'Su empresa es signataria del Pacto Global?',
+          label: 'Supplier.globalAgreement',
           key: 'globalAgreement',
-          help: 'El Pacto Global es una iniciativa voluntaria, en la cual las empresas se comprometen a alinear sus estrategias y operaciones con diez principios universalmente aceptados en cuatro áreas temáticas: Derechos humanos, Estándares laborales, Medio ambiente y anti-corrupción".',
+          help: 'Supplier.globalAgreementHelp',
           value: getValueOption(globalAgreement),
           options: defaultOptions,
           disabled,
@@ -879,7 +879,7 @@ function comercialInfo(fields) {
         {
           span: 12,
           type: 'select',
-          label: 'Si es un Proveedor de sustancias químicas ¿La sustancias químicas que nos provee es considerada una sustancia química peligrosa?',
+          label: 'Supplier.chemicalSubstance',
           key: 'chemicalSubstance',
           value: getValueOption(chemicalSubstance),
           options: defaultOptions,

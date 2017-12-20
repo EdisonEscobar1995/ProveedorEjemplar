@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import FormattedMessage from './FormattedMessage';
 
 const SubTitleStyle = styled.h3`
   color: ${props => props.theme.color.primary};
@@ -9,9 +10,7 @@ const SubTitleStyle = styled.h3`
 function SubTitle({ text }) {
   return (
     <SubTitleStyle>
-      {
-        text
-      }
+      <FormattedMessage id={text} />
     </SubTitleStyle>
   );
 }

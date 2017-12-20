@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import styled from 'styled-components';
+import FormattedMessage from './FormattedMessage';
 
 const ButtonStyle = styled(Button)`
   font-weight: normal;
@@ -16,7 +17,7 @@ const ButtonStyle = styled(Button)`
 function UploadButton({ disabled }) {
   return (
     <ButtonStyle icon="upload" disabled={disabled}>
-      Adjuntar archivo
+      <FormattedMessage id="Button.uploadFile" />
     </ButtonStyle>
   );
 }

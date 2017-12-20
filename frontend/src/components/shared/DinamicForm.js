@@ -40,10 +40,11 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
             {
               item.value.map((current) => {
                 let rowValue;
-                let { label, span, allowClear, options } = current;
+                let { span, allowClear, options } = current;
                 const {
                   key,
                   type,
+                  label,
                   inputType,
                   value,
                   help,
@@ -55,7 +56,6 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   hidden,
                 } = current;
                 allowClear = allowClear === undefined ? true : allowClear;
-                label = label ? `${label}${required ? '(*)' : ''}` : '';
                 options = options || [];
                 span = span || 24;
                 switch (type) {
@@ -142,7 +142,6 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               showSearch
                               mode={mode}
                               allowClear={allowClear}
-                              notFoundContent="No se encontraron resultados"
                               filterOption={selectValue => selectValue.startsWith(' ') || selectValue.endsWith(' ')}
                               onChange={(selectValue) => {
                                 if (valuesToClean) {
@@ -184,7 +183,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                       <div>
                         {
                           !hidden ?
-                            <Field label={label} help={help}>
+                            <Field label={label} help={help} required={required}>
                               <ItemStyle>
                                 {getFieldDecorator(key, {
                                   rules: [

@@ -12,7 +12,7 @@ class Comercial extends Component {
   componentDidMount() {
     const config = {
       type: 'warning',
-      text: 'Verifique la información ingresada en el campo tamaño de la empresa',
+      text: 'Supplier.validateInfo',
     };
     message(config);
     const { call, participateInCall, getDimensionsBySurvey } = this.props;
@@ -52,21 +52,21 @@ class Comercial extends Component {
     const buttons = [
       {
         key: 1,
-        text: 'Guardar',
+        text: 'Button.save',
         buttoncolor: 'buttonFirst',
         onClick: this.saveDraft,
         disabled: readOnly,
       },
       {
         key: 3,
-        text: 'Continuar',
+        text: 'Button.continue',
         buttoncolor: 'buttonSecond',
         onClick: next,
         disabled: readOnly,
       },
       {
         key: 2,
-        text: 'Enviar',
+        text: 'Button.send',
         buttoncolor: 'buttonThird',
         onClick: this.handleSubmit,
         disabled: readOnly,
@@ -76,7 +76,7 @@ class Comercial extends Component {
     ];
     return (
       <div>
-        <SubTitle text="Principales clientes" />
+        <SubTitle text="Supplier.principalCustomers" />
         <TableForm
           data={principalCustomer}
           colummns={colummns}

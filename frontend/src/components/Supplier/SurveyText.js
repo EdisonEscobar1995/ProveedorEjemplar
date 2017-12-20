@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import FormattedMessage from '../shared/FormattedMessage';
 
 const TitleStyle = styled.h1`  
   color: ${props => props.theme.color.primary};
@@ -19,7 +20,7 @@ function SurveyText() {
     <ContainerStyle>
       <img src="assets/images/SurveyIcon.png" alt="survey" />
       <TitleStyle>
-        Encuesta
+        <FormattedMessage id="Survey.title" />
       </TitleStyle>
     </ContainerStyle>
   );

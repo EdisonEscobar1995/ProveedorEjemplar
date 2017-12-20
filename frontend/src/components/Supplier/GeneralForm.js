@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Select } from 'antd';
-import styled from 'styled-components';
 import DinamicForm from '../shared/DinamicForm';
 import { generalInfo, noParticipateInfo } from './dataPage';
 import Field from './Field';
 import FormButtons from './FormButtons';
 import SubTitle from '../shared/SubTitle';
-
-const ParagraphStyle = styled.p`
-  margin-bottom:  ${props => props.theme.spaces.main};
-`;
+import Paragraph from '../shared/Paragraph';
 
 const { Option } = Select;
 
@@ -39,21 +35,21 @@ class General extends Component {
       buttons = [
         {
           key: 1,
-          text: 'Guardar',
+          text: 'Button.save',
           buttoncolor: 'buttonFirst',
           onClick: this.saveDraft,
           disabled: readOnly,
         },
         {
           key: 3,
-          text: 'Continuar',
+          text: 'Button.continue',
           buttoncolor: 'buttonSecond',
           onClick: next,
           disabled: readOnly,
         },
         {
           key: 2,
-          text: 'Enviar',
+          text: 'Button.send',
           buttoncolor: 'buttonThird',
           onClick: this.handleSubmit,
           disabled: readOnly,
@@ -73,7 +69,7 @@ class General extends Component {
       buttons = [
         {
           key: 1,
-          text: 'Enviar',
+          text: 'Button.send',
           disabled: readOnly,
           onClick: this.handleSubmit,
         },
@@ -88,12 +84,8 @@ class General extends Component {
     }
     return (
       <div>
-        <ParagraphStyle>
-          {
-            informationProgram
-          }
-        </ParagraphStyle>
-        <Field label="¿Participa del programa?">
+        <Paragraph text={informationProgram} />
+        <Field label="SupplierByCall.participateInCall">
           <Select
             disabled={readOnly}
             style={{ width: '100%' }}
@@ -104,10 +96,8 @@ class General extends Component {
             <Option value="false">No</Option>
           </Select>
         </Field>
-        {participateInCall === 'true' ? <SubTitle text="Información de la empresa" /> : ''}
-        <ParagraphStyle>
-          Los campos marcados con asterisco(*) son requeridos
-        </ParagraphStyle>
+        {participateInCall === 'true' ? <SubTitle text="Supplier.companyInformation" /> : ''}
+        <Paragraph text="Survey.required" translate />
         <Form onSubmit={this.handleSubmit}>
           {
             content

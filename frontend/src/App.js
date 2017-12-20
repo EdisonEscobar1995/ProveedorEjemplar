@@ -4,22 +4,28 @@ import { HashRouter as Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { ThemeProvider } from 'styled-components';
 import { LocaleProvider } from 'antd';
-import esEs from 'antd/lib/locale-provider/es_ES';
+import { addLocaleData, IntlProvider } from 'react-intl';
 import './styles/ant-theme-vars.less';
 import store from './state/store';
 import Document from './pages/_document';
 import theme from './styles/theme';
 import './styles/globalStyles';
+import './entry';
+
+const appLocale = window.appLocale;
+addLocaleData(appLocale.data);
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <LocaleProvider locale={esEs}>
-        <Provider store={store}>
-          <Router history={createBrowserHistory()}>
-            <Document />
-          </Router>
-        </Provider>
+      <LocaleProvider locale={appLocale.antd}>
+        <IntlProvider locale={appLocale.locale} messages={appLocale.messages}>
+          <Provider store={store}>
+            <Router history={createBrowserHistory()}>
+              <Document />
+            </Router>
+          </Provider>
+        </IntlProvider>
       </LocaleProvider>
     </ThemeProvider>
   );

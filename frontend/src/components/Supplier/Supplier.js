@@ -6,12 +6,9 @@ import ComercialForm from './ComercialForm';
 import Question from './Question';
 import SurveyText from './SurveyText';
 import setMessage from '../shared/Message';
+import Title from '../shared/Title';
 
 const TabPane = Tabs.TabPane;
-
-const TitleStyle = styled.span`
-  margin-left: 10px;
-`;
 
 const ContentStyle = styled.div`
   padding: 7px 0 12px 0;
@@ -89,7 +86,7 @@ class Supplier extends Component {
   getSteps = (dimensions) => {
     const steps = [
       {
-        name: 'Información General',
+        name: <Title text="Survey.generalInfo" translate />,
         content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
         stepContent: <ContentStyle>Información General</ContentStyle>,
       },
@@ -97,7 +94,7 @@ class Supplier extends Component {
     if (this.props.participateInCall === 'true') {
       steps.push(
         {
-          name: 'Información Comercial',
+          name: <Title text="Survey.comercialInfo" translate />,
           content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
           stepContent: <ContentStyle>Información Comercial</ContentStyle>,
         },
@@ -129,11 +126,6 @@ class Supplier extends Component {
   getProgress = (dimensionId, name) => {
     const percent = this.calculatePercent(dimensionId);
     const status = 'success';
-    // if (percent === 100) {
-    //   status = 'success';
-    // } else if (percent > 49) {
-    //   status = 'active';
-    // }
     return (
       <div>
         <Progress
@@ -144,7 +136,7 @@ class Supplier extends Component {
           width={40}
           format={value => (value === 0 ? '?' : `${value}%`)}
         />
-        <TitleStyle>{name}</TitleStyle>
+        <Title text={name} />
       </div>
     );
   }

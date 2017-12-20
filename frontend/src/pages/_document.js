@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Layout, Icon } from 'antd';
 import getUserContext from '../state/User/action';
+import FormattedMessage from '../components/shared/FormattedMessage';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
 import { loginUrl } from '../utils/api';
@@ -89,14 +90,14 @@ class Document extends Component {
                 <IconStyle type="user" />
                 <div>
                   <WelcomeStyle>
-                    Bienvenido,
+                    <FormattedMessage id="Header.welcome" />
                   </WelcomeStyle>
                   <NameStyle>
                     {userInfo && userInfo.name}
                   </NameStyle>
                   <CloseStyle>
                     <a href={loginUrl}>
-                      Cerrar sesión
+                      <FormattedMessage id="Header.logOut" />
                     </a>
                   </CloseStyle>
                 </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Select, Button } from 'antd';
+import FormattedMessage from '../shared/FormattedMessage';
 
 const { Option } = Select;
 
@@ -11,33 +12,33 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
     .lockedByModification;
 
   const columns = [{
-    title: 'Nombre del proveedor',
+    title: <FormattedMessage id="ModifiedSuppliers.businessName" />,
     dataIndex: 'businessName',
     key: 'businessName',
   }, {
-    title: 'NIT',
+    title: <FormattedMessage id="ModifiedSuppliers.nit" />,
     dataIndex: 'nit',
     key: 'nit',
   }, {
-    title: 'Código SAP',
+    title: <FormattedMessage id="ModifiedSuppliers.sapCode" />,
     dataIndex: 'sapCode',
     key: 'sapCode',
   }, {
-    title: 'Tipo de suministro',
+    title: <FormattedMessage id="ModifiedSuppliers.idSupply" />,
     dataIndex: 'idSupply',
     key: 'idSupply',
     render(text, record) {
       return masters.Supply.find(supply => supply.id === record.idSupply).name;
     },
   }, {
-    title: 'Categoría',
+    title: <FormattedMessage id="ModifiedSuppliers.idCategory" />,
     dataIndex: 'idCategory',
     key: 'idCategory',
     render(text, record) {
       return masters.Category.find(category => category.id === record.idCategory).name;
     },
   }, {
-    title: 'Tamaño de empresa asignado',
+    title: <FormattedMessage id="ModifiedSuppliers.oldIdCompanySize" />,
     dataIndex: 'oldIdCompanySize',
     key: 'oldIdCompanySize',
     render(text, record) {
@@ -49,7 +50,7 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
       return companySize ? companySize.name : '';
     },
   }, {
-    title: 'Tamaño de empresa actual',
+    title: <FormattedMessage id="ModifiedSuppliers.idCompanySize" />,
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
@@ -60,7 +61,6 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
             defaultValue={record.idCompanySize}
             showSearch
             allowClear={false}
-            notFoundContent="No se encontraron resultados"
             style={{ width: '100%' }}
             onChange={value => setCompanySize({ id: record.id, idCompanySize: value })}
           >
@@ -76,14 +76,14 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
       return companySize ? companySize.name : '';
     },
   }, {
-    title: 'Estado',
+    title: <FormattedMessage id="ModifiedSuppliers.state" />,
     dataIndex: 'state',
     key: 'state',
     render(text, record) {
       return isLocked(record.id) ? 'Bloqueado' : 'Notificado';
     },
   }, {
-    title: 'Acción',
+    title: <FormattedMessage id="Table.action" />,
     dataIndex: 'action',
     key: 'action',
     render(text, record) {

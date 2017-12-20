@@ -24,7 +24,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'Año',
+          label: 'ModifiedSuppliers.year',
           key: 'year',
           value: years && years.length > 0 ? years[0] : '',
           options: years ? years.map(item => ({ id: item, name: item })) : [],
@@ -51,7 +51,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'Tipo de suministro',
+          label: 'ModifiedSuppliers.supply',
           key: 'supply',
           value: '',
           options: masters ? masters.Supply : [],
@@ -63,7 +63,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'Categoría',
+          label: 'ModifiedSuppliers.category',
           key: 'category',
           value: '',
           options: masters ? masters.Category : [],
@@ -80,7 +80,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'País',
+          label: 'ModifiedSuppliers.country',
           key: 'country',
           value: '',
           options: masters ? masters.Country : [],
@@ -92,7 +92,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'Proveedor',
+          label: 'ModifiedSuppliers.supplier',
           key: 'supplier',
           value: '',
           options: suppliers ? suppliers.map((item) => {
@@ -107,7 +107,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'Estado',
+          label: 'ModifiedSuppliers.state',
           key: 'state',
           value: '',
           options: states,

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Table, Tooltip, Button, Input, Radio, Icon } from 'antd';
 import styled from 'styled-components';
 import Upload from '../shared/Upload';
+import FormattedMessage from '../shared/FormattedMessage';
+import SubTitle from '../shared/SubTitle';
 import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
 import { baseUrl } from '../../utils/api';
@@ -77,7 +79,7 @@ class Question extends Component {
   getColumns = () => (
     [
       {
-        title: 'Ayuda',
+        title: <FormattedMessage id="Table.help" />,
         width: '5%',
         dataIndex: 'helpText',
         key: 'helpText',
@@ -91,13 +93,13 @@ class Question extends Component {
         ),
       },
       {
-        title: 'Pregunta',
+        title: <FormattedMessage id="Table.question" />,
         width: '15%',
         dataIndex: 'wording',
         key: 'wording',
       },
       {
-        title: 'Respuesta del proveedor',
+        title: <FormattedMessage id="Table.providerAnswer" />,
         width: '30%',
         dataIndex: 'options',
         key: 'options',
@@ -150,13 +152,13 @@ class Question extends Component {
               {
                 renderComponent
               }
-              <ErrorTable visible={errors.answers} text="Esta pregunta es obligatoria" />
+              <ErrorTable visible={errors.answers} text="Survey.requiredQuestion" />
             </div>
           );
         },
       },
       {
-        title: 'Comentario',
+        title: <FormattedMessage id="Table.comment" />,
         width: '30%',
         dataIndex: 'answer',
         key: 'commentSupplier',
@@ -173,7 +175,7 @@ class Question extends Component {
           ),
       },
       {
-        title: 'Soporte',
+        title: <FormattedMessage id="Table.support" />,
         width: '20%',
         dataIndex: 'answer',
         key: 'attachment',
@@ -199,7 +201,7 @@ class Question extends Component {
                 onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
                 onRemove={(value, rowValue) => this.onChange(value, rowValue, 'attachment', 'delete')}
               />
-              <ErrorTable visible={errors.attachments} text="Debe anexar un archivo" />
+              <ErrorTable visible={errors.attachments} text="Survey.requiredAttachment" />
             </div>
           );
         },
@@ -214,17 +216,17 @@ class Question extends Component {
       buttons = [
         {
           key: 3,
-          text: 'Continuar',
+          text: 'Button.continue',
           buttoncolor: 'buttonSecond',
           onClick: next,
         },
         {
           key: 1,
-          text: 'Enviar',
+          text: 'Button.send',
           buttoncolor: 'buttonThird',
           onClick: this.props.validateQuestions,
           showConfirm: true,
-          messageConfirm: '¿Está seguro de enviar la encuesta?',
+          messageConfirm: 'Survey.confirm',
         },
       ];
     }
@@ -260,7 +262,9 @@ class Question extends Component {
               </div>
             ))
             :
-            (<h3>No hay preguntas para esta dimension</h3>)
+            (
+              <SubTitle text="Table.noFound" />
+            )
         }
         <FormButtons
           buttons={buttons}
