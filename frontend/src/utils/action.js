@@ -4,17 +4,17 @@ import { loginUrl } from './api';
 function getMessage(type) {
   switch (type) {
     case 'DATE_TO_MAKE_SURVEY_EXCEEDED':
-      return 'La fecha excede el tiempo de envio';
+      return 'Validation.dateToSend';
     case 'NO_DATA':
-      return 'No se recibieron datos';
+      return 'Validation.noData';
     case 'DONT_HAVE_SURVEY_ASSOCIED':
-      return 'En estos momentos no se encuetran convocatorias abiertas';
+      return 'Validation.noOpenCall';
     case 'SURVEY_DOES_NOT_EXIST':
-      return 'No existe una encuesta para el tipo de suministro y tamaño de encuesta seleccionada';
-    case 'UNAUTHORIZED':
-      return 'Usted no está autorizado para acceder a este sitio';
+      return 'Validation.supplier';
+    case 'Validation.unauthorized':
+      return '';
     default:
-      return 'Ocurrio un error al procesar la petición';
+      return 'Validation.wentWrong';
   }
 }
 
@@ -65,7 +65,7 @@ function sortByField(array, field) {
 }
 
 export {
-  requestApi as default,
+  requestApi,
   requestApiNotLoading,
   sortByField,
 };

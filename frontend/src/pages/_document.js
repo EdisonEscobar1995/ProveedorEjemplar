@@ -8,6 +8,7 @@ import FormattedMessage from '../components/shared/FormattedMessage';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
 import { loginUrl } from '../utils/api';
+import { changeLanguage } from '../translation/functions';
 
 const { Header, Footer, Content } = Layout;
 
@@ -24,6 +25,9 @@ const ContentStyle = styled(Content)`
 const MainContentStyle = styled.div`  
   padding: 24px;
   background: ${props => props.theme.color.normal};  
+`;
+const FooterImgStyle = styled.img`  
+  max-width: 100%;
 `;
 const LogoStyle = styled.div`  
   width: 120px;
@@ -77,6 +81,13 @@ const IconStyle = styled(Icon)`
   font-size: 30px;
   padding: 0 10px;
 `;
+const UserStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+`;
 
 class Document extends Component {
   componentDidMount() {
@@ -84,6 +95,7 @@ class Document extends Component {
   }
 
   render() {
+    console.log(this.props);
     const { userInfo } = this.props.data;
     return (
       <Layout>
@@ -92,7 +104,16 @@ class Document extends Component {
             <LogoStyle />
             <LogStyle>
               <InfoStyle>
-                <IconStyle type="user" />
+                <UserStyle>
+                  <IconStyle type="user" />
+                  <a
+                    role="button"
+                    tabIndex="0"
+                    onClick={changeLanguage}
+                  >
+                    Cambiar
+                  </a>
+                </UserStyle>
                 <div>
                   <WelcomeStyle>
                     <FormattedMessage id="Header.welcome" />
@@ -120,7 +141,7 @@ class Document extends Component {
         </ContentStyle>
         <FooterStyle>
           <FooterContentStyle>
-            <img src="assets/images/footer.png" alt="footer" style={{ maxWidth: '100%' }} />
+            <FooterImgStyle src="assets/images/footer.png" alt="footer" />
           </FooterContentStyle>
         </FooterStyle>
       </Layout>

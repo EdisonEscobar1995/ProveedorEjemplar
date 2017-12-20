@@ -46,7 +46,7 @@ import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
 import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
-import requestApi, { requestApiNotLoading, sortByField } from '../../utils/actionUtils';
+import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
 
 
@@ -501,7 +501,7 @@ const saveDataCallBySupplier = clientData => (
     requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
       .then((respone) => {
         const call = respone.data.data;
-        setMessage('Información guardada exitosamente', 'success');
+        setMessage('Supplier.savedInfo', 'success');
         dispatch(saveDataCallSuccess(call));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -571,7 +571,7 @@ const saveDataCallSupplier = clientSupplier => (
             };
           })
       )).then(({ call, supplier }) => {
-        dispatch(setMessage('Información almacenada', 'success'));
+        dispatch(setMessage('Supplier.savedInfo', 'success'));
         dispatch(saveDataCallAndSupplerSuccess(call, supplier));
       })
       .catch((err) => {
@@ -634,7 +634,7 @@ const finishSurvey = () => (
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
       .then((response) => {
         const data = response.data.data;
-        dispatch(setMessage('Encuesta enviada con éxito', 'success'));
+        dispatch(setMessage('Supplier.surveySuccess', 'success'));
         dispatch(finishSurveySucess(data));
       }).catch((err) => {
         dispatch(getFailedRequest(err));

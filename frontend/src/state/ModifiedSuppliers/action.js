@@ -8,7 +8,7 @@ import {
 } from './const';
 
 import { getModifiedSuppliersApi, unlockSupplierApi } from '../../api/supplier';
-import requestApi from '../../utils/actionUtils';
+import { requestApi } from '../../utils/action';
 import setMessage from '../Generic/action';
 
 const getDataModifiedSuppliersProgress = () => ({
@@ -50,8 +50,8 @@ const getModifiedSuppliers = year => (dispatch) => {
         });
       const { data } = response.data;
       dispatch(getDataModifiedSuppliersSuccess(data));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 
@@ -61,8 +61,8 @@ const unlockSupplier = supplierByCall => (dispatch) => {
       dispatch(setMessage('El proveedor ha sido notificado', 'success'));
       const { data } = response.data;
       dispatch(unlockSupplierSuccess(data));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 

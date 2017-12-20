@@ -1,40 +1,31 @@
-import { Modal as messageAnt } from 'antd';
+import { Modal } from 'antd';
+import FormattedMessage from './FormattedMessage';
 
-function message({ text = '', type = 'info' }) {
-  let label = text;
+function message({ type = 'info', text = '', aditionalInfo = '' }) {
+  const content = `${text} ${aditionalInfo}`;
   let modal = null;
-  if (typeof text !== 'string') {
-    label = 'Formato no soportado';
-  }
+  const title = 'Message.title';
+  const config = {
+    title,
+    content,
+  };
+  console.log(FormattedMessage);
   switch (type) {
     case 'success': {
-      modal = messageAnt.success(
-        {
-          title: 'Proveedor Ejemplar',
-          content: label,
-        });
+      modal = Modal.success(config);
       break;
     }
     case 'error': {
-      modal = messageAnt.error({
-        title: 'Proveedor Ejemplar',
-        content: label,
-      });
+      modal = Modal.error(config);
       break;
     }
     case 'warning': {
-      modal = messageAnt.warning({
-        title: 'Proveedor Ejemplar',
-        content: label,
-      });
+      modal = Modal.warning(config);
       break;
     }
     case 'info':
     default: {
-      modal = messageAnt.info({
-        title: 'Proveedor Ejemplar',
-        content: label,
-      });
+      modal = Modal.info(config);
       break;
     }
   }

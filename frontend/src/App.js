@@ -10,9 +10,9 @@ import store from './state/store';
 import Document from './pages/_document';
 import theme from './styles/theme';
 import './styles/globalStyles';
-import './entry';
+import language from './translation/';
 
-const appLocale = window.appLocale;
+const appLocale = window.appLocale[language];
 addLocaleData(appLocale.data);
 
 function App() {

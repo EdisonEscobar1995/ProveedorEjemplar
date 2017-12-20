@@ -5,7 +5,7 @@ import {
 } from './const';
 
 import getUserContextApi from '../../api/user';
-import requestApi from '../../utils/actionUtils';
+import { requestApi } from '../../utils/action';
 
 const getUserContextProgress = () => ({
   type: GET_USER_CONTEXT_PROGRESS,
@@ -25,8 +25,8 @@ const getUserContext = () => (dispatch) => {
     .then((response) => {
       const { data } = response.data;
       dispatch(getUserContextSuccess(data));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 

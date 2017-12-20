@@ -8,7 +8,7 @@ import {
 } from './const';
 
 import { getCalledSuppliersApi, sendInvitationApi, massiveShipmentCallApi } from '../../api/call';
-import requestApi from '../../utils/actionUtils';
+import { requestApi } from '../../utils/action';
 import setMessage from '../Generic/action';
 
 const getCalledSuppliersProgress = () => ({
@@ -45,8 +45,8 @@ const getCalledSuppliers = id => (dispatch) => {
         .map(item => ({ ...item, visible: true }));
       const { data } = response.data;
       dispatch(getCalledSuppliersSuccess(data));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 
@@ -55,8 +55,8 @@ const sendInvitation = supplier => (dispatch) => {
     .then(() => {
       dispatch(setMessage('El proveedor ha sido notificado', 'success'));
       dispatch(sendInvitationSuccess());
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 
@@ -65,8 +65,8 @@ const massiveShipmentCall = call => (dispatch) => {
     .then(() => {
       dispatch(setMessage('Se ha notificado a todos los proveedores', 'success'));
       dispatch(sendInvitationSuccess());
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 

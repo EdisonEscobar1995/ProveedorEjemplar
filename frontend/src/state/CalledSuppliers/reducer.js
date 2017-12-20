@@ -28,12 +28,12 @@ function calledSuppliersApp(state = initialState, action) {
         loading: false,
       };
     }
-    case SEND_INVITATION_SUCCESS: {
+    case SEND_INVITATION_SUCCESS:
+    case REQUEST_FAILED:
       return {
         ...state,
         loading: false,
       };
-    }
     case FILTER_CALLED_SUPPLIERS: {
       return {
         ...state,
@@ -54,12 +54,6 @@ function calledSuppliersApp(state = initialState, action) {
             };
           }),
         },
-      };
-    }
-    case REQUEST_FAILED: {
-      return {
-        ...state,
-        loading: false,
       };
     }
     default: {

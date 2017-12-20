@@ -8,7 +8,7 @@ import {
 } from './const';
 
 import { getCallApi, getCallByIdApi, saveCallApi } from '../../api/call';
-import requestApi from '../../utils/actionUtils';
+import { requestApi } from '../../utils/action';
 
 const getDataCallProgress = () => ({
   type: GET_DATA_CALL_PROGRESS,
@@ -28,8 +28,8 @@ const getAllCalls = () => (dispatch) => {
     .then((response) => {
       const { data } = response.data;
       dispatch(getDataCallSuccess(data));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 
@@ -47,8 +47,8 @@ const getCall = id => (dispatch) => {
     .then((response) => {
       const { data } = response.data;
       dispatch(getCallSuccess(data));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 

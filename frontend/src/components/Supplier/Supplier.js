@@ -1,17 +1,36 @@
 import React, { Component } from 'react';
 import { Tabs, Spin, Progress } from 'antd';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import GeneralForm from './GeneralForm';
 import ComercialForm from './ComercialForm';
 import Question from './Question';
 import SurveyText from './SurveyText';
-import setMessage from '../shared/Message';
+import message from '../shared/message';
 import Title from '../shared/Title';
 
 const TabPane = Tabs.TabPane;
 
 const ContentStyle = styled.div`
   padding: 7px 0 12px 0;
+`;
+
+const emptyArrow = css`
+  content: " ";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+`;
+const backArrow = css`
+  ${emptyArrow};
+  left: -18px;
+  border-left: 18px solid transparent;
+`;
+const forwardArrow = css`
+  ${emptyArrow};
+  right: -18px;
+  border-top: 28px solid transparent;
+  border-bottom: 28px solid transparent;
 `;
 
 const TabsStyle = styled(Tabs)`
@@ -25,52 +44,26 @@ const TabsStyle = styled(Tabs)`
         color: ${props => props.theme.color.normal};
       }
       &:before {
-        content: " ";
-        width: 0;
-        height: 0;
-        left: -18px;
-        border-left: 18px solid transparent;
+        ${backArrow}
         border-top: 28px solid ${props => props.theme.color.tabNormal};
         border-bottom: 28px solid ${props => props.theme.color.tabNormal};
-        position: absolute;
-        top: 0;
       }
       &:after {
-        content: " ";
-        width: 0;
-        right: -18px;
-        height: 0;
+        ${forwardArrow}
         border-left: 18px solid ${props => props.theme.color.tabNormal};
-        border-top: 28px solid transparent;
-        border-bottom: 28px solid transparent;
-        position: absolute;
-        top: 0;
       }
     }
     .ant-tabs-tab-active{
       background-color: ${props => props.theme.color.primary};
       color: ${props => props.theme.color.normal};
       &:before {
-        content: " ";
-        width: 0;
-        height: 0;
-        left: -18px;
-        border-left: 18px solid transparent;
+        ${backArrow}
         border-top: 28px solid ${props => props.theme.color.primary};
         border-bottom: 28px solid ${props => props.theme.color.primary};
-        position: absolute;
-        top: 0;
       }
       &:after {
-        content: " ";
-        width: 0;
-        right: -18px;
-        height: 0;
+        ${forwardArrow}
         border-left: 18px solid ${props => props.theme.color.primary};
-        border-top: 28px solid transparent;
-        border-bottom: 28px solid transparent;
-        position: absolute;
-        top: 0;
       }
     }
   }
@@ -86,17 +79,15 @@ class Supplier extends Component {
   getSteps = (dimensions) => {
     const steps = [
       {
-        name: <Title text="Survey.generalInfo" translate />,
         content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
-        stepContent: <ContentStyle>Información General</ContentStyle>,
+        stepContent: <ContentStyle><Title text="Survey.generalInfo" translate /></ContentStyle>,
       },
     ];
     if (this.props.participateInCall === 'true') {
       steps.push(
         {
-          name: <Title text="Survey.comercialInfo" translate />,
           content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
-          stepContent: <ContentStyle>Información Comercial</ContentStyle>,
+          stepContent: <ContentStyle><Title text="Survey.comercialInfo" translate /></ContentStyle>,
         },
       );
     }
@@ -219,7 +210,7 @@ class Supplier extends Component {
     this.props.reloadDimensions(dimesions);
   }
   openNotification = () => {
-    setMessage({ text: 'Aun tiene dimensiones sin diligenciar', type: 'info' });
+    message({ text: 'Validation.verifyDimensions', type: 'info' });
   };
 
   calculatePercent = (idDimension) => {

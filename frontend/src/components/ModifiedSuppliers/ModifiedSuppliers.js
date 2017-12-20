@@ -1,6 +1,5 @@
 import React from 'react';
 import { Table, Select, Button } from 'antd';
-import FormattedMessage from '../shared/FormattedMessage';
 
 const { Option } = Select;
 
@@ -12,33 +11,33 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
     .lockedByModification;
 
   const columns = [{
-    title: <FormattedMessage id="ModifiedSuppliers.businessName" />,
+    title: 'Nombre del proveedor',
     dataIndex: 'businessName',
     key: 'businessName',
   }, {
-    title: <FormattedMessage id="ModifiedSuppliers.nit" />,
+    title: 'NIT',
     dataIndex: 'nit',
     key: 'nit',
   }, {
-    title: <FormattedMessage id="ModifiedSuppliers.sapCode" />,
+    title: 'Código SAP',
     dataIndex: 'sapCode',
     key: 'sapCode',
   }, {
-    title: <FormattedMessage id="ModifiedSuppliers.idSupply" />,
+    title: 'Tipo de suministro',
     dataIndex: 'idSupply',
     key: 'idSupply',
     render(text, record) {
       return masters.Supply.find(supply => supply.id === record.idSupply).name;
     },
   }, {
-    title: <FormattedMessage id="ModifiedSuppliers.idCategory" />,
+    title: 'Categoría',
     dataIndex: 'idCategory',
     key: 'idCategory',
     render(text, record) {
       return masters.Category.find(category => category.id === record.idCategory).name;
     },
   }, {
-    title: <FormattedMessage id="ModifiedSuppliers.oldIdCompanySize" />,
+    title: 'Tamaño de empresa asignado',
     dataIndex: 'oldIdCompanySize',
     key: 'oldIdCompanySize',
     render(text, record) {
@@ -50,7 +49,7 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
       return companySize ? companySize.name : '';
     },
   }, {
-    title: <FormattedMessage id="ModifiedSuppliers.idCompanySize" />,
+    title: 'Tamaño de la empresa',
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
@@ -76,14 +75,14 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
       return companySize ? companySize.name : '';
     },
   }, {
-    title: <FormattedMessage id="ModifiedSuppliers.state" />,
+    title: 'Estado',
     dataIndex: 'state',
     key: 'state',
     render(text, record) {
       return isLocked(record.id) ? 'Bloqueado' : 'Notificado';
     },
   }, {
-    title: <FormattedMessage id="Table.action" />,
+    title: 'Acción',
     dataIndex: 'action',
     key: 'action',
     render(text, record) {

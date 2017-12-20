@@ -28,7 +28,7 @@ import {
   SET_EXPORT,
 } from './const';
 
-import reloadKeys from '../../utils/reducerUtils';
+import reloadKeys from '../../utils/reducer';
 
 
 const initialState = {

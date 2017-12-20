@@ -1,7 +1,4 @@
-import antdEn from 'antd/lib/locale-provider/en_US';
-import appLocaleData from 'react-intl/locale-data/en';
-
-const enMessages = {
+const messages = {
   'SupplierByCall.participateInCall': '¿Participa del programa?',
   'Supplier.businessName': 'Nombre o Razón social',
   'Supplier.idCompanySize': 'Tamaño de la empresa',
@@ -63,8 +60,12 @@ const enMessages = {
   'Supplier.chemicalSubstance': 'Si es un Proveedor de sustancias químicas ¿La sustancias químicas que nos provee es considerada una sustancia química peligrosa?',
   'Supplier.companyInformation': 'Información de la empresa',
   'Supplier.principalCustomers': 'Principales clientes',
-  'Supplier.validateInfo': 'Verifique la información ingresada en el campo tamaño de la empresa',
-  'Supplier.reasonForNotParticipation': '¿Por qué no desea participar? ',
+  'Supplier.validateInfo': 'Verifique la información ingresada en el campo tamaño de la empresa en la pestaña información general',
+  'Supplier.reasonForNotParticipation': '¿Por qué no desea participar?',
+  'Supplier.principalCustomer.name': 'Nombre',
+  'Supplier.principalCustomer.percentageOfParticipationInSales': 'Participación ventas por cliente (%)',
+  'Supplier.surveySuccess': 'Encuesta enviada con éxito',
+  'Supplier.savedInfo': 'Información almacenada',
   'Button.save': 'Guardar',
   'Button.add': 'Agregar',
   'Button.continue': 'Continuar',
@@ -91,26 +92,18 @@ const enMessages = {
   'Header.welcome': 'Bienvenido',
   'Header.logOut': 'Cerrar sesión',
   'Confirm.title': '¿Está seguro?',
-  'ModifiedSuppliers.businessName': 'Nombre del proveedor',
-  'ModifiedSuppliers.nit': 'NIT',
-  'ModifiedSuppliers.sapCode': 'Código SAP',
-  'ModifiedSuppliers.idSupply': 'Tipo de suministro',
-  'ModifiedSuppliers.idCategory': 'Categoría',
-  'ModifiedSuppliers.oldIdCompanySize': 'Tamaño de empresa asignado',
-  'ModifiedSuppliers.idCompanySize': 'Tamaño de empresa actual',
-  'ModifiedSuppliers.state': 'Estado',
-  'ModifiedSuppliers.supply': 'Tipo de suministro',
-  'ModifiedSuppliers.year': 'Año',
-  'ModifiedSuppliers.category': 'Categoría',
-  'ModifiedSuppliers.country': 'País',
-  'ModifiedSuppliers.supplier': 'Proveedor',
+  'Message.title': 'Proveedor Ejemplar',
+  'Validation.dateToSend': 'La fecha excede el tiempo de envío',
+  'Validation.noData': 'No se recibieron datos',
+  'Validation.noOpenCall': 'En estos momentos no se encuentran convocatorias abiertas',
+  'Validation.supplier': 'No existe una encuesta para el tipo de suministro y tamaño de empresa seleccionada',
+  'Validation.unauthorized': 'Usted no está autorizado para acceder a este sitio',
+  'Validation.wentWrong': 'Ocurrio un error al procesar la petición',
+  'Validation.validExtension': 'Extensión no válida',
+  'Validation.uploadFail': 'Ocurrió un error en la carga del archivo',
+  'Validation.successUpload': 'Archivo cargado exitosamente',
+  'Validation.maxFilesNumber': 'El máximo número de archivos es',
+  'Validation.maxFileSize': 'El archivo debe ser menor a',
+  'Validation.verifyDimensions': 'Aún tiene dimensiones y preguntas sin diligenciar, por favor validar',
 };
-
-window.appLocale = {
-  messages: {
-    ...enMessages,
-  },
-  antd: antdEn,
-  locale: 'en-US',
-  data: appLocaleData,
-};
+export default messages;

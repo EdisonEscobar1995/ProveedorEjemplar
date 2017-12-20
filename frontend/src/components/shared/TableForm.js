@@ -88,7 +88,7 @@ class GenericFormTable extends Component {
           colummns.map(column => (
             (
               <Column
-                title={column.title}
+                title={<FormattedMessage id={column.title} />}
                 key={column.key}
                 dataIndex={column.key}
                 render={(text, record) => {
@@ -106,7 +106,10 @@ class GenericFormTable extends Component {
                               ],
                               initialValue: text,
                             })(
-                              <Input type={column.type} placeholder={column.title} />,
+                              <Input
+                                type={column.type}
+                                placeholder={<FormattedMessage id={column.title} />}
+                              />,
                             )
                           }
                         </ItemStyle>

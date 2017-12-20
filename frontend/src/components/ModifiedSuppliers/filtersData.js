@@ -24,7 +24,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'ModifiedSuppliers.year',
+          label: 'Año',
           key: 'year',
           value: years && years.length > 0 ? years[0] : '',
           options: years ? years.map(item => ({ id: item, name: item })) : [],
@@ -51,7 +51,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'ModifiedSuppliers.supply',
+          label: 'Suministros',
           key: 'supply',
           value: '',
           options: masters ? masters.Supply : [],
@@ -63,7 +63,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'ModifiedSuppliers.category',
+          label: 'Categoría',
           key: 'category',
           value: '',
           options: masters ? masters.Category : [],
@@ -80,7 +80,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'ModifiedSuppliers.country',
+          label: 'País',
           key: 'country',
           value: '',
           options: masters ? masters.Country : [],
@@ -92,7 +92,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'ModifiedSuppliers.supplier',
+          label: 'Proveedor',
           key: 'supplier',
           value: '',
           options: suppliers ? suppliers.map((item) => {
@@ -107,7 +107,7 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         {
           span: 8,
           type: 'select',
-          label: 'ModifiedSuppliers.state',
+          label: 'Estado',
           key: 'state',
           value: '',
           options: states,

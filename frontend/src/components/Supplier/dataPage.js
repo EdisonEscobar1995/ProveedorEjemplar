@@ -928,11 +928,11 @@ function comercialInfo(fields) {
 
 const mainCustomers = [
   {
-    title: 'Nombre',
+    title: 'Supplier.principalCustomer.name',
     key: 'name',
   },
   {
-    title: 'Participación ventas por cliente (%)',
+    title: 'Supplier.principalCustomer.percentageOfParticipationInSales',
     key: 'percentageOfParticipationInSales',
     rules: [
       { ...intValidation },

@@ -9,7 +9,7 @@ import {
   CANCEL_SECTOR,
 } from './const';
 import { getAllSectorApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
-import requestApi from '../../utils/actionUtils';
+import { requestApi } from '../../utils/action';
 
 function getDataSectorProgress() {
   return {
@@ -69,8 +69,8 @@ function getAllSector() {
       .then((respose) => {
         const { data } = respose.data;
         dispatch(getDataSectorSuccess(data));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
+      }).catch(() => {
+        dispatch(getFailedRequest());
       });
   };
 }
@@ -80,8 +80,8 @@ function saveSector(clientData, index) {
       .then((respose) => {
         const { data } = respose.data;
         dispatch(saveDataSector(data, index));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
+      }).catch(() => {
+        dispatch(getFailedRequest());
       });
   };
 }
@@ -90,8 +90,8 @@ function deleteSector(clientData, index) {
     requestApi(dispatch, getDataSectorProgress, deleteSectorApi, clientData)
       .then(() => {
         dispatch(deleteDataSector(index));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
+      }).catch(() => {
+        dispatch(getFailedRequest());
       });
   };
 }

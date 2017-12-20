@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Upload as UploadAnt } from 'antd';
 import styled from 'styled-components';
-import message from './Message';
+import message from './message';
 import UploadButton from './UploadButton';
 
 const UploadStyle = styled(UploadAnt)`
@@ -29,19 +29,20 @@ class Upload extends Component {
     if (file.status === 'done') {
       const { status, data } = file.response;
       if (status) {
-        messageConfig.text = `${file.name} archivo cargado exitosamente`;
+        messageConfig.text = 'Validation.successUpload';
         messageConfig.type = 'success';
+        messageConfig.aditionalInfo = file.name;
         message(messageConfig);
         const onChange = this.props.onChange;
         if (onChange) {
           onChange(data, this.props.datakey);
         }
       } else {
-        messageConfig.text = `${file.name} fallo en la carga`;
+        messageConfig.text = 'Validation.uploadFail';
         message(messageConfig);
       }
     } else if (file.status === 'error') {
-      messageConfig.text = `${file.name} fallo en la carga`;
+      messageConfig.text = 'Validation.uploadFail';
       message(messageConfig);
     } else if (file.status === 'removed') {
       const onRemove = this.props.onRemove;
@@ -66,7 +67,7 @@ class Upload extends Component {
     const max = this.props.max;
     if (max) {
       if (this.props.list.length >= max) {
-        message({ text: `El maximo número de archivos es ${max}`, type: 'error' });
+        message({ text: 'Validation.maxFilesNumber', aditionalInfo: max, type: 'error' });
         return false;
       }
     }
@@ -75,13 +76,17 @@ class Upload extends Component {
     const extension = `.${nameExtension}`;
     if (this.props.uploadExtensions.indexOf(extension) < 0
       && this.props.uploadExtensions.indexOf(extension.toLowerCase()) < 0) {
-      message({ text: `Extensión ${extension} no válida`, type: 'error' });
+      message({ text: 'Validation.validExtension', type: 'error' });
       return false;
     }
     const uploadMaxFilesize = this.props.uploadMaxFilesize;
     const isValidSize = file.size / 1024 / 1024 < uploadMaxFilesize;
     if (!isValidSize) {
-      message({ text: `El archivo debe ser menor a ${uploadMaxFilesize} MB`, type: 'error' });
+      message({
+        text: 'Validation.maxFileSize',
+        aditionalInfo: `${uploadMaxFilesize} MB`,
+        type: 'error',
+      });
     }
     return isValidSize;
   }
@@ -120,10 +125,7 @@ class Upload extends Component {
         onChange={this.onChange}
       >
         {
-          !disabled ?
-            content
-            :
-            null
+          !disabled && content
         }
       </UploadStyle>
     );

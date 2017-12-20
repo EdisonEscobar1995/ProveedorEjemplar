@@ -22,7 +22,7 @@ function Field({ label, help, required, children }) {
         }
         {
           help ?
-            <Tooltip placement="top" title={help}>
+            <Tooltip placement="top" title={<FormattedMessage id={help} />}>
               <ButtonStyle type="primary" size="small" shape="circle" icon="question" />
             </Tooltip>
             :

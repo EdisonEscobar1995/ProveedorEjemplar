@@ -15,11 +15,7 @@ function ErrorTable({ visible = false, text = 'Survey.error' }) {
     );
   }
   return (
-    <div>
-      {
-        content
-      }
-    </div>
+    <div>{content}</div>
   );
 }
 export default ErrorTable;
