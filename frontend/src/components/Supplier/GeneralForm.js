@@ -18,14 +18,35 @@ class General extends Component {
       }
     });
   }
+  validateContactInfo = () => {
+    let response = true;
+    this.props.form.validateFields([
+      'fullNameContact',
+      'jobPosition',
+      'phoneOfContact',
+      'emailOfContact',
+    ], (err) => {
+      if (err) {
+        response = false;
+      }
+    });
+    return response;
+  }
   saveDraft = () => {
-    this.props.save(this.props.form.getFieldsValue());
+    if (this.validateContactInfo() === true) {
+      this.props.save(this.props.form.getFieldsValue());
+    }
+  }
+  continue = () => {
+    if (this.validateContactInfo() === true) {
+      this.props.save(this.props.form.getFieldsValue(), 'send');
+    }
   }
   handleChange= (participateInCall) => {
     this.props.changeParticipate(participateInCall);
   }
   render() {
-    const { participateInCall, changeIdCompanySize, system, readOnly, next } = this.props;
+    const { participateInCall, changeIdCompanySize, system, readOnly } = this.props;
     const { messageByChangeSizeCompany, informationProgram } = system;
     const { getFieldDecorator, setFields } = this.props.form;
     let content = '';
@@ -46,7 +67,7 @@ class General extends Component {
           key: 3,
           text: 'Button.continue',
           buttoncolor: 'buttonSecond',
-          onClick: next,
+          onClick: this.continue,
           disabled: readOnly,
         },
         {

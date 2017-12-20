@@ -72,7 +72,8 @@ const WelcomeStyle = styled.h4`
 const NameStyle = styled.h3`  
   color: ${props => props.theme.color.primary};
   margin-bottom: 6px;
-  font-family: LatoBold;
+  font-weight: 600;
+  font-style: normal;
 `;
 const CloseStyle = styled.h4`
   color: ${props => props.theme.color.secondary}

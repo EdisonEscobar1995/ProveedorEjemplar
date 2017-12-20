@@ -1,7 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,10 +67,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         SupplyDTO supply = supplyBLO.get(supplier.getIdSupply());
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         CompanySizeDTO companySize = companySizeBLO.get(supplier.getIdCompanySize());
-        Map<String, String> detail = new HashMap<String, String>();
-        detail.put(dictionary.get("COMPANY_SIZE"), companySize.getName());
-        detail.put(dictionary.get("SUPPLY"), supply.getName());
+        Map<String, String> detail = new LinkedHashMap<String, String>();
         detail.put(dictionary.get("SUPPLIER"), supplier.getBusinessName());
+        detail.put(dictionary.get("SUPPLY"), supply.getName());
+        detail.put(dictionary.get("COMPANY_SIZE"), companySize.getName());
         return detail;
     }
 
@@ -113,13 +113,15 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         }
     }
 
-    public void notifyToSupplierForContinue(List<String> email) throws HandlerGenericException {
+    public void notifyToSupplierForContinue(String email) throws HandlerGenericException {
         try {
+            List<String> emails = new ArrayList<String>();
+            emails.add(email);
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
             notification.setMessage(notification.getMessage());
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html";
-            sendNotification(email, notification, false, null, true, linkOfButton);
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
+            sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -131,13 +133,13 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
         if (!informationInOtherDataBase.isEmpty()) {
             Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
-            Map<String, String> detail = new HashMap<String, String>();
+            Map<String, String> detail = new LinkedHashMap<String, String>();
             detail.put(dictionary.get("USER"), informationInOtherDataBase.get("userName"));
             detail.put(dictionary.get("PASSWORD"), informationInOtherDataBase.get("password"));
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
             notification.setMessage(notification.getMessage());
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html";
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
             sendNotification(supplier.getEmails(), notification, true, detail, true, linkOfButton);
         }
     }

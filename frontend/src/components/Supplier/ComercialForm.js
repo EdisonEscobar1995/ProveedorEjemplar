@@ -7,7 +7,6 @@ import message from '../shared/message';
 import FormButtons from './FormButtons';
 import { comercialInfo, mainCustomers } from './dataPage';
 
-
 class Comercial extends Component {
   componentDidMount() {
     if (!this.props.readOnly) {
@@ -34,6 +33,9 @@ class Comercial extends Component {
   saveDraft = () => {
     this.props.save(this.props.form.getFieldsValue());
   }
+  continue = () => {
+    this.props.save(this.props.form.getFieldsValue(), 'send');
+  }
   render() {
     const {
       principalCustomer,
@@ -45,7 +47,6 @@ class Comercial extends Component {
       cancelData,
       readOnly,
       changeIdCompanySize,
-      next,
     } = this.props;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
@@ -65,7 +66,7 @@ class Comercial extends Component {
         key: 3,
         text: 'Button.continue',
         buttoncolor: 'buttonSecond',
-        onClick: next,
+        onClick: this.continue,
         disabled: readOnly,
       },
       {
