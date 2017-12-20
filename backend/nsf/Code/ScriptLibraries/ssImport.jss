@@ -310,14 +310,19 @@ function importData() {
 				break;
 				
 			case "MEN":
-				columnKeys = ["name", "title", "type", "idsRol"];
-				columnNameKeys = ["NAME", "TITLE", "TYPE", "IDSROL"];
-				columnNames = [{commonName: "NAME", technicalName: "name"},
-				               {commonName: "TITLE", technicalName: "title"},
-				               {commonName: "TYPE", technicalName: "type"},
-				               {commonName: "IDSROL", technicalName: "idsRol"}];
+				columnKeys = ["name", "title", "type", "idsRol", "tr_title"];
+				columnNameKeys = ["NOMBRE", "TITULO", "TIPO", "IDSROL", "TITLE"];
+				columnNames = [{commonName: "NOMBRE", technicalName: "name"},
+				               {commonName: "TITULO", technicalName: "title"},
+				               {commonName: "TIPO", technicalName: "type"},
+				               {commonName: "IDSROL", technicalName: "idsRol"},
+				               {commonName: "TITLE", technicalName: "tr_title"}];
 				defaultFields = [{ key: "form", value: "frMenu"}];
 				viewName = "vwMenus";
+				translationData = {
+					fields: ["title"],
+					entity: "Menu"
+				}
 				break;
 				
 		}
@@ -492,6 +497,8 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 					
 					for (j in fila){
 						if (fila.hasOwnProperty(j)){
+							println(j);
+							println(fila[j]);
 							nd.replaceItemValue(j, fila[j]);
 						}
 					}
@@ -555,7 +562,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 								ndForeign.recycle();
 							}else{
 			 					error = "Violación de clave foránea";
-			 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. No se encontró el rol " + idsRol[j]})
+			 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. No se encontró el rol " + idsRol[j] + " " + nd.getItemValueString("idsRol")})
 			 				}
 						}						
 						nd.replaceItemValue("idsRol", idsRol);
