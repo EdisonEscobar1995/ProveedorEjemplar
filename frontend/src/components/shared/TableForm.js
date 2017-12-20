@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Input, Form, Spin, Button } from 'antd';
+import { Table, Input, Form, Spin, Button, Tooltip } from 'antd';
 import styled from 'styled-components';
 import Confirm from './Confirm';
-import Tooltip from './Tooltip';
 import FormattedMessage from './FormattedMessage';
 
 const { Column } = Table;
@@ -135,7 +134,7 @@ class GenericFormTable extends Component {
                     {
                       editable ?
                         (
-                          <Tooltip title="Button.save">
+                          <Tooltip title={<FormattedMessage id="Button.save" />}>
                             <Button
                               shape="circle"
                               icon="save"
@@ -146,7 +145,7 @@ class GenericFormTable extends Component {
                         )
                         :
                         (
-                          <Tooltip title="Button.edit">
+                          <Tooltip title={<FormattedMessage id="Button.edit" />}>
                             <Button
                               shape="circle"
                               icon="edit"
@@ -159,14 +158,14 @@ class GenericFormTable extends Component {
                         )
                     }
                     <Confirm method={() => deleteData(record, index)}>
-                      <Tooltip title="Button.delete">
+                      <Tooltip title={<FormattedMessage id="Button.delete" />}>
                         <Button
                           shape="circle"
                           icon="delete"
                         />
                       </Tooltip>
                     </Confirm>
-                    <Tooltip title="Button.add">
+                    <Tooltip title={<FormattedMessage id="Button.add" />}>
                       <Button
                         shape="circle"
                         icon="plus"
@@ -177,17 +176,16 @@ class GenericFormTable extends Component {
                       />
                     </Tooltip>
                     {
-                      id && editable ?
-                        <Confirm method={() => cancelData(index)}>
-                          <Tooltip title="Button.cancel">
+                      id && editable && (
+                        <Tooltip title={<FormattedMessage id="Button.cancel" />}>
+                          <Confirm method={() => cancelData(index)}>
                             <Button
                               shape="circle"
                               icon="close-circle-o"
                             />
-                          </Tooltip>
-                        </Confirm>
-                        :
-                        ''
+                          </Confirm>
+                        </Tooltip>
+                      )
                     }
                   </div>
                 );
