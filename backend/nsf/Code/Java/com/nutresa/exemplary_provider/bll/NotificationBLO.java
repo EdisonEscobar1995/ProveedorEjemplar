@@ -12,6 +12,7 @@ import com.nutresa.exemplary_provider.dal.NotificationDAO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
 import com.nutresa.exemplary_provider.dtl.NotificationDTO;
 import com.nutresa.exemplary_provider.dtl.RolDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SupplyDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
@@ -25,18 +26,32 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         super(NotificationDAO.class);
     }
 
-    public void notifyChangeCompanySize() throws HandlerGenericException {
+    public void notifyChangeCompanySize(String idSupplier) throws HandlerGenericException {
+        String oldCampanySize = "";
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         try {
             List<String> sendTo = new ArrayList<String>();
             List<UserDTO> users = getUsersByRolName("LIBERATOR");
             for (UserDTO user : users) {
                 sendTo.add(user.getEmail());
             }
+
+            Map<String, String> detailUserToSend = buildDetailUserToSend(idSupplier);
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.getSupplierByCallActiveBySupplier(idSupplier);
+
+            if (null != supplierByCall && !supplierByCall.getOldIdCompanySize().isEmpty()) {
+                oldCampanySize = companySizeBLO.get(supplierByCall.getOldIdCompanySize()).getName();
+            }
+
+            detailUserToSend.put("NEW_COMPANY_SIZE", detailUserToSend.remove("COMPANY_SIZE"));
+            detailUserToSend.put("OLD_COMPANY_SIZE", oldCampanySize);
+
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
             notification.setMessage(notification.getMessage());
-            sendNotification(sendTo, notification, false, null, true, linkOfButton);
+            sendNotification(sendTo, notification, true, detailUserToSend, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -53,13 +68,13 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
             notification.setMessage(notification.getMessage());
-            sendNotification(sendTo, notification, true, buildDetailUserCompletedSurvey(idSupplier), false, null);
+            sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), false, null);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
     }
 
-    private Map<String, String> buildDetailUserCompletedSurvey(String idSupplier) throws HandlerGenericException {
+    private Map<String, String> buildDetailUserToSend(String idSupplier) throws HandlerGenericException {
         Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notifications");
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO supplier = supplierBLO.get(idSupplier);
@@ -97,7 +112,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             DominoEmail email = new DominoEmail();
             body.append(TemplateMail.buildMessage(notification.getMessage(), requireTableDetail, dataDetail,
                     requireButton, linkButton, notificationDAO.getPublicResource(notification.getIdBanner()),
-                            notificationDAO.getPublicResource(notification.getIdFooter())));
+                    notificationDAO.getPublicResource(notification.getIdFooter())));
             email.setTo(sendTo);
             List<String> withCopy = notification.getWithCopy();
             if (withCopy != null && !withCopy.isEmpty()) {
