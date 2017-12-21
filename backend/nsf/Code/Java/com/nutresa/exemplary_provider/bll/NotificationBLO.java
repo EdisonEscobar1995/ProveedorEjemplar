@@ -136,7 +136,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             List<String> emails = new ArrayList<String>();
             emails.add(email);
             NotificationDAO notificationDAO = new NotificationDAO();
-            NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+            NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE_CONFIRMED ");
             notification.setMessage(notification.getMessage());
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
             sendNotification(emails, notification, false, null, true, linkOfButton);
