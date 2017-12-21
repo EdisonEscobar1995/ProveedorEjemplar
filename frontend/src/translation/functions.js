@@ -1,5 +1,6 @@
-const languageVariable = 'exemplary_provider_language';
-const cookieName = 'language';
+import { languageLocalName } from '../utils/variables';
+
+const languageVariable = languageLocalName;
 const spanish = 'es';
 const english = 'en';
 const supportedLanguages = [spanish, english];
@@ -18,26 +19,24 @@ const getLanguage = () => {
   localStorage.setItem(languageVariable, language);
   return language;
 };
-const changeLanguage = () => {
-  const actualLanguage = localStorage.getItem(languageVariable);
-  let cookie = document.cookie;
+const getNoActiveLanguage = (actualLanguage) => {
   let languageChange;
-  if (cookie.indexOf(cookieName) < 0) {
-    cookie = `${cookieName};${cookie}`;
-  }
   if (actualLanguage === spanish) {
     languageChange = english;
-    localStorage.setItem(languageVariable, english);
   } else {
     languageChange = spanish;
-    localStorage.setItem(languageVariable, spanish);
   }
-  cookie = cookie.replace(new RegExp(cookieName, 'g'), `${cookieName}=${languageChange}`);
-  document.cookie = cookie;
+  return languageChange;
+};
+
+const changeLanguage = () => {
+  const actualLanguage = localStorage.getItem(languageVariable);
+  localStorage.setItem(languageVariable, getNoActiveLanguage(actualLanguage));
   location.reload();
 };
 
 export {
   getLanguage,
   changeLanguage,
+  getNoActiveLanguage,
 };
