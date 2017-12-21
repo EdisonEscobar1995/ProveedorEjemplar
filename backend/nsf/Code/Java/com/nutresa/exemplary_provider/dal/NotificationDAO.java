@@ -9,8 +9,8 @@ import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class NotificationDAO extends GenericDAO<NotificationDTO> {
-    public static final String SENDER_NAME = "Portal de proveedores";
-    public static final String SENDER_EMAIL = "gruponutresa@nutresa.com";
+    public static final String SENDER_NAME = "Proveedor Ejemplar Grupo Nutresa";
+    public static final String SENDER_EMAIL = "proveedorejemplar@serviciosnutresa.com";
 
     public NotificationDAO() {
         super(NotificationDTO.class);

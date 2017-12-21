@@ -26,16 +26,26 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierDTO supplier = null;
         dto.autoSetIdDocuments();
         dto.autoSetIdAttachedFinancialReport();
+
+        if (null != dto.getPrincipalCustomer() && !dto.getPrincipalCustomer().isEmpty()) {
+            CustomerBLO customerBLO = new CustomerBLO();
+            for (CustomerDTO customer : dto.getPrincipalCustomer()) {
+                customer.setIdSupplier(dto.getId());
+                customerBLO.save(customer);
+            }
+        }
+
         supplier = dao.get(dto.getId());
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         supplierByCallBLO.participateInCall();
         if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
             supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
+            supplier = dao.update(dto.getId(), dto);
             NotificationBLO notificationBLO = new NotificationBLO();
-            notificationBLO.notifyChangeCompanySize();
+            notificationBLO.notifyChangeCompanySize(dto.getId());
         }
 
-        return dao.update(dto.getId(), dto);
+        return supplier;
     }
 
     public SupplierDTO getSupplierInSession() throws HandlerGenericException {
