@@ -83,11 +83,20 @@ function importData() {
 					entity: "Option"
 				}  
 				break;
+			case "DEQ":
+				columnKeys = ["code"];
+				columnNameKeys = ["Pregunta"];
+				columnNames = [{commonName: "Pregunta", technicalName: "code"},
+				               {commonName: "Dependencia", technicalName: "dependency"}];
+				defaultFields = [{ key: "form", value: "frDependingQuestion"}];
+				viewName = "";
+				break;
 			case "SEC":
 				columnKeys = ["name", "tr_name"];
 				columnNameKeys = ["Sector", "Sector to which the company belongs"];
 				columnNames = [{commonName: "Sector", technicalName: "name"},
-				               {commonName: "Sector to which the company belongs", technicalName: "tr_name"}];
+				               {commonName: "Sector to which the company belongs", technicalName: "tr_name"},
+				               {commonName: "Otro", technicalName: "otro"}];
 				defaultFields = [{ key: "form", value: "frSector"}];
 				viewName = "vwSectors";
 				translationData = {
@@ -148,7 +157,8 @@ function importData() {
 				columnNameKeys = ["Tipos de suministro", "Categoría", "Type of Category"];
 				columnNames = [{commonName: "Tipos de suministro", technicalName: "idSupply"},
 				               {commonName: "Categoría", technicalName: "name"},
-				               {commonName: "Type of Category", technicalName: "tr_name"}];
+				               {commonName: "Type of Category", technicalName: "tr_name"},
+				               {commonName: "Material empaque", technicalName: "materialEmpaque"}];
 				defaultFields = [{ key: "form", value: "frCategory"}];
 				foreignKeys = [{technicalNames: ["idSupply"], commonNames: ["Tipo de suministro"], viewNames: ["ImportSuppliesByName"]}];
 				viewName = "vwCategories";
@@ -254,7 +264,8 @@ function importData() {
 				columnNameKeys = ["Año"];
 				columnNames = [{commonName: "Año", technicalName: "year"},
 				               {commonName: "Fecha cierre de convocatoria", technicalName: "dateToFinishCall"},
-				               {commonName: "Fecha límite para hacer la encuesta", technicalName: "deadlineToMakeSurvey"}];
+				               {commonName: "Fecha límite para hacer la encuesta", technicalName: "deadlineToMakeSurvey"},
+				               {commonName: "Activa", technicalName: "active"}];
 				defaultFields = [{ key: "form", value: "frCall"}];
 				viewName = "vwCalls";
 				break;
@@ -310,8 +321,8 @@ function importData() {
 				break;
 				
 			case "MEN":
-				columnKeys = ["name", "title", "type", "idsRol", "tr_title"];
-				columnNameKeys = ["NOMBRE", "TITULO", "TIPO", "IDSROL", "TITLE"];
+				columnKeys = ["name", "type"];
+				columnNameKeys = ["NOMBRE", "TIPO"];
 				columnNames = [{commonName: "NOMBRE", technicalName: "name"},
 				               {commonName: "TITULO", technicalName: "title"},
 				               {commonName: "TIPO", technicalName: "type"},
@@ -325,8 +336,8 @@ function importData() {
 				}
 				break;
 			case "DIC":
-				columnKeys = ["component", "name", "label", "tr_label"];
-				columnNameKeys = ["Componente", "Nombre", "Etiqueta", "Traducción"];
+				columnKeys = ["component", "name"];
+				columnNameKeys = ["Componente", "Nombre"];
 				columnNames = [{commonName: "Componente", technicalName: "component"},
 				               {commonName: "Nombre", technicalName: "name"},
 				               {commonName: "Etiqueta", technicalName: "label"},
@@ -384,11 +395,13 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		var keys;
 		var surveys;
 		var emails;
+		var aux;
 		
 		for (i in data) {
 			for (j in columnNames){
-				data[i][columnNames[j].technicalName] = data[i][columnNames[j].commonName];
+				aux = data[i][columnNames[j].commonName];
 				delete data[i][columnNames[j].commonName];
+				data[i][columnNames[j].technicalName] = aux;
 				if (data[i].hasOwnProperty(columnNames[j].technicalName) && data[i][columnNames[j].technicalName]){
 					data[i][columnNames[j].technicalName] = data[i][columnNames[j].technicalName].trim()
 				}else{
@@ -474,12 +487,25 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		}else if (unavailableForeignKeys > 0){
 			error = "Violación de clave foránea";
 		}else{
+			var dbDirectorio:NotesDatabase = sessionAsSigner.getDatabase("", "dnbddirectorio.nsf");
+			var vwPeopeXCedula:NotesView = dbDirectorio.getView("PeopleXcedula");
+			var vwUsers:NotesView = dbDirectorio.getView("($Users)");
+			var ndUser:NotesDocument;	
+			
+			var vwCfg:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSystems");
+			var ndCfg:NotesView = vwCfg.getDocumentByKey("frSystem", true);
+		
 			var vwSurveys:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
 			var vwQuestions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestions");
+			var vwQuestionsByCode:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportQuestionsByCode");
+			var vwOptions:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportOptionsByCode");
 			var vwSuppliers:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSuppliersBySapCode");
 			var vwAccess:Notesview = sessionAsSigner.getCurrentDatabase().getView("ImportAccessByApiAndAction");
 			var vwRols:Notesview = sessionAsSigner.getCurrentDatabase().getView("ImportRolByShortName");
 			vwSuppliers.setAutoUpdate(true);
+			
+			var ndQuestion:NotesDocument;
+			
 			var fullName:NotesName;	
 			var aDate;
 			var abort;
@@ -539,8 +565,27 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 						}
 					}else if(nd.getItemValueString("form") == "frCity"){
 						nd.removeItem("idCountry");
+					}else if(nd.getItemValueString("form") == "frDependingQuestion"){
+						
+					}else if(nd.getItemValueString("form") == "frCategory"){
+						if (nd.getItemValueString("materialEmpaque") == "Si"){
+							ndCfg.replaceItemValue("packagingMaterialCategoryId", nd.getItemValueString("id"));
+							ndCfg.save(true, false);
+						}else{
+							nd.removeItem("materialEmpaque");
+						}
+					}else if(nd.getItemValueString("form") == "frSector"){
+						if (nd.getItemValueString("otro") == "Si"){
+							ndCfg.replaceItemValue("otherSectorId", nd.getItemValueString("id"));
+							ndCfg.save(true, false);
+						}else{
+							nd.removeItem("otro");
+						}
+					}else if(nd.getItemValueString("form") == "frNotification"){
+						nd.replaceItemValue("idBanner", "663C6D1AA71F81CE052581F7004187E9");
+						nd.replaceItemValue("idFooter", "3FDB5AF6728650DF052581F70041C080");
 					}else if(nd.getItemValueString("form") == "frQuestion"){
-						nd.replaceItemValue("required", "0");
+						nd.replaceItemValue("required", "1");
 					}else if(nd.getItemValueString("form") == "frCall"){
 						nd.replaceItemValue("year", parseInt(nd.getItemValueString("year"), 10))
 						aDate = nd.getItemValueString("dateToFinishCall").split("/");
@@ -548,8 +593,20 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 						aDate = nd.getItemValueString("deadlineToMakeSurvey").split("/");
 						nd.replaceItemValue("deadlineToMakeSurvey", new Date(parseInt(aDate[2], 10), parseInt(aDate[1], 10) - 1, parseInt(aDate[0], 10)));
 					}else if(nd.getItemValueString("form") == "frSupplier"){
-						fullName = session.createName(nd.getItemValueString("businessName"));
-						nd.replaceItemValue("fullName", fullName.getCommon());
+						ndUser = vwPeopeXCedula.getDocumentByKey(nd.getItemValueString("nit"), true);
+						if (!ndUser){
+							ndUser = vwUsers.getDocumentByKey(nd.getItemValueString("nit"), true);
+						}
+						if (ndUser){
+							nd.replaceItemValue("fullName", ndUser.getItemValueString("fullName"));
+							if (nd.getItemValueString("fullName") === ""){
+								nd.replaceItemValue("fullName", ndUser.getItemValueString("fullName2"));
+							}
+						}
+						if (nd.getItemValueString("fullName") === ""){
+							fullName = session.createName(nd.getItemValueString("businessName"));
+							nd.replaceItemValue("fullName", fullName.getCommon());
+						}
 						if (nd.getItemValueString("emails") === ""){
 							nd.replaceItemValue("emails", "no@no.com")
 						}
@@ -589,6 +646,20 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		 				ndForeign.save(true, false);
 		 				modifiedIds.push(ndForeign.getItemValueString("id"));
 		 				ndForeign.recycle();
+					}else if(nd.getItemValueString("form") == "frDependingQuestion"){
+						ndQuestion= vwQuestionsByCode.getDocumentByKey(nd.getItemValueString("code"), true);
+						ndForeign = vwOptions.getDocumentByKey(nd.getItemValueString("dependency"));
+						if (ndQuestion && ndForeign){
+							ndQuestion.replaceItemValue("dependOfOptionId", ndForeign.getItemValueString("id"));
+							ndQuestion.replaceItemValue("dependOfQuestion", ndForeign.getItemValueString("idQuestion"));
+							ndQuestion.save(true, false);
+							modifiedIds.push(ndQuestion.getItemValueString("id"));
+				 			ndQuestion.recycle();
+							ndForeign.recycle();
+				 		}else{
+		 					error = "Violación de clave foránea";
+		 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. Revisar los códigos"})
+		 				}
 			 		}else{
 			 			translate(nd, translationData);
 			 			nd.save(true, false);						
@@ -616,7 +687,12 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 				for(i in modifiedIds){					
  					ndForeign = vwQuestions.getDocumentByKey(modifiedIds[i], true);
 					if(ndForeign){
-						ndForeign.removeItem("idSurvey");
+						if (defaultFields[0].value === "frQuestionBySurvey"){
+							ndForeign.removeItem("idSurvey");
+						}else if(defaultFields[0].value === "frDependingQuestion"){
+							ndForeign.removeItem("dependOfOptionId");
+							ndForeign.removeItem("dependOfQuestion");
+						}
 						ndForeign.save(true, false);
 						ndForeign.recycle();
 					}

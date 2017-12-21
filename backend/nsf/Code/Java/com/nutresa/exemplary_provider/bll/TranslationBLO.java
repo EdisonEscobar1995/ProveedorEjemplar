@@ -110,6 +110,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     
     public void clearLanguage() {
         translationTable = new HashMap<String, HashMap<String, String>>();
+        dictionaryTable = new HashMap<String, HashMap<String, String>>();
     }
     
     public String getClientLanguage(Map<String, String> parameters, Locale locale, Cookie[] cookies) {

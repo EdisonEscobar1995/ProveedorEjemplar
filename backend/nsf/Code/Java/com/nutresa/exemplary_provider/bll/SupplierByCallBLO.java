@@ -139,4 +139,17 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return readOnly;
     }
 
+    public SupplierByCallDTO getSupplierByCallActiveBySupplier(String idSupplier) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        SupplierByCallDTO response = null;
+        List<SupplierByCallDTO> suppliersByCall = supplierByCallDAO.getBySupplier(idSupplier);
+        for (SupplierByCallDTO supplierByCall : suppliersByCall) {
+            CallBLO callBLO = new CallBLO();
+            if (callBLO.get(supplierByCall.getIdCall()).isActive()) {
+                response = supplierByCall;
+            }
+        }
+        return response;
+    }
+
 }
