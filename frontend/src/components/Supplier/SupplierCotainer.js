@@ -8,7 +8,6 @@ import {
   getDataDepartmentsByCountry,
   getDataCitiesByDepartment,
   getDimensionsBySurvey,
-  getQuestionsByDimension,
   saveDataCallBySupplier,
   saveDataCallSupplier,
   changeParticipate,
@@ -59,6 +58,8 @@ const mapStateToProps = state => ({
   cities: state.supplier.cities,
   dimensions: state.supplier.dimensions,
   loading: state.supplier.loading,
+  loadingDimensions: state.supplier.loadingDimensions,
+  loadedDimensions: state.supplier.loadedDimensions,
   principalCustomer: state.supplier.principalCustomer,
   sectors: state.supplier.sectors,
   system: state.supplier.system,
@@ -83,9 +84,6 @@ const mapDispatchToProps = dispatch => ({
   },
   getDimensionsBySurvey: (idSurvey) => {
     dispatch(getDimensionsBySurvey(idSurvey));
-  },
-  getQuestionsByDimension: (idSurvey, idDimension) => {
-    dispatch(getQuestionsByDimension(idSurvey, idDimension));
   },
   saveDataCallBySupplier: (data) => {
     dispatch(saveDataCallBySupplier(data));

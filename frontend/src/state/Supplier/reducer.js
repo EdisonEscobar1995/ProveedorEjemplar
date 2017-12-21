@@ -7,7 +7,6 @@ import {
   GET_DATA_DEPARTMENTS_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
   GET_DATA_DIMENSION_SURVEY_SUCCESS,
-  GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
   SAVE_DATA_SUPPLIER_CALL_SUCCESS,
   SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
   SAVE_DATA_ANSWER_SUCCESS,
@@ -35,6 +34,7 @@ const initialState = {
   call: {},
   readOnly: false,
   changeIdCompanySize: false,
+  loadedDimensions: false,
   participateInCall: '',
   supply: [],
   categories: [],
@@ -50,6 +50,7 @@ const initialState = {
   system: {},
   loading: false,
   loadingDimensions: false,
+  error: null,
 };
 
 function supplierApp(state = initialState, action) {
@@ -113,10 +114,11 @@ function supplierApp(state = initialState, action) {
         loading: false,
       };
     case GET_DATA_DIMENSION_SURVEY_SUCCESS:
-    case GET_DATA_QUESTIONS_DIMENSION_SUCCESS:
       return {
         ...state,
         dimensions: action.dimensions,
+        loadingDimensions: false,
+        loadedDimensions: true,
         loading: false,
       };
     case GET_REQUEST_FAILED:

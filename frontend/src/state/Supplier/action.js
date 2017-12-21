@@ -9,7 +9,6 @@ import {
   GET_DATA_DEPARTMENTS_SUCCESS,
   GET_DATA_DIMENSION_SURVEY_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
-  GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
   SAVE_DATA_SUPPLIER_CALL_SUCCESS,
   SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
   SAVE_DATA_ANSWER_SUCCESS,
@@ -33,7 +32,7 @@ import {
 import {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
-  getDataQuestionsBySurverrApi,
+  getDataQuestionsBySurveyApi,
   saveDataSuppliertApi,
   saveDataCallBySupplierApi,
   finishSurveyApi,
@@ -255,34 +254,6 @@ const showQuestions = (questions) => {
   return visibleQuestions;
 };
 
-const getDataQuestionsByDimensionSuccess = (idDimension, dimensions, data) => {
-  const { questions } = data;
-  const showedQuestions = showQuestions(questions);
-  const { criterion } = data;
-  let result = [];
-  if (criterion.length > 0) {
-    result = criterion.map(criteria => (
-      {
-        ...criteria,
-        questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
-      }
-    ));
-  }
-  const noCriterianQuestion = questions.filter(question => question.idCriterion === '');
-  if (noCriterianQuestion.length > 0) {
-    result.unshift({
-      name: '',
-      id: 1,
-      questions: showedQuestions.filter(question => question.idCriterion === ''),
-    });
-  }
-  dimensions.find(item => item.id === idDimension).criterions = result;
-  return {
-    type: GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
-    dimensions,
-  };
-};
-
 function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
@@ -468,39 +439,69 @@ const getDataCitiesByDepartment = clientData => (
       });
   }
 );
+
+const formatData = (data) => {
+  const { dimensions, criterions } = data;
+  const formatedDimensions = dimensions.map((dimension, index) => {
+    const actual = criterions[index];
+    const { questions, criterion } = actual;
+    const showedQuestions = showQuestions(questions);
+    let result = [];
+    if (criterion.length > 0) {
+      result = criterion.map(criteria => (
+        {
+          ...criteria,
+          questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
+        }
+      ));
+    }
+    const noCriterianQuestion = questions.filter(question => question.idCriterion === '');
+    if (noCriterianQuestion.length > 0) {
+      result.unshift({
+        name: '',
+        id: 1,
+        questions: showedQuestions.filter(question => question.idCriterion === ''),
+      });
+    }
+    dimension.criterions = result;
+    return dimension;
+  });
+  return formatedDimensions;
+};
+
 const getDimensionsBySurvey = idSurvey => (
   (dispatch, getActualState) => {
     const actualDimensions = getActualState().supplier.dimensions;
     if (actualDimensions.length === 0) {
       requestApi(dispatch, getDataDimensionsProgress, getDimensionsBySurveyApi, idSurvey)
-        .then((respone) => {
-          const dimensions = respone.data.data;
+        .then(response => response.data.data)
+        .then((data) => {
+          const promises = [];
+          data.forEach((dimesion) => {
+            const dataSend = { idSurvey, idDimension: dimesion.id };
+            promises.push(getDataQuestionsBySurveyApi({ ...dataSend }));
+          });
+          return requestApiNotLoading(dispatch, axios.all, promises)
+            .then((criterionsResponse) => {
+              const criterions = [];
+              criterionsResponse.forEach((element) => {
+                criterions.push(element.data.data);
+              });
+              return criterions;
+            })
+            .then(criterions => ({ dimensions: data, criterions }));
+        }).then((data) => {
+          let dimensions = data.dimensions;
+          dimensions = formatData(data);
           dispatch(getDataDimensionsBySuplySuccess(dimensions));
-        }).catch((err) => {
+        })
+        .catch((err) => {
           dispatch(getFailedRequest(err));
         });
     }
   }
 );
-const getQuestionsByDimension = (idSurvey, idDimension) => (
-  (dispatch, getActualState) => {
-    requestApi(dispatch,
-      getDataSupplierProgress,
-      getDataQuestionsBySurverrApi,
-      { idSurvey, idDimension },
-    )
-      .then((respone) => {
-        const questions = respone.data.data;
-        dispatch(getDataQuestionsByDimensionSuccess(
-          idDimension,
-          getActualState().supplier.dimensions,
-          questions,
-        ));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
-  }
-);
+
 const saveDataCallBySupplier = clientData => (
   (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
@@ -702,7 +703,6 @@ export {
   getDataDepartmentsByCountry,
   getDataCitiesByDepartment,
   getDimensionsBySurvey,
-  getQuestionsByDimension,
   saveDataCallBySupplier,
   saveDataCallSupplier,
   saveAnswer,

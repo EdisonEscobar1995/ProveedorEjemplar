@@ -91,14 +91,21 @@ class Supplier extends Component {
           stepContent: <ContentStyle><Title text="Survey.comercialInfo" translate /></ContentStyle>,
         },
       );
-      if (dimensions.length === 0 && !this.props.loading && !this.props.loadingDimensions) {
+      const {
+        loadedDimensions,
+        loadingDimensions,
+        loading,
+        error,
+      } = this.props;
+      if (dimensions.length === 0 &&
+        !loading && !loadingDimensions && !error && !loadedDimensions) {
         const { call, getDimensionsBySurvey } = this.props;
         const { idSurvey } = call;
         getDimensionsBySurvey(idSurvey);
       }
     }
     const mapDimensions = dimensions.map((dimension) => {
-      const { call, getQuestionsByDimension, saveAnswer, system, readOnly } = this.props;
+      const { call, saveAnswer, system, readOnly } = this.props;
       const { id, idSurvey } = call;
       return {
         name: dimension.name,
@@ -109,7 +116,6 @@ class Supplier extends Component {
           idCall={id}
           system={system}
           criterions={dimension.criterions}
-          getQuestionsByDimension={getQuestionsByDimension}
           saveAnswer={saveAnswer}
           disabled={readOnly}
           validateQuestions={this.validateQuestions}
@@ -268,13 +274,18 @@ class Supplier extends Component {
   }
 
   render() {
-    const { loading } = this.props;
+    const { loading, loadingDimensions } = this.props;
     const { current } = this.state;
     const steps = this.getSteps();
     return (
       <Spin spinning={loading}>
         <SurveyText />
-        <TabsStyle activeKey={current.toString()} animated={false} onTabClick={this.changePage}>
+        <TabsStyle
+          tabBarExtraContent={<Spin spinning={loadingDimensions} />}
+          activeKey={current.toString()}
+          animated={false}
+          onTabClick={this.changePage}
+        >
           {steps.map((item, index) => {
             const key = index.toString();
             return (
