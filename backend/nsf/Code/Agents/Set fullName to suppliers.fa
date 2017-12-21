@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='Set fullName to suppliers' alias='set_fullName_suppliers' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='4cee2' unid='56DEE2156D01CB6B052581FD0055E607' sequence='1'>
+<created><datetime>20171221T103814,47-05</datetime></created>
+<modified><datetime>20171221T103814,70-05</datetime></modified>
+<revised><datetime>20171221T103814,69-05</datetime></revised>
+<lastaccessed><datetime>20171221T103814,70-05</datetime></lastaccessed>
+<addedtofile><datetime>20171221T103814,70-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=COGNOX</name><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20171221T094505,95-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='action'><formula>name:= @DbLookup("":"NoCache";"CXCOLABORACION/COGNOX":"dnbddirectorio.nsf";"PeopleXcedula";nit;"fullname";[FailSilent]);
+name:= @If(name = ""; @DbLookup("":"NoCache";"CXCOLABORACION/COGNOX":"dnbddirectorio.nsf";"($Users)";nit;"fullname";[FailSilent]); name);
+FIELD fullname := @If(name != ""; name; fullname);
+SELECT @All</formula></code>
+<rundata processeddocs='1' exitcode='0'>
+<agentmodified><datetime>20171221T102042,31-05</datetime></agentmodified>
+<agentrun><datetime>20171221T103624,27-05</datetime></agentrun>
+<runlog>Started running agent 'Set fullName to suppliers|set_fullName_suppliers' on 21/12/2017 10:36:23 a. m.
+Running on selected documents: 1 total
+Found 1 document(s) that match search criteria
+1 document(s) were modified by formula
+Done running agent 'Set fullName to suppliers|set_fullName_suppliers' on 21/12/2017 10:36:24 a. m.
+</runlog></rundata></agent>
+
