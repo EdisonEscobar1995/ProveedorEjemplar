@@ -1,15 +1,16 @@
 import { Modal } from 'antd';
-import FormattedMessage from './FormattedMessage';
+import { getIntl } from '../../utils/translate';
 
 function message({ type = 'info', text = '', aditionalInfo = '' }) {
-  const content = `${text} ${aditionalInfo}`;
+  const translate = getIntl();
+  const content = `${translate.formatMessage({ id: text })} ${aditionalInfo}`;
   let modal = null;
-  const title = 'Message.title';
+  const title = translate.formatMessage({ id: 'Message.title' });
   const config = {
     title,
     content,
   };
-  console.log(FormattedMessage);
+
   switch (type) {
     case 'success': {
       modal = Modal.success(config);

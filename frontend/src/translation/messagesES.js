@@ -105,5 +105,6 @@ const messages = {
   'Validation.maxFilesNumber': 'El máximo número de archivos es',
   'Validation.maxFileSize': 'El archivo debe ser menor a',
   'Validation.verifyDimensions': 'Aún tiene dimensiones y preguntas sin diligenciar, por favor validar',
+  'Validation.requiredField': 'Este campo es requerido',
 };
 export default messages;

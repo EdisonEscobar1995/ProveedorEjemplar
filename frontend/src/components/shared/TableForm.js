@@ -3,6 +3,9 @@ import { Table, Input, Form, Spin, Button, Tooltip } from 'antd';
 import styled from 'styled-components';
 import Confirm from './Confirm';
 import FormattedMessage from './FormattedMessage';
+import { getIntl } from '../../utils/translate';
+
+const translator = getIntl();
 
 const { Column } = Table;
 const { Item } = Form;
@@ -108,7 +111,7 @@ class GenericFormTable extends Component {
                             })(
                               <Input
                                 type={column.type}
-                                placeholder={<FormattedMessage id={column.title} />}
+                                placeholder={translator.formatMessage({ id: column.title })}
                               />,
                             )
                           }
