@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.openntf.domino.email.DominoEmail;
+import org.openntf.domino.utils.Factory.SessionType;
 
+import org.openntf.domino.utils.Factory;
 import com.nutresa.exemplary_provider.bll.TranslationBLO.Dictionary;
 import com.nutresa.exemplary_provider.dal.NotificationDAO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
@@ -28,6 +30,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
     public void notifyChangeCompanySize(String idSupplier) throws HandlerGenericException {
         String oldCampanySize = "";
+        Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         try {
@@ -44,8 +47,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 oldCampanySize = companySizeBLO.get(supplierByCall.getOldIdCompanySize()).getName();
             }
 
-            detailUserToSend.put("NEW_COMPANY_SIZE", detailUserToSend.remove("COMPANY_SIZE"));
-            detailUserToSend.put("OLD_COMPANY_SIZE", oldCampanySize);
+            detailUserToSend.put(dictionary.get("NEW_COMPANY_SIZE"), detailUserToSend.remove(dictionary
+                    .get("COMPANY_SIZE")));
+            detailUserToSend.put(dictionary.get("OLD_COMPANY_SIZE"), oldCampanySize);
 
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
@@ -75,7 +79,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     }
 
     private Map<String, String> buildDetailUserToSend(String idSupplier) throws HandlerGenericException {
-        Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notifications");
+        Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO supplier = supplierBLO.get(idSupplier);
         SupplyBLO supplyBLO = new SupplyBLO();
@@ -103,13 +107,12 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         return users;
     }
 
-    @SuppressWarnings("deprecation")
     private void sendNotification(List<String> sendTo, NotificationDTO notification, boolean requireTableDetail,
             Map<String, String> dataDetail, boolean requireButton, String linkButton) throws HandlerGenericException {
         NotificationDAO notificationDAO = new NotificationDAO();
         try {
             StringBuilder body = new StringBuilder();
-            DominoEmail email = new DominoEmail();
+            DominoEmail email = new DominoEmail(Factory.getSession(SessionType.NATIVE));
             body.append(TemplateMail.buildMessage(notification.getMessage(), requireTableDetail, dataDetail,
                     requireButton, linkButton, notificationDAO.getPublicResource(notification.getIdBanner()),
                     notificationDAO.getPublicResource(notification.getIdFooter())));
