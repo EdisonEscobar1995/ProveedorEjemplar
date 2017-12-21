@@ -121,6 +121,7 @@ class Upload extends Component {
         disabled={disabled}
         accept={uploadExtensions.join(',')}
         multiple={multiple}
+        showUploadList={{ showRemoveIcon: !disabled }}
         beforeUpload={this.beforeUpload}
         onChange={this.onChange}
       >

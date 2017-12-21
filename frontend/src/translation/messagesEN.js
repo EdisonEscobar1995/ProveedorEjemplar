@@ -92,7 +92,7 @@ const messages = {
   'Header.welcome': 'Welcome',
   'Header.logOut': 'Logout',
   'Confirm.title': 'Are you sure?',
-  'Message.title': 'Exemplary Provider',
+  'Message.title': 'Exemplary Supplier',
   'Validation.dateToSend': 'The date exceeds the time to send',
   'Validation.noData': 'No data received',
   'Validation.noOpenCall': 'At this time there are no open calls',
@@ -105,5 +105,6 @@ const messages = {
   'Validation.maxFilesNumber': 'The maximum number of files is',
   'Validation.maxFileSize': 'The file must be less than',
   'Validation.verifyDimensions': 'Still have dimensions and unfilled questions, please validate',
+  'Validation.requiredField': 'This field is required',
 };
 export default messages;

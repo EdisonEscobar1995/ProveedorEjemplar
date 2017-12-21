@@ -1,4 +1,6 @@
-const languageVariable = 'exemplary_provider_language';
+import { languageLocalName } from '../utils/variables';
+
+const languageVariable = languageLocalName;
 const spanish = 'es';
 const english = 'en';
 const supportedLanguages = [spanish, english];
@@ -17,17 +19,24 @@ const getLanguage = () => {
   localStorage.setItem(languageVariable, language);
   return language;
 };
+const getNoActiveLanguage = (actualLanguage) => {
+  let languageChange;
+  if (actualLanguage === spanish) {
+    languageChange = english;
+  } else {
+    languageChange = spanish;
+  }
+  return languageChange;
+};
+
 const changeLanguage = () => {
   const actualLanguage = localStorage.getItem(languageVariable);
-  if (actualLanguage === spanish) {
-    localStorage.setItem(languageVariable, english);
-  } else {
-    localStorage.setItem(languageVariable, spanish);
-  }
+  localStorage.setItem(languageVariable, getNoActiveLanguage(actualLanguage));
   location.reload();
 };
 
 export {
   getLanguage,
   changeLanguage,
+  getNoActiveLanguage,
 };

@@ -324,7 +324,20 @@ function importData() {
 					entity: "Menu"
 				}
 				break;
-				
+			case "DIC":
+				columnKeys = ["component", "name", "label", "tr_label"];
+				columnNameKeys = ["Componente", "Nombre", "Etiqueta", "Traducción"];
+				columnNames = [{commonName: "Componente", technicalName: "component"},
+				               {commonName: "Nombre", technicalName: "name"},
+				               {commonName: "Etiqueta", technicalName: "label"},
+				               {commonName: "Traducción", technicalName: "tr_label"}];
+				defaultFields = [{ key: "form", value: "frDictionary"}];
+				viewName = "vwDictionaries";
+				translationData = {
+					fields: ["label"],
+					entity: "Dictionary"
+				}
+				break;
 		}
 		result = importGeneric(data, response, viewName, columnNames, columnKeys, columnNameKeys, requiredFields, defaultFields, foreignKeys, translationData)
 		

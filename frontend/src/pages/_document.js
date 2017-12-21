@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -9,6 +10,7 @@ import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
 import { loginUrl } from '../utils/api';
 import { changeLanguage } from '../translation/functions';
+import { setIntl } from '../utils/translate';
 
 const { Header, Footer, Content } = Layout;
 
@@ -89,14 +91,22 @@ const UserStyle = styled.div`
   justify-content: center;
   margin-right: 15px;
 `;
+const LanguageStyle = styled.a`
+  width: 16px;
+  height: 11px;
+  background-image: url(${props => props.theme.images[props.language]});
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
+
 
 class Document extends Component {
   componentDidMount() {
+    setIntl(this.props.intl);
     this.props.getUserContext();
   }
 
   render() {
-    console.log(this.props);
     const { userInfo } = this.props.data;
     return (
       <Layout>
@@ -107,13 +117,7 @@ class Document extends Component {
               <InfoStyle>
                 <UserStyle>
                   <IconStyle type="user" />
-                  <a
-                    role="button"
-                    tabIndex="0"
-                    onClick={changeLanguage}
-                  >
-                    Cambiar
-                  </a>
+                  <LanguageStyle language={this.props.noActiveLanguage} onClick={changeLanguage} />
                 </UserStyle>
                 <div>
                   <WelcomeStyle>
@@ -159,4 +163,4 @@ const mapDispatchToProps = dispatch => ({
   getUserContext: () => dispatch(getUserContext()),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Document));
+export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(Document)));

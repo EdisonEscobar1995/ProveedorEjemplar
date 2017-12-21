@@ -8,11 +8,13 @@ import Field from '../Supplier/Field';
 import Upload from '../shared/Upload';
 import TableForm from '../shared/TableForm';
 import { baseUrl } from '../../utils/api';
+import { getIntl } from '../../utils/translate';
 
 const { Item } = Form;
 const { Option } = Select;
 const { TextArea } = Input;
 const { Group } = Radio;
+const message = getIntl().formatMessage({ id: 'Validation.requiredField' });
 
 const ParagraphStyle = styled.p`
   margin-bottom: ${props => props.theme.spaces.main};
@@ -187,7 +189,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               <ItemStyle>
                                 {getFieldDecorator(key, {
                                   rules: [
-                                    { required, message: 'Por favor diligencia el campo' },
+                                    { required, message },
                                     ...rules,
                                   ],
                                   initialValue: value,
