@@ -1,7 +1,12 @@
 import './initLanguage';
 import './EN';
 import './ES';
-import { getLanguage } from './functions';
+import { getLanguage, getNoActiveLanguage } from './functions';
 
-const language = getLanguage();
-export default language;
+const activeLanguage = getLanguage();
+const noActiveLanguage = getNoActiveLanguage(activeLanguage);
+
+export {
+  activeLanguage,
+  noActiveLanguage,
+};

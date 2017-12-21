@@ -91,6 +91,14 @@ const UserStyle = styled.div`
   justify-content: center;
   margin-right: 15px;
 `;
+const LanguageStyle = styled.a`
+  width: 16px;
+  height: 11px;
+  background-image: url(${props => props.theme.images[props.language]});
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
+
 
 class Document extends Component {
   componentDidMount() {
@@ -109,13 +117,7 @@ class Document extends Component {
               <InfoStyle>
                 <UserStyle>
                   <IconStyle type="user" />
-                  <a
-                    role="button"
-                    tabIndex="0"
-                    onClick={changeLanguage}
-                  >
-                    Cambiar
-                  </a>
+                  <LanguageStyle language={this.props.noActiveLanguage} onClick={changeLanguage} />
                 </UserStyle>
                 <div>
                   <WelcomeStyle>

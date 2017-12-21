@@ -18,6 +18,8 @@ const theme = {
     logo: 'assets/images/LogoApp.png',
     surveyIcon: 'assets/images/SurveyIcon.png',
     footer: 'assets/images/footer.png',
+    en: 'assets/images/english-flag.png',
+    es: 'assets/images/spanish-flag.png',
   },
 };
 export default theme;
