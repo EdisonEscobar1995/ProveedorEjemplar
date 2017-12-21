@@ -2,13 +2,13 @@ import axios from 'axios';
 import { notification } from 'antd';
 import {
   GET_DATA_SUPPLIER_PROGRESS,
+  GET_DIMENSIONS_PROGRESS,
   GET_DATA_SUPPLIER_SUCCESS,
   GET_DATA_CATEGORIES_SUCCESS,
   GET_DATA_SUBCATEGORIES_SUCCESS,
   GET_DATA_DEPARTMENTS_SUCCESS,
   GET_DATA_DIMENSION_SURVEY_SUCCESS,
   GET_DATA_CITIES_SUCCESS,
-  GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
   SAVE_DATA_SUPPLIER_CALL_SUCCESS,
   SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
   SAVE_DATA_ANSWER_SUCCESS,
@@ -32,7 +32,7 @@ import {
 import {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
-  getDataQuestionsBySurverrApi,
+  getDataQuestionsBySurveyApi,
   saveDataSuppliertApi,
   saveDataCallBySupplierApi,
   finishSurveyApi,
@@ -45,14 +45,19 @@ import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
-import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
+import reloadKeys from '../../utils/reducer';
 
 
 const getDataSupplierProgress = () => (
   {
     type: GET_DATA_SUPPLIER_PROGRESS,
+  }
+);
+const getDataDimensionsProgress = () => (
+  {
+    type: GET_DIMENSIONS_PROGRESS,
   }
 );
 
@@ -107,6 +112,7 @@ const getDataSupplierSuccess = (data) => {
   const cities = sortByField(data.cities, 'name');
 
   const { principalCustomer } = supplier;
+  supplier.principalCustomer = reloadKeys(principalCustomer);
   let { readOnly } = rules;
   readOnly = readOnly || isReadOnly(call);
   return {
@@ -248,34 +254,6 @@ const showQuestions = (questions) => {
   return visibleQuestions;
 };
 
-const getDataQuestionsByDimensionSuccess = (idDimension, dimensions, data) => {
-  const { questions } = data;
-  const showedQuestions = showQuestions(questions);
-  const { criterion } = data;
-  let result = [];
-  if (criterion.length > 0) {
-    result = criterion.map(criteria => (
-      {
-        ...criteria,
-        questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
-      }
-    ));
-  }
-  const noCriterianQuestion = questions.filter(question => question.idCriterion === '');
-  if (noCriterianQuestion.length > 0) {
-    result.unshift({
-      name: '',
-      id: 1,
-      questions: showedQuestions.filter(question => question.idCriterion === ''),
-    });
-  }
-  dimensions.find(item => item.id === idDimension).criterions = result;
-  return {
-    type: GET_DATA_QUESTIONS_DIMENSION_SUCCESS,
-    dimensions,
-  };
-};
-
 function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
@@ -305,36 +283,34 @@ function getFailedRequest(error) {
   };
 }
 
-function addDataCustomer(newItem, index) {
+function addDataCustomer(data) {
   return {
     type: ADD_CUSTOMER,
-    newItem,
-    index,
+    data,
   };
 }
-function editDataCustomer(index) {
+function editDataCustomer(data) {
   return {
     type: EDIT_CUSTOMER,
-    index,
+    data,
   };
 }
-function saveDataCustomer(data, index) {
+function saveDataCustomer(data) {
   return {
     type: SAVE_CUSTOMER,
     data,
-    index,
   };
 }
-function deleteDataCustomer(index) {
+function deleteDataCustomer(data) {
   return {
     type: DELETE_CUSTOMER,
-    index,
+    data,
   };
 }
-function cancelDataCustomer(index) {
+function cancelDataCustomer(data) {
   return {
     type: CANCEL_CUSTOMER,
-    index,
+    data,
   };
 }
 function finishSurveySucess(data) {
@@ -463,39 +439,69 @@ const getDataCitiesByDepartment = clientData => (
       });
   }
 );
+
+const formatData = (data) => {
+  const { dimensions, criterions } = data;
+  const formatedDimensions = dimensions.map((dimension, index) => {
+    const actual = criterions[index];
+    const { questions, criterion } = actual;
+    const showedQuestions = showQuestions(questions);
+    let result = [];
+    if (criterion.length > 0) {
+      result = criterion.map(criteria => (
+        {
+          ...criteria,
+          questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
+        }
+      ));
+    }
+    const noCriterianQuestion = questions.filter(question => question.idCriterion === '');
+    if (noCriterianQuestion.length > 0) {
+      result.unshift({
+        name: '',
+        id: 1,
+        questions: showedQuestions.filter(question => question.idCriterion === ''),
+      });
+    }
+    dimension.criterions = result;
+    return dimension;
+  });
+  return formatedDimensions;
+};
+
 const getDimensionsBySurvey = idSurvey => (
   (dispatch, getActualState) => {
     const actualDimensions = getActualState().supplier.dimensions;
     if (actualDimensions.length === 0) {
-      requestApi(dispatch, getDataSupplierProgress, getDimensionsBySurveyApi, idSurvey)
-        .then((respone) => {
-          const dimensions = respone.data.data;
+      requestApi(dispatch, getDataDimensionsProgress, getDimensionsBySurveyApi, idSurvey)
+        .then(response => response.data.data)
+        .then((data) => {
+          const promises = [];
+          data.forEach((dimesion) => {
+            const dataSend = { idSurvey, idDimension: dimesion.id };
+            promises.push(getDataQuestionsBySurveyApi({ ...dataSend }));
+          });
+          return requestApiNotLoading(dispatch, axios.all, promises)
+            .then((criterionsResponse) => {
+              const criterions = [];
+              criterionsResponse.forEach((element) => {
+                criterions.push(element.data.data);
+              });
+              return criterions;
+            })
+            .then(criterions => ({ dimensions: data, criterions }));
+        }).then((data) => {
+          let dimensions = data.dimensions;
+          dimensions = formatData(data);
           dispatch(getDataDimensionsBySuplySuccess(dimensions));
-        }).catch((err) => {
+        })
+        .catch((err) => {
           dispatch(getFailedRequest(err));
         });
     }
   }
 );
-const getQuestionsByDimension = (idSurvey, idDimension) => (
-  (dispatch, getActualState) => {
-    requestApi(dispatch,
-      getDataSupplierProgress,
-      getDataQuestionsBySurverrApi,
-      { idSurvey, idDimension },
-    )
-      .then((respone) => {
-        const questions = respone.data.data;
-        dispatch(getDataQuestionsByDimensionSuccess(
-          idDimension,
-          getActualState().supplier.dimensions,
-          questions,
-        ));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
-  }
-);
+
 const saveDataCallBySupplier = clientData => (
   (dispatch) => {
     requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
@@ -598,36 +604,58 @@ const deleteAttachment = (idAttachment, field) => (
 
 const saveCustomer = (clientData, index) => (
   (dispatch, getActualState) => {
-    const mapData = {
-      idSupplier: getActualState().supplier.supplier.id,
-    };
-    const mapedData = Object.assign(clientData, mapData);
-    requestApi(dispatch, getDataSupplierProgress, saveCustomerApi, mapedData)
-      .then((respose) => {
-        const { data } = respose.data;
-        dispatch(saveDataCustomer(data, index));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
+    const supplier = { ...getActualState().supplier.supplier };
+    const stateData = supplier.principalCustomer;
+    let newData = [...stateData];
+    newData[index] = clientData;
+    newData = reloadKeys(newData);
+    supplier.principalCustomer = newData;
+    dispatch(addDataCustomer(supplier));
+  }
+);
+const addCustomer = (clientData, index) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    let newData = [...principalCustomer];
+    newData.splice(index, 0, clientData);
+    newData = reloadKeys(newData);
+    supplier.principalCustomer = newData;
+    dispatch(saveDataCustomer(supplier));
+  }
+);
+const editCustomer = index => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    const newData = [...principalCustomer];
+    newData[index].editable = true;
+    supplier.principalCustomer = newData;
+    dispatch(editDataCustomer(supplier));
+  }
+);
+const cancelCustomer = index => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    const newData = [...principalCustomer];
+    newData[index].editable = false;
+    supplier.principalCustomer = newData;
+    dispatch(cancelDataCustomer(supplier));
   }
 );
 
-
-const deleteCustomer = (clientData, index) => {
-  const { id } = clientData;
-  return (dispatch) => {
-    if (id) {
-      requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, id)
-        .then(() => {
-          dispatch(deleteDataCustomer(index));
-        }).catch((err) => {
-          dispatch(getFailedRequest(err));
-        });
-    } else {
-      dispatch(deleteDataCustomer(index));
-    }
-  };
-};
+const deleteCustomer = (clientData, index) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    let newData = [...principalCustomer];
+    newData.splice(index, 1);
+    newData = reloadKeys(newData);
+    supplier.principalCustomer = newData;
+    dispatch(deleteDataCustomer(supplier));
+  }
+);
 const finishSurvey = () => (
   (dispatch, getActualState) => {
     const { call } = { ...getActualState().supplier };
@@ -675,7 +703,6 @@ export {
   getDataDepartmentsByCountry,
   getDataCitiesByDepartment,
   getDimensionsBySurvey,
-  getQuestionsByDimension,
   saveDataCallBySupplier,
   saveDataCallSupplier,
   saveAnswer,
@@ -685,9 +712,9 @@ export {
   updateChangeIdCompanySize,
   saveCustomer as saveDataCustomer,
   deleteCustomer as deleteDataCustomer,
-  addDataCustomer,
-  editDataCustomer,
-  cancelDataCustomer,
+  addCustomer as addDataCustomer,
+  editCustomer as editDataCustomer,
+  cancelCustomer as cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
   setNumberOfDirectEmployees,

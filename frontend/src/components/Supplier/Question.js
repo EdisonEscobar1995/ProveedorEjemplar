@@ -35,10 +35,6 @@ const RadioStyle = styled(Radio) `
 `;
 
 class Question extends Component {
-  componentDidMount() {
-    const { idDimension, idSurvey, getQuestionsByDimension } = this.props;
-    getQuestionsByDimension(idSurvey, idDimension);
-  }
   onChange = (value, record, fieldName, action) => {
     if (value) {
       const { id, answer, idCriterion } = record;

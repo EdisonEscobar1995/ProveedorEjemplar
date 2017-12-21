@@ -58,8 +58,7 @@ function importData() {
 				               {commonName: "Pregunta", technicalName: "wording"},
 				               {commonName: "Requiere soporte", technicalName: "requireAttachment"},
 				               {commonName: "Tipo de respuesta", technicalName: "type"},
-				               {commonName: "Question", technicalName: "tr_wording"},
-				               {commonName: "Dependencia", technicalName: "dependOfOptionId"}];
+				               {commonName: "Question", technicalName: "tr_wording"}];
 				defaultFields = [{ key: "form", value: "frQuestion"}];
 				foreignKeys = [{technicalNames: ["idDimension", "idCriterion"], commonNames: ["Código dimensión", "Código criterio"], viewNames: ["ImportDimensionsByCode", "ImportCriterionsByCode"]}];
 				viewName = "vwQuestions";
@@ -83,6 +82,14 @@ function importData() {
 					fields: ["wording"],
 					entity: "Option"
 				}  
+				break;
+			case "DEQ":
+				columnKeys = ["code"];
+				columnNameKeys = ["Pregunta"];
+				columnNames = [{commonName: "Pregunta", technicalName: "code"},
+				               {commonName: "Dependencia", technicalName: "dependency"}];
+				defaultFields = [{ key: "form", value: "frDependingQuestion"}];
+				viewName = "";
 				break;
 			case "SEC":
 				columnKeys = ["name", "tr_name"];
@@ -490,11 +497,15 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		
 			var vwSurveys:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSurveysBySupplyAndCompanySize");
 			var vwQuestions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestions");
-			var vwOptions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwOptions");
+			var vwQuestionsByCode:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportQuestionsByCode");
+			var vwOptions:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportOptionsByCode");
 			var vwSuppliers:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSuppliersBySapCode");
 			var vwAccess:Notesview = sessionAsSigner.getCurrentDatabase().getView("ImportAccessByApiAndAction");
 			var vwRols:Notesview = sessionAsSigner.getCurrentDatabase().getView("ImportRolByShortName");
 			vwSuppliers.setAutoUpdate(true);
+			
+			var ndQuestion:NotesDocument;
+			
 			var fullName:NotesName;	
 			var aDate;
 			var abort;
@@ -554,6 +565,8 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 						}
 					}else if(nd.getItemValueString("form") == "frCity"){
 						nd.removeItem("idCountry");
+					}else if(nd.getItemValueString("form") == "frDependingQuestion"){
+						
 					}else if(nd.getItemValueString("form") == "frCategory"){
 						if (nd.getItemValueString("materialEmpaque") == "Si"){
 							ndCfg.replaceItemValue("packagingMaterialCategoryId", nd.getItemValueString("id"));
@@ -573,19 +586,6 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 						nd.replaceItemValue("idFooter", "3FDB5AF6728650DF052581F70041C080");
 					}else if(nd.getItemValueString("form") == "frQuestion"){
 						nd.replaceItemValue("required", "1");
-						if (nd.getItemValueString("dependOfOptionId") !== ""){
-							ndForeign = vwOptions.getDocumentByKey(nd.getItemValueString("dependOfOptionId"));
-							if (ndForeign){
-								nd.replaceItemValue("dependOfOptionId", ndForeign.getItemValueString("id"));
-								nd.replaceItemValue("dependOfQuestion", ndForeign.getItemValueString("idQuestion"));
-								ndForeign.recycle();
-					 		}else{
-			 					error = "Violación de clave foránea";
-			 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. Revisar la dependencia"})
-			 				}
-						}else{
-							nd.removeItem("dependOfOptionId");
-						}
 					}else if(nd.getItemValueString("form") == "frCall"){
 						nd.replaceItemValue("year", parseInt(nd.getItemValueString("year"), 10))
 						aDate = nd.getItemValueString("dateToFinishCall").split("/");
@@ -646,6 +646,20 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 		 				ndForeign.save(true, false);
 		 				modifiedIds.push(ndForeign.getItemValueString("id"));
 		 				ndForeign.recycle();
+					}else if(nd.getItemValueString("form") == "frDependingQuestion"){
+						ndQuestion= vwQuestionsByCode.getDocumentByKey(nd.getItemValueString("code"), true);
+						ndForeign = vwOptions.getDocumentByKey(nd.getItemValueString("dependency"));
+						if (ndQuestion && ndForeign){
+							ndQuestion.replaceItemValue("dependOfOptionId", ndForeign.getItemValueString("id"));
+							ndQuestion.replaceItemValue("dependOfQuestion", ndForeign.getItemValueString("idQuestion"));
+							ndQuestion.save(true, false);
+							modifiedIds.push(ndQuestion.getItemValueString("id"));
+				 			ndQuestion.recycle();
+							ndForeign.recycle();
+				 		}else{
+		 					error = "Violación de clave foránea";
+		 					response.rows.push({pos: i + 1, error: "Clave foránea inexistente. Revisar los códigos"})
+		 				}
 			 		}else{
 			 			translate(nd, translationData);
 			 			nd.save(true, false);						
@@ -673,7 +687,12 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 				for(i in modifiedIds){					
  					ndForeign = vwQuestions.getDocumentByKey(modifiedIds[i], true);
 					if(ndForeign){
-						ndForeign.removeItem("idSurvey");
+						if (defaultFields[0].value === "frQuestionBySurvey"){
+							ndForeign.removeItem("idSurvey");
+						}else if(defaultFields[0].value === "frDependingQuestion"){
+							ndForeign.removeItem("dependOfOptionId");
+							ndForeign.removeItem("dependOfQuestion");
+						}
 						ndForeign.save(true, false);
 						ndForeign.recycle();
 					}

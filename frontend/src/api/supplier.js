@@ -16,7 +16,7 @@ function saveDataCallBySupplierApi(data) {
   return instance.post('SupplierByCall?action=save', data);
 }
 
-function getDataQuestionsBySurverrApi(data) {
+function getDataQuestionsBySurveyApi(data) {
   const { idSurvey, idDimension } = data;
   return instance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=${idSurvey}&idDimension=${idDimension}`);
 }
@@ -36,7 +36,7 @@ function unlockSupplierApi(supplierByCall) {
 export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
-  getDataQuestionsBySurverrApi,
+  getDataQuestionsBySurveyApi,
   saveDataCallBySupplierApi,
   saveDataSuppliertApi,
   getModifiedSuppliersApi,
