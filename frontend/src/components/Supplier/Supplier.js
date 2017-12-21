@@ -76,7 +76,8 @@ class Supplier extends Component {
       current: 0,
     };
   }
-  getSteps = (dimensions) => {
+  getSteps = () => {
+    const dimensions = this.props.dimensions;
     const steps = [
       {
         content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
@@ -90,6 +91,11 @@ class Supplier extends Component {
           stepContent: <ContentStyle><Title text="Survey.comercialInfo" translate /></ContentStyle>,
         },
       );
+      if (dimensions.length === 0 && !this.props.loading && !this.props.loadingDimensions) {
+        const { call, getDimensionsBySurvey } = this.props;
+        const { idSurvey } = call;
+        getDimensionsBySurvey(idSurvey);
+      }
     }
     const mapDimensions = dimensions.map((dimension) => {
       const { call, getQuestionsByDimension, saveAnswer, system, readOnly } = this.props;
@@ -262,9 +268,9 @@ class Supplier extends Component {
   }
 
   render() {
-    const { loading, dimensions } = this.props;
+    const { loading } = this.props;
     const { current } = this.state;
-    const steps = this.getSteps(dimensions);
+    const steps = this.getSteps();
     return (
       <Spin spinning={loading}>
         <SurveyText />

@@ -1,5 +1,6 @@
 import {
   GET_DATA_SUPPLIER_PROGRESS,
+  GET_DIMENSIONS_PROGRESS,
   GET_DATA_SUPPLIER_SUCCESS,
   GET_DATA_CATEGORIES_SUCCESS,
   GET_DATA_SUBCATEGORIES_SUCCESS,
@@ -28,8 +29,6 @@ import {
   SET_EXPORT,
 } from './const';
 
-import reloadKeys from '../../utils/reducer';
-
 
 const initialState = {
   supplier: {},
@@ -47,10 +46,10 @@ const initialState = {
   departments: [],
   cities: [],
   dimensions: [],
-  principalCustomer: [],
   sectors: [],
   system: {},
   loading: false,
+  loadingDimensions: false,
 };
 
 function supplierApp(state = initialState, action) {
@@ -60,9 +59,13 @@ function supplierApp(state = initialState, action) {
         ...state,
         loading: true,
       };
+    case GET_DIMENSIONS_PROGRESS:
+      return {
+        ...state,
+        loadingDimensions: true,
+      };
     case GET_DATA_SUPPLIER_SUCCESS: {
       const { participateInCall } = action.call;
-      const principalCustomer = reloadKeys(action.principalCustomer);
       return {
         ...state,
         supplier: action.supplier,
@@ -79,7 +82,6 @@ function supplierApp(state = initialState, action) {
         departments: action.departments,
         cities: action.cities,
         sectors: action.sectors,
-        principalCustomer,
         system: action.system,
         loading: false,
       };
@@ -169,57 +171,16 @@ function supplierApp(state = initialState, action) {
         supplier: action.supplier,
         loading: false,
       };
-    case ADD_CUSTOMER: {
-      const { principalCustomer } = state;
-      let newData = [...principalCustomer];
-      newData.splice(action.index, 0, action.newItem);
-      newData = reloadKeys(newData);
+    case ADD_CUSTOMER:
+    case DELETE_CUSTOMER:
+    case SAVE_CUSTOMER:
+    case EDIT_CUSTOMER:
+    case CANCEL_CUSTOMER:
       return {
         ...state,
-        principalCustomer: newData,
-      };
-    }
-    case SAVE_CUSTOMER: {
-      const { data, index } = action;
-      const stateData = state.principalCustomer;
-      let newData = [...stateData];
-      newData[index] = data;
-      newData = reloadKeys(newData);
-      return {
-        ...state,
-        principalCustomer: newData,
+        supplier: action.data,
         loading: false,
       };
-    }
-    case EDIT_CUSTOMER: {
-      const { principalCustomer } = state;
-      const newData = [...principalCustomer];
-      newData[action.index].editable = true;
-      return {
-        ...state,
-        principalCustomer: newData,
-      };
-    }
-    case DELETE_CUSTOMER: {
-      const { principalCustomer } = state;
-      let newData = [...principalCustomer];
-      newData.splice(action.index, 1);
-      newData = reloadKeys(newData);
-      return {
-        ...state,
-        principalCustomer: newData,
-        loading: false,
-      };
-    }
-    case CANCEL_CUSTOMER: {
-      const { principalCustomer } = state;
-      const newData = [...principalCustomer];
-      newData[action.index].editable = false;
-      return {
-        ...state,
-        principalCustomer: newData,
-      };
-    }
     case RELOAD_DIMENSIONS:
       return {
         ...state,

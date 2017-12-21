@@ -2,6 +2,7 @@ import axios from 'axios';
 import { notification } from 'antd';
 import {
   GET_DATA_SUPPLIER_PROGRESS,
+  GET_DIMENSIONS_PROGRESS,
   GET_DATA_SUPPLIER_SUCCESS,
   GET_DATA_CATEGORIES_SUCCESS,
   GET_DATA_SUBCATEGORIES_SUCCESS,
@@ -45,14 +46,19 @@ import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
-import { saveCustomerApi, deleteCustomerApi } from '../../api/customer';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
+import reloadKeys from '../../utils/reducer';
 
 
 const getDataSupplierProgress = () => (
   {
     type: GET_DATA_SUPPLIER_PROGRESS,
+  }
+);
+const getDataDimensionsProgress = () => (
+  {
+    type: GET_DIMENSIONS_PROGRESS,
   }
 );
 
@@ -107,6 +113,7 @@ const getDataSupplierSuccess = (data) => {
   const cities = sortByField(data.cities, 'name');
 
   const { principalCustomer } = supplier;
+  supplier.principalCustomer = reloadKeys(principalCustomer);
   let { readOnly } = rules;
   readOnly = readOnly || isReadOnly(call);
   return {
@@ -305,36 +312,34 @@ function getFailedRequest(error) {
   };
 }
 
-function addDataCustomer(newItem, index) {
+function addDataCustomer(data) {
   return {
     type: ADD_CUSTOMER,
-    newItem,
-    index,
+    data,
   };
 }
-function editDataCustomer(index) {
+function editDataCustomer(data) {
   return {
     type: EDIT_CUSTOMER,
-    index,
+    data,
   };
 }
-function saveDataCustomer(data, index) {
+function saveDataCustomer(data) {
   return {
     type: SAVE_CUSTOMER,
     data,
-    index,
   };
 }
-function deleteDataCustomer(index) {
+function deleteDataCustomer(data) {
   return {
     type: DELETE_CUSTOMER,
-    index,
+    data,
   };
 }
-function cancelDataCustomer(index) {
+function cancelDataCustomer(data) {
   return {
     type: CANCEL_CUSTOMER,
-    index,
+    data,
   };
 }
 function finishSurveySucess(data) {
@@ -467,7 +472,7 @@ const getDimensionsBySurvey = idSurvey => (
   (dispatch, getActualState) => {
     const actualDimensions = getActualState().supplier.dimensions;
     if (actualDimensions.length === 0) {
-      requestApi(dispatch, getDataSupplierProgress, getDimensionsBySurveyApi, idSurvey)
+      requestApi(dispatch, getDataDimensionsProgress, getDimensionsBySurveyApi, idSurvey)
         .then((respone) => {
           const dimensions = respone.data.data;
           dispatch(getDataDimensionsBySuplySuccess(dimensions));
@@ -598,36 +603,58 @@ const deleteAttachment = (idAttachment, field) => (
 
 const saveCustomer = (clientData, index) => (
   (dispatch, getActualState) => {
-    const mapData = {
-      idSupplier: getActualState().supplier.supplier.id,
-    };
-    const mapedData = Object.assign(clientData, mapData);
-    requestApi(dispatch, getDataSupplierProgress, saveCustomerApi, mapedData)
-      .then((respose) => {
-        const { data } = respose.data;
-        dispatch(saveDataCustomer(data, index));
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
+    const supplier = { ...getActualState().supplier.supplier };
+    const stateData = supplier.principalCustomer;
+    let newData = [...stateData];
+    newData[index] = clientData;
+    newData = reloadKeys(newData);
+    supplier.principalCustomer = newData;
+    dispatch(addDataCustomer(supplier));
+  }
+);
+const addCustomer = (clientData, index) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    let newData = [...principalCustomer];
+    newData.splice(index, 0, clientData);
+    newData = reloadKeys(newData);
+    supplier.principalCustomer = newData;
+    dispatch(saveDataCustomer(supplier));
+  }
+);
+const editCustomer = index => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    const newData = [...principalCustomer];
+    newData[index].editable = true;
+    supplier.principalCustomer = newData;
+    dispatch(editDataCustomer(supplier));
+  }
+);
+const cancelCustomer = index => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    const newData = [...principalCustomer];
+    newData[index].editable = false;
+    supplier.principalCustomer = newData;
+    dispatch(cancelDataCustomer(supplier));
   }
 );
 
-
-const deleteCustomer = (clientData, index) => {
-  const { id } = clientData;
-  return (dispatch) => {
-    if (id) {
-      requestApi(dispatch, getDataSupplierProgress, deleteCustomerApi, id)
-        .then(() => {
-          dispatch(deleteDataCustomer(index));
-        }).catch((err) => {
-          dispatch(getFailedRequest(err));
-        });
-    } else {
-      dispatch(deleteDataCustomer(index));
-    }
-  };
-};
+const deleteCustomer = (clientData, index) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const principalCustomer = supplier.principalCustomer;
+    let newData = [...principalCustomer];
+    newData.splice(index, 1);
+    newData = reloadKeys(newData);
+    supplier.principalCustomer = newData;
+    dispatch(deleteDataCustomer(supplier));
+  }
+);
 const finishSurvey = () => (
   (dispatch, getActualState) => {
     const { call } = { ...getActualState().supplier };
@@ -685,9 +712,9 @@ export {
   updateChangeIdCompanySize,
   saveCustomer as saveDataCustomer,
   deleteCustomer as deleteDataCustomer,
-  addDataCustomer,
-  editDataCustomer,
-  cancelDataCustomer,
+  addCustomer as addDataCustomer,
+  editCustomer as editDataCustomer,
+  cancelCustomer as cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
   setNumberOfDirectEmployees,

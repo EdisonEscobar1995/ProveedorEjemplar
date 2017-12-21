@@ -16,11 +16,6 @@ class Comercial extends Component {
       };
       message(config);
     }
-    const { call, participateInCall, getDimensionsBySurvey } = this.props;
-    const { idSurvey } = call;
-    if (participateInCall === 'true') {
-      getDimensionsBySurvey(idSurvey);
-    }
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -38,7 +33,7 @@ class Comercial extends Component {
   }
   render() {
     const {
-      principalCustomer,
+      supplier,
       system,
       addData,
       saveData,
@@ -48,6 +43,7 @@ class Comercial extends Component {
       readOnly,
       changeIdCompanySize,
     } = this.props;
+    const { principalCustomer } = supplier;
     const { getFieldDecorator } = this.props.form;
     const fields = comercialInfo(this.props);
     const colummns = mainCustomers;
