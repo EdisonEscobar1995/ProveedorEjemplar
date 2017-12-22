@@ -21,52 +21,74 @@ const UploadStyle = styled(UploadAnt)`
     white-space: normal;
   }
 `;
+const mapValue = (list, disabled) => {
+  let value = [];
+  if (list) {
+    value = list.map(file => (
+      {
+        uid: file.id,
+        url: file.url,
+        name: file.name,
+        disabled,
+      }
+    ));
+  }
+  return value;
+};
 
 class Upload extends Component {
+  state = {
+    listValue: mapValue(this.props.list, this.props.disabled),
+  }
+  onRemove = (file) => {
+    const onRemove = this.props.onRemove;
+    if (onRemove && !this.props.disabled) {
+      onRemove(file.uid, this.props.datakey);
+    }
+  }
   onChange = (info) => {
-    const { file } = info;
-    const messageConfig = { text: '', type: 'error' };
-    if (file.status === 'done') {
-      const { status, data } = file.response;
-      if (status) {
-        messageConfig.text = 'Validation.successUpload';
-        messageConfig.type = 'success';
-        messageConfig.aditionalInfo = file.name;
-        message(messageConfig);
+    if (info.file.status) {
+      let fileList = info.fileList;
+      const messageConfig = { text: '', type: 'error' };
+      if (info.file.status === 'done') {
+        fileList = fileList.map((file) => {
+          if (file.response) {
+            const { status, data } = file.response;
+            if (status) {
+              // messageConfig.text = 'Validation.successUpload';
+              // messageConfig.type = 'success';
+              // messageConfig.aditionalInfo = file.name;
+              // message(messageConfig);
+              file.url = data.url;
+              file.uid = data.id;
+              file.name = file.name;
+            }
+          }
+          return file;
+        });
+        fileList = fileList.filter((file) => {
+          if (file.response) {
+            const { status } = file.response;
+            return status;
+          }
+          return true;
+        });
+        const { listValue } = this.state;
         const onChange = this.props.onChange;
         if (onChange) {
-          onChange(data, this.props.datakey);
+          onChange(listValue.map(item => ({ id: item.uid })), this.props.datakey);
         }
-      } else {
+      } else if (info.file.status === 'error') {
         messageConfig.text = 'Validation.uploadFail';
         message(messageConfig);
       }
-    } else if (file.status === 'error') {
-      messageConfig.text = 'Validation.uploadFail';
-      message(messageConfig);
-    } else if (file.status === 'removed') {
-      const onRemove = this.props.onRemove;
-      if (onRemove && !this.props.disabled) {
-        const response = file.response;
-        let id;
-        if (response) {
-          id = response.data.id;
-        } else {
-          id = file.uid;
-        }
-        const isUploaded = id.split(',').length > 0;
-        if (!isUploaded) {
-          onRemove(id, this.props.datakey);
-        }
-      }
-    } else {
-      this.props.onChange();
+      this.setState({ listValue: fileList });
     }
   }
   beforeUpload = (file) => {
     const max = this.props.max;
     if (max) {
-      if (this.props.list.length >= max) {
+      if (this.state.listValue.length >= max) {
         message({ text: 'Validation.maxFilesNumber', aditionalInfo: max, type: 'error' });
         return false;
       }
@@ -93,7 +115,6 @@ class Upload extends Component {
   render() {
     const {
       children,
-      list,
       disabled,
       multiple,
       baseUrl,
@@ -103,20 +124,8 @@ class Upload extends Component {
     if (!uploadExtensions) {
       uploadExtensions = [];
     }
-    let value = [];
-    if (list) {
-      value = list.map(file => (
-        {
-          uid: file.id,
-          url: file.url,
-          name: file.name,
-          disabled,
-        }
-      ));
-    }
     return (
       <UploadStyle
-        defaultFileList={value}
         action={baseUrl}
         disabled={disabled}
         accept={uploadExtensions.join(',')}
@@ -124,6 +133,8 @@ class Upload extends Component {
         showUploadList={{ showRemoveIcon: !disabled }}
         beforeUpload={this.beforeUpload}
         onChange={this.onChange}
+        onRemove={this.onRemove}
+        fileList={this.state.listValue}
       >
         {
           !disabled && content

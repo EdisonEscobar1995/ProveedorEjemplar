@@ -43,7 +43,6 @@ import { getDataSubCategoryByCategoryApi } from '../../api/subcategory';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
-import { deleteAttachmentApi } from '../../api/attachment';
 import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
@@ -163,7 +162,7 @@ function updateAttachment(data, field) {
   return (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
     if (data) {
-      supplier[field].push(data);
+      supplier[field] = data;
     }
     const newData = {
       type: UPDATE_ATTACHMENT,
@@ -587,18 +586,21 @@ const saveDataCallSupplier = clientSupplier => (
 );
 const deleteAttachment = (idAttachment, field) => (
   (dispatch, getActualState) => {
-    requestApi(
-      dispatch,
-      getDataSupplierProgress,
-      deleteAttachmentApi,
-      idAttachment,
-    ).then(() => {
-      const supplier = { ...getActualState().supplier.supplier };
-      supplier[field] = supplier[field].filter(attach => attach.id !== idAttachment);
-      dispatch(deleteAttachmentSuccess(supplier));
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
-    });
+    const supplier = { ...getActualState().supplier.supplier };
+    supplier[field] = supplier[field].filter(attach => attach.id !== idAttachment);
+    dispatch(deleteAttachmentSuccess(supplier));
+    // requestApi(
+    //   dispatch,
+    //   getDataSupplierProgress,
+    //   deleteAttachmentApi,
+    //   idAttachment,
+    // ).then(() => {
+    //   const supplier = { ...getActualState().supplier.supplier };
+    //   supplier[field] = supplier[field].filter(attach => attach.id !== idAttachment);
+    //   dispatch(deleteAttachmentSuccess(supplier));
+    // }).catch((err) => {
+    //   dispatch(getFailedRequest(err));
+    // });
   }
 );
 

@@ -53,10 +53,8 @@ class Question extends Component {
       if (fieldName === 'attachment') {
         if (action === 'delete') {
           sendAnswer[fieldName] = sendAnswer[fieldName].filter(attach => attach.id !== value);
-        } else if (sendAnswer[fieldName]) {
-          sendAnswer[fieldName].push(value);
         } else {
-          sendAnswer[fieldName] = [value];
+          sendAnswer[fieldName] = value;
         }
       } else {
         sendAnswer[fieldName] = value;
