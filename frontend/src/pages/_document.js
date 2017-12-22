@@ -9,7 +9,7 @@ import FormattedMessage from '../components/shared/FormattedMessage';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
 import { loginUrl } from '../utils/api';
-import { changeLanguage } from '../translation/functions';
+// import { changeLanguage } from '../translation/functions';
 import { setIntl } from '../utils/translate';
 
 const { Header, Footer, Content } = Layout;
@@ -91,13 +91,13 @@ const UserStyle = styled.div`
   justify-content: center;
   margin-right: 15px;
 `;
-const LanguageStyle = styled.a`
-  width: 16px;
-  height: 11px;
-  background-image: url(${props => props.theme.images[props.language]});
-  background-repeat: no-repeat;
-  background-size: contain;
-`;
+// const LanguageStyle = styled.a`
+//   width: 16px;
+//   height: 11px;
+//   background-image: url(${props => props.theme.images[props.language]});
+//   background-repeat: no-repeat;
+//   background-size: contain;
+// `;
 
 
 class Document extends Component {
@@ -117,7 +117,9 @@ class Document extends Component {
               <InfoStyle>
                 <UserStyle>
                   <IconStyle type="user" />
-                  <LanguageStyle language={this.props.noActiveLanguage} onClick={changeLanguage} />
+                  {/* 
+                  <LanguageStyle language={this.props.noActiveLanguage} onClick={changeLanguage} /> 
+                  */}
                 </UserStyle>
                 <div>
                   <WelcomeStyle>
