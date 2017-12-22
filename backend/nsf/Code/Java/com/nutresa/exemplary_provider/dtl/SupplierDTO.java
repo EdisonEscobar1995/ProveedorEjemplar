@@ -245,7 +245,7 @@ public class SupplierDTO {
         return valueAssets;
     }
 
-    public void setValueAssets(float valueAssets) {
+    public void setValueAssets(double valueAssets) {
         this.valueAssets = valueAssets;
     }
 
@@ -277,7 +277,7 @@ public class SupplierDTO {
         return annualSalesValue;
     }
 
-    public void setAnnualSalesValue(float annualSalesValue) {
+    public void setAnnualSalesValue(double annualSalesValue) {
         this.annualSalesValue = annualSalesValue;
     }
 
