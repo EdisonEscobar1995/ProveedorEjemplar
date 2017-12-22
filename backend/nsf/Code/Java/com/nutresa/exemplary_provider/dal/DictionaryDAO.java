@@ -8,7 +8,7 @@ public class DictionaryDAO extends GenericDAO<DictionaryDTO> {
     public DictionaryDAO() {
         super(DictionaryDTO.class);
         this.entityView = "vwDictionaries";
-        translatable = true;
+        loadTranslator();
     }
 
 }

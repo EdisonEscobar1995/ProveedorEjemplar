@@ -6,7 +6,7 @@ public class CompanyTypeDAO extends GenericDAO<CompanyTypeDTO> {
 
     public CompanyTypeDAO() {
         super(CompanyTypeDTO.class);
-        translatable = true;
+        loadTranslator();
     }
 
 }
