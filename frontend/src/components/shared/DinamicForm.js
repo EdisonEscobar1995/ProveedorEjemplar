@@ -92,7 +92,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                             min={0}
                             disabled={disabled}
                             formatter={numberValue => ` ${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                            parser={numberValue => numberValue.replace(/\$\s?|(.*)/g, '')}
+                            parser={numberValue => numberValue.replace(/\$\s?|(\.*)/g, '')}
                           />
                         );
                         break;
