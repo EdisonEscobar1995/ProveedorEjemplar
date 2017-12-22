@@ -21,7 +21,7 @@ function FormButtons({ buttons }) {
           <Col span={2} key={button.key}>
             {
               button.showConfirm ?
-                <Confirm title={button.messageConfirm} method={button.onClick}>
+                <Confirm preventTranlate title={button.messageConfirm} method={button.onClick}>
                   <ButtonStyle
                     disabled={button.disabled}
                     buttoncolor={button.buttoncolor}

@@ -507,7 +507,7 @@ function noParticipateInfo(fields) {
         {
           disabled,
           type: 'input',
-          label: 'Nombre del participante ',
+          label: 'Supplier.nameWhoSayDontParticipate',
           required: true,
           key: 'nameWhoSayDontParticipate',
           value: nameWhoSayDontParticipate,
@@ -520,7 +520,7 @@ function noParticipateInfo(fields) {
         {
           disabled,
           type: 'input',
-          label: 'Email del participante ',
+          label: 'Supplier.emailWhoSayDontParticipate',
           required: true,
           key: 'emailWhoSayDontParticipate',
           value: emailWhoSayDontParticipate,

@@ -100,7 +100,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         if (disabled) {
                           fieldContent = <TextStyle>{value}</TextStyle>;
                         } else {
-                          fieldContent = <TextArea disabled={disabled} />;
+                          fieldContent = <TextArea rows="4" disabled={disabled} />;
                         }
                         break;
                       case 'select': {

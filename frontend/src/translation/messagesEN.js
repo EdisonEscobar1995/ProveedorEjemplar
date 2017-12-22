@@ -64,6 +64,8 @@ const messages = {
   'Supplier.reasonForNotParticipation': 'Why do not you want to participate?',
   'Supplier.principalCustomer.name': 'Name',
   'Supplier.principalCustomer.percentageOfParticipationInSales': 'Sales participation by customer (%)',
+  'Supplier.nameWhoSayDontParticipate': 'Full name',
+  'Supplier.emailWhoSayDontParticipate': 'E-mail',
   'Supplier.surveySuccess': 'Assessment sent successfully',
   'Supplier.savedInfo': 'Information saved',
   'Button.save': 'Save',
