@@ -26,6 +26,7 @@ import {
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
   SET_EXPORT,
+  UPDATE_CUSTOMER,
 } from './const';
 
 
@@ -178,10 +179,10 @@ function supplierApp(state = initialState, action) {
     case SAVE_CUSTOMER:
     case EDIT_CUSTOMER:
     case CANCEL_CUSTOMER:
+    case UPDATE_CUSTOMER:
       return {
         ...state,
         supplier: action.data,
-        loading: false,
       };
     case RELOAD_DIMENSIONS:
       return {

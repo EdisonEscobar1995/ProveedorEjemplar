@@ -28,6 +28,7 @@ import {
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
   SET_EXPORT,
+  UPDATE_CUSTOMER,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -589,18 +590,6 @@ const deleteAttachment = (idAttachment, field) => (
     const supplier = { ...getActualState().supplier.supplier };
     supplier[field] = supplier[field].filter(attach => attach.id !== idAttachment);
     dispatch(deleteAttachmentSuccess(supplier));
-    // requestApi(
-    //   dispatch,
-    //   getDataSupplierProgress,
-    //   deleteAttachmentApi,
-    //   idAttachment,
-    // ).then(() => {
-    //   const supplier = { ...getActualState().supplier.supplier };
-    //   supplier[field] = supplier[field].filter(attach => attach.id !== idAttachment);
-    //   dispatch(deleteAttachmentSuccess(supplier));
-    // }).catch((err) => {
-    //   dispatch(getFailedRequest(err));
-    // });
   }
 );
 
@@ -671,6 +660,21 @@ const finishSurvey = () => (
       });
   }
 );
+const updateField = (value, record, fielName) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    let rowValue = supplier.principalCustomer[record.key];
+    rowValue = rowValue || {};
+    const assignObject = {};
+    assignObject[fielName] = value;
+    rowValue = Object.assign(rowValue, assignObject);
+    supplier.principalCustomer[record.key] = rowValue;
+    dispatch({
+      type: UPDATE_CUSTOMER,
+      data: supplier,
+    });
+  }
+);
 
 const setNumberOfDirectEmployees = value => (
   {
@@ -723,4 +727,5 @@ export {
   setNumberOfSubContratedEmployees,
   setSector,
   setExport,
+  updateField,
 };

@@ -42,6 +42,7 @@ class Comercial extends Component {
       cancelData,
       readOnly,
       changeIdCompanySize,
+      updateField,
     } = this.props;
     const { principalCustomer } = supplier;
     const { getFieldDecorator } = this.props.form;
@@ -88,6 +89,7 @@ class Comercial extends Component {
           cancelData={cancelData}
           disabled={readOnly}
           loading={false}
+          updateField={updateField}
         />
         <Form onSubmit={this.handleSubmit}>
           <DinamicForm
