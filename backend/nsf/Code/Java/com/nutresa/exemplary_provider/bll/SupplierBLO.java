@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,19 +24,29 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     @Override
     public SupplierDTO save(SupplierDTO dto) throws HandlerGenericException {
         SupplierDAO dao = new SupplierDAO();
-        SupplierDTO supplier = null;
+        SupplierDTO supplier = dao.get(dto.getId());
         dto.autoSetIdDocuments();
         dto.autoSetIdAttachedFinancialReport();
+
+        if (null != supplier.getPrincipalCustomer()) {
+            CustomerBLO customerBLO = new CustomerBLO();
+            for (CustomerDTO customer : supplier.getPrincipalCustomer()) {
+                Map<String, String> parameters = new HashMap<String, String>();
+                parameters.put("id", customer.getId());
+                customerBLO.delete(parameters);
+            }
+        }
 
         if (null != dto.getPrincipalCustomer() && !dto.getPrincipalCustomer().isEmpty()) {
             CustomerBLO customerBLO = new CustomerBLO();
             for (CustomerDTO customer : dto.getPrincipalCustomer()) {
-                customer.setIdSupplier(dto.getId());
-                customerBLO.save(customer);
+                if (null != customer.getName() && !customer.getName().trim().isEmpty()) {
+                    customer.setIdSupplier(dto.getId());
+                    customerBLO.save(customer);
+                }
             }
         }
 
-        supplier = dao.get(dto.getId());
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         supplierByCallBLO.participateInCall();
         if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
@@ -45,7 +56,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             notificationBLO.notifyChangeCompanySize(dto.getId());
         }
 
-        return supplier;
+        return dao.update(dto.getId(), dto);
     }
 
     public SupplierDTO getSupplierInSession() throws HandlerGenericException {
