@@ -12,7 +12,7 @@ const { Option } = Select;
 class General extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.props.save(values, 'send');
       }
@@ -20,7 +20,7 @@ class General extends Component {
   }
   validateContactInfo = () => {
     let response = true;
-    this.props.form.validateFields([
+    this.props.form.validateFieldsAndScroll([
       'fullNameContact',
       'jobPosition',
       'phoneOfContact',

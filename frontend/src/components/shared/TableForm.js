@@ -24,7 +24,7 @@ class GenericFormTable extends Component {
     const colummns = this.props.colummns;
     const validateFields = colummns.map(item => `${row}-${item.key}`);
     let returnValue = null;
-    this.props.form.validateFields(validateFields, (err) => {
+    this.props.form.validateFieldsAndScroll(validateFields, (err) => {
       if (!err) {
         const dataForm = this.props.form.getFieldsValue();
         const rowValue = {};

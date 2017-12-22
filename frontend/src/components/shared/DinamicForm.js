@@ -91,8 +91,8 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           <InputNumberStyle
                             min={0}
                             disabled={disabled}
-                            formatter={numberValue => ` ${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                            parser={numberValue => numberValue.replace(/\$\s?|(,*)/g, '')}
+                            formatter={numberValue => ` ${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                            parser={numberValue => numberValue.replace(/\$\s?|(.*)/g, '')}
                           />
                         );
                         break;

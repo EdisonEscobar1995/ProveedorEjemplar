@@ -44,6 +44,7 @@ public class TemplateMail {
         String template = "";
         try {
             template = getTemplateInFile();
+            message = message.replace("\r\n", "<br>").replace("\r", "<br>").replace("\n", "<br>");
             template = template.replace("[MESSAGE_HERE]", message);
             template = template.replace("[HEADER]", pathBanner);
 

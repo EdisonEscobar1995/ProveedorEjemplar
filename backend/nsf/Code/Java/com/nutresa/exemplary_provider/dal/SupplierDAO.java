@@ -35,12 +35,8 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
             View vwSystem = getDatabase().getView("vwSystems");
             Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
             Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("namesPathApplication"));
-            View vwNames = namesDatabase.getView("PeopleXcedula");
-            Document docNames = vwNames.getFirstDocumentByKey(supplier.getNit(), true);
-            if (null == docNames) {
-                vwNames = namesDatabase.getView("($Users)");
-                docNames = vwNames.getFirstDocumentByKey(supplier.getNit(), true);
-            }
+            View vwNames = namesDatabase.getView("($Users)");
+            Document docNames = vwNames.getFirstDocumentByKey(supplier.getFullName(), true);
 
             if (null != docNames) {
                 response.put("password", docNames.getItemValueString("Comment"));

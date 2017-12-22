@@ -15,7 +15,7 @@ const theme = {
     main: '15px',
   },
   images: {
-    logo: 'assets/images/LogoApp.png',
+    logo: 'assets/images/LogoHeader.png',
     surveyIcon: 'assets/images/SurveyIcon.png',
     footer: 'assets/images/footer.png',
     en: 'assets/images/english-flag.png',
