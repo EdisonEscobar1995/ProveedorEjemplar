@@ -36,6 +36,20 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 customerBLO.delete(parameters);
             }
         }
+        
+        if (null != supplier.getAttachedFinancialReport()) {
+            AttachmentBLO attachmentBLO = new AttachmentBLO();
+            for (AttachmentDTO attachment : supplier.getAttachedFinancialReport()) {
+                attachmentBLO.delete(attachment.getId());
+            }
+        }
+        
+        if (null != supplier.getDocument()) {
+            AttachmentBLO attachmentBLO = new AttachmentBLO();
+            for (AttachmentDTO attachment : supplier.getDocument()) {
+                attachmentBLO.delete(attachment.getId());
+            }
+        }
 
         if (null != dto.getPrincipalCustomer() && !dto.getPrincipalCustomer().isEmpty()) {
             CustomerBLO customerBLO = new CustomerBLO();

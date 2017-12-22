@@ -131,15 +131,24 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         }
     }
 
-    public void notifyToSupplierForContinue(String email) throws HandlerGenericException {
+    public void notifyToSupplierForContinue(SupplierDTO supplier) throws HandlerGenericException {
         try {
+            SupplierBLO supplierBLO = new SupplierBLO();
             List<String> emails = new ArrayList<String>();
-            emails.add(email);
+            emails.add(supplier.getEmailOfContact());
+            
+            Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
+            Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
+            Map<String, String> detail = new LinkedHashMap<String, String>();
+            detail.put(dictionary.get("USER"), informationInOtherDataBase.get("userName"));
+            detail.put(dictionary.get("PASSWORD"), informationInOtherDataBase.get("password"));
+            
             NotificationDAO notificationDAO = new NotificationDAO();
-            NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
+            NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE_CONFIRMED");
             notification.setMessage(notification.getMessage());
+            
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
-            sendNotification(emails, notification, false, null, true, linkOfButton);
+            sendNotification(emails, notification, true, detail, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
