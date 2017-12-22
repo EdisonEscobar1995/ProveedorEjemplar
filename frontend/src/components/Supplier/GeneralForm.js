@@ -129,6 +129,7 @@ class General extends Component {
             content
           }
           <FormButtons
+            preventTranlate
             buttons={buttons}
           />
         </Form>

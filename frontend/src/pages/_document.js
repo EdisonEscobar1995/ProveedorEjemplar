@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout, Icon } from 'antd';
+import { Layout, Icon, BackTop } from 'antd';
 import getUserContext from '../state/User/action';
 import FormattedMessage from '../components/shared/FormattedMessage';
 import Menu from '../components/shared/Menu';
@@ -143,6 +143,7 @@ class Document extends Component {
         </HeaderStyle>
         <ContentStyle>
           <MainContentStyle>
+            <BackTop />
             <Router />
           </MainContentStyle>
         </ContentStyle>

@@ -13,7 +13,7 @@ const ButtonStyle = styled(Button)`
     color: ${props => props.theme.color.normal};
   }
 `;
-function FormButtons({ buttons }) {
+function FormButtons({ buttons, preventTranlate }) {
   return (
     <Row type="flex" justify="center" gutter={5}>
       {
@@ -21,7 +21,11 @@ function FormButtons({ buttons }) {
           <Col span={2} key={button.key}>
             {
               button.showConfirm ?
-                <Confirm preventTranlate title={button.messageConfirm} method={button.onClick}>
+                <Confirm
+                  preventTranlate={preventTranlate}
+                  title={button.messageConfirm}
+                  method={button.onClick}
+                >
                   <ButtonStyle
                     disabled={button.disabled}
                     buttoncolor={button.buttoncolor}

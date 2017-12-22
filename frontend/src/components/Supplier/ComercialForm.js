@@ -65,6 +65,8 @@ class Comercial extends Component {
         buttoncolor: 'buttonSecond',
         onClick: this.continue,
         disabled: readOnly,
+        showConfirm: changeIdCompanySize,
+        messageConfirm: messageByChangeSizeCompany,
       },
       {
         key: 2,
@@ -97,6 +99,7 @@ class Comercial extends Component {
             content={fields}
           />
           <FormButtons
+            preventTranlate
             buttons={buttons}
           />
         </Form>
