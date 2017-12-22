@@ -82,7 +82,7 @@ public class SupplierDTO {
     @Expose
     private String typeOfCurrencyValueAssets;
     @Expose
-    private float valueAssets;
+    private double valueAssets;
     private List<String> idAttachedFinancialReport;
     @Expose
     private List<AttachmentDTO> attachedFinancialReport;
@@ -95,7 +95,7 @@ public class SupplierDTO {
     @Expose
     private String typeOfCurrencyAnnualSales;
     @Expose
-    private float annualSalesValue;
+    private double annualSalesValue;
     @Expose
     private List<CustomerDTO> principalCustomer;
     @Expose
@@ -241,7 +241,7 @@ public class SupplierDTO {
         this.packagingProvided = packagingProvided;
     }
 
-    public float getValueAssets() {
+    public double getValueAssets() {
         return valueAssets;
     }
 
@@ -273,7 +273,7 @@ public class SupplierDTO {
         this.webSite = webSite;
     }
 
-    public float getAnnualSalesValue() {
+    public double getAnnualSalesValue() {
         return annualSalesValue;
     }
 
