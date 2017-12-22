@@ -26,6 +26,7 @@ import {
   setNumberOfSubContratedEmployees,
   setSector,
   setExport,
+  updateField,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
@@ -138,6 +139,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setExport: (value) => {
     dispatch(setExport(value));
+  },
+  updateField: (value, record, fielName) => {
+    dispatch(updateField(value, record, fielName));
   },
 });
 

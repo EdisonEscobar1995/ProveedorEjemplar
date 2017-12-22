@@ -112,7 +112,6 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               showSearch
                               mode={mode}
                               allowClear={allowClear}
-                              notFoundContent="No se encontraron resultados"
                               filterOption={(input, option) => (
                                 option.props.children.toLowerCase()
                                   .indexOf(input.toLowerCase()) >= 0

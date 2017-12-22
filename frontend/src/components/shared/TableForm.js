@@ -87,7 +87,6 @@ class GenericFormTable extends Component {
         key: 0,
         editable: true,
       });
-      // this.addData(0);
     }
     content = (
       <TableStyle pagination={false} dataSource={data}>
@@ -116,6 +115,11 @@ class GenericFormTable extends Component {
                               <Input
                                 type={column.type}
                                 placeholder={translator.formatMessage({ id: column.title })}
+                                onBlur={(e) => {
+                                  if (this.props.updateField) {
+                                    this.props.updateField(e.target.value, record, column.key);
+                                  }
+                                }}
                               />,
                             )
                           }
