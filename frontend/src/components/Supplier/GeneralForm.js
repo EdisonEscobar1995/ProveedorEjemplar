@@ -64,14 +64,16 @@ class General extends Component {
           messageConfirm: messageByChangeSizeCompany,
         },
         {
-          key: 3,
+          key: 2,
           text: 'Button.continue',
           buttoncolor: 'buttonSecond',
           onClick: this.continue,
+          showConfirm: changeIdCompanySize,
           disabled: readOnly,
+          messageConfirm: messageByChangeSizeCompany,
         },
         {
-          key: 2,
+          key: 3,
           text: 'Button.send',
           buttoncolor: 'buttonThird',
           onClick: this.handleSubmit,
