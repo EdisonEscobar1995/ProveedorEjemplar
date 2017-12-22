@@ -37,7 +37,6 @@ public abstract class GenericDAO<T> {
     protected String entityView;
     protected String entity;
     protected Translator translator;
-    protected boolean translatable = false;
 
     protected static final String PREFIX_FORM = "fr";
     protected static final String PREFIX_VIEW = "vw";
@@ -62,7 +61,6 @@ public abstract class GenericDAO<T> {
     }
 
     public T get(String id) throws HandlerGenericException {
-        loadTranslator();
         View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
         return castDocument(document);
@@ -75,7 +73,6 @@ public abstract class GenericDAO<T> {
     public T getBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
-        loadTranslator();
         if (null == view) {
             LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
             view = database.getView(entityView);
@@ -134,7 +131,7 @@ public abstract class GenericDAO<T> {
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
             Document document;
-            loadTranslator();
+            //loadTranslator();
             for (ViewEntry viewEntry : vec) {
                 document = viewEntry.getDocument();
                 list.add((T) this.castDocument(document));
@@ -178,7 +175,6 @@ public abstract class GenericDAO<T> {
     protected List<T> getAllDocumentsByKey(View view, ArrayList<String> indexedParameters)
             throws HandlerGenericException {
         List<T> list = new ArrayList<T>();
-        loadTranslator();
         if (indexedParameters.size() == 1 && indexedParameters.get(0).indexOf(Common.SEPARATOR_LIST, 0) != -1) {
             String[] ids = indexedParameters.get(0).split(String.valueOf(Common.SEPARATOR_LIST));
 
@@ -201,7 +197,6 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
-        loadTranslator();
         LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
 
         if (view.FTSearch(query) > 0) {
@@ -538,14 +533,14 @@ public abstract class GenericDAO<T> {
         return (List<DTO>) getAllBy(field, ids);
     }
 
-    private void loadTranslator() {
+    protected void loadTranslator() {
         String language = TranslationBLO.getInstance().getLanguage();
-        if (translatable && !"es".equals(language) && null == translator) {
-            if (translatable && !"Translation".equals(entity)) {
+        if (!"es".equals(language)) {
+            if (!"Translation".equals(entity)) {
                 translator = TranslationBLO.getInstance().getTranslator(language, entity);
             }
         } else {
-            translator = TranslationBLO.getInstance().getTranslator();
+            translator = null;
         }
     }
 }
