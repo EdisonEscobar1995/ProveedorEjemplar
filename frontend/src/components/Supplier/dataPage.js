@@ -36,7 +36,7 @@ const defaultMoneyType = [
 const getAnios = () => {
   const anios = [];
   const date = new Date();
-  for (let i = 1950; i <= date.getFullYear(); i += 1) {
+  for (let i = 1900; i <= date.getFullYear(); i += 1) {
     anios.push({ id: i.toString(), name: i.toString() });
   }
   return anios;

@@ -7,6 +7,6 @@ public class CategoryDAO extends GenericDAO<CategoryDTO> {
     public CategoryDAO() {
         super(CategoryDTO.class);
         entityView = "vwCategories";
-        translatable = true;
+        loadTranslator();
     }
 }

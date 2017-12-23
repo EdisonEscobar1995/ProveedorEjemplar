@@ -6,6 +6,7 @@ public class SupplyDAO extends GenericDAO<SupplyDTO> {
     public SupplyDAO() {
         super(SupplyDTO.class);
         this.entityView = "vwSupplies";
+        loadTranslator();
     }
 
 }

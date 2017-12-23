@@ -6,7 +6,7 @@ public class DimensionDAO extends GenericDAO<DimensionDTO> {
 
     public DimensionDAO() {
         super(DimensionDTO.class);
-        translatable = true;
+        loadTranslator();
     }
 
 }
