@@ -109,7 +109,7 @@ class General extends Component {
       );
     }
     return (
-      <div>
+      <div style={{ width: '90vw' }}>
         <Paragraph text={informationProgram} />
         <Field label="SupplierByCall.participateInCall">
           <Select

@@ -225,7 +225,7 @@ class Question extends Component {
       ];
     }
     return (
-      <div>
+      <div style={{ width: '90vw' }}>
         {
           criterions.length > 0 ?
             criterions.map(criteria => (
@@ -238,6 +238,7 @@ class Question extends Component {
                   key={criteria.key}
                   pagination={false}
                   dataSource={criteria.questions.filter(quiestion => quiestion.visible)}
+                  size="middle"
                 >
                   {
                     columns.map(column => (

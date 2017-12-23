@@ -77,7 +77,7 @@ class Comercial extends Component {
       },
     ];
     return (
-      <div>
+      <div style={{ width: '90vw' }}>
         <SubTitle text="Supplier.principalCustomers" />
         <TableForm
           data={principalCustomer}
