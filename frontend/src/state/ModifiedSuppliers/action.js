@@ -55,7 +55,7 @@ const getModifiedSuppliers = year => (dispatch) => {
         .sort((first, second) => {
           let result = 1;
           const dateFirst = first.dateLocked.replace(/\//g, '');
-          const dateSecond = second.dateLocked.replase(/\//g, '');
+          const dateSecond = second.dateLocked.replace(/\//g, '');
 
           if (dateFirst < dateSecond) {
             result = -1;
