@@ -9,7 +9,6 @@ import org.openntf.domino.email.DominoEmail;
 import org.openntf.domino.utils.Factory.SessionType;
 
 import org.openntf.domino.utils.Factory;
-import com.nutresa.exemplary_provider.bll.TranslationBLO.Dictionary;
 import com.nutresa.exemplary_provider.dal.NotificationDAO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
 import com.nutresa.exemplary_provider.dtl.NotificationDTO;
