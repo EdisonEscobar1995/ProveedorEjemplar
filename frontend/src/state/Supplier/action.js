@@ -469,7 +469,7 @@ const formatData = (data) => {
   return formatedDimensions;
 };
 
-const getDimensionsBySurvey = idSurvey => (
+const getDimensionsBySurvey = (idSurvey, id) => (
   (dispatch, getActualState) => {
     const actualDimensions = getActualState().supplier.dimensions;
     if (actualDimensions.length === 0) {
@@ -478,7 +478,7 @@ const getDimensionsBySurvey = idSurvey => (
         .then((data) => {
           const promises = [];
           data.forEach((dimesion) => {
-            const dataSend = { idSurvey, idDimension: dimesion.id };
+            const dataSend = { idSurvey, idDimension: dimesion.id, id };
             promises.push(getDataQuestionsBySurveyApi({ ...dataSend }));
           });
           return requestApiNotLoading(dispatch, axios.all, promises)

@@ -100,8 +100,8 @@ class Supplier extends Component {
       if (dimensions.length === 0 &&
         !loading && !loadingDimensions && !error && !loadedDimensions) {
         const { call, getDimensionsBySurvey } = this.props;
-        const { idSurvey } = call;
-        getDimensionsBySurvey(idSurvey);
+        const { idSurvey, id } = call;
+        getDimensionsBySurvey(idSurvey, id);
       }
     }
     const mapDimensions = dimensions.map((dimension) => {
