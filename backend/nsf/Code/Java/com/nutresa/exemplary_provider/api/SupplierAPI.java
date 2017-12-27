@@ -20,7 +20,7 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         ServletResponseDTO<QuestionsBySurveyDTO> response = null;
         try {
             response = new ServletResponseDTO<QuestionsBySurveyDTO>(supplierBLO.getQuestionsBySurvey(parameters
-                    .get("idSurvey"), parameters.get("idDimension")));
+                    .get("idSurvey"), parameters.get("idDimension"), parameters.get("idSupplierByCall")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<QuestionsBySurveyDTO>(exception);
         }

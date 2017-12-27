@@ -83,8 +83,8 @@ const mapDispatchToProps = dispatch => ({
   getDataCitiesByDepartment: (data) => {
     dispatch(getDataCitiesByDepartment(data));
   },
-  getDimensionsBySurvey: (idSurvey) => {
-    dispatch(getDimensionsBySurvey(idSurvey));
+  getDimensionsBySurvey: (idSurvey, id) => {
+    dispatch(getDimensionsBySurvey(idSurvey, id));
   },
   saveDataCallBySupplier: (data) => {
     dispatch(saveDataCallBySupplier(data));

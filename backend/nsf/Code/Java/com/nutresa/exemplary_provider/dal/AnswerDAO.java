@@ -17,11 +17,11 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         super(AnswerDTO.class);
     }
 
-    public List<AnswerDTO> getAnswerBySurvey(String idSurvey, String idQuestion) throws HandlerGenericException {
+    public List<AnswerDTO> getAnswerBySurvey(String idSupplierByCall, String idQuestion) throws HandlerGenericException {
         List<AnswerDTO> response = new ArrayList<AnswerDTO>();
         ArrayList<String> filterBySurveyAndQuestion;
         filterBySurveyAndQuestion = new ArrayList<String>();
-        filterBySurveyAndQuestion.add(idSurvey);
+        filterBySurveyAndQuestion.add(idSupplierByCall);
         filterBySurveyAndQuestion.add(idQuestion);
         try {
             View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");

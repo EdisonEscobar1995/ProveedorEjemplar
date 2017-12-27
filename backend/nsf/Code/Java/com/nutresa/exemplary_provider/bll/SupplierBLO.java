@@ -83,13 +83,13 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return response;
     }
 
-    public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension)
+    public QuestionsBySurveyDTO getQuestionsBySurvey(String idSurvey, String idDimension, String idSupplierByCall)
             throws HandlerGenericException {
         QuestionsBySurveyDTO response = new QuestionsBySurveyDTO();
         CriterionBLO criterionBLO = new CriterionBLO();
         QuestionBLO questionsBLO = new QuestionBLO();
         response.setCriterion(criterionBLO.getCriterionsBySurvey(idSurvey, idDimension));
-        response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension));
+        response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension, idSupplierByCall));
         return response;
     }
 

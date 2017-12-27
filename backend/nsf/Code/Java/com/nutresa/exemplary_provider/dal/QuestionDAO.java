@@ -79,7 +79,8 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         return response;
     }
 
-    public List<QuestionDTO> getQuestionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
+    public List<QuestionDTO> getQuestionsBySurvey(String idSurvey, String idDimension, String idSupplierByCall)
+            throws HandlerGenericException {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         OptionDAO optionDAO = new OptionDAO();
         AnswerDAO answerDAO = new AnswerDAO();
@@ -92,7 +93,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             for (Document document : documents) {
                 QuestionDTO question = castDocument(document);
                 question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
-                question.setAnswer(answerDAO.getAnswerBySurvey(idSurvey, question.getId()));
+                question.setAnswer(answerDAO.getAnswerBySurvey(idSupplierByCall, question.getId()));
                 response.add(question);
             }
         } catch (Exception exception) {
