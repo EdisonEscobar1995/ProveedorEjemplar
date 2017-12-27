@@ -30,7 +30,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
     public void notifyChangeCompanySize(String idSupplier) throws HandlerGenericException {
         String oldCampanySize = "";
-        Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         try {
@@ -47,9 +46,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 oldCampanySize = companySizeBLO.get(supplierByCall.getOldIdCompanySize()).getName();
             }
 
-            detailUserToSend.put(dictionary.get("NEW_COMPANY_SIZE"), detailUserToSend.remove(dictionary
-                    .get("COMPANY_SIZE")));
-            detailUserToSend.put(dictionary.get("OLD_COMPANY_SIZE"), oldCampanySize);
+            detailUserToSend.put("Nuevo tamaño", detailUserToSend.remove("Tamaño de empresa"));
+            detailUserToSend.put("Tamaño anterior", oldCampanySize);
 
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
@@ -79,7 +77,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     }
 
     private Map<String, String> buildDetailUserToSend(String idSupplier) throws HandlerGenericException {
-        Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO supplier = supplierBLO.get(idSupplier);
         SupplyBLO supplyBLO = new SupplyBLO();
@@ -87,9 +84,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         CompanySizeDTO companySize = companySizeBLO.get(supplier.getIdCompanySize());
         Map<String, String> detail = new LinkedHashMap<String, String>();
-        detail.put(dictionary.get("SUPPLIER"), supplier.getBusinessName());
-        detail.put(dictionary.get("SUPPLY"), supply.getName());
-        detail.put(dictionary.get("COMPANY_SIZE"), companySize.getName());
+        detail.put("Proveedor", supplier.getBusinessName());
+        detail.put("Suministro", supply.getName());
+        detail.put("Tamaño de empresa", companySize.getName());
         return detail;
     }
 
@@ -138,10 +135,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             emails.add(supplier.getEmailOfContact());
             
             Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
-            Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
             Map<String, String> detail = new LinkedHashMap<String, String>();
-            detail.put(dictionary.get("USER"), informationInOtherDataBase.get("userName"));
-            detail.put(dictionary.get("PASSWORD"), informationInOtherDataBase.get("password"));
+            detail.put("Usuario", informationInOtherDataBase.get("userName"));
+            detail.put("Contraseña", informationInOtherDataBase.get("password"));
             
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE_CONFIRMED");
@@ -159,10 +155,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         SupplierBLO supplierBLO = new SupplierBLO();
         Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
         if (!informationInOtherDataBase.isEmpty()) {
-            Dictionary dictionary = TranslationBLO.getInstance().getDictionary("Notification");
             Map<String, String> detail = new LinkedHashMap<String, String>();
-            detail.put(dictionary.get("USER"), informationInOtherDataBase.get("userName"));
-            detail.put(dictionary.get("PASSWORD"), informationInOtherDataBase.get("password"));
+            detail.put("Usuario", informationInOtherDataBase.get("userName"));
+            detail.put("Contraseña", informationInOtherDataBase.get("password"));
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
             notification.setMessage(notification.getMessage());
