@@ -7,6 +7,7 @@ import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
 import Upload from '../shared/Upload';
 import TableForm from '../shared/TableForm';
+import FormattedMessage from '../shared/FormattedMessage';
 import { baseUrl } from '../../utils/api';
 import { getIntl } from '../../utils/translate';
 
@@ -131,7 +132,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                                     key={option.id}
                                     value={option.id}
                                   >
-                                    {option.name}
+                                    <FormattedMessage id={option.name} />
                                   </Option>
                                 ))
                               }

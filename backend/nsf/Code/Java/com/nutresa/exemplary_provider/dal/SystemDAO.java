@@ -6,5 +6,6 @@ public class SystemDAO extends GenericDAO<SystemDTO> {
 
     public SystemDAO() {
         super(SystemDTO.class);
+        loadTranslator();
     }
 }

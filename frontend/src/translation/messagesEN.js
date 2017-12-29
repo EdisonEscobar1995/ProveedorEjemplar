@@ -1,5 +1,5 @@
 const messages = {
-  'SupplierByCall.participateInCall': '¿Participa del programa?',
+  'SupplierByCall.participateInCall': 'Do you want to join the program?',
   'Supplier.businessName': 'Name or Corporate Name',
   'Supplier.idCompanySize': 'Company size',
   'Supplier.idSupply': 'Supplies',
@@ -68,6 +68,8 @@ const messages = {
   'Supplier.emailWhoSayDontParticipate': 'E-mail',
   'Supplier.surveySuccess': 'Assessment sent successfully',
   'Supplier.savedInfo': 'Information saved',
+  'Supplier.yes': 'Yes',
+  'Supplier.no': 'No',
   'Button.save': 'Save',
   'Button.add': 'Add',
   'Button.continue': 'Continue',

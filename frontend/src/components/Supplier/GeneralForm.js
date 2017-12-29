@@ -6,6 +6,7 @@ import Field from './Field';
 import FormButtons from './FormButtons';
 import SubTitle from '../shared/SubTitle';
 import Paragraph from '../shared/Paragraph';
+import FormattedMessage from '../shared/FormattedMessage';
 
 const { Option } = Select;
 
@@ -118,8 +119,8 @@ class General extends Component {
             value={participateInCall}
             onChange={this.handleChange}
           >
-            <Option value="true">Si</Option>
-            <Option value="false">No</Option>
+            <Option value="true"><FormattedMessage id="Supplier.yes" /></Option>
+            <Option value="false"><FormattedMessage id="Supplier.no" /></Option>
           </Select>
         </Field>
         {participateInCall === 'true' ? <SubTitle text="Supplier.companyInformation" /> : ''}

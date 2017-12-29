@@ -6,5 +6,6 @@ public class MenuDAO extends GenericDAO<MenuDTO> {
 
     public MenuDAO() {
         super(MenuDTO.class);
+        loadTranslator();
     }
 }

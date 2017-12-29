@@ -3,7 +3,7 @@ import { FormattedMessage as FormattedMessageIntl } from 'react-intl';
 
 function FormattedMessage({ id }) {
   return (
-    <FormattedMessageIntl id={id} defaultMessage="No found for label" />
+    <FormattedMessageIntl id={id} defaultMessage={id} />
   );
 }
 export default FormattedMessage;

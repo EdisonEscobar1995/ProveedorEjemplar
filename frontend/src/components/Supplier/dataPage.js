@@ -3,11 +3,11 @@ import { intValidation, mailValitation, mailValitationMultiple } from '../../uti
 const defaultOptions = [
   {
     id: 'true',
-    name: 'Si',
+    name: 'Supplier.yes',
   },
   {
     id: 'false',
-    name: 'No',
+    name: 'Supplier.no',
   },
 ];
 const defaultMoneyType = [

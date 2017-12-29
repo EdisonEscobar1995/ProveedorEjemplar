@@ -68,6 +68,8 @@ const messages = {
   'Supplier.emailWhoSayDontParticipate': 'Correo electrónico',
   'Supplier.surveySuccess': 'Encuesta enviada con éxito',
   'Supplier.savedInfo': 'Información almacenada',
+  'Supplier.yes': 'Sí',
+  'Supplier.no': 'No',
   'Button.save': 'Guardar',
   'Button.add': 'Agregar',
   'Button.continue': 'Continuar',
