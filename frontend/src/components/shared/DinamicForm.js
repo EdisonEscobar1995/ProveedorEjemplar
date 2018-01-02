@@ -92,7 +92,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           <InputNumberStyle
                             min={0}
                             disabled={disabled}
-                            formatter={numberValue => ` ${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                            formatter={numberValue => `${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                             parser={numberValue => numberValue.replace(/\$\s?|(\.*)/g, '')}
                           />
                         );
@@ -113,10 +113,10 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                               showSearch
                               mode={mode}
                               allowClear={allowClear}
-                              filterOption={(input, option) => (
-                                option.props.children.toLowerCase()
-                                  .indexOf(input.toLowerCase()) >= 0
-                              )}
+                              filterOption={(input, option) =>
+                                option.props.children.props.id
+                                  .toLowerCase().indexOf(input.toLowerCase()) >= 0
+                              }
                               onChange={(selectValue) => {
                                 if (valuesToClean) {
                                   setFields(valuesToClean);

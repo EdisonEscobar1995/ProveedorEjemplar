@@ -48,6 +48,7 @@ function getValueOption(value) {
   }
   return '';
 }
+
 function generalInfo(fields) {
   const {
     supplier,
@@ -69,7 +70,10 @@ function generalInfo(fields) {
     updateAttachment,
     deleteAttachment,
     updateChangeIdCompanySize,
+    setNumberOfDirectEmployees,
+    setNumberOfSubContratedEmployees,
   } = fields;
+
   const {
     idSupply,
     idCategory,
@@ -96,9 +100,21 @@ function generalInfo(fields) {
     phoneOfContact,
     fullNameContact,
     document,
+    valueAssets,
+    typeOfCurrencyValueAssets,
+    typeOfCurrencyAnnualSales,
+    annualSalesValue,
+    numberOfDirectEmployees,
+    numberOfSubContratedEmployees,
+    employeesTotal,
+    participationInSalesWithGroupNutresa,
+    attachedFinancialReport,
   } = supplier;
+
   const { uploadMaxFilesize, uploadExtensions } = system;
+
   const disabled = readOnly;
+
   return [
     {
       key: 1.1,
@@ -248,6 +264,123 @@ function generalInfo(fields) {
           value: yearOfEstablishment.toString(),
           options: getAnios(),
           disabled,
+        },
+      ],
+    },
+    {
+      key: 2.6,
+      value: [
+        {
+          span: 12,
+          type: 'title',
+          value: 'Supplier.infoFinancial',
+          key: 'infoFinancial',
+        },
+      ],
+    },
+    {
+      key: 2.7,
+      value: [
+        {
+          span: 6,
+          type: 'select',
+          label: 'Supplier.typeOfCurrencyValueAssets',
+          key: 'typeOfCurrencyValueAssets',
+          value: typeOfCurrencyValueAssets,
+          options: defaultMoneyType,
+          disabled,
+        },
+        {
+          span: 6,
+          type: 'inputNumber',
+          label: 'Supplier.valueAssets',
+          key: 'valueAssets',
+          value: valueAssets,
+          disabled,
+        },
+        {
+          span: 8,
+          type: 'upload',
+          label: 'Supplier.attachedFinancialReport',
+          key: 'attachedFinancialReport',
+          fileList: attachedFinancialReport,
+          onChange: updateAttachment,
+          onRemove: deleteAttachment,
+          uploadMaxFilesize,
+          uploadExtensions,
+          required: true,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 2.8,
+      value: [
+        {
+          span: 6,
+          type: 'select',
+          label: 'Supplier.typeOfCurrencyAnnualSales',
+          key: 'typeOfCurrencyAnnualSales',
+          value: typeOfCurrencyAnnualSales,
+          options: defaultMoneyType,
+          disabled,
+        },
+        {
+          span: 6,
+          type: 'inputNumber',
+          label: 'Supplier.annualSalesValue',
+          key: 'annualSalesValue',
+          value: annualSalesValue,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 2.9,
+      value: [
+        {
+          span: 6,
+          type: 'input',
+          label: 'Supplier.numberOfDirectEmployees',
+          key: 'numberOfDirectEmployees',
+          value: numberOfDirectEmployees,
+          handleChange: setNumberOfDirectEmployees,
+          disabled,
+          rules: [
+            { ...intValidation },
+          ],
+        },
+        {
+          span: 6,
+          type: 'input',
+          label: 'Supplier.numberOfSubContratedEmployees',
+          key: 'numberOfSubContratedEmployees',
+          value: numberOfSubContratedEmployees,
+          handleChange: setNumberOfSubContratedEmployees,
+          disabled,
+          rules: [
+            { ...intValidation },
+          ],
+        },
+        {
+          span: 6,
+          type: 'input',
+          label: 'Supplier.employeesTotal',
+          inputType: 'number',
+          key: 'employeesTotal',
+          value: employeesTotal,
+          disabled: true,
+        },
+        {
+          span: 6,
+          type: 'input',
+          label: 'Supplier.participationInSalesWithGroupNutresa',
+          key: 'participationInSalesWithGroupNutresa',
+          value: participationInSalesWithGroupNutresa,
+          disabled,
+          rules: [
+            { ...intValidation },
+          ],
         },
       ],
     },
@@ -539,27 +672,16 @@ function comercialInfo(fields) {
     readOnly,
     sectors,
     system,
-    updateAttachment,
-    deleteAttachment,
-    setNumberOfDirectEmployees,
-    setNumberOfSubContratedEmployees,
     setSector,
     setExport,
   } = fields;
+
   const {
     idCategory,
     idSector,
     otherSector,
     webSite,
     packagingProvided,
-    valueAssets,
-    typeOfCurrencyValueAssets,
-    typeOfCurrencyAnnualSales,
-    annualSalesValue,
-    numberOfDirectEmployees,
-    numberOfSubContratedEmployees,
-    employeesTotal,
-    participationInSalesWithGroupNutresa,
     nameContactPersonInGroupNutresa,
     emailContactPersonInGroupNutresa,
     phoneContactPersonInGroupNutresa,
@@ -569,17 +691,17 @@ function comercialInfo(fields) {
     exportDestination,
     globalAgreement,
     chemicalSubstance,
-    attachedFinancialReport,
     actualSector,
     actuallyExport,
   } = supplier;
+
   const {
-    uploadMaxFilesize,
-    uploadExtensions,
     otherSectorId,
     packagingMaterialCategoryId,
   } = system;
+
   const disabled = readOnly;
+
   return [
     {
       key: 2.4,
@@ -628,133 +750,16 @@ function comercialInfo(fields) {
           options: [
             {
               id: 'si',
-              name: 'Si',
+              name: 'Supplier.yes',
             },
             {
               id: 'no',
-              name: 'No',
+              name: 'Supplier.no',
             },
             {
               id: 'na',
               name: 'N/A',
             },
-          ],
-        },
-      ],
-    },
-    {
-      key: 2.6,
-      value: [
-        {
-          span: 12,
-          type: 'title',
-          value: 'Supplier.infoFinancial',
-          key: 'infoFinancial',
-        },
-      ],
-    },
-    {
-      key: 2.7,
-      value: [
-        {
-          span: 6,
-          type: 'select',
-          label: 'Supplier.typeOfCurrencyValueAssets',
-          key: 'typeOfCurrencyValueAssets',
-          value: typeOfCurrencyValueAssets,
-          options: defaultMoneyType,
-          disabled,
-        },
-        {
-          span: 6,
-          type: 'inputNumber',
-          label: 'Supplier.valueAssets',
-          key: 'valueAssets',
-          value: valueAssets,
-          disabled,
-        },
-        {
-          span: 8,
-          type: 'upload',
-          label: 'Supplier.attachedFinancialReport',
-          key: 'attachedFinancialReport',
-          fileList: attachedFinancialReport,
-          onChange: updateAttachment,
-          onRemove: deleteAttachment,
-          uploadMaxFilesize,
-          uploadExtensions,
-          required: true,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 2.8,
-      value: [
-        {
-          span: 6,
-          type: 'select',
-          label: 'Supplier.typeOfCurrencyAnnualSales',
-          key: 'typeOfCurrencyAnnualSales',
-          value: typeOfCurrencyAnnualSales,
-          options: defaultMoneyType,
-          disabled,
-        },
-        {
-          span: 6,
-          type: 'inputNumber',
-          label: 'Supplier.annualSalesValue',
-          key: 'annualSalesValue',
-          value: annualSalesValue,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 2.9,
-      value: [
-        {
-          span: 6,
-          type: 'input',
-          label: 'Supplier.numberOfDirectEmployees',
-          key: 'numberOfDirectEmployees',
-          value: numberOfDirectEmployees,
-          handleChange: setNumberOfDirectEmployees,
-          disabled,
-          rules: [
-            { ...intValidation },
-          ],
-        },
-        {
-          span: 6,
-          type: 'input',
-          label: 'Supplier.numberOfSubContratedEmployees',
-          key: 'numberOfSubContratedEmployees',
-          value: numberOfSubContratedEmployees,
-          handleChange: setNumberOfSubContratedEmployees,
-          disabled,
-          rules: [
-            { ...intValidation },
-          ],
-        },
-        {
-          span: 6,
-          type: 'input',
-          label: 'Supplier.employeesTotal',
-          inputType: 'number',
-          key: 'employeesTotal',
-          value: employeesTotal,
-          disabled: true,
-        },
-        {
-          span: 6,
-          type: 'input',
-          label: 'Supplier.participationInSalesWithGroupNutresa',
-          key: 'participationInSalesWithGroupNutresa',
-          value: participationInSalesWithGroupNutresa,
-          disabled,
-          rules: [
-            { ...intValidation },
           ],
         },
       ],
