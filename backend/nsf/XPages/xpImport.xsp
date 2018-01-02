@@ -22,33 +22,8 @@
 			<div>Tipo de estructura</div>
 			<xp:comboBox id="type">
 				<xp:selectItem itemLabel="" itemValue=""></xp:selectItem>
-				<xp:selectItem itemLabel="1. Dimensiones de preguntas" itemValue="DIM"></xp:selectItem>
-				<xp:selectItem itemLabel="2. Criterios de preguntas" itemValue="CRI"></xp:selectItem>
-				<xp:selectItem itemLabel="3. Preguntas" itemValue="QUE"></xp:selectItem>
-				<xp:selectItem itemLabel="4. Opciones de respuesta" itemValue="OPC"></xp:selectItem>
-				<xp:selectItem itemLabel="5. Sectores" itemValue="SEC"></xp:selectItem>
-				<xp:selectItem itemLabel="6. Tamaños de empresa" itemValue="COS"></xp:selectItem>
-				<xp:selectItem itemLabel="7. Tipos de compañía" itemValue="COT"></xp:selectItem>
-				<xp:selectItem itemLabel="8. Tipos de sociedad" itemValue="SOT"></xp:selectItem>
-				<xp:selectItem itemLabel="9. Tipos de suministro" itemValue="SUT"></xp:selectItem>
-				<xp:selectItem itemLabel="10. Categorías del proveedor" itemValue="CAT"></xp:selectItem>
-				<xp:selectItem itemLabel="11. Subcategorías del proveedor" itemValue="SUB"></xp:selectItem>
-				<xp:selectItem itemLabel="12. Encuestas" itemValue="SUR"></xp:selectItem>
-				<xp:selectItem itemLabel="13. Preguntas por encuesta" itemValue="QBS"></xp:selectItem>
-				<xp:selectItem itemLabel="14. Países" itemValue="COU"></xp:selectItem>
-				<xp:selectItem itemLabel="15. Departamentos" itemValue="DEP"></xp:selectItem>
-				<xp:selectItem itemLabel="16. Ciudades" itemValue="CIT"></xp:selectItem>
-				<xp:selectItem itemLabel="17. Notificaciones" itemValue="NOT"></xp:selectItem>
-				<xp:selectItem itemLabel="18. Roles" itemValue="ROL"></xp:selectItem>
-				<xp:selectItem itemLabel="19. Usuarios" itemValue="USE"></xp:selectItem>
-				<xp:selectItem itemLabel="20. Convocatorias" itemValue="CAL"></xp:selectItem>
 				<xp:selectItem itemLabel="21. Proveedores" itemValue="SUP"></xp:selectItem>
 				<xp:selectItem itemLabel="22. Proveedores por convocatoria" itemValue="SBC"></xp:selectItem>
-				<xp:selectItem itemLabel="23. Accesos" itemValue="ACC"></xp:selectItem>
-				<xp:selectItem itemLabel="24. Accesos por rol" itemValue="ABR"></xp:selectItem>
-				<xp:selectItem itemLabel="25. Menus" itemValue="MEN"></xp:selectItem>
-				<xp:selectItem itemLabel="26. Diccionarios" itemValue="DIC"></xp:selectItem>
-				<xp:selectItem itemLabel="27. Preguntas dependientes" itemValue="DEQ"></xp:selectItem>
 				<xp:this.attrs>
 					<xp:attr name="data-name" value="type">
 					</xp:attr>
