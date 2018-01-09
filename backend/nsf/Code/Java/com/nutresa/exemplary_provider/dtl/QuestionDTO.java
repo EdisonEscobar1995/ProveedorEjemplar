@@ -14,50 +14,30 @@ public class QuestionDTO {
     @Expose
     private String wording;
     @Expose
+    private String type;
+    @Expose
+    private boolean required;
+    @Expose
     private boolean requireAttachment;
     @Expose
     private List<OptionDTO> options;
     @Expose
     private String helpText;
     @Expose
-    private List<String> dependOfAnswerIds;
+    private List<String> idsSurvey;
     @Expose
-    private QuestionDTO dependOfQuestion;
+    private String dependOfOptionId;
+    @Expose
+    private String dependOfQuestion;
+    @Expose
+    private List<AnswerDTO> answer;
 
-    public String getId() {
-        return id;
+    public String getIdDimension() {
+        return idDimension;
     }
 
-    public String getWording() {
-        return wording;
-    }
-
-    public void setWording(String wording) {
-        this.wording = wording;
-    }
-
-    public boolean isRequireAttached() {
-        return requireAttachment;
-    }
-
-    public void setRequireAttached(boolean requireAttached) {
-        this.requireAttachment = requireAttached;
-    }
-
-    public String getHelpText() {
-        return helpText;
-    }
-
-    public void setHelpText(String helpText) {
-        this.helpText = helpText;
-    }
-
-    public List<OptionDTO> getAnswer() {
-        return options;
-    }
-
-    public void setAnswer(List<OptionDTO> answers) {
-        this.options = answers;
+    public void setIdDimension(String idDimension) {
+        this.idDimension = idDimension;
     }
 
     public String getIdCriterion() {
@@ -68,28 +48,20 @@ public class QuestionDTO {
         this.idCriterion = idCriterion;
     }
 
-    public QuestionDTO getDependOfQuestion() {
-        return dependOfQuestion;
+    public String getWording() {
+        return wording;
     }
 
-    public void setDependOfQuestion(QuestionDTO dependOfQuestion) {
-        this.dependOfQuestion = dependOfQuestion;
+    public void setWording(String wording) {
+        this.wording = wording;
     }
 
-    public List<String> getDependOfAnswers() {
-        return dependOfAnswerIds;
+    public String getType() {
+        return type;
     }
 
-    public void setDependOfAnswers(List<String> dependOfAnswerIds) {
-        this.dependOfAnswerIds = dependOfAnswerIds;
-    }
-
-    public void setIdDimension(String idDimension) {
-        this.idDimension = idDimension;
-    }
-
-    public String getIdDimension() {
-        return idDimension;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public boolean isRequireAttachment() {
@@ -108,12 +80,56 @@ public class QuestionDTO {
         this.options = options;
     }
 
-    public List<String> getDependOfAnswerIds() {
-        return dependOfAnswerIds;
+    public String getHelpText() {
+        return helpText;
     }
 
-    public void setDependOfAnswerIds(List<String> dependOfAnswerIds) {
-        this.dependOfAnswerIds = dependOfAnswerIds;
+    public void setHelpText(String helpText) {
+        this.helpText = helpText;
+    }
+
+    public List<String> getIdsSurvey() {
+        return idsSurvey;
+    }
+
+    public void setIdsSurvey(List<String> idsSurvey) {
+        this.idsSurvey = idsSurvey;
+    }
+
+    public String getDependOfQuestion() {
+        return dependOfQuestion;
+    }
+
+    public void setDependOfQuestion(String dependOfQuestion) {
+        this.dependOfQuestion = dependOfQuestion;
+    }
+
+    public List<AnswerDTO> getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(List<AnswerDTO> answer) {
+        this.answer = answer;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setDependOfOptionId(String dependOfOptionId) {
+        this.dependOfOptionId = dependOfOptionId;
+    }
+
+    public String getDependOfOptionId() {
+        return dependOfOptionId;
     }
 
 }

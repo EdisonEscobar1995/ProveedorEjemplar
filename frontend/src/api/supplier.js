@@ -1,17 +1,45 @@
-import intance from './instance';
+import instance from './instance';
 
 function getDataSuppliertApi() {
-  return intance.get('Supplier?action=getAll');
+  return instance.get('Supplier?action=loadInformation');
 }
-function saveDataSupplierApi(data) {
-  return intance.post('Supplier?action=save', data);
+
+function getDataCallSuppliertApi() {
+  return instance.get('SupplierByCall?action=currentCall');
 }
-function updateDataSupplierApi(data) {
-  return intance.post('Supplier?action=update', data);
+
+function finishSurveyApi(call) {
+  return instance.post('SupplierByCall?action=finishSurvey', call);
+}
+
+function saveDataCallBySupplierApi(data) {
+  return instance.post('SupplierByCall?action=save', data);
+}
+
+function getDataQuestionsBySurveyApi(data) {
+  const { idSurvey, idDimension, id } = data;
+  return instance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=${idSurvey}&idDimension=${idDimension}&idSupplierByCall=${id}`);
+}
+
+function saveDataSuppliertApi(data) {
+  return instance.post('Supplier?action=save', data);
+}
+
+function getModifiedSuppliersApi(year = '') {
+  return instance.get(`Supplier?action=getModifiedSuppliers&year=${year}`);
+}
+
+function unlockSupplierApi(supplierByCall) {
+  return instance.post('SupplierByCall?action=unlockSupplier', supplierByCall);
 }
 
 export {
-  getDataSuppliertApi as default,
-  saveDataSupplierApi,
-  updateDataSupplierApi,
+  getDataSuppliertApi,
+  getDataCallSuppliertApi,
+  getDataQuestionsBySurveyApi,
+  saveDataCallBySupplierApi,
+  saveDataSuppliertApi,
+  getModifiedSuppliersApi,
+  unlockSupplierApi,
+  finishSurveyApi,
 };

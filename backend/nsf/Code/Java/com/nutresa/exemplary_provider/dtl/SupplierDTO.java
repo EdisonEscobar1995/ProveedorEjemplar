@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -8,25 +9,40 @@ public class SupplierDTO {
     @Expose
     private String id;
     @Expose
-    private String name;
+    private String fullName;
+    @Expose
+    private String businessName;
     @Expose
     private String idCompanySize;
     @Expose
+    private CompanySizeDTO companySize;
+    @Expose
     private String idSupply;
+    @Expose
+    private SupplyDTO supply;
     @Expose
     private String idCategory;
     @Expose
+    private CategoryDTO category;
+    @Expose
     private String idSubCategory;
     @Expose
-    private List<String> document;
+    private SubCategoryDTO subCategory;
+    private List<String> idDocuments;
+    @Expose
+    private List<AttachmentDTO> document;
     @Expose
     private String nit;
     @Expose
     private String idCompanyType;
     @Expose
+    private CompanyTypeDTO companyType;
+    @Expose
     private boolean producerLivestok;
     @Expose
     private String idSocietyType;
+    @Expose
+    private SocietyTypeDTO societyType;
     @Expose
     private short yearOfEstablishment;
     @Expose
@@ -38,7 +54,7 @@ public class SupplierDTO {
     @Expose
     private String idCity;
     @Expose
-    private List<String> branchOffice;
+    private String branchOffice;
     @Expose
     private String telephone;
     @Expose
@@ -64,9 +80,12 @@ public class SupplierDTO {
     @Expose
     private String packagingProvided;
     @Expose
-    private float valueAssets;
+    private String typeOfCurrencyValueAssets;
     @Expose
-    private String attachedFinancialReport;
+    private double valueAssets;
+    private List<String> idAttachedFinancialReport;
+    @Expose
+    private List<AttachmentDTO> attachedFinancialReport;
     @Expose
     private int numberOfDirectEmployees;
     @Expose
@@ -74,7 +93,9 @@ public class SupplierDTO {
     @Expose
     private String webSite;
     @Expose
-    private float annualSalesValue;
+    private String typeOfCurrencyAnnualSales;
+    @Expose
+    private double annualSalesValue;
     @Expose
     private List<CustomerDTO> principalCustomer;
     @Expose
@@ -90,29 +111,15 @@ public class SupplierDTO {
     @Expose
     private boolean currentlyExport;
     @Expose
-    private List<String> exportDestination;
+    private String exportDestination;
     @Expose
-    private List<String> nameCertification;
+    private String nameCertification;
     @Expose
     private boolean globalAgreement;
     @Expose
     private boolean chemicalSubstance;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<String> getDocument() {
-        return document;
-    }
-
-    public void setDocument(List<String> document) {
-        this.document = document;
-    }
+    @Expose
+    private String sapCode;
 
     public String getNit() {
         return nit;
@@ -146,11 +153,11 @@ public class SupplierDTO {
         this.principalAdress = principalAdress;
     }
 
-    public List<String> getBranchOffice() {
+    public String getBranchOffice() {
         return branchOffice;
     }
 
-    public void setBranchOffice(List<String> branchOffice) {
+    public void setBranchOffice(String branchOffice) {
         this.branchOffice = branchOffice;
     }
 
@@ -168,14 +175,6 @@ public class SupplierDTO {
 
     public void setFax(String fax) {
         this.fax = fax;
-    }
-
-    public List<String> getEmail() {
-        return emails;
-    }
-
-    public void setEmail(List<String> emails) {
-        this.emails = emails;
     }
 
     public String getCodeZip() {
@@ -242,20 +241,12 @@ public class SupplierDTO {
         this.packagingProvided = packagingProvided;
     }
 
-    public float getValueAssets() {
+    public double getValueAssets() {
         return valueAssets;
     }
 
-    public void setValueAssets(float valueAssets) {
+    public void setValueAssets(double valueAssets) {
         this.valueAssets = valueAssets;
-    }
-
-    public String getAttachedFinancialReport() {
-        return attachedFinancialReport;
-    }
-
-    public void setAttachedFinancialReport(String attachedFinancialReport) {
-        this.attachedFinancialReport = attachedFinancialReport;
     }
 
     public int getNumberOfDirectEmployees() {
@@ -282,11 +273,11 @@ public class SupplierDTO {
         this.webSite = webSite;
     }
 
-    public float getAnnualSalesValue() {
+    public double getAnnualSalesValue() {
         return annualSalesValue;
     }
 
-    public void setAnnualSalesValue(float annualSalesValue) {
+    public void setAnnualSalesValue(double annualSalesValue) {
         this.annualSalesValue = annualSalesValue;
     }
 
@@ -346,19 +337,19 @@ public class SupplierDTO {
         this.currentlyExport = currentlyExport;
     }
 
-    public List<String> getExportDestination() {
+    public String getExportDestination() {
         return exportDestination;
     }
 
-    public void setExportDestination(List<String> exportDestination) {
+    public void setExportDestination(String exportDestination) {
         this.exportDestination = exportDestination;
     }
 
-    public List<String> getNameCertification() {
+    public String getNameCertification() {
         return nameCertification;
     }
 
-    public void setNameCertification(List<String> nameCertification) {
+    public void setNameCertification(String nameCertification) {
         this.nameCertification = nameCertification;
     }
 
@@ -469,5 +460,137 @@ public class SupplierDTO {
     public void setIdSupply(String idSupply) {
         this.idSupply = idSupply;
     }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    public List<String> getIdDocuments() {
+        return idDocuments;
+    }
+
+    public void autoSetIdDocuments() {
+        this.idDocuments = new ArrayList<String>();
+        if (null != this.document) {
+            for (AttachmentDTO attachment : this.document) {
+                this.idDocuments.add(attachment.getId());
+            }
+        }
+    }
+
+    public List<AttachmentDTO> getDocument() {
+        return document;
+    }
+
+    public void setDocument(List<AttachmentDTO> document) {
+        this.document = document;
+    }
+
+    public List<String> getIdAttachedFinancialReport() {
+        return idAttachedFinancialReport;
+    }
+
+    public void autoSetIdAttachedFinancialReport() {
+        this.idAttachedFinancialReport = new ArrayList<String>();
+        if (null != this.attachedFinancialReport) {
+            for (AttachmentDTO attachment : this.attachedFinancialReport) {
+                this.idAttachedFinancialReport.add(attachment.getId());
+            }
+        }
+    }
+
+    public List<AttachmentDTO> getAttachedFinancialReport() {
+        return attachedFinancialReport;
+    }
+
+    public void setAttachedFinancialReport(List<AttachmentDTO> attachedFinancialReport) {
+        this.attachedFinancialReport = attachedFinancialReport;
+    }
+
+    public CompanySizeDTO getCompanySize() {
+        return this.companySize;
+    }
+
+    public void setCompanySize(CompanySizeDTO companySize) {
+        this.companySize = companySize;
+    }
+
+    public SupplyDTO getSupply() {
+        return this.supply;
+    }
+
+    public void setSupply(SupplyDTO supply) {
+        this.supply = supply;
+    }
+
+    public CategoryDTO getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
+    }
+
+    public SubCategoryDTO getSubCategory() {
+        return this.subCategory;
+    }
+
+    public void setSubCategory(SubCategoryDTO subCategory) {
+        this.subCategory = subCategory;
+    }
+
+    public CompanyTypeDTO getCompanyType() {
+        return this.companyType;
+    }
+
+    public void setCompanyType(CompanyTypeDTO companyType) {
+        this.companyType = companyType;
+    }
+
+    public SocietyTypeDTO getSocietyType() {
+        return this.societyType;
+    }
+
+    public void setSocietyType(SocietyTypeDTO societyType) {
+        this.societyType = societyType;
+    }
+
+    public void setSapCode(String sapCode) {
+        this.sapCode = sapCode;
+    }
+
+    public String getSapCode() {
+        return sapCode;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getTypeOfCurrencyValueAssets() {
+        return typeOfCurrencyValueAssets;
+    }
+
+    public void setTypeOfCurrencyValueAssets(String typeOfCurrencyValueAssets) {
+        this.typeOfCurrencyValueAssets = typeOfCurrencyValueAssets;
+    }
+
+    public String getTypeOfCurrencyAnnualSales() {
+        return typeOfCurrencyAnnualSales;
+    }
+
+    public void setTypeOfCurrencyAnnualSales(String typeOfCurrencyAnnualSales) {
+        this.typeOfCurrencyAnnualSales = typeOfCurrencyAnnualSales;
+    }
+    
+    
 
 }

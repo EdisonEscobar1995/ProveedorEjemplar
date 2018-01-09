@@ -28,9 +28,15 @@ public class SystemDTO {
     @Expose
     private String supplierPathApplication;
     @Expose
+    private String filesPathApplication;
+    @Expose
     private short uploadMaxFilesize;
     @Expose
     private List<String> uploadExtensions;
+    @Expose
+    private String otherSectorId;
+    @Expose
+    private String packagingMaterialCategoryId;
 
     public String getId() {
         return id;
@@ -138,6 +144,30 @@ public class SystemDTO {
 
     public String getNamesPathApplication() {
         return namesPathApplication;
+    }
+
+    public void setFilesPathApplication(String filesPathApplication) {
+        this.filesPathApplication = filesPathApplication;
+    }
+
+    public String getFilesPathApplication() {
+        return filesPathApplication;
+    }
+
+    public void setOtherSectorId(String otherSectorId) {
+        this.otherSectorId = otherSectorId;
+    }
+
+    public String getOtherSectorId() {
+        return otherSectorId;
+    }
+
+    public void setPackagingMaterialCategoryId(String packagingMaterialCategoryId) {
+        this.packagingMaterialCategoryId = packagingMaterialCategoryId;
+    }
+
+    public String getPackagingMaterialCategoryId() {
+        return packagingMaterialCategoryId;
     }
 
 }

@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Proveedor Ejemplar | Grupo Nutresa</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style type="text/css">
+        body {
+            -webkit-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+            -webkit-font-smoothing: antialiased !important;
+        }
+        
+        img {
+            border: 0 !important;
+            outline: none !important;
+        }
+        
+        p {
+            Margin: 0px !important;
+            Padding: 0px !important;
+        }
+        
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0px;
+            mso-table-rspace: 0px;
+        }
+        
+        td,
+        a,
+        span {
+            border-collapse: collapse;
+            mso-line-height-rule: exactly;
+        }
+        
+        span.MsoHyperlink {
+            mso-style-priority: 99;
+            color: inherit;
+        }
+        
+        span.MsoHyperlinkFollowed {
+            mso-style-priority: 99;
+            color: inherit;
+        }
+        
+        .ExternalClass * {
+            line-height: 100%;
+        }
+        
+        .white a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        /*Stylesheed for the devices width between 481px to 599px*/
+        
+        @media only screen and (max-width:600px) {
+            table.wrapper {
+                width: 100% !important;
+            }
+            table.main_table {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+            td.hide,
+            table.hide,
+            span.hide,
+            br.hide {
+                display: none !important;
+            }
+            td.align_cent {
+                text-align: center !important;
+            }
+            img.full_img {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+            img.full_img_logo{
+                width: 100% !important;
+                height: auto !important;
+                max-width: 219px !important;
+            
+            }
+            img.align-center {
+                display: block;
+                margin: 0 auto;
+            }
+            td.height15 {
+                height: 15px !important;
+            }
+            td.height25 {
+                height: 25px !important;
+            }
+            td.width15 {
+                width: 15px !important;
+            }
+            td.font {
+                font-size: 24px !important;
+                line-height: 27px !important;
+            }
+            td.pad {
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+            td.padtop {
+                padding-top: 20px !important;
+            }
+            table.w_284 {
+                width: 284px !important;
+            }
+            td.w_32 {
+                width: 32px !important;
+            }
+            img.w_32 {
+                width: 32px !important;
+                height: auto !important;
+            }
+        }
+        
+        @media only screen and (min-width:481px) and (max-width:599px) {
+            table.wrapper {
+                width: 100% !important;
+            }
+            table.main_table {
+                width: 480px !important;
+                min-width: 480px !important;
+            }
+            td.hide,
+            table.hide,
+            span.hide,
+            br.hide {
+                display: none !important;
+            }
+            td.align_cent {
+                text-align: center !important;
+            }
+            img.full_img {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+            td.height25 {
+                height: 25px !important;
+            }
+            td.height15 {
+                height: 15px !important;
+            }
+            td.width15 {
+                width: 15px !important;
+            }
+            td.font {
+                font-size: 31px !important;
+                line-height: 34px !important;
+            }
+            td.pad {
+                padding-left: 8px !important;
+                padding-right: 8px !important;
+            }
+            td.padtop {
+                padding-top: 20px !important;
+            }
+        }
+    </style>
+</head>
+
+<body bgcolor="#ffffff" style="margin:0px; padding:0px;">
+
+    <!--Full width table start-->
+    <table align="center" bgcolor="#f0f0f0" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+
+            <!-- CABEZOTE -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="main_table" style="table-layout:fixed;width:600px;min-width:640px;" width="640">
+                        <tbody>
+                            <tr>
+                                <td class="width15" width="18">&nbsp;</td>
+                                <td>
+                                    <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td><img src="[HEADER]" class="full_img" alt="" title="" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="height15" height="47" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="width15" width="18">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- FIN CABEZOTE -->
+
+            <!-- CONTENIDO -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="main_table" style="table-layout:fixed;width:600px;min-width:640px;" width="640">
+                        <tbody>
+                            <tr>
+                                <td class="width15" width="18">&nbsp;</td>
+                                <td>
+                                    <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                            <tr>
+                                                <td class="width15" width="40">&nbsp;</td>
+                                                <td>
+                                                    <table align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="color: #7c7c7c; font-family: Verdana, Geneva, sans-serif; font-weight: 300; font-size: 14px; line-height: 23px;">
+                                                                    [MESSAGE_HERE]
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="height15" height="40" style="font-size:1px; line-height:1px;">&nbsp;</td>
+                                                            </tr>
+                                                            [TEMPLATE_BY_TABLE_DETAIL]
+                                                            
+                                                            [TEMPLATE_BY_BUTTON]
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td class="width15" width="40">&nbsp;</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td class="width15" width="18">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- FIN CONTENIDO -->
+
+            <!-- FOOTER -->
+            <tr>
+                <td>
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="main_table" style="table-layout:fixed;width:600px;min-width:640px;" width="640">
+                        <tbody>
+                            <tr>
+                                <td><img src="[FOOTER]" class="full_img" alt="" title="" style="display: block;margin:auto;" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <!-- FIN FOOTER -->
+
+        </tbody>
+    </table>
+    <!--//Full width table End-->
+
+</body>
+
+</html>

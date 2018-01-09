@@ -1,8 +1,22 @@
 @import "~antd/lib/style/index.less";
 @import "~antd/lib/style/components.less";
+
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+@progress-color-common    : #E4DC29;
+@normal-color-common      : #FFF;
+
 @primary-color            : #37907c;
-@layout-header-background : #FFF;
-@layout-body-background   : #FFF;
+@layout-header-background : @normal-color-common;
+@layout-body-background   : @normal-color-common;
 @layout-footer-background : #f0f0f0;
 @text-color               : #404040;
+@progress-remaining-color : @normal-color-common;
+@progress-default-color   : @progress-color-common;
+@success-color            : @progress-color-common;
+@font-family              : 'Lato', sans-serif, @font-family-no-number;
+@font-size-base           : 13px;
 
+.ant-progress-text{
+  font-size: 0.9em;
+}

@@ -1,10 +1,15 @@
 import {
   GET_DATA_SECTOR_PROGRESS,
   GET_DATA_SECTOR_SUCCESS,
-  GET_DATA_SECTOR_FAILED,
+  REQUEST_FAILED,
+  ADD_SECTOR,
+  SAVE_SECTOR,
+  EDIT_SECTOR,
+  DELETE_SECTOR,
+  CANCEL_SECTOR,
 } from './const';
-import getDataSectortApi from '../../api/sector';
-
+import { getAllSectorApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
+import { requestApi } from '../../utils/action';
 
 function getDataSectorProgress() {
   return {
@@ -19,26 +24,83 @@ function getDataSectorSuccess(data) {
   };
 }
 
-function getDataSectorFailed() {
+function getFailedRequest() {
   return {
-    type: GET_DATA_SECTOR_FAILED,
+    type: REQUEST_FAILED,
   };
 }
 
-function getDataSector() {
+function addDataSector(newItem, index) {
+  return {
+    type: ADD_SECTOR,
+    newItem,
+    index,
+  };
+}
+function editDataSector(index) {
+  return {
+    type: EDIT_SECTOR,
+    index,
+  };
+}
+function saveDataSector(data, index) {
+  return {
+    type: SAVE_SECTOR,
+    data,
+    index,
+  };
+}
+function deleteDataSector(index) {
+  return {
+    type: DELETE_SECTOR,
+    index,
+  };
+}
+function cancelDataSector(index) {
+  return {
+    type: CANCEL_SECTOR,
+    index,
+  };
+}
+
+function getAllSector() {
   return (dispatch) => {
-    dispatch(getDataSectorProgress());
-    getDataSectortApi()
+    requestApi(dispatch, getDataSectorProgress, getAllSectorApi)
       .then((respose) => {
         const { data } = respose.data;
         dispatch(getDataSectorSuccess(data));
-      })
-      .catch(() => {
-        dispatch(getDataSectorFailed());
+      }).catch(() => {
+        dispatch(getFailedRequest());
+      });
+  };
+}
+function saveSector(clientData, index) {
+  return (dispatch) => {
+    requestApi(dispatch, getDataSectorProgress, saveSectorApi, clientData)
+      .then((respose) => {
+        const { data } = respose.data;
+        dispatch(saveDataSector(data, index));
+      }).catch(() => {
+        dispatch(getFailedRequest());
+      });
+  };
+}
+function deleteSector(clientData, index) {
+  return (dispatch) => {
+    requestApi(dispatch, getDataSectorProgress, deleteSectorApi, clientData)
+      .then(() => {
+        dispatch(deleteDataSector(index));
+      }).catch(() => {
+        dispatch(getFailedRequest());
       });
   };
 }
 
 export {
-  getDataSector as default,
+  getAllSector,
+  saveSector as saveDataSector,
+  deleteSector as deleteDataSector,
+  addDataSector,
+  editDataSector,
+  cancelDataSector,
 };

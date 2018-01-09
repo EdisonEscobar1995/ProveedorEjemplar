@@ -1,22 +1,36 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
 
 public class AnswerDTO {
     @Expose
+    private String id;
+    @Expose
     private String idSupplierByCall;
+    @Expose
+    private String idSurvey;
     @Expose
     private String idQuestion;
     @Expose
     private String idOptionSupplier;
     @Expose
+    private String responseSupplier;
+    @Expose
     private String commentSupplier;
     @Expose
     private String idOptionEvaluator;
     @Expose
-    private String commentEvaluator;
+    private String responseEvaluator;
     @Expose
-    private String idAttachment;
+    private String commentEvaluator;
+    private List<String> idAttachment;
+    @Expose
+    private List<AttachmentDTO> attachment;
+    @Expose
+    private List<String> idsToDelete;
 
     public String getIdSupplierByCall() {
         return idSupplierByCall;
@@ -25,7 +39,6 @@ public class AnswerDTO {
     public void setIdSupplierByCall(String idSupplierByCall) {
         this.idSupplierByCall = idSupplierByCall;
     }
-
     public String getIdOptionSupplier() {
         return idOptionSupplier;
     }
@@ -66,12 +79,57 @@ public class AnswerDTO {
         return idQuestion;
     }
 
-    public String getIdAttachment() {
+    public String getResponseSupplier() {
+        return responseSupplier;
+    }
+
+    public void setResponseSupplier(String responseSupplier) {
+        this.responseSupplier = responseSupplier;
+    }
+
+    public String getResponseEvaluator() {
+        return responseEvaluator;
+    }
+
+    public void setResponseEvaluator(String responseEvaluator) {
+        this.responseEvaluator = responseEvaluator;
+    }
+
+    public String getIdSurvey() {
+        return idSurvey;
+    }
+
+    public void setIdSurvey(String idSurvey) {
+        this.idSurvey = idSurvey;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<String> getIdAttachment() {
         return idAttachment;
     }
 
-    public void setIdAttachment(String idAttachment) {
-        this.idAttachment = idAttachment;
+    public void autoSetIdAttachment() {
+        this.idAttachment = new ArrayList<String>();
+        if (null != this.attachment) {
+            for (AttachmentDTO document : this.attachment) {
+                this.idAttachment.add(document.getId());
+            }
+        }
+    }
+
+    public List<AttachmentDTO> getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(List<AttachmentDTO> attachment) {
+        this.attachment = attachment;
+    }
+
+    public List<String> getIdsToDelete() {
+        return idsToDelete;
     }
 
 }

@@ -1,138 +1,303 @@
 import React, { Component } from 'react';
-import { Tabs, Steps, Select, Row, Col, Form, Button } from 'antd';
-import SubTitle from '../shared/SubTitle';
-import Field from './Field';
-import DinamicForm from './DinamicForm';
-import { generalInfo, noParticipateInfo, comercialInfo } from './dataPage';
+import { Tabs, Spin, Progress } from 'antd';
+import styled, { css } from 'styled-components';
+import GeneralForm from './GeneralForm';
+import ComercialForm from './ComercialForm';
+import Question from './Question';
+import SurveyText from './SurveyText';
+import message from '../shared/message';
+import Title from '../shared/Title';
 
-const { TabPane } = Tabs;
-const { Step } = Steps;
-const { Option } = Select;
+const TabPane = Tabs.TabPane;
 
-class SupplierForm extends Component {
-  state = {};
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields();
-  }
-  handleChange= (participate) => {
-    this.setState({
-      participate: participate === 'si',
-    });
-  }
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    let content = '';
-    let buttons = '';
-    const participate = this.state.participate;
-    if (participate === true) {
-      content = (
-        <DinamicForm
-          getFieldDecorator={getFieldDecorator}
-          content={generalInfo}
-        />
-      );
-      buttons = (
-        <Row type="flex" justify="center">
-          <Col span={4}>
-            <Button
-              type="primary"
-              htmlType="submit"
-            >
-              Guardar
-            </Button>
-          </Col>
-          <Col span={4}>
-            <Button
-              type="primary"
-              htmlType="submit"
-            >
-              Continuar
-            </Button>
-          </Col>
-          <Col span={4}>
-            <Button
-              type="primary"
-              htmlType="submit"
-            >
-              Enviar
-            </Button>
-          </Col>
-        </Row>
-      );
-    } else if (participate === false) {
-      content = (
-        <DinamicForm
-          getFieldDecorator={getFieldDecorator}
-          content={noParticipateInfo}
-        />
-      );
-      buttons = (
-        <Row type="flex" justify="center">
-          <Col span={4}>
-            <Button
-              type="primary"
-              htmlType="submit"
-            >
-              Enviar
-            </Button>
-          </Col>
-        </Row>
-      );
+const ContentStyle = styled.div`
+  padding: 7px 0 12px 0;
+`;
+
+const emptyArrow = css`
+  content: " ";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 0;
+`;
+const backArrow = css`
+  ${emptyArrow};
+  left: -18px;
+  border-left: 18px solid transparent;
+`;
+const forwardArrow = css`
+  ${emptyArrow};
+  right: -18px;
+  border-top: 28px solid transparent;
+  border-bottom: 28px solid transparent;
+`;
+
+const TabsStyle = styled(Tabs)`
+  .ant-tabs-bar {
+    border-bottom-color: rgba(217,217,217,.5);
+    color: ${props => props.theme.color.normal};
+    .ant-tabs-tab{
+      margin-right: 20px;
+      background-color: ${props => props.theme.color.tabNormal};
+      &:hover{
+        color: ${props => props.theme.color.normal};
+      }
+      &:before {
+        ${backArrow}
+        border-top: 28px solid ${props => props.theme.color.tabNormal};
+        border-bottom: 28px solid ${props => props.theme.color.tabNormal};
+      }
+      &:after {
+        ${forwardArrow}
+        border-left: 18px solid ${props => props.theme.color.tabNormal};
+      }
     }
+    .ant-tabs-tab-active{
+      background-color: ${props => props.theme.color.primary};
+      color: ${props => props.theme.color.normal};
+      &:before {
+        ${backArrow}
+        border-top: 28px solid ${props => props.theme.color.primary};
+        border-bottom: 28px solid ${props => props.theme.color.primary};
+      }
+      &:after {
+        ${forwardArrow}
+        border-left: 18px solid ${props => props.theme.color.primary};
+      }
+    }
+  }
+`;
+
+class Supplier extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      current: 0,
+    };
+  }
+  getSteps = () => {
+    const dimensions = this.props.dimensions;
+    const steps = [
+      {
+        content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
+        stepContent: <ContentStyle><Title text="Survey.generalInfo" translate /></ContentStyle>,
+      },
+    ];
+    if (this.props.participateInCall === 'true') {
+      steps.push(
+        {
+          content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
+          stepContent: <ContentStyle><Title text="Survey.comercialInfo" translate /></ContentStyle>,
+        },
+      );
+      const {
+        loadedDimensions,
+        loadingDimensions,
+        loading,
+        error,
+      } = this.props;
+      if (dimensions.length === 0 &&
+        !loading && !loadingDimensions && !error && !loadedDimensions) {
+        const { call, getDimensionsBySurvey } = this.props;
+        const { idSurvey, id } = call;
+        getDimensionsBySurvey(idSurvey, id);
+      }
+    }
+    const mapDimensions = dimensions.map((dimension) => {
+      const { call, saveAnswer, system, readOnly } = this.props;
+      const { id, idSurvey } = call;
+      return {
+        name: dimension.name,
+        content: <Question
+          key={dimension.id}
+          idDimension={dimension.id}
+          idSurvey={idSurvey}
+          idCall={id}
+          system={system}
+          criterions={dimension.criterions}
+          saveAnswer={saveAnswer}
+          disabled={readOnly}
+          validateQuestions={this.validateQuestions}
+          next={this.next}
+        />,
+        stepContent: this.getProgress(dimension.id, dimension.name),
+      };
+    });
+    return steps.concat(mapDimensions);
+  }
+  getProgress = (dimensionId, name) => {
+    const percent = this.calculatePercent(dimensionId);
+    const status = 'success';
     return (
       <div>
-        <Steps current={0}>
-          <Step />
-          <Step />
-        </Steps>
-        <Tabs defaultActiveKey="2">
-          <TabPane tab="Informacion General" key="1">
-            <div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos commodi recusandae aliquid,
-            tempora quia exercitationem quidem ullam ex corporis rerum! Amet quis molestias atque
-            laborum numquam dolores esse, distinctio repudiandae?
-              <div>
-                <Field label="Participa del programa ?">
-                  <Select style={{ width: '100%' }} onChange={this.handleChange}>
-                    <Option value="si">Si</Option>
-                    <Option value="no">No</Option>
-                  </Select>
-                </Field>
-                <SubTitle text="Informaciuon de la empresa" />
-                Los campos marcados con asteriscos(*) son obligatorios
-              </div>
-              <Form onSubmit={this.handleSubmit}>
-                {
-                  content
-                }
-                {
-                  buttons
-                }
-              </Form>
-            </div>
-          </TabPane>
-          <TabPane tab="Informacion Comercial" key="2">
-            <Form onSubmit={this.handleSubmit}>
-              <DinamicForm
-                getFieldDecorator={getFieldDecorator}
-                content={comercialInfo}
-              />
-              <Button
-                type="primary"
-                htmlType="submit"
-              >
-                Enviar
-              </Button>
-            </Form>
-          </TabPane>
-        </Tabs>
+        <Progress
+          strokeWidth={10}
+          type="circle"
+          percent={percent}
+          status={status}
+          width={40}
+          format={value => (value === 0 ? '?' : `${value}%`)}
+        />
+        <Title text={name} />
       </div>
     );
   }
-}
+  getSupplierValues = (values) => {
+    const { supplier } = { ...this.props };
+    let newSupplier = { ...supplier };
+    newSupplier = Object.assign(newSupplier, values);
+    return newSupplier;
+  }
+  changePage = (index) => {
+    const current = parseInt(index, 10);
+    this.setState({ current });
+  }
+  save = (values, action) => {
+    if (!this.props.changeIdCompanySize && this.props.participateInCall === 'true') {
+      const newSupplier = this.getSupplierValues(values);
+      this.props.saveDataCallSupplier(newSupplier);
+      if (action === 'send') {
+        this.next();
+      }
+    } else if (this.props.participateInCall === 'false') {
+      values.participateInCall = 'false';
+      this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
+    } else {
+      const newSupplier = this.getSupplierValues(values);
+      this.props.saveDataCallSupplier(newSupplier);
+    }
+  }
+  validateQuestions = () => {
+    const dimesions = [...this.props.dimensions];
+    let send = true;
+    dimesions.forEach((dimension) => {
+      if (dimension.criterions.length === 0) {
+        send = send && false;
+      } else {
+        dimension.criterions.forEach((criteria) => {
+          criteria.questions.forEach((question) => {
+            let errors = {};
+            if (question.visible && question.required) {
+              if (question.answer.length > 0) {
+                if (question.requireAttachment) {
+                  question.answer.forEach((answer) => {
+                    if (answer.attachment) {
+                      if (answer.attachment.length === 0) {
+                        send = send && false;
+                        errors = {
+                          attachments: true,
+                        };
+                      }
+                    } else {
+                      send = send && false;
+                      errors = {
+                        attachments: true,
+                      };
+                    }
+                  });
+                }
+              } else {
+                send = send && false;
+                errors = {
+                  answers: true,
+                };
+                if (question.requireAttachment) {
+                  errors.attachments = true;
+                }
+              }
+            }
+            question.errors = errors;
+          });
+        });
+      }
+    });
 
-const Supplier = Form.create()(SupplierForm);
+    if (send) {
+      this.props.finishSurvey();
+    } else {
+      this.openNotification();
+    }
+
+    this.props.reloadDimensions(dimesions);
+  }
+  openNotification = () => {
+    message({ text: 'Validation.verifyDimensions', type: 'info' });
+  };
+
+  calculatePercent = (idDimension) => {
+    let totalQuestions = 0;
+    let responsedQuestion = 0;
+    let totalResponses = 0;
+    let total;
+    const actualDimension = this.props.dimensions.find(dimension => dimension.id === idDimension);
+    if (actualDimension.criterions.length > 0) {
+      actualDimension.criterions.forEach((criteria) => {
+        criteria.questions.forEach((question) => {
+          const isAnswered = question.answer.length > 0;
+          if (question.visible && question.required) {
+            totalQuestions += 1;
+            if (isAnswered) {
+              responsedQuestion += 1;
+            }
+          }
+          if (isAnswered) {
+            totalResponses += 1;
+          }
+        });
+      });
+      if (totalQuestions > 0) {
+        total = (responsedQuestion * 100) / totalQuestions;
+      } else if (totalResponses > 0) {
+        total = 100;
+      } else {
+        total = 0;
+      }
+    } else {
+      total = 0;
+    }
+    return Math.round(total);
+  }
+  next = () => {
+    window.scrollTo(0, 0);
+    const { current } = this.state;
+    const { dimensions } = this.props;
+    let nextCurrent = current + 1;
+    if (dimensions.length + 2 === current + 1) {
+      nextCurrent = 0;
+    }
+    this.setState({ current: nextCurrent });
+  }
+  prev = () => {
+    const current = this.state.current - 1;
+    this.setState({ current });
+  }
+
+  render() {
+    const { loading, loadingDimensions } = this.props;
+    const { current } = this.state;
+    const steps = this.getSteps();
+    return (
+      <Spin spinning={loading}>
+        <SurveyText />
+        <TabsStyle
+          tabBarExtraContent={<Spin spinning={loadingDimensions} />}
+          activeKey={current.toString()}
+          animated={false}
+          onTabClick={this.changePage}
+        >
+          {steps.map((item, index) => {
+            const key = index.toString();
+            return (
+              <TabPane tab={item.stepContent} key={key}>{item.content}</TabPane>
+            );
+          },
+          )}
+        </TabsStyle>
+      </Spin>
+    );
+  }
+}
 
 export default Supplier;
 

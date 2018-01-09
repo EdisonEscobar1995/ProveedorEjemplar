@@ -4,26 +4,26 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public abstract class UserDTO extends MasterDTO {
+public class UserDTO extends MasterDTO {
     @Expose
-    private List<String> rolsId;
+    private List<String> idRols;
     @Expose
-    private List<RolDTO> rols;
+    private String email;
 
-    public List<RolDTO> getRol() {
-        return rols;
+    public List<String> getIdRols() {
+        return idRols;
     }
 
-    public void setRol(List<RolDTO> rols) {
-        this.rols = rols;
+    public void setIdRols(List<String> idRols) {
+        this.idRols = idRols;
     }
 
-    public void setRolsId(List<String> rolsId) {
-        this.rolsId = rolsId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public List<String> getRolsId() {
-        return rolsId;
+    public String getEmail() {
+        return email;
     }
 
 }

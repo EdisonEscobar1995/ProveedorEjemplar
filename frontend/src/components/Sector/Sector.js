@@ -1,9 +1,11 @@
 import React from 'react';
-import GenericForm from '../shared/GenericForm';
+import TableForm from '../shared/TableForm';
 
-function Sector({ colummns, data }) {
+function Sector(props) {
   return (
-    <GenericForm colummns={colummns} data={data} />
+    <TableForm
+      {...props}
+    />
   );
 }
 export default Sector;

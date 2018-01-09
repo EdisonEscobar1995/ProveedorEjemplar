@@ -4,23 +4,19 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class NotificationDTO extends MasterDTO{
+public class NotificationDTO extends MasterDTO {
     @Expose
-    private String banner;
+    private String idBanner;
+    @Expose
+    private String idFooter;
     @Expose
     private String subject;
     @Expose
     private String message;
     @Expose
     private List<String> withCopy;
-
-    public String getBanner() {
-        return banner;
-    }
-
-    public void setBanner(String banner) {
-        this.banner = banner;
-    }
+    @Expose
+    private String alias;
 
     public String getSubject() {
         return subject;
@@ -46,4 +42,24 @@ public class NotificationDTO extends MasterDTO{
         this.withCopy = withCopy;
     }
 
+    public String getAlias() {
+        return alias;
+    }
+
+    public String getIdBanner() {
+        return idBanner;
+    }
+
+    public void setIdBanner(String idBanner) {
+        this.idBanner = idBanner;
+    }
+
+    public String getIdFooter() {
+        return idFooter;
+    }
+
+    public void setIdFooter(String idFooter) {
+        this.idFooter = idFooter;
+    }
+    
 }

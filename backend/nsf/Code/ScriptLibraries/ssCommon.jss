@@ -18,7 +18,7 @@ function validateAccess(document1){
 
 	if(session.getEffectiveUserName() == "Anonymous"){
 		var externalCtx = facesContext.getExternalContext();
-		externalCtx.redirect("/"+webDbName+"?login&redirectto="+context.getUrl()); 
+		externalCtx.redirect("/"+webDbName+"?login&redirectto=/"+webDbName+view.getPageName()); 
 	}else{
 		if(!isAdmin()){
 			context.redirectToPage("xpError.xsp?Open&cod=1");

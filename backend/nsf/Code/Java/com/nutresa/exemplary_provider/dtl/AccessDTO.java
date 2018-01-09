@@ -1,8 +1,13 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import com.google.gson.annotations.Expose;
+
 public class AccessDTO {
+    @Expose
     private String id;
+    @Expose
     private String api;
+    @Expose
     private String action;
 
     public String getApi() {

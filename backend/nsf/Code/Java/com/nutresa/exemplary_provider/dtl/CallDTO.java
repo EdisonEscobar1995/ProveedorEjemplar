@@ -103,4 +103,13 @@ public class CallDTO {
         return active;
     }
 
+    public boolean isNotCaducedDate(Date dateInCall, Date today) {
+        boolean response = false;
+        if (today.compareTo(dateInCall) < 0) {
+            response = true;
+        }
+
+        return response;
+    }
+    
 }
