@@ -97,7 +97,6 @@ public class BaseAPI<T> extends DesignerFacesServlet {
             parameters.remove("action");
 
             List<String> access = getACL();
-            access.add("*.*");
             
             if (requestMethod != TypeRequestMethod.OPTIONS && !validateAccess(access, this.getClass().getSimpleName(), action)) {
                 status = 401;
