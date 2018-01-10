@@ -33,6 +33,10 @@ function unlockSupplierApi(supplierByCall) {
   return instance.post('SupplierByCall?action=unlockSupplier', supplierByCall);
 }
 
+function getSurveysApi(year = '') {
+  return instance.get(`Supplier?action=getSurveys&year=${year}`);
+}
+
 export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
@@ -42,4 +46,5 @@ export {
   getModifiedSuppliersApi,
   unlockSupplierApi,
   finishSurveyApi,
+  getSurveysApi,
 };
