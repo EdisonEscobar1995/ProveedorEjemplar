@@ -1,7 +1,8 @@
 const intValidation = { pattern: /^[0-9]+$/, message: 'Ingrese un valor entero' };
 const emailMessage = 'Ingrese un correo electrónico válido';
 const validateEmail = (values) => {
-  const regex = /^[a-zA-Z0-9\\.]+@[a-zA-Z0-9]+(\\-)?[a-zA-Z0-9]+(\.)?[a-zA-Z0-9]{2,6}?\.[a-zA-Z]{2,6}$/;
+  // eslint-disable-next-line
+  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   let resultTotal = true;
   values.forEach((element) => {
     const result = regex.test(element);
