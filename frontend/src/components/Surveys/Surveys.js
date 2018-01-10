@@ -4,10 +4,6 @@ import { Table } from 'antd';
 function Surveys({ data, loading }) {
   const { suppliers, suppliersByCall, masters } = data;
 
-  const isLocked = id => suppliersByCall
-    .find(item => item.idSupplier === id)
-    .lockedByModification;
-
   const columns = [{
     title: 'Año',
     dataIndex: 'year',
@@ -43,14 +39,17 @@ function Surveys({ data, loading }) {
     dataIndex: 'idCompanySize',
     key: 'idCompanySize',
     render(text, record) {
-      return masters.CompanySize.find(companySize => companySize.id === record.idCompanySize).name;
+      const companySize = masters.CompanySize.find(item => item.id === record.idCompanySize);
+      return companySize ? companySize.name : '';
     },
   }, {
     title: 'Estado',
-    dataIndex: 'state',
-    key: 'state',
+    dataIndex: 'surveyState',
+    key: 'surveyState',
     render(text, record) {
-      return isLocked(record.id) ? 'Bloqueado' : 'Notificado';
+      return suppliersByCall
+        .find(item => item.idSupplier === record.id)
+        .state;
     },
   }];
 

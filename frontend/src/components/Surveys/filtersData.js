@@ -28,7 +28,7 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
             companySize: {
               value: '',
             },
-            state: {
+            surveyState: {
               value: '',
             },
             supplier: {
@@ -84,11 +84,11 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           span: 8,
           type: 'select',
           label: 'Estado',
-          key: 'state',
+          key: 'surveyState',
           value: '',
           options: masters ? masters.State : [],
           handleChange: (value) => {
-            const values = { ...form.getFieldsValue(), state: value };
+            const values = { ...form.getFieldsValue(), surveyState: value };
             filterSurveys(values);
           },
         }, {
