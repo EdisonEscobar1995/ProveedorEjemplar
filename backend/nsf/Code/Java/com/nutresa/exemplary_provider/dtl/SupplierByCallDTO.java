@@ -30,7 +30,7 @@ public class SupplierByCallDTO {
     @Expose
     private String oldIdCompanySize;
     @Expose
-    private String state = "SUPPLIER";
+    private String state;
     @Expose
     private boolean invitedToCall;
 

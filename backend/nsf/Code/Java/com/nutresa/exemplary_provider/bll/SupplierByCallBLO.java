@@ -149,7 +149,24 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 response = supplierByCall;
             }
         }
+
         return response;
     }
 
+    @Override
+    public SupplierByCallDTO save(SupplierByCallDTO dto) throws HandlerGenericException {
+        if (dto.getParticipateInCall().equals("false")) {
+            dto.setState("DONT_PARTICIPATE");
+        }
+
+        if (dto.getParticipateInCall().equals("true")) {
+            dto.setState("SUPPLIER");
+        }
+
+        if (dto.getParticipateInCall().equals("")) {
+            dto.setState("NOT_STARTED");
+        }
+
+        return super.save(dto);
+    }
 }

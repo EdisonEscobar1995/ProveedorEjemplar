@@ -10,16 +10,16 @@ public class AnswerAPI extends GenericAPI<AnswerDTO, AnswerBLO> {
     public AnswerAPI() {
         super(AnswerDTO.class, AnswerBLO.class);
     }
-    
-    public ServletResponseDTO<AnswerDTO> deleteMassive(AnswerDTO answer){
-        ServletResponseDTO<AnswerDTO> response  = null;
+
+    public ServletResponseDTO<AnswerDTO> deleteMassive(AnswerDTO answer) {
+        ServletResponseDTO<AnswerDTO> response = null;
         AnswerBLO answerBLO = new AnswerBLO();
         try {
             response = new ServletResponseDTO<AnswerDTO>(answerBLO.deleteMassive(answer));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<AnswerDTO>(exception);
         }
-        
+
         return response;
     }
 

@@ -1,11 +1,13 @@
-package com.nutresa.exemplary_provider.dtl;
+package com.nutresa.exemplary_provider.dtl.queries;
 
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 
-public class ModifiedSupplierDTO {
+public class InformationFromSupplier {
     @Expose
     private List<SupplierDTO> suppliers;
     @Expose
