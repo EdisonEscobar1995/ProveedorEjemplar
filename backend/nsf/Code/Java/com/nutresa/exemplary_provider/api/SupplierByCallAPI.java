@@ -24,18 +24,6 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         return response;
     }
 
-    public ServletResponseDTO<SupplierByCallDTO> dontParticipateInProgram(SupplierByCallDTO supplierByCall) {
-        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        ServletResponseDTO<SupplierByCallDTO> response = null;
-        try {
-            response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO.save(supplierByCall));
-        } catch (HandlerGenericException exception) {
-            response = new ServletResponseDTO<SupplierByCallDTO>(exception);
-        }
-
-        return response;
-    }
-
     public ServletResponseDTO<SupplierByCallDTO> finishSurvey(SupplierByCallDTO supplierByCall) {
         ServletResponseDTO<SupplierByCallDTO> response = null;
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();

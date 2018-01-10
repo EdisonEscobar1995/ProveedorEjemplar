@@ -49,18 +49,23 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             // proveedores seleccionados
             String[] idFieldNames = { "CompanySize", "Supply" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
-            
+
             Map<String, List<DTO>> masters = getMasters(idFieldNames, masterIds, true);
             response.setMasters(masters);
             response.setSuppliers(suppliers);
             response.setSuppliersByCall(supplierByCall);
-            
+
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
         return response;
     }
-    
-    
-    
+
+    protected String getIdCallByYear(String year) throws HandlerGenericException {
+        Map<String, List<Object>> listIds;
+        List<DTO> listCalls = getAllBy("year", year);
+        listIds = Common.getDtoFields(listCalls, new String[] { "[id]" }, CallDTO.class);
+        return Common.getIdsFromList(listIds.get("[id]"));
+    }
+
 }
