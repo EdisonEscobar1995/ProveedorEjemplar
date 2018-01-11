@@ -24,6 +24,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     public SupplierByCallDTO getCurrentCallBySupplier() throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         CallDAO callDAO = new CallDAO();
+        StateBLO stateBLO = new StateBLO();
         CallDTO call = null;
         SupplierByCallDTO response = null;
         SupplierBLO supplierBLO = new SupplierBLO();
@@ -46,7 +47,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             throw new HandlerGenericException("DONT_HAVE_SURVEY_ASSOCIED");
         }
 
-        if (null != response && "EVALUATOR".equals(response.getState())) {
+        if (null != response && "EVALUATOR".equals(stateBLO.get(response.getIdState()).getShortName())) {
             readOnly = true;
         }
         return response;
@@ -75,7 +76,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     public SupplierByCallDTO finishSurvey(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         SupplierByCallDTO response = null;
-        supplierByCall.setState("EVALUATOR");
+        StateBLO stateBLO = new StateBLO();
+        supplierByCall.setIdState(stateBLO.getStateByShortName("EVALUATOR").getId());
         CallBLO callBLO = new CallBLO();
         CallDTO call = callBLO.get(supplierByCall.getIdCall());
         if (call.isNotCaducedDate(call.getDeadlineToMakeSurvey(), new Date())) {
@@ -155,16 +157,17 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     @Override
     public SupplierByCallDTO save(SupplierByCallDTO dto) throws HandlerGenericException {
+        StateBLO stateBLO = new StateBLO();
         if (dto.getParticipateInCall().equals("false")) {
-            dto.setState("DONT_PARTICIPATE");
+            dto.setIdState(stateBLO.getStateByShortName("DONT_PARTICIPATE").getId());
         }
 
         if (dto.getParticipateInCall().equals("true")) {
-            dto.setState("SUPPLIER");
+            dto.setIdState(stateBLO.getStateByShortName("SUPPLIER").getId());
         }
 
         if (dto.getParticipateInCall().equals("")) {
-            dto.setState("NOT_STARTED");
+            dto.setIdState(stateBLO.getStateByShortName("NOT_STARTED").getId());
         }
 
         return super.save(dto);

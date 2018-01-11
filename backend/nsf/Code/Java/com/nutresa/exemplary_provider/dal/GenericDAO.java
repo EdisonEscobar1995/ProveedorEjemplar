@@ -131,7 +131,6 @@ public abstract class GenericDAO<T> {
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
             Document document;
-            //loadTranslator();
             for (ViewEntry viewEntry : vec) {
                 document = viewEntry.getDocument();
                 list.add((T) this.castDocument(document));

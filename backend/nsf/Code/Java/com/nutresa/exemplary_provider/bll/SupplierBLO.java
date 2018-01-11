@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nutresa.exemplary_provider.dal.StateDAO;
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.CustomerDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
+import com.nutresa.exemplary_provider.dtl.StateDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
@@ -27,44 +29,16 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         dto.autoSetIdDocuments();
         dto.autoSetIdAttachedFinancialReport();
 
-        if (null != supplier.getPrincipalCustomer()) {
-            CustomerBLO customerBLO = new CustomerBLO();
-            for (CustomerDTO customer : supplier.getPrincipalCustomer()) {
-                Map<String, String> parameters = new HashMap<String, String>();
-                parameters.put("id", customer.getId());
-                customerBLO.delete(parameters);
-            }
-        }
-
-        if (null != supplier.getAttachedFinancialReport()) {
-            AttachmentBLO attachmentBLO = new AttachmentBLO();
-            for (AttachmentDTO attachment : supplier.getAttachedFinancialReport()) {
-                attachmentBLO.delete(attachment.getId());
-            }
-        }
-
-        if (null != supplier.getDocument()) {
-            AttachmentBLO attachmentBLO = new AttachmentBLO();
-            for (AttachmentDTO attachment : supplier.getDocument()) {
-                attachmentBLO.delete(attachment.getId());
-            }
-        }
-
-        if (null != dto.getPrincipalCustomer() && !dto.getPrincipalCustomer().isEmpty()) {
-            CustomerBLO customerBLO = new CustomerBLO();
-            for (CustomerDTO customer : dto.getPrincipalCustomer()) {
-                if (null != customer.getName() && !customer.getName().trim().isEmpty()) {
-                    customer.setIdSupplier(dto.getId());
-                    customerBLO.save(customer);
-                }
-            }
-        }
+        deleteCustomers(supplier.getPrincipalCustomer());
+        deleteAttachments(supplier.getAttachedFinancialReport());
+        deleteDocuments(supplier.getDocument());
+        savePrincipalCustomers(dto.getPrincipalCustomer(), dto.getId());
 
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         supplierByCallBLO.participateInCall();
         if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
             supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
-            supplier = dao.update(dto.getId(), dto);
+            dao.update(dto.getId(), dto);
             NotificationBLO notificationBLO = new NotificationBLO();
             notificationBLO.notifyChangeCompanySize(dto.getId());
         }
@@ -97,13 +71,13 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         InformationFromSupplier response = new InformationFromSupplier();
         List<Object> listYears;
-        
+
         try {
             listYears = getFieldAll(0, "vwCallsByYear");
             if (null == year || year.isEmpty()) {
                 year = (String) listYears.get(0);
             }
-            
+
             List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", callBLO.getIdCallByYear(year),
                     "vwSuppliersByCallModifiedIdCall");
             response = getInformationFromSuppliers(listYears, supplierByCall);
@@ -155,19 +129,25 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     private InformationFromSupplier getInformationFromSuppliers(List<Object> listYears, List<DTO> supplierByCall)
             throws HandlerGenericException {
         InformationFromSupplier response = new InformationFromSupplier();
-        Map<String, List<Object>> listIds;
+        Map<String, List<Object>> listIdsSupplierByCall;
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         SupplierDAO supplierDAO = new SupplierDAO();
-        
+        StateDAO stateDAO = new StateDAO();
+
         try {
-            listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
-            List<SupplierDTO> suppliers = supplierDAO
-                    .getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
+            listIdsSupplierByCall = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]", "[idState]" },
+                    SupplierByCallDTO.class);
+            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
+                    .get("[idSupplier]")));
+            List<StateDTO> states = stateDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
+                    .get("[idState]"), true));
+
             String[] idFieldNames = { "Category", "Country", "Supply" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
 
             Map<String, List<DTO>> masters = getMasters(idFieldNames, masterIds, true);
             masters.put("CompanySize", companySizeBLO.getAll());
+            response.setStates(states);
             response.setMasters(masters);
             response.setSuppliers(suppliers);
             response.setSuppliersByCall(supplierByCall);
@@ -177,19 +157,19 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         }
         return response;
     }
-    
+
     public InformationFromSupplier getSummaryWithSurvey(String year) throws HandlerGenericException {
         CallBLO callBLO = new CallBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         InformationFromSupplier response = new InformationFromSupplier();
         List<Object> listYears;
-        
+
         try {
             listYears = getFieldAll(0, "vwCallsByYear");
             if (null == year || year.isEmpty()) {
                 year = (String) listYears.get(0);
             }
-            
+
             List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", callBLO.getIdCallByYear(year),
                     "vwSuppliersByCallIdCall");
             response = getInformationFromSuppliers(listYears, supplierByCall);
@@ -198,6 +178,48 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         }
 
         return response;
+    }
+
+    private void deleteCustomers(List<CustomerDTO> customers) throws HandlerGenericException {
+        if (null != customers) {
+            CustomerBLO customerBLO = new CustomerBLO();
+            for (CustomerDTO customer : customers) {
+                Map<String, String> parameters = new HashMap<String, String>();
+                parameters.put("id", customer.getId());
+                customerBLO.delete(parameters);
+            }
+        }
+    }
+
+    private void deleteAttachments(List<AttachmentDTO> attachments) {
+        if (null != attachments) {
+            AttachmentBLO attachmentBLO = new AttachmentBLO();
+            for (AttachmentDTO attachment : attachments) {
+                attachmentBLO.delete(attachment.getId());
+            }
+        }
+    }
+
+    private void deleteDocuments(List<AttachmentDTO> documents) {
+        if (null != documents) {
+            AttachmentBLO attachmentBLO = new AttachmentBLO();
+            for (AttachmentDTO attachment : documents) {
+                attachmentBLO.delete(attachment.getId());
+            }
+        }
+    }
+
+    private void savePrincipalCustomers(List<CustomerDTO> principalCustomers, String idSupplier)
+            throws HandlerGenericException {
+        if (null != principalCustomers && !principalCustomers.isEmpty()) {
+            CustomerBLO customerBLO = new CustomerBLO();
+            for (CustomerDTO customer : principalCustomers) {
+                if (null != customer.getName() && !customer.getName().trim().isEmpty()) {
+                    customer.setIdSupplier(idSupplier);
+                    customerBLO.save(customer);
+                }
+            }
+        }
     }
 
 }
