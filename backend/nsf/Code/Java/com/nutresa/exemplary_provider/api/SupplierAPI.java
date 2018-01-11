@@ -28,11 +28,12 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         return response;
     }
 
-    public ServletResponseDTO<SupplierDTO> loadInformation() {
+    public ServletResponseDTO<SupplierDTO> loadInformation(Map<String, String> parametersInRequest) {
         SupplierBLO supplierBLO = new SupplierBLO();
         ServletResponseDTO<SupplierDTO> response = null;
         try {
-            response = new ServletResponseDTO<SupplierDTO>(supplierBLO.getSupplierInSession());
+            response = new ServletResponseDTO<SupplierDTO>(supplierBLO.getSupplierInSession(parametersInRequest
+                    .get("idSupplier")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<SupplierDTO>(exception);
         }

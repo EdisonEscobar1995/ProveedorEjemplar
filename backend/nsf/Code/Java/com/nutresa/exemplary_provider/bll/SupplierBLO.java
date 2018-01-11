@@ -46,13 +46,26 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return dao.update(dto.getId(), dto);
     }
 
-    public SupplierDTO getSupplierInSession() throws HandlerGenericException {
+    public SupplierDTO getSupplierInSession(String idSupplier) throws HandlerGenericException {
         SupplierDTO response = null;
         SupplierDAO dao = new SupplierDAO();
-        response = dao.getSupplierInDirectory();
-        response.setDocument(getDocuments(response.getIdDocuments()));
-        response.setAttachedFinancialReport(getDocuments(response.getIdAttachedFinancialReport()));
-        response.setPrincipalCustomer(getCustomersBySupplier(response.getId()));
+        response = dao.getSupplierByFullName(null);
+
+        if (null == response) {
+            UserBLO userBLO = new UserBLO();
+            if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+                response = dao.getSupplierByFullName(idSupplier);
+            } else {
+                throw new HandlerGenericException("ROL_INVALID");
+            }
+        }
+
+        if (null != response) {
+            response.setDocument(getDocuments(response.getIdDocuments()));
+            response.setAttachedFinancialReport(getDocuments(response.getIdAttachedFinancialReport()));
+            response.setPrincipalCustomer(getCustomersBySupplier(response.getId()));
+        }
+
         return response;
     }
 
@@ -114,7 +127,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         boolean response = false;
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         SupplierDAO supplierDAO = new SupplierDAO();
-        SupplierDTO supplier = supplierDAO.getSupplierInDirectory();
+        SupplierDTO supplier = supplierDAO.getSupplierByFullName(null);
         if (null != supplier && null != supplierByCallBLO.getBy("idSupplier", supplier.getId())) {
             response = true;
         }

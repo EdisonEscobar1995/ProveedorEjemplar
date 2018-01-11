@@ -22,7 +22,7 @@ public class AnswerBLO extends GenericBLO<OptionDTO, AnswerDAO> {
         List<String> answerIds = answer.getIdsToDelete();
         AnswerDAO answerDAO = new AnswerDAO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        String idSupplierByCall = supplierByCallBLO.getCurrentCallBySupplier().getId();
+        String idSupplierByCall = supplierByCallBLO.getCurrentCallBySupplier(null).getId();
         answerDAO.deleteMassive(answerIds, idSupplierByCall);
         return answer;
     }

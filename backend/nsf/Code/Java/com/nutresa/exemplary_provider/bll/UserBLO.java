@@ -42,7 +42,6 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
 
     public List<DTO> getRolsByUser() throws HandlerGenericException {
         UserDTO userInSession = getUserInSession();
-        SupplierBLO supplierBLO = new SupplierBLO();
         RolBLO rolBLO = new RolBLO();
         List<DTO> rols = null;
         if (null != userInSession) {
@@ -50,10 +49,12 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             idRols.addAll(userInSession.getIdRols());
             rols = rolBLO.getAllBy("id", Common.getIdsFromList(idRols));
         } else {
+            SupplierBLO supplierBLO = new SupplierBLO();
             if (supplierBLO.supplierWasInCall()) {
                 rols = rolBLO.getAllBy("shortName", "SUPPLIER");
             }
         }
+
         return rols;
     }
 
@@ -78,10 +79,10 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     public Map<String, Object> getUserContext() throws HandlerGenericException {
         Map<String, Object> userContext = new LinkedHashMap<String, Object>();
         List<DTO> rols = getRolsByUser();
-        if(null != rols) {
+        if (null != rols) {
             MenuBLO menuBLO = new MenuBLO();
             UserDAO userDAO = new UserDAO();
-            Name dominoUser = userDAO.getDominoUser(); 
+            Name dominoUser = userDAO.getDominoUser();
             Map<String, String> userInfo = new LinkedHashMap<String, String>();
             userInfo.put("name", dominoUser.getNamePart(NamePartKey.Common));
             userInfo.put("canonical", dominoUser.getNamePart(NamePartKey.Canonical));
@@ -89,7 +90,22 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             userContext.put("rols", rols);
             userContext.put("menu", menuBLO.getMenusByRol());
         }
+
         return userContext;
+    }
+
+    protected boolean isRol(String shortNameRol) throws HandlerGenericException {
+        List<DTO> rols = getRolsByUser();
+        boolean response = false;
+        for (DTO record : rols) {
+            RolDTO rol = (RolDTO) record;
+            if (rol.getShortName().equals(shortNameRol)) {
+                response = true;
+                break;
+            }
+        }
+
+        return response;
     }
 
 }
