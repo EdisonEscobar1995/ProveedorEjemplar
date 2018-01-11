@@ -30,8 +30,7 @@ const getSurveys = year => (dispatch) => {
   requestApi(dispatch, getDataSurveysProgress, getSurveysApi, year)
     .then((response) => {
       const { data } = response.data;
-      const { suppliers } = sortByField(data.suppliers, 'name');
-      data.suppliers = suppliers.map((item) => {
+      data.suppliers = sortByField(data.suppliers, 'name').map((item) => {
         item.visible = true;
         return item;
       });
