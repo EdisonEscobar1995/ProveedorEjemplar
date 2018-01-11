@@ -21,6 +21,15 @@ const routes = [
   },
   {
     index: 2,
+    name: 'SUPPLIER_BY_ID',
+    path: '/supplier/:idSupplier/:idSupplierByCall',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Supplier').then(module => module.default),
+    ),
+  },
+  {
+    index: 3,
     name: 'SECTOR',
     path: '/sector',
     exact: true,
@@ -30,7 +39,7 @@ const routes = [
     hidden: true,
   },
   {
-    index: 3,
+    index: 4,
     name: 'CALL',
     path: '/call',
     exact: true,
@@ -39,7 +48,7 @@ const routes = [
     ),
   },
   {
-    index: 4,
+    index: 5,
     name: 'CALL_FORM',
     path: '/call/form',
     exact: true,
@@ -48,7 +57,7 @@ const routes = [
     ),
   },
   {
-    index: 5,
+    index: 6,
     name: 'CALL_BY_ID',
     path: '/call/form/:id',
     exact: true,
@@ -57,7 +66,7 @@ const routes = [
     ),
   },
   {
-    index: 6,
+    index: 7,
     name: 'MODIFIED_SUPPLIERS',
     path: '/modifiedSuppliers',
     exact: true,
@@ -66,7 +75,7 @@ const routes = [
     ),
   },
   {
-    index: 7,
+    index: 8,
     name: 'SURVEYS',
     path: '/surveys',
     exact: true,

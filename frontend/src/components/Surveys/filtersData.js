@@ -3,6 +3,7 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
     years,
     suppliers,
     masters,
+    states,
   } = data;
 
   return [
@@ -86,7 +87,7 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           label: 'Estado',
           key: 'surveyState',
           value: '',
-          options: masters ? masters.State : [],
+          options: states,
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), surveyState: value };
             filterSurveys(values);

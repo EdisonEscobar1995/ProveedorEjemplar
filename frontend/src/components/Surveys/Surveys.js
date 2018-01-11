@@ -1,21 +1,20 @@
 import React from 'react';
 import { Table } from 'antd';
+import { Link } from 'react-router-dom';
 
 function Surveys({ data, loading }) {
-  const { suppliers, suppliersByCall, masters } = data;
+  const { suppliers, suppliersByCall, masters, states } = data;
 
   const columns = [{
-    title: 'Año',
-    dataIndex: 'year',
-    key: 'year',
-  }, {
     title: 'Nombre del proveedor',
     dataIndex: 'businessName',
     key: 'businessName',
+    sorter: (a, b) => (a.businessName < b.businessName ? -1 : 1),
   }, {
     title: 'Código SAP',
     dataIndex: 'sapCode',
     key: 'sapCode',
+    sorter: (a, b) => (a.sapCode < b.sapCode ? -1 : 1),
   }, {
     title: 'NIT',
     dataIndex: 'nit',
@@ -44,12 +43,27 @@ function Surveys({ data, loading }) {
     },
   }, {
     title: 'Estado',
-    dataIndex: 'surveyState',
-    key: 'surveyState',
+    dataIndex: 'idState',
+    key: 'idState',
     render(text, record) {
-      return suppliersByCall
+      const idState = suppliersByCall
         .find(item => item.idSupplier === record.id)
-        .state;
+        .idState;
+      return states.find(item => item.id === idState).name;
+    },
+  }, {
+    title: 'Proveedor',
+    dataIndex: 'linkSupplier',
+    key: 'linkSupplier',
+    render(text, record) {
+      const idSupplierByCall = suppliersByCall
+        .find(item => item.idSupplier === record.id)
+        .id;
+      return (
+        <Link to={`/supplier/${record.id}/${idSupplierByCall}`}>
+          Ver
+        </Link>
+      );
     },
   }];
 

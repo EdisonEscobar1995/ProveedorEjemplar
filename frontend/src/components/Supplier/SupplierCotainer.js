@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Supplier from './Supplier';
 import {
   getDataSupplier,
@@ -31,7 +32,8 @@ import {
 
 class SupplierContainer extends Component {
   componentDidMount() {
-    this.props.getDataSupplier();
+    const { match: { params: { idSupplier = null, idSupplierByCall = null } } } = this.props;
+    this.props.getDataSupplier(idSupplier, idSupplierByCall);
   }
   render() {
     return (
@@ -68,8 +70,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getDataSupplier: () => {
-    dispatch(getDataSupplier());
+  getDataSupplier: (idSupplier, idSupplierByCall) => {
+    dispatch(getDataSupplier(idSupplier, idSupplierByCall));
   },
   getDataCategoryBySuply: (data) => {
     dispatch(getDataCategoryBySuply(data));
@@ -145,7 +147,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SupplierContainer);
+)(SupplierContainer));

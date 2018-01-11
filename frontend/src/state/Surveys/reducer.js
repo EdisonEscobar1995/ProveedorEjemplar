@@ -31,17 +31,17 @@ function surveysApp(state = initialState, action) {
         data: {
           ...state.data,
           suppliers: state.data.suppliers.map((item) => {
-            const surveyState = state.data.suppliersByCall
+            const idState = state.data.suppliersByCall
               .find(supplierByCall => supplierByCall.idSupplier === item.id)
-              .state;
+              .idState;
             const {
               supply = '',
               category = '',
               companySize = '',
+              surveyState = '',
               supplier = '',
               country = '',
             } = action.data;
-            const supplierState = action.data.state ? action.data.state : '';
             let visible = true;
             if (category !== '' && category !== item.idCategory) {
               visible = false;
@@ -53,7 +53,7 @@ function surveysApp(state = initialState, action) {
               visible = false;
             } else if (companySize !== '' && companySize !== item.idCompanySize) {
               visible = false;
-            } else if (supplierState !== '' && supplierState !== surveyState) {
+            } else if (surveyState !== '' && surveyState !== idState) {
               visible = false;
             }
             return {
