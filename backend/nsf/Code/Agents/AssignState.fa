@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='AssignState' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9'
+ replicaid='052581DB006A5865' hide='v3' publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='2a6e2' unid='4DA7D3336E2E8D500525821300505DA4' sequence='5'>
+<created><datetime>20180112T093748,52-05</datetime></created>
+<modified><datetime>20180112T094532,40-05</datetime></modified>
+<revised><datetime>20180112T094532,39-05</datetime></revised>
+<lastaccessed><datetime>20180112T094532,40-05</datetime></lastaccessed>
+<addedtofile><datetime>20180112T093748,78-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<designchange><datetime>20180112T094532,30-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='action'>
+<simpleaction action='runformula'><formula>FIELD idState := @If (participateInCall = "true" ; "62BF6606CD0CD2CD05258211007251AA"; participateInCall = "false"; "E82C9E17B91CE1A8052582110070EA3E"; participateInCall = ""; "9ED195C276807C3805258211007247FA"; "");
+SELECT @All</formula></simpleaction></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180112T094532,30-05</datetime></agentmodified></rundata></agent>
+
