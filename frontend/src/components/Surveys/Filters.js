@@ -6,7 +6,7 @@ import DinamicForm from '../shared/DinamicForm';
 class Filters extends Component {
   handleReset = () => {
     this.props.form.resetFields();
-    this.props.getModifiedSuppliers();
+    this.props.getSurveys();
   }
 
   render() {
