@@ -1,17 +1,11 @@
 import instance from './instance';
 
-function getDataSuppliertApi(id) {
-  if (id && typeof id === 'string') {
-    return instance.get(`Supplier?action=loadInformation&idSupplier=${id}`);
-  }
-  return instance.get('SupplierByCall?action=currentCall');
+function getDataSuppliertApi(id = '') {
+  return instance.get(`Supplier?action=loadInformation&idSupplier=${id}`);
 }
 
-function getDataCallSuppliertApi(id) {
-  if (id && typeof id === 'string') {
-    return instance.get(`SupplierByCall?action=currentCall&idSupplierByCall=${id}`);
-  }
-  return instance.get('SupplierByCall?action=currentCall');
+function getDataCallSuppliertApi(id = '') {
+  return instance.get(`SupplierByCall?action=currentCall&idSupplierByCall=${id}`);
 }
 
 function finishSurveyApi(call) {
