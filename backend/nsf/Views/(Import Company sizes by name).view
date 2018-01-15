@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Import Company sizes by name)' alias='ImportCompanySizesByName'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
  extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='61a' unid='30C6E08CA5392AC3052581DF004EEACA' sequence='22'>
+<noteinfo noteid='61a' unid='30C6E08CA5392AC3052581DF004EEACA' sequence='29'>
 <created><datetime>20171121T092159,14-05</datetime></created>
-<modified><datetime>20171214T134930,14-05</datetime></modified>
-<revised><datetime>20171214T134930,13-05</datetime></revised>
-<lastaccessed><datetime>20171214T134930,14-05</datetime></lastaccessed>
+<modified><datetime>20180115T173427,72-05</datetime></modified>
+<revised><datetime>20180115T173427,71-05</datetime></revised>
+<lastaccessed><datetime>20180115T173427,72-05</datetime></lastaccessed>
 <addedtofile><datetime>20171121T092159,17-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code

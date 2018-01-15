@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Dimensions and criterions by survey)' alias='vwDimensionsAndCriterionsBySurvey'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
  extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='b01e' unid='9F48076C0A9C8FD0052581E50083C05A' sequence='10'>
+<noteinfo noteid='b01e' unid='9F48076C0A9C8FD0052581E50083C05A' sequence='17'>
 <created><datetime>20171127T185904,58-05</datetime></created>
-<modified><datetime>20171214T134929,78-05</datetime></modified>
-<revised><datetime>20171214T134929,77-05</datetime></revised>
-<lastaccessed><datetime>20171214T134929,78-05</datetime></lastaccessed>
+<modified><datetime>20180115T173427,58-05</datetime></modified>
+<revised><datetime>20180115T173427,57-05</datetime></revised>
+<lastaccessed><datetime>20180115T173427,58-05</datetime></lastaccessed>
 <addedtofile><datetime>20171127T185904,61-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
