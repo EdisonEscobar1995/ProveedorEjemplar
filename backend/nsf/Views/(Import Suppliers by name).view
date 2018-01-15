@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Import Suppliers by name)' alias='ImportSuppliersByName' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
- showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
- unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
- opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
- extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
- headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='736' unid='FD3AB42AB369CAA5052581E0004850BC' sequence='22'>
+<noteinfo noteid='736' unid='FD3AB42AB369CAA5052581E0004850BC' sequence='29'>
 <created><datetime>20171122T080952,60-05</datetime></created>
-<modified><datetime>20171214T134930,64-05</datetime></modified>
-<revised><datetime>20171214T134930,63-05</datetime></revised>
-<lastaccessed><datetime>20171214T134930,64-05</datetime></lastaccessed>
+<modified><datetime>20180115T173428,00-05</datetime></modified>
+<revised><datetime>20180115T173427,99-05</datetime></revised>
+<lastaccessed><datetime>20180115T173428,00-05</datetime></lastaccessed>
 <addedtofile><datetime>20171122T080952,70-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code

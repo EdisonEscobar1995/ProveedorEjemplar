@@ -16,12 +16,21 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         super(SupplierDTO.class);
     }
 
-    public SupplierDTO getSupplierInDirectory() throws HandlerGenericException {
+    public SupplierDTO getSupplierByFullName(String idSupplier) throws HandlerGenericException {
         SupplierDTO supplier = null;
+        String fullName = "";
         try {
+            if (null != idSupplier) {
+                fullName = super.get(idSupplier).getFullName();
+            } else {
+                fullName = getNameUserInSession();
+            }
+
             View view = getDatabase().getView("vwSuppliersByFullName");
-            Document document = view.getFirstDocumentByKey(getNameUserInSession(), true);
-            supplier = castDocument(document);
+            Document document = view.getFirstDocumentByKey(fullName, true);
+            if (null != document) {
+                supplier = castDocument(document);
+            }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }

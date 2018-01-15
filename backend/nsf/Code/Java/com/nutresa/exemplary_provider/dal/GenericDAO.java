@@ -63,6 +63,9 @@ public abstract class GenericDAO<T> {
     public T get(String id) throws HandlerGenericException {
         View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
+        if (null == document) {
+            throw new HandlerGenericException("INFORMATION_NOT_FOUNT");
+        }
         return castDocument(document);
     }
 
@@ -74,7 +77,8 @@ public abstract class GenericDAO<T> {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
         if (null == view) {
-            LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
+            LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters
+                    .toString()));
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
             if (view.FTSearch(query, 1) > 0) {
@@ -131,7 +135,6 @@ public abstract class GenericDAO<T> {
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
             Document document;
-            //loadTranslator();
             for (ViewEntry viewEntry : vec) {
                 document = viewEntry.getDocument();
                 list.add((T) this.castDocument(document));
@@ -197,7 +200,8 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
-        LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
+        LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters
+                .toString()));
 
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
@@ -225,6 +229,7 @@ public abstract class GenericDAO<T> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
+
         return result;
     }
 
@@ -397,7 +402,7 @@ public abstract class GenericDAO<T> {
     public Database getDatabase() {
         return database;
     }
-    
+
     public Session getSession() {
         return session;
     }

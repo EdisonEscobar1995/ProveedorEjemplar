@@ -1,11 +1,11 @@
 import instance from './instance';
 
-function getDataSuppliertApi() {
-  return instance.get('Supplier?action=loadInformation');
+function getDataSuppliertApi(id = '') {
+  return instance.get(`Supplier?action=loadInformation&idSupplier=${id}`);
 }
 
-function getDataCallSuppliertApi() {
-  return instance.get('SupplierByCall?action=currentCall');
+function getDataCallSuppliertApi(id = '') {
+  return instance.get(`SupplierByCall?action=currentCall&idSupplierByCall=${id}`);
 }
 
 function finishSurveyApi(call) {
@@ -33,6 +33,10 @@ function unlockSupplierApi(supplierByCall) {
   return instance.post('SupplierByCall?action=unlockSupplier', supplierByCall);
 }
 
+function getSurveysApi(year = '') {
+  return instance.get(`Supplier?action=getSurveys&year=${year}`);
+}
+
 export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
@@ -42,4 +46,5 @@ export {
   getModifiedSuppliersApi,
   unlockSupplierApi,
   finishSurveyApi,
+  getSurveysApi,
 };

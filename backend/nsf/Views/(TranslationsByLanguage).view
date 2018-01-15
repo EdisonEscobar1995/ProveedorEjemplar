@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(TranslationsByLanguage)' alias='Translation|vwTranslationsByLanguage'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
  extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='b472' unid='1A35F40412651692052581EC006821CA' sequence='5'>
+<noteinfo noteid='b472' unid='1A35F40412651692052581EC006821CA' sequence='12'>
 <created><datetime>20171204T135723,94-05</datetime></created>
-<modified><datetime>20171214T134931,80-05</datetime></modified>
-<revised><datetime>20171214T134931,79-05</datetime></revised>
-<lastaccessed><datetime>20171214T134931,80-05</datetime></lastaccessed>
+<modified><datetime>20180115T173428,68-05</datetime></modified>
+<revised><datetime>20180115T173428,67-05</datetime></revised>
+<lastaccessed><datetime>20180115T173428,68-05</datetime></lastaccessed>
 <addedtofile><datetime>20171204T135724,09-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
