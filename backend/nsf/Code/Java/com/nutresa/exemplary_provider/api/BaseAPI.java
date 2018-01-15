@@ -163,10 +163,8 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     protected List<String> getACL() throws HandlerGenericException {
         List<String> access = new ArrayList<String>();
-        if (null == access || access.isEmpty()) {
-            UserBLO userBLO = new UserBLO();
-            access = userBLO.loadAccess();
-        }
+        UserBLO userBLO = new UserBLO();
+        access = userBLO.loadAccess();
         return access;
     }
 
