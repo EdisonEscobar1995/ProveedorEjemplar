@@ -1,24 +1,29 @@
-package com.nutresa.exemplary_provider.dtl;
+package com.nutresa.exemplary_provider.dtl.queries;
 
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.StateDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 
-public class ModifiedSupplierDTO {
+public class InformationFromSupplier {
     @Expose
     private List<SupplierDTO> suppliers;
+    @Expose
+    private List<StateDTO> states;
     @Expose
     private List<DTO> suppliersByCall;
     @Expose
     private List<Object> years;
     @Expose
     private Map<String, List<DTO>> masters;
-    
+
     public List<SupplierDTO> getSuppliers() {
         return this.suppliers;
     }
-    
+
     public void setSuppliers(List<SupplierDTO> suppliers) {
         this.suppliers = suppliers;
     }
@@ -26,7 +31,7 @@ public class ModifiedSupplierDTO {
     public Map<String, List<DTO>> getMasters() {
         return this.masters;
     }
-  
+
     public void setMasters(Map<String, List<DTO>> masters) {
         this.masters = masters;
     }
@@ -45,5 +50,13 @@ public class ModifiedSupplierDTO {
 
     public List<Object> getYears() {
         return years;
+    }
+
+    public void setStates(List<StateDTO> states) {
+        this.states = states;
+    }
+
+    public List<StateDTO> getStates() {
+        return states;
     }
 }

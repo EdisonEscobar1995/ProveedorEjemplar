@@ -34,7 +34,8 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
     dataIndex: 'idCategory',
     key: 'idCategory',
     render(text, record) {
-      return masters.Category.find(category => category.id === record.idCategory).name;
+      const category = masters.Category.find(item => item.id === record.idCategory);
+      return category ? category.name : '';
     },
   }, {
     title: 'Tamaño de empresa asignado',

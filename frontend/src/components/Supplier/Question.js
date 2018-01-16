@@ -188,7 +188,6 @@ class Question extends Component {
                 datakey={record}
                 disabled={this.props.disabled}
                 list={actualValue}
-                multiple
                 baseUrl={`${baseUrl}/Attachment?action=save`}
                 uploadMaxFilesize={this.props.system.uploadMaxFilesize}
                 uploadExtensions={this.props.system.uploadExtensions}

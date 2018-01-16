@@ -30,7 +30,7 @@ public class SupplierByCallDTO {
     @Expose
     private String oldIdCompanySize;
     @Expose
-    private String state = "SUPPLIER";
+    private String idState;
     @Expose
     private boolean invitedToCall;
 
@@ -82,12 +82,12 @@ public class SupplierByCallDTO {
         this.oldIdCompanySize = oldIdCompanySize;
     }
 
-    public String getState() {
-        return state;
+    public String getIdState() {
+        return idState;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setIdState(String idState) {
+        this.idState = idState;
     }
 
     public String getId() {

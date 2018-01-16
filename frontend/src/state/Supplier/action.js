@@ -341,7 +341,7 @@ function loadDependingOptions(dispatch, api, data, filterField, valueField) {
   return allData;
 }
 
-function getDataSupplier() {
+function getDataSupplier(idSupplier, idSupplierByCall) {
   return (dispatch) => {
     const masters = [
       'Supply',
@@ -353,8 +353,8 @@ function getDataSupplier() {
       'System',
     ];
     const promises = [
-      getDataSuppliertApi(),
-      getDataCallSuppliertApi(),
+      getDataSuppliertApi(idSupplier),
+      getDataCallSuppliertApi(idSupplierByCall),
       getMasterApi(masters),
     ];
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
