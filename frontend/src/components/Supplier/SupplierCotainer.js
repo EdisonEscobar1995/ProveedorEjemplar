@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import Supplier from './Supplier';
 import {
   getDataSupplier,
@@ -27,11 +28,16 @@ import {
   setSector,
   setExport,
   updateField,
+  cleanStore,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
   componentDidMount() {
-    this.props.getDataSupplier();
+    const { match: { params: { idSupplier = null, idSupplierByCall = null } } } = this.props;
+    this.props.getDataSupplier(idSupplier, idSupplierByCall);
+  }
+  componentWillUnmount() {
+    this.props.cleanStore();
   }
   render() {
     return (
@@ -68,8 +74,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getDataSupplier: () => {
-    dispatch(getDataSupplier());
+  getDataSupplier: (idSupplier, idSupplierByCall) => {
+    dispatch(getDataSupplier(idSupplier, idSupplierByCall));
   },
   getDataCategoryBySuply: (data) => {
     dispatch(getDataCategoryBySuply(data));
@@ -143,9 +149,12 @@ const mapDispatchToProps = dispatch => ({
   updateField: (value, record, fielName) => {
     dispatch(updateField(value, record, fielName));
   },
+  cleanStore: () => {
+    dispatch(cleanStore());
+  },
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SupplierContainer);
+)(SupplierContainer));

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Answer by id supplier by call to delete masive)' alias='Answer|vwAnswersByIdSupplierByCallToDeleteMasive'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- hide='web' showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
  opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
  extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='b706' unid='317BDAD0798A0B4F052581F60059FE31' sequence='4'>
+<noteinfo noteid='b706' unid='317BDAD0798A0B4F052581F60059FE31' sequence='13'>
 <created><datetime>20171214T112257,77-05</datetime></created>
-<modified><datetime>20171214T134855,45-05</datetime></modified>
-<revised><datetime>20171214T134855,44-05</datetime></revised>
-<lastaccessed><datetime>20171214T134855,45-05</datetime></lastaccessed>
+<modified><datetime>20180115T173427,16-05</datetime></modified>
+<revised><datetime>20180115T173427,15-05</datetime></revised>
+<lastaccessed><datetime>20180115T173427,16-05</datetime></lastaccessed>
 <addedtofile><datetime>20171214T112257,78-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code

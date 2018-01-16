@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Notifications)' alias='Notification|vwNotifications' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
- showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
- unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
- opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
- extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
- headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='afd2' unid='48074F90713A1D2D052581E50080447B' sequence='12'>
+<noteinfo noteid='afd2' unid='48074F90713A1D2D052581E50080447B' sequence='19'>
 <created><datetime>20171127T182101,39-05</datetime></created>
-<modified><datetime>20171214T134930,88-05</datetime></modified>
-<revised><datetime>20171214T134930,87-05</datetime></revised>
-<lastaccessed><datetime>20171214T134930,88-05</datetime></lastaccessed>
+<modified><datetime>20180115T173428,20-05</datetime></modified>
+<revised><datetime>20180115T173428,19-05</datetime></revised>
+<lastaccessed><datetime>20180115T173428,20-05</datetime></lastaccessed>
 <addedtofile><datetime>20171127T182101,41-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code

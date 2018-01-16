@@ -11,8 +11,13 @@ function getMessage(type) {
       return 'Validation.noOpenCall';
     case 'SURVEY_DOES_NOT_EXIST':
       return 'Validation.supplier';
-    case 'Validation.unauthorized':
-      return '';
+    case 'THE_SURVEY_COULD_NOT_BE_COMPLETED':
+      return 'Validation.surveyCouldNotComplete';
+    case 'INFORMATION_NOT_FOUNT':
+      return 'Validation.informationNotFound';
+    case 'ROL_INVALID':
+    case 'UNAUTHORIZED':
+      return 'Validation.unauthorized';
     default:
       return 'Validation.wentWrong';
   }

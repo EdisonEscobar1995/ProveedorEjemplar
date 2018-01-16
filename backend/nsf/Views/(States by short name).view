@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(States by short name)' alias='State|vwStatesByShortName' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='2a52a' unid='DA43F305277E3E3605258211006FA32A' sequence='17'>
+<created><datetime>20180110T151922,66-05</datetime></created>
+<modified><datetime>20180115T173428,38-05</datetime></modified>
+<revised><datetime>20180115T173428,37-05</datetime></revised>
+<lastaccessed><datetime>20180115T173428,38-05</datetime></lastaccessed>
+<addedtofile><datetime>20180115T170818,34-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frState"</formula></code><code
+ event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+	Continue = False
+End Sub
+</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='shortName' width='17.2500'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='shortName'><font size='9pt' style='bold'/></columnheader></column></view>
+

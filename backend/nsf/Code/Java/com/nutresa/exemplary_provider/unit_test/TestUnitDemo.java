@@ -8,6 +8,6 @@ public class TestUnitDemo {
     public void testConcatenate() {
         TestDemo myUnit = new TestDemo();
         int result = myUnit.sum(3,4);
-        assertEquals(5, result);
+        assertEquals(7, result);
     }
 }

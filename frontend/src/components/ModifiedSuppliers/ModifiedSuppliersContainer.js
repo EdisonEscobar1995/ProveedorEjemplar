@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form } from 'antd';
 import * as actions from '../../state/ModifiedSuppliers/action';
 import Filters from './Filters';
 import ModifiedSuppliers from './ModifiedSuppliers';
-
-const FormCallHoc = Form.create()(Filters);
 
 class ModifiedSuppliersContainer extends Component {
   componentDidMount() {
@@ -16,9 +13,8 @@ class ModifiedSuppliersContainer extends Component {
   render() {
     return (
       <div>
-        <FormCallHoc
+        <Filters
           {...this.props}
-          Form={Form}
         />
         <ModifiedSuppliers
           {...this.props}

@@ -29,6 +29,7 @@ import {
   SET_SECTOR,
   SET_EXPORT,
   UPDATE_CUSTOMER,
+  CLEAN_STORE,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -134,6 +135,10 @@ const getDataSupplierSuccess = (data) => {
     system,
   };
 };
+
+const cleanStore = () => ({
+  type: CLEAN_STORE,
+});
 
 const getDataCategorySuccess = categories => (
   {
@@ -313,10 +318,9 @@ function cancelDataCustomer(data) {
     data,
   };
 }
-function finishSurveySucess(data) {
+function finishSurveySucess() {
   return {
     type: FINISH_SURVEY,
-    data,
     readOnly: true,
   };
 }
@@ -341,7 +345,7 @@ function loadDependingOptions(dispatch, api, data, filterField, valueField) {
   return allData;
 }
 
-function getDataSupplier() {
+function getDataSupplier(idSupplier, idSupplierByCall) {
   return (dispatch) => {
     const masters = [
       'Supply',
@@ -353,8 +357,8 @@ function getDataSupplier() {
       'System',
     ];
     const promises = [
-      getDataSuppliertApi(),
-      getDataCallSuppliertApi(),
+      getDataSuppliertApi(idSupplier),
+      getDataCallSuppliertApi(idSupplierByCall),
       getMasterApi(masters),
     ];
     requestApi(dispatch, getDataSupplierProgress, axios.all, promises).then((arrayResponse) => {
@@ -604,12 +608,12 @@ const saveCustomer = (clientData, index) => (
     dispatch(addDataCustomer(supplier));
   }
 );
-const addCustomer = (clientData, index) => (
+const addCustomer = clientData => (
   (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
     const principalCustomer = supplier.principalCustomer;
     let newData = [...principalCustomer];
-    newData.splice(index, 0, clientData);
+    newData.push(clientData);
     newData = reloadKeys(newData);
     supplier.principalCustomer = newData;
     dispatch(saveDataCustomer(supplier));
@@ -651,10 +655,9 @@ const finishSurvey = () => (
   (dispatch, getActualState) => {
     const { call } = { ...getActualState().supplier };
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
-      .then((response) => {
-        const data = response.data.data;
+      .then(() => {
         dispatch(setMessage('Supplier.surveySuccess', 'success'));
-        dispatch(finishSurveySucess(data));
+        dispatch(finishSurveySucess());
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -728,4 +731,5 @@ export {
   setSector,
   setExport,
   updateField,
+  cleanStore,
 };

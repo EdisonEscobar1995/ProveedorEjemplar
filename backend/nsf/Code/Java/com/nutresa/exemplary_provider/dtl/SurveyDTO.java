@@ -26,14 +26,6 @@ public class SurveyDTO {
         return id;
     }
 
-    public String getIdSizeCompany() {
-        return idCompanySize;
-    }
-
-    public void setIdSizeCompany(String idCompanySize) {
-        this.idCompanySize = idCompanySize;
-    }
-
     public String getIdCompanySize() {
         return idCompanySize;
     }

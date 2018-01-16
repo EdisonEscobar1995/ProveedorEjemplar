@@ -27,4 +27,5 @@ export const ADD_SUB_EMPLOYEES = 'ADD_SUB_EMPLOYEES';
 export const SET_SECTOR = 'SET_SECTOR';
 export const SET_EXPORT = 'SET_EXPORT';
 export const UPDATE_CUSTOMER = 'UPDATE_CUSTOMER';
+export const CLEAN_STORE = 'CLEAN_STORE';
 

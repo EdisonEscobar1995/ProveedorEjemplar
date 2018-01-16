@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,7 +41,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     protected String dateFomat = "yyyy/MM/dd";
     protected ServletOutputStream output = null;
     protected int status;
-    
+
     private enum TypeRequestMethod {
         GET, POST, OPTIONS
     }
@@ -53,7 +52,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
             throws ServletException, IOException {
-        
+
         FacesContext facesContext = null;
 
         try {
@@ -82,37 +81,37 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     @SuppressWarnings("unchecked")
     protected void doService(HttpServletRequest request, HttpServletResponse response, FacesContext facesContext,
-            ServletOutputStream output)
-        throws IOException {
-    
+            ServletOutputStream output) throws IOException {
+
         status = 200;
         ServletResponseDTO servletResponse = null;
 
         try {
             TypeRequestMethod requestMethod = TypeRequestMethod.valueOf(request.getMethod());
             LinkedHashMap<String, String> parameters = (LinkedHashMap) getParameters(request);
-            
+
             getClientLanguage(parameters);
             String action = parameters.get("action");
             parameters.remove("action");
 
             List<String> access = getACL();
-            
-            if (requestMethod != TypeRequestMethod.OPTIONS && !validateAccess(access, this.getClass().getSimpleName(), action)) {
+
+            if (requestMethod != TypeRequestMethod.OPTIONS
+                    && !validateAccess(access, this.getClass().getSimpleName(), action)) {
                 status = 401;
                 servletResponse = new ServletResponseDTO<String>(false, "Access denied.");
             } else {
                 servletResponse = proccessRequest(requestMethod, action, parameters);
             }
-    
+
         } catch (Exception exception) {
             status = 500;
             servletResponse = new ServletResponseDTO(exception);
         } finally {
             response.setStatus(status);
             if (null != servletResponse) {
-                Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-                    .setDateFormat(dateFomat).setPrettyPrinting().create();
+                Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
+                        .serializeNulls().setDateFormat(dateFomat).setPrettyPrinting().create();
 
                 String jsonResponse = gson.toJson(servletResponse);
                 byte[] utf8JsonString = jsonResponse.getBytes("UTF8");
@@ -122,8 +121,9 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     @SuppressWarnings("unchecked")
-    private ServletResponseDTO proccessRequest(TypeRequestMethod requestMethod, String action, Map<String, String> parameters)
-        throws HandlerGenericException, IOException, IllegalAccessException, InvocationTargetException {
+    private ServletResponseDTO proccessRequest(TypeRequestMethod requestMethod, String action,
+            Map<String, String> parameters) throws HandlerGenericException, IOException, IllegalAccessException,
+            InvocationTargetException {
         ServletResponseDTO servletResponse = null;
         if (null != action) {
             switch (requestMethod) {
@@ -147,8 +147,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         }
         return servletResponse;
     }
-    
-    
+
     private void getClientLanguage(LinkedHashMap<String, String> parameters) {
         Locale locale = httpRequest.getLocale();
         Cookie[] cookies = httpRequest.getCookies();
@@ -162,21 +161,17 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     protected List<String> getACL() throws HandlerGenericException {
-        List<String> access = new ArrayList<String>();
-        if (null == access || access.isEmpty()) {
-            UserBLO userBLO = new UserBLO();
-            access = userBLO.loadAccess();
-        }
-        return access;
+        UserBLO userBLO = new UserBLO();
+        return userBLO.loadAccess();
     }
 
     private boolean validateAccess(List<String> access, String api, String action) {
         boolean response = false;
         String[] accessToCheck = new String[] { api + "." + action, "*." + action, api + ".*", "*.*" };
-        
+
         if (access != null) {
             for (String check : accessToCheck) {
-                if(access.contains(check)) {
+                if (access.contains(check)) {
                     response = true;
                     break;
                 }
@@ -199,7 +194,7 @@ public class BaseAPI<T> extends DesignerFacesServlet {
 
     @SuppressWarnings("unchecked")
     protected ServletResponseDTO doGet(String action, Map<String, String> parameters) throws IllegalAccessException,
-        InvocationTargetException, HandlerGenericException {
+            InvocationTargetException, HandlerGenericException {
         ServletResponseDTO response = null;
         int parameterSize = parameters.size() == 0 ? 0 : 1;
         Method method = getActionMethod(action, parameterSize);
@@ -214,24 +209,25 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     private Method getActionMethod(String action, int parameters) throws HandlerGenericException {
         Method method = Common.getMethod(this.getClass(), action, parameters);
         if (null == method) {
-            throw new HandlerGenericException("Action (" + action + ") method not found for " + parameters + " parameters");
+            throw new HandlerGenericException("Action (" + action + ") method not found for " + parameters
+                    + " parameters");
         }
         return method;
     }
 
     @SuppressWarnings("unchecked")
-    protected ServletResponseDTO doPost(String action, HttpServletRequest request) throws IOException, IllegalAccessException,
-    	InvocationTargetException, HandlerGenericException {
-    
-    	T postBody = getPostBody(request.getInputStream());
+    protected ServletResponseDTO doPost(String action, HttpServletRequest request) throws IOException,
+            IllegalAccessException, InvocationTargetException, HandlerGenericException {
 
-        Method method = getActionMethod(action, 1);                    
+        T postBody = getPostBody(request.getInputStream());
+
+        Method method = getActionMethod(action, 1);
         return (ServletResponseDTO) method.invoke(this, postBody);
     }
 
     protected T getPostBody(ServletInputStream inputStream) throws HandlerGenericException {
         StringBuilder stringBuilder = new StringBuilder();
-        
+
         InputStreamReader streamReader = null;
         try {
             streamReader = new InputStreamReader(inputStream, "UTF-8");
@@ -243,15 +239,15 @@ public class BaseAPI<T> extends DesignerFacesServlet {
                 charBuffer.clear();
             }
         } catch (IOException exception) {
-            throw new HandlerGenericException(exception); 
+            throw new HandlerGenericException(exception);
         } finally {
             if (null != streamReader) {
                 IOUtils.closeQuietly(streamReader);
             }
         }
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().serializeNulls()
-        .setDateFormat(dateFomat).setPrettyPrinting().create();
-        
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
+                .serializeNulls().setDateFormat(dateFomat).setPrettyPrinting().create();
+
         return gson.fromJson(stringBuilder.toString(), this.dtoClass);
     }
 
@@ -261,5 +257,5 @@ public class BaseAPI<T> extends DesignerFacesServlet {
         response.addHeader("Access-Control-Allow-Origin", "*");
         output.print(" ");
     }
-    
+
 }
