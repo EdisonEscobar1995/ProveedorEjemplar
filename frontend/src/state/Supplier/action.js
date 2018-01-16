@@ -29,6 +29,7 @@ import {
   SET_SECTOR,
   SET_EXPORT,
   UPDATE_CUSTOMER,
+  CLEAN_STORE,
 } from './const';
 import {
   getDataSuppliertApi,
@@ -134,6 +135,10 @@ const getDataSupplierSuccess = (data) => {
     system,
   };
 };
+
+const cleanStore = () => ({
+  type: CLEAN_STORE,
+});
 
 const getDataCategorySuccess = categories => (
   {
@@ -726,4 +731,5 @@ export {
   setSector,
   setExport,
   updateField,
+  cleanStore,
 };

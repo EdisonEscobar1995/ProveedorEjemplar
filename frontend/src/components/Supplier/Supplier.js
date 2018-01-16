@@ -192,7 +192,7 @@ class Supplier extends Component {
           criteria.questions.forEach((question) => {
             let errors = {};
             if (question.visible && question.required) {
-              if (question.answer.length > 0) {
+              if (this.isAnswered(question)) {
                 if (question.requireAttachment) {
                   question.answer.forEach((answer) => {
                     if (answer.attachment) {
@@ -247,8 +247,7 @@ class Supplier extends Component {
     if (actualDimension.criterions.length > 0) {
       actualDimension.criterions.forEach((criteria) => {
         criteria.questions.forEach((question) => {
-          const isAnswered = question.answer.length > 0 &&
-            (question.answer[0].idOptionSupplier || question.answer[0].responseSupplier);
+          const isAnswered = this.isAnswered(question);
           if (question.visible && question.required) {
             totalQuestions += 1;
             if (isAnswered) {
@@ -272,6 +271,12 @@ class Supplier extends Component {
     }
     return Math.round(total);
   }
+
+  isAnswered = question => (
+    question.answer.length > 0 &&
+    (question.answer[0].idOptionSupplier || question.answer[0].responseSupplier)
+  );
+
   next = () => {
     window.scrollTo(0, 0);
     const { current } = this.state;

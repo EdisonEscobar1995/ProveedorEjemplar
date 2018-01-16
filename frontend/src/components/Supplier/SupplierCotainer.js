@@ -28,12 +28,16 @@ import {
   setSector,
   setExport,
   updateField,
+  cleanStore,
 } from '../../state/Supplier/action';
 
 class SupplierContainer extends Component {
   componentDidMount() {
     const { match: { params: { idSupplier = null, idSupplierByCall = null } } } = this.props;
     this.props.getDataSupplier(idSupplier, idSupplierByCall);
+  }
+  componentWillUnmount() {
+    this.props.cleanStore();
   }
   render() {
     return (
@@ -144,6 +148,9 @@ const mapDispatchToProps = dispatch => ({
   },
   updateField: (value, record, fielName) => {
     dispatch(updateField(value, record, fielName));
+  },
+  cleanStore: () => {
+    dispatch(cleanStore());
   },
 });
 
