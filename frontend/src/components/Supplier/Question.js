@@ -130,7 +130,7 @@ class Question extends Component {
           } else {
             renderComponent = (
               this.props.disabled ?
-                this.getAnswer(record, 'commentSupplier')
+                this.getAnswer(record, 'responseSupplier')
                 :
                 (
                   <TextArea

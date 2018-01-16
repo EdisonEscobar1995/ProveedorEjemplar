@@ -110,5 +110,7 @@ const messages = {
   'Validation.maxFileSize': 'The file must be less than',
   'Validation.verifyDimensions': 'Still have dimensions and unfilled questions, please validate',
   'Validation.requiredField': 'This field is required',
+  'Validation.surveyCouldNotComplete': 'The survey could not be completed',
+  'Validation.informationNotFound': 'Information not found',
 };
 export default messages;

@@ -51,6 +51,7 @@ public class Common {
             } else {
                 field = declarationDTO.getDeclaredField(name);
             }
+
             field.setAccessible(true);
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
@@ -63,10 +64,7 @@ public class Common {
         Object response = null;
         try {
             Field field = Common.getField(dto.getClass(), name);
-            if (null != field) {
-                field.setAccessible(true);
-                response = field.get(dto);
-            }
+            response = field.get(dto);
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
@@ -198,7 +196,6 @@ public class Common {
                     field = "id" + entity;
                 }
                 Field declaredField = Common.getField(clazz, field);
-                declaredField.setAccessible(true);
                 listFields.put(entity, declaredField);
                 listIds.put(entity, new ArrayList<Object>());
             }

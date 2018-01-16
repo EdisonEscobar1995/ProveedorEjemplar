@@ -249,8 +249,9 @@ public abstract class GenericDAO<T> {
         if (type.isPrimitive()) {
             Double numberValue = document.getItemValue(name, Double.class);
             if (null == numberValue) {
-                numberValue = new Double(0);
+                numberValue = 0D;
             }
+            
             value = getPrimitiveValue(type, numberValue);
         }
         if (null == value) {

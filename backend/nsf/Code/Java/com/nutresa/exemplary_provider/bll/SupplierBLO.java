@@ -29,9 +29,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         dto.autoSetIdDocuments();
         dto.autoSetIdAttachedFinancialReport();
 
-        deleteCustomers(supplier.getPrincipalCustomer());
-        deleteAttachments(supplier.getAttachedFinancialReport());
+        deleteCustomers(getCustomersBySupplier(supplier.getId()));
         deleteDocuments(supplier.getDocument());
+        deleteAttachments(supplier.getAttachedFinancialReport());
         savePrincipalCustomers(dto.getPrincipalCustomer(), dto.getId());
 
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
@@ -80,25 +80,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     public InformationFromSupplier getModifiedSuppliers(String year) throws HandlerGenericException {
-        CallBLO callBLO = new CallBLO();
-        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        InformationFromSupplier response = new InformationFromSupplier();
-        List<Object> listYears;
-
-        try {
-            listYears = getFieldAll(0, "vwCallsByYear");
-            if (null == year || year.isEmpty()) {
-                year = (String) listYears.get(0);
-            }
-
-            List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", callBLO.getIdCallByYear(year),
-                    "vwSuppliersByCallModifiedIdCall");
-            response = getInformationFromSuppliers(listYears, supplierByCall);
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return response;
+        String viewName = "vwSuppliersByCallModifiedIdCall";
+        return getInformationByYearInView(year, viewName);
     }
 
     public SupplierDTO update(SupplierDTO supplier) throws HandlerGenericException {
@@ -172,6 +155,13 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     public InformationFromSupplier getSummaryWithSurvey(String year) throws HandlerGenericException {
+        String viewName = "vwSuppliersByCallIdCall";
+        return getInformationByYearInView(year, viewName);
+    }
+
+
+    public InformationFromSupplier getInformationByYearInView(String year, String viewName)
+            throws HandlerGenericException {
         CallBLO callBLO = new CallBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         InformationFromSupplier response = new InformationFromSupplier();
@@ -183,8 +173,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 year = (String) listYears.get(0);
             }
 
-            List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", callBLO.getIdCallByYear(year),
-                    "vwSuppliersByCallIdCall");
+            List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", callBLO.getIdCallByYear(year), viewName);
             response = getInformationFromSuppliers(listYears, supplierByCall);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -227,7 +216,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         if (null != principalCustomers && !principalCustomers.isEmpty()) {
             CustomerBLO customerBLO = new CustomerBLO();
             for (CustomerDTO customer : principalCustomers) {
-                if (null != customer.getName() && !customer.getName().trim().isEmpty()) {
+                if (null != customer.getName() && !customer.getName().trim().isEmpty()
+                        && customer.getPercentageOfParticipationInSales() >= 0) {
                     customer.setIdSupplier(idSupplier);
                     customerBLO.save(customer);
                 }

@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -162,10 +161,8 @@ public class BaseAPI<T> extends DesignerFacesServlet {
     }
 
     protected List<String> getACL() throws HandlerGenericException {
-        List<String> access = new ArrayList<String>();
         UserBLO userBLO = new UserBLO();
-        access = userBLO.loadAccess();
-        return access;
+        return userBLO.loadAccess();
     }
 
     private boolean validateAccess(List<String> access, String api, String action) {

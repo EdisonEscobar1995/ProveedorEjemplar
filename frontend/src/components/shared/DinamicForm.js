@@ -172,7 +172,9 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         fieldContent = (<Group disabled={disabled}>
                           {
                             options.map(option => (
-                              <Radio key={option.id} value={option.id}>{option.name}</Radio>
+                              <Radio key={option.id} value={option.id}>
+                                <FormattedMessage id={option.name} />
+                              </Radio>
                             ))
                           }
                         </Group>);

@@ -27,6 +27,7 @@ import {
   SET_SECTOR,
   SET_EXPORT,
   UPDATE_CUSTOMER,
+  CLEAN_STORE,
 } from './const';
 
 
@@ -228,6 +229,10 @@ function supplierApp(state = initialState, action) {
           ...state.supplier,
           actuallyExport: action.value,
         },
+      };
+    case CLEAN_STORE:
+      return {
+        ...initialState,
       };
     default: {
       return state;

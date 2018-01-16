@@ -78,6 +78,7 @@ class GenericFormTable extends Component {
       editData,
       deleteData,
       cancelData,
+      disabled,
       form,
     } = this.props;
     const { getFieldDecorator } = form;
@@ -113,6 +114,7 @@ class GenericFormTable extends Component {
                               initialValue: text,
                             })(
                               <Input
+                                disabled={disabled}
                                 type={column.type}
                                 placeholder={translator.formatMessage({ id: column.title })}
                                 onBlur={(e) => {

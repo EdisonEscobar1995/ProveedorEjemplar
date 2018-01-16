@@ -110,5 +110,7 @@ const messages = {
   'Validation.maxFileSize': 'El archivo debe ser menor a',
   'Validation.verifyDimensions': 'Aún tiene dimensiones y preguntas sin diligenciar, por favor validar',
   'Validation.requiredField': 'Este campo es requerido',
+  'Validation.surveyCouldNotComplete': 'La encuesta no pudo ser finalizada',
+  'Validation.informationNotFound': 'Información no encontrada',
 };
 export default messages;

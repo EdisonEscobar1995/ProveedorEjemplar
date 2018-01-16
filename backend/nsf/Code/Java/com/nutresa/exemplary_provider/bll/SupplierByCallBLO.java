@@ -58,13 +58,15 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             throw new HandlerGenericException(exception);
         }
 
-        if (null == response) {
+        if (!(response instanceof SupplierByCallDTO)) {
             throw new HandlerGenericException("DONT_HAVE_SURVEY_ASSOCIED");
         }
 
-        if (null != response && "EVALUATOR".equals(stateBLO.get(response.getIdState()).getShortName())) {
+        if ((response instanceof SupplierByCallDTO)
+                && "EVALUATOR".equals(stateBLO.get(response.getIdState()).getShortName())) {
             readOnly = true;
         }
+
         return response;
     }
 
@@ -91,20 +93,21 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     public SupplierByCallDTO finishSurvey(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         SupplierByCallDTO response = null;
-        StateBLO stateBLO = new StateBLO();
-        supplierByCall.setIdState(stateBLO.getStateByShortName("EVALUATOR").getId());
         CallBLO callBLO = new CallBLO();
         CallDTO call = callBLO.get(supplierByCall.getIdCall());
         if (call.isNotCaducedDate(call.getDeadlineToMakeSurvey(), new Date())) {
-            response = save(supplierByCall);
-            NotificationBLO notificationBLO = new NotificationBLO();
-            notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
+            if (changeState("EVALUATOR", supplierByCall.getId())) {
+                response = get(supplierByCall.getId());
+                NotificationBLO notificationBLO = new NotificationBLO();
+                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
+            } else {
+                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+            }
         } else {
             throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
         }
 
         return response;
-
     }
 
     public SupplierByCallDTO unlockSupplier(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
@@ -122,8 +125,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
             if (!supplierByCall.getOldIdCompanySize().equals(currentSupplierByCall.getOldIdCompanySize())) {
                 supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
-                currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(),
-                        supplier.getIdCompanySize()).getId());
+                currentSupplierByCall
+                        .setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize()).getId());
                 notification.notifyToSupplierForContinue(supplier);
                 supplierBLO.update(supplier);
                 response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
@@ -146,8 +149,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         parameters.put("idSupplier", idSupplier);
         parameters.put("idCall", idCall);
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        SupplierByCallDTO supplierByCall = supplierByCallDAO
-                .getBy(parameters, "vwSuppliersByCallByIdSupplierAndIdCall");
+        SupplierByCallDTO supplierByCall = supplierByCallDAO.getBy(parameters,
+                "vwSuppliersByCallByIdSupplierAndIdCall");
         supplierByCall.setInvitedToCall(true);
         supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
@@ -186,5 +189,20 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         return super.save(dto);
+    }
+
+    public boolean changeState(String nameState, String idSupplierByCall) {
+        StateBLO stateBLO = new StateBLO();
+        boolean response = true;
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        try{
+            SupplierByCallDTO supplierByCall = supplierByCallDAO.get(idSupplierByCall);
+            supplierByCall.setIdState(stateBLO.getStateByShortName(nameState).getId());
+            super.save(supplierByCall);
+        } catch(HandlerGenericException exception){
+            response = false;
+        }
+
+        return response;
     }
 }
