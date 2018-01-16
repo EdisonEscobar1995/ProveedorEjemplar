@@ -1,36 +1,15 @@
-import React, { Component } from 'react';
-import { Row, Col, Button } from 'antd';
+import React from 'react';
 import filtersData from './filtersData';
-import DinamicForm from '../shared/DinamicForm';
+import FilterForm from '../shared/FilterForm';
 
-class Filters extends Component {
-  handleReset = () => {
-    this.props.form.resetFields();
-    this.props.getSurveys();
-  }
 
-  render() {
-    const { Form } = this.props;
-    const { getFieldDecorator, setFields } = this.props.form;
-    const fields = filtersData(this.props);
-
-    return (
-      <div>
-        <Form>
-          <DinamicForm
-            getFieldDecorator={getFieldDecorator}
-            setFields={setFields}
-            content={fields}
-          />
-        </Form>
-        <Row type="flex" justify="center" style={{ marginBottom: '20px' }}>
-          <Col span={2}>
-            <Button type="primary" onClick={this.handleReset}>Limpiar</Button>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
+function Filters(props) {
+  return (
+    <FilterForm
+      {...props}
+      getData={props.getSurveys}
+      getFields={filtersData}
+    />
+  );
 }
-
 export default Filters;
