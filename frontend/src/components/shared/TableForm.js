@@ -83,7 +83,7 @@ class GenericFormTable extends Component {
     } = this.props;
     const { getFieldDecorator } = form;
     let content = '';
-    if (data.length === 0) {
+    if (data && data.length === 0) {
       data.push({
         key: 0,
         editable: true,

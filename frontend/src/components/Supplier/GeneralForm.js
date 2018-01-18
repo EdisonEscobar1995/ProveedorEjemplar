@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { Form, Select } from 'antd';
 import DinamicForm from '../shared/DinamicForm';
-import { generalInfo, noParticipateInfo } from './dataPage';
+import { generalInfo, noParticipateInfo, mainCustomers } from './dataPage';
 import Field from './Field';
 import FormButtons from './FormButtons';
 import SubTitle from '../shared/SubTitle';
 import Paragraph from '../shared/Paragraph';
 import FormattedMessage from '../shared/FormattedMessage';
+import TableForm from '../shared/TableForm';
+import validateFields from './validateFields';
 
 const { Option } = Select;
+const colummns = mainCustomers;
 
 class General extends Component {
   handleSubmit = (e) => {
@@ -21,12 +24,7 @@ class General extends Component {
   }
   validateContactInfo = () => {
     let response = true;
-    this.props.form.validateFieldsAndScroll([
-      'fullNameContact',
-      'jobPosition',
-      'phoneOfContact',
-      'emailOfContact',
-    ], (err) => {
+    this.props.form.validateFieldsAndScroll(validateFields, (err) => {
       if (err) {
         response = false;
       }
@@ -39,15 +37,30 @@ class General extends Component {
     }
   }
   continue = () => {
-    if (this.validateContactInfo() === true) {
+    const isValid = this.validateContactInfo();
+    if (isValid) {
       this.props.save(this.props.form.getFieldsValue(), 'send');
     }
+    return isValid;
   }
   handleChange= (participateInCall) => {
     this.props.changeParticipate(participateInCall);
   }
   render() {
-    const { participateInCall, changeIdCompanySize, system, readOnly } = this.props;
+    const {
+      supplier,
+      participateInCall,
+      changeIdCompanySize,
+      system,
+      readOnly,
+      addData,
+      saveData,
+      editData,
+      deleteData,
+      cancelData,
+      updateField,
+    } = this.props;
+    const { principalCustomer } = supplier;
     const { messageByChangeSizeCompany, informationProgram } = system;
     const { getFieldDecorator, setFields } = this.props.form;
     let content = '';
@@ -134,6 +147,22 @@ class General extends Component {
             buttons={buttons}
           />
         </Form>
+        {participateInCall === 'true' ?
+          <TableForm
+            data={principalCustomer}
+            colummns={colummns}
+            addData={addData}
+            saveData={saveData}
+            editData={editData}
+            deleteData={deleteData}
+            cancelData={cancelData}
+            disabled={readOnly}
+            loading={false}
+            updateField={updateField}
+          />
+          :
+          null
+        }
       </div>
     );
   }

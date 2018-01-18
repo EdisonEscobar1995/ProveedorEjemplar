@@ -72,6 +72,9 @@ function generalInfo(fields) {
     updateChangeIdCompanySize,
     setNumberOfDirectEmployees,
     setNumberOfSubContratedEmployees,
+    sectors,
+    setSector,
+    setExport,
   } = fields;
 
   const {
@@ -109,9 +112,29 @@ function generalInfo(fields) {
     employeesTotal,
     participationInSalesWithGroupNutresa,
     attachedFinancialReport,
+    idSector,
+    otherSector,
+    webSite,
+    packagingProvided,
+    nameContactPersonInGroupNutresa,
+    emailContactPersonInGroupNutresa,
+    phoneContactPersonInGroupNutresa,
+    geograficDescriptionOfPrincipalMaterials,
+    currentlyExport,
+    nameCertification,
+    exportDestination,
+    globalAgreement,
+    chemicalSubstance,
+    actualSector,
+    actuallyExport,
   } = supplier;
 
-  const { uploadMaxFilesize, uploadExtensions } = system;
+  const {
+    uploadMaxFilesize,
+    uploadExtensions,
+    otherSectorId,
+    packagingMaterialCategoryId,
+  } = system;
 
   const disabled = readOnly;
 
@@ -605,104 +628,6 @@ function generalInfo(fields) {
         },
       ],
     },
-  ];
-}
-
-function noParticipateInfo(fields) {
-  const {
-    call,
-    readOnly,
-  } = fields;
-
-  const {
-    reasonForNotParticipation,
-    nameWhoSayDontParticipate,
-    emailWhoSayDontParticipate,
-  } = call;
-
-  const disabled = readOnly;
-  return [
-    {
-      key: 1.0,
-      value: [
-        {
-          disabled,
-          type: 'textarea',
-          label: 'Supplier.reasonForNotParticipation',
-          key: 'reasonForNotParticipation',
-          value: reasonForNotParticipation,
-        },
-      ],
-    },
-    {
-      key: 2.0,
-      value: [
-        {
-          disabled,
-          type: 'input',
-          label: 'Supplier.nameWhoSayDontParticipate',
-          required: true,
-          key: 'nameWhoSayDontParticipate',
-          value: nameWhoSayDontParticipate,
-        },
-      ],
-    },
-    {
-      key: 3.0,
-      value: [
-        {
-          disabled,
-          type: 'input',
-          label: 'Supplier.emailWhoSayDontParticipate',
-          required: true,
-          key: 'emailWhoSayDontParticipate',
-          value: emailWhoSayDontParticipate,
-          rules: [
-            { ...mailValitation },
-          ],
-        },
-      ],
-    },
-  ];
-}
-
-function comercialInfo(fields) {
-  const {
-    supplier,
-    readOnly,
-    sectors,
-    system,
-    setSector,
-    setExport,
-  } = fields;
-
-  const {
-    idCategory,
-    idSector,
-    otherSector,
-    webSite,
-    packagingProvided,
-    nameContactPersonInGroupNutresa,
-    emailContactPersonInGroupNutresa,
-    phoneContactPersonInGroupNutresa,
-    geograficDescriptionOfPrincipalMaterials,
-    currentlyExport,
-    nameCertification,
-    exportDestination,
-    globalAgreement,
-    chemicalSubstance,
-    actualSector,
-    actuallyExport,
-  } = supplier;
-
-  const {
-    otherSectorId,
-    packagingMaterialCategoryId,
-  } = system;
-
-  const disabled = readOnly;
-
-  return [
     {
       key: 2.4,
       value: [
@@ -931,6 +856,64 @@ function comercialInfo(fields) {
   ];
 }
 
+function noParticipateInfo(fields) {
+  const {
+    call,
+    readOnly,
+  } = fields;
+
+  const {
+    reasonForNotParticipation,
+    nameWhoSayDontParticipate,
+    emailWhoSayDontParticipate,
+  } = call;
+
+  const disabled = readOnly;
+  return [
+    {
+      key: 1.0,
+      value: [
+        {
+          disabled,
+          type: 'textarea',
+          label: 'Supplier.reasonForNotParticipation',
+          key: 'reasonForNotParticipation',
+          value: reasonForNotParticipation,
+        },
+      ],
+    },
+    {
+      key: 2.0,
+      value: [
+        {
+          disabled,
+          type: 'input',
+          label: 'Supplier.nameWhoSayDontParticipate',
+          required: true,
+          key: 'nameWhoSayDontParticipate',
+          value: nameWhoSayDontParticipate,
+        },
+      ],
+    },
+    {
+      key: 3.0,
+      value: [
+        {
+          disabled,
+          type: 'input',
+          label: 'Supplier.emailWhoSayDontParticipate',
+          required: true,
+          key: 'emailWhoSayDontParticipate',
+          value: emailWhoSayDontParticipate,
+          rules: [
+            { ...mailValitation },
+          ],
+        },
+      ],
+    },
+  ];
+}
+
 const mainCustomers = [
   {
     title: 'Supplier.principalCustomer.name',
@@ -948,6 +931,5 @@ const mainCustomers = [
 export {
   generalInfo,
   noParticipateInfo,
-  comercialInfo,
   mainCustomers,
 };
