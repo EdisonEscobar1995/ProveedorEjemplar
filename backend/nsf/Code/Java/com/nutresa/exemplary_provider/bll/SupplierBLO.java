@@ -43,7 +43,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             notificationBLO.notifyChangeCompanySize(dto.getId());
         }
 
-        return dao.update(dto.getId(), dto);
+        supplier = dao.update(dto.getId(), dto);
+        supplier.setPrincipalCustomer(getCustomersBySupplier(supplier.getId()));
+        return supplier;
     }
 
     public SupplierDTO getSupplierInSession(String idSupplier) throws HandlerGenericException {
