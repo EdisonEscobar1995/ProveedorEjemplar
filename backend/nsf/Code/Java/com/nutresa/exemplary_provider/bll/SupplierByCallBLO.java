@@ -22,7 +22,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     public SupplierByCallDTO getCurrentCallBySupplier(String idSupplierByCall) throws HandlerGenericException {
-        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         CallDAO callDAO = new CallDAO();
         StateBLO stateBLO = new StateBLO();
         CallDTO call = null;
@@ -37,7 +36,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 UserBLO userBLO = new UserBLO();
                 if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
                     isSupplier = false;
-                    response = supplierByCallDAO.get(idSupplierByCall);
+                    response = get(idSupplierByCall);
                     readOnly = true;
                 } else {
                     throw new HandlerGenericException("ROL_INVALID");
@@ -45,7 +44,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             }
 
             if (isSupplier) {
-                callsBySupplier = supplierByCallDAO.getBySupplier(supplier.getId());
+                callsBySupplier = getCallsBySupplier(supplier.getId());
                 for (SupplierByCallDTO supplierByCall : callsBySupplier) {
                     call = callDAO.get(supplierByCall.getIdCall());
                     if (call.isNotCaducedDate(call.getDateToFinishCall(), new Date())) {
@@ -160,13 +159,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     public SupplierByCallDTO getSupplierByCallActiveBySupplier(String idSupplier) throws HandlerGenericException {
-        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         SupplierByCallDTO response = null;
-        List<SupplierByCallDTO> suppliersByCall = supplierByCallDAO.getBySupplier(idSupplier);
-        for (SupplierByCallDTO supplierByCall : suppliersByCall) {
+        List<SupplierByCallDTO> callsBySupplier = getCallsBySupplier(idSupplier);
+        for (SupplierByCallDTO callBySupplier : callsBySupplier) {
             CallBLO callBLO = new CallBLO();
-            if (callBLO.get(supplierByCall.getIdCall()).isActive()) {
-                response = supplierByCall;
+            if (callBLO.get(callBySupplier.getIdCall()).isActive()) {
+                response = callBySupplier;
             }
         }
 
@@ -205,4 +203,10 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         return response;
     }
+
+    protected List<SupplierByCallDTO> getCallsBySupplier(String idSupplier) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.getCallsBySupplier(idSupplier);
+    }
+
 }

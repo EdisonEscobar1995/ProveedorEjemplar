@@ -122,7 +122,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return supplierDAO.getInformationInOtherDataBase(supplier);
     }
 
-    private InformationFromSupplier getInformationFromSuppliers(List<Object> listYears, List<DTO> supplierByCall)
+    protected InformationFromSupplier getInformationFromSuppliers(List<Object> listYears, List<DTO> callsFound)
             throws HandlerGenericException {
         InformationFromSupplier response = new InformationFromSupplier();
         Map<String, List<Object>> listIdsSupplierByCall;
@@ -131,12 +131,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         StateDAO stateDAO = new StateDAO();
 
         try {
-            listIdsSupplierByCall = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]", "[idState]" },
+            listIdsSupplierByCall = Common.getDtoFields(callsFound, new String[] { "[idSupplier]", "[idState]" },
                     SupplierByCallDTO.class);
-            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
-                    .get("[idSupplier]")));
-            List<StateDTO> states = stateDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
-                    .get("[idState]"), true));
+            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id",
+                    Common.getIdsFromList(listIdsSupplierByCall.get("[idSupplier]")));
+            List<StateDTO> states = stateDAO.getAllBy("id",
+                    Common.getIdsFromList(listIdsSupplierByCall.get("[idState]"), true));
 
             String[] idFieldNames = { "Category", "Country", "Supply" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
@@ -146,7 +146,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             response.setStates(states);
             response.setMasters(masters);
             response.setSuppliers(suppliers);
-            response.setSuppliersByCall(supplierByCall);
+            response.setSuppliersByCall(callsFound);
             response.setYears(listYears);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -158,7 +158,6 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         String viewName = "vwSuppliersByCallIdCall";
         return getInformationByYearInView(year, viewName);
     }
-
 
     public InformationFromSupplier getInformationByYearInView(String year, String viewName)
             throws HandlerGenericException {
@@ -173,8 +172,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 year = (String) listYears.get(0);
             }
 
-            List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", callBLO.getIdCallByYear(year), viewName);
-            response = getInformationFromSuppliers(listYears, supplierByCall);
+            List<DTO> callsByYear = supplierByCallBLO.getAllBy("idCall", callBLO.getIdCallByYear(year), viewName);
+            response = getInformationFromSuppliers(listYears, callsByYear);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
