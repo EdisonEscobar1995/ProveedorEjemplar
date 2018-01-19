@@ -20,4 +20,8 @@ public abstract class MasterDTO implements DTO {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }

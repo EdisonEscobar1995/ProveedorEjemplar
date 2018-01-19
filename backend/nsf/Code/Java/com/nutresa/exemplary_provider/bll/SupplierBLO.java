@@ -221,6 +221,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 if (null != customer.getName() && !customer.getName().trim().isEmpty()
                         && customer.getPercentageOfParticipationInSales() >= 0) {
                     customer.setIdSupplier(idSupplier);
+                    customer.setId(null);
                     customerBLO.save(customer);
                 }
             }
