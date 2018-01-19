@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='set api' alias='set_api' xmlns='http://www.lotus.com/dxl' version='9.0'
+ maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3' publicaccess='false'
+ designerversion='8.5.3'>
+<noteinfo noteid='6ced6' unid='CB81A1E7A6D30E18052582160076395C' sequence='8'>
+<created><datetime>20180115T163119,32-05</datetime></created>
+<modified><datetime>20180119T151543,63-05</datetime></modified>
+<revised><datetime>20180119T151543,62-05</datetime></revised>
+<lastaccessed><datetime>20180119T151543,63-05</datetime></lastaccessed>
+<addedtofile><datetime>20180115T163119,34-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180119T151543,51-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='action'>
+<simpleaction action='runformula'><formula>FIELD action := "loadCallOfSupplier";
+SELECT @All</formula></simpleaction></code>
+<rundata processeddocs='1' exitcode='0'>
+<agentmodified><datetime>20180119T151543,63-05</datetime></agentmodified>
+<agentrun><datetime>20180119T151549,01-05</datetime></agentrun>
+<runlog>Started running agent 'set api|set_api' on 19/01/2018 03:15:48 p. m.
+Running on selected documents: 1 total
+Found 1 document(s) that match search criteria
+1 document(s) were modified by formula
+Done running agent 'set api|set_api' on 19/01/2018 03:15:49 p. m.
+</runlog></rundata></agent>
+

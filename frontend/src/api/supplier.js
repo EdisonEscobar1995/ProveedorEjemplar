@@ -5,7 +5,7 @@ function getDataSuppliertApi(id = '') {
 }
 
 function getDataCallSuppliertApi(id = '') {
-  return instance.get(`SupplierByCall?action=currentCall&idSupplierByCall=${id}`);
+  return instance.get(`SupplierByCall?action=loadCallOfSupplier&idSupplierByCall=${id}`);
 }
 
 function finishSurveyApi(call) {
