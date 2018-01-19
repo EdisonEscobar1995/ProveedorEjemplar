@@ -1,12 +1,10 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
@@ -21,40 +19,45 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         super(SupplierByCallDAO.class);
     }
 
-    public SupplierByCallDTO getCurrentCallBySupplier(String idSupplierByCall) throws HandlerGenericException {
-        CallDAO callDAO = new CallDAO();
+    /**
+     * Obtiene la convocatoria de un proveedor, identificada con <code>idSupplierByCall</code> 
+     * en caso de <b>NO</b> ser <code>null</code>; en caso de serlo, busca la convocatoria que
+     * tenga asiganda y no esté vencida.
+     * 
+     * @param String <code>idSupplierByCall</code> Identificador de la convocatoria asiganda al proveedor
+     * @return <code>SupplierByCallDTO</code>
+     * @throws HandlerGenericException
+     */
+    public SupplierByCallDTO getCallOfSupplier(String idSupplierByCall) throws HandlerGenericException {
         StateBLO stateBLO = new StateBLO();
-        CallDTO call = null;
         SupplierByCallDTO response = null;
         SupplierBLO supplierBLO = new SupplierBLO();
-        List<SupplierByCallDTO> callsBySupplier = new ArrayList<SupplierByCallDTO>();
         boolean isSupplier = true;
-        try {
-            SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
+        SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
 
-            if (null == supplier) {
-                UserBLO userBLO = new UserBLO();
-                if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
-                    isSupplier = false;
-                    response = get(idSupplierByCall);
-                    readOnly = true;
+        if (null == supplier) {
+            UserBLO userBLO = new UserBLO();
+            if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+                isSupplier = false;
+                response = get(idSupplierByCall);
+                readOnly = true;
+            } else {
+                throw new HandlerGenericException("ROL_INVALID");
+            }
+        }
+
+        if (isSupplier) {
+            if (null != idSupplierByCall && !idSupplierByCall.trim().isEmpty()) {
+                CallBLO callBLO = new CallBLO();
+                response = get(idSupplierByCall);
+                if (!callBLO.get(response.getIdCall()).isCaducedDateToFinishCall()) {
+                    readOnly = false;
                 } else {
-                    throw new HandlerGenericException("ROL_INVALID");
+                    readOnly = true;
                 }
+            } else {
+                response = getCallActiveToParticipate(supplier.getId());
             }
-
-            if (isSupplier) {
-                callsBySupplier = getCallsBySupplier(supplier.getId());
-                for (SupplierByCallDTO supplierByCall : callsBySupplier) {
-                    call = callDAO.get(supplierByCall.getIdCall());
-                    if (call.isNotCaducedDate(call.getDateToFinishCall(), new Date())) {
-                        response = supplierByCall;
-                        break;
-                    }
-                }
-            }
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
         }
 
         if (!(response instanceof SupplierByCallDTO)) {
@@ -69,11 +72,27 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return response;
     }
 
+    private SupplierByCallDTO getCallActiveToParticipate(String idSupplier) throws HandlerGenericException {
+        CallBLO callBLO = new CallBLO();
+        CallDTO call = null;
+        SupplierByCallDTO response = null;
+        List<SupplierByCallDTO> callsBySupplier = getCallsBySupplier(idSupplier);
+        for (SupplierByCallDTO callBySupplier : callsBySupplier) {
+            call = callBLO.get(callBySupplier.getIdCall());
+            if (!call.isCaducedDateToFinishCall()) {
+                response = callBySupplier;
+                break;
+            }
+        }
+
+        return response;
+    }
+
     public void changedCompanySize(String oldIdCompanySize) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         SupplierByCallDTO supplierByCallDTO;
         try {
-            supplierByCallDTO = getCurrentCallBySupplier(null);
+            supplierByCallDTO = getCallOfSupplier(null);
             supplierByCallDTO.setOldIdCompanySize(oldIdCompanySize);
             supplierByCallDTO.setLockedByModification(true);
             supplierByCallDTO.setDateLocked(new Date());
@@ -85,7 +104,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     public void participateInCall() throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        SupplierByCallDTO supplierByCall = getCurrentCallBySupplier(null);
+        SupplierByCallDTO supplierByCall = getCallOfSupplier(null);
         supplierByCall.setParticipateInCall("true");
         supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
@@ -94,7 +113,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO response = null;
         CallBLO callBLO = new CallBLO();
         CallDTO call = callBLO.get(supplierByCall.getIdCall());
-        if (call.isNotCaducedDate(call.getDeadlineToMakeSurvey(), new Date())) {
+        if (!call.isCaducedDeadLineToMakeSurvey()) {
             if (changeState("EVALUATOR", supplierByCall.getId())) {
                 response = get(supplierByCall.getId());
                 NotificationBLO notificationBLO = new NotificationBLO();

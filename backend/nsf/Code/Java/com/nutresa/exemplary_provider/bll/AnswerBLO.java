@@ -21,7 +21,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         List<String> answerIds = answer.getIdsToDelete();
         AnswerDAO answerDAO = new AnswerDAO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        String idSupplierByCall = supplierByCallBLO.getCurrentCallBySupplier(null).getId();
+        String idSupplierByCall = supplierByCallBLO.getCallOfSupplier(null).getId();
         answerDAO.deleteMassive(answerIds, idSupplierByCall);
         return answer;
     }

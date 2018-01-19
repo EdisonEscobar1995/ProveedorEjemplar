@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,8 +88,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             }
         } else {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            List<DTO> callsBySupplier = supplierByCallBLO.getAllBy("idSupplier", supplier.getId(),
-                    "vwSuppliersByCallSupplier");
+            Map<String, String> filter = new HashMap<String, String>();
+            filter.put("idSupplier", supplier.getId());
+            filter.put("idCall", getIdCallByYear(year));
+            List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, "vwSuppliersByCallInIdSupplierAndIdCall");
             response = supplierBLO.getInformationFromSuppliers(listYears, callsBySupplier);
         }
 
