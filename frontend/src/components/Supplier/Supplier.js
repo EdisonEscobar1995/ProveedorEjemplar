@@ -82,11 +82,10 @@ class Supplier extends Component {
     });
     return newSupplier;
   }
-  constructor(props) {
-    super(props);
-    this.state = {
+  componentWillMount() {
+    this.setState({
       current: 0,
-    };
+    });
   }
   getSteps = () => {
     const dimensions = this.props.dimensions;

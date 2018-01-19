@@ -1,5 +1,17 @@
 import { intValidation, mailValitation, mailValitationMultiple } from '../../utils/rules';
 
+const mainCustomers = [
+  {
+    title: 'Supplier.principalCustomer.name',
+    key: 'name',
+  },
+  {
+    title: 'Supplier.principalCustomer.percentageOfParticipationInSales',
+    key: 'percentageOfParticipationInSales',
+    type: 'number',
+  },
+];
+
 const defaultOptions = [
   {
     id: 'true',
@@ -51,6 +63,7 @@ function getValueOption(value) {
 
 function generalInfo(fields) {
   const {
+    loading,
     supplier,
     readOnly,
     supplies,
@@ -75,6 +88,9 @@ function generalInfo(fields) {
     sectors,
     setSector,
     setExport,
+    addData,
+    deleteData,
+    updateField,
   } = fields;
 
   const {
@@ -127,8 +143,8 @@ function generalInfo(fields) {
     chemicalSubstance,
     actualSector,
     actuallyExport,
+    principalCustomer,
   } = supplier;
-
   const {
     uploadMaxFilesize,
     uploadExtensions,
@@ -408,7 +424,23 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.5,
+      key: 3.0,
+      value: [
+        {
+          type: 'table',
+          key: 'principalCustomer',
+          value: principalCustomer,
+          disabled,
+          colummns: mainCustomers,
+          loading,
+          addData,
+          deleteData,
+          updateField,
+        },
+      ],
+    },
+    {
+      key: 3.1,
       value:
       [
         {
@@ -420,7 +452,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.6,
+      key: 3.2,
       value: [
         {
           span: 6,
@@ -479,7 +511,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.7,
+      key: 3.3,
       value: [
         {
           type: 'textarea',
@@ -491,7 +523,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.8,
+      key: 3.4,
       value: [
         {
           span: 12,
@@ -503,7 +535,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.9,
+      key: 3.5,
       value: [
         {
           span: 6,
@@ -549,7 +581,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.0,
+      key: 3.6,
       value: [
         {
           span: 12,
@@ -561,7 +593,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.1,
+      key: 3.7,
       value: [
         {
           span: 6,
@@ -574,7 +606,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.2,
+      key: 3.8,
       value: [
         {
           span: 12,
@@ -585,7 +617,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.3,
+      key: 3.9,
       value: [
         {
           span: 6,
@@ -629,7 +661,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.4,
+      key: 4.0,
       value: [
         {
           span: 8,
@@ -662,7 +694,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.5,
+      key: 4.1,
       value: [
         {
           type: 'radio',
@@ -690,7 +722,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.0,
+      key: 4.2,
       value: [
         {
           span: 12,
@@ -702,7 +734,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.1,
+      key: 4.3,
       value: [
         {
           span: 8,
@@ -736,7 +768,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.2,
+      key: 4.4,
       value: [
         {
           type: 'title',
@@ -746,7 +778,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.3,
+      key: 4.5,
       value: [
         {
           type: 'textarea',
@@ -758,7 +790,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.4,
+      key: 4.6,
       value: [
         {
           type: 'title',
@@ -768,7 +800,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.5,
+      key: 4.7,
       value: [
         {
           span: 6,
@@ -793,7 +825,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.6,
+      key: 4.8,
       value: [
         {
           type: 'title',
@@ -803,7 +835,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.7,
+      key: 4.9,
       value: [
         {
           type: 'textarea',
@@ -815,7 +847,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.8,
+      key: 5.0,
       value: [
         {
           type: 'title',
@@ -825,7 +857,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.9,
+      key: 5.1,
       value: [
         {
           span: 12,
@@ -840,7 +872,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.0,
+      key: 5.2,
       value: [
         {
           span: 12,
@@ -914,22 +946,7 @@ function noParticipateInfo(fields) {
   ];
 }
 
-const mainCustomers = [
-  {
-    title: 'Supplier.principalCustomer.name',
-    key: 'name',
-  },
-  {
-    title: 'Supplier.principalCustomer.percentageOfParticipationInSales',
-    key: 'percentageOfParticipationInSales',
-    rules: [
-      { ...intValidation },
-    ],
-  },
-];
-
 export {
   generalInfo,
   noParticipateInfo,
-  mainCustomers,
 };
