@@ -47,17 +47,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         if (isSupplier) {
-            if (null != idSupplierByCall && !idSupplierByCall.trim().isEmpty()) {
-                CallBLO callBLO = new CallBLO();
-                response = get(idSupplierByCall);
-                if (!callBLO.get(response.getIdCall()).isCaducedDateToFinishCall()) {
-                    readOnly = false;
-                } else {
-                    readOnly = true;
-                }
-            } else {
-                response = getCallActiveToParticipate(supplier.getId());
-            }
+            response = identifyCallToParticipate(idSupplierByCall, supplier.getId());
         }
 
         if (!(response instanceof SupplierByCallDTO)) {
@@ -67,6 +57,24 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         if ((response instanceof SupplierByCallDTO)
                 && "EVALUATOR".equals(stateBLO.get(response.getIdState()).getShortName())) {
             readOnly = true;
+        }
+
+        return response;
+    }
+
+    private SupplierByCallDTO identifyCallToParticipate(String idSupplierByCall, String idSupplier)
+            throws HandlerGenericException {
+        SupplierByCallDTO response = null;
+        if (null != idSupplierByCall && !idSupplierByCall.trim().isEmpty()) {
+            CallBLO callBLO = new CallBLO();
+            response = get(idSupplierByCall);
+            if (!callBLO.get(response.getIdCall()).isCaducedDateToFinishCall()) {
+                readOnly = false;
+            } else {
+                readOnly = true;
+            }
+        } else {
+            response = getCallActiveToParticipate(idSupplier);
         }
 
         return response;
