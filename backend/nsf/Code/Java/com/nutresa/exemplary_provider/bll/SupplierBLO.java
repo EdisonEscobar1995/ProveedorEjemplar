@@ -138,7 +138,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             List<StateDTO> states = stateDAO.getAllBy("id",
                     Common.getIdsFromList(listIdsSupplierByCall.get("[idState]"), true));
 
-            String[] idFieldNames = { "Category", "Country", "Supply", "SubCategory" };
+            String[] idFieldNames = { "Category", "Country", "Department", "City", "Supply", "SubCategory",
+                    "CompanyType", "SocietyType", "Sector" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
 
             Map<String, List<DTO>> masters = getMasters(idFieldNames, masterIds, true);
@@ -151,6 +152,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+        
         return response;
     }
 
