@@ -2,37 +2,27 @@ import React from 'react';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
 
-function Surveys({ data, loading }) {
-  const { suppliers, suppliersByCall, masters, states } = data;
+function CallReport({ data, loading }) {
+  const { suppliers, suppliersByCall, masters } = data;
 
   const columns = [{
-    title: 'Nombre del proveedor',
-    dataIndex: 'businessName',
-    key: 'businessName',
-    sorter: (a, b) => (a.businessName < b.businessName ? -1 : 1),
+    title: 'NIT',
+    dataIndex: 'nit',
+    key: 'nit',
   }, {
     title: 'Código SAP',
     dataIndex: 'sapCode',
     key: 'sapCode',
-    sorter: (a, b) => (a.sapCode < b.sapCode ? -1 : 1),
   }, {
-    title: 'NIT',
-    dataIndex: 'nit',
-    key: 'nit',
+    title: 'Nombre del proveedor',
+    dataIndex: 'businessName',
+    key: 'businessName',
   }, {
     title: 'Tipo de suministro',
     dataIndex: 'idSupply',
     key: 'idSupply',
     render(text, record) {
       return masters.Supply.find(supply => supply.id === record.idSupply).name;
-    },
-  }, {
-    title: 'Categoría',
-    dataIndex: 'idCategory',
-    key: 'idCategory',
-    render(text, record) {
-      const category = masters.Category.find(item => item.id === record.idCategory);
-      return category ? category.name : '';
     },
   }, {
     title: 'Tamaño de empresa',
@@ -43,19 +33,26 @@ function Surveys({ data, loading }) {
       return companySize ? companySize.name : '';
     },
   }, {
-    title: 'Estado',
-    dataIndex: 'idState',
-    key: 'idState',
+    title: 'Participó',
+    dataIndex: 'participated',
+    key: 'participated',
     render(text, record) {
-      const idState = suppliersByCall
+      const participated = suppliersByCall
         .find(item => item.idSupplier === record.id)
-        .idState;
-      return states.find(item => item.id === idState).name;
+        .participateInCall;
+      switch (participated) {
+        case 'true':
+          return 'Si';
+        case 'false':
+          return 'No';
+        default:
+          return 'Sin respuesta';
+      }
     },
   }, {
-    title: 'Proveedor',
-    dataIndex: 'linkSupplier',
-    key: 'linkSupplier',
+    title: 'Enlace',
+    dataIndex: 'link',
+    key: 'link',
     render(text, record) {
       const idSupplierByCall = suppliersByCall
         .find(item => item.idSupplier === record.id)
@@ -84,4 +81,4 @@ function Surveys({ data, loading }) {
   );
 }
 
-export default Surveys;
+export default CallReport;

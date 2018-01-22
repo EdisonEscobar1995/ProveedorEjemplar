@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='Set menu' alias='set_ menu' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='6d0e6' unid='0A3F4A1B63AEC11D0525821A006F6D7F' sequence='4'>
+<created><datetime>20180119T151705,27-05</datetime></created>
+<modified><datetime>20180119T153019,02-05</datetime></modified>
+<revised><datetime>20180119T153019,01-05</datetime></revised>
+<lastaccessed><datetime>20180119T153019,02-05</datetime></lastaccessed>
+<addedtofile><datetime>20180119T151705,50-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180119T153018,98-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='action'>
+<simpleaction action='runformula'><formula>FIELD id := @Text(@DocumentUniqueID);
+FIELD idAccess := "0D4D5F7D3E0217C70525821A00702799";
+SELECT @All</formula></simpleaction></code>
+<rundata processeddocs='2' exitcode='0'>
+<agentmodified><datetime>20180119T153019,02-05</datetime></agentmodified>
+<agentrun><datetime>20180119T153025,35-05</datetime></agentrun>
+<runlog>Started running agent 'Set menu|set_ menu' on 19/01/2018 03:30:25 p. m.
+Running on selected documents: 2 total
+Found 2 document(s) that match search criteria
+2 document(s) were modified by formula
+Done running agent 'Set menu|set_ menu' on 19/01/2018 03:30:25 p. m.
+</runlog></rundata></agent>
+
