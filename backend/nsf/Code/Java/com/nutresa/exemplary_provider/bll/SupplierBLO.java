@@ -138,7 +138,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             List<StateDTO> states = stateDAO.getAllBy("id",
                     Common.getIdsFromList(listIdsSupplierByCall.get("[idState]"), true));
 
-            String[] idFieldNames = { "Category", "Country", "Supply" };
+            String[] idFieldNames = { "Category", "Country", "Supply", "SubCategory" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
 
             Map<String, List<DTO>> masters = getMasters(idFieldNames, masterIds, true);
