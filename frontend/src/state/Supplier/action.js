@@ -17,11 +17,8 @@ import {
   UPDATE_ATTACHMENT,
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
-  ADD_CUSTOMER,
-  EDIT_CUSTOMER,
   SAVE_CUSTOMER,
   DELETE_CUSTOMER,
-  CANCEL_CUSTOMER,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY,
   ADD_DIRECT_EMPLOYEES,
@@ -287,19 +284,6 @@ function getFailedRequest(error) {
     error,
   };
 }
-
-function addDataCustomer(data) {
-  return {
-    type: ADD_CUSTOMER,
-    data,
-  };
-}
-function editDataCustomer(data) {
-  return {
-    type: EDIT_CUSTOMER,
-    data,
-  };
-}
 function saveDataCustomer(data) {
   return {
     type: SAVE_CUSTOMER,
@@ -309,12 +293,6 @@ function saveDataCustomer(data) {
 function deleteDataCustomer(data) {
   return {
     type: DELETE_CUSTOMER,
-    data,
-  };
-}
-function cancelDataCustomer(data) {
-  return {
-    type: CANCEL_CUSTOMER,
     data,
   };
 }
@@ -597,46 +575,14 @@ const deleteAttachment = (idAttachment, field) => (
   }
 );
 
-const saveCustomer = (clientData, index) => (
-  (dispatch, getActualState) => {
-    const supplier = { ...getActualState().supplier.supplier };
-    const stateData = supplier.principalCustomer;
-    let newData = [...stateData];
-    newData[index] = clientData;
-    newData = reloadKeys(newData);
-    supplier.principalCustomer = newData;
-    dispatch(addDataCustomer(supplier));
-  }
-);
 const addCustomer = clientData => (
   (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
     const principalCustomer = supplier.principalCustomer;
-    let newData = [...principalCustomer];
+    const newData = [...principalCustomer];
     newData.push(clientData);
-    newData = reloadKeys(newData);
     supplier.principalCustomer = newData;
     dispatch(saveDataCustomer(supplier));
-  }
-);
-const editCustomer = index => (
-  (dispatch, getActualState) => {
-    const supplier = { ...getActualState().supplier.supplier };
-    const principalCustomer = supplier.principalCustomer;
-    const newData = [...principalCustomer];
-    newData[index].editable = true;
-    supplier.principalCustomer = newData;
-    dispatch(editDataCustomer(supplier));
-  }
-);
-const cancelCustomer = index => (
-  (dispatch, getActualState) => {
-    const supplier = { ...getActualState().supplier.supplier };
-    const principalCustomer = supplier.principalCustomer;
-    const newData = [...principalCustomer];
-    newData[index].editable = false;
-    supplier.principalCustomer = newData;
-    dispatch(cancelDataCustomer(supplier));
   }
 );
 
@@ -644,9 +590,13 @@ const deleteCustomer = (clientData, index) => (
   (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
     const principalCustomer = supplier.principalCustomer;
-    let newData = [...principalCustomer];
+    const newData = [...principalCustomer];
     newData.splice(index, 1);
-    newData = reloadKeys(newData);
+    if (newData && newData.length === 0) {
+      newData.push({
+        key: 0,
+      });
+    }
     supplier.principalCustomer = newData;
     dispatch(deleteDataCustomer(supplier));
   }
@@ -663,15 +613,15 @@ const finishSurvey = () => (
       });
   }
 );
-const updateField = (value, record, fielName) => (
+const updateField = (value, index, fielName) => (
   (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
-    let rowValue = supplier.principalCustomer[record.key];
+    let rowValue = supplier.principalCustomer[index];
     rowValue = rowValue || {};
     const assignObject = {};
     assignObject[fielName] = value;
     rowValue = Object.assign(rowValue, assignObject);
-    supplier.principalCustomer[record.key] = rowValue;
+    supplier.principalCustomer[index] = rowValue;
     dispatch({
       type: UPDATE_CUSTOMER,
       data: supplier,
@@ -719,11 +669,8 @@ export {
   updateAttachment,
   deleteAttachment,
   updateChangeIdCompanySize,
-  saveCustomer as saveDataCustomer,
   deleteCustomer as deleteDataCustomer,
   addCustomer as addDataCustomer,
-  editCustomer as editDataCustomer,
-  cancelCustomer as cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
   setNumberOfDirectEmployees,

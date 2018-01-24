@@ -42,8 +42,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             NotificationBLO notificationBLO = new NotificationBLO();
             notificationBLO.notifyChangeCompanySize(dto.getId());
         }
-
-        return dao.update(dto.getId(), dto);
+        supplier = dao.update(dto.getId(), dto);
+        supplier.setPrincipalCustomer(getCustomersBySupplier(supplier.getId()));
+        return supplier;
     }
 
     public SupplierDTO getSupplierInSession(String idSupplier) throws HandlerGenericException {
@@ -220,6 +221,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 if (null != customer.getName() && !customer.getName().trim().isEmpty()
                         && customer.getPercentageOfParticipationInSales() >= 0) {
                     customer.setIdSupplier(idSupplier);
+                    customer.setId(null);
                     customerBLO.save(customer);
                 }
             }
