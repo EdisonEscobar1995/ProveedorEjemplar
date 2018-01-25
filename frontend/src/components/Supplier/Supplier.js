@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Tabs, Spin, Progress } from 'antd';
 import styled, { css } from 'styled-components';
 import GeneralForm from './GeneralForm';
-import ComercialForm from './ComercialForm';
 import Question from './Question';
 import SurveyText from './SurveyText';
+import validateFields from './validateFields';
 import message from '../shared/message';
 import Title from '../shared/Title';
 
@@ -82,27 +82,31 @@ class Supplier extends Component {
     });
     return newSupplier;
   }
-  constructor(props) {
-    super(props);
-    this.state = {
+  componentWillMount() {
+    this.setState({
       current: 0,
-    };
+    });
   }
   getSteps = () => {
     const dimensions = this.props.dimensions;
     const steps = [
       {
-        content: <GeneralForm next={this.next} save={this.save} {...this.props} />,
-        stepContent: <ContentStyle><Title text="Survey.generalInfo" translate /></ContentStyle>,
+        content: (
+          <GeneralForm
+            ref={(form) => { this.generalForm = form; }}
+            next={this.next}
+            save={this.save}
+            {...this.props}
+          />
+        ),
+        stepContent: (
+          <ContentStyle>
+            <Title text="Survey.generalInfo" translate />
+          </ContentStyle>
+        ),
       },
     ];
     if (this.props.participateInCall === 'true') {
-      steps.push(
-        {
-          content: <ComercialForm next={this.next} save={this.save} {...this.props} />,
-          stepContent: <ContentStyle><Title text="Survey.comercialInfo" translate /></ContentStyle>,
-        },
-      );
       const {
         loadedDimensions,
         loadingDimensions,
@@ -163,8 +167,18 @@ class Supplier extends Component {
     return newSupplier;
   }
   changePage = (index) => {
+    const actual = this.state.current;
     const current = parseInt(index, 10);
-    this.setState({ current });
+    if (actual === 0 && !this.props.readOnly) {
+      this.generalForm.validateFieldsAndScroll(validateFields, (err) => {
+        if (!err) {
+          this.save(this.generalForm.getFieldsValue(), 'send');
+          this.setState({ current });
+        }
+      });
+    } else {
+      this.setState({ current });
+    }
   }
   save = (values, action) => {
     if (!this.props.changeIdCompanySize && this.props.participateInCall === 'true') {
@@ -282,7 +296,7 @@ class Supplier extends Component {
     const { current } = this.state;
     const { dimensions } = this.props;
     let nextCurrent = current + 1;
-    if (dimensions.length + 2 === current + 1) {
+    if (dimensions.length + 1 === current + 1) {
       nextCurrent = 0;
     }
     this.setState({ current: nextCurrent });

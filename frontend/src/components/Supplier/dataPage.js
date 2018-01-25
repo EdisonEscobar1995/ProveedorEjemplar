@@ -63,6 +63,7 @@ function getValueOption(value) {
 
 function generalInfo(fields) {
   const {
+    loading,
     supplier,
     readOnly,
     supplies,
@@ -84,6 +85,12 @@ function generalInfo(fields) {
     updateChangeIdCompanySize,
     setNumberOfDirectEmployees,
     setNumberOfSubContratedEmployees,
+    sectors,
+    setSector,
+    setExport,
+    addData,
+    deleteData,
+    updateField,
   } = fields;
 
   const {
@@ -121,9 +128,29 @@ function generalInfo(fields) {
     employeesTotal,
     participationInSalesWithGroupNutresa,
     attachedFinancialReport,
+    idSector,
+    otherSector,
+    webSite,
+    packagingProvided,
+    nameContactPersonInGroupNutresa,
+    emailContactPersonInGroupNutresa,
+    phoneContactPersonInGroupNutresa,
+    geograficDescriptionOfPrincipalMaterials,
+    currentlyExport,
+    nameCertification,
+    exportDestination,
+    globalAgreement,
+    chemicalSubstance,
+    actualSector,
+    actuallyExport,
+    principalCustomer,
   } = supplier;
-
-  const { uploadMaxFilesize, uploadExtensions } = system;
+  const {
+    uploadMaxFilesize,
+    uploadExtensions,
+    otherSectorId,
+    packagingMaterialCategoryId,
+  } = system;
 
   const disabled = readOnly;
 
@@ -397,7 +424,23 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.5,
+      key: 3.0,
+      value: [
+        {
+          type: 'table',
+          key: 'principalCustomer',
+          value: principalCustomer,
+          disabled,
+          colummns: mainCustomers,
+          loading,
+          addData,
+          deleteData,
+          updateField,
+        },
+      ],
+    },
+    {
+      key: 3.1,
       value:
       [
         {
@@ -409,7 +452,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.6,
+      key: 3.2,
       value: [
         {
           span: 6,
@@ -468,7 +511,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.7,
+      key: 3.3,
       value: [
         {
           type: 'textarea',
@@ -480,7 +523,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.8,
+      key: 3.4,
       value: [
         {
           span: 12,
@@ -492,7 +535,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 1.9,
+      key: 3.5,
       value: [
         {
           span: 6,
@@ -538,7 +581,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.0,
+      key: 3.6,
       value: [
         {
           span: 12,
@@ -550,7 +593,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.1,
+      key: 3.7,
       value: [
         {
           span: 6,
@@ -563,7 +606,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.2,
+      key: 3.8,
       value: [
         {
           span: 12,
@@ -574,7 +617,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 2.3,
+      key: 3.9,
       value: [
         {
           span: 6,
@@ -614,6 +657,231 @@ function generalInfo(fields) {
           rules: [
             { ...mailValitation },
           ],
+        },
+      ],
+    },
+    {
+      key: 4.0,
+      value: [
+        {
+          span: 8,
+          type: 'select',
+          label: 'Supplier.idSector',
+          key: 'idSector',
+          value: idSector,
+          options: sectors,
+          handleChange: setSector,
+          disabled,
+        },
+        {
+          span: 8,
+          type: 'input',
+          label: 'Supplier.otherSector',
+          key: 'otherSector',
+          value: otherSector,
+          hidden: (actualSector !== otherSectorId),
+          required: true,
+          disabled,
+        },
+        {
+          span: 8,
+          type: 'input',
+          label: 'Supplier.webSite',
+          key: 'webSite',
+          value: webSite,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 4.1,
+      value: [
+        {
+          type: 'radio',
+          label: 'Supplier.packagingProvided',
+          key: 'packagingProvided',
+          value: packagingProvided,
+          required: true,
+          hidden: (idCategory !== packagingMaterialCategoryId),
+          disabled,
+          options: [
+            {
+              id: 'si',
+              name: 'Supplier.yes',
+            },
+            {
+              id: 'no',
+              name: 'Supplier.no',
+            },
+            {
+              id: 'na',
+              name: 'N/A',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      key: 4.2,
+      value: [
+        {
+          span: 12,
+          type: 'title',
+          value: 'Supplier.contactNutresaGroup',
+          key: 'contactNutresaGroup',
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 4.3,
+      value: [
+        {
+          span: 8,
+          type: 'input',
+          label: 'Supplier.nameContactPersonInGroupNutresa',
+          key: 'nameContactPersonInGroupNutresa',
+          value: nameContactPersonInGroupNutresa,
+          disabled,
+        },
+        {
+          span: 8,
+          type: 'input',
+          inputType: 'mail',
+          label: 'Supplier.emailContactPersonInGroupNutresa',
+          key: 'emailContactPersonInGroupNutresa',
+          value: emailContactPersonInGroupNutresa,
+          disabled,
+          rules: [
+            { ...mailValitation },
+          ],
+        },
+        {
+          span: 8,
+          type: 'input',
+          inputType: 'mail',
+          label: 'Supplier.phoneContactPersonInGroupNutresa',
+          key: 'phoneContactPersonInGroupNutresa',
+          value: phoneContactPersonInGroupNutresa,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 4.4,
+      value: [
+        {
+          type: 'title',
+          value: 'Supplier.supplies',
+          key: 'supplies',
+        },
+      ],
+    },
+    {
+      key: 4.5,
+      value: [
+        {
+          type: 'textarea',
+          label: 'Supplier.geograficDescriptionOfPrincipalMaterials',
+          key: 'geograficDescriptionOfPrincipalMaterials',
+          value: geograficDescriptionOfPrincipalMaterials,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 4.6,
+      value: [
+        {
+          type: 'title',
+          value: 'Supplier.exports',
+          key: 'exports',
+        },
+      ],
+    },
+    {
+      key: 4.7,
+      value: [
+        {
+          span: 6,
+          type: 'select',
+          label: 'Supplier.currentlyExport',
+          key: 'currentlyExport',
+          value: getValueOption(currentlyExport),
+          handleChange: setExport,
+          options: defaultOptions,
+          disabled,
+        },
+        {
+          span: 18,
+          type: 'input',
+          label: 'Supplier.exportDestination',
+          key: 'exportDestination',
+          value: exportDestination,
+          hidden: !actuallyExport,
+          required: true,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 4.8,
+      value: [
+        {
+          type: 'title',
+          value: 'Supplier.certifications',
+          key: 'certifications',
+        },
+      ],
+    },
+    {
+      key: 4.9,
+      value: [
+        {
+          type: 'textarea',
+          label: 'Supplier.nameCertification',
+          key: 'nameCertification',
+          value: nameCertification,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 5.0,
+      value: [
+        {
+          type: 'title',
+          value: 'Supplier.aditionalInformation',
+          key: 'aditionalInformation',
+        },
+      ],
+    },
+    {
+      key: 5.1,
+      value: [
+        {
+          span: 12,
+          type: 'select',
+          label: 'Supplier.globalAgreement',
+          key: 'globalAgreement',
+          help: 'Supplier.globalAgreementHelp',
+          value: getValueOption(globalAgreement),
+          options: defaultOptions,
+          disabled,
+        },
+      ],
+    },
+    {
+      key: 5.2,
+      value: [
+        {
+          span: 12,
+          type: 'select',
+          label: 'Supplier.chemicalSubstance',
+          key: 'chemicalSubstance',
+          value: getValueOption(chemicalSubstance),
+          options: defaultOptions,
+          disabled,
         },
       ],
     },
@@ -678,294 +946,7 @@ function noParticipateInfo(fields) {
   ];
 }
 
-function comercialInfo(fields) {
-  const {
-    loading,
-    supplier,
-    readOnly,
-    sectors,
-    system,
-    setSector,
-    setExport,
-    addData,
-    deleteData,
-    updateField,
-  } = fields;
-
-  const {
-    idCategory,
-    idSector,
-    otherSector,
-    webSite,
-    packagingProvided,
-    nameContactPersonInGroupNutresa,
-    emailContactPersonInGroupNutresa,
-    phoneContactPersonInGroupNutresa,
-    geograficDescriptionOfPrincipalMaterials,
-    currentlyExport,
-    nameCertification,
-    exportDestination,
-    globalAgreement,
-    chemicalSubstance,
-    actualSector,
-    actuallyExport,
-    principalCustomer,
-  } = supplier;
-
-  const {
-    otherSectorId,
-    packagingMaterialCategoryId,
-  } = system;
-
-  const disabled = readOnly;
-
-  return [
-    {
-      key: 2.3,
-      value: [
-        {
-          type: 'table',
-          key: 'principalCustomer',
-          value: principalCustomer,
-          disabled,
-          colummns: mainCustomers,
-          loading,
-          addData,
-          deleteData,
-          updateField,
-        },
-      ],
-    },
-    {
-      key: 2.4,
-      value: [
-        {
-          span: 8,
-          type: 'select',
-          label: 'Supplier.idSector',
-          key: 'idSector',
-          value: idSector,
-          options: sectors,
-          handleChange: setSector,
-          disabled,
-        },
-        {
-          span: 8,
-          type: 'input',
-          label: 'Supplier.otherSector',
-          key: 'otherSector',
-          value: otherSector,
-          hidden: (actualSector !== otherSectorId),
-          required: true,
-          disabled,
-        },
-        {
-          span: 8,
-          type: 'input',
-          label: 'Supplier.webSite',
-          key: 'webSite',
-          value: webSite,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 2.5,
-      value: [
-        {
-          type: 'radio',
-          label: 'Supplier.packagingProvided',
-          key: 'packagingProvided',
-          value: packagingProvided,
-          required: true,
-          hidden: (idCategory !== packagingMaterialCategoryId),
-          disabled,
-          options: [
-            {
-              id: 'si',
-              name: 'Supplier.yes',
-            },
-            {
-              id: 'no',
-              name: 'Supplier.no',
-            },
-            {
-              id: 'na',
-              name: 'N/A',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      key: 3.0,
-      value: [
-        {
-          span: 12,
-          type: 'title',
-          value: 'Supplier.contactNutresaGroup',
-          key: 'contactNutresaGroup',
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 3.1,
-      value: [
-        {
-          span: 8,
-          type: 'input',
-          label: 'Supplier.nameContactPersonInGroupNutresa',
-          key: 'nameContactPersonInGroupNutresa',
-          value: nameContactPersonInGroupNutresa,
-          disabled,
-        },
-        {
-          span: 8,
-          type: 'input',
-          inputType: 'mail',
-          label: 'Supplier.emailContactPersonInGroupNutresa',
-          key: 'emailContactPersonInGroupNutresa',
-          value: emailContactPersonInGroupNutresa,
-          disabled,
-          rules: [
-            { ...mailValitation },
-          ],
-        },
-        {
-          span: 8,
-          type: 'input',
-          inputType: 'mail',
-          label: 'Supplier.phoneContactPersonInGroupNutresa',
-          key: 'phoneContactPersonInGroupNutresa',
-          value: phoneContactPersonInGroupNutresa,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 3.2,
-      value: [
-        {
-          type: 'title',
-          value: 'Supplier.supplies',
-          key: 'supplies',
-        },
-      ],
-    },
-    {
-      key: 3.3,
-      value: [
-        {
-          type: 'textarea',
-          label: 'Supplier.geograficDescriptionOfPrincipalMaterials',
-          key: 'geograficDescriptionOfPrincipalMaterials',
-          value: geograficDescriptionOfPrincipalMaterials,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 3.4,
-      value: [
-        {
-          type: 'title',
-          value: 'Supplier.exports',
-          key: 'exports',
-        },
-      ],
-    },
-    {
-      key: 3.5,
-      value: [
-        {
-          span: 6,
-          type: 'select',
-          label: 'Supplier.currentlyExport',
-          key: 'currentlyExport',
-          value: getValueOption(currentlyExport),
-          handleChange: setExport,
-          options: defaultOptions,
-          disabled,
-        },
-        {
-          span: 18,
-          type: 'input',
-          label: 'Supplier.exportDestination',
-          key: 'exportDestination',
-          value: exportDestination,
-          hidden: !actuallyExport,
-          required: true,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 3.6,
-      value: [
-        {
-          type: 'title',
-          value: 'Supplier.certifications',
-          key: 'certifications',
-        },
-      ],
-    },
-    {
-      key: 3.7,
-      value: [
-        {
-          type: 'textarea',
-          label: 'Supplier.nameCertification',
-          key: 'nameCertification',
-          value: nameCertification,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 3.8,
-      value: [
-        {
-          type: 'title',
-          value: 'Supplier.aditionalInformation',
-          key: 'aditionalInformation',
-        },
-      ],
-    },
-    {
-      key: 3.9,
-      value: [
-        {
-          span: 12,
-          type: 'select',
-          label: 'Supplier.globalAgreement',
-          key: 'globalAgreement',
-          help: 'Supplier.globalAgreementHelp',
-          value: getValueOption(globalAgreement),
-          options: defaultOptions,
-          disabled,
-        },
-      ],
-    },
-    {
-      key: 4.0,
-      value: [
-        {
-          span: 12,
-          type: 'select',
-          label: 'Supplier.chemicalSubstance',
-          key: 'chemicalSubstance',
-          value: getValueOption(chemicalSubstance),
-          options: defaultOptions,
-          disabled,
-        },
-      ],
-    },
-  ];
-}
-
 export {
   generalInfo,
   noParticipateInfo,
-  comercialInfo,
 };

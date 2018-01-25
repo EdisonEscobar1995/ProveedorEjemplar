@@ -14,7 +14,7 @@ const { Column } = Table;
 const RadioGroup = Radio.Group;
 const TableStyle = styled(Table)`
   .ant-table-body > table .ant-table-tbody > tr > td{
-    word-break: break-word;
+    word-break: inherit;
   }
 `;
 
