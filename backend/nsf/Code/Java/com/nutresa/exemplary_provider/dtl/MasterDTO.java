@@ -19,5 +19,9 @@ public abstract class MasterDTO implements DTO {
     public String getId() {
         return id;
     }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
 
 }

@@ -1,11 +1,11 @@
 import instance from './instance';
 
 function getDataSuppliertApi(id = '') {
-  return instance.get(`Supplier?action=loadInformation&idSupplier=${id}`);
+  return instance.get(`Supplier?action=loadInformation&idSupplier=${id !== null ? id : ''}`);
 }
 
 function getDataCallSuppliertApi(id = '') {
-  return instance.get(`SupplierByCall?action=currentCall&idSupplierByCall=${id}`);
+  return instance.get(`SupplierByCall?action=loadCallOfSupplier&idSupplierByCall=${id !== null ? id : ''}`);
 }
 
 function finishSurveyApi(call) {

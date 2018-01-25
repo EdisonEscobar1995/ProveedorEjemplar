@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
+import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -66,6 +68,34 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<DTO> listCalls = getAllBy("year", year);
         listIds = Common.getDtoFields(listCalls, new String[] { "[id]" }, CallDTO.class);
         return Common.getIdsFromList(listIds.get("[id]"));
+    }
+
+    public InformationFromSupplier getParticipantsByYear(String year) throws HandlerGenericException {
+        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        if (null == year || year.trim().isEmpty()) {
+            year = (String) listYears.get(0);
+        }
+
+        SupplierBLO supplierBLO = new SupplierBLO();
+        InformationFromSupplier response = null;
+        SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
+        if (null == supplier) {
+            UserBLO userBLO = new UserBLO();
+            if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+                response = supplierBLO.getSummaryWithSurvey(year);
+            } else {
+                throw new HandlerGenericException("ROL_INVALID");
+            }
+        } else {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            Map<String, String> filter = new HashMap<String, String>();
+            filter.put("idSupplier", supplier.getId());
+            filter.put("idCall", getIdCallByYear(year));
+            List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, "vwSuppliersByCallInIdSupplierAndIdCall");
+            response = supplierBLO.getInformationFromSuppliers(listYears, callsBySupplier);
+        }
+
+        return response;
     }
 
 }

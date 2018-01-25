@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.dal;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.openntf.domino.Database;
@@ -57,6 +58,20 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         }
 
         return response;
+    }
+    
+    @Override
+    public List<SupplierDTO> getAllBy(String field, String value) throws HandlerGenericException {
+        List<SupplierDTO> suppliers = super.getAllBy(field, value);
+        CustomerDAO customerDAO = new CustomerDAO();
+        int index = 0;
+        for (SupplierDTO supplier : suppliers) {
+            supplier.setPrincipalCustomer(customerDAO.getCustomersBySupplier(supplier.getId()));
+            suppliers.set(index, supplier);
+            index = index + 1;
+        }
+
+        return suppliers;
     }
 
 }

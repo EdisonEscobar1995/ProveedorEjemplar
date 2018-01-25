@@ -1,5 +1,17 @@
 import { intValidation, mailValitation, mailValitationMultiple } from '../../utils/rules';
 
+const mainCustomers = [
+  {
+    title: 'Supplier.principalCustomer.name',
+    key: 'name',
+  },
+  {
+    title: 'Supplier.principalCustomer.percentageOfParticipationInSales',
+    key: 'percentageOfParticipationInSales',
+    type: 'number',
+  },
+];
+
 const defaultOptions = [
   {
     id: 'true',
@@ -668,12 +680,16 @@ function noParticipateInfo(fields) {
 
 function comercialInfo(fields) {
   const {
+    loading,
     supplier,
     readOnly,
     sectors,
     system,
     setSector,
     setExport,
+    addData,
+    deleteData,
+    updateField,
   } = fields;
 
   const {
@@ -693,6 +709,7 @@ function comercialInfo(fields) {
     chemicalSubstance,
     actualSector,
     actuallyExport,
+    principalCustomer,
   } = supplier;
 
   const {
@@ -703,6 +720,22 @@ function comercialInfo(fields) {
   const disabled = readOnly;
 
   return [
+    {
+      key: 2.3,
+      value: [
+        {
+          type: 'table',
+          key: 'principalCustomer',
+          value: principalCustomer,
+          disabled,
+          colummns: mainCustomers,
+          loading,
+          addData,
+          deleteData,
+          updateField,
+        },
+      ],
+    },
     {
       key: 2.4,
       value: [
@@ -931,23 +964,8 @@ function comercialInfo(fields) {
   ];
 }
 
-const mainCustomers = [
-  {
-    title: 'Supplier.principalCustomer.name',
-    key: 'name',
-  },
-  {
-    title: 'Supplier.principalCustomer.percentageOfParticipationInSales',
-    key: 'percentageOfParticipationInSales',
-    rules: [
-      { ...intValidation },
-    ],
-  },
-];
-
 export {
   generalInfo,
   noParticipateInfo,
   comercialInfo,
-  mainCustomers,
 };

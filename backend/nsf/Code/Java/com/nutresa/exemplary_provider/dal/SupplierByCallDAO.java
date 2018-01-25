@@ -17,7 +17,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         this.entityView = "vwSuppliersByCall";
     }
 
-    public List<SupplierByCallDTO> getBySupplier(String idSupplier) throws HandlerGenericException {
+    public List<SupplierByCallDTO> getCallsBySupplier(String idSupplier) throws HandlerGenericException {
         List<SupplierByCallDTO> callsBySupplier = new ArrayList<SupplierByCallDTO>();
         try {
             View currentView = getDatabase().getView("vwSuppliersByCallSupplier");

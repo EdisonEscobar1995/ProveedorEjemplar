@@ -108,6 +108,10 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
 
   return (
     <div>
+      <div>
+        <strong>Total resultados: </strong>
+        {suppliers ? suppliers.filter(item => item.visible).length : 0}
+      </div>
       <Table
         rowKey={record => record.id}
         loading={loading}

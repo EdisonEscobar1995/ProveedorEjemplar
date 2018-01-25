@@ -15,11 +15,8 @@ import {
   UPDATE_ATTACHMENT,
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
-  ADD_CUSTOMER,
-  EDIT_CUSTOMER,
   SAVE_CUSTOMER,
   DELETE_CUSTOMER,
-  CANCEL_CUSTOMER,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY,
   ADD_DIRECT_EMPLOYEES,
@@ -175,11 +172,8 @@ function supplierApp(state = initialState, action) {
         supplier: action.supplier,
         loading: false,
       };
-    case ADD_CUSTOMER:
     case DELETE_CUSTOMER:
     case SAVE_CUSTOMER:
-    case EDIT_CUSTOMER:
-    case CANCEL_CUSTOMER:
     case UPDATE_CUSTOMER:
       return {
         ...state,

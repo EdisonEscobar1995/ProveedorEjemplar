@@ -13,12 +13,12 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         super(SupplierByCallDTO.class, SupplierByCallBLO.class);
     }
 
-    public ServletResponseDTO<SupplierByCallDTO> currentCall(Map<String, String> parametersInReques) {
+    public ServletResponseDTO<SupplierByCallDTO> loadCallOfSupplier(Map<String, String> parametersInReques) {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         ServletResponseDTO<SupplierByCallDTO> response = null;
         try {
             response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO
-                    .getCurrentCallBySupplier(parametersInReques.get("idSupplierByCall")));
+                    .getCallOfSupplier(parametersInReques.get("idSupplierByCall")));
             response.addRule("readOnly", supplierByCallBLO.getReadOnly());
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<SupplierByCallDTO>(exception);
