@@ -71,7 +71,7 @@ function Surveys({ data, loading }) {
   return (
     <div>
       <div>
-        <strong>Total proveedores: </strong>
+        <strong>Total resultados: </strong>
         {suppliers ? suppliers.filter(item => item.visible).length : 0}
       </div>
       <Table

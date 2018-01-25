@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class CallDTO {
     @Expose
@@ -103,13 +104,25 @@ public class CallDTO {
         return active;
     }
 
-    public boolean isNotCaducedDate(Date dateInCall, Date today) {
+    public boolean isCaducedDateToFinishCall() throws HandlerGenericException {
+        return isCaducedDate(this.dateToFinishCall, new Date());
+    }
+
+    public boolean isCaducedDeadLineToMakeSurvey() throws HandlerGenericException {
+        return isCaducedDate(this.dateToFinishCall, new Date());
+    }
+
+    private boolean isCaducedDate(Date dateToCompare, Date today) throws HandlerGenericException {
         boolean response = false;
-        if (today.compareTo(dateInCall) < 0) {
+        if (null == dateToCompare) {
+            throw new HandlerGenericException("DATE_WITHOUT_FIXING");
+        }
+
+        if (today.compareTo(dateToCompare) > 0) {
             response = true;
         }
 
         return response;
     }
-    
+
 }

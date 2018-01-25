@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import SubTitle from './SubTitle';
 import Field from '../Supplier/Field';
 import Upload from '../shared/Upload';
-import TableForm from '../shared/TableForm';
+import SimpleTable from '../shared/SimpleTable';
 import FormattedMessage from '../shared/FormattedMessage';
 import { baseUrl } from '../../utils/api';
 import { getIntl } from '../../utils/translate';
@@ -214,25 +214,21 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                     break;
                   case 'table': {
                     const {
-                      data,
                       colummns,
                       addData,
-                      saveData,
-                      editData,
                       deleteData,
-                      cancelData,
                       loading,
+                      updateField,
                     } = current;
                     rowValue = (
-                      <TableForm
-                        data={data}
-                        colummns={colummns}
-                        addData={addData}
-                        saveData={saveData}
-                        editData={editData}
-                        deleteData={deleteData}
-                        cancelData={cancelData}
+                      <SimpleTable
                         loading={loading}
+                        data={value}
+                        colummns={colummns}
+                        disabled={disabled}
+                        addData={addData}
+                        deleteData={deleteData}
+                        updateField={updateField}
                       />
                     );
                   }

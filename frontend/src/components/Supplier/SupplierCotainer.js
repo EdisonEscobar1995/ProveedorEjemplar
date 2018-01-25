@@ -17,10 +17,7 @@ import {
   updateChangeIdCompanySize,
   saveAnswer,
   addDataCustomer,
-  saveDataCustomer,
-  editDataCustomer,
   deleteDataCustomer,
-  cancelDataCustomer,
   reloadDimensions,
   finishSurvey,
   setNumberOfDirectEmployees,
@@ -116,17 +113,8 @@ const mapDispatchToProps = dispatch => ({
   addData: (data, index) => {
     dispatch(addDataCustomer(data, index));
   },
-  saveData: (data, index) => {
-    dispatch(saveDataCustomer(data, index));
-  },
-  editData: (index) => {
-    dispatch(editDataCustomer(index));
-  },
   deleteData: (data, index) => {
     dispatch(deleteDataCustomer(data, index));
-  },
-  cancelData: (index) => {
-    dispatch(cancelDataCustomer(index));
   },
   reloadDimensions: (dimensions) => {
     dispatch(reloadDimensions(dimensions));
