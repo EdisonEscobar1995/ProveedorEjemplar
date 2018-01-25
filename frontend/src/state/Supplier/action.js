@@ -585,7 +585,6 @@ const addCustomer = clientData => (
     dispatch(saveDataCustomer(supplier));
   }
 );
-
 const deleteCustomer = (clientData, index) => (
   (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };

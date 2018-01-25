@@ -7,6 +7,7 @@ import FormButtons from './FormButtons';
 import SubTitle from '../shared/SubTitle';
 import Paragraph from '../shared/Paragraph';
 import FormattedMessage from '../shared/FormattedMessage';
+import validateFields from './validateFields';
 
 const { Option } = Select;
 
@@ -21,12 +22,7 @@ class General extends Component {
   }
   validateContactInfo = () => {
     let response = true;
-    this.props.form.validateFieldsAndScroll([
-      'fullNameContact',
-      'jobPosition',
-      'phoneOfContact',
-      'emailOfContact',
-    ], (err) => {
+    this.props.form.validateFieldsAndScroll(validateFields, (err) => {
       if (err) {
         response = false;
       }
@@ -39,15 +35,22 @@ class General extends Component {
     }
   }
   continue = () => {
-    if (this.validateContactInfo() === true) {
+    const isValid = this.validateContactInfo();
+    if (isValid) {
       this.props.save(this.props.form.getFieldsValue(), 'send');
     }
+    return isValid;
   }
   handleChange= (participateInCall) => {
     this.props.changeParticipate(participateInCall);
   }
   render() {
-    const { participateInCall, changeIdCompanySize, system, readOnly } = this.props;
+    const {
+      participateInCall,
+      changeIdCompanySize,
+      system,
+      readOnly,
+    } = this.props;
     const { messageByChangeSizeCompany, informationProgram } = system;
     const { getFieldDecorator, setFields } = this.props.form;
     let content = '';
@@ -110,7 +113,7 @@ class General extends Component {
       );
     }
     return (
-      <div style={{ width: '90vw' }}>
+      <div>
         <Paragraph text={informationProgram} />
         <Field label="SupplierByCall.participateInCall">
           <Select
