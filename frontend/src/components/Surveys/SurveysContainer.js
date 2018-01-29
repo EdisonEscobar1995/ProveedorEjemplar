@@ -9,8 +9,7 @@ const FormFiltersHoc = Form.create()(Filters);
 
 class SurveysContainer extends Component {
   componentDidMount() {
-    const year = '';
-    this.props.getSurveys(year);
+    this.props.getSurveys();
   }
 
   render() {

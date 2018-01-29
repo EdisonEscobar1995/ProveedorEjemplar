@@ -9,8 +9,7 @@ const FormFiltersHoc = Form.create()(Filters);
 
 class ModifiedSuppliersContainer extends Component {
   componentDidMount() {
-    const year = '';
-    this.props.getModifiedSuppliers(year);
+    this.props.getModifiedSuppliers();
   }
 
   render() {
