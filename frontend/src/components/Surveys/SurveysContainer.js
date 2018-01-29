@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Spin, Form } from 'antd';
 import * as actions from '../../state/Surveys/action';
 import Filters from './Filters';
 import Surveys from './Surveys';
+
+const FormFiltersHoc = Form.create()(Filters);
 
 class SurveysContainer extends Component {
   componentDidMount() {
@@ -12,14 +15,15 @@ class SurveysContainer extends Component {
 
   render() {
     return (
-      <div>
-        <Filters
+      <Spin spinning={this.props.loading}>
+        <FormFiltersHoc
           {...this.props}
+          Form={Form}
         />
         <Surveys
           {...this.props}
         />
-      </div>
+      </Spin>
     );
   }
 }

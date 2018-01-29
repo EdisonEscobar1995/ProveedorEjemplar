@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Spin, Form } from 'antd';
-import * as actions from '../../state/ModifiedSuppliers/action';
+import * as actions from '../../state/Results/action';
 import Filters from './Filters';
-import ModifiedSuppliers from './ModifiedSuppliers';
 
 const FormFiltersHoc = Form.create()(Filters);
 
-class ModifiedSuppliersContainer extends Component {
+class ResultsContainer extends Component {
   componentDidMount() {
-    const year = '';
-    this.props.getModifiedSuppliers(year);
+    this.props.getMasters();
   }
 
   render() {
@@ -20,20 +18,17 @@ class ModifiedSuppliersContainer extends Component {
           {...this.props}
           Form={Form}
         />
-        <ModifiedSuppliers
-          {...this.props}
-        />
       </Spin>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  data: state.modifiedSuppliers.data,
-  loading: state.modifiedSuppliers.loading,
+  data: state.results.data,
+  loading: state.results.loading,
 });
 
 export default connect(
   mapStateToProps,
   actions,
-)(ModifiedSuppliersContainer);
+)(ResultsContainer);
