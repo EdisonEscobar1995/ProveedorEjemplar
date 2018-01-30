@@ -92,6 +92,15 @@ const routes = [
       import('./pages/CallReport').then(module => module.default),
     ),
   },
+  {
+    index: 10,
+    name: 'RESULTS',
+    path: '/results',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Results').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

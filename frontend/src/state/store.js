@@ -10,6 +10,7 @@ import calledSuppliers from './CalledSuppliers/reducer';
 import modifiedSuppliers from './ModifiedSuppliers/reducer';
 import surveys from './Surveys/reducer';
 import callReport from './CallReport/reducer';
+import results from './Results/reducer';
 
 const app = combineReducers({
   user,
@@ -21,6 +22,7 @@ const app = combineReducers({
   modifiedSuppliers,
   surveys,
   callReport,
+  results,
 });
 
 let middleware = {};

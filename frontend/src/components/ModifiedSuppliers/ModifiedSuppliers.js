@@ -3,7 +3,7 @@ import { Table, Select, Button } from 'antd';
 
 const { Option } = Select;
 
-function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
+function ModifiedSuppliers({ data, setCompanySize, unlockSupplier }) {
   const { suppliers, suppliersByCall, masters } = data;
 
   const isLocked = id => suppliersByCall
@@ -114,7 +114,6 @@ function ModifiedSuppliers({ data, loading, setCompanySize, unlockSupplier }) {
       </div>
       <Table
         rowKey={record => record.id}
-        loading={loading}
         dataSource={suppliers ? suppliers.filter(item => item.visible) : []}
         columns={columns}
       />

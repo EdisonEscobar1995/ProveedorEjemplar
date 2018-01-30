@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
 
-function Surveys({ data, loading }) {
+function Surveys({ data }) {
   const { suppliers, suppliersByCall, masters, states } = data;
 
   const columns = [{
@@ -76,7 +76,6 @@ function Surveys({ data, loading }) {
       </div>
       <Table
         rowKey={record => record.id}
-        loading={loading}
         dataSource={suppliers ? suppliers.filter(item => item.visible) : []}
         columns={columns}
       />

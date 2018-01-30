@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Spin, Form } from 'antd';
-import * as actions from '../../state/Surveys/action';
+import * as actions from '../../state/Results/action';
 import Filters from './Filters';
-import Surveys from './Surveys';
 
 const FormFiltersHoc = Form.create()(Filters);
 
-class SurveysContainer extends Component {
+class ResultsContainer extends Component {
   componentDidMount() {
-    this.props.getSurveys();
+    this.props.getMasters();
   }
 
   render() {
@@ -19,20 +18,17 @@ class SurveysContainer extends Component {
           {...this.props}
           Form={Form}
         />
-        <Surveys
-          {...this.props}
-        />
       </Spin>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  data: state.surveys.data,
-  loading: state.surveys.loading,
+  data: state.results.data,
+  loading: state.results.loading,
 });
 
 export default connect(
   mapStateToProps,
   actions,
-)(SurveysContainer);
+)(ResultsContainer);

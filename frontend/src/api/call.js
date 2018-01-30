@@ -16,7 +16,18 @@ const sendInvitationApi = supplier => instance.post('Supplier?action=sendInvitat
 
 const massiveShipmentCallApi = call => instance.post('Call?action=massiveShipmentCall', call);
 
-const getParticipantsByYearApi = (year = '') => instance.get(`Call?action=getParticipantsByYear&year=${year}`);
+const getParticipantsByYearApi = year => instance.get(`Call?action=getParticipantsByYear&year=${year || ''}`);
+
+const getResultsApi = data => instance.get(`Call?action=getResults
+  &year=${data.call}
+  &supply=${data.supply}
+  &category=${data.category}
+  &companySize=${data.companySize}
+  &supplier=${data.supplier}
+  &dimension=${data.dimension}
+  &criterion=${data.criterion}
+  &country=${data.country}
+`);
 
 export {
   getCallApi,
@@ -26,4 +37,5 @@ export {
   sendInvitationApi,
   massiveShipmentCallApi,
   getParticipantsByYearApi,
+  getResultsApi,
 };

@@ -183,6 +183,9 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 			var vwSuppliersByCall:NotesView = sessionAsSigner.getCurrentDatabase().getView("ImportSuppliersByCall");
 			vwSuppliers.setAutoUpdate(true);
 			
+			var vwStates:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwStatesByShortName");
+			var ndState:NotesDocument = vwStates.getDocumentByKey("NOT_STARTED", true);
+			
 			var fullName:NotesName;	
 			var abort;
 		
@@ -241,6 +244,7 @@ function importGeneric(data, response, viewName, columnNames, columnKeys, column
 							}
 							nd.replaceItemValue("participateInCall", "");
 							nd.replaceItemValue("invitedToCall", "0");
+							nd.replaceItemValue("idstate", ndState.getItemValueString("id"));
 						}else{
 							error = "Violación de clave primaria";
 		 					response.rows.push({pos: i + 1, error: "Ya existe en el sistema un documento que coincide con convocatoria y proveedor"})
