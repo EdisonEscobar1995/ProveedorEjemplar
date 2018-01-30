@@ -9,7 +9,7 @@ function Buttons(props) {
 
   const handleReset = () => {
     props.form.resetFields();
-    props.getData();
+    props.getParticipantsByYear();
   };
 
   const exportExcel = () => {

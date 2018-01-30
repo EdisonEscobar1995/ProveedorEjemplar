@@ -87,15 +87,23 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                           />
                         );
                         break;
-                      case 'inputNumber':
+                      case 'inputNumber': {
+                        const defaultFormatter = numberValue => `${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                        const defaultParser = numberValue => numberValue.replace(/\$\s?|(\.*)/g, '');
+                        const {
+                          formatter = defaultFormatter,
+                          parser = defaultParser,
+                        } = current;
                         fieldContent = (
                           <InputNumberStyle
                             min={0}
                             disabled={disabled}
-                            formatter={numberValue => `${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                            parser={numberValue => numberValue.replace(/\$\s?|(\.*)/g, '')}
+                            formatter={formatter}
+                            parser={parser}
+                            onChange={handleChange}
                           />
                         );
+                      }
                         break;
                       case 'textarea':
                         if (disabled) {

@@ -20,8 +20,7 @@ const participateInCall = (value) => {
 
 class CallReportContainer extends Component {
   componentDidMount() {
-    const year = '';
-    this.props.getParticipantsByYear(year);
+    this.props.getParticipantsByYear();
   }
 
   render() {

@@ -12,7 +12,6 @@ function Filters(props) {
       />
       <Buttons
         {...props}
-        getData={props.getSurveys}
       />
     </div>
   );

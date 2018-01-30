@@ -4,7 +4,7 @@ import { Row, Col, Button } from 'antd';
 function Buttons(props) {
   const handleReset = () => {
     props.form.resetFields();
-    props.getData();
+    props.getSurveys();
   };
 
   return (
