@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(Supplier by call by idSupplier and idCall)' alias='SupplierByCall|vwSuppliersByCallInIdSupplierAndIdCall'
+<view name='(Answers by question and idSupplierByCall)' alias='Answer|vwAnswersByQuestionAndIdSupplierByCall'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,23 +9,24 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='2dc52' unid='5515B1A6979B38CA0525821A00515CF3' sequence='3'>
-<created><datetime>20180119T094842,11-05</datetime></created>
-<modified><datetime>20180119T095148,91-05</datetime></modified>
-<revised><datetime>20180119T095148,90-05</datetime></revised>
-<lastaccessed><datetime>20180119T095148,91-05</datetime></lastaccessed>
-<addedtofile><datetime>20180119T094842,14-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='3b502' unid='43A1756D2BC4EDDB052582250077F75D' sequence='2'>
+<created><datetime>20180130T165021,09-05</datetime></created>
+<modified><datetime>20180130T165142,31-05</datetime></modified>
+<revised><datetime>20180130T165142,30-05</datetime></revised>
+<lastaccessed><datetime>20180130T165142,31-05</datetime></lastaccessed>
+<addedtofile><datetime>20180130T165021,11-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frSupplierByCall"</formula></code><code
+ event='selection'><formula>SELECT form = "frAnswer"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
 </lotusscript></code>
-<column sort='ascending' hidedetailrows='false' itemname='idSupplier' width='17.2500'
+<column sort='ascending' hidedetailrows='false' itemname='idQuestion' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='idSupplier'><font size='9pt' style='bold'/></columnheader></column>
-<column sort='ascending' hidedetailrows='false' itemname='idCall' width='10'
- resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
- showaslinks='false'><columnheader title='idCall'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='idQuestion'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idSupplierByCall'
+ width='17.2500' resizable='true' separatemultiplevalues='false' sortnoaccent='true'
+ sortnocase='true' showaslinks='false'><columnheader title='idSupplierByCall'><font
+ size='9pt' style='bold'/></columnheader></column></view>
 

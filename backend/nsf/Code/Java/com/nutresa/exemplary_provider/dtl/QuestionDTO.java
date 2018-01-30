@@ -1,8 +1,13 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.utils.Common;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class QuestionDTO {
     @Expose
@@ -130,6 +135,38 @@ public class QuestionDTO {
 
     public String getDependOfOptionId() {
         return dependOfOptionId;
+    }
+
+    public enum Field {
+        CRITERION, DIMENSION;
+
+        public static Field getType(String fieldName) {
+            return Field.valueOf(fieldName.toUpperCase());
+        }
+
+    }
+
+    public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
+        Map<String, String> fields = new HashMap<String, String>();
+        Iterator<String> iterator = parameters.keySet().iterator();
+        while (iterator.hasNext()) {
+            String valueInField = "";
+            String key = (String) iterator.next();
+            switch (Field.getType(key)) {
+            case CRITERION:
+                valueInField = parameters.get(key);
+                Common.setFieldsToFilterFTSearch(valueInField, "idCriterion", fields);
+                break;
+            case DIMENSION:
+                valueInField = parameters.get(key);
+                Common.setFieldsToFilterFTSearch(valueInField, "idDimension", fields);
+                break;
+            default:
+                break;
+            }
+        }
+
+        return fields;
     }
 
 }

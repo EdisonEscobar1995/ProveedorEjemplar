@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -93,6 +95,50 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             filter.put("idCall", getIdCallByYear(year));
             List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, "vwSuppliersByCallInIdSupplierAndIdCall");
             response = supplierBLO.getInformationFromSuppliers(listYears, callsBySupplier);
+        }
+
+        return response;
+    }
+
+    public List<ReportOfAverageGradeBySuppliers> getResults(Map<String, String> parameters)
+            throws HandlerGenericException {
+
+        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        String idCall = parameters.get("call");
+        if (null != idCall && !idCall.isEmpty()) {
+            SupplierBLO supplierBLO = new SupplierBLO();
+            List<SupplierDTO> suppliers = supplierBLO.getThemToResult(idCall, parameters);
+            if (!suppliers.isEmpty()) {
+                response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
+            }
+        } else {
+            throw new HandlerGenericException("CALL_NOT_ESPECIFIED");
+        }
+
+        if (response.isEmpty()) {
+            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+        }
+
+        return response;
+    }
+
+    private List<ReportOfAverageGradeBySuppliers> buildReportOfAverageGradeBySupplier(String idCall,
+            List<SupplierDTO> suppliers, Map<String, String> parameters) throws HandlerGenericException {
+        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        for (SupplierDTO supplier : suppliers) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
+                    supplier.getId());
+            if (supplierByCall instanceof SupplierByCallDTO) {
+                ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
+                AnswerBLO answerBLO = new AnswerBLO();
+                recordOfReport.setNit(supplier.getNit());
+                recordOfReport.setSapCode(supplier.getSapCode());
+                recordOfReport.setName(supplier.getBusinessName());
+                recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
+                        parameters);
+                response.add(recordOfReport);
+            }
         }
 
         return response;

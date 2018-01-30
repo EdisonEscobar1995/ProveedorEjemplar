@@ -17,7 +17,8 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         super(AnswerDTO.class);
     }
 
-    public List<AnswerDTO> getAnswerBySurvey(String idSupplierByCall, String idQuestion) throws HandlerGenericException {
+    public List<AnswerDTO> getAnswerBySurvey(String idSupplierByCall, String idQuestion)
+            throws HandlerGenericException {
         List<AnswerDTO> response = new ArrayList<AnswerDTO>();
         ArrayList<String> filterBySurveyAndQuestion;
         filterBySurveyAndQuestion = new ArrayList<String>();
@@ -30,6 +31,24 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
                 for (Document document : documents) {
                     AnswerDTO answer = castDocument(document);
                     answer.setAttachment(getAttachmentByAnswer(answer));
+                    response.add(answer);
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
+    }
+
+    public List<AnswerDTO> getAsnwersByIdSupplierByCall(String idSupplierByCall) throws HandlerGenericException {
+        List<AnswerDTO> response = new ArrayList<AnswerDTO>();
+        try {
+            View currentView = getDatabase().getView("vwAnswersBySupplierByCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(idSupplierByCall, true);
+            if (documents != null) {
+                for (Document document : documents) {
+                    AnswerDTO answer = castDocument(document);
                     response.add(answer);
                 }
             }
@@ -78,26 +97,45 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         }
     }
 
-    public void deleteMassive(List<String> paramToDelete, String idSupplierByCall ) throws HandlerGenericException {
+    public void deleteMassive(List<String> paramToDelete, String idSupplierByCall) throws HandlerGenericException {
         try {
             View currentView = getDatabase().getView("vwAnswersByIdSupplierByCallToDeleteMasive");
             DocumentCollection documents = getDatabase().createDocumentCollection();
             ArrayList<String> filter;
             for (String idAnswer : paramToDelete) {
-            	filter = new ArrayList<String>(2);
-            	filter.add(idAnswer);
-            	filter.add(idSupplierByCall);
-            	Document answer = currentView.getFirstDocumentByKey(filter, true);
-            	if(null != answer){
-            		documents.add(answer);  
-            	}
-			}
+                filter = new ArrayList<String>(2);
+                filter.add(idAnswer);
+                filter.add(idSupplierByCall);
+                Document answer = currentView.getFirstDocumentByKey(filter, true);
+                if (null != answer) {
+                    documents.add(answer);
+                }
+            }
             if (null != documents) {
                 documents.removeAll(true);
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+
+    public AnswerDTO getByQuestionsAndSupplierByCall(String idSupplierByCall, String idQuestion)
+            throws HandlerGenericException {
+        AnswerDTO response = null;
+        List<String> filter = new ArrayList<String>();
+        filter.add(idQuestion);
+        filter.add(idSupplierByCall);
+        try {
+            View view = getDatabase().getView("vwAnswersByQuestionAndIdSupplierByCall");
+            Document document = view.getFirstDocumentByKey(filter, true);
+            if (null != document) {
+                response = castDocument(document);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
     }
 
 }

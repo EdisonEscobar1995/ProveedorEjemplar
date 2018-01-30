@@ -236,4 +236,14 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return supplierByCallDAO.getCallsBySupplier(idSupplier);
     }
 
+    public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.getSuppliersByCall(idCall);
+    }
+
+    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.getByIdCallAndIdSupplierFinished(idCall, idSupplier);
+    }
+
 }

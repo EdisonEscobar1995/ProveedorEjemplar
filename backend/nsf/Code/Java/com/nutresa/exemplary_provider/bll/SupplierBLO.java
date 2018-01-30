@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -226,6 +227,23 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 }
             }
         }
+    }
+
+    public List<SupplierDTO> getThemToResult(String idCall, Map<String, String> parameters)
+            throws HandlerGenericException {
+        SupplierDTO supplier = new SupplierDTO();
+        Map<String, String> fieldsToFilter = supplier.identifyFieldsToFTSearch(parameters);
+        List<SupplierDTO> response = new ArrayList<SupplierDTO>();
+
+        if (!fieldsToFilter.isEmpty()) {
+            SupplierDAO supplierDAO = new SupplierDAO();
+            response = supplierDAO.getThemFilters(fieldsToFilter);
+        } else {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            response = supplierByCallBLO.getSuppliersByCall(idCall);
+        }
+
+        return response;
     }
 
 }

@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
@@ -95,6 +96,25 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
                 question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
                 question.setAnswer(answerDAO.getAnswerBySurvey(idSupplierByCall, question.getId()));
                 response.add(question);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
+    }
+
+    public List<QuestionDTO> getThemFilters(Map<String, String> fieldsToFilter) throws HandlerGenericException {
+        List<QuestionDTO> response = new ArrayList<QuestionDTO>();
+        try {
+            View view = getDatabase().getView("vwQuestions");
+            view.FTSearch(buildCharFTSearch(fieldsToFilter, QuestionDTO.class));
+
+            DocumentCollection documents = view.getAllDocuments();
+            if (null != documents) {
+                for (Document document : documents) {
+                    response.add(castDocument(document));
+                }
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);

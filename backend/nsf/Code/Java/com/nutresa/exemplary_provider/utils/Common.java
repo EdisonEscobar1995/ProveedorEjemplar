@@ -236,4 +236,25 @@ public class Common {
         return response;
     }
 
+    public static String implodeList(String separator, List<String> valuesToImplode) {
+        boolean first = true;
+        StringBuilder stringImploded = new StringBuilder();
+        for (String value : valuesToImplode) {
+            if (!first)
+                stringImploded.append(separator);
+            stringImploded.append(value);
+            first = false;
+        }
+
+        return stringImploded.toString();
+    }
+
+    public static Map<String, String> setFieldsToFilterFTSearch(String value, String nameOfKey, Map<String, String> fields) {
+        if (!value.trim().isEmpty()) {
+            fields.put(nameOfKey, value);
+        }
+
+        return fields;
+    }
+
 }

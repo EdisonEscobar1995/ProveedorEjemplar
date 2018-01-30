@@ -2,10 +2,12 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
+import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
@@ -72,6 +74,25 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         }
 
         return suppliers;
+    }
+    
+    public List<SupplierDTO> getThemFilters(Map<String, String> fieldsToFilter) throws HandlerGenericException {
+        List<SupplierDTO> response = new ArrayList<SupplierDTO>();
+        try {
+            View view = getDatabase().getView("vwSuppliers");
+            view.FTSearch(buildCharFTSearch(fieldsToFilter, SupplierDTO.class));
+
+            DocumentCollection documents = view.getAllDocuments();
+            if (null != documents) {
+                for (Document document : documents) {
+                    response.add(castDocument(document));
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
     }
 
 }
