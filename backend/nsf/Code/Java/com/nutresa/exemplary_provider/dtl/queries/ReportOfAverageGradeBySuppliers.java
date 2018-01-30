@@ -56,8 +56,12 @@ public class ReportOfAverageGradeBySuppliers {
         return totalScoreOfSupplier;
     }
 
-    public void setTotalScoreOfSupplier(double totalScoreOfSupplier) {
-        this.totalScoreOfSupplier = totalScoreOfSupplier;
+    public void setTotalScoreOfSupplier(short totalScoreOfSupplier, short totalExpectedScoreOfSupplier) {
+        if(totalExpectedScoreOfSupplier > 0){
+            this.totalScoreOfSupplier = totalScoreOfSupplier / totalExpectedScoreOfSupplier;
+        } else {
+            this.totalScoreOfSupplier = 0;
+        }
     }
 
     public double getExpectedScore() {

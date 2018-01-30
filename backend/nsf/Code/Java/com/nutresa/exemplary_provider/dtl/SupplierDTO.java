@@ -610,7 +610,7 @@ public class SupplierDTO {
         Iterator<String> iterator = parameters.keySet().iterator();
         while (iterator.hasNext()) {
             String valueInField = "";
-            String key = (String) iterator.next();
+            String key = iterator.next();
             switch (Field.getType(key)) {
             case CATEGORY:
                 valueInField = parameters.get(key);

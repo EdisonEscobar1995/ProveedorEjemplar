@@ -529,7 +529,7 @@ public abstract class GenericDAO<T> {
         try {
             Iterator<String> iterator = fields.keySet().iterator();
             while (iterator.hasNext()) {
-                String key = (String) iterator.next();
+                String key = iterator.next();
                 String valueInField = fields.get(key);
                 Field declaredField = classToBuild.getDeclaredField(valueInField);
                 declaredField.setAccessible(true);

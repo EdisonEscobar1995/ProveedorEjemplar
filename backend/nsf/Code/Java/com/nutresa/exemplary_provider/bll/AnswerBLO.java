@@ -86,7 +86,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         }
 
         recordOfReport.setExpectedScore(percentExpected);
-        recordOfReport.setTotalScoreOfSupplier(sumScoreAnswered / sumExpectedScore);
+        recordOfReport.setTotalScoreOfSupplier(sumScoreAnswered, sumExpectedScore);
         recordOfReport.setTotalScore(sumScoreAnswered / percentExpected);
         recordOfReport.setSummarySurvey(summariesSurvey);
 
@@ -95,7 +95,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     private List<AnswerDTO> getAnswersForReportOfAverageGrade(String idSupplierByCall, Map<String, String> parameters)
             throws HandlerGenericException {
-        List<AnswerDTO> response = new ArrayList<AnswerDTO>();
+        List<AnswerDTO> response = null;
         QuestionDTO question = new QuestionDTO();
 
         Map<String, String> fieldsToFilterQuestion = question.identifyFieldsToFTSearch(parameters);

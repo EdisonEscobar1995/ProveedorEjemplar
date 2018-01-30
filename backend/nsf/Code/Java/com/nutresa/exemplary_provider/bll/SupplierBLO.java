@@ -233,7 +233,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             throws HandlerGenericException {
         SupplierDTO supplier = new SupplierDTO();
         Map<String, String> fieldsToFilter = supplier.identifyFieldsToFTSearch(parameters);
-        List<SupplierDTO> response = new ArrayList<SupplierDTO>();
+        List<SupplierDTO> response = null;
 
         if (!fieldsToFilter.isEmpty()) {
             SupplierDAO supplierDAO = new SupplierDAO();
