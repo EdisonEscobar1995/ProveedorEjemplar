@@ -102,21 +102,26 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     public List<ReportOfAverageGradeBySuppliers> getResults(Map<String, String> parameters)
             throws HandlerGenericException {
-
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
-        String idCall = parameters.get("call");
-        if (null != idCall && !idCall.isEmpty()) {
-            SupplierBLO supplierBLO = new SupplierBLO();
-            List<SupplierDTO> suppliers = supplierBLO.getThemToResult(idCall, parameters);
-            if (!suppliers.isEmpty()) {
-                response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
+
+        UserBLO userBLO = new UserBLO();
+        if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+            String idCall = parameters.get("call");
+            if (null != idCall && !idCall.isEmpty()) {
+                SupplierBLO supplierBLO = new SupplierBLO();
+                List<SupplierDTO> suppliers = supplierBLO.getThemToResult(idCall, parameters);
+                if (!suppliers.isEmpty()) {
+                    response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
+                }
+            } else {
+                throw new HandlerGenericException("CALL_NOT_ESPECIFIED");
+            }
+
+            if (response.isEmpty()) {
+                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
             }
         } else {
-            throw new HandlerGenericException("CALL_NOT_ESPECIFIED");
-        }
-
-        if (response.isEmpty()) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            throw new HandlerGenericException("ROL_INVALID");
         }
 
         return response;
