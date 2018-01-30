@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Input, Button, Tooltip } from 'antd';
+import { Table, Input, InputNumber, Button, Tooltip } from 'antd';
 import styled from 'styled-components';
 import FormattedMessage from '../shared/FormattedMessage';
 import Confirm from '../shared/Confirm';
@@ -9,6 +9,9 @@ const translator = getIntl();
 
 const TableStyle = styled(Table)`
   margin: ${props => props.theme.spaces.main} 0;
+`;
+const InputNumberStyle = styled(InputNumber)`
+  width: 100%;
 `;
 const { Column } = Table;
 
@@ -37,7 +40,6 @@ class SimpleTable extends Component {
     }
     return (
       <TableStyle
-        rowKey={record => record.key}
         pagination={false}
         dataSource={copyData}
       >
@@ -48,21 +50,25 @@ class SimpleTable extends Component {
                 title={<FormattedMessage id={column.title} />}
                 key={column.key}
                 dataIndex={column.key}
-                render={(text, record, index) =>
-                  (
-                    <Input
-                      defaultValue={text}
-                      disabled={disabled}
-                      type={column.type}
-                      placeholder={translator.formatMessage({ id: column.title })}
-                      onBlur={(e) => {
-                        const value = e.target.value;
-                        if (updateField && value) {
-                          updateField(value, index, column.key);
-                        }
-                      }}
-                    />
-                  )
+                render={(text, record, index) => {
+                  const inputProps = {
+                    defaultValue: text,
+                    disabled,
+                    placeholder: translator.formatMessage({ id: column.title }),
+                    onBlur: (e) => {
+                      const value = e.target.value;
+                      if (updateField && value) {
+                        updateField(value, index, column.key);
+                      }
+                    },
+                  };
+                  return (
+                    column.type === 'number' ?
+                      <InputNumberStyle min={0} max={100} {...inputProps} />
+                      :
+                      <Input {...inputProps} type={column.type} />
+                  );
+                }
                 }
               />
             ),
