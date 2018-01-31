@@ -104,29 +104,33 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         while (iterator.hasNext()) {
             String valueInField = "";
             String key = iterator.next();
-            switch (FieldsSupplier.getType(key)) {
-            case CATEGORY:
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, "idCategory", fields);
-                break;
-            case COMPANYSIZE:
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, "idCompanySize", fields);
-                break;
-            case COUNTRY:
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, "idCountry", fields);
-                break;
-            case SUPPLIER:
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, "id", fields);
-                break;
-            case SUPPLY:
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, "idSupply", fields);
-                break;
-            default:
-                break;
+            try {
+                switch (FieldsSupplier.getType(key)) {
+                case CATEGORY:
+                    valueInField = parameters.get(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, "idCategory", fields);
+                    break;
+                case COMPANYSIZE:
+                    valueInField = parameters.get(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, "idCompanySize", fields);
+                    break;
+                case COUNTRY:
+                    valueInField = parameters.get(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, "idCountry", fields);
+                    break;
+                case SUPPLIER:
+                    valueInField = parameters.get(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, "id", fields);
+                    break;
+                case SUPPLY:
+                    valueInField = parameters.get(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, "idSupply", fields);
+                    break;
+                default:
+                    break;
+                }
+            } catch (IllegalArgumentException exception) {
+                continue;
             }
         }
 

@@ -64,9 +64,6 @@ public abstract class GenericDAO<T> {
     public T get(String id) throws HandlerGenericException {
         View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
-        if (null == document) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUNT");
-        }
         return castDocument(document);
     }
 

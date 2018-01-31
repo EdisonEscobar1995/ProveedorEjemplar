@@ -149,17 +149,21 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         while (iterator.hasNext()) {
             String valueInField = "";
             String key = iterator.next();
-            switch (FieldsQuestion.getType(key)) {
-            case CRITERION:
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, "idCriterion", fields);
-                break;
-            case DIMENSION:
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, "idDimension", fields);
-                break;
-            default:
-                break;
+            try {
+                switch (FieldsQuestion.getType(key)) {
+                case CRITERION:
+                    valueInField = parameters.get(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, "idCriterion", fields);
+                    break;
+                case DIMENSION:
+                    valueInField = parameters.get(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, "idDimension", fields);
+                    break;
+                default:
+                    break;
+                }
+            } catch (IllegalArgumentException exception) {
+                continue;
             }
         }
 
