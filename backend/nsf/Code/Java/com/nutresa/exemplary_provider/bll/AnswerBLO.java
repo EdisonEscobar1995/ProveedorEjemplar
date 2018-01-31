@@ -41,6 +41,15 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         return super.save(dto);
     }
 
+    /**
+     * Construye reporte de nota promedio por proveedor, basado en las respuestas suministradas por el proveedor.
+     * 
+     * @param idSupplierByCall Identificador de la convocaria definitiva y finalizada de un proveedor.
+     * @param recordOfReport Registro del reporte
+     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @return Registro del reporte
+     * @throws HandlerGenericException
+     */
     public ReportOfAverageGradeBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
             ReportOfAverageGradeBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
@@ -94,6 +103,14 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         return recordOfReport;
     }
 
+    /**
+     * Obtiene las respuestas que se van a tener en cuenta para el reporte de Nota promedio.
+     * 
+     * @param idSupplierByCall Identificador de la convocaria definitiva y finalizada de un proveedor.
+     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @return Collección de respuestas
+     * @throws HandlerGenericException
+     */
     private List<AnswerDTO> getAnswersForReportOfAverageGrade(String idSupplierByCall, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> response = null;
@@ -102,7 +119,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         Map<String, String> fieldsToFilterQuestion = answerDAO.identifyFieldsToFTSearch(parameters);
         if (!fieldsToFilterQuestion.isEmpty()) {
             QuestionBLO questionBLO = new QuestionBLO();
-            List<QuestionDTO> questions = questionBLO.getByFields(fieldsToFilterQuestion);
+            List<QuestionDTO> questions = questionBLO.getThemWithFilter(fieldsToFilterQuestion);
             response = getByQuestionsAndSupplierByCall(idSupplierByCall, questions);
         } else {
             response = answerDAO.getAsnwersByIdSupplierByCall(idSupplierByCall);
@@ -115,6 +132,14 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         return response;
     }
 
+    /**
+     * Obtiene las respuestas por pregunta y convocatoria definitiva de un proveedor.
+     * 
+     * @param idSupplierByCall Identificador de la convocatoria definitiva de un proveedor.
+     * @param questions Collección de preguntas a las que se desea obtener la respuesta.
+     * @return Colección de respuestas
+     * @throws HandlerGenericException
+     */
     private List<AnswerDTO> getByQuestionsAndSupplierByCall(String idSupplierByCall, List<QuestionDTO> questions)
             throws HandlerGenericException {
         List<AnswerDTO> response = new ArrayList<AnswerDTO>();

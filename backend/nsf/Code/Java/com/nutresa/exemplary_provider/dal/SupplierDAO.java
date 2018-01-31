@@ -80,26 +80,13 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         return suppliers;
     }
     
-    public List<SupplierDTO> getThemFilters(Map<String, String> fieldsToFilter) throws HandlerGenericException {
-        List<SupplierDTO> response = new ArrayList<SupplierDTO>();
-        try {
-            View view = getDatabase().getView("vwSuppliers");
-            view.FTSearch(buildCharFTSearch(fieldsToFilter, SupplierDTO.class), 0);
-
-            ViewEntryCollection entries = view.getAllEntries();
-            if (null != entries) {
-                for (ViewEntry entry : entries) {
-                    Document document = entry.getDocument(); 
-                    response.add(castDocument(document));
-                }
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return response;
-    }
-    
+    /**
+     * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar los proveedores.
+     * 
+     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @return Mapa clave valor con los campos que se debe filtrar.
+     * @throws HandlerGenericException
+     */
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
         Iterator<String> iterator = parameters.keySet().iterator();
@@ -137,6 +124,33 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         }
 
         return fields;
+    }
+
+    /**
+     * Filtra los proveedores según los campos especificados en <code>fieldsToFilter</code>
+     * 
+     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se filtrarán los proveedores.
+     * @return Colección de proveedores.
+     * @throws HandlerGenericException
+     */
+    public List<SupplierDTO> getThemWithFilter(Map<String, String> fieldsToFilter) throws HandlerGenericException {
+        List<SupplierDTO> response = new ArrayList<SupplierDTO>();
+        try {
+            View view = getDatabase().getView("vwSuppliers");
+            view.FTSearch(buildCharFTSearch(fieldsToFilter, SupplierDTO.class), 0);
+
+            ViewEntryCollection entries = view.getAllEntries();
+            if (null != entries) {
+                for (ViewEntry entry : entries) {
+                    Document document = entry.getDocument();
+                    response.add(castDocument(document));
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
     }
 
 }

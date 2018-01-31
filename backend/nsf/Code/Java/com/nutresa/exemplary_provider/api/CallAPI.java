@@ -59,7 +59,7 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         CallBLO callBLO = new CallBLO();
         try {
             response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(
-                    callBLO.getResults(parameters));
+                    callBLO.getReportOfAverageGradeBySupplier(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(exception);
         }

@@ -236,12 +236,28 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return supplierByCallDAO.getCallsBySupplier(idSupplier);
     }
 
+    /**
+     * Obtiene los proveedores asociados a una convocatoria.
+     * 
+     * @param idCall Identificador de la convocatoria.
+     * @return Colección de proveedores.
+     * @throws HandlerGenericException
+     */
     public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         return supplierByCallDAO.getSuppliersByCall(idCall);
     }
 
-    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier) throws HandlerGenericException {
+    /**
+     * Buscar la convocatoria de un proveedor en caso de estar finalizada
+     * 
+     * @param idCall Identificador de la convocatoria
+     * @param idSupplier Identificador del proveedor
+     * @return Objeto con la información en caso de hallar considencia en la búsqueda.
+     * @throws HandlerGenericException
+     */
+    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
+            throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         return supplierByCallDAO.getByIdCallAndIdSupplierFinished(idCall, idSupplier);
     }
