@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.queries.FieldsSupplier;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -596,22 +597,13 @@ public class SupplierDTO {
         this.typeOfCurrencyAnnualSales = typeOfCurrencyAnnualSales;
     }
 
-    public enum Field {
-        CATEGORY, COMPANYSIZE, COUNTRY, SUPPLIER, SUPPLY;
-
-        public static Field getType(String fieldName) {
-            return Field.valueOf(fieldName.toUpperCase());
-        }
-
-    }
-
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
         Iterator<String> iterator = parameters.keySet().iterator();
         while (iterator.hasNext()) {
             String valueInField = "";
             String key = iterator.next();
-            switch (Field.getType(key)) {
+            switch (FieldsSupplier.getType(key)) {
             case CATEGORY:
                 valueInField = parameters.get(key);
                 Common.setFieldsToFilterFTSearch(valueInField, "idCategory", fields);
@@ -639,5 +631,5 @@ public class SupplierDTO {
 
         return fields;
     }
-    
+
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.queries.FieldsQuestion;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -137,22 +138,13 @@ public class QuestionDTO {
         return dependOfOptionId;
     }
 
-    public enum Field {
-        CRITERION, DIMENSION;
-
-        public static Field getType(String fieldName) {
-            return Field.valueOf(fieldName.toUpperCase());
-        }
-
-    }
-
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
         Iterator<String> iterator = parameters.keySet().iterator();
         while (iterator.hasNext()) {
             String valueInField = "";
             String key = iterator.next();
-            switch (Field.getType(key)) {
+            switch (FieldsQuestion.getType(key)) {
             case CRITERION:
                 valueInField = parameters.get(key);
                 Common.setFieldsToFilterFTSearch(valueInField, "idCriterion", fields);
