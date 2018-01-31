@@ -18,7 +18,7 @@ const filtersData = ({ data, getCriterionsByDimension }) => {
           span: 8,
           type: 'select',
           label: 'Año',
-          key: 'year',
+          key: 'call',
           value: Call ? Call[0].id : '',
           options: Call ? Call.map(item => ({
             id: item.id,

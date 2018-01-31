@@ -25,9 +25,8 @@ const getCriterionsByDimensionSuccess = criterions => ({
   criterions,
 });
 
-const getResultsSuccess = results => ({
+const getResultsSuccess = () => ({
   type: GET_RESULTS_SUCCESS,
-  results,
 });
 
 const getFailedRequest = () => ({
@@ -65,11 +64,12 @@ const getCriterionsByDimension = idDimension => (
   }
 );
 
-const getResults = data => (
+const getResults = (data, exportExcel = () => {}) => (
   (dispatch) => {
     requestApi(dispatch, getMastersProgress, getResultsApi, data)
       .then((response) => {
-        dispatch(getResultsSuccess(response.data));
+        dispatch(getResultsSuccess());
+        exportExcel(response.data.data);
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
