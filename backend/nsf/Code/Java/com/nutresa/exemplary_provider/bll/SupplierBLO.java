@@ -230,12 +230,11 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
     public List<SupplierDTO> getThemToResult(String idCall, Map<String, String> parameters)
             throws HandlerGenericException {
-        SupplierDTO supplier = new SupplierDTO();
-        Map<String, String> fieldsToFilter = supplier.identifyFieldsToFTSearch(parameters);
+        SupplierDAO supplierDAO = new SupplierDAO();
+        Map<String, String> fieldsToFilter = supplierDAO.identifyFieldsToFTSearch(parameters);
         List<SupplierDTO> response = null;
 
         if (!fieldsToFilter.isEmpty()) {
-            SupplierDAO supplierDAO = new SupplierDAO();
             response = supplierDAO.getThemFilters(fieldsToFilter);
         } else {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();

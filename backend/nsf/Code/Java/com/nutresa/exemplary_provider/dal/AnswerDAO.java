@@ -1,7 +1,10 @@
 package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
@@ -9,6 +12,8 @@ import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+import com.nutresa.exemplary_provider.dtl.queries.FieldsQuestion;
+import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AnswerDAO extends GenericDAO<AnswerDTO> {
@@ -136,6 +141,29 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         }
 
         return response;
+    }
+    
+    public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
+        Map<String, String> fields = new HashMap<String, String>();
+        Iterator<String> iterator = parameters.keySet().iterator();
+        while (iterator.hasNext()) {
+            String valueInField = "";
+            String key = iterator.next();
+            switch (FieldsQuestion.getType(key)) {
+            case CRITERION:
+                valueInField = parameters.get(key);
+                Common.setFieldsToFilterFTSearch(valueInField, "idCriterion", fields);
+                break;
+            case DIMENSION:
+                valueInField = parameters.get(key);
+                Common.setFieldsToFilterFTSearch(valueInField, "idDimension", fields);
+                break;
+            default:
+                break;
+            }
+        }
+
+        return fields;
     }
 
 }

@@ -96,15 +96,14 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     private List<AnswerDTO> getAnswersForReportOfAverageGrade(String idSupplierByCall, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> response = null;
-        QuestionDTO question = new QuestionDTO();
 
-        Map<String, String> fieldsToFilterQuestion = question.identifyFieldsToFTSearch(parameters);
+        AnswerDAO answerDAO = new AnswerDAO();
+        Map<String, String> fieldsToFilterQuestion = answerDAO.identifyFieldsToFTSearch(parameters);
         if (!fieldsToFilterQuestion.isEmpty()) {
             QuestionBLO questionBLO = new QuestionBLO();
             List<QuestionDTO> questions = questionBLO.getByFields(fieldsToFilterQuestion);
             response = getByQuestionsAndSupplierByCall(idSupplierByCall, questions);
         } else {
-            AnswerDAO answerDAO = new AnswerDAO();
             response = answerDAO.getAsnwersByIdSupplierByCall(idSupplierByCall);
         }
 
