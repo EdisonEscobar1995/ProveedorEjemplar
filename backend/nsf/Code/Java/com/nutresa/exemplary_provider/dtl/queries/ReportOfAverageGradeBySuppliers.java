@@ -93,6 +93,8 @@ public class ReportOfAverageGradeBySuppliers {
         private short scoreOfSupplier;
         @Expose
         private short expectedScore;
+        @Expose
+        private String commentSupplier;
 
         public String getDimension() {
             return dimension;
@@ -140,6 +142,14 @@ public class ReportOfAverageGradeBySuppliers {
 
         public void setExpectedScore(short expectedScore) {
             this.expectedScore = expectedScore;
+        }
+
+        public void setCommentSupplier(String commentSupplier) {
+            this.commentSupplier = commentSupplier;
+        }
+
+        public String getCommentSupplier() {
+            return commentSupplier;
         }
 
     }
