@@ -7,13 +7,53 @@ function Buttons(props) {
     props.form.resetFields();
   };
 
-  const exportExcel = () => {
-    const header = ['Código SAP'];
-    const body = ['record.sapCode'];
+  const exportExcel = (data) => {
+    const header = [
+      'CÓDIGO SAP DEL PROVEEDOR',
+      'NIT',
+      'NOMBRE DEL PROVEEDOR',
+      'Dimensión',
+      'Criterio',
+      'PREGUNTA',
+      'RESPUESTA',
+      'PESO',
+      'Resultado Proveedor',
+      'Resultado esperado',
+      'COMENTARIOS',
+    ];
+    const report = [header];
+    data.forEach((supplier) => {
+      supplier.summarySurvey.forEach(item =>
+        report.push([
+          supplier.sapCode,
+          supplier.nit,
+          supplier.name,
+          item.dimension,
+          item.criterion,
+          item.question,
+          item.answer,
+          item.expectedScore === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
+          item.expectedScore === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
+          item.expectedScore === -1 ? 'Pregunta abierta' : item.expectedScore,
+          item.commentSupplier,
+        ]),
+      );
+      report.push([
+        '', '', '', '', '', '',
+        supplier.name,
+        supplier.totalScore,
+        supplier.totalScoreOfSupplier,
+        supplier.expectedScore,
+      ]);
+    });
     exportData([{
-      data: [header, ...body],
+      data: report,
       title: 'Proveedores',
     }], 'ParticipacionConvocatoriaProveedores.xlsx');
+  };
+
+  const getResults = () => {
+    props.getResults(props.form.getFieldsValue(), exportExcel);
   };
 
   return (
@@ -22,7 +62,7 @@ function Buttons(props) {
         <Button type="primary" onClick={handleReset}>Limpiar</Button>
       </Col>
       <Col span={2}>
-        <Button type="primary" onClick={exportExcel}>Exportar a Excel</Button>
+        <Button type="primary" onClick={getResults}>Exportar a Excel</Button>
       </Col>
     </Row>
   );

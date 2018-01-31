@@ -22,7 +22,7 @@ function resultsApp(state = initialState, action) {
     case GET_MASTERS_SUCCESS: {
       return {
         ...state,
-        data: { ...action.data, Criterion: [], results: [] },
+        data: action.data,
         loading: false,
       };
     }
@@ -39,10 +39,7 @@ function resultsApp(state = initialState, action) {
     case GET_RESULTS_SUCCESS: {
       return {
         ...state,
-        data: {
-          ...state.data,
-          results: action.results,
-        },
+        loading: false,
       };
     }
     case REQUEST_FAILED: {
