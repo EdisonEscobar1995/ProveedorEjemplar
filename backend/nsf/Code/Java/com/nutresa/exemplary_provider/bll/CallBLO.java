@@ -16,10 +16,6 @@ import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySupplier
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
-/**
- * @author daromero
- *
- */
 public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     public CallBLO() {
