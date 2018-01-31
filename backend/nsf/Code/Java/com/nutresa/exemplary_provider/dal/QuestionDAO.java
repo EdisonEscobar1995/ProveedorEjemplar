@@ -8,6 +8,7 @@ import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
+import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewNavigator;
 
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
@@ -110,9 +111,10 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             View view = getDatabase().getView("vwQuestions");
             view.FTSearch(buildCharFTSearch(fieldsToFilter, QuestionDTO.class));
 
-            DocumentCollection documents = view.getAllDocuments();
-            if (null != documents) {
-                for (Document document : documents) {
+            ViewEntryCollection entries = view.getAllEntries();
+            if (null != entries) {
+                for (ViewEntry entry : entries) {
+                    Document document = entry.getDocument(); 
                     response.add(castDocument(document));
                 }
             }

@@ -8,8 +8,9 @@ import java.util.Map;
 
 import org.openntf.domino.Database;
 import org.openntf.domino.Document;
-import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
+import org.openntf.domino.ViewEntry;
+import org.openntf.domino.ViewEntryCollection;
 
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.queries.FieldsSupplier;
@@ -83,11 +84,12 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         List<SupplierDTO> response = new ArrayList<SupplierDTO>();
         try {
             View view = getDatabase().getView("vwSuppliers");
-            view.FTSearch(buildCharFTSearch(fieldsToFilter, SupplierDTO.class));
+            view.FTSearch(buildCharFTSearch(fieldsToFilter, SupplierDTO.class), 0);
 
-            DocumentCollection documents = view.getAllDocuments();
-            if (null != documents) {
-                for (Document document : documents) {
+            ViewEntryCollection entries = view.getAllEntries();
+            if (null != entries) {
+                for (ViewEntry entry : entries) {
+                    Document document = entry.getDocument(); 
                     response.add(castDocument(document));
                 }
             }

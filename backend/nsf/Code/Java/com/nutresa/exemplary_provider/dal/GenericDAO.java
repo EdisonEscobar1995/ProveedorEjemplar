@@ -528,7 +528,7 @@ public abstract class GenericDAO<T> {
             while (iterator.hasNext()) {
                 String key = iterator.next();
                 String valueInField = fields.get(key);
-                Field declaredField = classToBuild.getDeclaredField(valueInField);
+                Field declaredField = classToBuild.getDeclaredField(key);
                 declaredField.setAccessible(true);
                 if (declaredField.isAccessible()) {
                     fieldsToFTSearch.add("[" + key + "] = " + valueInField);
