@@ -208,6 +208,7 @@ public abstract class GenericDAO<T> {
                 list.add((T) this.castDocument(document));
             }
         }
+        view.clear();
         return list;
     }
 
