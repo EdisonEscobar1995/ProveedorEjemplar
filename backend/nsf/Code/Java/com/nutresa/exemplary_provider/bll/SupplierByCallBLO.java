@@ -149,13 +149,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             currentSupplierByCall.setLockedByModification(false);
             currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
+            supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
+            currentSupplierByCall
+                    .setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize()).getId());
+            notification.notifyToSupplierForContinue(supplier);
+            supplierBLO.update(supplier);
+            response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
             if (!supplierByCall.getOldIdCompanySize().equals(currentSupplierByCall.getOldIdCompanySize())) {
-                supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
-                currentSupplierByCall
-                        .setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize()).getId());
-                notification.notifyToSupplierForContinue(supplier);
-                supplierBLO.update(supplier);
-                response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
                 answerBLO.deleteAnswers(currentSupplierByCall.getId());
             }
         } catch (HandlerGenericException exception) {
