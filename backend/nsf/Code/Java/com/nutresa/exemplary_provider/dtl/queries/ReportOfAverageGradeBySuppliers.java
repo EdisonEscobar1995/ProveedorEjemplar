@@ -12,6 +12,12 @@ public class ReportOfAverageGradeBySuppliers {
     @Expose
     private String name;
     @Expose
+    private String supply;
+    @Expose
+    private String category;
+    @Expose
+    private String companySize;
+    @Expose
     private double totalScore;
     @Expose
     private double totalScoreOfSupplier;
@@ -78,6 +84,30 @@ public class ReportOfAverageGradeBySuppliers {
 
     public void setSummarySurvey(List<SummarySurvey> summarySurvey) {
         this.summarySurvey = summarySurvey;
+    }
+
+    public void setSupply(String supply) {
+        this.supply = supply;
+    }
+
+    public String getSupply() {
+        return supply;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCompanySize(String companySize) {
+        this.companySize = companySize;
+    }
+
+    public String getCompanySize() {
+        return companySize;
     }
 
     public class SummarySurvey {

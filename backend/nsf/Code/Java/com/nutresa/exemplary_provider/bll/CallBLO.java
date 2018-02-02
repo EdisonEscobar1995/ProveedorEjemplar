@@ -152,9 +152,15 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             if (supplierByCall instanceof SupplierByCallDTO) {
                 ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
                 AnswerBLO answerBLO = new AnswerBLO();
+                SupplyBLO supplyBLO = new SupplyBLO();
+                CategoryBLO categoryBLO = new CategoryBLO();
+                CompanySizeBLO companySizeBLO = new CompanySizeBLO();
                 recordOfReport.setNit(supplier.getNit());
                 recordOfReport.setSapCode(supplier.getSapCode());
                 recordOfReport.setName(supplier.getBusinessName());
+                recordOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
+                recordOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
+                recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
                 recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
                         parameters);
                 response.add(recordOfReport);
