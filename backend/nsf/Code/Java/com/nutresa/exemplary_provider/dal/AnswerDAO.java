@@ -46,6 +46,13 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         return response;
     }
 
+    /**
+     * Obtiene las respuesta en base a una convocatoria definitiva de un proveedor.
+     * 
+     * @param idSupplierByCall Identificador de la convocatoria definitiva de un proveedor.
+     * @return Colección de respuestas
+     * @throws HandlerGenericException
+     */
     public List<AnswerDTO> getAsnwersByIdSupplierByCall(String idSupplierByCall) throws HandlerGenericException {
         List<AnswerDTO> response = new ArrayList<AnswerDTO>();
         try {
@@ -124,6 +131,14 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         }
     }
 
+    /**
+     * Obtiene una respuesta en base a una convocatria definitiva y un pregunta
+     * 
+     * @param idSupplierByCall Identificador de la convocatoria definitiva
+     * @param idQuestion Identificador de la pregunta
+     * @return Respuesta
+     * @throws HandlerGenericException
+     */
     public AnswerDTO getByQuestionsAndSupplierByCall(String idSupplierByCall, String idQuestion)
             throws HandlerGenericException {
         AnswerDTO response = null;
@@ -143,6 +158,13 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         return response;
     }
     
+    /**
+     * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar las preguntas.
+     * 
+     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @return Mapa clave valor con los campos que se debe filtrar.
+     * @throws HandlerGenericException
+     */
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
         Iterator<String> iterator = parameters.keySet().iterator();

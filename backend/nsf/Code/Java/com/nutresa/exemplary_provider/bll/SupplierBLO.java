@@ -228,14 +228,24 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         }
     }
 
-    public List<SupplierDTO> getThemToResult(String idCall, Map<String, String> parameters)
+    /**
+     * Busca los proveedores por convocatoria o por la especificación de algún filtro.
+     * <p>
+     * Si y solo si no se especifica un filtro de búsqueda entonces busca por convocatoria.
+     * 
+     * @param idCall Identificador de la convocatoria
+     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @return Colección de proveedores.
+     * @throws HandlerGenericException
+     */
+    public List<SupplierDTO> getThemByIdCallOrFiltered(String idCall, Map<String, String> parameters)
             throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         Map<String, String> fieldsToFilter = supplierDAO.identifyFieldsToFTSearch(parameters);
         List<SupplierDTO> response = null;
 
         if (!fieldsToFilter.isEmpty()) {
-            response = supplierDAO.getThemFilters(fieldsToFilter);
+            response = supplierDAO.getThemWithFilter(fieldsToFilter);
         } else {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             response = supplierByCallBLO.getSuppliersByCall(idCall);

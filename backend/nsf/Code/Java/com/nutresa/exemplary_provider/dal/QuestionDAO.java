@@ -105,7 +105,14 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         return response;
     }
 
-    public List<QuestionDTO> getThemFilters(Map<String, String> fieldsToFilter) throws HandlerGenericException {
+    /**
+     * Filtra las preguntas según los campos especificados en <code>fieldsToFilter</code>
+     * 
+     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se filtrarán las preguntas
+     * @return Colección de preguntas
+     * @throws HandlerGenericException
+     */
+    public List<QuestionDTO> getThemWithFilter(Map<String, String> fieldsToFilter) throws HandlerGenericException {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         try {
             View view = getDatabase().getView("vwQuestions");
@@ -114,7 +121,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             ViewEntryCollection entries = view.getAllEntries();
             if (null != entries) {
                 for (ViewEntry entry : entries) {
-                    Document document = entry.getDocument(); 
+                    Document document = entry.getDocument();
                     response.add(castDocument(document));
                 }
             }

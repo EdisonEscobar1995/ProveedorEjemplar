@@ -54,6 +54,13 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         return suppliers;
     }
 
+    /**
+     * Obtiene los proveedores asociados a una convocatoria.
+     * 
+     * @param idCall Identificador de la convocatoria.
+     * @return Colección de proveedores.
+     * @throws HandlerGenericException
+     */
     public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
         List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
         SupplierByCallDTO supplierByCallDTO = null;
@@ -74,6 +81,15 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         return suppliers;
     }
 
+    /**
+     * Buscar la convocatoria de un proveedor en caso de estar finalizada. La búsqueda debe coincidir justo con
+     * los parámetros <code>idCall</code> y <code>idSupplier</code>
+     * 
+     * @param idCall Identificador de la convocatoria
+     * @param idSupplier Identificador del proveedor
+     * @return Objeto con la información en caso de hallar considencia en la búsqueda.
+     * @throws HandlerGenericException
+     */
     public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
             throws HandlerGenericException {
         SupplierByCallDTO response = null;

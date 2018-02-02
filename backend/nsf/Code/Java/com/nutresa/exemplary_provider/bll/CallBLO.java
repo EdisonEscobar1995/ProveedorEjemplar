@@ -100,7 +100,15 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         return response;
     }
 
-    public List<ReportOfAverageGradeBySuppliers> getResults(Map<String, String> parameters)
+    /**
+     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @return Collección de datos obtenidos según los parámetros <code>parameters</code>
+     * @throws HandlerGenericException Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía el
+     *         identificador de la convocatoria en los parámetros de búsqueda.
+     *         Con mensaje <code>INFORMATION_NOT_FOUND</code> si no se encontró información para exportar.
+     *         Con mensaje <code>ROL_INVALID</code> si el usuario en sesión no tiene el rol permitido.
+     */
+    public List<ReportOfAverageGradeBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
 
@@ -109,7 +117,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             String idCall = parameters.get("call");
             if (null != idCall && !idCall.isEmpty()) {
                 SupplierBLO supplierBLO = new SupplierBLO();
-                List<SupplierDTO> suppliers = supplierBLO.getThemToResult(idCall, parameters);
+                List<SupplierDTO> suppliers = supplierBLO.getThemByIdCallOrFiltered(idCall, parameters);
                 if (!suppliers.isEmpty()) {
                     response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
                 }
@@ -127,6 +135,13 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         return response;
     }
 
+    /**
+     * @param idCall Identificador de la convocatoria que se va consultar.
+     * @param suppliers Collección de proveedores
+     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @return Collección de registros del reporte
+     * @throws HandlerGenericException
+     */
     private List<ReportOfAverageGradeBySuppliers> buildReportOfAverageGradeBySupplier(String idCall,
             List<SupplierDTO> suppliers, Map<String, String> parameters) throws HandlerGenericException {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
