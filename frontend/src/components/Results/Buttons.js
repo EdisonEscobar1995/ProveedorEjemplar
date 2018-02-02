@@ -9,17 +9,19 @@ function Buttons(props) {
 
   const exportExcel = (data) => {
     const header = [
-      'CÓDIGO SAP DEL PROVEEDOR',
+      'Código SAP',
       'NIT',
-      'NOMBRE DEL PROVEEDOR',
+      'Proveedor',
       'Dimensión',
       'Criterio',
-      'PREGUNTA',
-      'RESPUESTA',
-      'PESO',
-      'Resultado Proveedor',
+      'Pregunta',
+      'Respuesta',
+      'Comentarios',
+      'Resultado proveedor',
       'Resultado esperado',
-      'COMENTARIOS',
+      'Total proveedor',
+      'Total esperado',
+      'Porcentaje obtenido',
     ];
     const report = [header];
     data.forEach((supplier) => {
@@ -32,24 +34,19 @@ function Buttons(props) {
           item.criterion,
           item.question,
           item.answer,
-          item.expectedScore === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
+          item.commentSupplier,
           item.expectedScore === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
           item.expectedScore === -1 ? 'Pregunta abierta' : item.expectedScore,
-          item.commentSupplier,
+          supplier.totalScore,
+          supplier.expectedScore,
+          supplier.totalScoreOfSupplier,
         ]),
       );
-      report.push([
-        '', '', '', '', '', '',
-        supplier.name,
-        supplier.totalScore,
-        supplier.totalScoreOfSupplier,
-        supplier.expectedScore,
-      ]);
     });
     exportData([{
       data: report,
       title: 'Proveedores',
-    }], 'ParticipacionConvocatoriaProveedores.xlsx');
+    }], 'ResultadosProveedorEquipoEvaluador.xlsx');
   };
 
   const getResults = () => {
