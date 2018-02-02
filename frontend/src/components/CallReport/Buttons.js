@@ -68,7 +68,7 @@ function Buttons(props) {
       messages['Supplier.emailWhoSayDontParticipate'],
     ];
     const body = suppliers ? suppliers.filter(item => item.visible).map((record) => {
-      const enter = /\r\n|\r|\n/g;
+      const enter = /\r\n|\r|\n|\t/g;
       return [
         years[0],
         record.businessName,
@@ -100,12 +100,12 @@ function Buttons(props) {
         record.otherSector,
         record.packagingProvided,
         record.valueAssets,
-        record.typeOfCurrencyValueAssets,
+        record.typeOfCurrencyValueAssets.toString(),
         record.numberOfDirectEmployees,
         record.numberOfSubContratedEmployees,
         record.numberOfDirectEmployees + record.numberOfSubContratedEmployees,
         record.webSite,
-        record.annualSalesValue,
+        record.annualSalesValue.toString(),
         record.typeOfCurrencyAnnualSales,
         record.participationInSalesWithGroupNutresa,
         record.nameContactPersonInGroupNutresa,
@@ -133,7 +133,7 @@ function Buttons(props) {
     exportData([{
       data: [header, ...body],
       title: 'Proveedores',
-    }], 'ParticipacionConvocatoriaProveedores.xlsx');
+    }], 'ResultadosProveedorEquipoEvaluador.xlsx');
   };
 
   return (
