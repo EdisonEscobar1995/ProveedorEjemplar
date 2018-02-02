@@ -133,7 +133,7 @@ function Buttons(props) {
     exportData([{
       data: [header, ...body],
       title: 'Proveedores',
-    }], 'ResultadosProveedorEquipoEvaluador.xlsx');
+    }], 'ParticipacionConvocatoriaProveedores.xlsx');
   };
 
   return (
