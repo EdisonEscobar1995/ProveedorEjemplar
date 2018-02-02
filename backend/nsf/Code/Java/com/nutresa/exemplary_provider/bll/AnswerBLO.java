@@ -53,7 +53,6 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     public ReportOfAverageGradeBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
             ReportOfAverageGradeBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
-        double percentExpected = 100;
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
         short sumExpectedScore = 0;
         short sumScoreAnswered = 0;
@@ -95,9 +94,9 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summariesSurvey.add(summarySurvey);
         }
 
-        recordOfReport.setExpectedScore(percentExpected);
+        recordOfReport.setExpectedScore(sumExpectedScore);
         recordOfReport.setTotalScoreOfSupplier(sumScoreAnswered, sumExpectedScore);
-        recordOfReport.setTotalScore(sumScoreAnswered / percentExpected);
+        recordOfReport.setTotalScore(sumScoreAnswered);
         recordOfReport.setSummarySurvey(summariesSurvey);
 
         return recordOfReport;
