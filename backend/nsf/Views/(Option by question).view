@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='75e' unid='5B7B6BB8B65F995F052581E00071C556' sequence='27'>
+<noteinfo noteid='75e' unid='5B7B6BB8B65F995F052581E00071C556' sequence='33'>
 <created><datetime>20171122T154240,86-05</datetime></created>
-<modified><datetime>20180115T173428,22-05</datetime></modified>
-<revised><datetime>20180115T173428,21-05</datetime></revised>
-<lastaccessed><datetime>20180115T173428,22-05</datetime></lastaccessed>
+<modified><datetime>20180130T145257,48-05</datetime></modified>
+<revised><datetime>20180130T145257,47-05</datetime></revised>
+<lastaccessed><datetime>20180130T145257,48-05</datetime></lastaccessed>
 <addedtofile><datetime>20171122T154240,88-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
@@ -24,5 +24,8 @@ End Sub
 </lotusscript></code>
 <column sort='ascending' hidedetailrows='false' itemname='idQuestion' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='idQuestion'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='idQuestion'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='descending' hidedetailrows='false' itemname='score' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
+ showaslinks='false'><columnheader title='score'><font size='9pt' style='bold'/></columnheader></column></view>
 

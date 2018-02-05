@@ -140,7 +140,6 @@ function supplierApp(state = initialState, action) {
         call: action.call,
         readOnly: state.readOnly || action.readOnly,
         changeIdCompanySize: action.changeIdCompanySize,
-        supplier: action.supplier,
         loading: false,
       };
     case SAVE_DATA_ANSWER_SUCCESS:

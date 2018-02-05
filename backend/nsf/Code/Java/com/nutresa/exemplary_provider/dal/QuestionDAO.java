@@ -2,11 +2,13 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
+import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewNavigator;
 
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
@@ -95,6 +97,33 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
                 question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
                 question.setAnswer(answerDAO.getAnswerBySurvey(idSupplierByCall, question.getId()));
                 response.add(question);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
+    }
+
+    /**
+     * Filtra las preguntas según los campos especificados en <code>fieldsToFilter</code>
+     * 
+     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se filtrarán las preguntas
+     * @return Colección de preguntas
+     * @throws HandlerGenericException
+     */
+    public List<QuestionDTO> getThemWithFilter(Map<String, String> fieldsToFilter) throws HandlerGenericException {
+        List<QuestionDTO> response = new ArrayList<QuestionDTO>();
+        try {
+            View view = getDatabase().getView("vwQuestions");
+            view.FTSearch(buildCharFTSearch(fieldsToFilter, QuestionDTO.class));
+
+            ViewEntryCollection entries = view.getAllEntries();
+            if (null != entries) {
+                for (ViewEntry entry : entries) {
+                    Document document = entry.getDocument();
+                    response.add(castDocument(document));
+                }
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);

@@ -85,10 +85,21 @@ const openNotificationWithIcon = (type) => {
   });
 };
 
+const sumTotalSupplier = (supplier, reload) => {
+  let total = supplier.numberOfDirectEmployees + supplier.numberOfSubContratedEmployees;
+  if (isNaN(total)) {
+    total = 0;
+  }
+  supplier.employeesTotal = total;
+  if (reload) {
+    const { principalCustomer } = supplier;
+    supplier.principalCustomer = reloadKeys(principalCustomer);
+  }
+  return supplier;
+};
+
 const getDataSupplierSuccess = (data) => {
-  data.supplier.employeesTotal =
-  data.supplier.numberOfDirectEmployees +
-  data.supplier.numberOfSubContratedEmployees;
+  data.supplier = sumTotalSupplier(data.supplier, true);
   data.supplier.actualSector = data.supplier.idSector;
   data.supplier.actuallyExport = data.supplier.currentlyExport;
   const {
@@ -108,9 +119,6 @@ const getDataSupplierSuccess = (data) => {
   const sectors = sortByField(data.sectors, 'name');
   const departments = sortByField(data.departments, 'name');
   const cities = sortByField(data.cities, 'name');
-
-  const { principalCustomer } = supplier;
-  supplier.principalCustomer = reloadKeys(principalCustomer);
   let { readOnly } = rules;
   readOnly = readOnly || isReadOnly(call);
   return {
@@ -128,7 +136,6 @@ const getDataSupplierSuccess = (data) => {
     departments,
     cities,
     sectors,
-    principalCustomer,
     system,
   };
 };
@@ -558,9 +565,24 @@ const saveDataCallSupplier = clientSupplier => (
               supplier,
             };
           })
-      )).then(({ call, supplier }) => {
+      )).then(({ call, supplier = {} }) => {
         dispatch(setMessage('Supplier.savedInfo', 'success'));
-        dispatch(saveDataCallAndSupplerSuccess(call, supplier));
+        const { principalCustomer } = supplier;
+        const clientCustomers = clientSupplier.principalCustomer;
+        const newCustomers = principalCustomer.map((customer) => {
+          const oldCustomer = clientCustomers.find(item =>
+            (
+              customer.name === item.name &&
+              customer.percentageOfParticipationInSales === item.percentageOfParticipationInSales
+            ),
+          );
+          return {
+            ...customer,
+            key: oldCustomer.key,
+          };
+        });
+        supplier.principalCustomer = newCustomers;
+        dispatch(saveDataCallAndSupplerSuccess(call, sumTotalSupplier(supplier)));
       })
       .catch((err) => {
         dispatch(getFailedRequest(err));
@@ -627,18 +649,25 @@ const updateField = (value, index, fielName) => (
     });
   }
 );
+const validateNumber = (value) => {
+  let result = 0;
+  if (value) {
+    result = isNaN(value) ? 0 : parseInt(value, 10);
+  }
+  return result;
+};
 
 const setNumberOfDirectEmployees = value => (
   {
     type: ADD_DIRECT_EMPLOYEES,
-    value: isNaN(value) ? 0 : parseInt(value, 10),
+    value: validateNumber(value),
   }
 );
 
 const setNumberOfSubContratedEmployees = value => (
   {
     type: ADD_SUB_EMPLOYEES,
-    value: isNaN(value) ? 0 : parseInt(value, 10),
+    value: validateNumber(value),
   }
 );
 const setSector = value => (
