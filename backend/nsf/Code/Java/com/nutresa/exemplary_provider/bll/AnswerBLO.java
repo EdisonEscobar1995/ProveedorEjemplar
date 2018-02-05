@@ -38,6 +38,13 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     public AnswerDTO save(AnswerDTO dto) throws HandlerGenericException {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         supplierByCallBLO.changeState("SUPPLIER", dto.getIdSupplierByCall());
+        AnswerDAO answerDAO = new AnswerDAO();
+        AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
+                dto.getIdQuestion());
+        if (null != answerExisting) {
+            dto.setId(answerExisting.getId());
+        }
+
         return super.save(dto);
     }
 
