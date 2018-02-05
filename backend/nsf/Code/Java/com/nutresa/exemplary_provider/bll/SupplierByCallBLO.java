@@ -149,13 +149,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             currentSupplierByCall.setLockedByModification(false);
             currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
+            supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
+            currentSupplierByCall
+                    .setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize()).getId());
+            notification.notifyToSupplierForContinue(supplier);
+            supplierBLO.update(supplier);
+            response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
             if (!supplierByCall.getOldIdCompanySize().equals(currentSupplierByCall.getOldIdCompanySize())) {
-                supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
-                currentSupplierByCall
-                        .setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize()).getId());
-                notification.notifyToSupplierForContinue(supplier);
-                supplierBLO.update(supplier);
-                response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
                 answerBLO.deleteAnswers(currentSupplierByCall.getId());
             }
         } catch (HandlerGenericException exception) {
@@ -234,6 +234,32 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     protected List<SupplierByCallDTO> getCallsBySupplier(String idSupplier) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         return supplierByCallDAO.getCallsBySupplier(idSupplier);
+    }
+
+    /**
+     * Obtiene los proveedores asociados a una convocatoria.
+     * 
+     * @param idCall Identificador de la convocatoria.
+     * @return Colección de proveedores.
+     * @throws HandlerGenericException
+     */
+    public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.getSuppliersByCall(idCall);
+    }
+
+    /**
+     * Buscar la convocatoria de un proveedor en caso de estar finalizada
+     * 
+     * @param idCall Identificador de la convocatoria
+     * @param idSupplier Identificador del proveedor
+     * @return Objeto con la información en caso de hallar considencia en la búsqueda.
+     * @throws HandlerGenericException
+     */
+    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
+            throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.getByIdCallAndIdSupplierFinished(idCall, idSupplier);
     }
 
 }

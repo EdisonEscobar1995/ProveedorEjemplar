@@ -13,7 +13,7 @@ function getMessage(type) {
       return 'Validation.supplier';
     case 'THE_SURVEY_COULD_NOT_BE_COMPLETED':
       return 'Validation.surveyCouldNotComplete';
-    case 'INFORMATION_NOT_FOUNT':
+    case 'INFORMATION_NOT_FOUND':
       return 'Validation.informationNotFound';
     case 'ROL_INVALID':
     case 'UNAUTHORIZED':
@@ -32,6 +32,7 @@ function validateResponse(args) {
       if (element.headers['content-type'].toLowerCase().includes('text/html')) {
         location.href = loginUrl;
       } else if (!element.data.status) {
+        setMessage(getMessage(element.data.message), 'error');
         throw new Error(element.data.message);
       }
     });
@@ -65,8 +66,13 @@ const requestApiNotLoading = (dispatch, apiMethod, clientData) => (
   executeApi(dispatch, apiMethod, clientData)
 );
 
-function sortByField(array, field) {
-  return array.sort((a, b) => (a[field] < b[field] ? -1 : 1));
+function sortByField(array, field, descending) {
+  return array.sort((a, b) => {
+    if (descending) {
+      return a[field] > b[field] ? -1 : 1;
+    }
+    return a[field] < b[field] ? -1 : 1;
+  });
 }
 
 export {

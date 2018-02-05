@@ -22,7 +22,8 @@ public class MasterListBLO extends GenericBLO<CountryDTO, CountryDAO> {
         int i = 0;
         
         List<String> allowedEntities = Common.arrayToList(new String[] {
-            "Country",
+            "Call",
+       		"Country",
             "City",
             "Department",
             "CompanySize",
@@ -34,7 +35,8 @@ public class MasterListBLO extends GenericBLO<CountryDTO, CountryDAO> {
             "System",
             "Dimension",
             "Criterion",
-            "SocietyType"
+            "SocietyType",
+            "Supplier"
         });
         
         for (Entry<String, String> parameter : parameters.entrySet()) {

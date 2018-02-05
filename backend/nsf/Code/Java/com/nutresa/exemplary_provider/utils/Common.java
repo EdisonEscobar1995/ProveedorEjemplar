@@ -236,4 +236,41 @@ public class Common {
         return response;
     }
 
+    /**
+     * Convierte una Lista de valores a una cade de caracteres.
+     * 
+     * @param separator Separador para cada posición de la lista de valores.
+     * @param valuesToImplode Colección con los valores a convertir
+     * @return Cadena de texto concatenada
+     */
+    public static String implodeList(String separator, List<String> valuesToImplode) {
+        boolean first = true;
+        StringBuilder stringImploded = new StringBuilder();
+        for (String value : valuesToImplode) {
+            if (!first)
+                stringImploded.append(separator);
+            stringImploded.append(value);
+            first = false;
+        }
+
+        return stringImploded.toString();
+    }
+
+    /**
+     * Fija mapa clave valor con los campos que se debe filtrar. Solo fija los campos si tienen valor para el filtro. 
+     * 
+     * @param value Valor para filtrar
+     * @param nameOfKey Nombre del campo de filtro
+     * @param fields Mapa para fijar los campos de filtro.
+     * @return Mapa clave valor con los campos por los que se va a filtrar.
+     */
+    public static Map<String, String> setFieldsToFilterFTSearch(String value, String nameOfKey,
+            Map<String, String> fields) {
+        if (!value.trim().isEmpty()) {
+            fields.put(nameOfKey, value);
+        }
+
+        return fields;
+    }
+
 }

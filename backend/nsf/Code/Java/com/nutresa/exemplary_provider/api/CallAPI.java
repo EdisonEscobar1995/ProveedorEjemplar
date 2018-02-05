@@ -1,12 +1,14 @@
 package com.nutresa.exemplary_provider.api;
 
 import java.util.Map;
+import java.util.List;
 
 import com.nutresa.exemplary_provider.bll.CallBLO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
@@ -47,6 +49,19 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
                     callBLO.getParticipantsByYear(parameters.get("year")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<InformationFromSupplier>(exception);
+        }
+
+        return response;
+    }
+
+    public ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> getResults(Map<String, String> parameters) {
+        ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> response = null;
+        CallBLO callBLO = new CallBLO();
+        try {
+            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(
+                    callBLO.getReportOfAverageGradeBySupplier(parameters));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(exception);
         }
 
         return response;

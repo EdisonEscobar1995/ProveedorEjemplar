@@ -25,16 +25,16 @@ function saveDataSuppliertApi(data) {
   return instance.post('Supplier?action=save', data);
 }
 
-function getModifiedSuppliersApi(year = '') {
-  return instance.get(`Supplier?action=getModifiedSuppliers&year=${year}`);
+function getModifiedSuppliersApi(year) {
+  return instance.get(`Supplier?action=getModifiedSuppliers&year=${year || ''}`);
 }
 
 function unlockSupplierApi(supplierByCall) {
   return instance.post('SupplierByCall?action=unlockSupplier', supplierByCall);
 }
 
-function getSurveysApi(year = '') {
-  return instance.get(`Supplier?action=getSurveys&year=${year}`);
+function getSurveysApi(year) {
+  return instance.get(`Supplier?action=getSurveys&year=${year || ''}`);
 }
 
 export {

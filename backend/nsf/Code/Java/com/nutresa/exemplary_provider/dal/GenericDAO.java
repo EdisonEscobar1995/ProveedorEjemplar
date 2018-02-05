@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dal;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,9 +64,6 @@ public abstract class GenericDAO<T> {
     public T get(String id) throws HandlerGenericException {
         View currentView = database.getView(entityView);
         Document document = currentView.getFirstDocumentByKey(id, true);
-        if (null == document) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUNT");
-        }
         return castDocument(document);
     }
 
@@ -77,8 +75,8 @@ public abstract class GenericDAO<T> {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
         if (null == view) {
-            LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters
-                    .toString()));
+            LogBLO.log(ErrorType.WARNING, entity,
+                    String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
             if (view.FTSearch(query, 1) > 0) {
@@ -200,8 +198,8 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
-        LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters
-                .toString()));
+        LogBLO.log(ErrorType.WARNING, entity,
+                String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
 
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
@@ -210,6 +208,7 @@ public abstract class GenericDAO<T> {
                 list.add((T) this.castDocument(document));
             }
         }
+        view.clear();
         return list;
     }
 
@@ -251,7 +250,7 @@ public abstract class GenericDAO<T> {
             if (null == numberValue) {
                 numberValue = 0D;
             }
-            
+
             value = getPrimitiveValue(type, numberValue);
         }
         if (null == value) {
@@ -519,6 +518,28 @@ public abstract class GenericDAO<T> {
             throw new HandlerGenericException(exception);
         }
         return listIds;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected String buildCharFTSearch(Map<String, String> fields, Class classToBuild) throws HandlerGenericException {
+        String separatorToFTSearch = " AND ";
+        List<String> fieldsToFTSearch = new ArrayList<String>();
+        try {
+            Iterator<String> iterator = fields.keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                String valueInField = fields.get(key);
+                Field declaredField = classToBuild.getDeclaredField(key);
+                declaredField.setAccessible(true);
+                if (declaredField.isAccessible()) {
+                    fieldsToFTSearch.add("[" + key + "] = " + valueInField);
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return Common.implodeList(separatorToFTSearch, fieldsToFTSearch);
     }
 
     public List<DTO> getAllByIds(List<Object> list) throws HandlerGenericException {

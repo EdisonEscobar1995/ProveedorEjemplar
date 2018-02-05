@@ -590,7 +590,5 @@ public class SupplierDTO {
     public void setTypeOfCurrencyAnnualSales(String typeOfCurrencyAnnualSales) {
         this.typeOfCurrencyAnnualSales = typeOfCurrencyAnnualSales;
     }
-    
-    
 
 }

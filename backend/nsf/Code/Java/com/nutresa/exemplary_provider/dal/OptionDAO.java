@@ -31,4 +31,19 @@ public class OptionDAO extends GenericDAO<OptionDTO> {
         return response;
     }
 
+    public OptionDTO getOptionWithMaxScoreByQuestion(String idQuestion) throws HandlerGenericException {
+        OptionDTO response = null;
+        try {
+            View view = getDatabase().getView("vwOptionsByQuestion");
+            Document document = view.getFirstDocumentByKey(idQuestion, true);
+            if (null != document) {
+                response = castDocument(document);
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return response;
+    }
+
 }

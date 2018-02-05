@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.QuestionDAO;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
@@ -48,6 +49,29 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
         }
 
         return questions;
+    }
+
+    /**
+     * Filtra las preguntas según los campos especificados en <code>fieldsToFilter</code>
+     * 
+     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se filtrarán las preguntas
+     * @return Colección de preguntas
+     * @throws HandlerGenericException
+     */
+    protected List<QuestionDTO> getThemWithFilter(Map<String, String> fieldsToFilter) throws HandlerGenericException {
+        QuestionDAO questionDAO = new QuestionDAO();
+        List<QuestionDTO> response = null;
+        try {
+            response = questionDAO.getThemWithFilter(fieldsToFilter);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        if (null == response) {
+            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+        }
+
+        return response;
     }
 
 }
