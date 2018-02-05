@@ -51,7 +51,7 @@ function Buttons(props) {
     });
     exportData([{
       data: report,
-      title: 'Proveedores',
+      title: 'Resultados',
     }], 'ResultadosProveedorEquipoEvaluador.xlsx');
   };
 
