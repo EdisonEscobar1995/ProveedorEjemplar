@@ -3,13 +3,14 @@ package com.nutresa.exemplary_provider.dal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
+
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
-
-import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
-import com.nutresa.exemplary_provider.dtl.SupplierDTO;
-import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     public SupplierByCallDAO() {
@@ -93,22 +94,32 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
             throws HandlerGenericException {
         SupplierByCallDTO response = null;
-        StateDAO stateDAO = new StateDAO();
-        List<String> filter = new ArrayList<String>();
-        filter.add(idSupplier);
-        filter.add(idCall);
-        filter.add(stateDAO.getStateByShortName("EVALUATOR").getId());
-        try {
-            View view = getDatabase().getView("vwSuppliersByCallInIdSupplierAndIdCallFinished");
-            Document document = view.getFirstDocumentByKey(filter, true);
-            if (null != document) {
-                response = castDocument(document);
+
+        for (SurveyStates stateName : SurveyStates.values()) {
+            if (!stateName.equals(SurveyStates.DONT_PARTICIPATE) && !stateName.equals(SurveyStates.NOT_STARTED)
+                    && !stateName.equals(SurveyStates.SUPPLIER)) {
+                StateDAO stateDAO = new StateDAO();
+                String idState = stateDAO.getStateByShortName(stateName.toString()).getId();
+                List<String> filter = new ArrayList<String>();
+                
+                if(null != idState){
+                    filter.add(idSupplier);
+                    filter.add(idCall);
+                    filter.add(idState);
+                } else {
+                    continue;
+                }
+
+                View view = getDatabase().getView("vwSuppliersByCallInIdSupplierAndIdCallFinished");
+                Document document = view.getFirstDocumentByKey(filter, true);
+                if (null != document) {
+                    response = castDocument(document);
+                }
+
             }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
         }
 
         return response;
     }
-    
+
 }

@@ -9,6 +9,7 @@ import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
@@ -55,11 +56,28 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         if ((response instanceof SupplierByCallDTO)
-                && "EVALUATOR".equals(stateBLO.get(response.getIdState()).getShortName())) {
+                && shouldBeReadOnly(stateBLO.get(response.getIdState()).getShortName())) {
             readOnly = true;
         }
 
         return response;
+    }
+
+    /**
+     * Por medio del estado de la convocatoria identifica si la encuesta se debe mostrar en modo lectura.
+     * @param nameCurrentState Nombre del estado en el que se encuentra la convocatoria
+     * @return <code>true</code> si el nombre del estado es difente de <code>DONT_PARTICIPATE</code>,
+     *         <code>NOT_STARTED</code> y <code>SUPPLIER</code> de lo contrario <code>false</code>
+     */
+    private boolean shouldBeReadOnly(String nameCurrentState) {
+        boolean isReadOnly = false;
+        if (!nameCurrentState.equals(SurveyStates.DONT_PARTICIPATE.toString())
+                && !nameCurrentState.equals(SurveyStates.NOT_STARTED.toString())
+                && !nameCurrentState.equals(SurveyStates.SUPPLIER.toString())) {
+            isReadOnly = true;
+        }
+
+        return isReadOnly;
     }
 
     private SupplierByCallDTO identifyCallToParticipate(String idSupplierByCall, String idSupplier)
@@ -122,7 +140,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         CallBLO callBLO = new CallBLO();
         CallDTO call = callBLO.get(supplierByCall.getIdCall());
         if (!call.isCaducedDeadLineToMakeSurvey()) {
-            if (changeState("EVALUATOR", supplierByCall.getId())) {
+            if (changeState(SurveyStates.NOT_STARTED_EVALUATOR.toString(), supplierByCall.getId())) {
                 response = get(supplierByCall.getId());
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
@@ -202,15 +220,15 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     public SupplierByCallDTO save(SupplierByCallDTO dto) throws HandlerGenericException {
         StateBLO stateBLO = new StateBLO();
         if (dto.getParticipateInCall().equals("false")) {
-            dto.setIdState(stateBLO.getStateByShortName("DONT_PARTICIPATE").getId());
+            dto.setIdState(stateBLO.getStateByShortName(SurveyStates.DONT_PARTICIPATE.toString()).getId());
         }
 
         if (dto.getParticipateInCall().equals("true")) {
-            dto.setIdState(stateBLO.getStateByShortName("SUPPLIER").getId());
+            dto.setIdState(stateBLO.getStateByShortName(SurveyStates.SUPPLIER.toString()).getId());
         }
 
         if (dto.getParticipateInCall().equals("")) {
-            dto.setIdState(stateBLO.getStateByShortName("NOT_STARTED").getId());
+            dto.setIdState(stateBLO.getStateByShortName(SurveyStates.NOT_STARTED.toString()).getId());
         }
 
         return super.save(dto);
