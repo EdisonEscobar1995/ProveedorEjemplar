@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='(anonymousAsRol)' alias='anonymousAsRol' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='7cbba' unid='5DEB9CD9E422204A0525822D005015BD' sequence='13'>
+<created><datetime>20180207T093444,45-05</datetime></created>
+<modified><datetime>20180207T101421,51-05</datetime></modified>
+<revised><datetime>20180207T101421,50-05</datetime></revised>
+<lastaccessed><datetime>20180207T101421,51-05</datetime></lastaccessed>
+<addedtofile><datetime>20180207T093444,57-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180207T101421,49-05</datetime></designchange>
+<trigger type='agentlist'/>
+<documentset type='runonce'/><code event='options'><lotusscript>%REM
+	Agent anonymousAsRol
+	Created Feb 7, 2018 by Juan Carlos Gonzalez Arroyave/desarrollo
+	Description: Comments for Agent
+%END REM
+Option Public
+Option Declare
+
+
+</lotusscript></code><code event='initialize'><lotusscript>Sub Initialize
+	Dim ns As New NotesSession
+	Dim db As NotesDatabase
+	Dim vwSuppliers As NotesView 
+	Dim vwRols As NotesView 
+	Dim ndSupplier As NotesDocument
+	Dim ndAux As NotesDocument
+	Dim nd As NotesDocument 
+	Dim ndRol As NotesDocument 
+	Dim sParametros As String
+	Dim arrParametros As Variant
+	
+	Set db = ns.Currentdatabase
+	Set vwSuppliers = db.Getview("vwSuppliersByFullName")
+	Set vwRols = db.Getview("vwRolByShortName")
+	Set nd = ns.Documentcontext
+	Set ndAux = New NotesDocument(db)
+	
+	sParametros = StrRight(nd.Query_String_Decoded(0),"&amp;")
+	arrParametros = Split(sParametros,"&amp;")
+	
+	ForAll parametro In arrParametros
+		Call ndAux.ReplaceItemValue(StrLeft(parametro,"="), StrRight(parametro,"="))
+	End ForAll
+		
+	Set ndRol = vwRols.getdocumentbykey(ndAux.rol(0), True)
+	If Not ndRol Is Nothing Then 
+		Set ndSupplier = vwSuppliers.Getdocumentbykey("Anonymous", True)
+		If Not ndSupplier Is Nothing Then 
+			ndSupplier.fullname = ndSupplier.businessname
+			Call ndSupplier.save(True, False)
+		End If
+		
+		Set nd = New NotesDocument(db)
+		nd.form = "frUser"
+		nd.email = "no@no.com"
+		nd.idRols = ndRol.id
+		nd.name = "Anonymous"
+		nd.id = nd.Universalid
+		Call nd.save(True, False)
+		Print "Ahora el usuario Anonymous tiene el rol " + ndAux.rol(0)
+	Else
+		Print "Rol no identificado"
+	End If	
+	
+End Sub</lotusscript></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180207T101421,40-05</datetime></agentmodified></rundata></agent>
+

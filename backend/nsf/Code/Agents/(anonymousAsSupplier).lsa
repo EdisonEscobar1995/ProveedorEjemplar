@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='(anonymousAsSupplier)' alias='anonymousAsSupplier' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='7cbda' unid='3A30E01775EB9EC40525822D00539091' sequence='7'>
+<created><datetime>20180207T101244,97-05</datetime></created>
+<modified><datetime>20180207T102108,36-05</datetime></modified>
+<revised><datetime>20180207T102108,35-05</datetime></revised>
+<lastaccessed><datetime>20180207T102108,36-05</datetime></lastaccessed>
+<addedtofile><datetime>20180207T101245,00-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180207T102108,31-05</datetime></designchange>
+<trigger type='agentlist'/>
+<documentset type='runonce'/><code event='options'><lotusscript>%REM
+	Agent anonymousAsRol
+	Created Feb 7, 2018 by Juan Carlos Gonzalez Arroyave/desarrollo
+	Description: Comments for Agent
+%END REM
+Option Public
+Option Declare
+
+
+</lotusscript></code><code event='initialize'><lotusscript>Sub Initialize
+	Dim ns As New NotesSession
+	Dim db As NotesDatabase
+	Dim vwSupplier As NotesView 
+	Dim vwRols As NotesView 
+	Dim ndSupplier As NotesDocument
+	Dim ndAux As NotesDocument
+	Dim nd As NotesDocument 
+	Dim ndRol As NotesDocument 
+	Dim sParametros As String
+	Dim arrParametros As Variant
+	
+	Set db = ns.Currentdatabase
+	Set vwSupplier = db.Getview("vwSuppliersByFullName")
+	Set vwRols = db.Getview("vwRolByShortName")
+	Set nd = ns.Documentcontext
+	Set ndAux = New NotesDocument(db)
+	
+	sParametros = StrRight(nd.Query_String_Decoded(0),"&amp;")
+	arrParametros = Split(sParametros,"&amp;")
+	
+	ForAll parametro In arrParametros
+		Call ndAux.ReplaceItemValue(StrLeft(parametro,"="), StrRight(parametro,"="))
+	End ForAll
+		
+	Set ndRol = vwRols.getdocumentbykey(ndAux.rol(0), True)
+	If Not ndRol Is Nothing Then 
+		Set ndSupplier = vwSupplier.Getdocumentbykey("Anonymous", True)
+		If Not ndSupplier Is Nothing Then 
+			ndSupplier.fullname = ndSupplier.businessname
+			Call ndSupplier.save(True, False)
+		End If
+		
+		Set nd = New NotesDocument(db)
+		nd.form = "frUser"
+		nd.email = "no@no.com"
+		nd.idRols = ndRol.id
+		nd.name = "Anonymous"
+		nd.id = nd.Universalid
+		Call nd.save(True, False)
+		Print "Ahora el usuario Anonymous tiene el rol " + ndAux.rol(0)
+	Else
+		Print "Rol no identificado"
+	End If	
+	
+End Sub</lotusscript></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180207T102108,19-05</datetime></agentmodified></rundata>
+<item name='$AssistAction_error' sign='true'>
+<rawitemdata type='10'>
+gQKF/+cGAAAAANsGAAAnKytMb3R1c1NjcmlwdCBEZXZlbG9wbWVudCBFbnZpcm9ubWVudDoyOjU6
+KE9wdGlvbnMpOjA6NzQKJVJFTQoJQWdlbnQgYW5vbnltb3VzQXNSb2wKCUNyZWF0ZWQgRmViIDcs
+IDIwMTggYnkgSnVhbiBDYXJsb3MgR29uemFsZXogQXJyb3lhdmUvZGVzYXJyb2xsbwoJRGVzY3Jp
+cHRpb246IENvbW1lbnRzIGZvciBBZ2VudAolRU5EIFJFTQpPcHRpb24gUHVibGljCk9wdGlvbiBE
+ZWNsYXJlCgoKJysrTG90dXNTY3JpcHQgRGV2ZWxvcG1lbnQgRW52aXJvbm1lbnQ6Mjo1OihGb3J3
+YXJkKTowOjEKRGVjbGFyZSBTdWIgSW5pdGlhbGl6ZQoKJysrTG90dXNTY3JpcHQgRGV2ZWxvcG1l
+bnQgRW52aXJvbm1lbnQ6Mjo1OihEZWNsYXJhdGlvbnMpOjA6MgoKJysrTG90dXNTY3JpcHQgRGV2
+ZWxvcG1lbnQgRW52aXJvbm1lbnQ6MjoyOkluaXRpYWxpemU6MToxMApTdWIgSW5pdGlhbGl6ZQoJ
+RGltIG5zIEFzIE5ldyBOb3Rlc1Nlc3Npb24KCURpbSBkYiBBcyBOb3Rlc0RhdGFiYXNlCglEaW0g
+dndVc2VycyBBcyBOb3Rlc1ZpZXcgCglEaW0gbmRVc2VyIEFzIE5vdGVzRG9jdW1lbnQKCURpbSB2
+d1N1cHBsaWVycyBBcyBOb3Rlc1ZpZXcKCURpbSBuZFN1cHBwbGllciBBcyBOb3Rlc0RvY3VtZW50
+ICAKCURpbSBuZEF1eCBBcyBOb3Rlc0RvY3VtZW50CglEaW0gbmQgQXMgTm90ZXNEb2N1bWVudCAK
+CURpbSBzUGFyYW1ldHJvcyBBcyBTdHJpbmcKCURpbSBhcnJQYXJhbWV0cm9zIEFzIFZhcmlhbnQK
+CQoJU2V0IGRiID0gbnMuQ3VycmVudGRhdGFiYXNlCglTZXQgdndTdXBwbGllcnMgPSBkYi5HZXR2
+aWV3KCJJbXBvcnRTdXBwbGllcnNCeVNhcENvZGUiKQoJU2V0IHZ3VXNlcnMgPSBkYi5HZXR2aWV3
+KCJ2d1VzZXJzQnlOYW1lIikKCVNldCBuZCA9IG5zLkRvY3VtZW50Y29udGV4dAoJU2V0IG5kQXV4
+ID0gTmV3IE5vdGVzRG9jdW1lbnQoZGIpCgkKCXNQYXJhbWV0cm9zID0gU3RyUmlnaHQobmQuUXVl
+cnlfU3RyaW5nX0RlY29kZWQoMCksIiYiKQoJYXJyUGFyYW1ldHJvcyA9IFNwbGl0KHNQYXJhbWV0
+cm9zLCImIikKCQoJRm9yQWxsIHBhcmFtZXRybyBJbiBhcnJQYXJhbWV0cm9zCgkJQ2FsbCBuZEF1
+eC5SZXBsYWNlSXRlbVZhbHVlKFN0ckxlZnQocGFyYW1ldHJvLCI9IiksIFN0clJpZ2h0KHBhcmFt
+ZXRybywiPSIpKQoJRW5kIEZvckFsbAoJCQoJU2V0IG5kU3VwcGxpZXIgPSB2d1N1cHBsaWVycy5n
+ZXRkb2N1bWVudGJ5a2V5KG5kQXV4LnNhcENvZGUoMCksIFRydWUpCglJZiBOb3QgbmRSb2wgSXMg
+Tm90aGluZyBUaGVuIAoJCVNldCBuZFN1cHBsaWVyID0gdndTdXBwbGllci5HZXRkb2N1bWVudGJ5
+a2V5KCJBbm9ueW1vdXMiLCBUcnVlKQoJCUlmIE5vdCBuZFN1cHBsaWVyIElzIE5vdGhpbmcgVGhl
+biAKCQkJbmRTdXBwbGllci5mdWxsbmFtZSA9IG5kU3VwcGxpZXIuYnVzaW5lc3NuYW1lCgkJCUNh
+bGwgbmRTdXBwbGllci5zYXZlKFRydWUsIEZhbHNlKQoJCUVuZCBJZgoJCQoJCVNldCBuZCA9IE5l
+dyBOb3Rlc0RvY3VtZW50KGRiKQoJCW5kLmZvcm0gPSAiZnJVc2VyIgoJCW5kLmVtYWlsID0gIm5v
+QG5vLmNvbSIKCQluZC5pZFJvbHMgPSBuZFJvbC5pZAoJCW5kLm5hbWUgPSAiQW5vbnltb3VzIgoJ
+CW5kLmlkID0gbmQuVW5pdmVyc2FsaWQKCQlDYWxsIG5kLnNhdmUoVHJ1ZSwgRmFsc2UpCgkJUHJp
+bnQgIkFob3JhIGVsIHVzdWFyaW8gQW5vbnltb3VzIHRpZW5lIGVsIHJvbCAiICsgbmRBdXgucm9s
+KDApCglFbHNlCgkJUHJpbnQgIlJvbCBubyBpZGVudGlmaWNhZG8iCglFbmQgSWYJCgkKRW5kIFN1
+YgAi
+</rawitemdata></item></agent>
+
