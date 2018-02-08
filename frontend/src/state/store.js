@@ -11,6 +11,7 @@ import modifiedSuppliers from './ModifiedSuppliers/reducer';
 import surveys from './Surveys/reducer';
 import callReport from './CallReport/reducer';
 import results from './Results/reducer';
+import pendings from './Pendings/reducer';
 
 const app = combineReducers({
   user,
@@ -23,6 +24,7 @@ const app = combineReducers({
   surveys,
   callReport,
   results,
+  pendings,
 });
 
 let middleware = {};

@@ -2,19 +2,17 @@ import React from 'react';
 import DinamicForm from '../shared/DinamicForm';
 
 function Filter(props) {
-  const { getFields, Form } = props;
+  const { Form, fieldsData, handleSubmit } = props;
   const { getFieldDecorator, setFields } = props.form;
-  const fields = getFields(props);
+  const fields = fieldsData(props);
   return (
-    <div>
-      <Form>
-        <DinamicForm
-          getFieldDecorator={getFieldDecorator}
-          setFields={setFields}
-          content={fields}
-        />
-      </Form>
-    </div>
+    <Form onSubmit={handleSubmit}>
+      <DinamicForm
+        getFieldDecorator={getFieldDecorator}
+        setFields={setFields}
+        content={fields}
+      />
+    </Form>
   );
 }
 

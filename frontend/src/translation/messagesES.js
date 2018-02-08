@@ -1,4 +1,5 @@
 const messages = {
+  'Call.year': 'Año de convocatoria',
   'SupplierByCall.participateInCall': '¿Participa del programa?',
   'Supplier.businessName': 'Nombre o Razón social',
   'Supplier.idCompanySize': 'Tamaño de la empresa',
@@ -7,6 +8,7 @@ const messages = {
   'Supplier.idSubCategory': 'Tipo de subcategoría',
   'Supplier.document': 'Documentos oficiales: Por ejemplo, para Colombia adjuntar RUT y Cámara de Comercio o Para Costa Rica adjuntar Cédula y Personaría Jurídica. (Máximo dos documentos)',
   'Supplier.nit': 'Número Identificación Tributaria/NIT( Sin dígito Verificación)',
+  'Supplier.sapCode': 'Código SAP',
   'Supplier.idCompanyType': 'Tipo de compañía',
   'Supplier.producerLivestok': '¿Es productor pecuario?',
   'Supplier.idSocietyType': 'Tipo de sociedad',

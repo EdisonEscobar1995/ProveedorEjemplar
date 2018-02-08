@@ -5,7 +5,7 @@ import FilterForm from '../shared/FilterForm';
 function Filters(props) {
   const handleReset = () => {
     props.form.resetFields();
-    props.getSurveys();
+    props.getPendings();
   };
 
   return (

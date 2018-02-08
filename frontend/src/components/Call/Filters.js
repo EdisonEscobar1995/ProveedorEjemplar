@@ -1,30 +1,20 @@
-import React, { Component } from 'react';
-import filtersData from './filtersData';
-import DinamicForm from '../shared/DinamicForm';
+import React from 'react';
+import fieldsData from './fieldsData';
+import FilterForm from '../shared/FilterForm';
 
-class Filters extends Component {
-  handleSubmit = (e) => {
+function Filters(props) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.props.filterCalledSuppliers(this.props.form.getFieldsValue());
-  }
+    props.filterCalledSuppliers(props.form.getFieldsValue());
+  };
 
-  render() {
-    const { Form } = this.props;
-    const { getFieldDecorator, setFields } = this.props.form;
-    const fields = filtersData();
-
-    return (
-      <div>
-        <Form onSubmit={this.handleSubmit}>
-          <DinamicForm
-            getFieldDecorator={getFieldDecorator}
-            setFields={setFields}
-            content={fields}
-          />
-        </Form>
-      </div>
-    );
-  }
+  return (
+    <FilterForm
+      {...props}
+      fieldsData={fieldsData}
+      handleSubmit={handleSubmit}
+    />
+  );
 }
 
 export default Filters;
