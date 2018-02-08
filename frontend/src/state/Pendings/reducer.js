@@ -4,6 +4,7 @@ import {
   FILTER_PENDINGS,
   REQUEST_FAILED,
 } from './const';
+
 const initialState = {
   data: {},
   loading: false,
@@ -30,29 +31,20 @@ function pendingsApp(state = initialState, action) {
         data: {
           ...state.data,
           suppliers: state.data.suppliers.map((item) => {
-            const idState = state.data.suppliersByCall
-              .find(supplierByCall => supplierByCall.idSupplier === item.id)
-              .idState;
             const {
               supply = '',
               category = '',
               companySize = '',
-              surveyState = '',
               supplier = '',
-              country = '',
             } = action.data;
             let visible = true;
             if (category !== '' && category !== item.idCategory) {
-              visible = false;
-            } else if (country !== '' && country !== item.idCountry) {
               visible = false;
             } else if (supplier !== '' && supplier !== item.id) {
               visible = false;
             } else if (supply !== '' && supply !== item.idSupply) {
               visible = false;
             } else if (companySize !== '' && companySize !== item.idCompanySize) {
-              visible = false;
-            } else if (surveyState !== '' && surveyState !== idState) {
               visible = false;
             }
             return {

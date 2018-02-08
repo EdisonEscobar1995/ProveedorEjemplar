@@ -1,6 +1,6 @@
 import { LOCKED, NOTIFIED } from '../../utils/const';
 
-const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form }) => {
+const fieldsData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, handleReset, form }) => {
   const states = [
     {
       id: LOCKED,
@@ -31,21 +31,11 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
           handleChange: getModifiedSuppliers,
           allowClear: false,
           valuesToClean: {
-            supply: {
-              value: '',
-            },
-            category: {
-              value: '',
-            },
-            country: {
-              value: '',
-            },
-            supplier: {
-              value: '',
-            },
-            state: {
-              value: '',
-            },
+            supply: { value: '' },
+            category: { value: '' },
+            country: { value: '' },
+            supplier: { value: '' },
+            state: { value: '' },
           },
         },
         {
@@ -118,7 +108,21 @@ const filtersData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form
         },
       ],
     },
+    {
+      key: 1.3,
+      justify: 'center',
+      value: [
+        {
+          span: 2,
+          type: 'button',
+          label: 'Limpiar',
+          key: 'clear',
+          buttonType: 'primary',
+          handleclick: handleReset,
+        },
+      ],
+    },
   ];
 };
 
-export default filtersData;
+export default fieldsData;

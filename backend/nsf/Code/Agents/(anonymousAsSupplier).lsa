@@ -2,15 +2,15 @@
 <agent name='(anonymousAsSupplier)' alias='anonymousAsSupplier' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
  publicaccess='false' designerversion='8.5.3'>
-<noteinfo noteid='7cd12' unid='B0F0A2A30066B98D0525822D006560B9' sequence='1'>
+<noteinfo noteid='7cd12' unid='B0F0A2A30066B98D0525822D006560B9' sequence='3'>
 <created><datetime>20180207T132718,97-05</datetime></created>
-<modified><datetime>20180207T132719,43-05</datetime></modified>
-<revised><datetime>20180207T132719,42-05</datetime></revised>
-<lastaccessed><datetime>20180207T132719,43-05</datetime></lastaccessed>
+<modified><datetime>20180208T075824,13-05</datetime></modified>
+<revised><datetime>20180208T075824,12-05</datetime></revised>
+<lastaccessed><datetime>20180208T075824,13-05</datetime></lastaccessed>
 <addedtofile><datetime>20180207T132719,43-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
-<designchange><datetime>20180207T122501,29-05</datetime></designchange>
+<designchange><datetime>20180208T075824,13-05</datetime></designchange>
 <trigger type='agentlist'/>
 <documentset type='runonce'/><code event='options'><lotusscript>%REM
 	Agent anonymousAsRol
@@ -34,7 +34,6 @@ Option Declare
 	Dim arrParametros As Variant
 	
 	Set db = ns.Currentdatabase
-	Set vwSuppliers = db.Getview("ImportSuppliersByBusinessName")
 	Set vwUsers = db.Getview("vwUsersByName")
 	Set nd = ns.Documentcontext
 	Set ndAux = New NotesDocument(db)
@@ -46,6 +45,14 @@ Option Declare
 		Call ndAux.ReplaceItemValue(StrLeft(parametro,"="), StrRight(parametro,"="))
 	End ForAll
 	
+	Set vwSuppliers = db.Getview("vwSuppliersByFullName")
+	Set ndSupplier = vwSuppliers.Getdocumentbykey("Anonymous", True)
+	If Not ndSupplier Is Nothing Then 
+		ndSupplier.fullname = ndSupplier.businessname
+		Call ndSupplier.save(True, False)
+	End If
+	
+	Set vwSuppliers = db.Getview("ImportSuppliersByBusinessName")
 	Set ndSupplier = vwSuppliers.getdocumentbykey(ndAux.businessName(0), True)
 	If Not ndSupplier Is Nothing Then 
 		Set ndUser = vwUsers.Getdocumentbykey("Anonymous", True)
@@ -61,11 +68,6 @@ Option Declare
 	End If	
 	
 End Sub</lotusscript></code>
-<rundata processeddocs='0' exitcode='0' agentdata='CBB25DD0E6AE1A160525822D005FBAD1'>
-<agentmodified><datetime>20180207T122501,29-05</datetime></agentmodified>
-<agentrun><datetime>20180207T122720,63-05</datetime></agentrun>
-<runlog>Started running agent '(anonymousAsSupplier)|anonymousAsSupplier' on 07/02/2018 12:27:20 p. m.
-Ran LotusScript code
-Done running agent '(anonymousAsSupplier)|anonymousAsSupplier' on 07/02/2018 12:27:20 p. m.
-</runlog></rundata></agent>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180208T075823,90-05</datetime></agentmodified></rundata></agent>
 

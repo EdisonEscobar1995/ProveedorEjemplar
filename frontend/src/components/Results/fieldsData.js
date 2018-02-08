@@ -1,4 +1,4 @@
-const filtersData = ({ data, getCriterionsByDimension }) => {
+const fieldsData = ({ data, getCriterionsByDimension, handleReset, getResults }) => {
   const {
     Call,
     Supply,
@@ -105,7 +105,28 @@ const filtersData = ({ data, getCriterionsByDimension }) => {
         },
       ],
     },
+    {
+      key: 1.4,
+      justify: 'center',
+      value: [
+        {
+          span: 2,
+          type: 'button',
+          label: 'Limpiar',
+          key: 'clear',
+          buttonType: 'primary',
+          handleclick: handleReset,
+        }, {
+          span: 2,
+          type: 'button',
+          label: 'Exportar a Excel',
+          key: 'export',
+          buttonType: 'primary',
+          handleclick: getResults,
+        },
+      ],
+    },
   ];
 };
 
-export default filtersData;
+export default fieldsData;

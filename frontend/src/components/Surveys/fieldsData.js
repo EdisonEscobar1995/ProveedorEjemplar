@@ -1,4 +1,4 @@
-const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
+const fieldsData = ({ data, getSurveys, filterSurveys, handleReset, form }) => {
   const {
     years,
     suppliers,
@@ -20,24 +20,12 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           handleChange: getSurveys,
           allowClear: false,
           valuesToClean: {
-            supply: {
-              value: '',
-            },
-            category: {
-              value: '',
-            },
-            companySize: {
-              value: '',
-            },
-            surveyState: {
-              value: '',
-            },
-            supplier: {
-              value: '',
-            },
-            country: {
-              value: '',
-            },
+            supply: { value: '' },
+            category: { value: '' },
+            companySize: { value: '' },
+            surveyState: { value: '' },
+            supplier: { value: '' },
+            country: { value: '' },
           },
         },
         {
@@ -126,7 +114,21 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
         },
       ],
     },
+    {
+      key: 1.4,
+      justify: 'center',
+      value: [
+        {
+          span: 2,
+          type: 'button',
+          label: 'Limpiar',
+          key: 'clear',
+          buttonType: 'primary',
+          handleclick: handleReset,
+        },
+      ],
+    },
   ];
 };
 
-export default filtersData;
+export default fieldsData;

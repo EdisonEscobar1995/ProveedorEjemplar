@@ -1,4 +1,4 @@
-const filtersData = () => ([
+const fieldsData = () => ([
   {
     key: 1.1,
     value: [
@@ -35,4 +35,4 @@ const filtersData = () => ([
   },
 ]);
 
-export default filtersData;
+export default fieldsData;

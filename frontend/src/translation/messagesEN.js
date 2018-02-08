@@ -1,4 +1,5 @@
 const messages = {
+  'Call.year': 'Year of call',
   'SupplierByCall.participateInCall': 'Do you want to join the program?',
   'Supplier.businessName': 'Name or Corporate Name',
   'Supplier.idCompanySize': 'Company size',
@@ -7,6 +8,7 @@ const messages = {
   'Supplier.idSubCategory': 'Type of Sub-category',
   'Supplier.document': 'Official documents: For example, For Colombia, attach RUT + Certificate of Existence and Legal Representation. For Costa Rica, attach Cédula and Legal Constitution. For Peru, attach RUC - Unique Contributor Registration (Registro Único de Contribuyente) (Maximum two documents)',
   'Supplier.nit': 'Tax Identification Number / NIT (Without Verification Digit)',
+  'Supplier.sapCode': 'SAP code',
   'Supplier.idCompanyType': 'Type of Company',
   'Supplier.producerLivestok': 'Are you a livestock producer?',
   'Supplier.idSocietyType': 'Type of Company',

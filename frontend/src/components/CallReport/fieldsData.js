@@ -1,4 +1,11 @@
-const filtersData = ({ data, getParticipantsByYear, filterCallReport, form }) => {
+const fieldsData = ({
+  data,
+  getParticipantsByYear,
+  filterCallReport,
+  handleReset,
+  exportExcel,
+  form,
+}) => {
   const {
     years,
     suppliers,
@@ -19,18 +26,10 @@ const filtersData = ({ data, getParticipantsByYear, filterCallReport, form }) =>
           handleChange: getParticipantsByYear,
           allowClear: false,
           valuesToClean: {
-            supply: {
-              value: '',
-            },
-            companySize: {
-              value: '',
-            },
-            participated: {
-              value: '',
-            },
-            supplier: {
-              value: '',
-            },
+            supply: { value: '' },
+            companySize: { value: '' },
+            participated: { value: '' },
+            supplier: { value: '' },
           },
         },
         {
@@ -95,7 +94,28 @@ const filtersData = ({ data, getParticipantsByYear, filterCallReport, form }) =>
         },
       ],
     },
+    {
+      key: 1.3,
+      justify: 'center',
+      value: [
+        {
+          span: 2,
+          type: 'button',
+          label: 'Limpiar',
+          key: 'clear',
+          buttonType: 'primary',
+          handleclick: handleReset,
+        }, {
+          span: 2,
+          type: 'button',
+          label: 'Exportar a Excel',
+          key: 'export',
+          buttonType: 'primary',
+          handleclick: exportExcel,
+        },
+      ],
+    },
   ];
 };
 
-export default filtersData;
+export default fieldsData;
