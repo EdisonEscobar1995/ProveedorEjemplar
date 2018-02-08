@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
+import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
@@ -278,6 +279,23 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         return supplierByCallDAO.getByIdCallAndIdSupplierFinished(idCall, idSupplier);
+    }
+
+    /**
+     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por cada uno de los estados especificados
+     * @param idCall Identificador de la convocatoria
+     * @param states Colección con los estados a filtrar.
+     * @return Colección de datos encontrados
+     * @throws HandlerGenericException
+     */
+    public List<DTO> getByStates(String idCall, List<String> states) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        List<DTO> response = supplierByCallDAO.getByStates(idCall, states);
+        if(response.isEmpty()){
+            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+        }
+
+        return response;
     }
 
 }

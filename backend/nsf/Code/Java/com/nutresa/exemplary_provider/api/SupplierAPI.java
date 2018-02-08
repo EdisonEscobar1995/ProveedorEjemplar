@@ -78,5 +78,18 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
 
         return response;
     }
+    
+    public ServletResponseDTO<InformationFromSupplier> pendingToQualify(Map<String, String> parameters) {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        ServletResponseDTO<InformationFromSupplier> response = null;
+        try {
+            response = new ServletResponseDTO<InformationFromSupplier>(supplierBLO.pendingToQualify(parameters
+                    .get("year")));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<InformationFromSupplier>(exception);
+        }
+
+        return response;
+    }
 
 }

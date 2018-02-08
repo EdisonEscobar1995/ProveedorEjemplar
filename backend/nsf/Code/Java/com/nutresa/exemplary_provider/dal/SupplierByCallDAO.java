@@ -1,11 +1,15 @@
 package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 import org.openntf.domino.Document;
@@ -120,6 +124,43 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         }
 
         return response;
+    }
+
+    /**
+     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por cada uno de los estados especificados
+     * @param idCall Identificador de la convocatoria
+     * @param states Colección con los estados a filtrar.
+     * @return Colección de datos encontrados
+     * @throws HandlerGenericException 
+     * @throws HandlerGenericException
+     */
+    @SuppressWarnings("unchecked")
+    public List<DTO> getByStates(String idCall, List<String> states) throws HandlerGenericException {
+        try {
+            List<DTO> response = new ArrayList<DTO>();
+            int index = 0;
+            StateDAO stateDAO = new StateDAO();
+            for(String state : states){
+                states.set(index, "[idState] = ".concat(stateDAO.getStateByShortName(state).getId()));
+                index = index + 1;
+            }
+
+            String queryFTSearch = "[idCall] = " + idCall + " AND (" + Common.implodeList(" OR ", states) +")";
+            String viewName = "vwSuppliersByCallIdCall";
+            View view = getDatabase().getView(viewName);
+            view.FTSearch(queryFTSearch, 0);
+
+            Map<String, String> filter = new HashMap<String, String>();
+            filter.put("idCall", idCall);
+            
+            viewFiltered.put("vwSuppliersByCallIdCall", view);
+            entityView = viewName;
+            response = ((GenericDAO) this).getAll();
+            viewFiltered.remove("vwSuppliersByCallIdCall");
+            return response;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
     }
 
 }

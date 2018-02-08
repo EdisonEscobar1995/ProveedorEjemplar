@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
 import com.nutresa.exemplary_provider.dtl.StateDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -252,6 +254,41 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         }
 
         return response;
+    }
+
+    /**
+     * Obtiene los proveedores que ya terminaron la evaluación y los que han sido evaluados parcialmente por el
+     * evaluador.
+     * @param year Año de la convocatoria
+     * @return Colección de datos encontrados
+     * @throws HandlerGenericException
+     */
+    public InformationFromSupplier pendingToQualify(String year) throws HandlerGenericException {
+        try {
+            InformationFromSupplier response = new InformationFromSupplier();
+            CallBLO callBLO = new CallBLO();
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            List<Object> listYears;
+            listYears = getFieldAll(0, "vwCallsByYear");
+            if (null == year || year.isEmpty()) {
+                year = (String) listYears.get(0);
+            }
+
+            UserBLO userBLO = new UserBLO();
+            if (userBLO.isRol("EVALUATOR")) {
+                List<String> states = new ArrayList<String>();
+                states.add(SurveyStates.EVALUATOR.toString());
+                states.add(SurveyStates.NOT_STARTED_EVALUATOR.toString());
+                List<DTO> callsByYear = supplierByCallBLO.getByStates(callBLO.getIdCallByYear(year), states);
+                response = getInformationFromSuppliers(listYears, callsByYear);
+            } else {
+                throw new HandlerGenericException("ROL_INVALID");
+            }
+
+            return response;
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
     }
 
 }
