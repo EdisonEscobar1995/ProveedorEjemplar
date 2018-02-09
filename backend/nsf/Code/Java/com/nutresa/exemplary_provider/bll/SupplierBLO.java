@@ -275,7 +275,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             }
 
             UserBLO userBLO = new UserBLO();
-            if (userBLO.isRol("EVALUATOR")) {
+            if (userBLO.isRol("EVALUATOR") || userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
                 List<String> states = new ArrayList<String>();
                 states.add(SurveyStates.EVALUATOR.toString());
                 states.add(SurveyStates.NOT_STARTED_EVALUATOR.toString());
