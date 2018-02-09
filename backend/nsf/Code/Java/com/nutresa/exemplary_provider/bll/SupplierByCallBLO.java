@@ -91,10 +91,10 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 response = callBySupplier;
                 break;
             }
-            
-            if(call.isCaducedDeadLineToMakeSurvey()){
-                throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
-            }
+        }
+
+        if (null != call && call.isCaducedDeadLineToMakeSurvey()) {
+            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
         }
 
         return response;
