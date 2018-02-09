@@ -97,7 +97,7 @@ const messages = {
   'Header.logOut': 'Logout',
   'Confirm.title': 'Are you sure?',
   'Message.title': 'Exemplary Supplier',
-  'Validation.dateToSend': 'The date exceeds the time to send',
+  'Validation.dateToSend': 'The date to make the survey has expired',
   'Validation.noData': 'No data received',
   'Validation.noOpenCall': 'At this time there are no open calls',
   'Validation.supplier': 'There is no assessment for the type of supply and company size selected',

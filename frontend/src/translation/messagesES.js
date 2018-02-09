@@ -97,7 +97,7 @@ const messages = {
   'Header.logOut': 'Cerrar sesión',
   'Confirm.title': '¿Está seguro?',
   'Message.title': 'Proveedor Ejemplar',
-  'Validation.dateToSend': 'La fecha excede el tiempo de envío',
+  'Validation.dateToSend': 'La fecha para hacer la encuesta ha vencido',
   'Validation.noData': 'No se recibieron datos',
   'Validation.noOpenCall': 'En estos momentos no se encuentran convocatorias abiertas',
   'Validation.supplier': 'No existe una encuesta para el tipo de suministro y tamaño de empresa seleccionada',

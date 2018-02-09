@@ -109,7 +109,7 @@ public class CallDTO {
     }
 
     public boolean isCaducedDeadLineToMakeSurvey() throws HandlerGenericException {
-        return isCaducedDate(this.dateToFinishCall, new Date());
+        return isCaducedDate(this.deadlineToMakeSurvey, new Date());
     }
 
     private boolean isCaducedDate(Date dateToCompare, Date today) throws HandlerGenericException {
