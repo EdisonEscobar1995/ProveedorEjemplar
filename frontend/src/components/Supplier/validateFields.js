@@ -1,4 +1,5 @@
 const fieldsToValid = [
+  'idCompanySize',
   'fullNameContact',
   'jobPosition',
   'phoneOfContact',
