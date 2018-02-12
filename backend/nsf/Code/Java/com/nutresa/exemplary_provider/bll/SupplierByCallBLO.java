@@ -68,7 +68,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         if (null != idSupplierByCall && !idSupplierByCall.trim().isEmpty()) {
             CallBLO callBLO = new CallBLO();
             response = get(idSupplierByCall);
-            if (!callBLO.get(response.getIdCall()).isCaducedDateToFinishCall()) {
+            if (!callBLO.get(response.getIdCall()).isCaducedDeadLineToMakeSurvey()) {
                 readOnly = false;
             } else {
                 readOnly = true;
