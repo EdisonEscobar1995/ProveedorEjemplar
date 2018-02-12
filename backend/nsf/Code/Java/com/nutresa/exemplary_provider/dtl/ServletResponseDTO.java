@@ -13,7 +13,7 @@ public class ServletResponseDTO<T> {
     T data;
 
     @Expose
-    Map<String, Object> rules = new HashMap<String, Object>();
+    Map<String, Map<String, Object>> rules = new HashMap<String, Map<String, Object>>();
 
     @Expose
     String message = "";
@@ -36,9 +36,9 @@ public class ServletResponseDTO<T> {
         this.message = SUCCESS;
         this.status = true;
     }
-    
-    public void addRule(String name, Object value) {
-        rules.put(name, value);
+
+    public void setRule(Map<String, Map<String, Object>> rules) {
+        this.rules = rules;
     }
-   
+
 }

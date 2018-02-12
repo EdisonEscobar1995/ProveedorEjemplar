@@ -132,12 +132,11 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
      * @param states Colección con los estados a filtrar.
      * @return Colección de datos encontrados
      * @throws HandlerGenericException 
-     * @throws HandlerGenericException
      */
     @SuppressWarnings("unchecked")
     public List<DTO> getByStates(String idCall, List<String> states) throws HandlerGenericException {
         try {
-            List<DTO> response = new ArrayList<DTO>();
+            List<DTO> response = null;
             int index = 0;
             StateDAO stateDAO = new StateDAO();
             for(String state : states){
@@ -153,10 +152,10 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             Map<String, String> filter = new HashMap<String, String>();
             filter.put("idCall", idCall);
             
-            viewFiltered.put("vwSuppliersByCallIdCall", view);
+            viewFiltered.put(viewName, view);
             entityView = viewName;
             response = ((GenericDAO) this).getAll();
-            viewFiltered.remove("vwSuppliersByCallIdCall");
+            viewFiltered.remove(viewName);
             return response;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
