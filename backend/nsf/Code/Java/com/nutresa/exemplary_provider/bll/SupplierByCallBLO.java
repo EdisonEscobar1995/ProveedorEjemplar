@@ -9,22 +9,51 @@ import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.Rule;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.dtl.Rol;
+import com.nutresa.exemplary_provider.dtl.SurveySection;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
 
-    private boolean readOnly = false;
+    private Rule rules;
+
+    public Rule getRule() {
+        return rules;
+    }
+
+    private void setRulesToSection(String section, Map<String, Object> rules) {
+        this.rules.getRules().put(section, rules);
+    }
+
+    private Map<String, Object> buildRules(boolean show, boolean readOnly) {
+        Map<String, Object> specifRules = new HashMap<String, Object>();
+        specifRules.put("show", show);
+        specifRules.put("readonly", readOnly);
+        return specifRules;
+    }
 
     public SupplierByCallBLO() {
         super(SupplierByCallDAO.class);
+        rules = new Rule();
+        Map<String, Map<String, Object>> specificRule = new HashMap<String, Map<String, Object>>();
+        Map<String, Object> rule = new HashMap<String, Object>();
+        rule.put("show", false);
+        rule.put("readonly", true);
+        specificRule.put(SurveySection.SUPPLIER.getNameSection(), rule);
+        specificRule.put(SurveySection.EVALUATOR.getNameSection(), rule);
+        rules.setRules(specificRule);
     }
 
     /**
      * Obtiene la convocatoria de un proveedor, identificada con <code>idSupplierByCall</code> 
      * en caso de <b>NO</b> ser <code>null</code>; en caso de serlo, busca la convocatoria que
      * tenga asiganda y no esté vencida.
+     * <p>
+     * Si el rol del usuario en sessión es <b>LIBERATOR</b> o <b>ADMINISTRATOR</b> se envía la instrucción de modo
+     * lectura. Si el rol es <b>EVALUATOR</b> la sección de este rol se envía modo escritura.
      * 
      * @param String <code>idSupplierByCall</code> Identificador de la convocatoria asiganda al proveedor
      * @return <code>SupplierByCallDTO</code>
@@ -39,10 +68,16 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         if (null == supplier) {
             UserBLO userBLO = new UserBLO();
-            if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
+                    || userBLO.isRol(Rol.EVALUATOR.toString())) {
                 isSupplier = false;
                 response = get(idSupplierByCall);
-                readOnly = true;
+                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, true));
+                if (userBLO.isRol(Rol.EVALUATOR.toString())) {
+                    setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, false));
+                } else {
+                    setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, true));
+                }
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
             }
@@ -58,7 +93,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         if ((response instanceof SupplierByCallDTO)
                 && shouldBeReadOnly(stateBLO.get(response.getIdState()).getShortName())) {
-            readOnly = true;
+            setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, true));
         }
 
         return response;
@@ -88,9 +123,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             CallBLO callBLO = new CallBLO();
             response = get(idSupplierByCall);
             if (!callBLO.get(response.getIdCall()).isCaducedDateToFinishCall()) {
-                readOnly = false;
+                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, false));
             } else {
-                readOnly = true;
+                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, true));
             }
         } else {
             response = getCallActiveToParticipate(idSupplier);
@@ -200,10 +235,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
 
-    public boolean getReadOnly() {
-        return readOnly;
-    }
-
     public SupplierByCallDTO getSupplierByCallActiveBySupplier(String idSupplier) throws HandlerGenericException {
         SupplierByCallDTO response = null;
         List<SupplierByCallDTO> callsBySupplier = getCallsBySupplier(idSupplier);
@@ -239,11 +270,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         StateBLO stateBLO = new StateBLO();
         boolean response = true;
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        try{
+        try {
             SupplierByCallDTO supplierByCall = supplierByCallDAO.get(idSupplierByCall);
             supplierByCall.setIdState(stateBLO.getStateByShortName(nameState).getId());
             super.save(supplierByCall);
-        } catch(HandlerGenericException exception){
+        } catch (HandlerGenericException exception) {
             response = false;
         }
 
@@ -291,7 +322,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     public List<DTO> getByStates(String idCall, List<String> states) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         List<DTO> response = supplierByCallDAO.getByStates(idCall, states);
-        if(response.isEmpty()){
+        if (response.isEmpty()) {
             throw new HandlerGenericException("INFORMATION_NOT_FOUND");
         }
 

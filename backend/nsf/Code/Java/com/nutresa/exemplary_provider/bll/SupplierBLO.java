@@ -15,6 +15,7 @@ import com.nutresa.exemplary_provider.dtl.StateDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -56,7 +57,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
         if (null == response) {
             UserBLO userBLO = new UserBLO();
-            if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
                 response = dao.getSupplierByFullName(idSupplier);
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
@@ -155,7 +156,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
-        
+
         return response;
     }
 
@@ -265,7 +266,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
      */
     public InformationFromSupplier pendingToQualify(String year) throws HandlerGenericException {
         try {
-            InformationFromSupplier response = new InformationFromSupplier();
+            InformationFromSupplier response = null;
             CallBLO callBLO = new CallBLO();
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             List<Object> listYears;
@@ -275,7 +276,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             }
 
             UserBLO userBLO = new UserBLO();
-            if (userBLO.isRol("EVALUATOR") || userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+            if (userBLO.isRol(Rol.EVALUATOR.toString()) || userBLO.isRol(Rol.LIBERATOR.toString())
+                    || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
                 List<String> states = new ArrayList<String>();
                 states.add(SurveyStates.EVALUATOR.toString());
                 states.add(SurveyStates.NOT_STARTED_EVALUATOR.toString());
@@ -283,6 +285,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 response = getInformationFromSuppliers(listYears, callsByYear);
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
+            }
+
+            if (!(response instanceof InformationFromSupplier)) {
+                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
             }
 
             return response;

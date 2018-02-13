@@ -8,6 +8,7 @@ import java.util.Map;
 import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
@@ -83,7 +84,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
         if (null == supplier) {
             UserBLO userBLO = new UserBLO();
-            if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
                 response = supplierBLO.getSummaryWithSurvey(year);
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
@@ -113,7 +114,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
 
         UserBLO userBLO = new UserBLO();
-        if (userBLO.isRol("LIBERATOR") || userBLO.isRol("ADMINISTRATOR")) {
+        if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
             String idCall = parameters.get("call");
             if (null != idCall && !idCall.isEmpty()) {
                 SupplierBLO supplierBLO = new SupplierBLO();
