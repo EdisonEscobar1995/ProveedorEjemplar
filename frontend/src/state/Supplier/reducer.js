@@ -34,10 +34,10 @@ const initialState = {
   rules: {
     supplier: {
       show: true,
-      readOnly: true,
+      readOnly: false,
     },
     evaluator: {
-      show: true,
+      show: false,
       readOnly: true,
     },
   },

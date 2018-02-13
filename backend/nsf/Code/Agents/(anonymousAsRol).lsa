@@ -2,15 +2,15 @@
 <agent name='(anonymousAsRol)' alias='anonymousAsRol' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
  publicaccess='false' designerversion='8.5.3'>
-<noteinfo noteid='7cd0a' unid='384E96BF249CB4640525822D006560B8' sequence='3'>
+<noteinfo noteid='7cd0a' unid='384E96BF249CB4640525822D006560B8' sequence='9'>
 <created><datetime>20180207T132718,96-05</datetime></created>
-<modified><datetime>20180208T075331,39-05</datetime></modified>
-<revised><datetime>20180208T075331,38-05</datetime></revised>
-<lastaccessed><datetime>20180208T075331,39-05</datetime></lastaccessed>
-<addedtofile><datetime>20180207T132719,20-05</datetime></addedtofile></noteinfo>
+<modified><datetime>20180213T105337,70-05</datetime></modified>
+<revised><datetime>20180213T105337,69-05</datetime></revised>
+<lastaccessed><datetime>20180213T105337,70-05</datetime></lastaccessed>
+<addedtofile><datetime>20180213T105337,68-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
-<designchange><datetime>20180208T075331,40-05</datetime></designchange>
+<designchange><datetime>20180213T105337,65-05</datetime></designchange>
 <trigger type='agentlist'/>
 <documentset type='runonce'/><code event='options'><lotusscript>%REM
 	Agent anonymousAsRol
@@ -74,6 +74,11 @@ Option Declare
 	End If	
 	
 End Sub</lotusscript></code>
-<rundata processeddocs='0' exitcode='0'>
-<agentmodified><datetime>20180208T075331,13-05</datetime></agentmodified></rundata></agent>
+<rundata processeddocs='0' exitcode='0' agentdata='771C96AE49B2D2D805258233005BCDBA'>
+<agentmodified><datetime>20180213T105337,70-05</datetime></agentmodified>
+<agentrun><datetime>20180213T114244,59-05</datetime></agentrun>
+<runlog>Started running agent '(anonymousAsRol)|anonymousAsRol' on 13/02/2018 11:42:44 a. m.
+Ran LotusScript code
+Done running agent '(anonymousAsRol)|anonymousAsRol' on 13/02/2018 11:42:44 a. m.
+</runlog></rundata></agent>
 
