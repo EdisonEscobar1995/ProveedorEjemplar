@@ -9,7 +9,7 @@ import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
-import com.nutresa.exemplary_provider.dtl.Rule;
+import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.Rol;
@@ -18,42 +18,15 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
 
-    private Rule rules;
+    private SectionRule rules;
 
-    public Rule getRule() {
+    public SectionRule getRule() {
         return rules;
-    }
-
-    /**
-     * @param section Sección para la que aplican las reglas
-     * @param rules Reglas para la sección
-     */
-    private void setRulesToSection(String section, Map<String, Object> rules) {
-        this.rules.getRules().put(section, rules);
-    }
-
-    /**
-     * @param show Propiedad para determinar si se muestra la sección
-     * @param readOnly Propiedad para deterinar si la sección es modo lectura o no
-     * @return Colección de reglas.
-     */
-    private Map<String, Object> buildRules(boolean show, boolean readOnly) {
-        Map<String, Object> specifRules = new HashMap<String, Object>();
-        specifRules.put("show", show);
-        specifRules.put("readOnly", readOnly);
-        return specifRules;
     }
 
     public SupplierByCallBLO() {
         super(SupplierByCallDAO.class);
-        rules = new Rule();
-        Map<String, Map<String, Object>> specificRule = new HashMap<String, Map<String, Object>>();
-        Map<String, Object> rule = new HashMap<String, Object>();
-        rule.put("show", false);
-        rule.put("readonly", true);
-        specificRule.put(SurveySection.SUPPLIER.getNameSection(), rule);
-        specificRule.put(SurveySection.EVALUATOR.getNameSection(), rule);
-        rules.setRules(specificRule);
+        rules = new SectionRule();
     }
 
     /**
@@ -81,11 +54,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                     || userBLO.isRol(Rol.EVALUATOR.toString())) {
                 isSupplier = false;
                 response = get(idSupplierByCall);
-                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, true));
+                rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, true));
                 if (userBLO.isRol(Rol.EVALUATOR.toString())) {
                     permissionForEvaluator(response);
                 } else {
-                    setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, true));
+                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
                 }
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
@@ -102,7 +75,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         if ((response instanceof SupplierByCallDTO)
                 && shouldBeReadOnly(stateBLO.get(response.getIdState()).getShortName())) {
-            setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, true));
+            rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, true));
         }
 
         return response;
@@ -116,11 +89,32 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     private void permissionForEvaluator(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         CallBLO callBLO = new CallBLO();
         if (!callBLO.get(supplierByCall.getIdCall()).isCaducedDeadLineToMakeSurveyEvaluator()) {
-            setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, false));
+            if (isFromEvaluator(supplierByCall.getId())) {
+                rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
+                throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
+            } else {
+                rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
+            }
         } else {
-            setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, true));
+            rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
             throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
         }
+    }
+
+    /**
+     * Verifica la convocatoria de un proveedor esté siendo evaluada por un <b>EVALUATOR</b>
+     * @param idSupplierByCall Identificador definitivo de la convocatoria (convocatoria de un proveedor)
+     * @return <code>true</code> si la convocatoria está siendo evaluada o <code>false</code> si aún está libre.
+     * @throws HandlerGenericException
+     */
+    protected boolean isFromEvaluator(String idSupplierByCall) throws HandlerGenericException {
+        boolean isFromEvaluator = false;
+        SupplierByCallDTO supplierByCall = get(idSupplierByCall);
+        if (null != supplierByCall && !supplierByCall.getWhoEvaluate().isEmpty()) {
+            isFromEvaluator = true;
+        }
+
+        return isFromEvaluator;
     }
 
     /**
@@ -147,9 +141,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             CallBLO callBLO = new CallBLO();
             response = get(idSupplierByCall);
             if (!callBLO.get(response.getIdCall()).isCaducedDateToFinishCall()) {
-                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, false));
+                rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, false));
             } else {
-                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, true));
+                rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, true));
             }
         } else {
             response = getCallActiveToParticipate(idSupplier);
@@ -167,7 +161,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             call = callBLO.get(callBySupplier.getIdCall());
             if (!call.isCaducedDateToFinishCall()) {
                 response = callBySupplier;
-                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, false));
+                rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, false));
                 break;
             }
         }
@@ -198,18 +192,49 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     public SupplierByCallDTO finishSurvey(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         SupplierByCallDTO response = null;
+        UserBLO userBLO = new UserBLO();
         CallBLO callBLO = new CallBLO();
         CallDTO call = callBLO.get(supplierByCall.getIdCall());
-        if (!call.isCaducedDeadLineToMakeSurvey()) {
-            if (changeState(SurveyStates.ENDED_SUPPLIER.toString(), supplierByCall.getId())) {
-                response = get(supplierByCall.getId());
-                NotificationBLO notificationBLO = new NotificationBLO();
-                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
+
+        if(userBLO.isRol(Rol.EVALUATOR.toString())){
+            if (!call.isCaducedDeadLineToMakeSurveyEvaluator()) {
+                if (changeState(SurveyStates.ENDED_EVALUATOR.toString(), supplierByCall.getId())) {
+                    response = get(supplierByCall.getId());
+                    NotificationBLO notificationBLO = new NotificationBLO();
+                    notificationBLO.notifySurveyCompletedByEvaluator();
+                } else {
+                    throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+                }
             } else {
-                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+                throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
             }
         } else {
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
+            if (!call.isCaducedDeadLineToMakeSurvey()) {
+                if (changeState(SurveyStates.ENDED_SUPPLIER.toString(), supplierByCall.getId())) {
+                    response = get(supplierByCall.getId());
+                    NotificationBLO notificationBLO = new NotificationBLO();
+                    notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
+                } else {
+                    throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+                }
+            } else {
+                throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
+            }
+        }
+        
+        return response;
+    }
+
+    public boolean changeState(String nameState, String idSupplierByCall) {
+        StateBLO stateBLO = new StateBLO();
+        boolean response = true;
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        try {
+            SupplierByCallDTO supplierByCall = supplierByCallDAO.get(idSupplierByCall);
+            supplierByCall.setIdState(stateBLO.getStateByShortName(nameState).getId());
+            super.save(supplierByCall);
+        } catch (HandlerGenericException exception) {
+            response = false;
         }
 
         return response;
@@ -289,21 +314,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         return super.save(dto);
-    }
-
-    public boolean changeState(String nameState, String idSupplierByCall) {
-        StateBLO stateBLO = new StateBLO();
-        boolean response = true;
-        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        try {
-            SupplierByCallDTO supplierByCall = supplierByCallDAO.get(idSupplierByCall);
-            supplierByCall.setIdState(stateBLO.getStateByShortName(nameState).getId());
-            super.save(supplierByCall);
-        } catch (HandlerGenericException exception) {
-            response = false;
-        }
-
-        return response;
     }
 
     protected List<SupplierByCallDTO> getCallsBySupplier(String idSupplier) throws HandlerGenericException {

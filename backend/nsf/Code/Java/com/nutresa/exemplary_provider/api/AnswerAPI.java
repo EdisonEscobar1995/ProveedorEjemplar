@@ -7,6 +7,20 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AnswerAPI extends GenericAPI<AnswerDTO, AnswerBLO> {
 
+    @Override
+    public ServletResponseDTO<AnswerDTO> save(AnswerDTO dto) {
+        ServletResponseDTO<AnswerDTO> response = null;
+        AnswerBLO answerBLO = new AnswerBLO();
+        try {
+            response = new ServletResponseDTO<AnswerDTO>(answerBLO.save(dto));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<AnswerDTO>(exception);
+        }
+
+        response.setRule(answerBLO.getRule().getRules());
+        return response;
+    }
+
     public AnswerAPI() {
         super(AnswerDTO.class, AnswerBLO.class);
     }

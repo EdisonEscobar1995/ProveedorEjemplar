@@ -75,6 +75,22 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         }
     }
 
+    public void notifySurveyCompletedByEvaluator() throws HandlerGenericException {
+        try {
+            List<String> sendTo = new ArrayList<String>();
+            List<UserDTO> users = getUsersByRolName("LIBERATOR");
+            for (UserDTO user : users) {
+                sendTo.add(user.getEmail());
+            }
+            NotificationDAO notificationDAO = new NotificationDAO();
+            NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_EVALUATOR");
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/pendings";
+            sendNotification(sendTo, notification, false, null, true, linkOfButton);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
+
     private Map<String, String> buildDetailUserToSend(String idSupplier) throws HandlerGenericException {
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO supplier = supplierBLO.get(idSupplier);
@@ -132,16 +148,16 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             SupplierBLO supplierBLO = new SupplierBLO();
             List<String> emails = new ArrayList<String>();
             emails.add(supplier.getEmailOfContact());
-            
+
             Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
             Map<String, String> detail = new LinkedHashMap<String, String>();
             detail.put("Usuario", informationInOtherDataBase.get("userName"));
             detail.put("Contraseña", informationInOtherDataBase.get("password"));
-            
+
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE_CONFIRMED");
             notification.setMessage(notification.getMessage());
-            
+
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
             sendNotification(emails, notification, true, detail, true, linkOfButton);
         } catch (HandlerGenericException exception) {
