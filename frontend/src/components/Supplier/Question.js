@@ -207,7 +207,7 @@ class Question extends Component {
                   icon="message"
                   onClick={() => {
                     message({
-                      type: 'success',
+                      type: 'info',
                       text: comment,
                     });
                   }}

@@ -1,16 +1,27 @@
 <?xml version='1.0' encoding='utf-8'?>
 <agent name='Set state evaluator' alias='set_state_evaluator' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
- publicaccess='false' designerversion='8.5.3' agenttype='formula'>
-<noteinfo noteid='7cd52' unid='A8CCC377E3E019700525822E00736EAE' sequence='15'>
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='7cd52' unid='A8CCC377E3E019700525822E00736EAE' sequence='18'>
 <created><datetime>20180208T160049,74-05</datetime></created>
-<modified><datetime>20180213T105337,58-05</datetime></modified>
-<revised><datetime>20180213T105337,57-05</datetime></revised>
-<lastaccessed><datetime>20180213T105337,58-05</datetime></lastaccessed>
+<modified><datetime>20180213T152732,40-05</datetime></modified>
+<revised><datetime>20180213T152732,39-05</datetime></revised>
+<lastaccessed><datetime>20180213T152732,40-05</datetime></lastaccessed>
 <addedtofile><datetime>20180213T105337,56-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
-<designchange><datetime>20180213T105337,48-05</datetime></designchange>
+<designchange><datetime>20180213T152732,30-05</datetime></designchange>
 <trigger type='actionsmenu'/>
-<documentset type='selected'/></agent>
+<documentset type='selected'/><code event='action'><formula>FIELD shortName := "ENDED_SUPPLIER";
+FIELD name := "Finalizada proveedor";
+SELECT @All</formula></code>
+<rundata processeddocs='1' exitcode='0'>
+<agentmodified><datetime>20180213T152732,40-05</datetime></agentmodified>
+<agentrun><datetime>20180213T152759,06-05</datetime></agentrun>
+<runlog>Started running agent 'Set state evaluator|set_state_evaluator' on 13/02/2018 03:27:58 p. m.
+Running on selected documents: 1 total
+Found 1 document(s) that match search criteria
+1 document(s) were modified by formula
+Done running agent 'Set state evaluator|set_state_evaluator' on 13/02/2018 03:27:59 p. m.
+</runlog></rundata></agent>
 

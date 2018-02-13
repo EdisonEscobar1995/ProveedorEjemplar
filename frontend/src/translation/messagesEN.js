@@ -102,6 +102,8 @@ const messages = {
   'Confirm.title': 'Are you sure?',
   'Message.title': 'Exemplary Supplier',
   'Validation.dateToSend': 'The date exceeds the time to send',
+  'Validation.dateToEvaluate': 'The date exceeds the time to evaluate',
+  'Validation.alreadyBeingEvaluated': 'The survey is already being evaluated',
   'Validation.noData': 'No data received',
   'Validation.noOpenCall': 'At this time there are no open calls',
   'Validation.supplier': 'There is no assessment for the type of supply and company size selected',

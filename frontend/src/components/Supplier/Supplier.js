@@ -287,10 +287,11 @@ class Supplier extends Component {
   }
 
   isAnswered = (question) => {
-    const { stateData } = this.props;
+    const { stateData, rules } = this.props;
     let optionFieldName = 'idOptionSupplier';
     let responseFieldName = 'responseSupplier';
-    if (stateData.shortName === 'NOT_STARTED_EVALUATOR' || stateData.shortName === 'EVALUATOR') {
+    if ((stateData.shortName === 'NOT_STARTED_EVALUATOR' ||
+    stateData.shortName === 'EVALUATOR') && rules.evaluator.show) {
       optionFieldName = 'idOptionEvaluator';
       responseFieldName = 'responseEvaluator';
     }

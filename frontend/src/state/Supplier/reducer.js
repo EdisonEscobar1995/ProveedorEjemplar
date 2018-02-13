@@ -79,7 +79,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         supplier: action.supplier,
-        // rules: action.rules,
+        rules: action.rules,
         call: action.call,
         participateInCall,
         supply: action.supply,
@@ -179,6 +179,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        rules: action.rules,
       };
     case CHANGE_PARTICIPATE:
       return {

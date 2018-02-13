@@ -274,10 +274,11 @@ function saveDataCallSuccess(call) {
     readOnlySupplier: isReadOnly(call),
   };
 }
-function saveAnswerSuccess(allDimensions) {
+function saveAnswerSuccess(allDimensions, rules) {
   return {
     type: SAVE_DATA_ANSWER_SUCCESS,
     dimensions: allDimensions,
+    rules,
   };
 }
 function saveDataCallAndSupplerSuccess(call, supplier) {
@@ -562,7 +563,7 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
             }
           }
         }
-        dispatch(saveAnswerSuccess(allDimensions));
+        dispatch(saveAnswerSuccess(allDimensions, respone.data.rules));
         openNotificationWithIcon('success');
       }).catch((err) => {
         dispatch(getFailedRequest(err));
