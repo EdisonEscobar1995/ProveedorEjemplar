@@ -49,7 +49,7 @@ class General extends Component {
       participateInCall,
       changeIdCompanySize,
       system,
-      readOnly,
+      rules: { supplier: { readOnly } },
     } = this.props;
     const { messageByChangeSizeCompany, informationProgram } = system;
     const { getFieldDecorator, setFields } = this.props.form;

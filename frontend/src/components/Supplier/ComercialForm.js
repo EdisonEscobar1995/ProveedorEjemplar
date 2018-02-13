@@ -8,7 +8,7 @@ import { comercialInfo } from './dataPage';
 
 class Comercial extends Component {
   componentDidMount() {
-    if (!this.props.readOnly) {
+    if (!this.props.rules.supplier.readOnly) {
       const config = {
         type: 'warning',
         text: 'Supplier.validateInfo',
@@ -33,7 +33,7 @@ class Comercial extends Component {
   render() {
     const {
       system,
-      readOnly,
+      rules: { supplier: { readOnly } },
       changeIdCompanySize,
     } = this.props;
     const { getFieldDecorator } = this.props.form;

@@ -43,6 +43,7 @@ import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
+import getDataStateApi from '../../api/state';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
 import reloadKeys from '../../utils/reducer';
@@ -108,6 +109,7 @@ const getDataSupplierSuccess = (data) => {
     rules,
     supply,
     system,
+    stateData,
   } = data;
 
   const companyTypes = sortByField(data.companyTypes, 'name');
@@ -119,12 +121,13 @@ const getDataSupplierSuccess = (data) => {
   const sectors = sortByField(data.sectors, 'name');
   const departments = sortByField(data.departments, 'name');
   const cities = sortByField(data.cities, 'name');
-  let { readOnly } = rules;
-  readOnly = readOnly || isReadOnly(call);
+  if (rules.supplier) {
+    rules.supplier.readOnly = rules.supplier.readOnly || isReadOnly(call);
+  }
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
-    readOnly,
+    rules,
     call,
     supply,
     companyTypes,
@@ -135,6 +138,7 @@ const getDataSupplierSuccess = (data) => {
     subcategories,
     departments,
     cities,
+    stateData,
     sectors,
     system,
   };
@@ -267,7 +271,7 @@ function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
-    readOnly: isReadOnly(call),
+    readOnlySupplier: isReadOnly(call),
   };
 }
 function saveAnswerSuccess(allDimensions) {
@@ -281,7 +285,7 @@ function saveDataCallAndSupplerSuccess(call, supplier) {
     type: SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
     call,
     supplier,
-    readOnly: call.lockedByModification,
+    readOnlySupplier: call.lockedByModification,
   };
 }
 
@@ -303,11 +307,26 @@ function deleteDataCustomer(data) {
     data,
   };
 }
+
 function finishSurveySucess() {
   return {
     type: FINISH_SURVEY,
-    readOnly: true,
+    readOnlySupplier: true,
   };
+}
+
+function loadStateData(dispatch, api, data) {
+  const allData = {
+    ...data,
+  };
+  return requestApiNotLoading(dispatch, api, data.call.idState)
+    .then((respone) => {
+      allData.stateData = respone.data.data;
+      return allData;
+    }).catch(() => {
+      allData.stateData = { shortName: '' };
+      return allData;
+    });
 }
 
 function loadDependingOptions(dispatch, api, data, filterField, valueField) {
@@ -370,7 +389,8 @@ function getDataSupplier(idSupplier, idSupplierByCall) {
         sectors,
         system,
       };
-    }).then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
+    }).then(data => loadStateData(dispatch, getDataStateApi, data))
+      .then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
       .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))
       .then(data => loadDependingOptions(dispatch, getDataDepartmentsByCountryApi, data, 'idCountry', 'departments'))
       .then(data => loadDependingOptions(dispatch, getDataCitiesByDepartmentApi, data, 'idDepartment', 'cities'))
