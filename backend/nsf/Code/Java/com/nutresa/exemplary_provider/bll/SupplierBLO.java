@@ -57,7 +57,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
         if (null == response) {
             UserBLO userBLO = new UserBLO();
-            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
+                    || userBLO.isRol(Rol.EVALUATOR.toString())) {
                 response = dao.getSupplierByFullName(idSupplier);
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
