@@ -19,11 +19,11 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         try {
             response = new ServletResponseDTO<SupplierByCallDTO>(
                     supplierByCallBLO.getCallOfSupplier(parametersInReques.get("idSupplierByCall")));
-            response.setRule(supplierByCallBLO.getRule().getRules());
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<SupplierByCallDTO>(exception);
         }
 
+        response.setRule(supplierByCallBLO.getRule().getRules());
         return response;
     }
 

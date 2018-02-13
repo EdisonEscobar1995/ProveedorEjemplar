@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
@@ -41,6 +42,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         AnswerDAO answerDAO = new AnswerDAO();
         AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
                 dto.getIdQuestion());
+        dto.setDateResponseSupplier(new Date());
+        
         if (null != answerExisting) {
             dto.setId(answerExisting.getId());
         }

@@ -24,14 +24,23 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return rules;
     }
 
+    /**
+     * @param section Sección para la que aplican las reglas
+     * @param rules Reglas para la sección
+     */
     private void setRulesToSection(String section, Map<String, Object> rules) {
         this.rules.getRules().put(section, rules);
     }
 
+    /**
+     * @param show Propiedad para determinar si se muestra la sección
+     * @param readOnly Propiedad para deterinar si la sección es modo lectura o no
+     * @return Colección de reglas.
+     */
     private Map<String, Object> buildRules(boolean show, boolean readOnly) {
         Map<String, Object> specifRules = new HashMap<String, Object>();
         specifRules.put("show", show);
-        specifRules.put("readonly", readOnly);
+        specifRules.put("readOnly", readOnly);
         return specifRules;
     }
 
@@ -74,7 +83,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 response = get(idSupplierByCall);
                 setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, true));
                 if (userBLO.isRol(Rol.EVALUATOR.toString())) {
-                    setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, false));
+                    permissionForEvaluator(response);
                 } else {
                     setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, true));
                 }
@@ -97,6 +106,21 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         return response;
+    }
+
+    /**
+     * Verifica si la fecha para hacer la encuesta por parte del <b>EVALUATOR</b> está habilitada
+     * @param supplierByCall Identificador de la convocatoria definitivia de un proveedor
+     * @throws HandlerGenericException
+     */
+    private void permissionForEvaluator(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
+        CallBLO callBLO = new CallBLO();
+        if (!callBLO.get(supplierByCall.getIdCall()).isCaducedDeadLineToMakeSurveyEvaluator()) {
+            setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, false));
+        } else {
+            setRulesToSection(SurveySection.EVALUATOR.getNameSection(), buildRules(true, true));
+            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+        }
     }
 
     /**
@@ -143,6 +167,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             call = callBLO.get(callBySupplier.getIdCall());
             if (!call.isCaducedDateToFinishCall()) {
                 response = callBySupplier;
+                setRulesToSection(SurveySection.SUPPLIER.getNameSection(), buildRules(true, false));
                 break;
             }
         }
@@ -176,7 +201,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         CallBLO callBLO = new CallBLO();
         CallDTO call = callBLO.get(supplierByCall.getIdCall());
         if (!call.isCaducedDeadLineToMakeSurvey()) {
-            if (changeState(SurveyStates.NOT_STARTED_EVALUATOR.toString(), supplierByCall.getId())) {
+            if (changeState(SurveyStates.ENDED_SUPPLIER.toString(), supplierByCall.getId())) {
                 response = get(supplierByCall.getId());
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
