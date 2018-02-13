@@ -65,7 +65,7 @@ function generalInfo(fields) {
   const {
     loading,
     supplier,
-    readOnly,
+    rules: { supplier: { readOnly } },
     supplies,
     categories,
     getDataCategoryBySuply,
@@ -888,7 +888,7 @@ function generalInfo(fields) {
 function noParticipateInfo(fields) {
   const {
     call,
-    readOnly,
+    rules: { supplier: { readOnly } },
   } = fields;
 
   const {

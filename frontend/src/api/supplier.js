@@ -38,7 +38,7 @@ function getSurveysApi(year) {
 }
 
 function getPendingsApi(year) {
-  return instance.get(`Supplier?action=getSurveys&year=${year || ''}`);
+  return instance.get(`Supplier?action=pendingToQualify&year=${year || ''}`);
 }
 
 export {

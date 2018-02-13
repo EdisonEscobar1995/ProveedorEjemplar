@@ -31,7 +31,16 @@ import {
 const initialState = {
   supplier: {},
   call: {},
-  readOnly: false,
+  rules: {
+    supplier: {
+      show: true,
+      readOnly: true,
+    },
+    evaluator: {
+      show: true,
+      readOnly: true,
+    },
+  },
   changeIdCompanySize: false,
   loadedDimensions: false,
   participateInCall: '',
@@ -44,6 +53,7 @@ const initialState = {
   countries: [],
   departments: [],
   cities: [],
+  stateData: {},
   dimensions: [],
   sectors: [],
   system: {},
@@ -69,7 +79,7 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         supplier: action.supplier,
-        readOnly: action.readOnly,
+        // rules: action.rules,
         call: action.call,
         participateInCall,
         supply: action.supply,
@@ -81,6 +91,7 @@ function supplierApp(state = initialState, action) {
         subcategories: action.subcategories,
         departments: action.departments,
         cities: action.cities,
+        stateData: action.stateData,
         sectors: action.sectors,
         system: action.system,
         loading: false,
@@ -124,21 +135,43 @@ function supplierApp(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        readOnly: true,
+        rules: {
+          ...state.rules,
+          supplier: {
+            ...state.rules.supplier,
+            readOnly: true,
+          },
+          evaluator: {
+            ...state.rules.evaluator,
+            readOnly: true,
+          },
+        },
         error: action.error,
       };
     case SAVE_DATA_SUPPLIER_CALL_SUCCESS:
       return {
         ...state,
         call: action.call,
-        readOnly: state.readOnly || action.readOnly,
+        rules: {
+          ...state.rules,
+          supplier: {
+            ...state.rules.supplier,
+            readOnly: state.rules.supplier.readOnly || action.readOnlySupplier,
+          },
+        },
         loading: false,
       };
     case SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS:
       return {
         ...state,
         call: action.call,
-        readOnly: state.readOnly || action.readOnly,
+        rules: {
+          ...state.rules,
+          supplier: {
+            ...state.rules.supplier,
+            readOnly: state.rules.supplier.readOnly || action.readOnlySupplier,
+          },
+        },
         changeIdCompanySize: action.changeIdCompanySize,
         loading: false,
       };
@@ -186,7 +219,13 @@ function supplierApp(state = initialState, action) {
     case FINISH_SURVEY:
       return {
         ...state,
-        readOnly: action.readOnly,
+        rules: {
+          ...state.rules,
+          supplier: {
+            ...state.rules.supplier,
+            readOnly: action.readOnlySupplier,
+          },
+        },
         loading: false,
       };
     case ADD_DIRECT_EMPLOYEES:

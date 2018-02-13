@@ -121,7 +121,7 @@ class Supplier extends Component {
       }
     }
     const mapDimensions = dimensions.map((dimension) => {
-      const { call, saveAnswer, system, readOnly } = this.props;
+      const { call, saveAnswer, system, rules } = this.props;
       const { id, idSurvey } = call;
       return {
         name: dimension.name,
@@ -133,7 +133,7 @@ class Supplier extends Component {
           system={system}
           criterions={dimension.criterions}
           saveAnswer={saveAnswer}
-          disabled={readOnly}
+          rules={rules}
           validateQuestions={this.validateQuestions}
           next={this.next}
         />,
@@ -169,7 +169,7 @@ class Supplier extends Component {
   changePage = (index) => {
     const actual = this.state.current;
     const current = parseInt(index, 10);
-    if (actual === 0 && !this.props.readOnly) {
+    if (actual === 0 && !this.props.rules.supplier.readOnly) {
       this.generalForm.validateFieldsAndScroll(validateFields, (err) => {
         if (!err) {
           this.save(this.generalForm.getFieldsValue(), 'send');
@@ -286,10 +286,17 @@ class Supplier extends Component {
     return Math.round(total);
   }
 
-  isAnswered = question => (
-    question.answer.length > 0 &&
-    (question.answer[0].idOptionSupplier || question.answer[0].responseSupplier)
-  );
+  isAnswered = (question) => {
+    const { stateData } = this.props;
+    let optionFieldName = 'idOptionSupplier';
+    let responseFieldName = 'responseSupplier';
+    if (stateData.shortName === 'NOT_STARTED_EVALUATOR' || stateData.shortName === 'EVALUATOR') {
+      optionFieldName = 'idOptionEvaluator';
+      responseFieldName = 'responseEvaluator';
+    }
+    return question.answer.length > 0 &&
+    (question.answer[0][optionFieldName] || question.answer[0][responseFieldName]);
+  };
 
   next = () => {
     window.scrollTo(0, 0);
