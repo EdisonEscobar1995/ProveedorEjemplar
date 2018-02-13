@@ -32,7 +32,7 @@ function validateResponse(args) {
       if (element.headers['content-type'].toLowerCase().includes('text/html')) {
         location.href = loginUrl;
       } else if (!element.data.status) {
-        setMessage(getMessage(element.data.message), 'error');
+        setMessage(getMessage(element.data.message), 'warning');
         throw new Error(element.data.message);
       }
     });
