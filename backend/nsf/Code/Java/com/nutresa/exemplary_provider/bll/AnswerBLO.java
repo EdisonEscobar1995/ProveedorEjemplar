@@ -13,6 +13,7 @@ import com.nutresa.exemplary_provider.dtl.OptionDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers.SummarySurvey;
@@ -53,12 +54,16 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
         if (userBLO.isRol(Rol.EVALUATOR.toString())) {
             rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, true));
+            rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
             if (supplierByCallBLO.isFromEvaluator(dto.getIdSupplierByCall())) {
                 rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
                 throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
             }
+            supplierByCallBLO.changeState(SurveyStates.EVALUATOR.toString(), dto.getIdSupplierByCall());
+            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getUserInSession().getId());
+            dto.setDateResponseEvaluator(new Date());
         } else {
-            supplierByCallBLO.changeState("SUPPLIER", dto.getIdSupplierByCall());
+            supplierByCallBLO.changeState(SurveyStates.SUPPLIER.toString(), dto.getIdSupplierByCall());
             AnswerDAO answerDAO = new AnswerDAO();
             AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
                     dto.getIdQuestion());

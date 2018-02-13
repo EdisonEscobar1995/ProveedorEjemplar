@@ -17,6 +17,7 @@ import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SupplyDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
+import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 import com.nutresa.exemplary_provider.utils.TemplateMail;
@@ -33,7 +34,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         try {
             List<String> sendTo = new ArrayList<String>();
-            List<UserDTO> users = getUsersByRolName("LIBERATOR");
+            List<UserDTO> users = getUsersByRolName(Rol.LIBERATOR.toString());
             for (UserDTO user : users) {
                 sendTo.add(user.getEmail());
             }
@@ -61,8 +62,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     public void notifySurveyCompleted(String idSupplier) throws HandlerGenericException {
         try {
             List<String> sendTo = new ArrayList<String>();
-            List<UserDTO> users = getUsersByRolName("LIBERATOR");
-            users.addAll(getUsersByRolName("EVALUATOR"));
+            List<UserDTO> users = getUsersByRolName(Rol.LIBERATOR.toString());
+            users.addAll(getUsersByRolName(Rol.EVALUATOR.toString()));
             for (UserDTO user : users) {
                 sendTo.add(user.getEmail());
             }
@@ -78,7 +79,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     public void notifySurveyCompletedByEvaluator() throws HandlerGenericException {
         try {
             List<String> sendTo = new ArrayList<String>();
-            List<UserDTO> users = getUsersByRolName("LIBERATOR");
+            List<UserDTO> users = getUsersByRolName(Rol.LIBERATOR.toString());
             for (UserDTO user : users) {
                 sendTo.add(user.getEmail());
             }

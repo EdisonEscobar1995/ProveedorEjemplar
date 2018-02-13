@@ -58,7 +58,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 if (userBLO.isRol(Rol.EVALUATOR.toString())) {
                     permissionForEvaluator(response);
                 } else {
-                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
+                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(false, true));
                 }
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
@@ -88,12 +88,28 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      */
     private void permissionForEvaluator(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         CallBLO callBLO = new CallBLO();
-        if (!callBLO.get(supplierByCall.getIdCall()).isCaducedDeadLineToMakeSurveyEvaluator()) {
+        CallDTO call = callBLO.get(supplierByCall.getIdCall());
+        if (!call.isCaducedDeadLineToMakeSurveyEvaluator()) {
             if (isFromEvaluator(supplierByCall.getId())) {
                 rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
-                throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
             } else {
-                rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
+                StateBLO stateBLO = new StateBLO();
+                if (supplierByCall.getIdState()
+                        .equals(stateBLO.getStateByShortName(SurveyStates.EVALUATOR.toString()).getId())
+                        || supplierByCall.getIdState().equals(
+                                stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_EVALUATOR.toString()).getId())) {
+
+                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
+                } else {
+                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(false, true));
+
+                }
+
+                if (supplierByCall.getIdState()
+                        .equals(stateBLO.getStateByShortName(SurveyStates.ENDED_EVALUATOR.toString()).getId())) {
+
+                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
+                }
             }
         } else {
             rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
@@ -110,7 +126,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     protected boolean isFromEvaluator(String idSupplierByCall) throws HandlerGenericException {
         boolean isFromEvaluator = false;
         SupplierByCallDTO supplierByCall = get(idSupplierByCall);
-        if (null != supplierByCall && !supplierByCall.getWhoEvaluate().isEmpty()) {
+        UserBLO userBLO = new UserBLO();
+        if (null != supplierByCall && !supplierByCall.getWhoEvaluate().isEmpty()
+                && !supplierByCall.getWhoEvaluate().equals(userBLO.getUserInSession().getId())) {
             isFromEvaluator = true;
         }
 
@@ -196,32 +214,62 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         CallBLO callBLO = new CallBLO();
         CallDTO call = callBLO.get(supplierByCall.getIdCall());
 
-        if(userBLO.isRol(Rol.EVALUATOR.toString())){
-            if (!call.isCaducedDeadLineToMakeSurveyEvaluator()) {
-                if (changeState(SurveyStates.ENDED_EVALUATOR.toString(), supplierByCall.getId())) {
-                    response = get(supplierByCall.getId());
-                    NotificationBLO notificationBLO = new NotificationBLO();
-                    notificationBLO.notifySurveyCompletedByEvaluator();
-                } else {
-                    throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
-                }
+        if (userBLO.isRol(Rol.EVALUATOR.toString())) {
+            response = finishSurveyOfEvalutor(call, supplierByCall);
+        } else {
+            response = finishSurveyOfSupplier(call, supplierByCall);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param call Convocatoria
+     * @param supplierByCall Convocatoria del proveedor
+     * @return
+     * @throws HandlerGenericException
+     */
+    private SupplierByCallDTO finishSurveyOfSupplier(CallDTO call, SupplierByCallDTO supplierByCall)
+            throws HandlerGenericException {
+        SupplierByCallDTO response = null;
+
+        if (!call.isCaducedDeadLineToMakeSurvey()) {
+            if (changeState(SurveyStates.ENDED_SUPPLIER.toString(), supplierByCall.getId())) {
+                response = get(supplierByCall.getId());
+                NotificationBLO notificationBLO = new NotificationBLO();
+                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
             } else {
-                throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
             }
         } else {
-            if (!call.isCaducedDeadLineToMakeSurvey()) {
-                if (changeState(SurveyStates.ENDED_SUPPLIER.toString(), supplierByCall.getId())) {
-                    response = get(supplierByCall.getId());
-                    NotificationBLO notificationBLO = new NotificationBLO();
-                    notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
-                } else {
-                    throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
-                }
-            } else {
-                throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
-            }
+            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
         }
-        
+
+        return response;
+    }
+
+    /**
+     * @param call Convocatoria
+     * @param supplierByCall Convocatoria del proveedor
+     * @return
+     * @throws HandlerGenericException
+     */
+    private SupplierByCallDTO finishSurveyOfEvalutor(CallDTO call, SupplierByCallDTO supplierByCall)
+            throws HandlerGenericException {
+        SupplierByCallDTO response = null;
+
+        if (!call.isCaducedDeadLineToMakeSurveyEvaluator()) {
+            if (changeState(SurveyStates.ENDED_EVALUATOR.toString(), supplierByCall.getId())) {
+                response = get(supplierByCall.getId());
+                NotificationBLO notificationBLO = new NotificationBLO();
+                notificationBLO.notifySurveyCompletedByEvaluator();
+            } else {
+                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+            }
+        } else {
+            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+        }
+
         return response;
     }
 
@@ -362,6 +410,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         return response;
+    }
+
+    protected SupplierByCallDTO setWhoEvaluate(String idSupplierByCall, String nameEvaluator)
+            throws HandlerGenericException {
+        SupplierByCallDTO supplierByCall = get(idSupplierByCall);
+        supplierByCall.setWhoEvaluate(nameEvaluator);
+        return super.save(supplierByCall);
     }
 
 }
