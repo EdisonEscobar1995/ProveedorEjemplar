@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
@@ -9,6 +10,10 @@ import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
 import com.nutresa.exemplary_provider.dtl.OptionDTO;
+import com.nutresa.exemplary_provider.dtl.Rol;
+import com.nutresa.exemplary_provider.dtl.SectionRule;
+import com.nutresa.exemplary_provider.dtl.SurveySection;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers.SummarySurvey;
@@ -16,8 +21,15 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
+    private SectionRule rules;
+
+    public SectionRule getRule() {
+        return rules;
+    }
+
     public AnswerBLO() {
         super(AnswerDAO.class);
+        rules = new SectionRule();
     }
 
     public void deleteAnswers(String idSupplierByCall) throws HandlerGenericException {
@@ -36,13 +48,31 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     @Override
     public AnswerDTO save(AnswerDTO dto) throws HandlerGenericException {
+        UserBLO userBLO = new UserBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        supplierByCallBLO.changeState("SUPPLIER", dto.getIdSupplierByCall());
-        AnswerDAO answerDAO = new AnswerDAO();
-        AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
-                dto.getIdQuestion());
-        if (null != answerExisting) {
-            dto.setId(answerExisting.getId());
+        rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, false));
+
+        if (userBLO.isRol(Rol.EVALUATOR.toString())) {
+            rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, true));
+            rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
+            if (supplierByCallBLO.isFromEvaluator(dto.getIdSupplierByCall())) {
+                rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
+                throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
+            }
+            supplierByCallBLO.changeState(SurveyStates.EVALUATOR.toString(), dto.getIdSupplierByCall());
+            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getUserInSession().getId());
+            dto.setDateResponseEvaluator(new Date());
+        } else {
+            supplierByCallBLO.changeState(SurveyStates.SUPPLIER.toString(), dto.getIdSupplierByCall());
+            AnswerDAO answerDAO = new AnswerDAO();
+            AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
+                    dto.getIdQuestion());
+            dto.setDateResponseSupplier(new Date());
+
+            if (null != answerExisting) {
+                dto.setId(answerExisting.getId());
+            }
+
         }
 
         return super.save(dto);
@@ -97,7 +127,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summarySurvey.setCriterion(criterion.getName());
             summarySurvey.setDimension(dimension.getName());
             summarySurvey.setExpectedScore(expectedScore);
-            
+
             summariesSurvey.add(summarySurvey);
         }
 
@@ -134,7 +164,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         if (null == response) {
             throw new HandlerGenericException("INFORMATION_NOT_FOUND");
         }
-        
+
         return response;
     }
 

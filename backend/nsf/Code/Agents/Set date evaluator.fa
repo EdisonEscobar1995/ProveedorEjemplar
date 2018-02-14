@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='Set date evaluator' alias='set_date_evaluator' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='7ceba' unid='E9CD9B05B1D0BC9A052582330066B8D3' sequence='2'>
+<created><datetime>20180213T134159,87-05</datetime></created>
+<modified><datetime>20180213T134301,13-05</datetime></modified>
+<revised><datetime>20180213T134301,12-05</datetime></revised>
+<lastaccessed><datetime>20180213T134301,13-05</datetime></lastaccessed>
+<addedtofile><datetime>20180213T134200,04-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180213T134301,09-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='action'><formula>FIELD deadlineToMakeSurveyEvaluator := @Date(2018;3;1;0;0;0);
+SELECT @All</formula></code>
+<rundata processeddocs='1' exitcode='0'>
+<agentmodified><datetime>20180213T134301,13-05</datetime></agentmodified>
+<agentrun><datetime>20180213T134314,09-05</datetime></agentrun>
+<runlog>Started running agent 'Set date evaluator|set_date_evaluator' on 13/02/2018 01:43:14 p. m.
+Running on selected documents: 1 total
+Found 1 document(s) that match search criteria
+1 document(s) were modified by formula
+Done running agent 'Set date evaluator|set_date_evaluator' on 13/02/2018 01:43:14 p. m.
+</runlog></rundata></agent>
+

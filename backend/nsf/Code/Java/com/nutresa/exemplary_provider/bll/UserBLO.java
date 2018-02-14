@@ -35,7 +35,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return users;
     }
 
-    private UserDTO getUserInSession() throws HandlerGenericException {
+    protected UserDTO getUserInSession() throws HandlerGenericException {
         UserDAO userDAO = new UserDAO();
         return userDAO.getUserInSession();
     }

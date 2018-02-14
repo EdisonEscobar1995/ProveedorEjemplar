@@ -101,6 +101,15 @@ const routes = [
       import('./pages/Results').then(module => module.default),
     ),
   },
+  {
+    index: 11,
+    name: 'PENDINGS',
+    path: '/pendings',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Pendings').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

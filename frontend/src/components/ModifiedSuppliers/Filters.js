@@ -1,19 +1,20 @@
 import React from 'react';
-import filtersData from './filtersData';
+import fieldsData from './fieldsData';
 import FilterForm from '../shared/FilterForm';
-import Buttons from './Buttons';
 
 function Filters(props) {
+  const handleReset = () => {
+    props.form.resetFields();
+    props.getModifiedSuppliers();
+  };
+
   return (
-    <div>
-      <FilterForm
-        {...props}
-        getFields={filtersData}
-      />
-      <Buttons
-        {...props}
-      />
-    </div>
+    <FilterForm
+      {...props}
+      fieldsData={fieldsData}
+      handleReset={handleReset}
+    />
   );
 }
+
 export default Filters;

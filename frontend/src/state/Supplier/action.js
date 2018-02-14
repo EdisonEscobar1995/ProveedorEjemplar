@@ -20,7 +20,8 @@ import {
   SAVE_CUSTOMER,
   DELETE_CUSTOMER,
   RELOAD_DIMENSIONS,
-  FINISH_SURVEY,
+  FINISH_SURVEY_SUPPLIER,
+  FINISH_SURVEY_EVALUATOR,
   ADD_DIRECT_EMPLOYEES,
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
@@ -43,6 +44,7 @@ import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
+import getDataStateApi from '../../api/state';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
 import reloadKeys from '../../utils/reducer';
@@ -108,6 +110,7 @@ const getDataSupplierSuccess = (data) => {
     rules,
     supply,
     system,
+    stateData,
   } = data;
 
   const companyTypes = sortByField(data.companyTypes, 'name');
@@ -119,12 +122,13 @@ const getDataSupplierSuccess = (data) => {
   const sectors = sortByField(data.sectors, 'name');
   const departments = sortByField(data.departments, 'name');
   const cities = sortByField(data.cities, 'name');
-  let { readOnly } = rules;
-  readOnly = readOnly || isReadOnly(call);
+  if (rules.supplier) {
+    rules.supplier.readOnly = rules.supplier.readOnly || isReadOnly(call);
+  }
   return {
     type: GET_DATA_SUPPLIER_SUCCESS,
     supplier,
-    readOnly,
+    rules,
     call,
     supply,
     companyTypes,
@@ -135,6 +139,7 @@ const getDataSupplierSuccess = (data) => {
     subcategories,
     departments,
     cities,
+    stateData,
     sectors,
     system,
   };
@@ -267,13 +272,14 @@ function saveDataCallSuccess(call) {
   return {
     type: SAVE_DATA_SUPPLIER_CALL_SUCCESS,
     call,
-    readOnly: isReadOnly(call),
+    readOnlySupplier: isReadOnly(call),
   };
 }
-function saveAnswerSuccess(allDimensions) {
+function saveAnswerSuccess(allDimensions, rules) {
   return {
     type: SAVE_DATA_ANSWER_SUCCESS,
     dimensions: allDimensions,
+    rules,
   };
 }
 function saveDataCallAndSupplerSuccess(call, supplier) {
@@ -281,7 +287,7 @@ function saveDataCallAndSupplerSuccess(call, supplier) {
     type: SAVE_DATA_SUPPLIER_AND_CALL_SUCCESS,
     call,
     supplier,
-    readOnly: call.lockedByModification,
+    readOnlySupplier: call.lockedByModification,
   };
 }
 
@@ -303,11 +309,33 @@ function deleteDataCustomer(data) {
     data,
   };
 }
-function finishSurveySucess() {
+
+function finishSurveySupplierSucess() {
   return {
-    type: FINISH_SURVEY,
-    readOnly: true,
+    type: FINISH_SURVEY_SUPPLIER,
+    readOnlySupplier: true,
   };
+}
+
+function finishSurveyEvaluatorSucess() {
+  return {
+    type: FINISH_SURVEY_EVALUATOR,
+    readOnlyEvaluator: true,
+  };
+}
+
+function loadStateData(dispatch, api, data) {
+  const allData = {
+    ...data,
+  };
+  return requestApiNotLoading(dispatch, api, data.call.idState)
+    .then((respone) => {
+      allData.stateData = respone.data.data;
+      return allData;
+    }).catch(() => {
+      allData.stateData = { shortName: '' };
+      return allData;
+    });
 }
 
 function loadDependingOptions(dispatch, api, data, filterField, valueField) {
@@ -370,7 +398,8 @@ function getDataSupplier(idSupplier, idSupplierByCall) {
         sectors,
         system,
       };
-    }).then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
+    }).then(data => loadStateData(dispatch, getDataStateApi, data))
+      .then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
       .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))
       .then(data => loadDependingOptions(dispatch, getDataDepartmentsByCountryApi, data, 'idCountry', 'departments'))
       .then(data => loadDependingOptions(dispatch, getDataCitiesByDepartmentApi, data, 'idDepartment', 'cities'))
@@ -542,7 +571,7 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
             }
           }
         }
-        dispatch(saveAnswerSuccess(allDimensions));
+        dispatch(saveAnswerSuccess(allDimensions, respone.data.rules));
         openNotificationWithIcon('success');
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -624,11 +653,16 @@ const deleteCustomer = (clientData, index) => (
 );
 const finishSurvey = () => (
   (dispatch, getActualState) => {
-    const { call } = { ...getActualState().supplier };
+    const { supplier, stateData } = { ...getActualState() };
+    const { call } = supplier;
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
       .then(() => {
         dispatch(setMessage('Supplier.surveySuccess', 'success'));
-        dispatch(finishSurveySucess());
+        if (stateData.shorName === 'SUPPLIER') {
+          dispatch(finishSurveySupplierSucess());
+        } else {
+          dispatch(finishSurveyEvaluatorSucess());
+        }
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });

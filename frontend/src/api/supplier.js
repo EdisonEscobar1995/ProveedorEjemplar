@@ -37,6 +37,10 @@ function getSurveysApi(year) {
   return instance.get(`Supplier?action=getSurveys&year=${year || ''}`);
 }
 
+function getPendingsApi(year) {
+  return instance.get(`Supplier?action=pendingToQualify&year=${year || ''}`);
+}
+
 export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
@@ -47,4 +51,5 @@ export {
   unlockSupplierApi,
   finishSurveyApi,
   getSurveysApi,
+  getPendingsApi,
 };

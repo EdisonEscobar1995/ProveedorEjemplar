@@ -3,6 +3,10 @@ import { loginUrl } from './api';
 
 function getMessage(type) {
   switch (type) {
+    case 'DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED':
+      return 'Validation.dateToEvaluate';
+    case 'ALREADY_HAS_AN_EVALUATOR':
+      return 'Validation.alreadyBeingEvaluated';
     case 'DATE_TO_MAKE_SURVEY_EXCEEDED':
       return 'Validation.dateToSend';
     case 'NO_DATA':

@@ -12,7 +12,7 @@ import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
-import com.nutresa.exemplary_provider.dtl.queries.FieldsQuestion;
+import com.nutresa.exemplary_provider.dtl.FieldsQuestion;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -172,18 +172,9 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
             String valueInField = "";
             String key = iterator.next();
             try {
-                switch (FieldsQuestion.getType(key)) {
-                case CRITERION:
-                    valueInField = parameters.get(key);
-                    Common.setFieldsToFilterFTSearch(valueInField, "idCriterion", fields);
-                    break;
-                case DIMENSION:
-                    valueInField = parameters.get(key);
-                    Common.setFieldsToFilterFTSearch(valueInField, "idDimension", fields);
-                    break;
-                default:
-                    break;
-                }
+                FieldsQuestion fieldQuestion = FieldsQuestion.getType(key);
+                valueInField = parameters.get(key);
+                Common.setFieldsToFilterFTSearch(valueInField, fieldQuestion.getFieldName(), fields);
             } catch (IllegalArgumentException exception) {
                 continue;
             }
