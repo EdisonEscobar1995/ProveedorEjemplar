@@ -20,7 +20,8 @@ import {
   SAVE_CUSTOMER,
   DELETE_CUSTOMER,
   RELOAD_DIMENSIONS,
-  FINISH_SURVEY,
+  FINISH_SURVEY_SUPPLIER,
+  FINISH_SURVEY_EVALUATOR,
   ADD_DIRECT_EMPLOYEES,
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
@@ -309,10 +310,17 @@ function deleteDataCustomer(data) {
   };
 }
 
-function finishSurveySucess() {
+function finishSurveySupplierSucess() {
   return {
-    type: FINISH_SURVEY,
+    type: FINISH_SURVEY_SUPPLIER,
     readOnlySupplier: true,
+  };
+}
+
+function finishSurveyEvaluatorSucess() {
+  return {
+    type: FINISH_SURVEY_EVALUATOR,
+    readOnlyEvaluator: true,
   };
 }
 
@@ -645,11 +653,16 @@ const deleteCustomer = (clientData, index) => (
 );
 const finishSurvey = () => (
   (dispatch, getActualState) => {
-    const { call } = { ...getActualState().supplier };
+    const { supplier, stateData } = { ...getActualState() };
+    const { call } = supplier;
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
       .then(() => {
         dispatch(setMessage('Supplier.surveySuccess', 'success'));
-        dispatch(finishSurveySucess());
+        if (stateData.shorName === 'SUPPLIER') {
+          dispatch(finishSurveySupplierSucess());
+        } else {
+          dispatch(finishSurveyEvaluatorSucess());
+        }
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });

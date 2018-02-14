@@ -7,7 +7,6 @@ import SubTitle from '../shared/SubTitle';
 import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
 import { baseUrl } from '../../utils/api';
-import message from '../shared/message';
 
 const { TextArea } = Input;
 const { Column } = Table;
@@ -202,16 +201,12 @@ class Question extends Component {
             }
             if (comment !== '') {
               return (
-                <Button
-                  shape="circle"
-                  icon="message"
-                  onClick={() => {
-                    message({
-                      type: 'info',
-                      text: comment,
-                    });
-                  }}
-                />
+                <Tooltip placement="top" title={comment}>
+                  <Button
+                    shape="circle"
+                    icon="message"
+                  />
+                </Tooltip>
               );
             }
             return null;

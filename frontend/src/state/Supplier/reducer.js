@@ -18,7 +18,8 @@ import {
   SAVE_CUSTOMER,
   DELETE_CUSTOMER,
   RELOAD_DIMENSIONS,
-  FINISH_SURVEY,
+  FINISH_SURVEY_SUPPLIER,
+  FINISH_SURVEY_EVALUATOR,
   ADD_DIRECT_EMPLOYEES,
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
@@ -217,7 +218,7 @@ function supplierApp(state = initialState, action) {
         ...state,
         dimensions: action.dimensions,
       };
-    case FINISH_SURVEY:
+    case FINISH_SURVEY_SUPPLIER:
       return {
         ...state,
         rules: {
@@ -225,6 +226,18 @@ function supplierApp(state = initialState, action) {
           supplier: {
             ...state.rules.supplier,
             readOnly: action.readOnlySupplier,
+          },
+        },
+        loading: false,
+      };
+    case FINISH_SURVEY_EVALUATOR:
+      return {
+        ...state,
+        rules: {
+          ...state.rules,
+          evaluator: {
+            ...state.rules.evaluator,
+            readOnly: action.readOnlyEvaluator,
           },
         },
         loading: false,
