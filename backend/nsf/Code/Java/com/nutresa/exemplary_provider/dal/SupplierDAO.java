@@ -98,6 +98,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
                 valueInField = parameters.get(key);
                 Common.setFieldsToFilterFTSearch(valueInField, fieldSupplier.getFieldName(), fields);
             } catch (IllegalArgumentException exception) {
+                Common.logError("Error saving to log ", exception);
                 continue;
             }
         }

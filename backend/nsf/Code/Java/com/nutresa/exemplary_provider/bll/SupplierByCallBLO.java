@@ -15,18 +15,19 @@ import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
+import com.nutresa.exemplary_provider.utils.Common;
 
 public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByCallDAO> {
 
     private SectionRule rules;
 
-    public SectionRule getRule() {
-        return rules;
-    }
-
     public SupplierByCallBLO() {
         super(SupplierByCallDAO.class);
         rules = new SectionRule();
+    }
+
+    public SectionRule getRule() {
+        return rules;
     }
 
     /**
@@ -287,6 +288,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             super.save(supplierByCall);
         } catch (HandlerGenericException exception) {
             response = false;
+            Common.logError("Error saving to log ", exception);
         }
 
         return response;
@@ -353,15 +355,18 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     @Override
     public SupplierByCallDTO save(SupplierByCallDTO dto) throws HandlerGenericException {
         StateBLO stateBLO = new StateBLO();
-        if (dto.getParticipateInCall().equals("false")) {
+        String stateFalse = "false";
+        String stateTrue = "true";
+        String stateDefault = "";
+        if (dto.getParticipateInCall().equals(stateFalse)) {
             dto.setIdState(stateBLO.getStateByShortName(SurveyStates.DONT_PARTICIPATE.toString()).getId());
         }
 
-        if (dto.getParticipateInCall().equals("true")) {
+        if (dto.getParticipateInCall().equals(stateTrue)) {
             dto.setIdState(stateBLO.getStateByShortName(SurveyStates.SUPPLIER.toString()).getId());
         }
 
-        if (dto.getParticipateInCall().equals("")) {
+        if (dto.getParticipateInCall().equals(stateDefault)) {
             dto.setIdState(stateBLO.getStateByShortName(SurveyStates.NOT_STARTED.toString()).getId());
         }
 

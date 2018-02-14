@@ -23,13 +23,13 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     private SectionRule rules;
 
-    public SectionRule getRule() {
-        return rules;
-    }
-
     public AnswerBLO() {
         super(AnswerDAO.class);
         rules = new SectionRule();
+    }
+
+    public SectionRule getRule() {
+        return rules;
     }
 
     public void deleteAnswers(String idSupplierByCall) throws HandlerGenericException {
