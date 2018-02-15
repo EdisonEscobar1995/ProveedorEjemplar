@@ -70,7 +70,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
             notification.setMessage(notification.getMessage());
-            sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), false, null);
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/getSurveys";
+            sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -85,7 +86,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_EVALUATOR");
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/pendings";
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/getSurveys";
             sendNotification(sendTo, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);

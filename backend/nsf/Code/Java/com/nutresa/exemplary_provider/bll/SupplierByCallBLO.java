@@ -56,10 +56,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 isSupplier = false;
                 response = get(idSupplierByCall);
                 rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, true));
+                rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
                 if (userBLO.isRol(Rol.EVALUATOR.toString())) {
                     permissionForEvaluator(response);
-                } else {
-                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(false, true));
                 }
             } else {
                 throw new HandlerGenericException("ROL_INVALID");
