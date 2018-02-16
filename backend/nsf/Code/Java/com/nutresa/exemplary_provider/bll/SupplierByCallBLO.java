@@ -241,7 +241,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             if (changeState(SurveyStates.ENDED_SUPPLIER.toString(), supplierByCall.getId())) {
                 response = get(supplierByCall.getId());
                 NotificationBLO notificationBLO = new NotificationBLO();
-                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier());
+                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.SUPPLIER);
             } else {
                 throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
             }
@@ -266,7 +266,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             if (changeState(SurveyStates.ENDED_EVALUATOR.toString(), supplierByCall.getId())) {
                 response = get(supplierByCall.getId());
                 NotificationBLO notificationBLO = new NotificationBLO();
-                notificationBLO.notifySurveyCompletedByEvaluator();
+                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.EVALUATOR);
             } else {
                 throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
             }
