@@ -87,6 +87,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
                 break;
             default:
+                notification = new NotificationDTO();
                 break;
             }
 

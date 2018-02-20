@@ -92,7 +92,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
         short sumExpectedScore = 0;
-        short sumScoreAnswered = 0;
+        short sumScoreAnsweredBySupplier = 0;
+        short sumScoreAnsweredByEvaluator = 0;
         List<SummarySurvey> summariesSurvey = new ArrayList<SummarySurvey>();
         for (AnswerDTO answer : answers) {
             QuestionBLO questionBLO = new QuestionBLO();
@@ -108,22 +109,33 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
             short expectedScore = 0;
             if (null != option) {
-                summarySurvey.setAnswer(option.getWording());
-                summarySurvey.setScoreOfSupplier(option.getScore());
+                setSummarySurveyBySupplier(option, summarySurvey);
+                if (summarySurvey.getScoreOfSupplier() >= 0) {
+                    sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier
+                            + summarySurvey.getScoreOfSupplier());
+                }
+
+                setSummarySurveyByEvaluator(answer, summarySurvey);
+                if (summarySurvey.getScoreOfEvaluator() >= 0) {
+                    sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
+                            + summarySurvey.getScoreOfEvaluator());
+                }
 
                 expectedScore = optionBLO.getMaxScoreInQuestion(question.getId());
                 sumExpectedScore = (short) (sumExpectedScore + expectedScore);
-
-                if (option.getScore() >= 0) {
-                    sumScoreAnswered = (short) (sumScoreAnswered + option.getScore());
-                }
             } else {
-                summarySurvey.setAnswer(answer.getResponseSupplier());
+                summarySurvey.setAnswerSupplier(answer.getResponseSupplier());
+
+                if (!answer.getResponseEvaluator().isEmpty()) {
+                    summarySurvey.setAnswerEvaluator(answer.getResponseEvaluator());
+                }
+
                 expectedScore = -1;
             }
 
             summarySurvey.setQuestion(question.getWording());
             summarySurvey.setCommentSupplier(answer.getCommentSupplier());
+            summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
             summarySurvey.setCriterion(criterion.getName());
             summarySurvey.setDimension(dimension.getName());
             summarySurvey.setExpectedScore(expectedScore);
@@ -132,11 +144,31 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         }
 
         recordOfReport.setExpectedScore(sumExpectedScore);
-        recordOfReport.setTotalScoreOfSupplier(sumScoreAnswered, sumExpectedScore);
-        recordOfReport.setTotalScore(sumScoreAnswered);
+        recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScore);
+        recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScore);
+        recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);
+        recordOfReport.setScoreOfEvaluator(sumScoreAnsweredByEvaluator);
         recordOfReport.setSummarySurvey(summariesSurvey);
 
         return recordOfReport;
+    }
+
+    private void setSummarySurveyBySupplier(OptionDTO optionAnswer, SummarySurvey summary) {
+        summary.setAnswerSupplier(optionAnswer.getWording());
+        if (optionAnswer.getScore() >= 0) {
+            summary.setScoreOfSupplier(optionAnswer.getScore());
+        }
+    }
+
+    private void setSummarySurveyByEvaluator(AnswerDTO answer, SummarySurvey summary) throws HandlerGenericException {
+        if (!answer.getIdOptionEvaluator().isEmpty()) {
+            OptionBLO optionBLO = new OptionBLO();
+            OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
+            summary.setAnswerEvaluator(optionEvaluator.getWording());
+            if (optionEvaluator.getScore() >= 0) {
+                summary.setScoreOfEvaluator(optionEvaluator.getScore());
+            }
+        }
     }
 
     /**
