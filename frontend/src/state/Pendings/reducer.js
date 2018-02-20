@@ -31,11 +31,15 @@ function pendingsApp(state = initialState, action) {
         data: {
           ...state.data,
           suppliers: state.data.suppliers.map((item) => {
+            const idState = state.data.suppliersByCall
+              .find(supplierByCall => supplierByCall.idSupplier === item.id)
+              .idState;
             const {
               supply = '',
               category = '',
               companySize = '',
               supplier = '',
+              surveyState = '',
             } = action.data;
             let visible = true;
             if (category !== '' && category !== item.idCategory) {
@@ -45,6 +49,8 @@ function pendingsApp(state = initialState, action) {
             } else if (supply !== '' && supply !== item.idSupply) {
               visible = false;
             } else if (companySize !== '' && companySize !== item.idCompanySize) {
+              visible = false;
+            } else if (surveyState !== '' && surveyState !== idState) {
               visible = false;
             }
             return {
