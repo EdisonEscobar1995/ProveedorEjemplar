@@ -9,6 +9,8 @@ import com.nutresa.exemplary_provider.dal.AnswerDAO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.dtl.OptionDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
@@ -22,6 +24,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     private SectionRule rules;
+    private String notice;
 
     public AnswerBLO() {
         super(AnswerDAO.class);
@@ -30,6 +33,10 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     public SectionRule getRule() {
         return rules;
+    }
+
+    public String getNotice() {
+        return notice;
     }
 
     public void deleteAnswers(String idSupplierByCall) throws HandlerGenericException {
@@ -57,6 +64,9 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
             if (supplierByCallBLO.isFromEvaluator(dto.getIdSupplierByCall())) {
                 rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
+                SupplierByCallDTO supplierByCall = supplierByCallBLO.get(dto.getIdSupplierByCall());
+                UserDTO evaluator = userBLO.get(supplierByCall.getWhoEvaluate());
+                notice = userBLO.getCommonName(evaluator.getName());
                 throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
             }
             supplierByCallBLO.changeState(SurveyStates.EVALUATOR.toString(), dto.getIdSupplierByCall());

@@ -48,4 +48,9 @@ public class UserDAO extends GenericDAO<UserDTO> {
         return currSess.createName(currSess.getEffectiveUserName());
     }
 
+    public String getCommonName(String name) throws HandlerGenericException {
+        Session currSess = Factory.getSession();
+        return currSess.createName(name).getCommon();
+    }
+
 }

@@ -128,5 +128,10 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
 
         return evaluator;
     }
+    
+    protected String getCommonName(String name) throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.getCommonName(name);
+    }
 
 }

@@ -19,6 +19,7 @@ public class AnswerAPI extends GenericAPI<AnswerDTO, AnswerBLO> {
             response = new ServletResponseDTO<AnswerDTO>(answerBLO.save(dto));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<AnswerDTO>(exception);
+            response.setNotice(answerBLO.getNotice());
         }
 
         response.setRule(answerBLO.getRule().getRules());
