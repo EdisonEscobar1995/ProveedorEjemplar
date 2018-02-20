@@ -240,9 +240,27 @@ const searchChildren = (actualQuestion, childs, allQuestions, isVisible, removeI
   actualQuestion.visible = isVisible;
   childs.forEach((child) => {
     let visible = false;
+    let required;
+    let disabled;
     if (actualQuestion.answer.length > 0) {
       if (actualQuestion.answer[0].idOptionSupplier === child.dependOfOptionId) {
         visible = true;
+      }
+      if (actualQuestion.answer[0].idOptionEvaluator) {
+        if (actualQuestion.answer[0].idOptionEvaluator === child.dependOfOptionId) {
+          required = child.oldRequired;
+          disabled = false;
+        } else {
+          required = false;
+          disabled = true;
+          if (child.answer.length > 0) {
+            child.answer[0].idOptionEvaluator = '';
+            child.answer[0].commentEvaluator = '';
+            child.errors = {};
+          }
+        }
+        child.required = required;
+        child.disabled = disabled;
       }
     }
     const filtred = validateAnswer(child, allQuestions);
@@ -258,7 +276,10 @@ const removeRecursive = (actualQuestion, questions, removeIds) => {
 };
 
 const showQuestions = (questions) => {
-  const visibleQuestions = [...questions];
+  const visibleQuestions = [...questions].map((question) => {
+    question.oldRequired = question.required;
+    return question;
+  });
   visibleQuestions.forEach((question) => {
     if (question.dependOfOptionId === '') {
       const filteredDependency = validateAnswer(question, questions);

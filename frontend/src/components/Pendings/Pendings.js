@@ -6,9 +6,9 @@ function Pendings({ data }) {
   const { suppliers, suppliersByCall, masters, states } = data;
 
   const columns = [{
-    title: 'NIT',
-    dataIndex: 'nit',
-    key: 'nit',
+    title: 'Código SAP',
+    dataIndex: 'sapCode',
+    key: 'sapCode',
   }, {
     title: 'Nombre del proveedor',
     dataIndex: 'businessName',

@@ -3,6 +3,7 @@ const fieldsData = ({ data, getPendings, filterPendings, handleReset, form }) =>
     years,
     suppliers,
     masters,
+    states,
   } = data;
 
   return [
@@ -23,6 +24,7 @@ const fieldsData = ({ data, getPendings, filterPendings, handleReset, form }) =>
             category: { value: '' },
             companySize: { value: '' },
             supplier: { value: '' },
+            surveyState: { value: '' },
           },
         },
         {
@@ -78,6 +80,18 @@ const fieldsData = ({ data, getPendings, filterPendings, handleReset, form }) =>
           }) : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
+            filterPendings(values);
+          },
+        },
+        {
+          span: 8,
+          type: 'select',
+          label: 'Estado',
+          key: 'surveyState',
+          value: '',
+          options: states,
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), surveyState: value };
             filterPendings(values);
           },
         },
