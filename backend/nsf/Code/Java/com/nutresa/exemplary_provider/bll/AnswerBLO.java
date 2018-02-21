@@ -131,6 +131,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                     sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
                 } else {
                     summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
+                    expectedScoreSupplier = SCORE_OF_NA;
                 }
 
                 setSummarySurveyByEvaluator(answer, summarySurvey);
@@ -141,6 +142,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                     sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
                 } else {
                     summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
+                    expectedScoreEvaluator = SCORE_OF_NA;
                 }
 
             } else {
