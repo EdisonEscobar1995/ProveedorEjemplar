@@ -153,6 +153,8 @@ public class ReportOfAverageGradeBySuppliers {
         @Expose
         private String question;
         @Expose
+        private String questionType;
+        @Expose
         private String answerSupplier;
         @Expose
         private String answerEvaluator;
@@ -191,6 +193,14 @@ public class ReportOfAverageGradeBySuppliers {
 
         public void setQuestion(String question) {
             this.question = question;
+        }
+
+        public String getQuestionType() {
+            return questionType;
+        }
+
+        public void setQuestionType(String questionType) {
+            this.questionType = questionType;
         }
 
         public String getAnswerSupplier() {

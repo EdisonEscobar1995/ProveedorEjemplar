@@ -159,6 +159,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summarySurvey.setExpectedScoreSupplier(expectedScoreSupplier);
             summarySurvey.setExpectedScoreEvaluator(expectedScoreEvaluator);
             summarySurvey.setQuestion(question.getWording());
+            summarySurvey.setQuestionType(question.getType());
             summarySurvey.setCommentSupplier(answer.getCommentSupplier());
             summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
             summarySurvey.setCriterion(criterion.getName());
