@@ -17,13 +17,13 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         ServletResponseDTO<SupplierByCallDTO> response = null;
         try {
-            response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO
-                    .getCallOfSupplier(parametersInReques.get("idSupplierByCall")));
-            response.addRule("readOnly", supplierByCallBLO.getReadOnly());
+            response = new ServletResponseDTO<SupplierByCallDTO>(
+                    supplierByCallBLO.getCallOfSupplier(parametersInReques.get("idSupplierByCall")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<SupplierByCallDTO>(exception);
         }
 
+        response.setRule(supplierByCallBLO.getRule().getRules());
         return response;
     }
 

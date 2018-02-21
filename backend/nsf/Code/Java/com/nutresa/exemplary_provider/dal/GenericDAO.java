@@ -39,6 +39,8 @@ public abstract class GenericDAO<T> {
     protected String entity;
     protected Translator translator;
 
+    protected Map<String, View> viewFiltered;
+
     protected static final String PREFIX_FORM = "fr";
     protected static final String PREFIX_VIEW = "vw";
     protected static final String ERROR_VIEW_NOT_FOUND = "View %s not found";
@@ -59,6 +61,7 @@ public abstract class GenericDAO<T> {
 
         this.entityForm = PREFIX_FORM + entity;
         this.entityView = PREFIX_VIEW + entity + "s";
+        viewFiltered = new HashMap<String, View>();
     }
 
     public T get(String id) throws HandlerGenericException {
@@ -128,14 +131,22 @@ public abstract class GenericDAO<T> {
     }
 
     public List<T> getAll(String defaultView) throws HandlerGenericException {
-        View view = database.getView(defaultView);
+        View view = null;
+        if (viewFiltered.containsKey(defaultView)) {
+            view = viewFiltered.get(defaultView);
+        } else {
+            view = database.getView(defaultView);
+        }
+        
         List<T> list = new ArrayList<T>();
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
             Document document;
             for (ViewEntry viewEntry : vec) {
                 document = viewEntry.getDocument();
-                list.add((T) this.castDocument(document));
+                if(null != document){
+                    list.add((T) this.castDocument(document));
+                }
             }
         } else {
             throw new HandlerGenericException(String.format(ERROR_VIEW_NOT_FOUND, defaultView));
@@ -148,8 +159,8 @@ public abstract class GenericDAO<T> {
     }
 
     public List<T> getAllBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
-        View view = getIndexedView(parameters, defaultView);
         List<T> list;
+        View view = getIndexedView(parameters, defaultView);
         if (null == view) {
             view = database.getView(entityView);
             if (null == view) {
@@ -187,7 +198,9 @@ public abstract class GenericDAO<T> {
             DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
 
             for (Document document : documents) {
-                list.add((T) this.castDocument(document));
+                if(null != document){
+                    list.add((T) this.castDocument(document));
+                }
             }
         }
 

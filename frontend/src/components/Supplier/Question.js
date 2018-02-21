@@ -8,7 +8,6 @@ import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
 import { baseUrl } from '../../utils/api';
 
-
 const { TextArea } = Input;
 const { Column } = Table;
 const RadioGroup = Radio.Group;
@@ -70,8 +69,91 @@ class Question extends Component {
     }
     return value;
   }
-  getColumns = () => (
-    [
+  getAnswerComponent = (options, record, rol) => {
+    const { rules } = this.props;
+    let disabled;
+    if (record.disabled) {
+      disabled = true;
+    } else {
+      disabled = rol === 'SUPPLIER' ? rules.supplier.readOnly : rules.evaluator.readOnly;
+    }
+    const optionFieldName = rol === 'SUPPLIER' ? 'idOptionSupplier' : 'idOptionEvaluator';
+    const responseFieldName = rol === 'SUPPLIER' ? 'responseSupplier' : 'responseEvaluator';
+    let { errors } = record;
+    if (!errors) {
+      errors = {};
+    }
+    let value;
+    if (record.answer.length > 0) {
+      value = record.answer[0][optionFieldName];
+    }
+    let renderComponent;
+    if (record.type === 'Cerrada') {
+      renderComponent = (
+        <RadioGroup
+          disabled={disabled}
+          value={value}
+          onChange={e => this.onChange(e.target.value, record, optionFieldName)}
+        >
+          {
+            options.map(option => (
+              <RadioStyle
+                key={option.id}
+                value={option.id}
+              >
+                {option.wording}
+              </RadioStyle>
+            ),
+            )
+          }
+        </RadioGroup>
+      );
+    } else {
+      renderComponent = (
+        disabled ?
+          this.getAnswer(record, responseFieldName)
+          :
+          (
+            <TextArea
+              rows={10}
+              defaultValue={this.getAnswer(record, responseFieldName)}
+              onBlur={e => this.onChange(e.target.value, record, responseFieldName)}
+            />
+          )
+      );
+    }
+    return (
+      <div>
+        {
+          renderComponent
+        }
+        <ErrorTable visible={errors.answers} text="Survey.requiredQuestion" />
+      </div>
+    );
+  }
+  getCommentComponent = (text, record, rol) => {
+    const { rules } = this.props;
+    let disabled;
+    if (record.disabled) {
+      disabled = true;
+    } else {
+      disabled = rol === 'SUPPLIER' ? rules.supplier.readOnly : rules.evaluator.readOnly;
+    }
+    const fieldName = rol === 'SUPPLIER' ? 'commentSupplier' : 'commentEvaluator';
+    return (
+      disabled ?
+        this.getAnswer(record, fieldName)
+        :
+        <TextArea
+          rows={10}
+          defaultValue={this.getAnswer(record, fieldName)}
+          onBlur={e => this.onChange(e.target.value, record, fieldName)}
+        />
+    );
+  }
+  getColumns = () => {
+    const { rules } = this.props;
+    let columns = [
       {
         title: <FormattedMessage id="Table.help" />,
         width: '5%',
@@ -94,83 +176,57 @@ class Question extends Component {
       },
       {
         title: <FormattedMessage id="Table.providerAnswer" />,
-        width: '30%',
+        width: rules.evaluator.show ? '15%' : '30%',
         dataIndex: 'options',
         key: 'options',
         render: (options, record) => {
-          let value;
-          if (record.answer.length > 0) {
-            value = record.answer[0].idOptionSupplier;
-          }
-          let { errors } = record;
-          if (!errors) {
-            errors = {};
-          }
-          let renderComponent;
-          if (record.type === 'Cerrada') {
-            renderComponent = (
-              <RadioGroup
-                disabled={this.props.disabled}
-                value={value}
-                onChange={e => this.onChange(e.target.value, record, 'idOptionSupplier')}
-              >
-                {
-                  options.map(option => (
-                    <RadioStyle
-                      key={option.id}
-                      value={option.id}
-                    >
-                      {option.wording}
-                    </RadioStyle>
-                  ),
-                  )
+          if (rules.evaluator.show) {
+            let answer = '';
+            if (record.answer.length > 0) {
+              if (record.type === 'Cerrada') {
+                if (record.answer[0].idOptionSupplier !== '') {
+                  answer = options.find(option => (
+                    option.id === record.answer[0].idOptionSupplier
+                  )).wording;
                 }
-              </RadioGroup>
-            );
-          } else {
-            renderComponent = (
-              this.props.disabled ?
-                this.getAnswer(record, 'responseSupplier')
-                :
-                (
-                  <TextArea
-                    rows={10}
-                    defaultValue={this.getAnswer(record, 'responseSupplier')}
-                    onBlur={e => this.onChange(e.target.value, record, 'responseSupplier')}
-                  />
-                )
-            );
-          }
-          return (
-            <div>
-              {
-                renderComponent
+              } else {
+                answer = record.answer[0].responseSupplier;
               }
-              <ErrorTable visible={errors.answers} text="Survey.requiredQuestion" />
-            </div>
-          );
+            }
+            return answer;
+          }
+          return this.getAnswerComponent(options, record, 'SUPPLIER');
         },
       },
       {
-        title: <FormattedMessage id="Table.comment" />,
-        width: '30%',
+        title: <FormattedMessage id="Table.providerComment" />,
+        width: rules.evaluator.show ? '10%' : '30%',
         dataIndex: 'answer',
         key: 'commentSupplier',
-        render: (text, record) =>
-          (
-            this.props.disabled ?
-              this.getAnswer(record, 'commentSupplier')
-              :
-              <TextArea
-                rows={10}
-                defaultValue={this.getAnswer(record, 'commentSupplier')}
-                onBlur={e => this.onChange(e.target.value, record, 'commentSupplier')}
-              />
-          ),
+        render: (text, record) => {
+          if (rules.evaluator.show) {
+            let comment = '';
+            if (record.answer.length > 0) {
+              comment = record.answer[0].commentSupplier;
+            }
+            if (comment !== '') {
+              return (
+                <Tooltip placement="top" title={comment}>
+                  <Button
+                    shape="circle"
+                    icon="message"
+                  />
+                </Tooltip>
+              );
+            }
+            return null;
+          }
+          return this.getCommentComponent(text, record, 'SUPPLIER');
+        },
       },
       {
         title: <FormattedMessage id="Table.support" />,
-        width: '20%',
+        width: rules.evaluator.show ? '15%' : '20%',
         dataIndex: 'answer',
         key: 'attachment',
         render: (text, record) => {
@@ -186,7 +242,7 @@ class Question extends Component {
             <div>
               <Upload
                 datakey={record}
-                disabled={this.props.disabled}
+                disabled={this.props.rules.supplier.readOnly}
                 list={actualValue}
                 baseUrl={`${baseUrl}/Attachment?action=save`}
                 uploadMaxFilesize={this.props.system.uploadMaxFilesize}
@@ -199,10 +255,28 @@ class Question extends Component {
           );
         },
       },
-    ]
-  )
+    ];
+    if (rules.evaluator.show) {
+      columns = columns.concat({
+        title: <FormattedMessage id="Table.evaluatorAnswer" />,
+        width: '20%',
+        dataIndex: 'options',
+        key: 'optionsEvaluator',
+        render: (options, record) => this.getAnswerComponent(options, record, 'EVALUATOR'),
+      },
+      {
+        title: <FormattedMessage id="Table.evaluatorComment" />,
+        width: '20%',
+        dataIndex: 'answer',
+        key: 'commentEvaluator',
+        render: (text, record) => this.getCommentComponent(text, record, 'EVALUATOR'),
+      });
+    }
+    return columns;
+  }
   render() {
-    const { criterions, disabled, next } = this.props;
+    const { criterions, rules, next } = this.props;
+    const disabled = rules.supplier.readOnly && rules.evaluator.readOnly;
     const columns = this.getColumns();
     let buttons = [];
     if (!disabled) {

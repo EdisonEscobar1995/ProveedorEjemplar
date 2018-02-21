@@ -2,13 +2,20 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.dtl.OptionDTO;
+import com.nutresa.exemplary_provider.dtl.Rol;
+import com.nutresa.exemplary_provider.dtl.SectionRule;
+import com.nutresa.exemplary_provider.dtl.SurveySection;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers.SummarySurvey;
@@ -16,8 +23,22 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
+    private SectionRule rules;
+    private static final short SCORE_OF_NA = -1;
+    private static final short MINIMUM_SCORE = 0;
+    private String notice;
+
     public AnswerBLO() {
         super(AnswerDAO.class);
+        rules = new SectionRule();
+    }
+
+    public SectionRule getRule() {
+        return rules;
+    }
+
+    public String getNotice() {
+        return notice;
     }
 
     public void deleteAnswers(String idSupplierByCall) throws HandlerGenericException {
@@ -36,13 +57,34 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     @Override
     public AnswerDTO save(AnswerDTO dto) throws HandlerGenericException {
+        UserBLO userBLO = new UserBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        supplierByCallBLO.changeState("SUPPLIER", dto.getIdSupplierByCall());
-        AnswerDAO answerDAO = new AnswerDAO();
-        AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
-                dto.getIdQuestion());
-        if (null != answerExisting) {
-            dto.setId(answerExisting.getId());
+        rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, false));
+
+        if (userBLO.isRol(Rol.EVALUATOR.toString())) {
+            rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, true));
+            rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
+            if (supplierByCallBLO.isFromEvaluator(dto.getIdSupplierByCall())) {
+                rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
+                SupplierByCallDTO supplierByCall = supplierByCallBLO.get(dto.getIdSupplierByCall());
+                UserDTO evaluator = userBLO.get(supplierByCall.getWhoEvaluate());
+                notice = userBLO.getCommonName(evaluator.getName());
+                throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
+            }
+            supplierByCallBLO.changeState(SurveyStates.EVALUATOR.toString(), dto.getIdSupplierByCall());
+            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getUserInSession().getId());
+            dto.setDateResponseEvaluator(new Date());
+        } else {
+            supplierByCallBLO.changeState(SurveyStates.SUPPLIER.toString(), dto.getIdSupplierByCall());
+            AnswerDAO answerDAO = new AnswerDAO();
+            AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
+                    dto.getIdQuestion());
+            dto.setDateResponseSupplier(new Date());
+
+            if (null != answerExisting) {
+                dto.setId(answerExisting.getId());
+            }
+
         }
 
         return super.save(dto);
@@ -61,8 +103,10 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             ReportOfAverageGradeBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
-        short sumExpectedScore = 0;
-        short sumScoreAnswered = 0;
+        short sumExpectedScoreSupplier = 0;
+        short sumExpectedScoreEvaluator = 0;
+        short sumScoreAnsweredBySupplier = 0;
+        short sumScoreAnsweredByEvaluator = 0;
         List<SummarySurvey> summariesSurvey = new ArrayList<SummarySurvey>();
         for (AnswerDTO answer : answers) {
             QuestionBLO questionBLO = new QuestionBLO();
@@ -76,37 +120,79 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             ReportOfAverageGradeBySuppliers report = new ReportOfAverageGradeBySuppliers();
             ReportOfAverageGradeBySuppliers.SummarySurvey summarySurvey = report.new SummarySurvey();
 
-            short expectedScore = 0;
+            short expectedScoreSupplier = 0;
+            short expectedScoreEvaluator = 0;
             if (null != option) {
-                summarySurvey.setAnswer(option.getWording());
-                summarySurvey.setScoreOfSupplier(option.getScore());
-
-                expectedScore = optionBLO.getMaxScoreInQuestion(question.getId());
-                sumExpectedScore = (short) (sumExpectedScore + expectedScore);
-
-                if (option.getScore() >= 0) {
-                    sumScoreAnswered = (short) (sumScoreAnswered + option.getScore());
+                setSummarySurveyBySupplier(option, summarySurvey);
+                if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
+                    sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier
+                            + summarySurvey.getScoreOfSupplier());
+                    expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId());
+                    sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
+                } else {
+                    summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
+                    expectedScoreSupplier = SCORE_OF_NA;
                 }
+
+                setSummarySurveyByEvaluator(answer, summarySurvey);
+                if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
+                    sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
+                            + summarySurvey.getScoreOfEvaluator());
+                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId());
+                    sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
+                } else {
+                    summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                }
+
             } else {
-                summarySurvey.setAnswer(answer.getResponseSupplier());
-                expectedScore = -1;
+                summarySurvey.setAnswerSupplier(answer.getResponseSupplier());
+
+                if (!answer.getResponseEvaluator().isEmpty()) {
+                    summarySurvey.setAnswerEvaluator(answer.getResponseEvaluator());
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                }
+
+                expectedScoreSupplier = SCORE_OF_NA;
             }
 
+            summarySurvey.setExpectedScoreSupplier(expectedScoreSupplier);
+            summarySurvey.setExpectedScoreEvaluator(expectedScoreEvaluator);
             summarySurvey.setQuestion(question.getWording());
+            summarySurvey.setQuestionType(question.getType());
             summarySurvey.setCommentSupplier(answer.getCommentSupplier());
+            summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
             summarySurvey.setCriterion(criterion.getName());
             summarySurvey.setDimension(dimension.getName());
-            summarySurvey.setExpectedScore(expectedScore);
-            
+
             summariesSurvey.add(summarySurvey);
         }
 
-        recordOfReport.setExpectedScore(sumExpectedScore);
-        recordOfReport.setTotalScoreOfSupplier(sumScoreAnswered, sumExpectedScore);
-        recordOfReport.setTotalScore(sumScoreAnswered);
+        recordOfReport.setExpectedScoreSupplier(sumExpectedScoreSupplier);
+        recordOfReport.setExpectedScoreEvaluator(sumExpectedScoreEvaluator);
+        recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
+        recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
+        recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);
+        recordOfReport.setScoreOfEvaluator(sumScoreAnsweredByEvaluator);
         recordOfReport.setSummarySurvey(summariesSurvey);
 
         return recordOfReport;
+    }
+
+    private void setSummarySurveyBySupplier(OptionDTO optionAnswer, SummarySurvey summary) {
+        summary.setAnswerSupplier(optionAnswer.getWording());
+        summary.setScoreOfSupplier(optionAnswer.getScore());
+    }
+
+    private void setSummarySurveyByEvaluator(AnswerDTO answer, SummarySurvey summary) throws HandlerGenericException {
+        if (!answer.getIdOptionEvaluator().isEmpty()) {
+            OptionBLO optionBLO = new OptionBLO();
+            OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
+            summary.setAnswerEvaluator(optionEvaluator.getWording());
+            summary.setScoreOfEvaluator(optionEvaluator.getScore());
+        } else {
+            summary.setScoreOfEvaluator((short) SCORE_OF_NA);
+        }
     }
 
     /**
@@ -134,7 +220,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         if (null == response) {
             throw new HandlerGenericException("INFORMATION_NOT_FOUND");
         }
-        
+
         return response;
     }
 

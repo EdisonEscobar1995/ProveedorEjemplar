@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -21,11 +22,15 @@ public class AnswerDTO {
     @Expose
     private String commentSupplier;
     @Expose
+    private Date dateResponseSupplier;
+    @Expose
     private String idOptionEvaluator;
     @Expose
     private String responseEvaluator;
     @Expose
     private String commentEvaluator;
+    @Expose
+    private Date dateResponseEvaluator;
     private List<String> idAttachment;
     @Expose
     private List<AttachmentDTO> attachment;
@@ -39,6 +44,7 @@ public class AnswerDTO {
     public void setIdSupplierByCall(String idSupplierByCall) {
         this.idSupplierByCall = idSupplierByCall;
     }
+
     public String getIdOptionSupplier() {
         return idOptionSupplier;
     }
@@ -106,7 +112,7 @@ public class AnswerDTO {
     public String getId() {
         return id;
     }
-    
+
     public void setId(String id) {
         this.id = id;
     }
@@ -134,6 +140,22 @@ public class AnswerDTO {
 
     public List<String> getIdsToDelete() {
         return idsToDelete;
+    }
+
+    public void setDateResponseSupplier(Date dateResponseSupplier) {
+        this.dateResponseSupplier = dateResponseSupplier;
+    }
+
+    public Date getDateResponseSupplier() {
+        return dateResponseSupplier;
+    }
+
+    public void setDateResponseEvaluator(Date dateResponseEvaluator) {
+        this.dateResponseEvaluator = dateResponseEvaluator;
+    }
+
+    public Date getDateResponseEvaluator() {
+        return dateResponseEvaluator;
     }
 
 }

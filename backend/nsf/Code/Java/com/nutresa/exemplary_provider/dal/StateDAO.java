@@ -13,11 +13,13 @@ public class StateDAO extends GenericDAO<StateDTO> {
     }
 
     public StateDTO getStateByShortName(String shortName) throws HandlerGenericException {
-        StateDTO response = null;
+        StateDTO response = new StateDTO();
         try {
             View view = getDatabase().getView("vwStatesByShortName");
             Document document = view.getFirstDocumentByKey(shortName, true);
-            response = castDocument(document);
+            if (null != document) {
+                response = castDocument(document);
+            }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }

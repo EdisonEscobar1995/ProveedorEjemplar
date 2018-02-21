@@ -112,6 +112,10 @@ public class CallDTO {
         return isCaducedDate(this.deadlineToMakeSurvey, new Date());
     }
 
+    public boolean isCaducedDeadLineToMakeSurveyEvaluator() throws HandlerGenericException {
+        return isCaducedDate(this.deadlineToMakeSurveyEvaluator, new Date());
+    }
+
     private boolean isCaducedDate(Date dateToCompare, Date today) throws HandlerGenericException {
         boolean response = false;
         if (null == dateToCompare) {

@@ -1,4 +1,4 @@
-const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
+const fieldsData = ({ data, getPendings, filterPendings, handleReset, form }) => {
   const {
     years,
     suppliers,
@@ -17,27 +17,14 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           key: 'year',
           value: years && years.length > 0 ? years[0] : '',
           options: years ? years.map(item => ({ id: item, name: item })) : [],
-          handleChange: getSurveys,
+          handleChange: getPendings,
           allowClear: false,
           valuesToClean: {
-            supply: {
-              value: '',
-            },
-            category: {
-              value: '',
-            },
-            companySize: {
-              value: '',
-            },
-            surveyState: {
-              value: '',
-            },
-            supplier: {
-              value: '',
-            },
-            country: {
-              value: '',
-            },
+            supply: { value: '' },
+            category: { value: '' },
+            companySize: { value: '' },
+            supplier: { value: '' },
+            surveyState: { value: '' },
           },
         },
         {
@@ -49,7 +36,7 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           options: masters ? masters.Supply : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supply: value };
-            filterSurveys(values);
+            filterPendings(values);
           },
         },
         {
@@ -61,7 +48,7 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           options: masters ? masters.Category : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), category: value };
-            filterSurveys(values);
+            filterPendings(values);
           },
         },
       ],
@@ -78,21 +65,10 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           options: masters ? masters.CompanySize : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), companySize: value };
-            filterSurveys(values);
+            filterPendings(values);
           },
         },
         {
-          span: 8,
-          type: 'select',
-          label: 'Estado',
-          key: 'surveyState',
-          value: '',
-          options: states,
-          handleChange: (value) => {
-            const values = { ...form.getFieldsValue(), surveyState: value };
-            filterSurveys(values);
-          },
-        }, {
           span: 8,
           type: 'select',
           label: 'Proveedor',
@@ -104,29 +80,38 @@ const filtersData = ({ data, getSurveys, filterSurveys, form }) => {
           }) : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
-            filterSurveys(values);
+            filterPendings(values);
+          },
+        },
+        {
+          span: 8,
+          type: 'select',
+          label: 'Estado',
+          key: 'surveyState',
+          value: '',
+          options: states,
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), surveyState: value };
+            filterPendings(values);
           },
         },
       ],
     },
     {
       key: 1.3,
+      justify: 'center',
       value: [
         {
-          span: 8,
-          type: 'select',
-          label: 'País',
-          key: 'country',
-          value: '',
-          options: masters ? masters.Country : [],
-          handleChange: (value) => {
-            const values = { ...form.getFieldsValue(), country: value };
-            filterSurveys(values);
-          },
+          span: 2,
+          type: 'button',
+          label: 'Limpiar',
+          key: 'clear',
+          buttonType: 'primary',
+          handleclick: handleReset,
         },
       ],
     },
   ];
 };
 
-export default filtersData;
+export default fieldsData;

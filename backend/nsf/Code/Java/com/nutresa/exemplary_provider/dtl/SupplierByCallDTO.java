@@ -33,6 +33,10 @@ public class SupplierByCallDTO {
     private String idState;
     @Expose
     private boolean invitedToCall;
+    @Expose
+    private Date dateAssignedToEvaluator;
+    @Expose
+    private String whoEvaluate;
 
     public String getIdCall() {
         return idCall;
@@ -140,6 +144,22 @@ public class SupplierByCallDTO {
 
     public String getEmailWhoSayDontParticipate() {
         return emailWhoSayDontParticipate;
+    }
+
+    public void setDateAssignedToEvaluator(Date dateAssignedToEvaluator) {
+        this.dateAssignedToEvaluator = dateAssignedToEvaluator;
+    }
+
+    public Date getDateAssignedToEvaluator() {
+        return dateAssignedToEvaluator;
+    }
+
+    public void setWhoEvaluate(String whoEvaluate) {
+        this.whoEvaluate = whoEvaluate;
+    }
+
+    public String getWhoEvaluate() {
+        return whoEvaluate;
     }
 
 }

@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='(anonymousAsSupplier)' alias='anonymousAsSupplier' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='7cd12' unid='B0F0A2A30066B98D0525822D006560B9' sequence='9'>
+<created><datetime>20180207T132718,97-05</datetime></created>
+<modified><datetime>20180213T105337,64-05</datetime></modified>
+<revised><datetime>20180213T105337,63-05</datetime></revised>
+<lastaccessed><datetime>20180213T105337,64-05</datetime></lastaccessed>
+<addedtofile><datetime>20180213T105337,62-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180213T105337,57-05</datetime></designchange>
+<trigger type='agentlist'/>
+<documentset type='runonce'/><code event='options'><lotusscript>%REM
+	Agent anonymousAsRol
+	Created Feb 7, 2018 by Juan Carlos Gonzalez Arroyave/desarrollo
+	Description: Comments for Agent
+%END REM
+Option Public
+Option Declare
+
+
+</lotusscript></code><code event='initialize'><lotusscript>Sub Initialize
+	Dim ns As New NotesSession
+	Dim db As NotesDatabase
+	Dim vwUsers As NotesView 
+	Dim ndUser As NotesDocument
+	Dim vwSuppliers As NotesView
+	Dim ndSupplier As NotesDocument  
+	Dim ndAux As NotesDocument
+	Dim nd As NotesDocument 
+	Dim sParametros As String
+	Dim arrParametros As Variant
+	
+	Set db = ns.Currentdatabase
+	Set vwUsers = db.Getview("vwUsersByName")
+	Set nd = ns.Documentcontext
+	Set ndAux = New NotesDocument(db)
+	
+	sParametros = Strright(nd.Query_String_Decoded(0),"&amp;")
+	arrParametros = Split(sParametros,"&amp;")
+	
+	Forall parametro In arrParametros
+		Call ndAux.ReplaceItemValue(Strleft(parametro,"="), Strright(parametro,"="))
+	End Forall
+	
+	Set vwSuppliers = db.Getview("vwSuppliersByFullName")
+	Set ndSupplier = vwSuppliers.Getdocumentbykey("Anonymous", True)
+	If Not ndSupplier Is Nothing Then 
+		ndSupplier.fullname = ndSupplier.businessname
+		Call ndSupplier.save(True, False)
+	End If
+	
+	Set vwSuppliers = db.Getview("ImportSuppliersByBusinessName")
+	Set ndSupplier = vwSuppliers.getdocumentbykey(ndAux.businessName(0), True)
+	If Not ndSupplier Is Nothing Then 
+		Set ndUser = vwUsers.Getdocumentbykey("Anonymous", True)
+		If Not ndUser Is Nothing Then 
+			Call ndUser.remove(True)
+		End If
+		
+		ndSupplier.fullname = "Anonymous"
+		Call ndSupplier.save(True, False)
+		Print "Ahora el usuario Anonymous está asociado con " + ndAux.businessName(0)
+	Else
+		Print "Proveedor no identificado"
+	End If	
+	
+End Sub</lotusscript></code></agent>
+

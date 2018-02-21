@@ -116,7 +116,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         try {
             View view = getDatabase().getView("vwQuestions");
-            view.FTSearch(buildCharFTSearch(fieldsToFilter, QuestionDTO.class));
+            view.FTSearch(buildCharFTSearch(fieldsToFilter, QuestionDTO.class), 0);
 
             ViewEntryCollection entries = view.getAllEntries();
             if (null != entries) {
