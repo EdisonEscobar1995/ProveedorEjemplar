@@ -103,7 +103,7 @@ const messages = {
   'Message.title': 'Proveedor Ejemplar',
   'Validation.dateToSend': 'La fecha para hacer la encuesta ha vencido',
   'Validation.dateToEvaluate': 'La fecha para evaluar la encuesta ha vencido',
-  'Validation.alreadyBeingEvaluated': 'La encuesta ya está siendo evaluada',
+  'Validation.alreadyBeingEvaluated': 'La encuesta ya está siendo evaluada por',
   'Validation.noData': 'No se recibieron datos',
   'Validation.noOpenCall': 'En estos momentos no se encuentran convocatorias abiertas',
   'Validation.supplier': 'No existe una encuesta para el tipo de suministro y tamaño de empresa seleccionada',
