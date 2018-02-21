@@ -36,7 +36,13 @@ function Filters(props) {
     ];
     const report = [header];
     data.forEach((supplier) => {
-      supplier.summarySurvey.forEach(item =>
+      supplier.summarySurvey.forEach((item) => {
+        let labelForExpected;
+        if (item.questionType === 'Abierta') {
+          labelForExpected = 'Pregunta abierta';
+        } else {
+          labelForExpected = 'No aplica';
+        }
         report.push([
           supplier.sapCode,
           supplier.nit,
@@ -50,19 +56,19 @@ function Filters(props) {
           item.answerSupplier,
           item.commentSupplier,
           item.expectedScoreSupplier === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
-          item.expectedScoreSupplier === -1 ? 'Pregunta abierta' : item.expectedScoreSupplier,
+          item.expectedScoreSupplier === -1 ? labelForExpected : item.expectedScoreSupplier,
           supplier.scoreOfSupplier,
           supplier.expectedScoreSupplier,
           supplier.totalScoreOfSupplier,
           item.answerEvaluator,
           item.commentEvaluator,
           item.expectedScoreEvaluator === -1 || item.scoreOfEvaluator === -1 ? 'No aplica' : item.scoreOfEvaluator,
-          item.expectedScoreEvaluator === -1 ? 'Pregunta abierta' : item.expectedScoreEvaluator,
+          item.expectedScoreEvaluator === -1 ? labelForExpected : item.expectedScoreEvaluator,
           supplier.scoreOfEvaluator,
           supplier.expectedScoreEvaluator,
           supplier.totalScoreOfEvaluator,
-        ]),
-      );
+        ]);
+      });
     });
     exportData([{
       data: report,
