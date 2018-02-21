@@ -24,6 +24,8 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     private SectionRule rules;
+    private static final short SCORE_OF_NA = -1;
+    private static final short MINIMUM_SCORE = 0;
     private String notice;
 
     public AnswerBLO() {
@@ -120,13 +122,13 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             short expectedScore = 0;
             if (null != option) {
                 setSummarySurveyBySupplier(option, summarySurvey);
-                if (summarySurvey.getScoreOfSupplier() >= 0) {
+                if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
                     sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier
                             + summarySurvey.getScoreOfSupplier());
                 }
 
                 setSummarySurveyByEvaluator(answer, summarySurvey);
-                if (summarySurvey.getScoreOfEvaluator() >= 0) {
+                if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
                     sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
                             + summarySurvey.getScoreOfEvaluator());
                 }
@@ -140,7 +142,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                     summarySurvey.setAnswerEvaluator(answer.getResponseEvaluator());
                 }
 
-                expectedScore = -1;
+                expectedScore = SCORE_OF_NA;
             }
 
             summarySurvey.setQuestion(question.getWording());
@@ -165,7 +167,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
     private void setSummarySurveyBySupplier(OptionDTO optionAnswer, SummarySurvey summary) {
         summary.setAnswerSupplier(optionAnswer.getWording());
-        if (optionAnswer.getScore() >= 0) {
+        if (optionAnswer.getScore() >= MINIMUM_SCORE) {
             summary.setScoreOfSupplier(optionAnswer.getScore());
         }
     }
@@ -175,9 +177,11 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             OptionBLO optionBLO = new OptionBLO();
             OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
             summary.setAnswerEvaluator(optionEvaluator.getWording());
-            if (optionEvaluator.getScore() >= 0) {
+            if (optionEvaluator.getScore() >= MINIMUM_SCORE) {
                 summary.setScoreOfEvaluator(optionEvaluator.getScore());
             }
+        } else {
+            summary.setScoreOfEvaluator((short) SCORE_OF_NA);
         }
     }
 
