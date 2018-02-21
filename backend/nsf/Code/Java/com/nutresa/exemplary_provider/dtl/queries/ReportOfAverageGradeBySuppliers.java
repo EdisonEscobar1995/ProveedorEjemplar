@@ -22,7 +22,9 @@ public class ReportOfAverageGradeBySuppliers {
     @Expose
     private double totalScoreOfSupplier;
     @Expose
-    private double expectedScore;
+    private double expectedScoreSupplier;
+    @Expose
+    private double expectedScoreEvaluator;
     @Expose
     private double scoreOfEvaluator;
     @Expose
@@ -95,12 +97,20 @@ public class ReportOfAverageGradeBySuppliers {
         return scoreCalculated;
     }
 
-    public double getExpectedScore() {
-        return expectedScore;
+    public double getExpectedScoreSupplier() {
+        return expectedScoreSupplier;
     }
 
-    public void setExpectedScore(double expectedScore) {
-        this.expectedScore = expectedScore;
+    public void setExpectedScoreSupplier(double expectedScore) {
+        this.expectedScoreSupplier = expectedScore;
+    }
+
+    public double getExpectedScoreEvaluator() {
+        return expectedScoreEvaluator;
+    }
+
+    public void setExpectedScoreEvaluator(double expectedScore) {
+        this.expectedScoreEvaluator = expectedScore;
     }
 
     public List<SummarySurvey> getSummarySurvey() {
@@ -151,7 +161,9 @@ public class ReportOfAverageGradeBySuppliers {
         @Expose
         private short scoreOfEvaluator;
         @Expose
-        private short expectedScore;
+        private short expectedScoreSupplier;
+        @Expose
+        private short expectedScoreEvaluator;
         @Expose
         private String commentSupplier;
         @Expose
@@ -197,12 +209,20 @@ public class ReportOfAverageGradeBySuppliers {
             this.scoreOfSupplier = scoreOfSupplier;
         }
 
-        public short getExpectedScore() {
-            return expectedScore;
+        public short getExpectedScoreSupplier() {
+            return expectedScoreSupplier;
         }
 
-        public void setExpectedScore(short expectedScore) {
-            this.expectedScore = expectedScore;
+        public void setExpectedScoreSupplier(short expectedScore) {
+            this.expectedScoreSupplier = expectedScore;
+        }
+
+        public short getExpectedScoreEvaluator() {
+            return expectedScoreEvaluator;
+        }
+
+        public void setExpectedScoreEvaluator(short expectedScore) {
+            this.expectedScoreEvaluator = expectedScore;
         }
 
         public void setCommentSupplier(String commentSupplier) {
