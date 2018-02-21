@@ -1,3 +1,4 @@
+import message from '../components/shared/message';
 import setMessage from '../state/Generic/action';
 import { loginUrl } from './api';
 
@@ -36,7 +37,8 @@ function validateResponse(args) {
       if (element.headers['content-type'].toLowerCase().includes('text/html')) {
         location.href = loginUrl;
       } else if (!element.data.status) {
-        setMessage(getMessage(element.data.message), 'warning');
+        const notice = element.data.message === 'ALREADY_HAS_AN_EVALUATOR' ? `(${element.data.notice})` : '';
+        message({ type: 'info', text: getMessage(element.data.message), aditionalInfo: notice });
         throw new Error(element.data.message);
       }
     });
