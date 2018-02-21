@@ -71,7 +71,12 @@ class Question extends Component {
   }
   getAnswerComponent = (options, record, rol) => {
     const { rules } = this.props;
-    const disabled = rol === 'SUPPLIER' ? rules.supplier.readOnly : rules.evaluator.readOnly;
+    let disabled;
+    if (record.disabled) {
+      disabled = true;
+    } else {
+      disabled = rol === 'SUPPLIER' ? rules.supplier.readOnly : rules.evaluator.readOnly;
+    }
     const optionFieldName = rol === 'SUPPLIER' ? 'idOptionSupplier' : 'idOptionEvaluator';
     const responseFieldName = rol === 'SUPPLIER' ? 'responseSupplier' : 'responseEvaluator';
     let { errors } = record;
@@ -128,7 +133,12 @@ class Question extends Component {
   }
   getCommentComponent = (text, record, rol) => {
     const { rules } = this.props;
-    const disabled = rol === 'SUPPLIER' ? rules.supplier.readOnly : rules.evaluator.readOnly;
+    let disabled;
+    if (record.disabled) {
+      disabled = true;
+    } else {
+      disabled = rol === 'SUPPLIER' ? rules.supplier.readOnly : rules.evaluator.readOnly;
+    }
     const fieldName = rol === 'SUPPLIER' ? 'commentSupplier' : 'commentEvaluator';
     return (
       disabled ?

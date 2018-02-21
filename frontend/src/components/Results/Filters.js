@@ -19,17 +19,30 @@ function Filters(props) {
       'Dimensión',
       'Criterio',
       'Pregunta',
-      'Respuesta',
+      'Respuesta proveedor',
       'Comentarios',
       'Resultado proveedor',
       'Resultado esperado',
       'Total proveedor',
       'Total esperado',
       'Porcentaje obtenido',
+      'Respuesta evaluador',
+      'Comentarios',
+      'Resultado evaluador',
+      'Resultado esperado',
+      'Total evaluador',
+      'Total esperado',
+      'Porcentaje obtenido',
     ];
     const report = [header];
     data.forEach((supplier) => {
-      supplier.summarySurvey.forEach(item =>
+      supplier.summarySurvey.forEach((item) => {
+        let labelForExpected;
+        if (item.questionType === 'Abierta') {
+          labelForExpected = 'Pregunta abierta';
+        } else {
+          labelForExpected = 'No aplica';
+        }
         report.push([
           supplier.sapCode,
           supplier.nit,
@@ -40,15 +53,22 @@ function Filters(props) {
           item.dimension,
           item.criterion,
           item.question,
-          item.answer,
+          item.answerSupplier,
           item.commentSupplier,
-          item.expectedScore === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
-          item.expectedScore === -1 ? 'Pregunta abierta' : item.expectedScore,
-          supplier.totalScore,
-          supplier.expectedScore,
+          item.expectedScoreSupplier === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
+          item.expectedScoreSupplier === -1 ? labelForExpected : item.expectedScoreSupplier,
+          supplier.scoreOfSupplier,
+          supplier.expectedScoreSupplier,
           supplier.totalScoreOfSupplier,
-        ]),
-      );
+          item.answerEvaluator,
+          item.commentEvaluator,
+          item.expectedScoreEvaluator === -1 || item.scoreOfEvaluator === -1 ? 'No aplica' : item.scoreOfEvaluator,
+          item.expectedScoreEvaluator === -1 ? labelForExpected : item.expectedScoreEvaluator,
+          supplier.scoreOfEvaluator,
+          supplier.expectedScoreEvaluator,
+          supplier.totalScoreOfEvaluator,
+        ]);
+      });
     });
     exportData([{
       data: report,

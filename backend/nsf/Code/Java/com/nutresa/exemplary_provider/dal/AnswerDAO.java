@@ -176,6 +176,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
                 valueInField = parameters.get(key);
                 Common.setFieldsToFilterFTSearch(valueInField, fieldQuestion.getFieldName(), fields);
             } catch (IllegalArgumentException exception) {
+                Common.logError("Error saving to log ", exception);
                 continue;
             }
         }

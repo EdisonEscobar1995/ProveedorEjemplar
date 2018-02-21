@@ -13,6 +13,7 @@ import com.nutresa.exemplary_provider.dtl.AccessByRolDTO;
 import com.nutresa.exemplary_provider.dtl.AccessDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.RolDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -106,6 +107,31 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         }
 
         return response;
+    }
+
+    public UserDTO whoEvaluateSurvey(String idSupplierByCall) throws HandlerGenericException {
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        UserDTO evaluator = null;
+        if (idSupplierByCall.trim().isEmpty()) {
+            throw new HandlerGenericException("INVALID_VALUE");
+        }
+
+        SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
+        if (!(supplierByCall instanceof SupplierByCallDTO) || supplierByCall.getWhoEvaluate().isEmpty()) {
+            throw new HandlerGenericException("DONT_HAVE_EVALUATOR");
+        } else {
+            evaluator = super.get(supplierByCall.getWhoEvaluate());
+            if (!(evaluator instanceof UserDTO)) {
+                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            }
+        }
+
+        return evaluator;
+    }
+    
+    protected String getCommonName(String name) throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.getCommonName(name);
     }
 
 }

@@ -19,6 +19,9 @@ public class ServletResponseDTO<T> {
     String message = "";
 
     @Expose
+    String notice = "";
+
+    @Expose
     boolean status = true;
 
     public ServletResponseDTO(boolean status, String message) {
@@ -39,6 +42,10 @@ public class ServletResponseDTO<T> {
 
     public void setRule(Map<String, Map<String, Object>> rules) {
         this.rules = rules;
+    }
+
+    public void setNotice(String notice) {
+        this.notice = notice;
     }
 
 }

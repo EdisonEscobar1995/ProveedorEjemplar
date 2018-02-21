@@ -52,41 +52,47 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE");
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
-            notification.setMessage(notification.getMessage());
             sendNotification(sendTo, notification, true, detailUserToSend, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
     }
 
-    public void notifySurveyCompleted(String idSupplier) throws HandlerGenericException {
+    /**
+     * Notifica a los interesados de cada etapa de la encuesta finalizada. Dado el <code>Rol</code> que complete la fase
+     * envía su respectivo mensaje.
+     * @param idSupplier Identificador del proveedor que fue evaluado en la encuesta.
+     * @param rol Rol que está finalizando la encuesta
+     * @throws HandlerGenericException
+     */
+    public void notifySurveyCompleted(String idSupplier, Rol rol) throws HandlerGenericException {
         try {
+            NotificationDTO notification = null;
             List<String> sendTo = new ArrayList<String>();
             List<UserDTO> users = getUsersByRolName(Rol.LIBERATOR.toString());
-            users.addAll(getUsersByRolName(Rol.EVALUATOR.toString()));
             for (UserDTO user : users) {
                 sendTo.add(user.getEmail());
             }
-            NotificationDAO notificationDAO = new NotificationDAO();
-            NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
-            notification.setMessage(notification.getMessage());
-            sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), false, null);
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
-        }
-    }
 
-    public void notifySurveyCompletedByEvaluator() throws HandlerGenericException {
-        try {
-            List<String> sendTo = new ArrayList<String>();
-            List<UserDTO> users = getUsersByRolName(Rol.LIBERATOR.toString());
-            for (UserDTO user : users) {
-                sendTo.add(user.getEmail());
-            }
             NotificationDAO notificationDAO = new NotificationDAO();
-            NotificationDTO notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_EVALUATOR");
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/pendings";
-            sendNotification(sendTo, notification, false, null, true, linkOfButton);
+            switch (rol) {
+            case EVALUATOR:
+                users.addAll(getUsersByRolName(Rol.EVALUATOR.toString()));
+                for (UserDTO user : users) {
+                    sendTo.add(user.getEmail());
+                }
+                notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_EVALUATOR");
+                break;
+            case SUPPLIER:
+                notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_SUPPLIER");
+                break;
+            default:
+                notification = new NotificationDTO();
+                break;
+            }
+
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/surveys";
+            sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -157,7 +163,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("CHANGE_COMPANY_SIZE_CONFIRMED");
-            notification.setMessage(notification.getMessage());
 
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
             sendNotification(emails, notification, true, detail, true, linkOfButton);
@@ -176,7 +181,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             detail.put("Contraseña", informationInOtherDataBase.get("password"));
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias("SUPPLIER_CALLED_BY_LIBERATOR");
-            notification.setMessage(notification.getMessage());
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
             sendNotification(supplier.getEmails(), notification, true, detail, true, linkOfButton);
         }

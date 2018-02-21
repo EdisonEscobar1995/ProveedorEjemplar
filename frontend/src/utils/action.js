@@ -36,7 +36,8 @@ function validateResponse(args) {
       if (element.headers['content-type'].toLowerCase().includes('text/html')) {
         location.href = loginUrl;
       } else if (!element.data.status) {
-        setMessage(getMessage(element.data.message), 'warning');
+        const notice = element.data.message === 'ALREADY_HAS_AN_EVALUATOR' ? element.data.notice : '';
+        setMessage(getMessage(element.data.message), 'info', notice);
         throw new Error(element.data.message);
       }
     });

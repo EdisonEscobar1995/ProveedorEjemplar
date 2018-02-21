@@ -114,7 +114,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
 
         UserBLO userBLO = new UserBLO();
-        if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+        if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
+                || userBLO.isRol(Rol.EVALUATOR.toString())) {
             String idCall = parameters.get("call");
             if (null != idCall && !idCall.isEmpty()) {
                 SupplierBLO supplierBLO = new SupplierBLO();

@@ -18,11 +18,17 @@ public class ReportOfAverageGradeBySuppliers {
     @Expose
     private String companySize;
     @Expose
-    private double totalScore;
+    private double scoreOfSupplier;
     @Expose
     private double totalScoreOfSupplier;
     @Expose
-    private double expectedScore;
+    private double expectedScoreSupplier;
+    @Expose
+    private double expectedScoreEvaluator;
+    @Expose
+    private double scoreOfEvaluator;
+    @Expose
+    private double totalScoreOfEvaluator;
     @Expose
     private List<SummarySurvey> summarySurvey;
 
@@ -51,11 +57,11 @@ public class ReportOfAverageGradeBySuppliers {
     }
 
     public double getTotalScore() {
-        return totalScore;
+        return scoreOfSupplier;
     }
 
-    public void setTotalScore(double totalScore) {
-        this.totalScore = totalScore;
+    public void setScoreOfSupplier(double scoreOfSupplier) {
+        this.scoreOfSupplier = scoreOfSupplier;
     }
 
     public double getTotalScoreOfSupplier() {
@@ -63,19 +69,48 @@ public class ReportOfAverageGradeBySuppliers {
     }
 
     public void setTotalScoreOfSupplier(short totalScoreOfSupplier, short totalExpectedScoreOfSupplier) {
-        if (totalExpectedScoreOfSupplier > 0) {
-            this.totalScoreOfSupplier = ((double) totalScoreOfSupplier / (double) totalExpectedScoreOfSupplier) * 100;
-        } else {
-            this.totalScoreOfSupplier = 0D;
+        this.totalScoreOfSupplier = calculateTotalScore(totalScoreOfSupplier, totalExpectedScoreOfSupplier);
+    }
+
+    public void setScoreOfEvaluator(double scoreOfEvaluator) {
+        this.scoreOfEvaluator = scoreOfEvaluator;
+    }
+
+    public double getScoreOfEvaluator() {
+        return scoreOfEvaluator;
+    }
+
+    public void setTotalScoreOfEvaluator(short totalScore, short totalExpectedScore) {
+        this.totalScoreOfEvaluator = calculateTotalScore(totalScore, totalExpectedScore);
+    }
+
+    public double getTotalScoreOfEvaluator() {
+        return totalScoreOfEvaluator;
+    }
+
+    private double calculateTotalScore(short totalScore, short totalExpectedScore) {
+        double scoreCalculated = 0D;
+        if (totalExpectedScore > 0) {
+            scoreCalculated = ((double) totalScore / (double) totalExpectedScore) * 100;
         }
+
+        return scoreCalculated;
     }
 
-    public double getExpectedScore() {
-        return expectedScore;
+    public double getExpectedScoreSupplier() {
+        return expectedScoreSupplier;
     }
 
-    public void setExpectedScore(double expectedScore) {
-        this.expectedScore = expectedScore;
+    public void setExpectedScoreSupplier(double expectedScore) {
+        this.expectedScoreSupplier = expectedScore;
+    }
+
+    public double getExpectedScoreEvaluator() {
+        return expectedScoreEvaluator;
+    }
+
+    public void setExpectedScoreEvaluator(double expectedScore) {
+        this.expectedScoreEvaluator = expectedScore;
     }
 
     public List<SummarySurvey> getSummarySurvey() {
@@ -118,13 +153,23 @@ public class ReportOfAverageGradeBySuppliers {
         @Expose
         private String question;
         @Expose
-        private String answer;
+        private String questionType;
+        @Expose
+        private String answerSupplier;
+        @Expose
+        private String answerEvaluator;
         @Expose
         private short scoreOfSupplier;
         @Expose
-        private short expectedScore;
+        private short scoreOfEvaluator;
+        @Expose
+        private short expectedScoreSupplier;
+        @Expose
+        private short expectedScoreEvaluator;
         @Expose
         private String commentSupplier;
+        @Expose
+        private String commentEvaluator;
 
         public String getDimension() {
             return dimension;
@@ -150,12 +195,20 @@ public class ReportOfAverageGradeBySuppliers {
             this.question = question;
         }
 
-        public String getAnswer() {
-            return answer;
+        public String getQuestionType() {
+            return questionType;
         }
 
-        public void setAnswer(String answer) {
-            this.answer = answer;
+        public void setQuestionType(String questionType) {
+            this.questionType = questionType;
+        }
+
+        public String getAnswerSupplier() {
+            return answerSupplier;
+        }
+
+        public void setAnswerSupplier(String answer) {
+            this.answerSupplier = answer;
         }
 
         public short getScoreOfSupplier() {
@@ -166,12 +219,20 @@ public class ReportOfAverageGradeBySuppliers {
             this.scoreOfSupplier = scoreOfSupplier;
         }
 
-        public short getExpectedScore() {
-            return expectedScore;
+        public short getExpectedScoreSupplier() {
+            return expectedScoreSupplier;
         }
 
-        public void setExpectedScore(short expectedScore) {
-            this.expectedScore = expectedScore;
+        public void setExpectedScoreSupplier(short expectedScore) {
+            this.expectedScoreSupplier = expectedScore;
+        }
+
+        public short getExpectedScoreEvaluator() {
+            return expectedScoreEvaluator;
+        }
+
+        public void setExpectedScoreEvaluator(short expectedScore) {
+            this.expectedScoreEvaluator = expectedScore;
         }
 
         public void setCommentSupplier(String commentSupplier) {
@@ -180,6 +241,30 @@ public class ReportOfAverageGradeBySuppliers {
 
         public String getCommentSupplier() {
             return commentSupplier;
+        }
+
+        public void setAnswerEvaluator(String answerEvaluator) {
+            this.answerEvaluator = answerEvaluator;
+        }
+
+        public String getAnswerEvaluator() {
+            return answerEvaluator;
+        }
+
+        public void setScoreOfEvaluator(short scoreOfEvaluator) {
+            this.scoreOfEvaluator = scoreOfEvaluator;
+        }
+
+        public short getScoreOfEvaluator() {
+            return scoreOfEvaluator;
+        }
+
+        public void setCommentEvaluator(String commentEvaluator) {
+            this.commentEvaluator = commentEvaluator;
+        }
+
+        public String getCommentEvaluator() {
+            return commentEvaluator;
         }
 
     }

@@ -282,6 +282,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 List<String> states = new ArrayList<String>();
                 states.add(SurveyStates.EVALUATOR.toString());
                 states.add(SurveyStates.NOT_STARTED_EVALUATOR.toString());
+                states.add(SurveyStates.ENDED_EVALUATOR.toString());
                 List<DTO> callsByYear = supplierByCallBLO.getByStates(callBLO.getIdCallByYear(year), states);
                 response = getInformationFromSuppliers(listYears, callsByYear);
             } else {
