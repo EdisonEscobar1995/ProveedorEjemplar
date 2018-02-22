@@ -77,10 +77,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             switch (rol) {
             case EVALUATOR:
-                users.addAll(getUsersByRolName(Rol.EVALUATOR.toString()));
-                for (UserDTO user : users) {
-                    sendTo.add(user.getEmail());
-                }
                 notification = notificationDAO.getNotificationByAlias("SURVEY_ENDED_BY_EVALUATOR");
                 break;
             case SUPPLIER:
