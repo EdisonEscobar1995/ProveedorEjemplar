@@ -11,6 +11,8 @@ public class MenuDTO extends MasterDTO {
     private String type;
     @Expose
     private List<String> idsRol;
+    @Expose
+    private String category;
     
     public String getTitle() {
         return this.title;
@@ -34,5 +36,13 @@ public class MenuDTO extends MasterDTO {
     
     public void setIdsRol(List<String> idsRol) {
         this.idsRol = idsRol;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }
