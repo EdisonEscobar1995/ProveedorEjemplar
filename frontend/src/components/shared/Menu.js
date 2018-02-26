@@ -1,49 +1,60 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu as MenuAnt } from 'antd';
+import { Icon, Menu as MenuAnt } from 'antd';
 import styled from 'styled-components';
 import routes from '../../routes';
 
-const { Item } = MenuAnt;
+const { Item, SubMenu } = MenuAnt;
 
 const MenuStyle = styled(MenuAnt)`
   line-height: 64px;
   background: ${props => props.theme.color.primary};
 `;
-const ItemStyle = styled(Item)`
-  font-size:16px;
-  & > a {
-    color: ${props => props.theme.color.normal} !Important;
-  }
-  & > a:hover{
-    color: ${props => props.theme.color.normal} !Important;
-  }
-  &:hover {
-    border-bottom: 2px solid ${props => props.theme.color.normal} !Important;
-  }
-  & .ant-menu-item-selected {
-    border-bottom: 2px solid ${props => props.theme.color.normal} !Important;
-  }
-`;
+const ItemStyle = {
+  fontSize: 16,
+  color: 'white',
+};
 
 function Menu(props) {
-  const { menu } = props.data;
+  const { categories } = props.data;
   return (
     <MenuStyle
       mode="horizontal"
     >
-      {menu && menu.map((item) => {
-        const entry = routes.find(route => item.name === route.name && !route.hidden);
-        if (item.type === 'menu' && entry) {
+      {categories && categories.map((category) => {
+        const items = category.items.map((item) => {
+          const entry = routes.find(route => item.name === route.name && !route.hidden);
+          if (item.type === 'menu' && entry) {
+            return (
+              <Item key={item.id} >
+                <Link
+                  to={entry.path}
+                  style={!category.name ? ItemStyle : { fontSize: 16 }}
+                >
+                  {item.title}
+                </Link>
+              </Item>
+            );
+          }
+          return null;
+        });
+
+        if (category.name) {
           return (
-            <ItemStyle key={item.id}>
-              <Link to={entry.path}>
-                {item.title}
-              </Link>
-            </ItemStyle>
+            <SubMenu
+              key={category.name}
+              title={
+                <span style={ItemStyle}>
+                  {category.name}
+                  <Icon type="caret-down" style={{ marginLeft: 5 }} />
+                </span>
+              }
+            >
+              {items}
+            </SubMenu>
           );
         }
-        return null;
+        return items;
       })}
     </MenuStyle>
   );

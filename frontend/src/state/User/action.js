@@ -5,7 +5,7 @@ import {
 } from './const';
 
 import getUserContextApi from '../../api/user';
-import { requestApi } from '../../utils/action';
+import { requestApi, sortByField } from '../../utils/action';
 
 const getUserContextProgress = () => ({
   type: GET_USER_CONTEXT_PROGRESS,
@@ -24,6 +24,19 @@ const getUserContext = () => (dispatch) => {
   requestApi(dispatch, getUserContextProgress, getUserContextApi)
     .then((response) => {
       const { data } = response.data;
+      const menu = sortByField(data.menu, 'categoryNumber');
+      const categories = new Array(menu[menu.length - 1].categoryNumber);
+      menu.forEach((item) => {
+        if (!categories[item.categoryNumber]) {
+          categories[item.categoryNumber] = {
+            name: item.categoryName,
+            items: [item],
+          };
+        } else {
+          categories[item.categoryNumber].items.push(item);
+        }
+      });
+      data.categories = categories;
       dispatch(getUserContextSuccess(data));
     }).catch(() => {
       dispatch(getFailedRequest());
