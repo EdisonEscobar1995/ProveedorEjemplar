@@ -28,7 +28,7 @@ public class ServiceBLO extends GenericBLO<ServiceDTO, ServiceDAO> {
         ServiceDAO serviceDAO = new ServiceDAO();
         ServiceDTO service = serviceDAO.getByName(name);
 
-        if (!service.getId().isEmpty() && service.getName().equalsIgnoreCase(name)) {
+        if (null != service.getId() && name.equalsIgnoreCase(service.getName())) {
             existService = true;
         }
 

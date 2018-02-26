@@ -28,7 +28,7 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
         nameItem = nameItem.trim();
         ItemDTO item = itemDAO.getByServiceAndNameItem(idService, nameItem);
 
-        if (!item.getId().isEmpty()) {
+        if (null != item.getId()) {
             existItem = true;
         }
 
