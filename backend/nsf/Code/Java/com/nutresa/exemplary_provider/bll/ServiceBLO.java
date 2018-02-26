@@ -14,7 +14,7 @@ public class ServiceBLO extends GenericBLO<ServiceDTO, ServiceDAO> {
     public ServiceDTO save(ServiceDTO service) throws HandlerGenericException {
         ServiceDTO response = null;
         if (existByName(service.getName())) {
-            throw new HandlerGenericException("SERVICE_EXIST");
+            throw new HandlerGenericException("DOCUMENT_EXISTS");
         } else {
             response = super.save(service);
         }
@@ -28,11 +28,8 @@ public class ServiceBLO extends GenericBLO<ServiceDTO, ServiceDAO> {
         ServiceDAO serviceDAO = new ServiceDAO();
         ServiceDTO service = serviceDAO.getByName(name);
 
-        if (!service.getId().isEmpty()) {
-            String nameToCompare = service.getName().toUpperCase();
-            if (nameToCompare.equals(name.toUpperCase())) {
-                existService = true;
-            }
+        if (!service.getId().isEmpty() && service.getName().equalsIgnoreCase(name)) {
+            existService = true;
         }
 
         return existService;
