@@ -128,7 +128,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO supplierByCall = get(idSupplierByCall);
         UserBLO userBLO = new UserBLO();
         if (null != supplierByCall && !supplierByCall.getWhoEvaluate().isEmpty()
-                && !supplierByCall.getWhoEvaluate().equals(userBLO.getUserInSession().getId())) {
+                && !supplierByCall.getWhoEvaluate().equals(userBLO.getUserInSession().getName())) {
             isFromEvaluator = true;
         }
 
