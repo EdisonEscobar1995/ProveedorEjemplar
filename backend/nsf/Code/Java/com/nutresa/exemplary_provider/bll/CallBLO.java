@@ -102,12 +102,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
-     * @return Collección de datos obtenidos según los parámetros <code>parameters</code>
-     * @throws HandlerGenericException Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía el
-     *         identificador de la convocatoria en los parámetros de búsqueda.
-     *         Con mensaje <code>INFORMATION_NOT_FOUND</code> si no se encontró información para exportar.
-     *         Con mensaje <code>ROL_INVALID</code> si el usuario en sesión no tiene el rol permitido.
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
+     * @return Collección de datos obtenidos según los parámetros
+     *         <code>parameters</code>
+     * @throws HandlerGenericException
+     *             Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía
+     *             el identificador de la convocatoria en los parámetros de
+     *             búsqueda. Con mensaje <code>INFORMATION_NOT_FOUND</code> si
+     *             no se encontró información para exportar. Con mensaje
+     *             <code>ROL_INVALID</code> si el usuario en sesión no tiene el
+     *             rol permitido.
      */
     public List<ReportOfAverageGradeBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
@@ -138,9 +144,13 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * @param idCall Identificador de la convocatoria que se va consultar.
-     * @param suppliers Collección de proveedores
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param idCall
+     *            Identificador de la convocatoria que se va consultar.
+     * @param suppliers
+     *            Collección de proveedores
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Collección de registros del reporte
      * @throws HandlerGenericException
      */
@@ -152,21 +162,46 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
                     supplier.getId());
             if (supplierByCall instanceof SupplierByCallDTO) {
-                ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
-                AnswerBLO answerBLO = new AnswerBLO();
-                SupplyBLO supplyBLO = new SupplyBLO();
-                CategoryBLO categoryBLO = new CategoryBLO();
-                CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-                recordOfReport.setNit(supplier.getNit());
-                recordOfReport.setSapCode(supplier.getSapCode());
-                recordOfReport.setName(supplier.getBusinessName());
-                recordOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
-                recordOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
-                recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
-                recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
-                        parameters);
-                response.add(recordOfReport);
+                response.add(getRecordOfReport(supplierByCall, supplier, parameters));
             }
+        }
+
+        return response;
+    }
+
+    private ReportOfAverageGradeBySuppliers getRecordOfReport(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
+            Map<String, String> parameters) throws HandlerGenericException {
+        ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
+        AnswerBLO answerBLO = new AnswerBLO();
+        SupplyBLO supplyBLO = new SupplyBLO();
+        CategoryBLO categoryBLO = new CategoryBLO();
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        recordOfReport.setNit(supplier.getNit());
+        recordOfReport.setSapCode(supplier.getSapCode());
+        recordOfReport.setName(supplier.getBusinessName());
+        recordOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
+        recordOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
+        recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
+        recordOfReport.setIdSupplier(supplierByCall.getIdSupplier());
+        recordOfReport.setIdSupplierByCall(supplierByCall.getId());
+        recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
+                parameters);
+
+        return recordOfReport;
+    }
+
+    public List<ReportOfAverageGradeBySuppliers> getThemWillPassToTechnicalCommittee() throws HandlerGenericException {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        List<SupplierByCallDTO> evaluated = supplierByCallBLO.getFinishedByEvaluator();
+        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        for (SupplierByCallDTO supplierByCall : evaluated) {
+            response.add(getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
+                    new HashMap<String, String>()));
+        }
+
+        if (response.isEmpty()) {
+            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
         }
 
         return response;

@@ -62,7 +62,8 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     /**
      * Obtiene los proveedores asociados a una convocatoria.
      * 
-     * @param idCall Identificador de la convocatoria.
+     * @param idCall
+     *            Identificador de la convocatoria.
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -87,12 +88,16 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     }
 
     /**
-     * Buscar la convocatoria de un proveedor en caso de estar finalizada. La búsqueda debe coincidir justo con
-     * los parámetros <code>idCall</code> y <code>idSupplier</code>
+     * Buscar la convocatoria de un proveedor en caso de estar finalizada. La
+     * búsqueda debe coincidir justo con los parámetros <code>idCall</code> y
+     * <code>idSupplier</code>
      * 
-     * @param idCall Identificador de la convocatoria
-     * @param idSupplier Identificador del proveedor
-     * @return Objeto con la información en caso de hallar considencia en la búsqueda.
+     * @param idCall
+     *            Identificador de la convocatoria
+     * @param idSupplier
+     *            Identificador del proveedor
+     * @return Objeto con la información en caso de hallar considencia en la
+     *         búsqueda.
      * @throws HandlerGenericException
      */
     public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
@@ -105,8 +110,8 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
                 StateDAO stateDAO = new StateDAO();
                 String idState = stateDAO.getStateByShortName(stateName.toString()).getId();
                 List<String> filter = new ArrayList<String>();
-                
-                if(null != idState){
+
+                if (null != idState) {
                     filter.add(idSupplier);
                     filter.add(idCall);
                     filter.add(idState);
@@ -127,11 +132,15 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     }
 
     /**
-     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por cada uno de los estados especificados
-     * @param idCall Identificador de la convocatoria
-     * @param states Colección con los estados a filtrar.
+     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por
+     * cada uno de los estados especificados
+     * 
+     * @param idCall
+     *            Identificador de la convocatoria
+     * @param states
+     *            Colección con los estados a filtrar.
      * @return Colección de datos encontrados
-     * @throws HandlerGenericException 
+     * @throws HandlerGenericException
      */
     @SuppressWarnings("unchecked")
     public List<DTO> getByStates(String idCall, List<String> states) throws HandlerGenericException {
@@ -139,19 +148,19 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             List<DTO> response = null;
             int index = 0;
             StateDAO stateDAO = new StateDAO();
-            for(String state : states){
+            for (String state : states) {
                 states.set(index, "[idState] = ".concat(stateDAO.getStateByShortName(state).getId()));
                 index = index + 1;
             }
 
-            String queryFTSearch = "[idCall] = " + idCall + " AND (" + Common.implodeList(" OR ", states) +")";
+            String queryFTSearch = "[idCall] = " + idCall + " AND (" + Common.implodeList(" OR ", states) + ")";
             String viewName = "vwSuppliersByCallIdCall";
             View view = getDatabase().getView(viewName);
             view.FTSearch(queryFTSearch, 0);
 
             Map<String, String> filter = new HashMap<String, String>();
             filter.put("idCall", idCall);
-            
+
             viewFiltered.put(viewName, view);
             entityView = viewName;
             response = ((GenericDAO) this).getAll();
@@ -162,4 +171,22 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         }
     }
 
+    public List<SupplierByCallDTO> getByStateInCall(String idState, String idCall) throws HandlerGenericException {
+        List<SupplierByCallDTO> result;
+        List<String> filter = new ArrayList<String>();
+        filter.add(idState);
+        filter.add(idCall);
+        View view = getDatabase().getView("vwSuppliersByCallIdStateAndIdCall");
+        DocumentCollection documents = view.getAllDocumentsByKey(filter, true);
+        if (null != documents) {
+            result = new ArrayList<SupplierByCallDTO>();
+            for (Document document : documents) {
+                result.add(castDocument(document));
+            }
+        } else {
+            result = new ArrayList<SupplierByCallDTO>();
+        }
+
+        return result;
+    }
 }
