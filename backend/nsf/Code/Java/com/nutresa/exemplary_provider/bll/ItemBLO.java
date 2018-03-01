@@ -13,23 +13,42 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
     @Override
     public ItemDTO save(ItemDTO item) throws HandlerGenericException {
         ItemDTO response = null;
-        if (existItemByService(item.getIdService(), item.getName())) {
-            throw new HandlerGenericException("DOCUMENT_EXISTS");
+
+        if (null != item.getIdService() && !item.getIdService().trim().isEmpty() && null != item.getName()
+                && !item.getName().trim().isEmpty()) {
+            if (existItemByService(item)) {
+                throw new HandlerGenericException("DOCUMENT_EXISTS");
+            } else {
+                response = super.save(item);
+            }
         } else {
-            response = super.save(item);
+            throw new HandlerGenericException("UNEXPECTED_VALUE");
         }
 
         return response;
     }
 
-    private boolean existItemByService(String idService, String nameItem) throws HandlerGenericException {
+    private boolean existItemByService(ItemDTO item) throws HandlerGenericException {
         boolean existItem = false;
-        ItemDAO itemDAO = new ItemDAO();
-        nameItem = nameItem.trim();
-        ItemDTO item = itemDAO.getByServiceAndNameItem(idService, nameItem);
 
-        if (null != item.getId()) {
+        String idItem = item.getId();
+        String idService = item.getIdService();
+        String nameItem = item.getName().trim();
+
+        ItemDAO itemDAO = new ItemDAO();
+        ItemDTO itemExisting = itemDAO.getByServiceAndNameItem(idService, nameItem);
+
+        String idItemExisting = itemExisting.getId();
+        String nameItemExisting = itemExisting.getName();
+
+        if ((null == idItem || idItem.isEmpty())
+                && (null != nameItemExisting && nameItem.equalsIgnoreCase(nameItemExisting))) {
             existItem = true;
+        } else {
+            if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)
+                    && nameItem.equalsIgnoreCase(nameItemExisting)) {
+                existItem = true;
+            }
         }
 
         return existItem;
