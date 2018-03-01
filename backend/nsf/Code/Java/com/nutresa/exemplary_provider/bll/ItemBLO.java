@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,9 +60,10 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
 
     public List<ItemDTO> getByIdService(Map<String, String> parameters) throws HandlerGenericException {
         ItemDAO itemDAO = new ItemDAO();
+        List<ItemDTO> response = new ArrayList<ItemDTO>();
         String idService = parameters.get("idService");
         if (null != idService) {
-            List<ItemDTO> response = itemDAO.getByIdService(idService);
+            response = itemDAO.getByIdService(idService);
             if (response.isEmpty()) {
                 throw new HandlerGenericException("INFORMATION_NOT_FOUND");
             }
