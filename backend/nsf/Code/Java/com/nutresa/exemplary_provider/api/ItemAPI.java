@@ -13,12 +13,11 @@ public class ItemAPI extends GenericAPI<ItemDTO, ItemBLO> {
         super(ItemDTO.class, ItemBLO.class);
     }
 
-    public ServletResponseDTO<List<ItemDTO>> getCriterionBySurvey(Map<String, String> parameters) {
+    public ServletResponseDTO<List<ItemDTO>> getItemByService(Map<String, String> parameters) {
         ItemBLO itemBLO = new ItemBLO();
         ServletResponseDTO<List<ItemDTO>> response = null;
         try {
-            response = new ServletResponseDTO<List<ItemDTO>>((List<ItemDTO>) itemBLO
-                    .getByIdService(parameters));
+            response = new ServletResponseDTO<List<ItemDTO>>((List<ItemDTO>) itemBLO.getByIdService(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<List<ItemDTO>>(exception);
         }

@@ -1,11 +1,11 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.ItemDAO;
 import com.nutresa.exemplary_provider.dtl.ItemDTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
@@ -21,12 +21,12 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
         if (null != item.getIdService() && !item.getIdService().trim().isEmpty() && null != item.getName()
                 && !item.getName().trim().isEmpty()) {
             if (existItemByService(item)) {
-                throw new HandlerGenericException("DOCUMENT_EXISTS");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
             } else {
                 response = super.save(item);
             }
         } else {
-            throw new HandlerGenericException("UNEXPECTED_VALUE");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
         return response;
@@ -60,15 +60,15 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
 
     public List<ItemDTO> getByIdService(Map<String, String> parameters) throws HandlerGenericException {
         ItemDAO itemDAO = new ItemDAO();
-        List<ItemDTO> response = new ArrayList<ItemDTO>();
+        List<ItemDTO> response;
         String idService = parameters.get("idService");
         if (null != idService) {
             response = itemDAO.getByIdService(idService);
             if (response.isEmpty()) {
-                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
             }
         } else {
-            throw new HandlerGenericException("UNEXPECTED_VALUE");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
         return response;
