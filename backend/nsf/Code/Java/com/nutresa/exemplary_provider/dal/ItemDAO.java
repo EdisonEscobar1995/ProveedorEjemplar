@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openntf.domino.Document;
+import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.ItemDTO;
@@ -27,6 +28,20 @@ public class ItemDAO extends GenericDAO<ItemDTO> {
             response = castDocument(document);
         } else {
             response = new ItemDTO();
+        }
+
+        return response;
+    }
+
+    public List<ItemDTO> getByIdService(String idService) throws HandlerGenericException {
+        List<ItemDTO> response = new ArrayList<ItemDTO>();
+        View view = getDatabase().getView("vwItemsByIdService");
+        DocumentCollection documents = view.getAllDocumentsByKey(idService, true);
+
+        if (null != documents) {
+            for (Document document : documents) {
+                response.add(castDocument(document));
+            }
         }
 
         return response;

@@ -1,5 +1,8 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.List;
+import java.util.Map;
+
 import com.nutresa.exemplary_provider.dal.ItemDAO;
 import com.nutresa.exemplary_provider.dtl.ItemDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -52,6 +55,21 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
         }
 
         return existItem;
+    }
+
+    public List<ItemDTO> getByIdService(Map<String, String> parameters) throws HandlerGenericException {
+        ItemDAO itemDAO = new ItemDAO();
+        String idService = parameters.get("idService");
+        if (null != idService) {
+            List<ItemDTO> response = itemDAO.getByIdService(idService);
+            if (response.isEmpty()) {
+                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            }
+        } else {
+            throw new HandlerGenericException("UNEXPECTED_VALUE");
+        }
+
+        return response;
     }
 
 }
