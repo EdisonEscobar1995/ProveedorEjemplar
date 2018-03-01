@@ -64,9 +64,6 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
         String idService = parameters.get("idService");
         if (null != idService) {
             response = itemDAO.getByIdService(idService);
-            if (response.isEmpty()) {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-            }
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
