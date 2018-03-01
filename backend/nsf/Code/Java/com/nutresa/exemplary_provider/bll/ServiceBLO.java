@@ -13,23 +13,34 @@ public class ServiceBLO extends GenericBLO<ServiceDTO, ServiceDAO> {
     @Override
     public ServiceDTO save(ServiceDTO service) throws HandlerGenericException {
         ServiceDTO response = null;
-        if (existByName(service.getName())) {
-            throw new HandlerGenericException("DOCUMENT_EXISTS");
+        if (null != service.getName() && !service.getName().trim().isEmpty()) {
+            if (existByName(service)) {
+                throw new HandlerGenericException("DOCUMENT_EXISTS");
+            } else {
+                response = super.save(service);
+            }
         } else {
-            response = super.save(service);
+            throw new HandlerGenericException("UNEXPECTED_VALUE");
         }
 
         return response;
     }
 
-    private boolean existByName(String name) throws HandlerGenericException {
+    private boolean existByName(ServiceDTO service) throws HandlerGenericException {
         boolean existService = false;
-        name = name.trim();
+        String name = service.getName().trim();
+        String id = service.getId();
         ServiceDAO serviceDAO = new ServiceDAO();
-        ServiceDTO service = serviceDAO.getByName(name);
+        ServiceDTO serviceExisting = serviceDAO.getByName(name);
+        String nameExisting = serviceExisting.getName();
+        String idExisting = serviceExisting.getId();
 
-        if (null != service.getId() && name.equalsIgnoreCase(service.getName())) {
+        if ((null == id || id.isEmpty()) && (null != nameExisting && name.equalsIgnoreCase(nameExisting))) {
             existService = true;
+        } else {
+            if (null != id && null != idExisting && !id.equals(idExisting) && name.equalsIgnoreCase(nameExisting)) {
+                existService = true;
+            }
         }
 
         return existService;
