@@ -277,7 +277,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         }
     }
 
-    public String approveToTechnicalCommittee(Map<String, String> parameters) throws HandlerGenericException {
+    public String approveToTechnicalTeam(Map<String, String> parameters) throws HandlerGenericException {
         String notified;
         String idSupplierByCall = parameters.get("idSupplierByCall");
         if (null != idSupplierByCall) {
@@ -298,7 +298,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                         .getId());
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
-                userBLO.notifyToTechnicalCommittee(filter);
+                userBLO.notifyToTechnicalTeam(filter);
             } else {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
             }
@@ -309,7 +309,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return notified;
     }
 
-    public String dontApproveToTechnicalCommittee(Map<String, String> parameters) throws HandlerGenericException {
+    public String dontApproveToTechnicalTeam(Map<String, String> parameters) throws HandlerGenericException {
         String notified;
         String idSupplierByCall = parameters.get("idSupplierByCall");
         if (null != idSupplierByCall) {

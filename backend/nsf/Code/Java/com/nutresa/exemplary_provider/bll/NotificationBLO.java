@@ -172,7 +172,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         }
     }
 
-    public void notifyToTechnicalCommittee(List<String> emails) throws HandlerGenericException {
+    public void notifyToTechnicalTeam(List<String> emails) throws HandlerGenericException {
         try {
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO

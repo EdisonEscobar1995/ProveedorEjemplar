@@ -465,7 +465,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return evaluated;
     }
 
-    public SupplierByCallDTO update(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
+    protected SupplierByCallDTO update(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
         if (null == supplierByCall.getId() || supplierByCall.getId().trim().isEmpty()) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }

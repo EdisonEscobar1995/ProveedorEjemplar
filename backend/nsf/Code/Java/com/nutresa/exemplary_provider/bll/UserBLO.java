@@ -142,16 +142,16 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return userDAO.getUsersByRol(idRol);
     }
 
-    protected void notifyToTechnicalCommittee(Map<String, String> fieldsToIdentifyCommittee)
+    protected void notifyToTechnicalTeam(Map<String, String> fieldsToIdentifyTechnicalTeam)
             throws HandlerGenericException {
         UserDAO userDAO = new UserDAO();
-        List<UserDTO> technicalCommittee = userDAO.getTechnicalCommittee(fieldsToIdentifyCommittee);
+        List<UserDTO> technicalTeam = userDAO.getTechnicalTeam(fieldsToIdentifyTechnicalTeam);
         NotificationBLO notificationBLO = new NotificationBLO();
-        List<String> committeeEmails = new ArrayList<String>();
-        for (UserDTO member : technicalCommittee) {
-            committeeEmails.add(member.getEmail());
+        List<String> technicalTeamEmails = new ArrayList<String>();
+        for (UserDTO member : technicalTeam) {
+            technicalTeamEmails.add(member.getEmail());
         }
-        notificationBLO.notifyToTechnicalCommittee(committeeEmails);
+        notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
     }
 
 }

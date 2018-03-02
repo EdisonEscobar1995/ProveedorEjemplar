@@ -192,7 +192,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         return recordOfReport;
     }
 
-    public List<ReportOfAverageGradeBySuppliers> getThemWillPassToTechnicalCommittee() throws HandlerGenericException {
+    public List<ReportOfAverageGradeBySuppliers> getThemWillPassToTechnicalTeam() throws HandlerGenericException {
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         List<SupplierByCallDTO> evaluated = supplierByCallBLO.getFinishedByEvaluator();

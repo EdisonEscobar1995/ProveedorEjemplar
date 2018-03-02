@@ -92,11 +92,11 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         return response;
     }
 
-    public ServletResponseDTO<String> approveToTechnicalCommittee(Map<String, String> parameters) {
+    public ServletResponseDTO<String> approveToTechnicalTeam(Map<String, String> parameters) {
         SupplierBLO supplierBLO = new SupplierBLO();
         ServletResponseDTO<String> response = null;
         try {
-            response = new ServletResponseDTO<String>(supplierBLO.approveToTechnicalCommittee(parameters));
+            response = new ServletResponseDTO<String>(supplierBLO.approveToTechnicalTeam(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<String>(exception);
         }
@@ -104,11 +104,11 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
         return response;
     }
     
-    public ServletResponseDTO<String> dontApproveToTechnicalCommittee(Map<String, String> parameters) {
+    public ServletResponseDTO<String> dontApproveToTechnicalTeam(Map<String, String> parameters) {
         SupplierBLO supplierBLO = new SupplierBLO();
         ServletResponseDTO<String> response = null;
         try {
-            response = new ServletResponseDTO<String>(supplierBLO.dontApproveToTechnicalCommittee(parameters));
+            response = new ServletResponseDTO<String>(supplierBLO.dontApproveToTechnicalTeam(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<String>(exception);
         }

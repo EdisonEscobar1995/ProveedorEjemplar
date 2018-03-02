@@ -53,22 +53,22 @@ public class UserDAO extends GenericDAO<UserDTO> {
         return currSess.createName(name).getCommon();
     }
 
-    public List<UserDTO> getTechnicalCommittee(Map<String, String> fieldsToIdentifyCommittee)
+    public List<UserDTO> getTechnicalTeam(Map<String, String> fieldsToIdentifyTechnicalTeam)
             throws HandlerGenericException {
-        List<UserDTO> technicalCommittee = new ArrayList<UserDTO>();
+        List<UserDTO> technicalTeam = new ArrayList<UserDTO>();
         List<String> filter = new ArrayList<String>();
-        filter.add(fieldsToIdentifyCommittee.get("SUPPLY"));
-        filter.add(fieldsToIdentifyCommittee.get("CATEGORY"));
-        filter.add(fieldsToIdentifyCommittee.get("COUNTRY"));
+        filter.add(fieldsToIdentifyTechnicalTeam.get("SUPPLY"));
+        filter.add(fieldsToIdentifyTechnicalTeam.get("CATEGORY"));
+        filter.add(fieldsToIdentifyTechnicalTeam.get("COUNTRY"));
         View currentView = getDatabase().getView("vwUsersByRol");
         DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
         if (null != documents) {
             for (Document document : documents) {
-                technicalCommittee.add(castDocument(document));
+                technicalTeam.add(castDocument(document));
             }
         }
 
-        return technicalCommittee;
+        return technicalTeam;
     }
 
 }
