@@ -14,6 +14,7 @@ import pendings from './Pendings/reducer';
 import endedEvaluator from './EndedEvaluator/reducer';
 import sector from './Sector/reducer';
 import service from './Service/reducer';
+import evaluationScale from './EvaluationScale/reducer';
 
 const app = combineReducers({
   main,
@@ -29,6 +30,7 @@ const app = combineReducers({
   endedEvaluator,
   sector,
   service,
+  evaluationScale,
 });
 
 let middleware = {};
