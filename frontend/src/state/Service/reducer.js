@@ -71,7 +71,7 @@ function serviceApp(state = initialState, action) {
     }
     case SAVE_SERVICE: {
       const newData = [...state.data];
-      newData[action.index] = action.data;
+      newData[action.index] = { ...newData[action.index], ...action.data };
       return {
         ...state,
         data: newData,

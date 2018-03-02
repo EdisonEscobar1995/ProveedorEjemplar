@@ -11,6 +11,7 @@ import surveys from './Surveys/reducer';
 import callReport from './CallReport/reducer';
 import results from './Results/reducer';
 import pendings from './Pendings/reducer';
+import endedEvaluator from './EndedEvaluator/reducer';
 import sector from './Sector/reducer';
 import service from './Service/reducer';
 
@@ -25,6 +26,7 @@ const app = combineReducers({
   callReport,
   results,
   pendings,
+  endedEvaluator,
   sector,
   service,
 });

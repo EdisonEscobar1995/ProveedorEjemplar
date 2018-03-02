@@ -102,6 +102,15 @@ const routes = [
   },
   {
     index: 11,
+    name: 'ENDEDEVALUATOR',
+    path: '/endedEvaluator',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/EndedEvaluator').then(module => module.default),
+    ),
+  },
+  {
+    index: 12,
     name: 'SECTOR',
     path: '/sector',
     exact: true,
@@ -110,7 +119,7 @@ const routes = [
     ),
   },
   {
-    index: 12,
+    index: 13,
     name: 'SERVICE',
     path: '/service',
     exact: true,

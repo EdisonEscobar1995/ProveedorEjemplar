@@ -1,13 +1,8 @@
 import React from 'react';
 import { Table, Spin, Button, Tooltip } from 'antd';
-import styled from 'styled-components';
 import Confirm from './Confirm';
 import FormattedMessage from './FormattedMessage';
-
-const TitleStyle = styled('h1')`
-  color: ${props => props.theme.color.primary};
-  margin-bottom: ${props => props.theme.spaces.main};
-`;
+import H1 from '../shared/H1';
 
 const { Column } = Table;
 
@@ -25,7 +20,7 @@ function GenericTable(props) {
 
   return (
     <Spin spinning={loading}>
-      <TitleStyle>{componentList[level].title}</TitleStyle>
+      <H1 text={componentList[level].title} />
       {
         data && data.length > 0 ? (
           <Table

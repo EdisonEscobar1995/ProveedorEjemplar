@@ -47,8 +47,8 @@ function deleteDataSector(index) {
 function getSectors() {
   return (dispatch) => {
     requestApi(dispatch, getSectorProgress, getSectorsApi)
-      .then((respose) => {
-        const { data } = respose.data;
+      .then((response) => {
+        const { data } = response.data;
         dispatch(getSectorSuccess(data));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -60,8 +60,8 @@ function saveSector(clientData, index) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSectorProgress, saveSectorApi, clientData)
-      .then((respose) => {
-        const { data } = respose.data;
+      .then((response) => {
+        const { data } = response.data;
         dispatch(saveDataSector(data, index, clientData.id));
       }).catch(() => {
         dispatch(getFailedRequest());
