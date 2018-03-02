@@ -23,8 +23,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     private static final String STATE_SUCCESS = "OK";
-    
-    
+
     public SupplierBLO() {
         super(SupplierDAO.class);
     }
@@ -294,8 +293,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier,
                         NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM);
-                supplierByCall.setIdState(stateBLO.getStateByShortName(SurveyStates.TECHNICAL_TEAM.toString())
-                        .getId());
+                supplierByCall.setIdState(stateBLO.getStateByShortName(
+                        SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId());
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
                 userBLO.notifyToTechnicalTeam(filter);
@@ -319,8 +318,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             if (supplier instanceof SupplierDTO) {
                 NotificationBLO notificationBLO = new NotificationBLO();
                 StateBLO stateBLO = new StateBLO();
-                notificationBLO.sendNotificationTypeToSupplier(supplier,
-                        NotificationType.SUPPLIER_DISCARDED);
+                notificationBLO.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_DISCARDED);
                 supplierByCall.setIdState(stateBLO.getStateByShortName(
                         SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
                 supplierByCallBLO.update(supplierByCall);

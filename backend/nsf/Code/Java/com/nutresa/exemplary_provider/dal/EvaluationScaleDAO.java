@@ -7,4 +7,5 @@ public class EvaluationScaleDAO extends GenericDAO<EvaluationScaleDTO> {
     public EvaluationScaleDAO() {
         super(EvaluationScaleDTO.class);
     }
+
 }
