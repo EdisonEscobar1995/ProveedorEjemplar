@@ -8,5 +8,4 @@ public class EvaluationScaleBLO extends GenericBLO<EvaluationScaleDTO, Evaluatio
     public EvaluationScaleBLO() {
         super(EvaluationScaleDAO.class);
     }
-
 }

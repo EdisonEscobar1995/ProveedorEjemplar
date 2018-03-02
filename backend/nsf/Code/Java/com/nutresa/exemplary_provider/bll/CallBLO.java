@@ -14,6 +14,7 @@ import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.utils.Common;
@@ -46,7 +47,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         SuppliersInCallDTO response = new SuppliersInCallDTO();
         Map<String, List<Object>> listIds;
         SupplierBLO supplierBLO = new SupplierBLO();
-        List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", idCall, "vwSuppliersByCallIdCall");
+        List<DTO> supplierByCall = supplierByCallBLO.getAllBy(FieldToFilter.FIELD_CALL, idCall,
+                "vwSuppliersByCallIdCall");
         try {
             listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
             // Consultar los proveedores que se encuentran bloqueados o
@@ -94,8 +96,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         } else {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             Map<String, String> filter = new HashMap<String, String>();
-            filter.put("idSupplier", supplier.getId());
-            filter.put("idCall", getIdCallByYear(year));
+            filter.put(FieldToFilter.FIELD_SUPPLIER, supplier.getId());
+            filter.put(FieldToFilter.FIELD_CALL, getIdCallByYear(year));
             List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, "vwSuppliersByCallInIdSupplierAndIdCall");
             response = supplierBLO.getInformationFromSuppliers(listYears, callsBySupplier);
         }
@@ -207,6 +209,54 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
 
         return response;
+    }
+
+    public InformationFromSupplier getParticipantsToTechnicalTeam(String year) throws HandlerGenericException {
+        String viewName = "vwSuppliersByCallIdStateAndIdCall";
+        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        if (null == year || year.trim().isEmpty()) {
+            year = (String) listYears.get(0);
+        }
+
+        SupplierBLO supplierBLO = new SupplierBLO();
+        StateBLO stateBLO = new StateBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        Map<String, String> filter = new HashMap<String, String>();
+        String idState = stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId();
+        filter.put(FieldToFilter.FIELD_STATE, idState);
+        filter.put(FieldToFilter.FIELD_CALL, getIdCallByYear(year));
+        List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, viewName);
+        idState = stateBLO.getStateByShortName(SurveyStates.TECHNICAL_TEAM.toString()).getId();
+        filter.put(FieldToFilter.FIELD_STATE, idState);
+        callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
+        idState = stateBLO.getStateByShortName(SurveyStates.ENDED_TECHNICAL_TEAM.toString()).getId();
+        filter.put(FieldToFilter.FIELD_STATE, idState);
+        callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
+
+        InformationFromSupplier participantsToTechnicalTeam = supplierBLO.getInformationFromSuppliers(listYears,
+                callsBySupplier);
+
+        Map<String, List<DTO>> currentMasters = participantsToTechnicalTeam.getMasters();
+        ServiceBLO serviceBLO = new ServiceBLO();
+        ItemBLO itemBLO = new ItemBLO();
+        EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
+        currentMasters.put("Service", serviceBLO.getAll());
+        currentMasters.put("Item", itemBLO.getAll());
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo", SurveyStates.TECHNICAL_TEAM
+                .toString(), "vwEvaluationScalesByApplyTo"));
+        participantsToTechnicalTeam.setMasters(currentMasters);
+
+        return participantsToTechnicalTeam;
+    }
+
+    private class FieldToFilter {
+        public static final String FIELD_SUPPLIER = "idSupplier";
+        public static final String FIELD_STATE = "idState";
+        public static final String FIELD_CALL = "idCall";
+
+        private FieldToFilter() {
+            throw new IllegalStateException("Utility class");
+        }
     }
 
 }
