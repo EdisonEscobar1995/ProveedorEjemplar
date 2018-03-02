@@ -8,7 +8,7 @@ import {
 
 import { getEndedEvaluatorApi } from '../../api/call';
 import { sendApprovalsApi, sendRejectionsApi } from '../../api/supplier';
-import { requestApi } from '../../utils/action';
+import { requestApi, sortByField } from '../../utils/action';
 
 const getEndedEvaluatorProgress = () => ({
   type: GET_ENDED_EVALUATOR_PROGRESS,
@@ -32,7 +32,7 @@ const getEndedEvaluator = () => (
   (dispatch) => {
     requestApi(dispatch, getEndedEvaluatorProgress, getEndedEvaluatorApi)
       .then((response) => {
-        const { data } = response.data;
+        const data = sortByField(response.data.data, 'totalScoreOfEvaluator', true);
         dispatch(getEndedEvaluatorSuccess(data));
       }).catch((err) => {
         dispatch(getFailedRequest(err));

@@ -99,7 +99,7 @@ const messages = {
   'Table.action': 'Acción',
   'Header.welcome': 'Bienvenido',
   'Header.logOut': 'Cerrar sesión',
-  'Confirm.title': '¿Está seguro?',
+  'Confirm.title': '¿Confirma que desea realizar esta acción?',
   'Message.title': 'Proveedor Ejemplar',
   'Validation.dateToSend': 'La fecha para hacer la encuesta ha vencido',
   'Validation.dateToEvaluate': 'La fecha para evaluar la encuesta ha vencido',

@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, Checkbox, Button, Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
 import message from '../../components/shared/message';
+import Confirm from '../shared/Confirm';
 
 function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) {
   const onChange = (event, record) => {
@@ -90,20 +91,18 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
       />
       <Row justify="center" align="middle" type="flex" gutter={24}>
         <Col>
-          <Button
-            type="primary"
-            onClick={() => validateChecked(sendApprovals)}
-          >
-            Pasan a evaluación de comité ténico
-          </Button>
+          <Confirm method={() => validateChecked(sendApprovals)}>
+            <Button type="primary">
+              Pasan a evaluación de comité ténico
+            </Button>
+          </Confirm>
         </Col>
         <Col>
-          <Button
-            type="primary"
-            onClick={() => validateChecked(sendRejections)}
-          >
-            No pasan a evaluación de comité ténico
-          </Button>
+          <Confirm method={() => validateChecked(sendRejections)}>
+            <Button type="primary">
+              No pasan a evaluación de comité ténico
+            </Button>
+          </Confirm>
         </Col>
       </Row>
     </div>
