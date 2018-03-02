@@ -8,9 +8,11 @@ import java.util.Map;
 import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
@@ -31,7 +33,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         suppliers = supplierByCallBLO.getSuppliersByCallDontInvited(idCall);
         for (SupplierDTO supplier : suppliers) {
             NotificationBLO notification = new NotificationBLO();
-            notification.sendInvitation(supplier);
+            notification.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_CALLED_BY_LIBERATOR);
             supplierByCallBLO.markToInvited(supplier.getId(), idCall);
         }
 
@@ -87,7 +89,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
                 response = supplierBLO.getSummaryWithSurvey(year);
             } else {
-                throw new HandlerGenericException("ROL_INVALID");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
         } else {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
@@ -130,14 +132,14 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                     response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
                 }
             } else {
-                throw new HandlerGenericException("CALL_NOT_ESPECIFIED");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.CALL_NOT_ESPECIFIED.toString());
             }
 
             if (response.isEmpty()) {
-                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
             }
         } else {
-            throw new HandlerGenericException("ROL_INVALID");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
         }
 
         return response;
@@ -159,8 +161,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
         for (SupplierDTO supplier : suppliers) {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
-                    supplier.getId());
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
+                    .getId());
             if (supplierByCall instanceof SupplierByCallDTO) {
                 response.add(getRecordOfReport(supplierByCall, supplier, parameters));
             }
@@ -201,7 +203,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
 
         if (response.isEmpty()) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;

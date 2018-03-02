@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.QuestionDAO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -52,9 +53,12 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
     }
 
     /**
-     * Filtra las preguntas según los campos especificados en <code>fieldsToFilter</code>
+     * Filtra las preguntas según los campos especificados en
+     * <code>fieldsToFilter</code>
      * 
-     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se filtrarán las preguntas
+     * @param fieldsToFilter
+     *            Mapa clave valor de los campos por los cuales se filtrarán las
+     *            preguntas
      * @return Colección de preguntas
      * @throws HandlerGenericException
      */
@@ -68,7 +72,7 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
         }
 
         if (null == response) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;

@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import com.nutresa.exemplary_provider.dal.ServiceDAO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.ServiceDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -15,12 +16,12 @@ public class ServiceBLO extends GenericBLO<ServiceDTO, ServiceDAO> {
         ServiceDTO response = null;
         if (null != service.getName() && !service.getName().trim().isEmpty()) {
             if (existByName(service)) {
-                throw new HandlerGenericException("DOCUMENT_EXISTS");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
             } else {
                 response = super.save(service);
             }
         } else {
-            throw new HandlerGenericException("UNEXPECTED_VALUE");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
         return response;

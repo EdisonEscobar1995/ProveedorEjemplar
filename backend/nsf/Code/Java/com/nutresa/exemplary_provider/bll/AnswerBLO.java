@@ -9,6 +9,7 @@ import com.nutresa.exemplary_provider.dal.AnswerDAO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.OptionDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
@@ -203,7 +204,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
      */
     private List<AnswerDTO> getAnswersForReportOfAverageGrade(String idSupplierByCall, Map<String, String> parameters)
             throws HandlerGenericException {
-        List<AnswerDTO> response = null;
+        List<AnswerDTO> response;
 
         AnswerDAO answerDAO = new AnswerDAO();
         Map<String, String> fieldsToFilterQuestion = answerDAO.identifyFieldsToFTSearch(parameters);
@@ -215,8 +216,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             response = answerDAO.getAsnwersByIdSupplierByCall(idSupplierByCall);
         }
 
-        if (null == response) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+        if (response.isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;

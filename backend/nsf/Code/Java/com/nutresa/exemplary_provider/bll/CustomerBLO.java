@@ -1,6 +1,8 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.CustomerDAO;
 import com.nutresa.exemplary_provider.dtl.CustomerDTO;
@@ -12,9 +14,19 @@ public class CustomerBLO extends GenericBLO<CustomerDTO, CustomerDAO> {
         super(CustomerDAO.class);
     }
 
-    public List<CustomerDTO> getCustomersBySupplier(String idSupplier) throws HandlerGenericException {
+    protected List<CustomerDTO> getCustomersBySupplier(String idSupplier) throws HandlerGenericException {
         CustomerDAO customerDAO = new CustomerDAO();
         return customerDAO.getCustomersBySupplier(idSupplier);
+    }
+
+    protected void deleteCustomers(List<CustomerDTO> customers) throws HandlerGenericException {
+        if (null != customers) {
+            for (CustomerDTO customer : customers) {
+                Map<String, String> parameters = new HashMap<String, String>();
+                parameters.put("id", customer.getId());
+                delete(parameters);
+            }
+        }
     }
 
 }

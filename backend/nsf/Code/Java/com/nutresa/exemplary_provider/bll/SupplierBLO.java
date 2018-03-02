@@ -1,13 +1,12 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.StateDAO;
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
-import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.CustomerDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
@@ -16,38 +15,47 @@ import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.Rol;
+import com.nutresa.exemplary_provider.dtl.NotificationType;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
+    private static final String STATE_SUCCESS = "OK";
+    
+    
     public SupplierBLO() {
         super(SupplierDAO.class);
     }
 
     @Override
-    public SupplierDTO save(SupplierDTO dto) throws HandlerGenericException {
+    public SupplierDTO save(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO dao = new SupplierDAO();
-        SupplierDTO supplier = dao.get(dto.getId());
-        dto.autoSetIdDocuments();
-        dto.autoSetIdAttachedFinancialReport();
+        SupplierDTO currentSupplier = dao.get(supplier.getId());
+        supplier.autoSetIdDocuments();
+        supplier.autoSetIdAttachedFinancialReport();
 
-        deleteCustomers(getCustomersBySupplier(supplier.getId()));
-        deleteDocuments(supplier.getDocument());
-        deleteAttachments(supplier.getAttachedFinancialReport());
-        savePrincipalCustomers(dto.getPrincipalCustomer(), dto.getId());
+        CustomerBLO customerBLO = new CustomerBLO();
+        customerBLO.deleteCustomers(customerBLO.getCustomersBySupplier(currentSupplier.getId()));
+        AttachmentBLO attachmentBLO = new AttachmentBLO();
+        attachmentBLO.deleteDocuments(currentSupplier.getDocument());
+        attachmentBLO.deleteDocuments(currentSupplier.getAttachedFinancialReport());
+
+        savePrincipalCustomers(supplier.getPrincipalCustomer(), supplier.getId());
 
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         supplierByCallBLO.participateInCall();
-        if (!supplier.getIdCompanySize().equals(dto.getIdCompanySize())) {
-            supplierByCallBLO.changedCompanySize(supplier.getIdCompanySize());
-            dao.update(dto.getId(), dto);
+        if (!currentSupplier.getIdCompanySize().equals(supplier.getIdCompanySize())) {
+            supplierByCallBLO.changedCompanySize(currentSupplier.getIdCompanySize());
+            dao.update(supplier.getId(), supplier);
             NotificationBLO notificationBLO = new NotificationBLO();
-            notificationBLO.notifyChangeCompanySize(dto.getId());
+            notificationBLO.notifyChangeCompanySize(supplier.getId());
         }
-        supplier = dao.update(dto.getId(), dto);
-        supplier.setPrincipalCustomer(getCustomersBySupplier(supplier.getId()));
-        return supplier;
+
+        currentSupplier = dao.update(supplier.getId(), supplier);
+        currentSupplier.setPrincipalCustomer(customerBLO.getCustomersBySupplier(currentSupplier.getId()));
+        return currentSupplier;
     }
 
     public SupplierDTO getSupplierInSession(String idSupplier) throws HandlerGenericException {
@@ -61,14 +69,16 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                     || userBLO.isRol(Rol.EVALUATOR.toString())) {
                 response = dao.getSupplierByFullName(idSupplier);
             } else {
-                throw new HandlerGenericException("ROL_INVALID");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
         }
 
         if (null != response) {
-            response.setDocument(getDocuments(response.getIdDocuments()));
-            response.setAttachedFinancialReport(getDocuments(response.getIdAttachedFinancialReport()));
-            response.setPrincipalCustomer(getCustomersBySupplier(response.getId()));
+            AttachmentBLO attachmentBLO = new AttachmentBLO();
+            CustomerBLO customerBLO = new CustomerBLO();
+            response.setDocument(attachmentBLO.getDocuments(response.getIdDocuments()));
+            response.setAttachedFinancialReport(attachmentBLO.getDocuments(response.getIdAttachedFinancialReport()));
+            response.setPrincipalCustomer(customerBLO.getCustomersBySupplier(response.getId()));
         }
 
         return response;
@@ -94,20 +104,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return supplierDAO.update(supplier.getId(), supplier);
     }
 
-    private List<AttachmentDTO> getDocuments(List<String> idDocuements) {
-        AttachmentBLO attachmentBLO = new AttachmentBLO();
-        return attachmentBLO.getDocuments(idDocuements);
-    }
-
-    private List<CustomerDTO> getCustomersBySupplier(String idSupplier) throws HandlerGenericException {
-        CustomerBLO customerBLO = new CustomerBLO();
-        return customerBLO.getCustomersBySupplier(idSupplier);
-    }
-
     public SupplierDTO sendInvitation(SupplierDTO supplier) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         NotificationBLO notification = new NotificationBLO();
-        notification.sendInvitation(supplier);
+        notification.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_CALLED_BY_LIBERATOR);
         return supplierDAO.get(supplier.getId());
     }
 
@@ -138,10 +138,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         try {
             listIdsSupplierByCall = Common.getDtoFields(callsFound, new String[] { "[idSupplier]", "[idState]" },
                     SupplierByCallDTO.class);
-            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id",
-                    Common.getIdsFromList(listIdsSupplierByCall.get("[idSupplier]")));
-            List<StateDTO> states = stateDAO.getAllBy("id",
-                    Common.getIdsFromList(listIdsSupplierByCall.get("[idState]"), true));
+            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
+                    .get("[idSupplier]")));
+            List<StateDTO> states = stateDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
+                    .get("[idState]"), true));
 
             String[] idFieldNames = { "Category", "Country", "Department", "City", "Supply", "SubCategory",
                     "CompanyType", "SocietyType", "Sector" };
@@ -188,35 +188,6 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return response;
     }
 
-    private void deleteCustomers(List<CustomerDTO> customers) throws HandlerGenericException {
-        if (null != customers) {
-            CustomerBLO customerBLO = new CustomerBLO();
-            for (CustomerDTO customer : customers) {
-                Map<String, String> parameters = new HashMap<String, String>();
-                parameters.put("id", customer.getId());
-                customerBLO.delete(parameters);
-            }
-        }
-    }
-
-    private void deleteAttachments(List<AttachmentDTO> attachments) {
-        if (null != attachments) {
-            AttachmentBLO attachmentBLO = new AttachmentBLO();
-            for (AttachmentDTO attachment : attachments) {
-                attachmentBLO.delete(attachment.getId());
-            }
-        }
-    }
-
-    private void deleteDocuments(List<AttachmentDTO> documents) {
-        if (null != documents) {
-            AttachmentBLO attachmentBLO = new AttachmentBLO();
-            for (AttachmentDTO attachment : documents) {
-                attachmentBLO.delete(attachment.getId());
-            }
-        }
-    }
-
     private void savePrincipalCustomers(List<CustomerDTO> principalCustomers, String idSupplier)
             throws HandlerGenericException {
         if (null != principalCustomers && !principalCustomers.isEmpty()) {
@@ -233,12 +204,17 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Busca los proveedores por convocatoria o por la especificación de algún filtro.
+     * Busca los proveedores por convocatoria o por la especificación de algún
+     * filtro.
      * <p>
-     * Si y solo si no se especifica un filtro de búsqueda entonces busca por convocatoria.
+     * Si y solo si no se especifica un filtro de búsqueda entonces busca por
+     * convocatoria.
      * 
-     * @param idCall Identificador de la convocatoria
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param idCall
+     *            Identificador de la convocatoria
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -259,9 +235,11 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Obtiene los proveedores que ya terminaron la evaluación y los que han sido evaluados parcialmente por el
-     * evaluador.
-     * @param year Año de la convocatoria
+     * Obtiene los proveedores que ya terminaron la evaluación y los que han
+     * sido evaluados parcialmente por el evaluador.
+     * 
+     * @param year
+     *            Año de la convocatoria
      * @return Colección de datos encontrados
      * @throws HandlerGenericException
      */
@@ -286,17 +264,75 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 List<DTO> callsByYear = supplierByCallBLO.getByStates(callBLO.getIdCallByYear(year), states);
                 response = getInformationFromSuppliers(listYears, callsByYear);
             } else {
-                throw new HandlerGenericException("ROL_INVALID");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
 
             if (!(response instanceof InformationFromSupplier)) {
-                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
             }
 
             return response;
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+
+    public String approveToTechnicalCommittee(Map<String, String> parameters) throws HandlerGenericException {
+        String notified;
+        String idSupplierByCall = parameters.get("idSupplierByCall");
+        if (null != idSupplierByCall) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
+            SupplierDTO supplier = get(supplierByCall.getIdSupplier());
+            if (supplier instanceof SupplierDTO) {
+                Map<String, String> filter = new LinkedHashMap<String, String>();
+                filter.put("SUPPLY", supplier.getIdSupply());
+                filter.put("CATEGORY", supplier.getIdCountry());
+                filter.put("COUNTRY", supplier.getIdCountry());
+                UserBLO userBLO = new UserBLO();
+                NotificationBLO notificationBLO = new NotificationBLO();
+                StateBLO stateBLO = new StateBLO();
+                notificationBLO.sendNotificationTypeToSupplier(supplier,
+                        NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM);
+                supplierByCall.setIdState(stateBLO.getStateByShortName(SurveyStates.TECHNICAL_TEAM.toString())
+                        .getId());
+                supplierByCallBLO.update(supplierByCall);
+                notified = STATE_SUCCESS;
+                userBLO.notifyToTechnicalCommittee(filter);
+            } else {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
+            }
+        } else {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+
+        return notified;
+    }
+
+    public String dontApproveToTechnicalCommittee(Map<String, String> parameters) throws HandlerGenericException {
+        String notified;
+        String idSupplierByCall = parameters.get("idSupplierByCall");
+        if (null != idSupplierByCall) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
+            SupplierDTO supplier = get(supplierByCall.getIdSupplier());
+            if (supplier instanceof SupplierDTO) {
+                NotificationBLO notificationBLO = new NotificationBLO();
+                StateBLO stateBLO = new StateBLO();
+                notificationBLO.sendNotificationTypeToSupplier(supplier,
+                        NotificationType.SUPPLIER_DISCARDED);
+                supplierByCall.setIdState(stateBLO.getStateByShortName(
+                        SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
+                supplierByCallBLO.update(supplierByCall);
+                notified = STATE_SUCCESS;
+            } else {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
+            }
+        } else {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+
+        return notified;
     }
 
 }

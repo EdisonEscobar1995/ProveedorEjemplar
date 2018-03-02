@@ -15,30 +15,16 @@ public class MasterListBLO extends GenericBLO<CountryDTO, CountryDAO> {
     public MasterListBLO() {
         super(CountryDAO.class);
     }
-    
+
     public Map<String, List<DTO>> get(Map<String, String> parameters) throws HandlerGenericException {
         String[] mastersToLoad = new String[parameters.size()];
 
         int i = 0;
-        
-        List<String> allowedEntities = Common.arrayToList(new String[] {
-            "Call",
-       		"Country",
-            "City",
-            "Department",
-            "CompanySize",
-            "CompanyType",
-            "Sector",
-            "Category",
-            "Subcategory",
-            "Supply",
-            "System",
-            "Dimension",
-            "Criterion",
-            "SocietyType",
-            "Supplier"
-        });
-        
+
+        List<String> allowedEntities = Common.arrayToList(new String[] { "Call", "Country", "City", "Department",
+                "CompanySize", "CompanyType", "Sector", "Category", "Subcategory", "Supply", "System", "Dimension",
+                "Criterion", "SocietyType", "Supplier" });
+
         for (Entry<String, String> parameter : parameters.entrySet()) {
             String master = parameter.getKey();
             if (allowedEntities.contains(master)) {

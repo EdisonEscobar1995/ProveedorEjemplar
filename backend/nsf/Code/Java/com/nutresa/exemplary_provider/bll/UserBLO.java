@@ -12,6 +12,7 @@ import com.nutresa.exemplary_provider.dal.UserDAO;
 import com.nutresa.exemplary_provider.dtl.AccessByRolDTO;
 import com.nutresa.exemplary_provider.dtl.AccessDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.RolDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
@@ -22,18 +23,6 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
 
     public UserBLO() {
         super(UserDAO.class);
-    }
-
-    public List<UserDTO> getUsersByRol(String idRol) throws HandlerGenericException {
-        List<UserDTO> users = new ArrayList<UserDTO>();
-        try {
-            UserDAO userDAO = new UserDAO();
-            users = userDAO.getUsersByRol(idRol);
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return users;
     }
 
     protected UserDTO getUserInSession() throws HandlerGenericException {
@@ -113,25 +102,56 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         UserDTO evaluator = null;
         if (idSupplierByCall.trim().isEmpty()) {
-            throw new HandlerGenericException("INVALID_VALUE");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INVALID_VALUE.toString());
         }
 
         SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
         if (!(supplierByCall instanceof SupplierByCallDTO) || supplierByCall.getWhoEvaluate().isEmpty()) {
-            throw new HandlerGenericException("DONT_HAVE_EVALUATOR");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DONT_HAVE_EVALUATOR.toString());
         } else {
             evaluator = super.get(supplierByCall.getWhoEvaluate());
             if (!(evaluator instanceof UserDTO)) {
-                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
             }
         }
 
         return evaluator;
     }
-    
+
     protected String getCommonName(String name) throws HandlerGenericException {
         UserDAO userDAO = new UserDAO();
         return userDAO.getCommonName(name);
+    }
+
+    protected List<String> getUserEmailsByRol(String rolName) throws HandlerGenericException {
+        RolBLO rolBLO = new RolBLO();
+        List<String> emails = new ArrayList<String>();
+        RolDTO rol = rolBLO.getIdRolLiberator(rolName);
+        List<UserDTO> users = getUsersByRol(rol.getId());
+        if (!users.isEmpty()) {
+            for (UserDTO user : users) {
+                emails.add(user.getEmail());
+            }
+        }
+
+        return emails;
+    }
+
+    protected List<UserDTO> getUsersByRol(String idRol) throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.getUsersByRol(idRol);
+    }
+
+    protected void notifyToTechnicalCommittee(Map<String, String> fieldsToIdentifyCommittee)
+            throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        List<UserDTO> technicalCommittee = userDAO.getTechnicalCommittee(fieldsToIdentifyCommittee);
+        NotificationBLO notificationBLO = new NotificationBLO();
+        List<String> committeeEmails = new ArrayList<String>();
+        for (UserDTO member : technicalCommittee) {
+            committeeEmails.add(member.getEmail());
+        }
+        notificationBLO.notifyToTechnicalCommittee(committeeEmails);
     }
 
 }

@@ -78,7 +78,7 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
 
         return response;
     }
-    
+
     public ServletResponseDTO<InformationFromSupplier> pendingToQualify(Map<String, String> parameters) {
         SupplierBLO supplierBLO = new SupplierBLO();
         ServletResponseDTO<InformationFromSupplier> response = null;
@@ -87,6 +87,30 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
                     .get("year")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<InformationFromSupplier>(exception);
+        }
+
+        return response;
+    }
+
+    public ServletResponseDTO<String> approveToTechnicalCommittee(Map<String, String> parameters) {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        ServletResponseDTO<String> response = null;
+        try {
+            response = new ServletResponseDTO<String>(supplierBLO.approveToTechnicalCommittee(parameters));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<String>(exception);
+        }
+
+        return response;
+    }
+    
+    public ServletResponseDTO<String> dontApproveToTechnicalCommittee(Map<String, String> parameters) {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        ServletResponseDTO<String> response = null;
+        try {
+            response = new ServletResponseDTO<String>(supplierBLO.dontApproveToTechnicalCommittee(parameters));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<String>(exception);
         }
 
         return response;

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
@@ -65,7 +66,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                     permissionForEvaluator(response);
                 }
             } else {
-                throw new HandlerGenericException("ROL_INVALID");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
         }
 
@@ -74,7 +75,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         if (!(response instanceof SupplierByCallDTO)) {
-            throw new HandlerGenericException("DONT_HAVE_SURVEY_ASSOCIED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DONT_HAVE_SURVEY_ASSOCIED.toString());
         }
 
         if ((response instanceof SupplierByCallDTO)
@@ -123,7 +124,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             }
         } else {
             rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED
+                    .toString());
         }
     }
 
@@ -189,7 +191,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         if (null != call && call.isCaducedDeadLineToMakeSurvey()) {
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
         }
 
         return response;
@@ -249,10 +251,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.SUPPLIER);
             } else {
-                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
+                        .toString());
             }
         } else {
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
         }
 
         return response;
@@ -276,10 +279,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.EVALUATOR);
             } else {
-                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
+                        .toString());
             }
         } else {
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED
+                    .toString());
         }
 
         return response;
@@ -430,7 +435,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         List<DTO> response = supplierByCallDAO.getByStates(idCall, states);
         if (response.isEmpty()) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;
@@ -449,14 +454,21 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         CallBLO callBLO = new CallBLO();
         List<Object> listYears = getFieldAll(0, "vwCallsByYear");
         String year = (String) listYears.get(0);
-        
+
         List<SupplierByCallDTO> evaluated = supplierByCallDAO.getByStateInCall(stateBLO.getStateByShortName(
                 SurveyStates.ENDED_EVALUATOR.toString()).getId(), callBLO.getIdCallByYear(year));
 
         if (evaluated.isEmpty()) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return evaluated;
+    }
+
+    public SupplierByCallDTO update(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
+        if (null == supplierByCall.getId() || supplierByCall.getId().trim().isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+        return super.save(supplierByCall);
     }
 }
