@@ -1,4 +1,6 @@
-const fieldsData = ({ data, getCriterionsByDimension, handleReset, getResults }) => {
+import exportData from '../../utils/excel';
+
+const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
   const {
     Call,
     Supply,
@@ -9,6 +11,82 @@ const fieldsData = ({ data, getCriterionsByDimension, handleReset, getResults })
     Criterion,
     Country,
   } = data;
+
+  const handleReset = () => {
+    form.resetFields();
+  };
+
+  const exportExcel = (excelData) => {
+    const header = [
+      'Código SAP',
+      'NIT',
+      'Proveedor',
+      'Tipo de suministro',
+      'Categoría',
+      'Tamaño de empresa',
+      'Dimensión',
+      'Criterio',
+      'Pregunta',
+      'Respuesta proveedor',
+      'Comentarios',
+      'Resultado proveedor',
+      'Resultado esperado',
+      'Total proveedor',
+      'Total esperado',
+      'Porcentaje obtenido',
+      'Respuesta evaluador',
+      'Comentarios',
+      'Resultado evaluador',
+      'Resultado esperado',
+      'Total evaluador',
+      'Total esperado',
+      'Porcentaje obtenido',
+    ];
+    const report = [header];
+    excelData.forEach((supplier) => {
+      supplier.summarySurvey.forEach((item) => {
+        let labelForExpected;
+        if (item.questionType === 'Abierta') {
+          labelForExpected = 'Pregunta abierta';
+        } else {
+          labelForExpected = 'No aplica';
+        }
+        report.push([
+          supplier.sapCode,
+          supplier.nit,
+          supplier.name,
+          supplier.supply,
+          supplier.category,
+          supplier.companySize,
+          item.dimension,
+          item.criterion,
+          item.question,
+          item.answerSupplier,
+          item.commentSupplier,
+          item.expectedScoreSupplier === -1 || item.scoreOfSupplier === -1 ? 'No aplica' : item.scoreOfSupplier,
+          item.expectedScoreSupplier === -1 ? labelForExpected : item.expectedScoreSupplier,
+          supplier.scoreOfSupplier,
+          supplier.expectedScoreSupplier,
+          supplier.totalScoreOfSupplier,
+          item.answerEvaluator,
+          item.commentEvaluator,
+          item.expectedScoreEvaluator === -1 || item.scoreOfEvaluator === -1 ? 'No aplica' : item.scoreOfEvaluator,
+          item.expectedScoreEvaluator === -1 ? labelForExpected : item.expectedScoreEvaluator,
+          supplier.scoreOfEvaluator,
+          supplier.expectedScoreEvaluator,
+          supplier.totalScoreOfEvaluator,
+        ]);
+      });
+    });
+    exportData([{
+      data: report,
+      title: 'Resultados',
+    }], 'ResultadosProveedorEquipoEvaluador.xlsx');
+  };
+
+  const handleResults = () => {
+    getResults(form.getFieldsValue(), exportExcel);
+  };
 
   return [
     {
@@ -122,11 +200,11 @@ const fieldsData = ({ data, getCriterionsByDimension, handleReset, getResults })
           label: 'Exportar a Excel',
           key: 'export',
           buttonType: 'primary',
-          handleclick: getResults,
+          handleclick: handleResults,
         },
       ],
     },
   ];
 };
 
-export default fieldsData;
+export default formData;

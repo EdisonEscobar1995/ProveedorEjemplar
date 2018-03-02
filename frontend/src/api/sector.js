@@ -1,6 +1,6 @@
 import intance from './instance';
 
-function getAllSectorApi() {
+function getSectorsApi() {
   return intance.get('Sector?action=getAll');
 }
 function saveSectorApi(data) {
@@ -12,7 +12,7 @@ function deleteSectorApi(data) {
 }
 
 export {
-  getAllSectorApi,
+  getSectorsApi,
   saveSectorApi,
   deleteSectorApi,
 };

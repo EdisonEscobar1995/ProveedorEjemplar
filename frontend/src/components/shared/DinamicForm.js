@@ -57,6 +57,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   format,
                   rules = [],
                   hidden,
+                  style,
                 } = current;
                 allowClear = allowClear === undefined ? true : allowClear;
                 options = options || [];
@@ -195,7 +196,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                       <div>
                         {
                           !hidden ?
-                            <Field label={label} help={help} required={required}>
+                            <Field label={label} help={help} required={required} style={style}>
                               <ItemStyle>
                                 {getFieldDecorator(key, {
                                   rules: [

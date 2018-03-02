@@ -1,15 +1,11 @@
 import {
-  GET_DATA_SECTOR_PROGRESS,
-  GET_DATA_SECTOR_SUCCESS,
+  GET_SECTOR_PROGRESS,
+  GET_SECTOR_SUCCESS,
   REQUEST_FAILED,
   ADD_SECTOR,
   SAVE_SECTOR,
-  EDIT_SECTOR,
   DELETE_SECTOR,
-  CANCEL_SECTOR,
 } from './const';
-
-import reloadKeys from '../../utils/reducer';
 
 const initialState = {
   data: [],
@@ -17,71 +13,46 @@ const initialState = {
   loading: false,
 };
 
-
 function sectorApp(state = initialState, action) {
   switch (action.type) {
-    case GET_DATA_SECTOR_PROGRESS: {
+    case GET_SECTOR_PROGRESS: {
       return {
         ...state,
         loading: true,
       };
     }
-    case GET_DATA_SECTOR_SUCCESS: {
-      const data = reloadKeys(action.data);
+    case GET_SECTOR_SUCCESS: {
       return {
         ...state,
-        data,
+        data: action.data,
         loading: false,
       };
     }
     case ADD_SECTOR: {
-      const { data } = state;
-      let newData = [...data];
-      newData.splice(action.index, 0, action.newItem);
-      newData = reloadKeys(newData);
+      const newData = [...state.data];
+      newData.splice(action.index + 1, 0, action.data);
       return {
         ...state,
         data: newData,
+        loading: false,
       };
     }
     case SAVE_SECTOR: {
-      const { data, index } = action;
-      const stateData = state.data;
-      let newData = [...stateData];
-      newData[index] = data;
-      newData = reloadKeys(newData);
+      const newData = [...state.data];
+      newData[action.index] = action.data;
       return {
         ...state,
         data: newData,
         loading: false,
-      };
-    }
-    case EDIT_SECTOR: {
-      const { data } = state;
-      const newData = [...data];
-      newData[action.index].editable = true;
-      return {
-        ...state,
-        data: newData,
       };
     }
     case DELETE_SECTOR: {
-      const { data } = state;
-      const newData = [...data];
+      const newData = [...state.data];
       newData.splice(action.index, 1);
       return {
         ...state,
+        data: newData,
         loading: false,
-        data: newData,
-      };
-    }
-    case CANCEL_SECTOR: {
-      const { data } = state;
-      const newData = [...data];
-      newData[action.index].editable = false;
-      return {
-        ...state,
-        data: newData,
       };
     }
     case REQUEST_FAILED:

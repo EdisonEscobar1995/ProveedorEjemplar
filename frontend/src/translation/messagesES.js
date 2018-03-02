@@ -118,5 +118,6 @@ const messages = {
   'Validation.requiredField': 'Este campo es requerido',
   'Validation.surveyCouldNotComplete': 'La encuesta no pudo ser finalizada',
   'Validation.informationNotFound': 'Información no encontrada',
+  'Validation.documentExists': 'La información ingresada coincide con la de otro documento ingresado previamente',
 };
 export default messages;

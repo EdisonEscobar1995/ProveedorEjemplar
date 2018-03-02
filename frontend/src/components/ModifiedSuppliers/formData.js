@@ -1,16 +1,26 @@
-const fieldsData = ({
-  data,
-  getParticipantsByYear,
-  filterCallReport,
-  handleReset,
-  exportExcel,
-  form,
-}) => {
+import { LOCKED, NOTIFIED } from '../../utils/const';
+
+const formData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, form }) => {
+  const states = [
+    {
+      id: LOCKED,
+      name: LOCKED,
+    },
+    {
+      id: NOTIFIED,
+      name: NOTIFIED,
+    },
+  ];
   const {
     years,
     suppliers,
     masters,
   } = data;
+
+  const handleReset = () => {
+    form.resetFields();
+    getModifiedSuppliers();
+  };
 
   return [
     {
@@ -23,37 +33,38 @@ const fieldsData = ({
           key: 'year',
           value: years && years.length > 0 ? years[0] : '',
           options: years ? years.map(item => ({ id: item, name: item })) : [],
-          handleChange: getParticipantsByYear,
+          handleChange: getModifiedSuppliers,
           allowClear: false,
           valuesToClean: {
             supply: { value: '' },
-            companySize: { value: '' },
-            participated: { value: '' },
+            category: { value: '' },
+            country: { value: '' },
             supplier: { value: '' },
+            state: { value: '' },
           },
         },
         {
           span: 8,
           type: 'select',
-          label: 'Tipo de suministro',
+          label: 'Suministros',
           key: 'supply',
           value: '',
           options: masters ? masters.Supply : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supply: value };
-            filterCallReport(values);
+            filterModifiedSuppliers(values);
           },
         },
         {
           span: 8,
           type: 'select',
-          label: 'Tamaño',
-          key: 'companySize',
+          label: 'Categoría',
+          key: 'category',
           value: '',
-          options: masters ? masters.CompanySize : [],
+          options: masters ? masters.Category : [],
           handleChange: (value) => {
-            const values = { ...form.getFieldsValue(), companySize: value };
-            filterCallReport(values);
+            const values = { ...form.getFieldsValue(), category: value };
+            filterModifiedSuppliers(values);
           },
         },
       ],
@@ -64,17 +75,13 @@ const fieldsData = ({
         {
           span: 8,
           type: 'select',
-          label: 'Participó',
-          key: 'participated',
+          label: 'País',
+          key: 'country',
           value: '',
-          options: masters ? [
-            { id: 'true', name: 'Si' },
-            { id: 'false', name: 'No' },
-            { id: 'empty', name: 'Sin respuesta' },
-          ] : [],
+          options: masters ? masters.Country : [],
           handleChange: (value) => {
-            const values = { ...form.getFieldsValue(), participated: value };
-            filterCallReport(values);
+            const values = { ...form.getFieldsValue(), country: value };
+            filterModifiedSuppliers(values);
           },
         },
         {
@@ -89,7 +96,19 @@ const fieldsData = ({
           }) : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
-            filterCallReport(values);
+            filterModifiedSuppliers(values);
+          },
+        },
+        {
+          span: 8,
+          type: 'select',
+          label: 'Estado',
+          key: 'state',
+          value: '',
+          options: states,
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), state: value };
+            filterModifiedSuppliers(values);
           },
         },
       ],
@@ -105,17 +124,10 @@ const fieldsData = ({
           key: 'clear',
           buttonType: 'primary',
           handleclick: handleReset,
-        }, {
-          span: 2,
-          type: 'button',
-          label: 'Exportar a Excel',
-          key: 'export',
-          buttonType: 'primary',
-          handleclick: exportExcel,
         },
       ],
     },
   ];
 };
 
-export default fieldsData;
+export default formData;

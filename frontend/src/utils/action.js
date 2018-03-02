@@ -3,6 +3,8 @@ import { loginUrl } from './api';
 
 function getMessage(type) {
   switch (type) {
+    case 'DOCUMENT_EXISTS':
+      return 'Validation.documentExists';
     case 'DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED':
       return 'Validation.dateToEvaluate';
     case 'ALREADY_HAS_AN_EVALUATOR':
