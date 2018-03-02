@@ -30,16 +30,6 @@ const routes = [
   },
   {
     index: 3,
-    name: 'SECTOR',
-    path: '/sector',
-    exact: true,
-    component: asyncComponent(() =>
-      import('./pages/Sector').then(module => module.default),
-    ),
-    hidden: true,
-  },
-  {
-    index: 4,
     name: 'CALL',
     path: '/call',
     exact: true,
@@ -48,7 +38,7 @@ const routes = [
     ),
   },
   {
-    index: 5,
+    index: 4,
     name: 'CALL_FORM',
     path: '/call/form',
     exact: true,
@@ -57,7 +47,7 @@ const routes = [
     ),
   },
   {
-    index: 6,
+    index: 5,
     name: 'CALL_BY_ID',
     path: '/call/form/:id',
     exact: true,
@@ -66,7 +56,7 @@ const routes = [
     ),
   },
   {
-    index: 7,
+    index: 6,
     name: 'MODIFIED_SUPPLIERS',
     path: '/modifiedSuppliers',
     exact: true,
@@ -75,7 +65,7 @@ const routes = [
     ),
   },
   {
-    index: 8,
+    index: 7,
     name: 'SURVEYS',
     path: '/surveys',
     exact: true,
@@ -84,7 +74,7 @@ const routes = [
     ),
   },
   {
-    index: 9,
+    index: 8,
     name: 'CALLREPORT',
     path: '/callReport',
     exact: true,
@@ -93,7 +83,7 @@ const routes = [
     ),
   },
   {
-    index: 10,
+    index: 9,
     name: 'RESULTS',
     path: '/results',
     exact: true,
@@ -102,12 +92,30 @@ const routes = [
     ),
   },
   {
-    index: 11,
+    index: 10,
     name: 'PENDINGS',
     path: '/pendings',
     exact: true,
     component: asyncComponent(() =>
       import('./pages/Pendings').then(module => module.default),
+    ),
+  },
+  {
+    index: 11,
+    name: 'SECTOR',
+    path: '/sector',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Sector').then(module => module.default),
+    ),
+  },
+  {
+    index: 12,
+    name: 'SERVICE',
+    path: '/service',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Service').then(module => module.default),
     ),
   },
 ];

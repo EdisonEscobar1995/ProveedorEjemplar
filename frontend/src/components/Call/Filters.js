@@ -1,6 +1,6 @@
 import React from 'react';
-import fieldsData from './fieldsData';
-import FilterForm from '../shared/FilterForm';
+import DinamicForm from '../shared/DinamicForm';
+import filterData from './filterData';
 
 function Filters(props) {
   const handleSubmit = (e) => {
@@ -8,12 +8,18 @@ function Filters(props) {
     props.filterCalledSuppliers(props.form.getFieldsValue());
   };
 
+  const { Form } = props;
+  const { getFieldDecorator, setFields } = props.form;
+  const template = filterData();
+
   return (
-    <FilterForm
-      {...props}
-      fieldsData={fieldsData}
-      handleSubmit={handleSubmit}
-    />
+    <Form onSubmit={handleSubmit}>
+      <DinamicForm
+        getFieldDecorator={getFieldDecorator}
+        setFields={setFields}
+        content={template}
+      />
+    </Form>
   );
 }
 

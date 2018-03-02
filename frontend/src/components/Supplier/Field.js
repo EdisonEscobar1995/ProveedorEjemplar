@@ -10,9 +10,9 @@ const ColStyle = styled(Col)`
   margin-bottom: 4px;
 `;
 
-function Field({ label, help, required, children }) {
+function Field({ label, help, required, children, style }) {
   return (
-    <Row>
+    <Row style={style}>
       <ColStyle span={24}>
         <FormattedMessage
           id={label}

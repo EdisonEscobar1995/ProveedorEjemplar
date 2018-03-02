@@ -1,6 +1,7 @@
 import {
   GET_USER_CONTEXT_PROGRESS,
   GET_USER_CONTEXT_SUCCESS,
+  TOGGLE_MODAL,
   REQUEST_FAILED,
 } from './const';
 
@@ -43,4 +44,20 @@ const getUserContext = () => (dispatch) => {
     });
 };
 
-export default getUserContext;
+const openModal = component => ({
+  type: TOGGLE_MODAL,
+  visibleModal: true,
+  component,
+});
+
+const closeModal = () => ({
+  type: TOGGLE_MODAL,
+  visibleModal: false,
+  component: null,
+});
+
+export {
+  getUserContext,
+  openModal,
+  closeModal,
+};

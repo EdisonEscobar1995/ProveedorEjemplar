@@ -118,5 +118,6 @@ const messages = {
   'Validation.requiredField': 'This field is required',
   'Validation.surveyCouldNotComplete': 'The survey could not be completed',
   'Validation.informationNotFound': 'Information not found',
+  'Validation.documentExists': 'There is another document with the same data',
 };
 export default messages;

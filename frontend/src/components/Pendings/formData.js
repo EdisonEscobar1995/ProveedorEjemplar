@@ -1,21 +1,15 @@
-import { LOCKED, NOTIFIED } from '../../utils/const';
-
-const fieldsData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, handleReset, form }) => {
-  const states = [
-    {
-      id: LOCKED,
-      name: LOCKED,
-    },
-    {
-      id: NOTIFIED,
-      name: NOTIFIED,
-    },
-  ];
+const formData = ({ data, getPendings, filterPendings, form }) => {
   const {
     years,
     suppliers,
     masters,
+    states,
   } = data;
+
+  const handleReset = () => {
+    form.resetFields();
+    getPendings();
+  };
 
   return [
     {
@@ -28,26 +22,26 @@ const fieldsData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, handl
           key: 'year',
           value: years && years.length > 0 ? years[0] : '',
           options: years ? years.map(item => ({ id: item, name: item })) : [],
-          handleChange: getModifiedSuppliers,
+          handleChange: getPendings,
           allowClear: false,
           valuesToClean: {
             supply: { value: '' },
             category: { value: '' },
-            country: { value: '' },
+            companySize: { value: '' },
             supplier: { value: '' },
-            state: { value: '' },
+            surveyState: { value: '' },
           },
         },
         {
           span: 8,
           type: 'select',
-          label: 'Suministros',
+          label: 'Tipo de suministro',
           key: 'supply',
           value: '',
           options: masters ? masters.Supply : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supply: value };
-            filterModifiedSuppliers(values);
+            filterPendings(values);
           },
         },
         {
@@ -59,7 +53,7 @@ const fieldsData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, handl
           options: masters ? masters.Category : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), category: value };
-            filterModifiedSuppliers(values);
+            filterPendings(values);
           },
         },
       ],
@@ -70,13 +64,13 @@ const fieldsData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, handl
         {
           span: 8,
           type: 'select',
-          label: 'País',
-          key: 'country',
+          label: 'Tamaño',
+          key: 'companySize',
           value: '',
-          options: masters ? masters.Country : [],
+          options: masters ? masters.CompanySize : [],
           handleChange: (value) => {
-            const values = { ...form.getFieldsValue(), country: value };
-            filterModifiedSuppliers(values);
+            const values = { ...form.getFieldsValue(), companySize: value };
+            filterPendings(values);
           },
         },
         {
@@ -91,19 +85,19 @@ const fieldsData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, handl
           }) : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
-            filterModifiedSuppliers(values);
+            filterPendings(values);
           },
         },
         {
           span: 8,
           type: 'select',
           label: 'Estado',
-          key: 'state',
+          key: 'surveyState',
           value: '',
           options: states,
           handleChange: (value) => {
-            const values = { ...form.getFieldsValue(), state: value };
-            filterModifiedSuppliers(values);
+            const values = { ...form.getFieldsValue(), surveyState: value };
+            filterPendings(values);
           },
         },
       ],
@@ -125,4 +119,4 @@ const fieldsData = ({ data, getModifiedSuppliers, filterModifiedSuppliers, handl
   ];
 };
 
-export default fieldsData;
+export default formData;
