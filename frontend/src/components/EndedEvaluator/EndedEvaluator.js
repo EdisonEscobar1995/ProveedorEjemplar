@@ -1,8 +1,22 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Checkbox, Button, Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
+import message from '../../components/shared/message';
 
-function EndedEvaluator({ data }) {
+function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) {
+  const onChange = (event, record) => {
+    checkSupplier(record.idSupplier, event.target.checked);
+  };
+
+  const validateChecked = (sendMethod) => {
+    const checked = data.filter(item => item.checked).map(item => item.idSupplierByCall);
+    if (checked.length > 0) {
+      sendMethod(checked);
+    } else {
+      message({ text: 'Debe seleccionar al menos un proveedor', type: 'error' });
+    }
+  };
+
   const columns = [{
     title: 'Código SAP',
     dataIndex: 'sapCode',
@@ -52,6 +66,15 @@ function EndedEvaluator({ data }) {
         </Link>
       );
     },
+  }, {
+    title: 'Seleccionar',
+    dataIndex: 'check',
+    key: 'check',
+    render(text, record) {
+      return (
+        <Checkbox onChange={event => (onChange(event, record))} />
+      );
+    },
   }];
 
   return (
@@ -65,6 +88,24 @@ function EndedEvaluator({ data }) {
         dataSource={data}
         columns={columns}
       />
+      <Row justify="center" align="middle" type="flex" gutter={24}>
+        <Col>
+          <Button
+            type="primary"
+            onClick={() => validateChecked(sendApprovals)}
+          >
+            Pasan a evaluación de comité ténico
+          </Button>
+        </Col>
+        <Col>
+          <Button
+            type="primary"
+            onClick={() => validateChecked(sendRejections)}
+          >
+            No pasan a evaluación de comité ténico
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }

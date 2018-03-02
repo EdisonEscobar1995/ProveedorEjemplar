@@ -1,10 +1,13 @@
 import {
   GET_ENDED_EVALUATOR_PROGRESS,
   GET_ENDED_EVALUATOR_SUCCESS,
+  CHECK_SUPPLIER,
+  UPDATE_ENDED_EVALUATOR,
   REQUEST_FAILED,
 } from './const';
 
 import { getEndedEvaluatorApi } from '../../api/call';
+import { sendApprovalsApi, sendRejectionsApi } from '../../api/supplier';
 import { requestApi } from '../../utils/action';
 
 const getEndedEvaluatorProgress = () => ({
@@ -13,6 +16,11 @@ const getEndedEvaluatorProgress = () => ({
 
 const getEndedEvaluatorSuccess = data => ({
   type: GET_ENDED_EVALUATOR_SUCCESS,
+  data,
+});
+
+const updateEndedEvaluator = data => ({
+  type: UPDATE_ENDED_EVALUATOR,
   data,
 });
 
@@ -32,7 +40,38 @@ const getEndedEvaluator = () => (
   }
 );
 
+const checkSupplier = (idSupplier, checked) => ({
+  type: CHECK_SUPPLIER,
+  idSupplier,
+  checked,
+});
+
+const sendApprovals = clientData => (
+  (dispatch) => {
+    requestApi(dispatch, getEndedEvaluatorProgress, sendApprovalsApi, clientData)
+      .then(() => {
+        dispatch(updateEndedEvaluator(clientData));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  }
+);
+
+const sendRejections = clientData => (
+  (dispatch) => {
+    requestApi(dispatch, getEndedEvaluatorProgress, sendRejectionsApi, clientData)
+      .then(() => {
+        dispatch(updateEndedEvaluator(clientData));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  }
+);
+
 export {
   getEndedEvaluator,
   getFailedRequest,
+  checkSupplier,
+  sendApprovals,
+  sendRejections,
 };

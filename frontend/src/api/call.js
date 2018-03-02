@@ -28,7 +28,7 @@ const getResultsApi = data => instance.get(`Call?action=getResults&call=${data.c
   `&country=${data.country || ''}
 `);
 
-const getEndedEvaluatorApi = () => instance.get('Call?action=getThemForTechnicalCommittee');
+const getEndedEvaluatorApi = () => instance.get('Call?action=getThemForTechnicalTeam');
 
 export {
   getCallApi,

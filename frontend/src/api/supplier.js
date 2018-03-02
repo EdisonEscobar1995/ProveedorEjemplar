@@ -41,6 +41,14 @@ function getPendingsApi(year) {
   return instance.get(`Supplier?action=pendingToQualify&year=${year || ''}`);
 }
 
+function sendApprovalsApi(data) {
+  return instance.post('Supplier?action=approveToTechnicalTeam', { data });
+}
+
+function sendRejectionsApi(data) {
+  return instance.post('Supplier?action=dontApproveToTechnicalTeam', { data });
+}
+
 export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
@@ -52,4 +60,6 @@ export {
   finishSurveyApi,
   getSurveysApi,
   getPendingsApi,
+  sendApprovalsApi,
+  sendRejectionsApi,
 };
