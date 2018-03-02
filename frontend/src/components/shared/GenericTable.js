@@ -66,6 +66,8 @@ function GenericTable(props) {
                     title={<FormattedMessage id={column.title} />}
                     key={column.key}
                     dataIndex={column.key}
+                    render={column.render}
+                    sorter={column.sorter}
                   />
                 )
               ))

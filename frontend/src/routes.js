@@ -127,6 +127,15 @@ const routes = [
       import('./pages/Service').then(module => module.default),
     ),
   },
+  {
+    index: 14,
+    name: 'EVALUATIONSCALE',
+    path: '/evaluationScale',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/EvaluationScale').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;
