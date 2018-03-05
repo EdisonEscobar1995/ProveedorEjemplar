@@ -1,11 +1,14 @@
 import {
   GET_ENDED_EVALUATOR_PROGRESS,
   GET_ENDED_EVALUATOR_SUCCESS,
+  CHECK_SUPPLIER,
+  UPDATE_ENDED_EVALUATOR,
   REQUEST_FAILED,
 } from './const';
 
 import { getEndedEvaluatorApi } from '../../api/call';
-import { requestApi } from '../../utils/action';
+import { sendApprovalsApi, sendRejectionsApi } from '../../api/supplier';
+import { requestApi, sortByField } from '../../utils/action';
 
 const getEndedEvaluatorProgress = () => ({
   type: GET_ENDED_EVALUATOR_PROGRESS,
@@ -13,6 +16,11 @@ const getEndedEvaluatorProgress = () => ({
 
 const getEndedEvaluatorSuccess = data => ({
   type: GET_ENDED_EVALUATOR_SUCCESS,
+  data,
+});
+
+const updateEndedEvaluator = data => ({
+  type: UPDATE_ENDED_EVALUATOR,
   data,
 });
 
@@ -24,8 +32,36 @@ const getEndedEvaluator = () => (
   (dispatch) => {
     requestApi(dispatch, getEndedEvaluatorProgress, getEndedEvaluatorApi)
       .then((response) => {
-        const { data } = response.data;
+        const data = sortByField(response.data.data, 'totalScoreOfEvaluator', true);
         dispatch(getEndedEvaluatorSuccess(data));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  }
+);
+
+const checkSupplier = (idSupplier, checked) => ({
+  type: CHECK_SUPPLIER,
+  idSupplier,
+  checked,
+});
+
+const sendApprovals = clientData => (
+  (dispatch) => {
+    requestApi(dispatch, getEndedEvaluatorProgress, sendApprovalsApi, clientData)
+      .then(() => {
+        dispatch(updateEndedEvaluator(clientData));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  }
+);
+
+const sendRejections = clientData => (
+  (dispatch) => {
+    requestApi(dispatch, getEndedEvaluatorProgress, sendRejectionsApi, clientData)
+      .then(() => {
+        dispatch(updateEndedEvaluator(clientData));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -35,4 +71,7 @@ const getEndedEvaluator = () => (
 export {
   getEndedEvaluator,
   getFailedRequest,
+  checkSupplier,
+  sendApprovals,
+  sendRejections,
 };
