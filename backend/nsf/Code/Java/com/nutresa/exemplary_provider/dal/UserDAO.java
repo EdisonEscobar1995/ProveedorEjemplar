@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
@@ -51,24 +50,6 @@ public class UserDAO extends GenericDAO<UserDTO> {
     public String getCommonName(String name) throws HandlerGenericException {
         Session currSess = Factory.getSession();
         return currSess.createName(name).getCommon();
-    }
-
-    public List<UserDTO> getTechnicalTeam(Map<String, String> fieldsToIdentifyTechnicalTeam)
-            throws HandlerGenericException {
-        List<UserDTO> technicalTeam = new ArrayList<UserDTO>();
-        List<String> filter = new ArrayList<String>();
-        filter.add(fieldsToIdentifyTechnicalTeam.get("SUPPLY"));
-        filter.add(fieldsToIdentifyTechnicalTeam.get("CATEGORY"));
-        filter.add(fieldsToIdentifyTechnicalTeam.get("COUNTRY"));
-        View currentView = getDatabase().getView("vwUsersByRol");
-        DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
-        if (null != documents) {
-            for (Document document : documents) {
-                technicalTeam.add(castDocument(document));
-            }
-        }
-
-        return technicalTeam;
     }
 
 }

@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -239,11 +240,23 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         Map<String, List<DTO>> currentMasters = participantsToTechnicalTeam.getMasters();
         ServiceBLO serviceBLO = new ServiceBLO();
         ItemBLO itemBLO = new ItemBLO();
+        TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
         currentMasters.put("Service", serviceBLO.getAll());
         currentMasters.put("Item", itemBLO.getAll());
         currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo", SurveyStates.TECHNICAL_TEAM
                 .toString(), "vwEvaluationScalesByApplyTo"));
+
+        Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
+                SupplierByCallDTO.class);
+
+        Iterator<String> iterator = listIdsSupplierByCall.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            currentMasters.put("TechnicalTeamAnswer", technicalTeamBLO.getAllBy("idSupplierByCall",
+                    listIdsSupplierByCall.get(key).toString(), "vwTechnicalTeamAnswersByIdSupplierByCall"));
+        }
+
         participantsToTechnicalTeam.setMasters(currentMasters);
 
         return participantsToTechnicalTeam;

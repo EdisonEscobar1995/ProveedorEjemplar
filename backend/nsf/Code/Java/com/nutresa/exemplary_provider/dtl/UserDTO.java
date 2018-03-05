@@ -9,12 +9,6 @@ public class UserDTO extends MasterDTO {
     private List<String> idRols;
     @Expose
     private String email;
-    @Expose
-    private List<String> idSupplies;
-    @Expose
-    private List<String> idCategories;
-    @Expose
-    private String idCountry;
 
     public List<String> getIdRols() {
         return idRols;
@@ -30,30 +24,6 @@ public class UserDTO extends MasterDTO {
 
     public String getEmail() {
         return email;
-    }
-
-    public void setIdCategories(List<String> idCategories) {
-        this.idCategories = idCategories;
-    }
-
-    public List<String> getIdCategories() {
-        return idCategories;
-    }
-
-    public void setIdSupplies(List<String> idSupplies) {
-        this.idSupplies = idSupplies;
-    }
-
-    public List<String> getIdSupplies() {
-        return idSupplies;
-    }
-
-    public void setIdCountry(String idCountry) {
-        this.idCountry = idCountry;
-    }
-
-    public String getIdCountry() {
-        return idCountry;
     }
 
 }

@@ -13,8 +13,10 @@ import com.nutresa.exemplary_provider.dtl.AccessByRolDTO;
 import com.nutresa.exemplary_provider.dtl.AccessDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
+import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.RolDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -126,7 +128,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     protected List<String> getUserEmailsByRol(String rolName) throws HandlerGenericException {
         RolBLO rolBLO = new RolBLO();
         List<String> emails = new ArrayList<String>();
-        RolDTO rol = rolBLO.getIdRolLiberator(rolName);
+        RolDTO rol = rolBLO.getRolByShortName(rolName);
         List<UserDTO> users = getUsersByRol(rol.getId());
         if (!users.isEmpty()) {
             for (UserDTO user : users) {
@@ -145,12 +147,21 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     protected void notifyToTechnicalTeam(Map<String, String> fieldsToIdentifyTechnicalTeam)
             throws HandlerGenericException {
         UserDAO userDAO = new UserDAO();
-        List<UserDTO> technicalTeam = userDAO.getTechnicalTeam(fieldsToIdentifyTechnicalTeam);
+        RolBLO rolBLO = new RolBLO();
+        TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
+        List<UserDTO> userWithTechnicalTeamRol = userDAO.getUsersByRol(rolBLO.getRolByShortName(
+                Rol.TECHNICAL_TEAM.toString()).getId());
         NotificationBLO notificationBLO = new NotificationBLO();
         List<String> technicalTeamEmails = new ArrayList<String>();
-        for (UserDTO member : technicalTeam) {
-            technicalTeamEmails.add(member.getEmail());
+        for (UserDTO user : userWithTechnicalTeamRol) {
+            fieldsToIdentifyTechnicalTeam.put("USER", user.getId());
+            List<TechnicalTeamDTO> especificTechnicalTeamMembers = technicalTeamBLO
+                    .getMembersByEspecificFeactures(fieldsToIdentifyTechnicalTeam);
+            if (!especificTechnicalTeamMembers.isEmpty()) {
+                technicalTeamEmails.add(user.getEmail());
+            }
         }
+
         notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
     }
 
