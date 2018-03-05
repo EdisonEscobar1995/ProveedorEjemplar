@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(EvaluationScale)' alias='EvaluationScale|vwEvaluationScales'
+<view name='(EvaluationScale)' alias='EvaluationScales|vwEvaluationScales'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='42f5a' unid='2AEB1AFA60CF7E850525824100582766' sequence='2'>
+<noteinfo noteid='42f5a' unid='2AEB1AFA60CF7E850525824100582766' sequence='3'>
 <created><datetime>20180227T110252,54-05</datetime></created>
-<modified><datetime>20180227T110351,32-05</datetime></modified>
-<revised><datetime>20180227T110351,31-05</datetime></revised>
-<lastaccessed><datetime>20180227T110351,32-05</datetime></lastaccessed>
+<modified><datetime>20180305T153024,52-05</datetime></modified>
+<revised><datetime>20180305T153024,51-05</datetime></revised>
+<lastaccessed><datetime>20180305T153024,52-05</datetime></lastaccessed>
 <addedtofile><datetime>20180227T110252,90-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code

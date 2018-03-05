@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(Services by name)' alias='Service|vwServicesByName' xmlns='http://www.lotus.com/dxl'
+<view name='(Services by name)' alias='Services|vwServicesByName' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
  showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,11 +9,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='41d86' unid='4C99B789F5FB8861052582400054000C' sequence='6'>
+<noteinfo noteid='41d86' unid='4C99B789F5FB8861052582400054000C' sequence='7'>
 <created><datetime>20180226T101730,36-05</datetime></created>
-<modified><datetime>20180226T135107,57-05</datetime></modified>
-<revised><datetime>20180226T135107,56-05</datetime></revised>
-<lastaccessed><datetime>20180226T135107,57-05</datetime></lastaccessed>
+<modified><datetime>20180305T153135,64-05</datetime></modified>
+<revised><datetime>20180305T153135,63-05</datetime></revised>
+<lastaccessed><datetime>20180305T153135,64-05</datetime></lastaccessed>
 <addedtofile><datetime>20180226T101730,42-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
