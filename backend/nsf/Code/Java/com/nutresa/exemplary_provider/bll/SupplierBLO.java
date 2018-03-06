@@ -286,7 +286,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             if (supplier instanceof SupplierDTO) {
                 Map<String, String> filter = new LinkedHashMap<String, String>();
                 filter.put("SUPPLY", supplier.getIdSupply());
-                filter.put("CATEGORY", supplier.getIdCountry());
+                filter.put("CATEGORY", supplier.getIdCategory());
                 filter.put("COUNTRY", supplier.getIdCountry());
                 UserBLO userBLO = new UserBLO();
                 NotificationBLO notificationBLO = new NotificationBLO();
