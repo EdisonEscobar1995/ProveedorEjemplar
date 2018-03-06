@@ -140,7 +140,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO supplierByCall = get(idSupplierByCall);
         UserBLO userBLO = new UserBLO();
         if (null != supplierByCall && !supplierByCall.getWhoEvaluate().isEmpty()
-                && !supplierByCall.getWhoEvaluate().equals(userBLO.getUserInSession().getName())) {
+                && !supplierByCall.getWhoEvaluate().equals(userBLO.getCommonName(userBLO.getUserInSession().getName()))) {
             isFromEvaluator = true;
         }
 
@@ -226,8 +226,35 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         if (userBLO.isRol(Rol.EVALUATOR.toString())) {
             response = finishSurveyOfEvalutor(call, supplierByCall);
-        } else {
+        }
+
+        if (userBLO.isRol(Rol.TECHNICAL_TEAM.toString())) {
+            response = finishSurveyOfTechnicalTeam(call, supplierByCall);
+        }
+
+        if (userBLO.isRol(Rol.SUPPLIER.toString())) {
             response = finishSurveyOfSupplier(call, supplierByCall);
+        }
+
+        return response;
+    }
+
+    private SupplierByCallDTO finishSurveyOfTechnicalTeam(CallDTO call, SupplierByCallDTO supplierByCall)
+            throws HandlerGenericException {
+        SupplierByCallDTO response = null;
+
+        if (!call.isCaducedDeadLineToMakeSurveyTechnicalTeam()) {
+            if (changeState(SurveyStates.ENDED_TECHNICAL_TEAM.toString(), supplierByCall.getId())) {
+                response = get(supplierByCall.getId());
+                NotificationBLO notificationBLO = new NotificationBLO();
+                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.TECHNICAL_TEAM);
+            } else {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
+                        .toString());
+            }
+        } else {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED
+                    .toString());
         }
 
         return response;
@@ -469,6 +496,27 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         if (null == supplierByCall.getId() || supplierByCall.getId().trim().isEmpty()) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
+        return super.save(supplierByCall);
+    }
+
+    protected boolean isFromTechnicalTeam(String idSupplierByCall) throws HandlerGenericException {
+        boolean isFromTechnicalTeamMember = false;
+        SupplierByCallDTO supplierByCall = get(idSupplierByCall);
+        UserBLO userBLO = new UserBLO();
+        if (null != supplierByCall
+                && !supplierByCall.getWhoEvaluateOfTechnicalTeam().isEmpty()
+                && !supplierByCall.getWhoEvaluateOfTechnicalTeam().equals(
+                        userBLO.getCommonName(userBLO.getUserInSession().getName()))) {
+            isFromTechnicalTeamMember = true;
+        }
+
+        return isFromTechnicalTeamMember;
+    }
+
+    protected SupplierByCallDTO setWhoTechnicalTeamMember(String idSupplierByCall, String nameEvaluator)
+            throws HandlerGenericException {
+        SupplierByCallDTO supplierByCall = get(idSupplierByCall);
+        supplierByCall.setWhoEvaluateOfTechnicalTeam(nameEvaluator);
         return super.save(supplierByCall);
     }
 }

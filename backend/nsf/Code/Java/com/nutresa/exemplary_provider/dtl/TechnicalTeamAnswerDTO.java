@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.Date;
+
 import com.google.gson.annotations.Expose;
 
 public class TechnicalTeamAnswerDTO {
@@ -13,6 +15,8 @@ public class TechnicalTeamAnswerDTO {
     private String idItem;
     @Expose
     private String idTechnicalTeamMember;
+    @Expose
+    private Date dateResponseTechnicalTeamMember;
 
     public String getId() {
         return id;
@@ -52,6 +56,14 @@ public class TechnicalTeamAnswerDTO {
 
     public String getIdTechnicalTeamMember() {
         return idTechnicalTeamMember;
+    }
+
+    public void setDateResponseTechnicalTeamMember(Date dateResponseTechnicalTeamMember) {
+        this.dateResponseTechnicalTeamMember = dateResponseTechnicalTeamMember;
+    }
+
+    public Date getDateResponseTechnicalTeamMember() {
+        return dateResponseTechnicalTeamMember;
     }
 
 }

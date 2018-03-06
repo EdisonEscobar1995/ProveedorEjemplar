@@ -65,30 +65,29 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
      * @throws HandlerGenericException
      */
     public void notifySurveyCompleted(String idSupplier, Rol rol) throws HandlerGenericException {
-        try {
-            NotificationDTO notification = null;
-            List<String> sendTo = getUsersByRolName(Rol.LIBERATOR.toString());
+        NotificationDTO notification = null;
+        String linkOfButton = Common.buildPathResource() + "/dist/index.html#/surveys";
+        List<String> sendTo = getUsersByRolName(Rol.LIBERATOR.toString());
 
-            NotificationDAO notificationDAO = new NotificationDAO();
-            switch (rol) {
-            case EVALUATOR:
-                notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_EVALUATOR
-                        .toString());
-                break;
-            case SUPPLIER:
-                notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_SUPPLIER
-                        .toString());
-                break;
-            default:
-                notification = new NotificationDTO();
-                break;
-            }
-
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/surveys";
-            sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), true, linkOfButton);
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
+        NotificationDAO notificationDAO = new NotificationDAO();
+        switch (rol) {
+        case EVALUATOR:
+            notification = notificationDAO
+                    .getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_EVALUATOR.toString());
+            break;
+        case SUPPLIER:
+            notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_SUPPLIER.toString());
+            break;
+        case TECHNICAL_TEAM:
+            notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_TECHNICAL_TEAM
+                    .toString());
+            break;
+        default:
+            notification = new NotificationDTO();
+            break;
         }
+
+        sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), true, linkOfButton);
     }
 
     private Map<String, String> buildDetailUserToSend(String idSupplier) throws HandlerGenericException {

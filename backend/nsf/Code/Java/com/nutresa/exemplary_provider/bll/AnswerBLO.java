@@ -67,17 +67,18 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             if (supplierByCallBLO.isFromEvaluator(dto.getIdSupplierByCall())) {
                 rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
                 SupplierByCallDTO supplierByCall = supplierByCallBLO.get(dto.getIdSupplierByCall());
-                notice = userBLO.getCommonName(supplierByCall.getWhoEvaluate());
-                throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
+                notice = supplierByCall.getWhoEvaluate();
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_HAS_AN_EVALUATOR.toString());
             }
             supplierByCallBLO.changeState(SurveyStates.EVALUATOR.toString(), dto.getIdSupplierByCall());
-            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getUserInSession().getName());
+            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getCommonName(userBLO
+                    .getUserInSession().getName()));
             dto.setDateResponseEvaluator(new Date());
         } else {
             supplierByCallBLO.changeState(SurveyStates.SUPPLIER.toString(), dto.getIdSupplierByCall());
             AnswerDAO answerDAO = new AnswerDAO();
-            AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
-                    dto.getIdQuestion());
+            AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(), dto
+                    .getIdQuestion());
             dto.setDateResponseSupplier(new Date());
 
             if (null != answerExisting) {
@@ -90,11 +91,17 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     }
 
     /**
-     * Construye reporte de nota promedio por proveedor, basado en las respuestas suministradas por el proveedor.
+     * Construye reporte de nota promedio por proveedor, basado en las
+     * respuestas suministradas por el proveedor.
      * 
-     * @param idSupplierByCall Identificador de la convocaria definitiva y finalizada de un proveedor.
-     * @param recordOfReport Registro del reporte
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param idSupplierByCall
+     *            Identificador de la convocaria definitiva y finalizada de un
+     *            proveedor.
+     * @param recordOfReport
+     *            Registro del reporte
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Registro del reporte
      * @throws HandlerGenericException
      */
@@ -124,8 +131,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             if (null != option) {
                 setSummarySurveyBySupplier(option, summarySurvey);
                 if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
-                    sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier
-                            + summarySurvey.getScoreOfSupplier());
+                    sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier + summarySurvey
+                            .getScoreOfSupplier());
                     expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId());
                     sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
                 } else {
@@ -135,8 +142,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
                 setSummarySurveyByEvaluator(answer, summarySurvey);
                 if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
-                    sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
-                            + summarySurvey.getScoreOfEvaluator());
+                    sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator + summarySurvey
+                            .getScoreOfEvaluator());
                     expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId());
                     sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
                 } else {
@@ -195,10 +202,15 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     }
 
     /**
-     * Obtiene las respuestas que se van a tener en cuenta para el reporte de Nota promedio.
+     * Obtiene las respuestas que se van a tener en cuenta para el reporte de
+     * Nota promedio.
      * 
-     * @param idSupplierByCall Identificador de la convocaria definitiva y finalizada de un proveedor.
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param idSupplierByCall
+     *            Identificador de la convocaria definitiva y finalizada de un
+     *            proveedor.
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Collección de respuestas
      * @throws HandlerGenericException
      */
@@ -224,10 +236,14 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     }
 
     /**
-     * Obtiene las respuestas por pregunta y convocatoria definitiva de un proveedor.
+     * Obtiene las respuestas por pregunta y convocatoria definitiva de un
+     * proveedor.
      * 
-     * @param idSupplierByCall Identificador de la convocatoria definitiva de un proveedor.
-     * @param questions Collección de preguntas a las que se desea obtener la respuesta.
+     * @param idSupplierByCall
+     *            Identificador de la convocatoria definitiva de un proveedor.
+     * @param questions
+     *            Collección de preguntas a las que se desea obtener la
+     *            respuesta.
      * @return Colección de respuestas
      * @throws HandlerGenericException
      */
