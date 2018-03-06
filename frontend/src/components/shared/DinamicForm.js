@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker,
+  Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker, Spin,
 } from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
@@ -34,9 +34,9 @@ const InputNumberStyle = styled(InputNumber)`
   width: 100%;
 `;
 
-function DinamicForm({ content, getFieldDecorator, setFields }) {
+function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
   return (
-    <div>
+    <Spin spinning={loadingModal === true}>
       {
         content.map(item => (
           <Row key={item.key} justify={item.justify} align="middle" type="flex" gutter={24}>
@@ -304,7 +304,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
           </Row>
         ))
       }
-    </div>
+    </Spin>
   );
 }
 export default DinamicForm;

@@ -15,6 +15,9 @@ import endedEvaluator from './EndedEvaluator/reducer';
 import sector from './Sector/reducer';
 import service from './Service/reducer';
 import evaluationScale from './EvaluationScale/reducer';
+import user from './User/reducer';
+import supply from './Supply/reducer';
+import technicalTeam from './TechnicalTeam/reducer';
 
 const app = combineReducers({
   main,
@@ -31,6 +34,9 @@ const app = combineReducers({
   sector,
   service,
   evaluationScale,
+  user,
+  supply,
+  technicalTeam,
 });
 
 let middleware = {};

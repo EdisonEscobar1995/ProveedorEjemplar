@@ -3,6 +3,7 @@ import {
   GET_USER_CONTEXT_SUCCESS,
   TOGGLE_MODAL,
   REQUEST_FAILED,
+  LOADING_MODAL,
 } from './const';
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   visibleModal: false,
   component: null,
   loading: false,
+  loadingModal: false,
 };
 
 function mainApp(state = initialState, action) {
@@ -33,12 +35,20 @@ function mainApp(state = initialState, action) {
         loading: false,
       };
     }
-    case TOGGLE_MODAL:
+    case TOGGLE_MODAL: {
       return {
         ...state,
         visibleModal: action.visibleModal,
         component: action.component,
+        loadingModal: false,
       };
+    }
+    case LOADING_MODAL: {
+      return {
+        ...state,
+        loadingModal: action.flag,
+      };
+    }
     default: {
       return state;
     }

@@ -136,6 +136,33 @@ const routes = [
       import('./pages/EvaluationScale').then(module => module.default),
     ),
   },
+  {
+    index: 15,
+    name: 'USER',
+    path: '/user',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/User').then(module => module.default),
+    ),
+  },
+  {
+    index: 16,
+    name: 'SUPPLY',
+    path: '/supply',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Supply').then(module => module.default),
+    ),
+  },
+  {
+    index: 17,
+    name: 'TECHNICALTEAM',
+    path: '/technicalTeam',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/TechnicalTeam').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

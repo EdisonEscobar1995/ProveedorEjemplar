@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import DinamicForm from '../shared/DinamicForm';
 
 function Generic(props) {
-  const { formData, submitMethod, validate, form, index } = props;
+  const { formData, submitMethod, validate, form, index, loadingModal } = props;
   const { getFieldDecorator, setFields } = form;
   const template = formData(props);
 
@@ -28,6 +28,7 @@ function Generic(props) {
         getFieldDecorator={getFieldDecorator}
         setFields={setFields}
         content={template}
+        loadingModal={loadingModal}
       />
     </Form>
   );

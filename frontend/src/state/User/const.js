@@ -1,0 +1,6 @@
+export const GET_USER_PROGRESS = 'GET_DATA_USER_PROGRESS';
+export const GET_USER_SUCCESS = 'GET_DATA_USER_SUCCESS';
+export const REQUEST_FAILED = 'REQUEST_FAILED';
+export const ADD_USER = 'ADD_USER';
+export const SAVE_USER = 'SAVE_USER';
+export const DELETE_USER = 'DELETE_USER';
