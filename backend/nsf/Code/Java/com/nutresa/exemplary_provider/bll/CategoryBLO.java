@@ -13,23 +13,6 @@ public class CategoryBLO extends GenericBLO<CategoryDTO, CategoryDAO> {
         super(CategoryDAO.class);
     }
 
-    @Override
-    public CategoryDTO save(CategoryDTO category) throws HandlerGenericException {
-        CategoryDAO dao = new CategoryDAO();
-        try {
-            category = dao.save(category);
-            if (null != category.getSubCategories()) {
-                SubCategoryBLO subCategory = new SubCategoryBLO();
-                category.setSubCategories(subCategory.saveList(category.getSubCategories(), "id" + dao.getEntity(),
-                        category.getId()));
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return category;
-    }
-
     public List<CategoryDTO> getByIdSupply(String idSupply) throws HandlerGenericException {
         CategoryDAO categoryDAO = new CategoryDAO();
         if (null == idSupply || idSupply.isEmpty()) {
