@@ -20,7 +20,7 @@ public class EvaluationScaleBLO extends GenericBLO<EvaluationScaleDTO, Evaluatio
 
         if (null != evaluationScale.getName() && !evaluationScale.getName().trim().isEmpty()
                 && null != evaluationScale.getApplyTo() && !evaluationScale.getApplyTo().trim().isEmpty()
-                && evaluationScale.getScore() < 0 && null != evaluationScale.getHelpText()
+                && evaluationScale.getScore() > 0 && null != evaluationScale.getHelpText()
                 && !evaluationScale.getHelpText().trim().isEmpty()) {
             if (existEvaluationScale(evaluationScale)) {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());

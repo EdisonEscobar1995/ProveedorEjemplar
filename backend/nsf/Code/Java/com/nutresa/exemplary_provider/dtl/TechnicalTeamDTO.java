@@ -13,8 +13,6 @@ public class TechnicalTeamDTO {
     private String idCategory;
     @Expose
     private String idCountry;
-    @Expose
-    private CountryDTO country;
 
     public String getId() {
         return id;
@@ -54,14 +52,6 @@ public class TechnicalTeamDTO {
 
     public void setIdCountry(String idCountry) {
         this.idCountry = idCountry;
-    }
-
-    public void setCountry(CountryDTO country) {
-        this.country = country;
-    }
-
-    public CountryDTO getCountry() {
-        return country;
     }
 
 }

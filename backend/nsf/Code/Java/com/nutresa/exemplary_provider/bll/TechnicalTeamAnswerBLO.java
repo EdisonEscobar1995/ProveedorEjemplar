@@ -23,27 +23,26 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
     }
 
     @Override
-    public TechnicalTeamAnswerDTO save(TechnicalTeamAnswerDTO dto) throws HandlerGenericException {
+    public TechnicalTeamAnswerDTO save(TechnicalTeamAnswerDTO answer) throws HandlerGenericException {
         UserBLO userBLO = new UserBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
 
         if (userBLO.isRol(Rol.TECHNICAL_TEAM.toString())) {
-            if (supplierByCallBLO.isFromTechnicalTeam(dto.getIdSupplierByCall())) {
-                SupplierByCallDTO supplierByCall = supplierByCallBLO.get(dto.getIdSupplierByCall());
+            if (supplierByCallBLO.isFromTechnicalTeam(answer.getIdSupplierByCall())) {
+                SupplierByCallDTO supplierByCall = supplierByCallBLO.get(answer.getIdSupplierByCall());
                 notice = supplierByCall.getWhoEvaluateOfTechnicalTeam();
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER
                         .toString());
             }
 
-            supplierByCallBLO.changeState(SurveyStates.TECHNICAL_TEAM.toString(), dto.getIdSupplierByCall());
-            supplierByCallBLO.setWhoTechnicalTeamMember(dto.getIdSupplierByCall(), userBLO.getCommonName(userBLO
+            supplierByCallBLO.changeState(SurveyStates.TECHNICAL_TEAM.toString(), answer.getIdSupplierByCall());
+            supplierByCallBLO.setWhoTechnicalTeamMember(answer.getIdSupplierByCall(), userBLO.getCommonName(userBLO
                     .getUserInSession().getName()));
-            dto.setDateResponseTechnicalTeamMember(new Date());
-            return super.save(dto);
+            answer.setDateResponseTechnicalTeamMember(new Date());
+            return super.save(answer);
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
         }
-
     }
 
 }
