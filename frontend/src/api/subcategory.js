@@ -1,17 +1,25 @@
-import intance from './instance';
+import instance from './instance';
 
-function getDataSubCategoryApi() {
-  return intance.get('SubCategory?action=getAll');
-}
 function getDataSubCategoryByCategoryApi(idCategory) {
-  return intance.get(`SubCategory?action=getAll&idCategory=${idCategory}`);
+  return instance.get(`SubCategory?action=getAll&idCategory=${idCategory}`);
 }
-function saveDataSubCategoryApi(data) {
-  return intance.post('SubCategory?action=save', data);
+
+function getSubcategoryByCategoryApi(id) {
+  return instance.get(`SubCategory?action=getByIdCategory&idCategory=${id}`);
+}
+
+function saveSubcategoryApi(data) {
+  return instance.post('SubCategory?action=save', data);
+}
+
+function deleteSubcategoryApi(data) {
+  const { id } = data;
+  return instance.get(`SubCategory?action=delete&id=${id}`);
 }
 
 export {
-  getDataSubCategoryApi,
-  saveDataSubCategoryApi,
   getDataSubCategoryByCategoryApi,
+  getSubcategoryByCategoryApi,
+  saveSubcategoryApi,
+  deleteSubcategoryApi,
 };

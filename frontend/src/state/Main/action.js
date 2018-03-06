@@ -3,9 +3,10 @@ import {
   GET_USER_CONTEXT_SUCCESS,
   TOGGLE_MODAL,
   REQUEST_FAILED,
+  LOADING_MODAL,
 } from './const';
 
-import getUserContextApi from '../../api/user';
+import { getUserContextApi } from '../../api/user';
 import { requestApi, sortByField } from '../../utils/action';
 
 const getUserContextProgress = () => ({
@@ -56,8 +57,14 @@ const closeModal = () => ({
   component: null,
 });
 
+const loadingModal = flag => ({
+  type: LOADING_MODAL,
+  flag,
+});
+
 export {
   getUserContext,
   openModal,
   closeModal,
+  loadingModal,
 };

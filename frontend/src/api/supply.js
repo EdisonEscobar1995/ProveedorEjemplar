@@ -1,13 +1,20 @@
-import intance from './instance';
+import instance from './instance';
 
-function getDataSupplyApi() {
-  return intance.get('Supply?action=getAll');
+function getSuppliesApi() {
+  return instance.get('Supply?action=getAll');
 }
-function saveDataSupplyApi(data) {
-  return intance.post('Supply?action=save', data);
+
+function saveSupplyApi(data) {
+  return instance.post('Supply?action=save', data);
+}
+
+function deleteSupplyApi(data) {
+  const { id } = data;
+  return instance.get(`Supply?action=delete&id=${id}`);
 }
 
 export {
-  getDataSupplyApi,
-  saveDataSupplyApi,
+  getSuppliesApi,
+  saveSupplyApi,
+  deleteSupplyApi,
 };
