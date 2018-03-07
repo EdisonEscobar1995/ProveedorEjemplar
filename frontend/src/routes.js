@@ -102,6 +102,15 @@ const routes = [
   },
   {
     index: 11,
+    name: 'TECHNICALTEAMSURVEY',
+    path: '/technicalTeamSurvey',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/TechnicalTeamSurvey').then(module => module.default),
+    ),
+  },
+  {
+    index: 12,
     name: 'ENDEDEVALUATOR',
     path: '/endedEvaluator',
     exact: true,
@@ -110,7 +119,7 @@ const routes = [
     ),
   },
   {
-    index: 12,
+    index: 13,
     name: 'SECTOR',
     path: '/sector',
     exact: true,
@@ -119,7 +128,7 @@ const routes = [
     ),
   },
   {
-    index: 13,
+    index: 14,
     name: 'SERVICE',
     path: '/service',
     exact: true,
@@ -128,7 +137,7 @@ const routes = [
     ),
   },
   {
-    index: 14,
+    index: 15,
     name: 'EVALUATIONSCALE',
     path: '/evaluationScale',
     exact: true,
@@ -137,7 +146,7 @@ const routes = [
     ),
   },
   {
-    index: 15,
+    index: 16,
     name: 'USER',
     path: '/user',
     exact: true,
@@ -146,7 +155,7 @@ const routes = [
     ),
   },
   {
-    index: 16,
+    index: 17,
     name: 'SUPPLY',
     path: '/supply',
     exact: true,
@@ -155,7 +164,7 @@ const routes = [
     ),
   },
   {
-    index: 17,
+    index: 18,
     name: 'TECHNICALTEAM',
     path: '/technicalTeam',
     exact: true,
