@@ -128,7 +128,6 @@ function supplyApp(state = initialState, action) {
       };
     }
     case SAVE_CATEGORY: {
-      console.log(action);
       return {
         ...state,
         data: state.data.map((supply) => {

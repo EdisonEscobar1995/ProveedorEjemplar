@@ -56,13 +56,16 @@ function getEvaluationScales() {
   };
 }
 
-function saveEvaluationScale(clientData, index) {
+function saveEvaluationScale(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getEvaluationScaleProgress, saveEvaluationScaleApi, clientData)
       .then((response) => {
         const { data } = response.data;
         dispatch(saveDataEvaluationScale(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });

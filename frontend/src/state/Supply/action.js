@@ -138,39 +138,48 @@ function getSubcategoryByCategory(id) {
   };
 }
 
-function saveSupply(clientData, index) {
+function saveSupply(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSupplyApi, clientData)
       .then((response) => {
         const { data } = response.data;
         dispatch(saveDataSupply(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
 
-function saveCategory(clientData, index) {
+function saveCategory(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveCategoryApi, clientData)
       .then((response) => {
         const { data } = response.data;
         dispatch(saveDataCategory(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
 
-function saveSubcategory(clientData, index) {
+function saveSubcategory(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSubcategoryApi, clientData)
       .then((response) => {
         const { data } = response.data;
         dispatch(saveDataSubcategory(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });
