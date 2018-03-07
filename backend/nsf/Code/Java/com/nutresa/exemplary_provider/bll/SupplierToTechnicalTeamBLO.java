@@ -15,7 +15,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTeamDTO, SupplierToTechnicalTeamDAO> {
     private static final String STATE_SUCCESS = "OK";
     private static final String STATE_FAILED = "KO";
-    private static final String SEPARATOR = "|";
+    private static final String SEPARATOR = ":";
 
     public SupplierToTechnicalTeamBLO() {
         super(SupplierToTechnicalTeamDAO.class);

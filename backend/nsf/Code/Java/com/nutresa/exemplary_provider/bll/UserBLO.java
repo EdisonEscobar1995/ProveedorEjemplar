@@ -159,7 +159,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             List<String> technicalTeamEmails = new ArrayList<String>();
             for (UserDTO user : userWithTechnicalTeamRol) {
                 String key = iterator.next();
-                String[] valueInFields = key.split("|");
+                String[] valueInFields = key.split(":");
                 filter.put("USER", user.getId());
                 filter.put("SUPPLY", valueInFields[0]);
                 filter.put("CATEGORY", valueInFields[1]);
