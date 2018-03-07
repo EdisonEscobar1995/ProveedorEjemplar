@@ -1,7 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +21,6 @@ import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
-    private static final String STATE_SUCCESS = "OK";
 
     public SupplierBLO() {
         super(SupplierDAO.class);
@@ -274,63 +272,6 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
-    }
-
-    public String approveToTechnicalTeam(Map<String, String> parameters) throws HandlerGenericException {
-        String notified;
-        String idSupplierByCall = parameters.get("idSupplierByCall");
-        if (null != idSupplierByCall) {
-            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
-            SupplierDTO supplier = get(supplierByCall.getIdSupplier());
-            if (supplier instanceof SupplierDTO) {
-                Map<String, String> filter = new LinkedHashMap<String, String>();
-                filter.put("SUPPLY", supplier.getIdSupply());
-                filter.put("CATEGORY", supplier.getIdCategory());
-                filter.put("COUNTRY", supplier.getIdCountry());
-                UserBLO userBLO = new UserBLO();
-                NotificationBLO notificationBLO = new NotificationBLO();
-                StateBLO stateBLO = new StateBLO();
-                notificationBLO.sendNotificationTypeToSupplier(supplier,
-                        NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM);
-                supplierByCall.setIdState(stateBLO.getStateByShortName(
-                        SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId());
-                supplierByCallBLO.update(supplierByCall);
-                notified = STATE_SUCCESS;
-                userBLO.notifyToTechnicalTeam(filter);
-            } else {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-            }
-        } else {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
-        }
-
-        return notified;
-    }
-
-    public String dontApproveToTechnicalTeam(Map<String, String> parameters) throws HandlerGenericException {
-        String notified;
-        String idSupplierByCall = parameters.get("idSupplierByCall");
-        if (null != idSupplierByCall) {
-            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
-            SupplierDTO supplier = get(supplierByCall.getIdSupplier());
-            if (supplier instanceof SupplierDTO) {
-                NotificationBLO notificationBLO = new NotificationBLO();
-                StateBLO stateBLO = new StateBLO();
-                notificationBLO.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_DISCARDED);
-                supplierByCall.setIdState(stateBLO.getStateByShortName(
-                        SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
-                supplierByCallBLO.update(supplierByCall);
-                notified = STATE_SUCCESS;
-            } else {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-            }
-        } else {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
-        }
-
-        return notified;
     }
 
 }

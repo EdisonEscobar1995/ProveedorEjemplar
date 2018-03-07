@@ -161,13 +161,22 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         SupplierBLO supplierBLO = new SupplierBLO();
         Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
         if (!informationInOtherDataBase.isEmpty()) {
+            List<String> emails = new ArrayList<String>();
+
+            if (notificationType.equals(NotificationType.SUPPLIER_DISCARDED)
+                    || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM)) {
+                emails.add(supplier.getEmailOfContact());
+            } else {
+                emails = supplier.getEmails();
+            }
+
             Map<String, String> detail = new LinkedHashMap<String, String>();
             detail.put("Usuario", informationInOtherDataBase.get("userName"));
             detail.put("Contraseña", informationInOtherDataBase.get("password"));
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias(notificationType.toString());
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
-            sendNotification(supplier.getEmails(), notification, true, detail, true, linkOfButton);
+            sendNotification(emails, notification, true, detail, true, linkOfButton);
         }
     }
 

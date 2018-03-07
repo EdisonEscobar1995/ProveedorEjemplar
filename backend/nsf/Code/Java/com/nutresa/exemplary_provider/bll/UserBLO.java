@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,23 +147,33 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
 
     protected void notifyToTechnicalTeam(Map<String, String> fieldsToIdentifyTechnicalTeam)
             throws HandlerGenericException {
-        UserDAO userDAO = new UserDAO();
-        RolBLO rolBLO = new RolBLO();
-        TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
-        List<UserDTO> userWithTechnicalTeamRol = userDAO.getUsersByRol(rolBLO.getRolByShortName(
-                Rol.TECHNICAL_TEAM.toString()).getId());
-        NotificationBLO notificationBLO = new NotificationBLO();
-        List<String> technicalTeamEmails = new ArrayList<String>();
-        for (UserDTO user : userWithTechnicalTeamRol) {
-            fieldsToIdentifyTechnicalTeam.put("USER", user.getId());
-            List<TechnicalTeamDTO> especificTechnicalTeamMembers = technicalTeamBLO
-                    .getMembersByEspecificFeactures(fieldsToIdentifyTechnicalTeam);
-            if (!especificTechnicalTeamMembers.isEmpty()) {
-                technicalTeamEmails.add(user.getEmail());
+        Map<String, String> filter = new LinkedHashMap<String, String>();
+        Iterator<String> iterator = fieldsToIdentifyTechnicalTeam.keySet().iterator();
+        while (iterator.hasNext()) {
+            UserDAO userDAO = new UserDAO();
+            RolBLO rolBLO = new RolBLO();
+            TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
+            List<UserDTO> userWithTechnicalTeamRol = userDAO.getUsersByRol(rolBLO.getRolByShortName(
+                    Rol.TECHNICAL_TEAM.toString()).getId());
+            NotificationBLO notificationBLO = new NotificationBLO();
+            List<String> technicalTeamEmails = new ArrayList<String>();
+            for (UserDTO user : userWithTechnicalTeamRol) {
+                String key = iterator.next();
+                String[] valueInFields = key.split("|");
+                filter.put("USER", user.getId());
+                filter.put("SUPPLY", valueInFields[0]);
+                filter.put("CATEGORY", valueInFields[1]);
+                filter.put("COUNTRY", valueInFields[2]);
+                List<TechnicalTeamDTO> especificTechnicalTeamMembers = technicalTeamBLO
+                        .getMembersByEspecificFeactures(filter);
+                if (!especificTechnicalTeamMembers.isEmpty()) {
+                    technicalTeamEmails.add(user.getEmail());
+                }
             }
+
+            notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
         }
 
-        notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
     }
 
 }
