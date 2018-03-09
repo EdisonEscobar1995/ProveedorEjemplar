@@ -18,6 +18,7 @@ import evaluationScale from './EvaluationScale/reducer';
 import user from './User/reducer';
 import supply from './Supply/reducer';
 import technicalTeam from './TechnicalTeam/reducer';
+import technicalTeamSurvey from './TechnicalTeamSurvey/reducer';
 
 const app = combineReducers({
   main,
@@ -37,6 +38,7 @@ const app = combineReducers({
   user,
   supply,
   technicalTeam,
+  technicalTeamSurvey,
 });
 
 let middleware = {};

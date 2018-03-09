@@ -30,6 +30,8 @@ const getResultsApi = data => instance.get(`Call?action=getResults&call=${data.c
 
 const getEndedEvaluatorApi = () => instance.get('Call?action=getThemForTechnicalTeam');
 
+const getTechnicalTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToTechnicalTeam&year=${year || ''}`);
+
 export {
   getCallApi,
   saveCallApi,
@@ -40,4 +42,5 @@ export {
   getParticipantsByYearApi,
   getResultsApi,
   getEndedEvaluatorApi,
+  getTechnicalTeamSurveyApi,
 };

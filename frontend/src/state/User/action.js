@@ -66,13 +66,16 @@ function getUsers() {
   };
 }
 
-function saveUser(clientData, index) {
+function saveUser(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getUserProgress, saveUserApi, clientData)
       .then((response) => {
         const { data } = response.data;
         dispatch(saveDataUser(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });

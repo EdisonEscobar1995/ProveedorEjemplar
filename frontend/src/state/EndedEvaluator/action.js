@@ -46,22 +46,24 @@ const checkSupplier = (idSupplier, checked) => ({
   checked,
 });
 
-const sendApprovals = clientData => (
+const sendApprovals = (list, next) => (
   (dispatch) => {
-    requestApi(dispatch, getEndedEvaluatorProgress, sendApprovalsApi, clientData)
+    requestApi(dispatch, getEndedEvaluatorProgress, sendApprovalsApi, { idSuppliersByCall: list })
       .then(() => {
-        dispatch(updateEndedEvaluator(clientData));
+        dispatch(updateEndedEvaluator(list));
+        next(list);
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
   }
 );
 
-const sendRejections = clientData => (
+const sendRejections = (list, next) => (
   (dispatch) => {
-    requestApi(dispatch, getEndedEvaluatorProgress, sendRejectionsApi, clientData)
+    requestApi(dispatch, getEndedEvaluatorProgress, sendRejectionsApi, { idSuppliersByCall: list })
       .then(() => {
-        dispatch(updateEndedEvaluator(clientData));
+        dispatch(updateEndedEvaluator(list));
+        next(list);
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });

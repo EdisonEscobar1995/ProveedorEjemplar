@@ -98,13 +98,16 @@ const getCategoryBySupply = idSupply => (
   }
 );
 
-function saveTechnicalTeam(clientData, index) {
+function saveTechnicalTeam(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getTechnicalTeamProgress, saveTechnicalTeamApi, clientData)
       .then((response) => {
         const { data } = response.data;
         dispatch(saveDataTechnicalTeam(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });

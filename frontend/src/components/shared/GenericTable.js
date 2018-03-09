@@ -47,14 +47,17 @@ function GenericTable(props) {
                     pagination={false}
                   />
                 ) : (
-                  <Button
-                    onClick={() => {
-                      const Component = componentList[level + 1].component;
-                      openModal(<Component {...props} parentId={record.id} index={0} />);
-                    }}
-                  >
-                    Agregar
-                  </Button>
+                  <div>
+                    <H1 text={componentList[level + 1].title} />
+                    <Button
+                      onClick={() => {
+                        const Component = componentList[level + 1].component;
+                        openModal(<Component {...props} parentId={record.id} index={0} />);
+                      }}
+                    >
+                      Agregar
+                    </Button>
+                  </div>
                 )
               ) : null
             }

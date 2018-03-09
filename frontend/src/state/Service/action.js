@@ -99,26 +99,32 @@ function getItemByService(id) {
   };
 }
 
-function saveService(clientData, index) {
+function saveService(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveServiceApi, clientData)
       .then((respose) => {
         const { data } = respose.data;
         dispatch(saveDataService(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
 
-function saveItem(clientData, index) {
+function saveItem(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveItemApi, clientData)
       .then((respose) => {
         const { data } = respose.data;
         dispatch(saveDataItem(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });

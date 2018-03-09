@@ -56,13 +56,16 @@ function getSectors() {
   };
 }
 
-function saveSector(clientData, index) {
+function saveSector(clientData, index, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSectorProgress, saveSectorApi, clientData)
       .then((response) => {
         const { data } = response.data;
         dispatch(saveDataSector(data, index, clientData.id));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });

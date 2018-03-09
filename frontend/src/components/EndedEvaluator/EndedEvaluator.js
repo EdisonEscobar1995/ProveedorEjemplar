@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Checkbox, Button, Row, Col } from 'antd';
+import { Table, Checkbox, Button, Row, Col, notification } from 'antd';
 import { Link } from 'react-router-dom';
 import message from '../../components/shared/message';
 import Confirm from '../shared/Confirm';
@@ -9,10 +9,18 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
     checkSupplier(record.idSupplier, event.target.checked);
   };
 
+  const openNotification = (list) => {
+    const plural = list.length > 1 ? 's' : '';
+    notification.open({
+      message: 'Operación exitosa',
+      description: `${list.length} documento${plural} procesado${plural}`,
+    });
+  };
+
   const validateChecked = (sendMethod) => {
     const checked = data.filter(item => item.checked).map(item => item.idSupplierByCall);
     if (checked.length > 0) {
-      sendMethod(checked);
+      sendMethod(checked, openNotification);
     } else {
       message({ text: 'Debe seleccionar al menos un proveedor', type: 'error' });
     }
@@ -73,7 +81,7 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
     key: 'check',
     render(text, record) {
       return (
-        <Checkbox onChange={event => (onChange(event, record))} />
+        <Checkbox checked={record.checked} onChange={event => (onChange(event, record))} />
       );
     },
   }];
@@ -82,29 +90,33 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
     <div>
       <div>
         <strong>Total resultados: </strong>
-        {data ? data.length : 0}
+        {data.length}
       </div>
       <Table
         rowKey={record => record.id}
         dataSource={data}
         columns={columns}
       />
-      <Row justify="center" align="middle" type="flex" gutter={24}>
-        <Col>
-          <Confirm method={() => validateChecked(sendApprovals)}>
-            <Button type="primary">
-              Pasan a evaluación de comité ténico
-            </Button>
-          </Confirm>
-        </Col>
-        <Col>
-          <Confirm method={() => validateChecked(sendRejections)}>
-            <Button type="primary">
-              No pasan a evaluación de comité ténico
-            </Button>
-          </Confirm>
-        </Col>
-      </Row>
+      {
+        data.length > 0 ? (
+          <Row justify="center" align="middle" type="flex" gutter={24}>
+            <Col>
+              <Confirm method={() => validateChecked(sendApprovals)}>
+                <Button type="primary">
+                  Pasan a evaluación de comité ténico
+                </Button>
+              </Confirm>
+            </Col>
+            <Col>
+              <Confirm method={() => validateChecked(sendRejections)}>
+                <Button type="primary">
+                  No pasan a evaluación de comité ténico
+                </Button>
+              </Confirm>
+            </Col>
+          </Row>
+        ) : null
+      }
     </div>
   );
 }

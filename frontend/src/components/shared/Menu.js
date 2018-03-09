@@ -11,7 +11,6 @@ const MenuStyle = styled(MenuAnt)`
   background: ${props => props.theme.color.primary};
 `;
 const ItemStyle = {
-  fontSize: 16,
   color: 'white',
 };
 
@@ -29,7 +28,7 @@ function Menu(props) {
               <Item key={item.id} >
                 <Link
                   to={entry.path}
-                  style={!category.name ? ItemStyle : { fontSize: 16 }}
+                  style={!category.name ? ItemStyle : null}
                 >
                   {item.title}
                 </Link>

@@ -41,6 +41,7 @@ function resultsApp(state = initialState, action) {
       return {
         ...state,
         data: state.data.filter(item => action.data.indexOf(item.idSupplierByCall) < 0),
+        loading: false,
       };
     }
     case REQUEST_FAILED: {
