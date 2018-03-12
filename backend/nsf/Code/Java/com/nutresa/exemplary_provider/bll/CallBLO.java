@@ -245,6 +245,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         Map<String, List<DTO>> currentMasters = participantsToTechnicalTeam.getMasters();
         ServiceBLO serviceBLO = new ServiceBLO();
         ItemBLO itemBLO = new ItemBLO();
+        UserBLO userBLO = new UserBLO();
         TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
         TechnicalTeamCommentBLO technicalTeamCommentBLO = new TechnicalTeamCommentBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
@@ -253,6 +254,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         currentMasters.put("State", stateBLO.getAll());
         currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
                 SurveyStates.TECHNICAL_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
 
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
                 SupplierByCallDTO.class);

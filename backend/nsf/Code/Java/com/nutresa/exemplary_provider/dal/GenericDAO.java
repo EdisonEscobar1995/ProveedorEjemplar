@@ -420,7 +420,7 @@ public abstract class GenericDAO<T> {
         return session;
     }
 
-    protected String getNameUserInSession() {
+    public String getNameUserInSession() {
         return session.getEffectiveUserName();
     }
 
