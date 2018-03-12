@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -259,15 +258,15 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
                 SupplierByCallDTO.class);
 
-        Iterator<String> iterator = listIdsSupplierByCall.keySet().iterator();
+        List<Object> idsSupplierByCall = listIdsSupplierByCall.get("[id]");
+
         List<DTO> answers = new ArrayList<DTO>();
         List<DTO> comments = new ArrayList<DTO>();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy("idSupplierByCall",
-                    listIdsSupplierByCall.get(key).toString(), "vwTechnicalTeamAnswersByIdSupplierByCall");
+        for (Object idSupplierByCall : idsSupplierByCall) {
+            List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy("idSupplierByCall", idSupplierByCall.toString(),
+                    "vwTechnicalTeamAnswersByIdSupplierByCall");
             List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall",
-                    listIdsSupplierByCall.get(key).toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
+                    idSupplierByCall.toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
 
             if (!auxiliarAnswer.isEmpty()) {
                 answers.addAll(auxiliarAnswer);
@@ -276,6 +275,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             if (!auxiliarComment.isEmpty()) {
                 comments.addAll(auxiliarComment);
             }
+
         }
 
         currentMasters.put("TechnicalTeamAnswer", answers);
