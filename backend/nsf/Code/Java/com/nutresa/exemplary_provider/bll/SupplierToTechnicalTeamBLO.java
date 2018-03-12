@@ -39,8 +39,8 @@ public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTe
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier,
                         NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM);
-                supplierByCall.setIdState(stateBLO.getStateByShortName(
-                        SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId());
+                supplierByCall.setIdState(
+                        stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId());
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
             }
@@ -63,11 +63,25 @@ public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTe
                 NotificationBLO notificationBLO = new NotificationBLO();
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_DISCARDED);
-                supplierByCall.setIdState(stateBLO.getStateByShortName(
-                        SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
+                supplierByCall.setIdState(
+                        stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
             }
+        }
+
+        return notified;
+    }
+
+    public String finishTechnicalTeamSurvey(SupplierToTechnicalTeamDTO suppliersToTechnicalTeam)
+            throws HandlerGenericException {
+        String notified = STATE_FAILED;
+        List<String> idSuppliersToApprove = suppliersToTechnicalTeam.getIdSuppliersByCall();
+        for (String idSupplierByCall : idSuppliersToApprove) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
+            supplierByCallBLO.finishSurvey(supplierByCall);
+            notified = STATE_SUCCESS;
         }
 
         return notified;

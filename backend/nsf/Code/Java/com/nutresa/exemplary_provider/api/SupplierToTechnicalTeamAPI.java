@@ -27,7 +27,20 @@ public class SupplierToTechnicalTeamAPI extends GenericAPI<SupplierToTechnicalTe
         SupplierToTechnicalTeamBLO supplierToTechnicalTeamBLO = new SupplierToTechnicalTeamBLO();
         ServletResponseDTO<String> response = null;
         try {
-            response = new ServletResponseDTO<String>(supplierToTechnicalTeamBLO.dontApproveToTechnicalTeam(parameters));
+            response = new ServletResponseDTO<String>(
+                    supplierToTechnicalTeamBLO.dontApproveToTechnicalTeam(parameters));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<String>(exception);
+        }
+
+        return response;
+    }
+
+    public ServletResponseDTO<String> finishTechnicalTeamSurvey(SupplierToTechnicalTeamDTO parameters) {
+        SupplierToTechnicalTeamBLO supplierToTechnicalTeamBLO = new SupplierToTechnicalTeamBLO();
+        ServletResponseDTO<String> response = null;
+        try {
+            response = new ServletResponseDTO<String>(supplierToTechnicalTeamBLO.finishTechnicalTeamSurvey(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<String>(exception);
         }

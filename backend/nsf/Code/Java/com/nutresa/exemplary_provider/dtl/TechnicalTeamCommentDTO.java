@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.gson.annotations.Expose;
 
-public class TechnicalTeamAnswerDTO {
+public class TechnicalTeamCommentDTO {
     @Expose
     private String id;
     @Expose
@@ -12,9 +12,7 @@ public class TechnicalTeamAnswerDTO {
     @Expose
     private String idService;
     @Expose
-    private String idItem;
-    @Expose
-    private String idEvaluationScale;
+    private String comment;
     @Expose
     private Date dateResponse;
 
@@ -42,20 +40,12 @@ public class TechnicalTeamAnswerDTO {
         this.idService = idService;
     }
 
-    public String getIdItem() {
-        return idItem;
+    public String getComment() {
+        return comment;
     }
 
-    public void setIdItem(String idItem) {
-        this.idItem = idItem;
-    }
-
-    public String getIdEvaluationScale() {
-        return idEvaluationScale;
-    }
-
-    public void setIdEvaluationScale(String idEvaluationScale) {
-        this.idEvaluationScale = idEvaluationScale;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public Date getDateResponse() {

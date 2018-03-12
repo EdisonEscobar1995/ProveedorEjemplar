@@ -176,4 +176,9 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
 
     }
 
+    protected String getNameUserInSession() {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.getNameUserInSession();
+    }
+
 }

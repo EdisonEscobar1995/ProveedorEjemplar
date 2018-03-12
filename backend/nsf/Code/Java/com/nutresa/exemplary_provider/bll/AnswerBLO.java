@@ -71,14 +71,13 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_HAS_AN_EVALUATOR.toString());
             }
             supplierByCallBLO.changeState(SurveyStates.EVALUATOR.toString(), dto.getIdSupplierByCall());
-            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getCommonName(userBLO
-                    .getUserInSession().getName()));
+            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getNameUserInSession());
             dto.setDateResponseEvaluator(new Date());
         } else {
             supplierByCallBLO.changeState(SurveyStates.SUPPLIER.toString(), dto.getIdSupplierByCall());
             AnswerDAO answerDAO = new AnswerDAO();
-            AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(), dto
-                    .getIdQuestion());
+            AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(),
+                    dto.getIdQuestion());
             dto.setDateResponseSupplier(new Date());
 
             if (null != answerExisting) {
@@ -131,8 +130,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             if (null != option) {
                 setSummarySurveyBySupplier(option, summarySurvey);
                 if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
-                    sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier + summarySurvey
-                            .getScoreOfSupplier());
+                    sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier
+                            + summarySurvey.getScoreOfSupplier());
                     expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId());
                     sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
                 } else {
@@ -142,8 +141,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
                 setSummarySurveyByEvaluator(answer, summarySurvey);
                 if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
-                    sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator + summarySurvey
-                            .getScoreOfEvaluator());
+                    sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
+                            + summarySurvey.getScoreOfEvaluator());
                     expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId());
                     sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
                 } else {

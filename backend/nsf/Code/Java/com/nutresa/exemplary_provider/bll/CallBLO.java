@@ -164,8 +164,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
         for (SupplierDTO supplier : suppliers) {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
-                    .getId());
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
+                    supplier.getId());
             if (supplierByCall instanceof SupplierByCallDTO) {
                 response.add(getRecordOfReport(supplierByCall, supplier, parameters));
             }
@@ -220,8 +220,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
 
         if (getByYear(year).isCaducedDeadLineToMakeSurveyTechnicalTeam()) {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED
-                    .toString());
+            throw new HandlerGenericException(
+                    HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED.toString());
         }
 
         SupplierBLO supplierBLO = new SupplierBLO();
@@ -245,23 +245,39 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         Map<String, List<DTO>> currentMasters = participantsToTechnicalTeam.getMasters();
         ServiceBLO serviceBLO = new ServiceBLO();
         ItemBLO itemBLO = new ItemBLO();
-        TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
+        TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
+        TechnicalTeamCommentBLO technicalTeamCommentBLO = new TechnicalTeamCommentBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
         currentMasters.put("Service", serviceBLO.getAll());
         currentMasters.put("Item", itemBLO.getAll());
-        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo", SurveyStates.TECHNICAL_TEAM
-                .toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("State", stateBLO.getAll());
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
+                SurveyStates.TECHNICAL_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
 
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
                 SupplierByCallDTO.class);
 
         Iterator<String> iterator = listIdsSupplierByCall.keySet().iterator();
+        List<DTO> answers = new ArrayList<DTO>();
+        List<DTO> comments = new ArrayList<DTO>();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            currentMasters.put("TechnicalTeamAnswer", technicalTeamBLO.getAllBy("idSupplierByCall",
-                    listIdsSupplierByCall.get(key).toString(), "vwTechnicalTeamAnswersByIdSupplierByCall"));
+            List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy("idSupplierByCall",
+                    listIdsSupplierByCall.get(key).toString(), "vwTechnicalTeamAnswersByIdSupplierByCall");
+            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall",
+                    listIdsSupplierByCall.get(key).toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
+
+            if (!auxiliarAnswer.isEmpty()) {
+                answers.addAll(auxiliarAnswer);
+            }
+
+            if (!auxiliarComment.isEmpty()) {
+                comments.addAll(auxiliarComment);
+            }
         }
 
+        currentMasters.put("TechnicalTeamAnswer", answers);
+        currentMasters.put("TechnicalTeamComment", comments);
         participantsToTechnicalTeam.setMasters(currentMasters);
 
         return participantsToTechnicalTeam;

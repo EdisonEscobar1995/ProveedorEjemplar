@@ -249,12 +249,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.TECHNICAL_TEAM);
             } else {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
-                        .toString());
+                throw new HandlerGenericException(
+                        HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED.toString());
             }
         } else {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED
-                    .toString());
+            throw new HandlerGenericException(
+                    HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED.toString());
         }
 
         return response;

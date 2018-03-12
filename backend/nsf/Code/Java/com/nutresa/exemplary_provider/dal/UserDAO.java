@@ -52,4 +52,8 @@ public class UserDAO extends GenericDAO<UserDTO> {
         return currSess.createName(name).getCommon();
     }
 
+    public String getNameUserInSession() {
+        return super.getNameUserInSession();
+    }
+
 }
