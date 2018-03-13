@@ -43,7 +43,7 @@ import { getDataSubCategoryByCategoryApi } from '../../api/subcategory';
 import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
-import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
+import { saveAnswerApi, deleteMassiveAnswersApi, clearMassiveAnswersApi } from '../../api/answer';
 import getDataStateApi from '../../api/state';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
@@ -230,7 +230,7 @@ const validateAnswer = (question, questions) => {
   return [];
 };
 
-const searchChildren = (actualQuestion, childs, allQuestions, isVisible, removeIds) => {
+const searchChildren = (actualQuestion, childs, allQuestions, isVisible, removeIds, clearIds) => {
   if (!isVisible) {
     if (removeIds && actualQuestion.answer.length > 0) {
       removeIds.push(actualQuestion.answer[0].id);
@@ -254,6 +254,10 @@ const searchChildren = (actualQuestion, childs, allQuestions, isVisible, removeI
           required = false;
           disabled = true;
           if (child.answer.length > 0) {
+            if (clearIds &&
+              (child.answer[0].idOptionEvaluator || child.answer[0].commentEvaluator)) {
+              clearIds.push(child.answer[0].id);
+            }
             child.answer[0].idOptionEvaluator = '';
             child.answer[0].commentEvaluator = '';
             child.errors = {};
@@ -268,10 +272,10 @@ const searchChildren = (actualQuestion, childs, allQuestions, isVisible, removeI
   });
 };
 
-const removeRecursive = (actualQuestion, questions, removeIds) => {
+const removeRecursive = (actualQuestion, questions, removeIds, clearIds) => {
   const visibles = [...questions];
   const filteredDependency = validateAnswer(actualQuestion, visibles);
-  searchChildren(actualQuestion, filteredDependency, visibles, true, removeIds);
+  searchChildren(actualQuestion, filteredDependency, visibles, true, removeIds, clearIds);
   return visibles;
 };
 
@@ -558,6 +562,10 @@ const deleteAnswers = (dispatch, answers) => (
   requestApiNotLoading(dispatch, deleteMassiveAnswersApi, { idsToDelete: answers })
 );
 
+const clearAnswers = (dispatch, answers) => (
+  requestApiNotLoading(dispatch, clearMassiveAnswersApi, { idsToDelete: answers })
+);
+
 const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
   (dispatch, getActualState) => {
     requestApi(dispatch, getDataSupplierProgress, saveAnswerApi, clientAnswer)
@@ -572,13 +580,18 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
           .find(question => question.id === answer.idQuestion);
         actualQuestion.answer[0] = answer;
         const removeIds = [];
+        const clearIds = [];
         actualCriterion.questions = removeRecursive(
           actualQuestion,
           actualCriterion.questions,
           removeIds,
+          clearIds,
         );
         if (removeIds.length > 0) {
           deleteAnswers(dispatch, removeIds);
+        }
+        if (clearIds.length > 0) {
+          clearAnswers(dispatch, clearIds);
         }
         if (actualQuestion.errors) {
           if (answer.idOptionSupplier || answer.responseSupplier) {
