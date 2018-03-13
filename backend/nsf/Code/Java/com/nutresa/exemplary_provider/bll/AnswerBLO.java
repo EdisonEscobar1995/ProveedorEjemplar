@@ -153,9 +153,10 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
                 setSummarySurveyByEvaluator(answer, summarySurvey);
                 if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
+                    OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
                     sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
                             + summarySurvey.getScoreOfEvaluator());
-                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId(), option);
+                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId(), optionEvaluator);
                     sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
                 } else {
                     summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
