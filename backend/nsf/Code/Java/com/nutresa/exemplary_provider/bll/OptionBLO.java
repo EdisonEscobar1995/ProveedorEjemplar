@@ -14,14 +14,20 @@ public class OptionBLO extends GenericBLO<OptionDTO, OptionDAO> {
         return optionDAO.getOptionWithMaxScoreByQuestion(idQuestion);
     }
 
-    protected short getMaxScoreInQuestion(String idQuestion) throws HandlerGenericException {
+    protected short getMaxScoreInQuestion(String idQuestion, OptionDTO option) throws HandlerGenericException {
         short score = 0;
-        OptionDTO option = getMaxOptionByQuestion(idQuestion);
+        OptionDAO optionDAO = new OptionDAO();
+        OptionDTO optionWithMaxValue = getMaxOptionByQuestion(idQuestion);
 
-        if (null != option) {
+        if (optionDAO.generateDependenceInQuestion(option)) {
             score = option.getScore();
+        } else {
+            if (null != optionWithMaxValue) {
+                score = optionWithMaxValue.getScore();
+            }
         }
 
         return score;
     }
+
 }

@@ -127,7 +127,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                 if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
                     sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier
                             + summarySurvey.getScoreOfSupplier());
-                    expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId());
+                    expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId(), option);
                     sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
                 } else {
                     summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
@@ -138,7 +138,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                 if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
                     sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
                             + summarySurvey.getScoreOfEvaluator());
-                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId());
+                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId(), option);
                     sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
                 } else {
                     summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
