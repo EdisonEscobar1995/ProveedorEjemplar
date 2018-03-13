@@ -10,7 +10,7 @@ public class AnswerAPI extends GenericAPI<AnswerDTO, AnswerBLO> {
     public AnswerAPI() {
         super(AnswerDTO.class, AnswerBLO.class);
     }
-    
+
     @Override
     public ServletResponseDTO<AnswerDTO> save(AnswerDTO dto) {
         ServletResponseDTO<AnswerDTO> response = null;
@@ -31,6 +31,18 @@ public class AnswerAPI extends GenericAPI<AnswerDTO, AnswerBLO> {
         AnswerBLO answerBLO = new AnswerBLO();
         try {
             response = new ServletResponseDTO<AnswerDTO>(answerBLO.deleteMassive(answer));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<AnswerDTO>(exception);
+        }
+
+        return response;
+    }
+
+    public ServletResponseDTO<AnswerDTO> updateMassive(AnswerDTO answer) {
+        ServletResponseDTO<AnswerDTO> response = null;
+        AnswerBLO answerBLO = new AnswerBLO();
+        try {
+            response = new ServletResponseDTO<AnswerDTO>(answerBLO.updateMassive(answer));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<AnswerDTO>(exception);
         }
