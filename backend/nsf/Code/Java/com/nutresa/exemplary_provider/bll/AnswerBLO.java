@@ -55,6 +55,23 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         return answer;
     }
 
+    public AnswerDTO updateMassive(AnswerDTO answer) throws HandlerGenericException {
+        List<String> answerIds = answer.getIdsToDelete();
+        for (String idAnswer : answerIds) {
+            AnswerDTO existingAnswer = get(idAnswer);
+            if (null != existingAnswer) {
+                existingAnswer.setIdOptionEvaluator(null);
+                existingAnswer.setCommentEvaluator(null);
+                existingAnswer.setDateResponseEvaluator(null);
+                super.save(existingAnswer);
+            } else {
+                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            }
+        }
+
+        return answer;
+    }
+
     @Override
     public AnswerDTO save(AnswerDTO dto) throws HandlerGenericException {
         UserBLO userBLO = new UserBLO();
@@ -185,7 +202,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     }
 
     private void setSummarySurveyByEvaluator(AnswerDTO answer, SummarySurvey summary) throws HandlerGenericException {
-        if (!answer.getIdOptionEvaluator().isEmpty()) {
+        if (null != answer.getIdOptionEvaluator() && !answer.getIdOptionEvaluator().isEmpty()) {
             OptionBLO optionBLO = new OptionBLO();
             OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
             summary.setAnswerEvaluator(optionEvaluator.getWording());
