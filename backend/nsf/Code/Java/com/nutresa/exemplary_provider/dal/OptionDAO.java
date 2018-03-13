@@ -46,4 +46,19 @@ public class OptionDAO extends GenericDAO<OptionDTO> {
         return response;
     }
 
+    public boolean generateDependenceInQuestion(OptionDTO option) throws HandlerGenericException {
+        boolean generateDependence = false;
+        try {
+            View view = getDatabase().getView("vwQuestionWithDependence");
+            Document document = view.getFirstDocumentByKey(option.getId(), true);
+            if (null != document) {
+                generateDependence = true;
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+        return generateDependence;
+    }
+
 }

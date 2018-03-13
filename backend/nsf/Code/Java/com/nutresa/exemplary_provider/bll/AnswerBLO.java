@@ -55,6 +55,23 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         return answer;
     }
 
+    public AnswerDTO updateMassive(AnswerDTO answer) throws HandlerGenericException {
+        List<String> answerIds = answer.getIdsToDelete();
+        for (String idAnswer : answerIds) {
+            AnswerDTO existingAnswer = get(idAnswer);
+            if (null != existingAnswer) {
+                existingAnswer.setIdOptionEvaluator(null);
+                existingAnswer.setCommentEvaluator(null);
+                existingAnswer.setDateResponseEvaluator(null);
+                super.save(existingAnswer);
+            } else {
+                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            }
+        }
+
+        return answer;
+    }
+
     @Override
     public AnswerDTO save(AnswerDTO dto) throws HandlerGenericException {
         UserBLO userBLO = new UserBLO();
@@ -127,7 +144,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                 if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
                     sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier
                             + summarySurvey.getScoreOfSupplier());
-                    expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId());
+                    expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId(), option);
                     sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
                 } else {
                     summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
@@ -136,9 +153,10 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
                 setSummarySurveyByEvaluator(answer, summarySurvey);
                 if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
+                    OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
                     sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator
                             + summarySurvey.getScoreOfEvaluator());
-                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId());
+                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId(), optionEvaluator);
                     sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
                 } else {
                     summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
@@ -185,7 +203,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     }
 
     private void setSummarySurveyByEvaluator(AnswerDTO answer, SummarySurvey summary) throws HandlerGenericException {
-        if (!answer.getIdOptionEvaluator().isEmpty()) {
+        if (null != answer.getIdOptionEvaluator() && !answer.getIdOptionEvaluator().isEmpty()) {
             OptionBLO optionBLO = new OptionBLO();
             OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
             summary.setAnswerEvaluator(optionEvaluator.getWording());
