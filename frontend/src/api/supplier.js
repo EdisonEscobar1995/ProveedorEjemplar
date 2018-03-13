@@ -49,6 +49,10 @@ function sendRejectionsApi(data) {
   return instance.post('SupplierToTechnicalTeam?action=dontApproveToTechnicalTeam', data);
 }
 
+function finishTechnicalTeamSurveyApi(data) {
+  return instance.post('SupplierToTechnicalTeam?action=finishTechnicalTeamSurvey', data);
+}
+
 export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
@@ -62,4 +66,5 @@ export {
   getPendingsApi,
   sendApprovalsApi,
   sendRejectionsApi,
+  finishTechnicalTeamSurveyApi,
 };

@@ -104,6 +104,7 @@ const messages = {
   'Validation.dateToSend': 'The date to make the survey has expired',
   'Validation.dateToEvaluate': 'The date exceeds the time to evaluate',
   'Validation.alreadyBeingEvaluated': 'The survey is already being evaluated by',
+  'Validation.alreadyBeingQualified': 'The supplier is already being evaluated by',
   'Validation.noData': 'No data received',
   'Validation.noOpenCall': 'At this time there are no open calls',
   'Validation.supplier': 'There is no assessment for the type of supply and company size selected',

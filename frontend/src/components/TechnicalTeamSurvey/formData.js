@@ -1,4 +1,4 @@
-const formData = ({ data, getTechnicalTeamSurvey, filterSurveys, form }) => {
+const formData = ({ data, getTechnicalTeamSurvey, filterTechnicalTeamSurvey, form }) => {
   const {
     years,
     suppliers,
@@ -39,7 +39,7 @@ const formData = ({ data, getTechnicalTeamSurvey, filterSurveys, form }) => {
           options: masters ? masters.Supply : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supply: value };
-            filterSurveys(values);
+            filterTechnicalTeamSurvey(values);
           },
         },
         {
@@ -51,7 +51,7 @@ const formData = ({ data, getTechnicalTeamSurvey, filterSurveys, form }) => {
           options: masters ? masters.Category : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), category: value };
-            filterSurveys(values);
+            filterTechnicalTeamSurvey(values);
           },
         },
       ],
@@ -68,7 +68,7 @@ const formData = ({ data, getTechnicalTeamSurvey, filterSurveys, form }) => {
           options: masters ? masters.Country : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), country: value };
-            filterSurveys(values);
+            filterTechnicalTeamSurvey(values);
           },
         },
         {
@@ -83,7 +83,7 @@ const formData = ({ data, getTechnicalTeamSurvey, filterSurveys, form }) => {
           }) : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
-            filterSurveys(values);
+            filterTechnicalTeamSurvey(values);
           },
         },
       ],

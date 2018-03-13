@@ -9,6 +9,8 @@ function getMessage(type) {
       return 'Validation.dateToEvaluate';
     case 'ALREADY_HAS_AN_EVALUATOR':
       return 'Validation.alreadyBeingEvaluated';
+    case 'ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER':
+      return 'Validation.alreadyBeingQualified';
     case 'DATE_TO_MAKE_SURVEY_EXCEEDED':
       return 'Validation.dateToSend';
     case 'NO_DATA':
@@ -38,7 +40,8 @@ function validateResponse(args) {
       if (element.headers['content-type'].toLowerCase().includes('text/html')) {
         location.href = loginUrl;
       } else if (!element.data.status) {
-        const notice = element.data.message === 'ALREADY_HAS_AN_EVALUATOR' ? element.data.notice : '';
+        const notice = (element.data.message === 'ALREADY_HAS_AN_EVALUATOR' ||
+        element.data.message === 'ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER') ? element.data.notice : '';
         setMessage(getMessage(element.data.message), 'info', notice);
         throw new Error(element.data.message);
       }
