@@ -140,7 +140,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO supplierByCall = get(idSupplierByCall);
         UserBLO userBLO = new UserBLO();
         if (null != supplierByCall && !supplierByCall.getWhoEvaluate().isEmpty()
-                && !supplierByCall.getWhoEvaluate().equals(userBLO.getCommonName(userBLO.getUserInSession().getName()))) {
+                && !supplierByCall.getWhoEvaluate().equals(userBLO.getNameUserInSession())) {
             isFromEvaluator = true;
         }
 
@@ -506,7 +506,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         if (null != supplierByCall
                 && !supplierByCall.getWhoEvaluateOfTechnicalTeam().isEmpty()
                 && !supplierByCall.getWhoEvaluateOfTechnicalTeam().equals(
-                        userBLO.getCommonName(userBLO.getUserInSession().getName()))) {
+                        userBLO.getNameUserInSession())) {
             isFromTechnicalTeamMember = true;
         }
 
