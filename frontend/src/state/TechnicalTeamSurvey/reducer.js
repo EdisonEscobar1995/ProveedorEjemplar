@@ -15,6 +15,20 @@ const initialState = {
   loading: false,
 };
 
+const updateSuppliersByCall = (state, idSuppliersByCall = [], stateCode) => (
+  state.data.suppliersByCall.map((supplierByCall) => {
+    if (idSuppliersByCall.indexOf(supplierByCall.id) >= 0) {
+      return {
+        ...supplierByCall,
+        idState: state.data.masters.State.find(
+          element => element.shortName === stateCode).id,
+        whoEvaluateOfTechnicalTeam: state.data.masters.User[0].name,
+      };
+    }
+    return supplierByCall;
+  })
+);
+
 function technicalTeamSurveyApp(state = initialState, action) {
   switch (action.type) {
     case GET_TECHNICAL_TEAM_SURVEY_PROGRESS: {
@@ -70,12 +84,15 @@ function technicalTeamSurveyApp(state = initialState, action) {
               required: action.value !== null,
               readOnly: action.value === null,
               items: supplier.items.map(item => (
-                item.id === action.idItem ? {
+                item.id === action.answer.idItem ? {
                   ...item,
                   defaultValue: action.value ? {
                     key: action.value.key,
+                    name: state.data.masters.EvaluationScale
+                      .find(element => element.id === action.value.key).name,
                   } : {
                     key: null,
+                    name: null,
                   },
                   value: action.value ? parseInt(action.value.label, 10) : null,
                   error: false,
@@ -83,6 +100,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
               )),
             } : supplier
           )),
+          suppliersByCall: updateSuppliersByCall(state, [action.answer.idSupplierByCall], 'TECHNICAL_TEAM'),
         },
       };
     }
@@ -97,13 +115,14 @@ function technicalTeamSurveyApp(state = initialState, action) {
               required: action.value !== null,
               readOnly: action.value === null,
               comments: supplier.comments.map(comment => (
-                comment.idService === action.idService ? {
+                comment.idService === action.comment.idService ? {
                   ...comment,
                   value: action.value,
                 } : comment
               )),
             } : supplier
           )),
+          suppliersByCall: updateSuppliersByCall(state, [action.comment.idSupplierByCall], 'TECHNICAL_TEAM'),
         },
         loading: false,
       };
@@ -153,7 +172,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
         data: {
           ...state.data,
           suppliers: state.data.suppliers.map((supplier) => {
-            if (action.data.indexOf(supplier.id) >= 0) {
+            if (action.idSuppliers.indexOf(supplier.id) >= 0) {
               return {
                 ...supplier,
                 required: false,
@@ -162,17 +181,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
             }
             return supplier;
           }),
-          suppliersByCall: state.data.suppliersByCall.map((supplierByCall) => {
-            if (action.data.indexOf(supplierByCall.idSupplier) >= 0) {
-              return {
-                ...supplierByCall,
-                idState: state.data.masters.State.find(
-                  element => element.shortName === 'ENDED_TECHNICAL_TEAM').id,
-                whoEvaluateOfTechnicalTeam: state.data.masters.User[0].name,
-              };
-            }
-            return supplierByCall;
-          }),
+          suppliersByCall: updateSuppliersByCall(state, action.idSuppliersByCall, 'ENDED_TECHNICAL_TEAM'),
         },
         loading: false,
       };

@@ -38,17 +38,17 @@ const calculateTotal = () => ({
   type: CALCULATE_TOTAL,
 });
 
-const changeScore = (idSupplier, idItem, value) => ({
+const changeScore = (idSupplier, answer, value) => ({
   type: CHANGE_SCORE,
   idSupplier,
-  idItem,
+  answer,
   value,
 });
 
-const changeComment = (idSupplier, idService, value) => ({
+const changeComment = (idSupplier, comment, value) => ({
   type: CHANGE_COMMENT,
   idSupplier,
-  idService,
+  comment,
   value,
 });
 
@@ -57,32 +57,33 @@ const updateErrors = data => ({
   data,
 });
 
-const updateSuppliers = data => ({
+const updateSuppliers = (idSuppliers, idSuppliersByCall) => ({
   type: UPDATE_SUPPLIERS,
-  data,
+  idSuppliers,
+  idSuppliersByCall,
 });
 
-const setScore = (idSupplier, idItem, value, answer) => (dispatch) => {
+const setScore = (idSupplier, value, answer) => (dispatch) => {
   requestApi(dispatch, getDataTechnicalTeamSurveyProgress, saveTechnicalTeamAnswerApi, answer)
     .then(() => {
-      dispatch(changeScore(idSupplier, idItem, value));
+      dispatch(changeScore(idSupplier, answer, value));
       dispatch(calculateTotal());
     }).catch(() => {
-      dispatch(changeScore(idSupplier, idItem, null));
+      dispatch(changeScore(idSupplier, answer, null));
       dispatch(getFailedRequest());
     });
 };
 
-const setComment = (idSupplier, idService, value, comment) => (dispatch, getState) => {
+const setComment = (idSupplier, value, comment) => (dispatch, getState) => {
   const storedValue = getState().technicalTeamSurvey.data.suppliers.find(
     element => element.id === idSupplier).comments.find(
-    element => element.idService === idService).value;
+    element => element.idService === comment.idService).value;
   if (storedValue !== value) {
     requestApi(dispatch, getDataTechnicalTeamSurveyProgress, saveTechnicalTeamCommentApi, comment)
       .then(() => {
-        dispatch(changeComment(idSupplier, idService, value));
+        dispatch(changeComment(idSupplier, comment, value));
       }).catch(() => {
-        dispatch(changeComment(idSupplier, idService, null));
+        dispatch(changeComment(idSupplier, comment, null));
         dispatch(getFailedRequest());
       });
   }
@@ -193,34 +194,39 @@ const finishTechnicalTeamSurvey = () => (dispatch, getState) => {
   const { suppliers, suppliersByCall } = getState().technicalTeamSurvey.data;
   const idSuppliersByCall = [];
   const idSuppliers = [];
-  const errorData = suppliers.map((supplier) => {
-    const validatedSupplier = {
+  const updatedErrors = suppliers.map((supplier) => {
+    let completed = true;
+    const updatedError = {
       ...supplier,
-      items: supplier.items.map(item => ({
-        ...item,
-        error: supplier.visible && supplier.required && !item.value,
-      })),
+      items: supplier.items.map((item) => {
+        if (supplier.visible && !supplier.readOnly && !item.value) {
+          completed = false;
+        }
+        return {
+          ...item,
+          error: supplier.visible && supplier.required && !item.value,
+        };
+      }),
     };
-    if (validatedSupplier.items.filter(element => element.error).length === 0) {
+    if (completed) {
       idSuppliersByCall.push(
         suppliersByCall.find(element => element.idSupplier === supplier.id).id);
       idSuppliers.push(supplier.id);
     }
-    return validatedSupplier;
+    return updatedError;
   });
-  console.log(idSuppliersByCall);
-  console.log(idSuppliers);
+
   if (idSuppliersByCall.length > 0) {
     requestApi(dispatch, getDataTechnicalTeamSurveyProgress, finishTechnicalTeamSurveyApi,
       { idSuppliersByCall })
       .then(() => {
-        dispatch(updateSuppliers(idSuppliers));
-        dispatch(updateErrors(errorData));
+        dispatch(updateErrors(updatedErrors));
+        dispatch(updateSuppliers(idSuppliers, idSuppliersByCall));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   } else {
-    dispatch(updateErrors(errorData));
+    dispatch(updateErrors(updatedErrors));
     setMessage('Algunos proveedores no han sido calificados completamente', 'error');
   }
 };

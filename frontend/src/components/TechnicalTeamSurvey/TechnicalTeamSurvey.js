@@ -220,7 +220,7 @@ class TechnicalTeamSurvey extends Component {
       };
     }
     comment.comment = value;
-    setComment(idSupplier, idService, value, comment);
+    setComment(idSupplier, value, comment);
   }
 
   changeScore = (record, item, value) => {
@@ -241,7 +241,7 @@ class TechnicalTeamSurvey extends Component {
       };
     }
     answer.idEvaluationScale = value.key;
-    setScore(idSupplier, idItem, value, answer);
+    setScore(idSupplier, value, answer);
   }
 
   render() {
