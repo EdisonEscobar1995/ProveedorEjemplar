@@ -64,9 +64,8 @@ public class TechnicalTeamBLO extends GenericBLO<TechnicalTeamDTO, TechnicalTeam
             TechnicalTeamDTO memberExisting = technicalTeamMember.get(0);
 
             String idTechnicalTeamExisting = memberExisting.getId();
-            String temporalIdRecordExisting = memberExisting.getIdUser().concat(
-                    memberExisting.getIdSupply().concat(
-                            memberExisting.getIdCategory().concat(memberExisting.getIdCountry())));
+            String temporalIdRecordExisting = memberExisting.getIdUser().concat(memberExisting.getIdSupply()
+                    .concat(memberExisting.getIdCategory().concat(memberExisting.getIdCountry())));
 
             if ((null == idTechnicalTeam || idTechnicalTeam.isEmpty())
                     && (null != temporalIdRecordExisting && temporalIdRecord.equals(temporalIdRecordExisting))) {
@@ -81,6 +80,11 @@ public class TechnicalTeamBLO extends GenericBLO<TechnicalTeamDTO, TechnicalTeam
         }
 
         return existItem;
+    }
+
+    protected List<TechnicalTeamDTO> getMemberInTeamByUserInSession() throws HandlerGenericException {
+        TechnicalTeamDAO technicalTeamDAO = new TechnicalTeamDAO();
+        return technicalTeamDAO.getMemberInTeamByUserInSession();
     }
 
 }

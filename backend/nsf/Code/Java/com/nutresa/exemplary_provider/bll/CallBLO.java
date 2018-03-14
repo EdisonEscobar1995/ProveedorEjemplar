@@ -238,6 +238,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         filter.put(FieldToFilter.FIELD_STATE, idState);
         callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
 
+        SupplierToTechnicalTeamBLO supplierToTechnicalTeamBLO = new SupplierToTechnicalTeamBLO();
+        callsBySupplier = supplierToTechnicalTeamBLO.getParticipantsByTechnicalTeamMember(callsBySupplier);
+
         InformationFromSupplier participantsToTechnicalTeam = supplierBLO.getInformationFromSuppliers(listYears,
                 callsBySupplier);
 

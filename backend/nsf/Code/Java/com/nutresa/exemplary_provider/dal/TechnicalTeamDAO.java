@@ -8,12 +8,12 @@ import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
+import com.nutresa.exemplary_provider.dal.UserDAO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class TechnicalTeamDAO extends GenericDAO<TechnicalTeamDTO> {
     public TechnicalTeamDAO() {
         super(TechnicalTeamDTO.class);
-        entityView = "TechnicalTeam";
     }
 
     public List<TechnicalTeamDTO> getMembersByEspecificFeactures(List<String> filterEspecificFeactures)
@@ -28,5 +28,19 @@ public class TechnicalTeamDAO extends GenericDAO<TechnicalTeamDTO> {
         }
 
         return membersTechnicalTeam;
+    }
+
+    public List<TechnicalTeamDTO> getMemberInTeamByUserInSession() throws HandlerGenericException {
+        List<TechnicalTeamDTO> membersInTeam = new ArrayList<TechnicalTeamDTO>();
+        UserDAO userDAO = new UserDAO();
+        View currentView = getDatabase().getView("vwTechnicalTeamByIdUser");
+        DocumentCollection documents = currentView.getAllDocumentsByKey(userDAO.getUserInSession().getId(), true);
+        if (null != documents) {
+            for (Document document : documents) {
+                membersInTeam.add(castDocument(document));
+            }
+        }
+
+        return membersInTeam;
     }
 }

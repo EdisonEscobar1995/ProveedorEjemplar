@@ -8,6 +8,8 @@ import com.nutresa.exemplary_provider.dal.SupplierToTechnicalTeamDAO;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
+import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.SupplierToTechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -85,6 +87,30 @@ public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTe
         }
 
         return notified;
+    }
+
+    public List<DTO> getParticipantsByTechnicalTeamMember(List<DTO> suppliersByCall) throws HandlerGenericException {
+        TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
+        List<TechnicalTeamDTO> members = technicalTeamBLO.getMemberInTeamByUserInSession();
+        for (TechnicalTeamDTO member : members) {
+            String temporalIdTechnicalTeam = member.getIdSupply()
+                    .concat(member.getIdCategory().concat(member.getIdCountry()));
+            short index = 0;
+            for (DTO supplierByCall : suppliersByCall) {
+                SupplierBLO supplierBLO = new SupplierBLO();
+                SupplierByCallDTO originalSupplierByCall = (SupplierByCallDTO) supplierByCall;
+                SupplierDTO supplier = supplierBLO.get(originalSupplierByCall.getIdSupplier());
+                String temporalIdSupplier = supplier.getIdSupply()
+                        .concat(supplier.getIdCategory().concat(supplier.getIdCountry()));
+                if (!temporalIdTechnicalTeam.equals(temporalIdSupplier)) {
+                    suppliersByCall.remove(index);
+                }
+
+                index = (short) (index + 1);
+            }
+        }
+
+        return suppliersByCall;
     }
 
 }
