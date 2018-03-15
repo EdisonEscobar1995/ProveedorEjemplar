@@ -186,7 +186,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDTO notification = notificationDAO
                     .getNotificationByAlias(NotificationType.TECHNICAL_TEAM_CALLED_BY_LIBERATOR.toString());
 
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/technicalTeam";
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/technicalTeamSurvey";
             sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
