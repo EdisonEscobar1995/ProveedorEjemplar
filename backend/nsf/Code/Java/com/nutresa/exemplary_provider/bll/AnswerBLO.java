@@ -195,14 +195,16 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
         recordOfReport.setExpectedScoreSupplier(sumExpectedScoreSupplier);
         recordOfReport.setExpectedScoreEvaluator(sumExpectedScoreEvaluator);
-
+        
         if (counterQuestions == sumScoreAnsweredBySupplierNA) {
             sumScoreAnsweredBySupplier = SCORE_OF_NA;
+            recordOfReport.setExpectedScoreSupplier(SCORE_OF_NA);
         }
         recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
-
+        
         if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
             sumScoreAnsweredByEvaluator = SCORE_OF_NA;
+            recordOfReport.setExpectedScoreEvaluator(SCORE_OF_NA);
         }
         recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
 
