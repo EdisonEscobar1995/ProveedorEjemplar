@@ -3,7 +3,7 @@ import {
   GET_EVALUATION_SCALE_SUCCESS,
   REQUEST_FAILED,
   ADD_EVALUATION_SCALE,
-  SAVE_EVALUATION_SCALE,
+  UPDATE_EVALUATION_SCALE,
   DELETE_EVALUATION_SCALE,
   SEARCH_EVALUATION_SCALE,
 } from './const';
@@ -17,7 +17,6 @@ const initialState = {
       { id: 'MANAGER_TEAM', name: 'Comité gerencial' },
     ],
   },
-  actual: {},
   loading: false,
 };
 
@@ -43,7 +42,7 @@ function evaluationScaleApp(state = initialState, action) {
         loading: false,
       };
     }
-    case SAVE_EVALUATION_SCALE: {
+    case UPDATE_EVALUATION_SCALE: {
       return {
         ...state,
         data: updateData(state.data, action.data),

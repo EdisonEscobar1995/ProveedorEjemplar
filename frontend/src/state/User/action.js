@@ -3,8 +3,9 @@ import {
   GET_USER_SUCCESS,
   REQUEST_FAILED,
   ADD_USER,
-  SAVE_USER,
+  UPDATE_USER,
   DELETE_USER,
+  SEARCH_USER,
 } from './const';
 import { getUsersApi, saveUserApi, deleteUserApi } from '../../api/user';
 import getRolesApi from '../../api/role';
@@ -31,10 +32,11 @@ function getFailedRequest() {
   };
 }
 
-function saveDataUser(data, id) {
+function saveDataUser(id, data, remoteId) {
   return {
-    type: id ? SAVE_USER : ADD_USER,
+    type: id ? UPDATE_USER : ADD_USER,
     data,
+    remoteId,
   };
 }
 
@@ -45,13 +47,23 @@ function deleteDataUser(data) {
   };
 }
 
+function searchUser(value) {
+  return {
+    type: SEARCH_USER,
+    value,
+  };
+}
+
 function getUsers() {
   return (dispatch) => {
     requestApi(dispatch, getUserProgress, getRolesApi)
       .then((rolesResponse) => {
         requestApi(dispatch, getUserProgress, getUsersApi)
           .then((response) => {
-            const { data } = response.data;
+            const data = response.data.data.map(element => ({
+              ...element,
+              visible: true,
+            }));
             const masters = {
               Roles: rolesResponse.data.data,
             };
@@ -65,13 +77,14 @@ function getUsers() {
   };
 }
 
-function saveUser(clientData, next) {
+function saveUser(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getUserProgress, saveUserApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataUser(data, clientData.id));
+        data.visible = true;
+        dispatch(saveDataUser(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -97,6 +110,7 @@ export {
   getUsers,
   saveUser,
   deleteUser,
+  searchUser,
   openModal,
   closeModal,
 };

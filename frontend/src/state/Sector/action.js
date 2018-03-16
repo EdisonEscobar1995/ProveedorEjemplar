@@ -3,8 +3,9 @@ import {
   GET_SECTOR_SUCCESS,
   REQUEST_FAILED,
   ADD_SECTOR,
-  SAVE_SECTOR,
+  UPDATE_SECTOR,
   DELETE_SECTOR,
+  SEARCH_SECTOR,
 } from './const';
 import { getSectorsApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
 import { openModal, closeModal } from '../Main/action';
@@ -29,10 +30,11 @@ function getFailedRequest() {
   };
 }
 
-function saveDataSector(data, id) {
+function saveDataSector(id, data, remoteId) {
   return {
-    type: id ? SAVE_SECTOR : ADD_SECTOR,
+    type: id ? UPDATE_SECTOR : ADD_SECTOR,
     data,
+    remoteId,
   };
 }
 
@@ -43,11 +45,21 @@ function deleteDataSector(data) {
   };
 }
 
+function searchSector(value) {
+  return {
+    type: SEARCH_SECTOR,
+    value,
+  };
+}
+
 function getSectors() {
   return (dispatch) => {
     requestApi(dispatch, getSectorProgress, getSectorsApi)
       .then((response) => {
-        const { data } = response.data;
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
         dispatch(getSectorSuccess(data));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -55,13 +67,14 @@ function getSectors() {
   };
 }
 
-function saveSector(clientData, next) {
+function saveSector(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSectorProgress, saveSectorApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataSector(data, clientData.id));
+        data.visible = true;
+        dispatch(saveDataSector(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -87,6 +100,7 @@ export {
   getSectors,
   saveSector,
   deleteSector,
+  searchSector,
   openModal,
   closeModal,
 };

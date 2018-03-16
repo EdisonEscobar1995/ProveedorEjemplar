@@ -3,15 +3,16 @@ import {
   GET_TECHNICAL_TEAM_SUCCESS,
   REQUEST_FAILED,
   ADD_TECHNICAL_TEAM,
-  SAVE_TECHNICAL_TEAM,
+  UPDATE_TECHNICAL_TEAM,
   DELETE_TECHNICAL_TEAM,
   GET_CATEGORIES_SUCCESS,
+  SEARCH_TECHNICAL_TEAM,
 } from './const';
+import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
   masters: {},
-  actual: {},
   loading: false,
 };
 
@@ -32,29 +33,23 @@ function technicalTeamApp(state = initialState, action) {
       };
     }
     case ADD_TECHNICAL_TEAM: {
-      const newData = [...state.data];
-      newData.splice(action.index + 1, 0, action.data);
       return {
         ...state,
-        data: newData,
+        data: insertData(state.data, action.remoteId, action.data),
         loading: false,
       };
     }
-    case SAVE_TECHNICAL_TEAM: {
-      const newData = [...state.data];
-      newData[action.index] = action.data;
+    case UPDATE_TECHNICAL_TEAM: {
       return {
         ...state,
-        data: newData,
+        data: updateData(state.data, action.data),
         loading: false,
       };
     }
     case DELETE_TECHNICAL_TEAM: {
-      const newData = [...state.data];
-      newData.splice(action.index, 1);
       return {
         ...state,
-        data: newData,
+        data: deleteData(state.data, action.data.id),
         loading: false,
       };
     }
@@ -66,6 +61,32 @@ function technicalTeamApp(state = initialState, action) {
           FilteredCategory: action.categories,
         },
         loading: false,
+      };
+    }
+    case SEARCH_TECHNICAL_TEAM: {
+      return {
+        ...state,
+        data: state.data.map((element) => {
+          let visible = true;
+          const value = action.value.toLowerCase();
+          if (
+            action.value !== '' &&
+            !(state.masters.Supply.find(item => item.id === element.idSupply).name)
+              .toLowerCase().includes(value) &&
+            !(state.masters.Category.find(item => item.id === element.idCategory).name)
+              .toLowerCase().includes(value) &&
+            !(state.masters.Country.find(item => item.id === element.idCountry).name)
+              .toLowerCase().includes(value) &&
+            !(state.masters.User.find(item => item.id === element.idUser).name)
+              .toLowerCase().includes(value)
+          ) {
+            visible = false;
+          }
+          return {
+            ...element,
+            visible,
+          };
+        }),
       };
     }
     case REQUEST_FAILED: {

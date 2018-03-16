@@ -3,14 +3,15 @@ import {
   GET_USER_SUCCESS,
   REQUEST_FAILED,
   ADD_USER,
-  SAVE_USER,
+  UPDATE_USER,
   DELETE_USER,
+  SEARCH_USER,
 } from './const';
+import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
   masters: {},
-  actual: {},
   loading: false,
 };
 
@@ -31,30 +32,44 @@ function userApp(state = initialState, action) {
       };
     }
     case ADD_USER: {
-      const newData = [...state.data];
-      newData.splice(action.index + 1, 0, action.data);
       return {
         ...state,
-        data: newData,
+        data: insertData(state.data, action.remoteId, action.data),
         loading: false,
       };
     }
-    case SAVE_USER: {
-      const newData = [...state.data];
-      newData[action.index] = action.data;
+    case UPDATE_USER: {
       return {
         ...state,
-        data: newData,
+        data: updateData(state.data, action.data),
         loading: false,
       };
     }
     case DELETE_USER: {
-      const newData = [...state.data];
-      newData.splice(action.index, 1);
       return {
         ...state,
-        data: newData,
+        data: deleteData(state.data, action.data.id),
         loading: false,
+      };
+    }
+    case SEARCH_USER: {
+      return {
+        ...state,
+        data: state.data.map((element) => {
+          let visible = true;
+          const value = action.value.toLowerCase();
+          if (
+            action.value !== '' &&
+            !element.name.toLowerCase().includes(value) &&
+            !element.email.toLowerCase().includes(value)
+          ) {
+            visible = false;
+          }
+          return {
+            ...element,
+            visible,
+          };
+        }),
       };
     }
     case REQUEST_FAILED:

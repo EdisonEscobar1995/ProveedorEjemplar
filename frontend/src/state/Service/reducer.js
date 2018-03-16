@@ -4,22 +4,21 @@ import {
   GET_ITEM_BY_SERVICE_SUCCESS,
   REQUEST_FAILED,
   ADD_SERVICE,
-  SAVE_SERVICE,
+  UPDATE_SERVICE,
   DELETE_SERVICE,
   ADD_ITEM,
-  SAVE_ITEM,
+  UPDATE_ITEM,
   DELETE_ITEM,
   SEARCH_SERVICE,
   SEARCH_ITEM,
   COLLAPSE_SERVICE,
 } from './const';
+import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
-  actual: {},
   loading: false,
 };
-
 
 function serviceApp(state = initialState, action) {
   switch (action.type) {
@@ -50,11 +49,9 @@ function serviceApp(state = initialState, action) {
       };
     }
     case ADD_SERVICE: {
-      const newData = [...state.data];
-      newData.splice(action.index + 1, 0, action.data);
       return {
         ...state,
-        data: newData,
+        data: insertData(state.data, action.remoteId, action.data),
         loading: false,
       };
     }
@@ -63,32 +60,26 @@ function serviceApp(state = initialState, action) {
         ...state,
         data: state.data.map((service) => {
           if (service.id === action.data.idService) {
-            const newData = service.data ? [...service.data] : [];
-            newData.splice(action.index + 1, 0, action.data);
-            service.data = newData;
+            service.data = insertData(service.data, action.remoteId, action.data);
           }
           return service;
         }),
         loading: false,
       };
     }
-    case SAVE_SERVICE: {
-      const newData = [...state.data];
-      newData[action.index] = { ...newData[action.index], ...action.data };
+    case UPDATE_SERVICE: {
       return {
         ...state,
-        data: newData,
+        data: updateData(state.data, action.data),
         loading: false,
       };
     }
-    case SAVE_ITEM: {
+    case UPDATE_ITEM: {
       return {
         ...state,
         data: state.data.map((service) => {
           if (service.id === action.data.idService) {
-            const newData = [...service.data];
-            newData[action.index] = action.data;
-            service.data = newData;
+            service.data = updateData(service.data, action.data);
           }
           return service;
         }),
@@ -96,11 +87,9 @@ function serviceApp(state = initialState, action) {
       };
     }
     case DELETE_SERVICE: {
-      const newData = [...state.data];
-      newData.splice(action.index, 1);
       return {
         ...state,
-        data: newData,
+        data: deleteData(state.data, action.data.id),
         loading: false,
       };
     }
@@ -109,9 +98,7 @@ function serviceApp(state = initialState, action) {
         ...state,
         data: state.data.map((service) => {
           if (service.id === action.data.idService) {
-            const newData = [...service.data];
-            newData.splice(action.index, 1);
-            service.data = newData;
+            service.data = deleteData(service.data, action.data.id);
           }
           return service;
         }),

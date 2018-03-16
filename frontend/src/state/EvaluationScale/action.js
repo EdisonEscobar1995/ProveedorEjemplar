@@ -3,7 +3,7 @@ import {
   GET_EVALUATION_SCALE_SUCCESS,
   REQUEST_FAILED,
   ADD_EVALUATION_SCALE,
-  SAVE_EVALUATION_SCALE,
+  UPDATE_EVALUATION_SCALE,
   DELETE_EVALUATION_SCALE,
   SEARCH_EVALUATION_SCALE,
 } from './const';
@@ -32,7 +32,7 @@ function getFailedRequest() {
 
 function saveDataEvaluationScale(id, data, remoteId) {
   return {
-    type: id ? SAVE_EVALUATION_SCALE : ADD_EVALUATION_SCALE,
+    type: id ? UPDATE_EVALUATION_SCALE : ADD_EVALUATION_SCALE,
     data,
     remoteId,
   };

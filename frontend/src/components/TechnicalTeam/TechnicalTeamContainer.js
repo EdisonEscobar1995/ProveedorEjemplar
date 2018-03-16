@@ -17,6 +17,7 @@ class TechnicalTeamContainer extends Component {
         component: TechnicalTeam,
         columns: columnsData(this.props.masters),
         deleteMethod: this.props.deleteTechnicalTeam,
+        onSearchMethod: this.props.searchTechnicalTeam,
       },
     ];
 

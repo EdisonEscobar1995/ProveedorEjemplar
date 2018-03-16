@@ -7,24 +7,24 @@ import {
   COLLAPSE_CATEGORY,
   REQUEST_FAILED,
   ADD_SUPPLY,
-  SAVE_SUPPLY,
+  UPDATE_SUPPLY,
   DELETE_SUPPLY,
   SEARCH_SUPPLY,
   ADD_CATEGORY,
-  SAVE_CATEGORY,
+  UPDATE_CATEGORY,
   DELETE_CATEGORY,
   SEARCH_CATEGORY,
   ADD_SUBCATEGORY,
-  SAVE_SUBCATEGORY,
+  UPDATE_SUBCATEGORY,
   DELETE_SUBCATEGORY,
   SEARCH_SUBCATEGORY,
 } from './const';
+import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
   loading: false,
 };
-
 
 function supplyApp(state = initialState, action) {
   switch (action.type) {
@@ -79,11 +79,9 @@ function supplyApp(state = initialState, action) {
       };
     }
     case ADD_SUPPLY: {
-      const newData = [...state.data];
-      newData.splice(action.index + 1, 0, action.data);
       return {
         ...state,
-        data: newData,
+        data: insertData(state.data, action.remoteId, action.data),
         loading: false,
       };
     }
@@ -92,9 +90,7 @@ function supplyApp(state = initialState, action) {
         ...state,
         data: state.data.map((supply) => {
           if (supply.id === action.data.idSupply) {
-            const newData = supply.data ? [...supply.data] : [];
-            newData.splice(action.index + 1, 0, action.data);
-            supply.data = newData;
+            supply.data = insertData(supply.data, action.remoteId, action.data);
           }
           return supply;
         }),
@@ -110,9 +106,7 @@ function supplyApp(state = initialState, action) {
               ...supply,
               data: supply.data.map((category) => {
                 if (category.id === action.data.idCategory) {
-                  const newData = category.data ? [...category.data] : [];
-                  newData.splice(action.index + 1, 0, action.data);
-                  category.data = newData;
+                  category.data = insertData(category.data, action.remoteId, action.data);
                 }
                 return category;
               }),
@@ -123,30 +117,26 @@ function supplyApp(state = initialState, action) {
         loading: false,
       };
     }
-    case SAVE_SUPPLY: {
-      const newData = [...state.data];
-      newData[action.index] = { ...newData[action.index], ...action.data };
+    case UPDATE_SUPPLY: {
       return {
         ...state,
-        data: newData,
+        data: updateData(state.data, action.data),
         loading: false,
       };
     }
-    case SAVE_CATEGORY: {
+    case UPDATE_CATEGORY: {
       return {
         ...state,
         data: state.data.map((supply) => {
           if (supply.id === action.data.idSupply) {
-            const newData = [...supply.data];
-            newData[action.index] = { ...newData[action.index], ...action.data };
-            supply.data = newData;
+            supply.data = updateData(supply.data, action.data);
           }
           return supply;
         }),
         loading: false,
       };
     }
-    case SAVE_SUBCATEGORY: {
+    case UPDATE_SUBCATEGORY: {
       return {
         ...state,
         data: state.data.map((supply) => {
@@ -155,9 +145,7 @@ function supplyApp(state = initialState, action) {
               ...supply,
               data: supply.data.map((category) => {
                 if (category.id === action.data.idCategory) {
-                  const newData = [...category.data];
-                  newData[action.index] = action.data;
-                  category.data = newData;
+                  category.data = updateData(category.data, action.data);
                 }
                 return category;
               }),
@@ -169,11 +157,9 @@ function supplyApp(state = initialState, action) {
       };
     }
     case DELETE_SUPPLY: {
-      const newData = [...state.data];
-      newData.splice(action.index, 1);
       return {
         ...state,
-        data: newData,
+        data: deleteData(state.data, action.data.id),
         loading: false,
       };
     }
@@ -182,9 +168,7 @@ function supplyApp(state = initialState, action) {
         ...state,
         data: state.data.map((supply) => {
           if (supply.id === action.data.idSupply) {
-            const newData = [...supply.data];
-            newData.splice(action.index, 1);
-            supply.data = newData;
+            supply.data = deleteData(supply.data, action.data.id);
           }
           return supply;
         }),
@@ -200,9 +184,7 @@ function supplyApp(state = initialState, action) {
               ...supply,
               data: supply.data.map((category) => {
                 if (category.id === action.data.idCategory) {
-                  const newData = [...category.data];
-                  newData.splice(action.index, 1);
-                  category.data = newData;
+                  category.data = deleteData(category.data, action.data.id);
                 }
                 return category;
               }),

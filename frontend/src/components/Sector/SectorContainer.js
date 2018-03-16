@@ -17,6 +17,7 @@ class SectorContainer extends Component {
         component: Sector,
         columns: columnsData,
         deleteMethod: this.props.deleteSector,
+        onSearchMethod: this.props.searchSector,
       },
     ];
 

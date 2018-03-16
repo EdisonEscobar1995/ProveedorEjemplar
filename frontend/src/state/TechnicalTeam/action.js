@@ -3,9 +3,10 @@ import {
   GET_TECHNICAL_TEAM_SUCCESS,
   REQUEST_FAILED,
   ADD_TECHNICAL_TEAM,
-  SAVE_TECHNICAL_TEAM,
+  UPDATE_TECHNICAL_TEAM,
   DELETE_TECHNICAL_TEAM,
   GET_CATEGORIES_SUCCESS,
+  SEARCH_TECHNICAL_TEAM,
 } from './const';
 import { getTechnicalTeamApi, saveTechnicalTeamApi, deleteTechnicalTeamApi } from '../../api/technicalTeam';
 import getMasterApi from '../../api/master';
@@ -33,10 +34,11 @@ function getFailedRequest() {
   };
 }
 
-function saveDataTechnicalTeam(data, id) {
+function saveDataTechnicalTeam(id, data, remoteId) {
   return {
-    type: id ? SAVE_TECHNICAL_TEAM : ADD_TECHNICAL_TEAM,
+    type: id ? UPDATE_TECHNICAL_TEAM : ADD_TECHNICAL_TEAM,
     data,
+    remoteId,
   };
 }
 
@@ -44,6 +46,13 @@ function deleteDataTechnicalTeam(data) {
   return {
     type: DELETE_TECHNICAL_TEAM,
     data,
+  };
+}
+
+function searchTechnicalTeam(value) {
+  return {
+    type: SEARCH_TECHNICAL_TEAM,
+    value,
   };
 }
 
@@ -66,7 +75,10 @@ function getTechnicalTeam() {
       .then((masterResponse) => {
         requestApi(dispatch, getTechnicalTeamProgress, getTechnicalTeamApi)
           .then((response) => {
-            const { data } = response.data;
+            const data = response.data.data.map(element => ({
+              ...element,
+              visible: true,
+            }));
             const masters = masterResponse.data.data;
             masters.User = masters.User.filter((user) => {
               const roles = user.idRols.map(id =>
@@ -97,13 +109,14 @@ const getCategoryBySupply = idSupply => (
   }
 );
 
-function saveTechnicalTeam(clientData, next) {
+function saveTechnicalTeam(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getTechnicalTeamProgress, saveTechnicalTeamApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataTechnicalTeam(data, clientData.id));
+        data.visible = true;
+        dispatch(saveDataTechnicalTeam(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -129,6 +142,7 @@ export {
   getTechnicalTeam,
   saveTechnicalTeam,
   deleteTechnicalTeam,
+  searchTechnicalTeam,
   getCategoryBySupply,
   openModal,
   closeModal,

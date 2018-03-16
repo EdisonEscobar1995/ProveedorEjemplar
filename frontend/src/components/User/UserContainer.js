@@ -17,6 +17,7 @@ class UserContainer extends Component {
         component: User,
         columns: columnsData(this.props.masters),
         deleteMethod: this.props.deleteUser,
+        onSearchMethod: this.props.searchUser,
       },
     ];
 

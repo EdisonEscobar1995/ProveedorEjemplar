@@ -4,10 +4,10 @@ import {
   GET_ITEM_BY_SERVICE_SUCCESS,
   REQUEST_FAILED,
   ADD_SERVICE,
-  SAVE_SERVICE,
+  UPDATE_SERVICE,
   DELETE_SERVICE,
   ADD_ITEM,
-  SAVE_ITEM,
+  UPDATE_ITEM,
   DELETE_ITEM,
   SEARCH_SERVICE,
   SEARCH_ITEM,
@@ -47,17 +47,19 @@ function getFailedRequest() {
   };
 }
 
-function saveDataService(data, id) {
+function saveDataService(id, data, remoteId) {
   return {
-    type: id ? SAVE_SERVICE : ADD_SERVICE,
+    type: id ? UPDATE_SERVICE : ADD_SERVICE,
     data,
+    remoteId,
   };
 }
 
-function saveDataItem(data, id) {
+function saveDataItem(id, data, remoteId) {
   return {
-    type: id ? SAVE_ITEM : ADD_ITEM,
+    type: id ? UPDATE_ITEM : ADD_ITEM,
     data,
+    remoteId,
   };
 }
 
@@ -127,14 +129,14 @@ function getItemByService(id) {
   };
 }
 
-function saveService(clientData, next) {
+function saveService(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveServiceApi, clientData)
       .then((response) => {
         const { data } = response.data;
         data.visible = true;
-        dispatch(saveDataService(data, clientData.id));
+        dispatch(saveDataService(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -144,14 +146,14 @@ function saveService(clientData, next) {
   };
 }
 
-function saveItem(clientData, next) {
+function saveItem(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveItemApi, clientData)
       .then((response) => {
         const { data } = response.data;
         data.visible = true;
-        dispatch(saveDataItem(data, clientData.id));
+        dispatch(saveDataItem(clientData.id, data, remoteId));
         if (next) {
           next();
         }

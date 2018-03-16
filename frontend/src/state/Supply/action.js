@@ -7,15 +7,15 @@ import {
   COLLAPSE_CATEGORY,
   REQUEST_FAILED,
   ADD_SUPPLY,
-  SAVE_SUPPLY,
+  UPDATE_SUPPLY,
   DELETE_SUPPLY,
   SEARCH_SUPPLY,
   ADD_CATEGORY,
-  SAVE_CATEGORY,
+  UPDATE_CATEGORY,
   DELETE_CATEGORY,
   SEARCH_CATEGORY,
   ADD_SUBCATEGORY,
-  SAVE_SUBCATEGORY,
+  UPDATE_SUBCATEGORY,
   DELETE_SUBCATEGORY,
   SEARCH_SUBCATEGORY,
 } from './const';
@@ -60,24 +60,27 @@ function getFailedRequest() {
   };
 }
 
-function saveDataSupply(data, id) {
+function saveDataSupply(id, data, remoteId) {
   return {
-    type: id ? SAVE_SUPPLY : ADD_SUPPLY,
+    type: id ? UPDATE_SUPPLY : ADD_SUPPLY,
     data,
+    remoteId,
   };
 }
 
-function saveDataCategory(data, id) {
+function saveDataCategory(id, data, remoteId) {
   return {
-    type: id ? SAVE_CATEGORY : ADD_CATEGORY,
+    type: id ? UPDATE_CATEGORY : ADD_CATEGORY,
     data,
+    remoteId,
   };
 }
 
-function saveDataSubcategory(data, id) {
+function saveDataSubcategory(id, data, remoteId) {
   return {
-    type: id ? SAVE_SUBCATEGORY : ADD_SUBCATEGORY,
+    type: id ? UPDATE_SUBCATEGORY : ADD_SUBCATEGORY,
     data,
+    remoteId,
   };
 }
 
@@ -184,14 +187,14 @@ function getSubcategoryByCategory(id) {
   };
 }
 
-function saveSupply(clientData, next) {
+function saveSupply(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSupplyApi, clientData)
       .then((response) => {
         const { data } = response.data;
         data.visible = true;
-        dispatch(saveDataSupply(data, clientData.id));
+        dispatch(saveDataSupply(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -201,14 +204,14 @@ function saveSupply(clientData, next) {
   };
 }
 
-function saveCategory(clientData, next) {
+function saveCategory(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveCategoryApi, clientData)
       .then((response) => {
         const { data } = response.data;
         data.visible = true;
-        dispatch(saveDataCategory(data, clientData.id));
+        dispatch(saveDataCategory(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -218,14 +221,14 @@ function saveCategory(clientData, next) {
   };
 }
 
-function saveSubcategory(clientData, next) {
+function saveSubcategory(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSubcategoryApi, clientData)
       .then((response) => {
         const { data } = response.data;
         data.visible = true;
-        dispatch(saveDataSubcategory(data, clientData.id));
+        dispatch(saveDataSubcategory(clientData.id, data, remoteId));
         if (next) {
           next();
         }

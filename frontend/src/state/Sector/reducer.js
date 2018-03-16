@@ -3,13 +3,14 @@ import {
   GET_SECTOR_SUCCESS,
   REQUEST_FAILED,
   ADD_SECTOR,
-  SAVE_SECTOR,
+  UPDATE_SECTOR,
   DELETE_SECTOR,
+  SEARCH_SECTOR,
 } from './const';
+import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
-  actual: {},
   loading: false,
 };
 
@@ -29,30 +30,43 @@ function sectorApp(state = initialState, action) {
       };
     }
     case ADD_SECTOR: {
-      const newData = [...state.data];
-      newData.splice(action.index + 1, 0, action.data);
       return {
         ...state,
-        data: newData,
+        data: insertData(state.data, action.remoteId, action.data),
         loading: false,
       };
     }
-    case SAVE_SECTOR: {
-      const newData = [...state.data];
-      newData[action.index] = action.data;
+    case UPDATE_SECTOR: {
       return {
         ...state,
-        data: newData,
+        data: updateData(state.data, action.data),
         loading: false,
       };
     }
     case DELETE_SECTOR: {
-      const newData = [...state.data];
-      newData.splice(action.index, 1);
       return {
         ...state,
-        data: newData,
+        data: deleteData(state.data, action.data.id),
         loading: false,
+      };
+    }
+    case SEARCH_SECTOR: {
+      return {
+        ...state,
+        data: state.data.map((element) => {
+          let visible = true;
+          const value = action.value.toLowerCase();
+          if (
+            action.value !== '' &&
+            !element.name.toLowerCase().includes(value)
+          ) {
+            visible = false;
+          }
+          return {
+            ...element,
+            visible,
+          };
+        }),
       };
     }
     case REQUEST_FAILED:
