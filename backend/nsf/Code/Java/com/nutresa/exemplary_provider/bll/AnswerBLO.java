@@ -120,6 +120,9 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             ReportOfAverageGradeBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
+        short sumScoreAnsweredBySupplierNA = 0;
+        short sumScoreAnsweredByEvaluatorNA = 0;
+        short counterQuestions = (short) answers.size();
         short sumExpectedScoreSupplier = 0;
         short sumExpectedScoreEvaluator = 0;
         short sumScoreAnsweredBySupplier = 0;
@@ -149,6 +152,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                 } else {
                     summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
                     expectedScoreSupplier = SCORE_OF_NA;
+                    sumScoreAnsweredBySupplierNA = (short) (sumScoreAnsweredBySupplierNA + SCORE_OF_NA);
                 }
 
                 setSummarySurveyByEvaluator(answer, summarySurvey);
@@ -161,6 +165,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                 } else {
                     summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
                     expectedScoreEvaluator = SCORE_OF_NA;
+                    sumScoreAnsweredByEvaluatorNA = (short) (sumScoreAnsweredByEvaluatorNA + SCORE_OF_NA);
                 }
 
             } else {
@@ -186,10 +191,23 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summariesSurvey.add(summarySurvey);
         }
 
+        counterQuestions = (short) (counterQuestions * SCORE_OF_NA);
+
         recordOfReport.setExpectedScoreSupplier(sumExpectedScoreSupplier);
         recordOfReport.setExpectedScoreEvaluator(sumExpectedScoreEvaluator);
+        
+        if (counterQuestions == sumScoreAnsweredBySupplierNA) {
+            sumScoreAnsweredBySupplier = SCORE_OF_NA;
+            recordOfReport.setExpectedScoreSupplier(SCORE_OF_NA);
+        }
         recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
+        
+        if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
+            sumScoreAnsweredByEvaluator = SCORE_OF_NA;
+            recordOfReport.setExpectedScoreEvaluator(SCORE_OF_NA);
+        }
         recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
+
         recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);
         recordOfReport.setScoreOfEvaluator(sumScoreAnsweredByEvaluator);
         recordOfReport.setSummarySurvey(summariesSurvey);

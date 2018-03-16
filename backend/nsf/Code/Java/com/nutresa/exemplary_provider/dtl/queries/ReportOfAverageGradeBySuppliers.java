@@ -90,8 +90,12 @@ public class ReportOfAverageGradeBySuppliers {
 
     private double calculateTotalScore(short totalScore, short totalExpectedScore) {
         double scoreCalculated = 0D;
-        if (totalExpectedScore > 0) {
-            scoreCalculated = ((double) totalScore / (double) totalExpectedScore) * 100;
+        if (totalScore < 0) {
+            scoreCalculated = -1D;
+        } else {
+            if (totalExpectedScore > 0) {
+                scoreCalculated = ((double) totalScore / (double) totalExpectedScore) * 100;
+            }
         }
 
         return scoreCalculated;
