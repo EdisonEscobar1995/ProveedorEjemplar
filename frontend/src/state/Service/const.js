@@ -8,4 +8,7 @@ export const DELETE_SERVICE = 'DELETE_SERVICE';
 export const ADD_ITEM = 'ADD_ITEM';
 export const SAVE_ITEM = 'SAVE_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
+export const SEARCH_SERVICE = 'SEARCH_SERVICE';
+export const SEARCH_ITEM = 'SEARCH_ITEM';
+export const COLLAPSE_SERVICE = 'COLLAPSE_SERVICE';
 

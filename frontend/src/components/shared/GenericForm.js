@@ -4,7 +4,7 @@ import DinamicForm from '../shared/DinamicForm';
 
 function Generic(props) {
   const {
-    formData, submitMethod, validate, form, index, loadingModal,
+    formData, submitMethod, validate, form, remoteId, loadingModal,
   } = props;
   const { getFieldDecorator, setFields } = form;
   const template = formData(props);
@@ -21,11 +21,11 @@ function Generic(props) {
       if (validate) {
         form.validateFieldsAndScroll((err, values) => {
           if (!err) {
-            submitMethod(values, index, openNotification);
+            submitMethod(values, remoteId, openNotification);
           }
         });
       } else {
-        submitMethod(form.getFieldsValue(), index, openNotification);
+        submitMethod(form.getFieldsValue(), remoteId, openNotification);
       }
     }
   };

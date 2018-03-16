@@ -19,12 +19,15 @@ class ServiceContainer extends Component {
         columns: columnsData,
         deleteMethod: this.props.deleteService,
         onExpandMethod: this.props.getItemByService,
+        onCollapseMethod: this.props.collapseService,
+        onSearchMethod: this.props.searchService,
       },
       {
         title: 'Items',
         component: Item,
         columns: columnsData,
         deleteMethod: this.props.deleteItem,
+        onSearchMethod: this.props.searchItem,
       },
     ];
 

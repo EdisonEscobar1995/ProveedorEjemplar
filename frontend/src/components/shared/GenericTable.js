@@ -1,14 +1,16 @@
 import React from 'react';
-import { Table, Spin, Button, Tooltip } from 'antd';
+import { Table, Spin, Button, Tooltip, Input } from 'antd';
 import Confirm from './Confirm';
 import FormattedMessage from './FormattedMessage';
 import H1 from '../shared/H1';
 
 const { Column } = Table;
+const Search = Input.Search;
 
 function GenericTable(props) {
   const {
     level,
+    parentId,
     componentList,
     openModal,
     loading,
@@ -23,105 +25,115 @@ function GenericTable(props) {
       <H1 text={componentList[level].title} />
       {
         data && data.length > 0 ? (
-          <Table
-            dataSource={data}
-            onExpand={expandable ? (expanded, record) => {
-              if (!record.data && expanded && componentList[level].onExpandMethod) {
-                componentList[level].onExpandMethod(record.id);
-              }
-            } : null}
-            pagination={pagination}
-            rowKey={record => record.id}
-            expandedRowRender={
-              expandable ? record => (
-                record.data && record.data.length > 0 ? (
-                  <GenericTable
-                    {...props}
-                    level={level + 1}
-                    componentList={componentList}
-                    parentId={record.id}
-                    data={record.data}
-                    disabled={record.disabled}
-                    expandable={record.expandable}
-                    loading={false}
-                    pagination={false}
-                  />
-                ) : (
-                  <div>
-                    <H1 text={componentList[level + 1].title} />
-                    <Button
-                      onClick={() => {
-                        const Component = componentList[level + 1].component;
-                        openModal(<Component {...props} parentId={record.id} index={0} />);
-                      }}
-                    >
-                      Agregar
-                    </Button>
-                  </div>
-                )
+          <div>
+            {
+              componentList[level].onSearchMethod ? (
+                <Search placeholder="Buscar" style={{ width: 200 }} size="large" onSearch={value => (componentList[level].onSearchMethod(value, parentId))} />
               ) : null
             }
-          >
-            {
-              componentList[level].columns.map(column => (
-                (
-                  <Column
-                    title={<FormattedMessage id={column.title} />}
-                    key={column.key}
-                    dataIndex={column.key}
-                    render={column.render}
-                    sorter={column.sorter}
-                  />
-                )
-              ))
-            }
-            {
-              disabled ?
-                null
-                :
-                <Column
-                  title={<FormattedMessage id="Table.action" />}
-                  key="action"
-                  render={(text, record, index) => (
+            <Table
+              pagination={pagination}
+              rowKey={record => record.id}
+              dataSource={componentList[level].onSearchMethod ?
+                data.filter(element => element.visible) : data}
+              onExpand={expandable ? (expanded, record) => {
+                if (!record.data && expanded && componentList[level].onExpandMethod) {
+                  componentList[level].onExpandMethod(record.id);
+                } else if (!expanded) {
+                  componentList[level].onCollapseMethod(record);
+                }
+              } : null}
+              expandedRowRender={
+                expandable ? record => (
+                  record.data && record.data.length > 0 ? (
+                    <GenericTable
+                      {...props}
+                      level={level + 1}
+                      componentList={componentList}
+                      parentId={record.id}
+                      data={record.data}
+                      disabled={record.disabled}
+                      expandable={record.expandable}
+                      loading={false}
+                      pagination={pagination}
+                    />
+                  ) : (
                     <div>
-                      <Tooltip title={<FormattedMessage id="Button.edit" />}>
-                        <Button
-                          shape="circle"
-                          icon="edit"
-                          onClick={() => {
-                            const Component = componentList[level].component;
-                            openModal(<Component {...props} record={record} index={index} />);
-                          }}
-                        />
-                      </Tooltip>
-                      <Confirm method={() => componentList[level].deleteMethod(record, index)}>
-                        <Tooltip title={<FormattedMessage id="Button.delete" />}>
+                      <H1 text={componentList[level + 1].title} />
+                      <Button
+                        onClick={() => {
+                          const Component = componentList[level + 1].component;
+                          openModal(<Component {...props} parentId={record.id} />);
+                        }}
+                      >
+                        Agregar
+                      </Button>
+                    </div>
+                  )
+                ) : null
+              }
+            >
+              {
+                componentList[level].columns.map(column => (
+                  (
+                    <Column
+                      title={<FormattedMessage id={column.title} />}
+                      key={column.key}
+                      dataIndex={column.key}
+                      render={column.render}
+                      sorter={column.sorter}
+                    />
+                  )
+                ))
+              }
+              {
+                disabled ?
+                  null
+                  :
+                  <Column
+                    title={<FormattedMessage id="Table.action" />}
+                    key="action"
+                    render={(text, record) => (
+                      <div>
+                        <Tooltip title={<FormattedMessage id="Button.edit" />}>
                           <Button
                             shape="circle"
-                            icon="delete"
+                            icon="edit"
+                            onClick={() => {
+                              const Component = componentList[level].component;
+                              openModal(<Component {...props} record={record} />);
+                            }}
                           />
                         </Tooltip>
-                      </Confirm>
-                      <Tooltip title={<FormattedMessage id="Button.add" />}>
-                        <Button
-                          shape="circle"
-                          icon="plus"
-                          onClick={() => {
-                            const Component = componentList[level].component;
-                            openModal(<Component {...props} index={index} />);
-                          }}
-                        />
-                      </Tooltip>
-                    </div>
-                  )}
-                />
-            }
-          </Table>
+                        <Confirm method={() => componentList[level].deleteMethod(record)}>
+                          <Tooltip title={<FormattedMessage id="Button.delete" />}>
+                            <Button
+                              shape="circle"
+                              icon="delete"
+                            />
+                          </Tooltip>
+                        </Confirm>
+                        <Tooltip title={<FormattedMessage id="Button.add" />}>
+                          <Button
+                            shape="circle"
+                            icon="plus"
+                            onClick={() => {
+                              const Component = componentList[level].component;
+                              openModal(<Component {...props} remoteId={record.id} />);
+                            }}
+                          />
+                        </Tooltip>
+                      </div>
+                    )}
+                  />
+              }
+            </Table>
+          </div>
         ) : (
           <Button
             onClick={() => {
               const Component = componentList[level].component;
-              openModal(<Component {...props} index={0} />);
+              openModal(<Component {...props} />);
             }}
           >
             Agregar

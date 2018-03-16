@@ -47,7 +47,7 @@ import { saveAnswerApi, deleteMassiveAnswersApi } from '../../api/answer';
 import getDataStateApi from '../../api/state';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
-import reloadKeys from '../../utils/reducer';
+import { reloadKeys } from '../../utils/reducer';
 
 
 const getDataSupplierProgress = () => (

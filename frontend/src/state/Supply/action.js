@@ -1,18 +1,23 @@
 import {
   GET_SUPPLY_PROGRESS,
   GET_SUPPLY_SUCCESS,
+  COLLAPSE_SUPPLY,
   GET_CATEGORY_BY_SUPPLY_SUCCESS,
   GET_SUBCATEGORY_BY_CATEGORY_SUCCESS,
+  COLLAPSE_CATEGORY,
   REQUEST_FAILED,
   ADD_SUPPLY,
   SAVE_SUPPLY,
   DELETE_SUPPLY,
+  SEARCH_SUPPLY,
   ADD_CATEGORY,
   SAVE_CATEGORY,
   DELETE_CATEGORY,
+  SEARCH_CATEGORY,
   ADD_SUBCATEGORY,
   SAVE_SUBCATEGORY,
   DELETE_SUBCATEGORY,
+  SEARCH_SUBCATEGORY,
 } from './const';
 import { getSuppliesApi, saveSupplyApi, deleteSupplyApi } from '../../api/supply';
 import { getCategoryBySupplyApi, saveCategoryApi, deleteCategoryApi } from '../../api/category';
@@ -55,49 +60,81 @@ function getFailedRequest() {
   };
 }
 
-function saveDataSupply(data, index, id) {
+function saveDataSupply(data, id) {
   return {
     type: id ? SAVE_SUPPLY : ADD_SUPPLY,
     data,
-    index,
   };
 }
 
-function saveDataCategory(data, index, id) {
+function saveDataCategory(data, id) {
   return {
     type: id ? SAVE_CATEGORY : ADD_CATEGORY,
     data,
-    index,
   };
 }
 
-function saveDataSubcategory(data, index, id) {
+function saveDataSubcategory(data, id) {
   return {
     type: id ? SAVE_SUBCATEGORY : ADD_SUBCATEGORY,
     data,
-    index,
   };
 }
 
-function deleteDataSupply(index) {
+function deleteDataSupply(data) {
   return {
     type: DELETE_SUPPLY,
-    index,
-  };
-}
-
-function deleteDataCategory(index, data) {
-  return {
-    type: DELETE_CATEGORY,
-    index,
     data,
   };
 }
 
-function deleteDataSubcategory(index, data) {
+function deleteDataCategory(data) {
+  return {
+    type: DELETE_CATEGORY,
+    data,
+  };
+}
+
+function deleteDataSubcategory(data) {
   return {
     type: DELETE_SUBCATEGORY,
-    index,
+    data,
+  };
+}
+
+function searchSupply(value) {
+  return {
+    type: SEARCH_SUPPLY,
+    value,
+  };
+}
+
+function searchCategory(value, parentId) {
+  return {
+    type: SEARCH_CATEGORY,
+    value,
+    parentId,
+  };
+}
+
+function searchSubcategory(value, parentId) {
+  return {
+    type: SEARCH_SUBCATEGORY,
+    value,
+    parentId,
+  };
+}
+
+function collapseSupply(data) {
+  return {
+    type: COLLAPSE_SUPPLY,
+    data,
+  };
+}
+
+function collapseCategory(data) {
+  return {
+    type: COLLAPSE_CATEGORY,
     data,
   };
 }
@@ -106,7 +143,10 @@ function getSupplies() {
   return (dispatch) => {
     requestApi(dispatch, getSupplyProgress, getSuppliesApi)
       .then((response) => {
-        const { data } = response.data;
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
         dispatch(getSupplySuccess(data));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -118,7 +158,10 @@ function getCategoryBySupply(id) {
   return (dispatch) => {
     requestApi(dispatch, getSupplyProgress, getCategoryBySupplyApi, id)
       .then((response) => {
-        const { data } = response.data;
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
         dispatch(getCategoryBySupplySuccess(data, id));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -130,7 +173,10 @@ function getSubcategoryByCategory(id) {
   return (dispatch) => {
     requestApi(dispatch, getSupplyProgress, getSubcategoryByCategoryApi, id)
       .then((response) => {
-        const { data } = response.data;
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
         dispatch(getSubcategoryByCategorySuccess(data, id));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -138,13 +184,14 @@ function getSubcategoryByCategory(id) {
   };
 }
 
-function saveSupply(clientData, index, next) {
+function saveSupply(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSupplyApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataSupply(data, index, clientData.id));
+        data.visible = true;
+        dispatch(saveDataSupply(data, clientData.id));
         if (next) {
           next();
         }
@@ -154,13 +201,14 @@ function saveSupply(clientData, index, next) {
   };
 }
 
-function saveCategory(clientData, index, next) {
+function saveCategory(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveCategoryApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataCategory(data, index, clientData.id));
+        data.visible = true;
+        dispatch(saveDataCategory(data, clientData.id));
         if (next) {
           next();
         }
@@ -170,13 +218,14 @@ function saveCategory(clientData, index, next) {
   };
 }
 
-function saveSubcategory(clientData, index, next) {
+function saveSubcategory(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSubcategoryApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataSubcategory(data, index, clientData.id));
+        data.visible = true;
+        dispatch(saveDataSubcategory(data, clientData.id));
         if (next) {
           next();
         }
@@ -186,33 +235,33 @@ function saveSubcategory(clientData, index, next) {
   };
 }
 
-function deleteSupply(clientData, index) {
+function deleteSupply(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getSupplyProgress, deleteSupplyApi, clientData)
       .then(() => {
-        dispatch(deleteDataSupply(index));
+        dispatch(deleteDataSupply(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
 
-function deleteCategory(clientData, index) {
+function deleteCategory(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getSupplyProgress, deleteCategoryApi, clientData)
       .then(() => {
-        dispatch(deleteDataCategory(index, clientData));
+        dispatch(deleteDataCategory(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
 
-function deleteSubcategory(clientData, index) {
+function deleteSubcategory(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getSupplyProgress, deleteSubcategoryApi, clientData)
       .then(() => {
-        dispatch(deleteDataSubcategory(index, clientData));
+        dispatch(deleteDataSubcategory(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
@@ -223,12 +272,17 @@ export {
   getSupplies,
   saveSupply,
   deleteSupply,
+  searchSupply,
   getCategoryBySupply,
   saveCategory,
   deleteCategory,
+  searchCategory,
   getSubcategoryByCategory,
   saveSubcategory,
   deleteSubcategory,
+  searchSubcategory,
+  collapseSupply,
+  collapseCategory,
   openModal,
   closeModal,
 };

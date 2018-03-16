@@ -1,18 +1,23 @@
 import {
   GET_SUPPLY_PROGRESS,
   GET_SUPPLY_SUCCESS,
+  COLLAPSE_SUPPLY,
   GET_CATEGORY_BY_SUPPLY_SUCCESS,
   GET_SUBCATEGORY_BY_CATEGORY_SUCCESS,
+  COLLAPSE_CATEGORY,
   REQUEST_FAILED,
   ADD_SUPPLY,
   SAVE_SUPPLY,
   DELETE_SUPPLY,
+  SEARCH_SUPPLY,
   ADD_CATEGORY,
   SAVE_CATEGORY,
   DELETE_CATEGORY,
+  SEARCH_CATEGORY,
   ADD_SUBCATEGORY,
   SAVE_SUBCATEGORY,
   DELETE_SUBCATEGORY,
+  SEARCH_SUBCATEGORY,
 } from './const';
 
 const initialState = {
@@ -208,8 +213,137 @@ function supplyApp(state = initialState, action) {
         loading: false,
       };
     }
-    case REQUEST_FAILED:
-    {
+    case SEARCH_SUPPLY: {
+      return {
+        ...state,
+        data: state.data.map((supply) => {
+          let visible = true;
+          if (action.value !== '' && !supply.name.toLowerCase().includes(action.value.toLowerCase())) {
+            visible = false;
+          }
+          if (supply.data) {
+            supply.data = supply.data.map((category) => {
+              if (category.data) {
+                category.data = category.data.map(subcategory => ({
+                  ...subcategory,
+                  visible: true,
+                }));
+              }
+              return {
+                ...category,
+                visible: true,
+              };
+            });
+          }
+          return {
+            ...supply,
+            visible,
+          };
+        }),
+      };
+    }
+    case SEARCH_CATEGORY: {
+      return {
+        ...state,
+        data: state.data.map((supply) => {
+          if (supply.data && supply.id === action.parentId) {
+            return {
+              ...supply,
+              data: supply.data.map((category) => {
+                let visible = true;
+                if (action.value !== '' && !category.name.toLowerCase().includes(action.value.toLowerCase())) {
+                  visible = false;
+                }
+                if (category.data) {
+                  category.data = category.data.map(subcategory => ({
+                    ...subcategory,
+                    visible: true,
+                  }));
+                }
+                return {
+                  ...category,
+                  visible,
+                };
+              }),
+            };
+          }
+          return supply;
+        }),
+      };
+    }
+    case SEARCH_SUBCATEGORY: {
+      return {
+        ...state,
+        data: state.data.map((supply) => {
+          if (supply.data) {
+            return {
+              ...supply,
+              data: supply.data.map((category) => {
+                if (category.data && category.id === action.parentId) {
+                  return {
+                    ...category,
+                    data: category.data.map((subcategory) => {
+                      let visible = true;
+                      if (action.value !== '' && !subcategory.name.toLowerCase().includes(action.value.toLowerCase())) {
+                        visible = false;
+                      }
+                      return {
+                        ...subcategory,
+                        visible,
+                      };
+                    }),
+                  };
+                }
+                return category;
+              }),
+            };
+          }
+          return supply;
+        }),
+      };
+    }
+    case COLLAPSE_SUPPLY: {
+      return {
+        ...state,
+        data: state.data.map((supply) => {
+          if (supply.data && supply.id === action.data.id) {
+            supply.data = supply.data.map((category) => {
+              if (category.data) {
+                category.data = category.data.map(subcategory => ({
+                  ...subcategory,
+                  visible: true,
+                }));
+              }
+              return {
+                ...category,
+                visible: true,
+              };
+            });
+          }
+          return supply;
+        }),
+      };
+    }
+    case COLLAPSE_CATEGORY: {
+      return {
+        ...state,
+        data: state.data.map((supply) => {
+          if (supply.data && supply.id === action.data.idSupply) {
+            supply.data = supply.data.map((category) => {
+              if (category.data && category.id === action.data.id) {
+                category.data = category.data.map(subcategory => ({
+                  ...subcategory,
+                  visible: true,
+                }));
+              }
+              return category;
+            });
+          }
+          return supply;
+        }),
+      };
+    }
+    case REQUEST_FAILED: {
       return {
         ...state,
         loading: false,
