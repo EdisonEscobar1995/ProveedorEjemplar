@@ -91,26 +91,29 @@ public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTe
 
     public List<DTO> getParticipantsByTechnicalTeamMember(List<DTO> suppliersByCall) throws HandlerGenericException {
         TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
+        List<DTO> definitivesSupplierByCall = new ArrayList<DTO>();
         List<TechnicalTeamDTO> members = technicalTeamBLO.getMemberInTeamByUserInSession();
         for (TechnicalTeamDTO member : members) {
+            definitivesSupplierByCall.addAll(suppliersByCall);
             String temporalIdTechnicalTeam = member.getIdSupply()
                     .concat(member.getIdCategory().concat(member.getIdCountry()));
+
             short index = 0;
-            for (DTO supplierByCall : suppliersByCall) {
+            while (index < suppliersByCall.size() && !definitivesSupplierByCall.isEmpty()) {
                 SupplierBLO supplierBLO = new SupplierBLO();
-                SupplierByCallDTO originalSupplierByCall = (SupplierByCallDTO) supplierByCall;
+                SupplierByCallDTO originalSupplierByCall = (SupplierByCallDTO) suppliersByCall.get(index);
                 SupplierDTO supplier = supplierBLO.get(originalSupplierByCall.getIdSupplier());
                 String temporalIdSupplier = supplier.getIdSupply()
                         .concat(supplier.getIdCategory().concat(supplier.getIdCountry()));
-                if (!temporalIdTechnicalTeam.equals(temporalIdSupplier)) {
-                    suppliersByCall.remove(index);
+                if (!temporalIdTechnicalTeam.equals(temporalIdSupplier) && !definitivesSupplierByCall.isEmpty()) {
+                    definitivesSupplierByCall.remove(suppliersByCall.get(index));
                 }
 
                 index = (short) (index + 1);
             }
         }
 
-        return suppliersByCall;
+        return definitivesSupplierByCall;
     }
 
 }
