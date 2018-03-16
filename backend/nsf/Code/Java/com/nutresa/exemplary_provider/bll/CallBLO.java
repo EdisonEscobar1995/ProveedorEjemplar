@@ -218,11 +218,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             year = (String) listYears.get(0);
         }
 
-        if (getByYear(year).isCaducedDeadLineToMakeSurveyTechnicalTeam()) {
-            throw new HandlerGenericException(
-                    HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED.toString());
-        }
-
         SupplierBLO supplierBLO = new SupplierBLO();
         StateBLO stateBLO = new StateBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
@@ -286,16 +281,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         participantsToTechnicalTeam.setMasters(currentMasters);
 
         return participantsToTechnicalTeam;
-    }
-
-    private CallDTO getByYear(String year) throws HandlerGenericException {
-        CallDAO callDAO = new CallDAO();
-        CallDTO call = callDAO.getByYear(year);
-        if (null == call.getId() || call.getId().isEmpty()) {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-        }
-
-        return call;
     }
 
     private class FieldToFilter {
