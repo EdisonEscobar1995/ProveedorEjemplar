@@ -20,6 +20,8 @@ class SupplyContainer extends Component {
         columns: columnsData,
         deleteMethod: this.props.deleteSupply,
         onExpandMethod: this.props.getCategoryBySupply,
+        onCollapseMethod: this.props.collapseSupply,
+        onSearchMethod: this.props.searchSupply,
       },
       {
         title: 'Categorias',
@@ -27,12 +29,15 @@ class SupplyContainer extends Component {
         columns: columnsData,
         deleteMethod: this.props.deleteCategory,
         onExpandMethod: this.props.getSubcategoryByCategory,
+        onCollapseMethod: this.props.collapseCategory,
+        onSearchMethod: this.props.searchCategory,
       },
       {
         title: 'Subcategorias',
         component: Subcategory,
         columns: columnsData,
         deleteMethod: this.props.deleteSubcategory,
+        onSearchMethod: this.props.searchSubcategory,
       },
     ];
 

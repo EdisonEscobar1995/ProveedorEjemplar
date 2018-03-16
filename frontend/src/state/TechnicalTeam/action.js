@@ -33,18 +33,17 @@ function getFailedRequest() {
   };
 }
 
-function saveDataTechnicalTeam(data, index, id) {
+function saveDataTechnicalTeam(data, id) {
   return {
     type: id ? SAVE_TECHNICAL_TEAM : ADD_TECHNICAL_TEAM,
     data,
-    index,
   };
 }
 
-function deleteDataTechnicalTeam(index) {
+function deleteDataTechnicalTeam(data) {
   return {
     type: DELETE_TECHNICAL_TEAM,
-    index,
+    data,
   };
 }
 
@@ -98,13 +97,13 @@ const getCategoryBySupply = idSupply => (
   }
 );
 
-function saveTechnicalTeam(clientData, index, next) {
+function saveTechnicalTeam(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getTechnicalTeamProgress, saveTechnicalTeamApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataTechnicalTeam(data, index, clientData.id));
+        dispatch(saveDataTechnicalTeam(data, clientData.id));
         if (next) {
           next();
         }
@@ -114,12 +113,12 @@ function saveTechnicalTeam(clientData, index, next) {
   };
 }
 
-function deleteTechnicalTeam(clientData, index) {
+function deleteTechnicalTeam(clientData) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getTechnicalTeamProgress, deleteTechnicalTeamApi, clientData)
       .then(() => {
-        dispatch(deleteDataTechnicalTeam(index));
+        dispatch(deleteDataTechnicalTeam(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });

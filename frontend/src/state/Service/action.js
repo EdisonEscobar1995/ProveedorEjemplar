@@ -9,6 +9,9 @@ import {
   ADD_ITEM,
   SAVE_ITEM,
   DELETE_ITEM,
+  SEARCH_SERVICE,
+  SEARCH_ITEM,
+  COLLAPSE_SERVICE,
 } from './const';
 import {
   getServicesApi, saveServiceApi, deleteServiceApi,
@@ -44,33 +47,52 @@ function getFailedRequest() {
   };
 }
 
-function saveDataService(data, index, id) {
+function saveDataService(data, id) {
   return {
     type: id ? SAVE_SERVICE : ADD_SERVICE,
     data,
-    index,
   };
 }
 
-function saveDataItem(data, index, id) {
+function saveDataItem(data, id) {
   return {
     type: id ? SAVE_ITEM : ADD_ITEM,
     data,
-    index,
   };
 }
 
-function deleteDataService(index) {
+function deleteDataService(data) {
   return {
     type: DELETE_SERVICE,
-    index,
+    data,
   };
 }
 
-function deleteDataItem(index, data) {
+function deleteDataItem(data) {
   return {
     type: DELETE_ITEM,
-    index,
+    data,
+  };
+}
+
+function searchService(value) {
+  return {
+    type: SEARCH_SERVICE,
+    value,
+  };
+}
+
+function searchItem(value, parentId) {
+  return {
+    type: SEARCH_ITEM,
+    value,
+    parentId,
+  };
+}
+
+function collapseService(data) {
+  return {
+    type: COLLAPSE_SERVICE,
     data,
   };
 }
@@ -78,8 +100,11 @@ function deleteDataItem(index, data) {
 function getServices() {
   return (dispatch) => {
     requestApi(dispatch, getServiceProgress, getServicesApi)
-      .then((respose) => {
-        const { data } = respose.data;
+      .then((response) => {
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
         dispatch(getServiceSuccess(data));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -90,8 +115,11 @@ function getServices() {
 function getItemByService(id) {
   return (dispatch) => {
     requestApi(dispatch, getServiceProgress, getItemByServiceApi, id)
-      .then((respose) => {
-        const { data } = respose.data;
+      .then((response) => {
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
         dispatch(getItemByServiceSuccess(data, id));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -99,13 +127,14 @@ function getItemByService(id) {
   };
 }
 
-function saveService(clientData, index, next) {
+function saveService(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveServiceApi, clientData)
-      .then((respose) => {
-        const { data } = respose.data;
-        dispatch(saveDataService(data, index, clientData.id));
+      .then((response) => {
+        const { data } = response.data;
+        data.visible = true;
+        dispatch(saveDataService(data, clientData.id));
         if (next) {
           next();
         }
@@ -115,13 +144,14 @@ function saveService(clientData, index, next) {
   };
 }
 
-function saveItem(clientData, index, next) {
+function saveItem(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveItemApi, clientData)
-      .then((respose) => {
-        const { data } = respose.data;
-        dispatch(saveDataItem(data, index, clientData.id));
+      .then((response) => {
+        const { data } = response.data;
+        data.visible = true;
+        dispatch(saveDataItem(data, clientData.id));
         if (next) {
           next();
         }
@@ -131,22 +161,22 @@ function saveItem(clientData, index, next) {
   };
 }
 
-function deleteService(clientData, index) {
+function deleteService(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getServiceProgress, deleteServiceApi, clientData)
       .then(() => {
-        dispatch(deleteDataService(index));
+        dispatch(deleteDataService(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
 
-function deleteItem(clientData, index) {
+function deleteItem(clientData) {
   return (dispatch) => {
     requestApi(dispatch, getServiceProgress, deleteItemApi, clientData)
       .then(() => {
-        dispatch(deleteDataItem(index, clientData));
+        dispatch(deleteDataItem(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
@@ -160,6 +190,9 @@ export {
   deleteService,
   deleteItem,
   saveItem,
+  searchService,
+  searchItem,
+  collapseService,
   openModal,
   closeModal,
 };

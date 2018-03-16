@@ -5,6 +5,7 @@ import {
   ADD_EVALUATION_SCALE,
   SAVE_EVALUATION_SCALE,
   DELETE_EVALUATION_SCALE,
+  SEARCH_EVALUATION_SCALE,
 } from './const';
 import { getEvaluationScalesApi, saveEvaluationScaleApi, deleteEvaluationScaleApi } from '../../api/evaluationScale';
 import { openModal, closeModal } from '../Main/action';
@@ -29,18 +30,25 @@ function getFailedRequest() {
   };
 }
 
-function saveDataEvaluationScale(data, index, id) {
+function saveDataEvaluationScale(id, data, remoteId) {
   return {
     type: id ? SAVE_EVALUATION_SCALE : ADD_EVALUATION_SCALE,
     data,
-    index,
+    remoteId,
   };
 }
 
-function deleteDataEvaluationScale(index) {
+function deleteDataEvaluationScale(data) {
   return {
     type: DELETE_EVALUATION_SCALE,
-    index,
+    data,
+  };
+}
+
+function searchEvaluationScale(value) {
+  return {
+    type: SEARCH_EVALUATION_SCALE,
+    value,
   };
 }
 
@@ -48,7 +56,10 @@ function getEvaluationScales() {
   return (dispatch) => {
     requestApi(dispatch, getEvaluationScaleProgress, getEvaluationScalesApi)
       .then((response) => {
-        const { data } = response.data;
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
         dispatch(getEvaluationScaleSuccess(data));
       }).catch(() => {
         dispatch(getFailedRequest());
@@ -56,13 +67,14 @@ function getEvaluationScales() {
   };
 }
 
-function saveEvaluationScale(clientData, index, next) {
+function saveEvaluationScale(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getEvaluationScaleProgress, saveEvaluationScaleApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataEvaluationScale(data, index, clientData.id));
+        data.visible = true;
+        dispatch(saveDataEvaluationScale(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -72,12 +84,12 @@ function saveEvaluationScale(clientData, index, next) {
   };
 }
 
-function deleteEvaluationScale(clientData, index) {
+function deleteEvaluationScale(clientData) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getEvaluationScaleProgress, deleteEvaluationScaleApi, clientData)
       .then(() => {
-        dispatch(deleteDataEvaluationScale(index));
+        dispatch(deleteDataEvaluationScale(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
@@ -88,6 +100,7 @@ export {
   getEvaluationScales,
   saveEvaluationScale,
   deleteEvaluationScale,
+  searchEvaluationScale,
   openModal,
   closeModal,
 };

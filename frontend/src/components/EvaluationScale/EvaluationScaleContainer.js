@@ -11,19 +11,13 @@ class EvaluationScaleontainer extends Component {
   }
 
   render() {
-    const masters = {
-      ApplyTo: [
-        { id: 'TECHNICAL_TEAM', name: 'Comité téncico' },
-        { id: 'MANAGER_TEAM', name: 'Comité gerencial' },
-      ],
-    };
-
     const componentList = [
       {
         title: 'Escalas de evaluación',
         component: EvaluationScale,
-        columns: columnsData(masters),
+        columns: columnsData(this.props.masters),
         deleteMethod: this.props.deleteEvaluationScale,
+        onSearchMethod: this.props.searchEvaluationScale,
       },
     ];
 
@@ -35,7 +29,6 @@ class EvaluationScaleontainer extends Component {
         componentList={componentList}
         expandable={false}
         pagination
-        masters={masters}
       />
     );
   }
@@ -45,6 +38,7 @@ const mapStateToProps = state => (
   {
     loading: state.evaluationScale.loading,
     data: state.evaluationScale.data,
+    masters: state.evaluationScale.masters,
   }
 );
 

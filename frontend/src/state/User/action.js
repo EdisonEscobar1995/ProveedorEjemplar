@@ -31,18 +31,17 @@ function getFailedRequest() {
   };
 }
 
-function saveDataUser(data, index, id) {
+function saveDataUser(data, id) {
   return {
     type: id ? SAVE_USER : ADD_USER,
     data,
-    index,
   };
 }
 
-function deleteDataUser(index) {
+function deleteDataUser(data) {
   return {
     type: DELETE_USER,
-    index,
+    data,
   };
 }
 
@@ -66,13 +65,13 @@ function getUsers() {
   };
 }
 
-function saveUser(clientData, index, next) {
+function saveUser(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getUserProgress, saveUserApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataUser(data, index, clientData.id));
+        dispatch(saveDataUser(data, clientData.id));
         if (next) {
           next();
         }
@@ -82,12 +81,12 @@ function saveUser(clientData, index, next) {
   };
 }
 
-function deleteUser(clientData, index) {
+function deleteUser(clientData) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getUserProgress, deleteUserApi, clientData)
       .then(() => {
-        dispatch(deleteDataUser(index));
+        dispatch(deleteDataUser(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });

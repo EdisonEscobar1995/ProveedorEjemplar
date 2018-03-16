@@ -29,18 +29,17 @@ function getFailedRequest() {
   };
 }
 
-function saveDataSector(data, index, id) {
+function saveDataSector(data, id) {
   return {
     type: id ? SAVE_SECTOR : ADD_SECTOR,
     data,
-    index,
   };
 }
 
-function deleteDataSector(index) {
+function deleteDataSector(data) {
   return {
     type: DELETE_SECTOR,
-    index,
+    data,
   };
 }
 
@@ -56,13 +55,13 @@ function getSectors() {
   };
 }
 
-function saveSector(clientData, index, next) {
+function saveSector(clientData, next) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSectorProgress, saveSectorApi, clientData)
       .then((response) => {
         const { data } = response.data;
-        dispatch(saveDataSector(data, index, clientData.id));
+        dispatch(saveDataSector(data, clientData.id));
         if (next) {
           next();
         }
@@ -72,12 +71,12 @@ function saveSector(clientData, index, next) {
   };
 }
 
-function deleteSector(clientData, index) {
+function deleteSector(clientData) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getSectorProgress, deleteSectorApi, clientData)
       .then(() => {
-        dispatch(deleteDataSector(index));
+        dispatch(deleteDataSector(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });

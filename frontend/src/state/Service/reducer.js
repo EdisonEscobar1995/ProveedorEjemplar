@@ -9,6 +9,9 @@ import {
   ADD_ITEM,
   SAVE_ITEM,
   DELETE_ITEM,
+  SEARCH_SERVICE,
+  SEARCH_ITEM,
+  COLLAPSE_SERVICE,
 } from './const';
 
 const initialState = {
@@ -113,6 +116,64 @@ function serviceApp(state = initialState, action) {
           return service;
         }),
         loading: false,
+      };
+    }
+    case SEARCH_SERVICE: {
+      return {
+        ...state,
+        data: state.data.map((service) => {
+          let visible = true;
+          if (action.value !== '' && !service.name.toLowerCase().includes(action.value.toLowerCase())) {
+            visible = false;
+          }
+          if (service.data) {
+            service.data = service.data.map(item => ({
+              ...item,
+              visible: true,
+            }));
+          }
+          return {
+            ...service,
+            visible,
+          };
+        }),
+      };
+    }
+    case SEARCH_ITEM: {
+      return {
+        ...state,
+        data: state.data.map((service) => {
+          if (service.data && service.id === action.parentId) {
+            return {
+              ...service,
+              data: service.data.map((item) => {
+                let visible = true;
+                if (action.value !== '' && !item.name.toLowerCase().includes(action.value.toLowerCase())) {
+                  visible = false;
+                }
+                return {
+                  ...item,
+                  visible,
+                };
+              }),
+            };
+          }
+          return service;
+        }),
+      };
+    }
+    case COLLAPSE_SERVICE: {
+      return {
+        ...state,
+        data: state.data.map((service) => {
+          if (service.data && service.id === action.data.id) {
+            service.data = service.data.map(item => ({
+              ...item,
+              visible: true,
+            }));
+          }
+          return service;
+        }),
       };
     }
     case REQUEST_FAILED:
