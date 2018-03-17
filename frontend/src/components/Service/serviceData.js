@@ -40,7 +40,7 @@ const formData = ({ record = {}, closeModal }) => [
     value: [
       {
         span: 24,
-        type: 'input',
+        type: 'textarea',
         label: 'Ayuda',
         key: 'helpText',
         required: true,

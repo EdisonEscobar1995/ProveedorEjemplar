@@ -94,10 +94,13 @@ function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
                         const {
                           formatter = defaultFormatter,
                           parser = defaultParser,
+                          min = 0,
+                          max,
                         } = current;
                         fieldContent = (
                           <InputNumberStyle
-                            min={0}
+                            min={min}
+                            max={max}
                             disabled={disabled}
                             formatter={formatter}
                             parser={parser}

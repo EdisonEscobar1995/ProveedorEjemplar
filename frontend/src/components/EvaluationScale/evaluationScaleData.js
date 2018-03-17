@@ -54,7 +54,8 @@ const formData = ({ record = {}, closeModal, masters }) => [
     value: [
       {
         span: 24,
-        type: 'input',
+        type: 'inputNumber',
+        max: 10000,
         label: 'Peso',
         key: 'score',
         required: true,
@@ -67,7 +68,7 @@ const formData = ({ record = {}, closeModal, masters }) => [
     value: [
       {
         span: 24,
-        type: 'input',
+        type: 'textarea',
         label: 'Ayuda',
         key: 'helpText',
         required: true,
