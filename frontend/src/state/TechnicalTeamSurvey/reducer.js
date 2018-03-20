@@ -100,7 +100,9 @@ function technicalTeamSurveyApp(state = initialState, action) {
               )),
             } : supplier
           )),
-          suppliersByCall: updateSuppliersByCall(state, [action.answer.idSupplierByCall], 'TECHNICAL_TEAM'),
+          suppliersByCall: action.value ?
+            updateSuppliersByCall(state, [action.answer.idSupplierByCall], 'TECHNICAL_TEAM')
+            : state.data.suppliersByCall,
         },
       };
     }
@@ -122,7 +124,9 @@ function technicalTeamSurveyApp(state = initialState, action) {
               )),
             } : supplier
           )),
-          suppliersByCall: updateSuppliersByCall(state, [action.comment.idSupplierByCall], 'TECHNICAL_TEAM'),
+          suppliersByCall: action.value ?
+            updateSuppliersByCall(state, [action.comment.idSupplierByCall], 'TECHNICAL_TEAM')
+            : state.data.suppliersByCall,
         },
         loading: false,
       };

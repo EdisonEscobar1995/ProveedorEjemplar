@@ -266,20 +266,24 @@ class TechnicalTeamSurvey extends Component {
             this.getServices()
           }
         </TabsStyle>
-        <Row type="flex" justify="center">
-          <Col span={2}>
-            <Confirm
-              title="¿Confirma que desea finalizar?"
-              method={() => finishTechnicalTeamSurvey()}
-            >
-              <Button
-                type="primary"
-              >
-                Finalizar
-              </Button>
-            </Confirm>
-          </Col>
-        </Row>
+        {
+          suppliers.filter(element => element.visible && element.required).length > 0 ? (
+            <Row type="flex" justify="center">
+              <Col span={2}>
+                <Confirm
+                  title="¿Confirma que desea finalizar?"
+                  method={() => finishTechnicalTeamSurvey()}
+                >
+                  <Button
+                    type="primary"
+                  >
+                    Finalizar
+                  </Button>
+                </Confirm>
+              </Col>
+            </Row>
+          ) : null
+        }
       </div>
     ) : null;
   }

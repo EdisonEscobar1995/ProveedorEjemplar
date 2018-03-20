@@ -195,28 +195,24 @@ const finishTechnicalTeamSurvey = () => (dispatch, getState) => {
   const idSuppliersByCall = [];
   const idSuppliers = [];
   const updatedErrors = suppliers.map((supplier) => {
-    let completed = true;
     const updatedError = {
       ...supplier,
-      items: supplier.items.map((item) => {
-        if (supplier.visible && !supplier.readOnly && !item.value) {
-          completed = false;
-        }
-        return {
-          ...item,
-          error: supplier.visible && supplier.required && !item.value,
-        };
-      }),
+      items: supplier.items.map(item => ({
+        ...item,
+        error: supplier.visible && supplier.required && !item.value,
+      })),
     };
-    if (completed) {
-      idSuppliersByCall.push(
-        suppliersByCall.find(element => element.idSupplier === supplier.id).id);
-      idSuppliers.push(supplier.id);
+    if (supplier.visible && !supplier.readOnly) {
+      if (supplier.items.filter(item => item.value).length === supplier.items.length) {
+        idSuppliersByCall.push(
+          suppliersByCall.find(element => element.idSupplier === supplier.id).id);
+        idSuppliers.push(supplier.id);
+      }
     }
     return updatedError;
   });
 
-  if (idSuppliersByCall.length > 0) {
+  if (suppliers.filter(element => element.required).length === idSuppliersByCall.length) {
     requestApi(dispatch, getDataTechnicalTeamSurveyProgress, finishTechnicalTeamSurveyApi,
       { idSuppliersByCall })
       .then(() => {
