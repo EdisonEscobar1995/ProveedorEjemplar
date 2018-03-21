@@ -184,4 +184,10 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return userDAO.getNameUserInSession();
     }
 
+    public List<UserDTO> searchUser(String text) throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.searchUser(text);
+    }
+
+
 }

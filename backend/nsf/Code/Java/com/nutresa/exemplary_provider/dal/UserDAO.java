@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openntf.domino.Database;
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.Session;
@@ -50,6 +51,31 @@ public class UserDAO extends GenericDAO<UserDTO> {
     public String getCommonName(String name) throws HandlerGenericException {
         Session currSess = Factory.getSession();
         return currSess.createName(name).getCommon();
+    }
+
+    public List<UserDTO> searchUser(String text) throws HandlerGenericException {
+        List<UserDTO> users = new ArrayList<UserDTO>();
+        View vwSystem = getDatabase().getView("vwSystems");
+        Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
+        Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("namesPathApplication"));
+        View vwNames = namesDatabase.getView("($Users)");
+        String query = "(Field type = Person and FIELD fullname CONTAINS " + text + "*)";
+        if (null != vwNames) {
+            int resultNumber = vwNames.FTSearch(query);
+            if (resultNumber > 0) {
+                Document document = vwNames.getFirstDocument();
+                while (document != null) {
+                    UserDTO user = new UserDTO();
+                    user.setName(document.getItemValueString("fullname"));
+                    user.setEmail(document.getItemValueString("MailAddress"));
+                    users.add(user);
+                    document = vwNames.getNextDocument(document);
+                }
+            }
+        }
+
+        return users;
+
     }
 
 }
