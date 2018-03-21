@@ -11,12 +11,15 @@ import {
   DELETE_ITEM,
   SEARCH_SERVICE,
   SEARCH_ITEM,
+  CHANGE_SEARCH_SERVICE,
+  CHANGE_SEARCH_ITEM,
   COLLAPSE_SERVICE,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
+  searchValue: '',
   loading: false,
 };
 
@@ -41,6 +44,7 @@ function serviceApp(state = initialState, action) {
         data: state.data.map((service) => {
           if (service.id === action.id) {
             service.data = action.data;
+            service.searchValue = '';
             service.expandable = false;
           }
           return service;
@@ -108,6 +112,7 @@ function serviceApp(state = initialState, action) {
     case SEARCH_SERVICE: {
       return {
         ...state,
+        searchValue: action.value,
         data: state.data.map((service) => {
           let visible = true;
           if (action.value !== '' && !service.name.toLowerCase().includes(action.value.toLowerCase())) {
@@ -121,6 +126,7 @@ function serviceApp(state = initialState, action) {
           }
           return {
             ...service,
+            searchValue: '',
             visible,
           };
         }),
@@ -133,6 +139,7 @@ function serviceApp(state = initialState, action) {
           if (service.data && service.id === action.parentId) {
             return {
               ...service,
+              searchValue: action.value,
               data: service.data.map((item) => {
                 let visible = true;
                 if (action.value !== '' && !item.name.toLowerCase().includes(action.value.toLowerCase())) {
@@ -149,11 +156,32 @@ function serviceApp(state = initialState, action) {
         }),
       };
     }
+    case CHANGE_SEARCH_SERVICE: {
+      return {
+        ...state,
+        searchValue: action.value,
+      };
+    }
+    case CHANGE_SEARCH_ITEM: {
+      return {
+        ...state,
+        data: state.data.map((service) => {
+          if (service.data && service.id === action.parentId) {
+            return {
+              ...service,
+              searchValue: action.value,
+            };
+          }
+          return service;
+        }),
+      };
+    }
     case COLLAPSE_SERVICE: {
       return {
         ...state,
         data: state.data.map((service) => {
           if (service.data && service.id === action.data.id) {
+            service.searchValue = '';
             service.data = service.data.map(item => ({
               ...item,
               visible: true,

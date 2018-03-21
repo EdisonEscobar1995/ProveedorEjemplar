@@ -6,11 +6,13 @@ import {
   UPDATE_SECTOR,
   DELETE_SECTOR,
   SEARCH_SECTOR,
+  CHANGE_SEARCH_SECTOR,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
+  searchValue: '',
   loading: false,
 };
 
@@ -53,6 +55,7 @@ function sectorApp(state = initialState, action) {
     case SEARCH_SECTOR: {
       return {
         ...state,
+        searchValue: action.value,
         data: state.data.map((element) => {
           let visible = true;
           const value = action.value.toLowerCase();
@@ -67,6 +70,12 @@ function sectorApp(state = initialState, action) {
             visible,
           };
         }),
+      };
+    }
+    case CHANGE_SEARCH_SECTOR: {
+      return {
+        ...state,
+        searchValue: action.value,
       };
     }
     case REQUEST_FAILED:

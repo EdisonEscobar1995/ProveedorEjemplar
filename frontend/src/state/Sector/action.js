@@ -6,6 +6,7 @@ import {
   UPDATE_SECTOR,
   DELETE_SECTOR,
   SEARCH_SECTOR,
+  CHANGE_SEARCH_SECTOR,
 } from './const';
 import { getSectorsApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
 import { openModal, closeModal } from '../Main/action';
@@ -48,6 +49,13 @@ function deleteDataSector(data) {
 function searchSector(value) {
   return {
     type: SEARCH_SECTOR,
+    value,
+  };
+}
+
+function changeSearchSector(value) {
+  return {
+    type: CHANGE_SEARCH_SECTOR,
     value,
   };
 }
@@ -101,6 +109,7 @@ export {
   saveSector,
   deleteSector,
   searchSector,
+  changeSearchSector,
   openModal,
   closeModal,
 };

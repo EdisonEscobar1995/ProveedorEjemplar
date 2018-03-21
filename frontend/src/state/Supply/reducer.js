@@ -10,19 +10,23 @@ import {
   UPDATE_SUPPLY,
   DELETE_SUPPLY,
   SEARCH_SUPPLY,
+  CHANGE_SEARCH_SUPPLY,
   ADD_CATEGORY,
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
   SEARCH_CATEGORY,
+  CHANGE_SEARCH_CATEGORY,
   ADD_SUBCATEGORY,
   UPDATE_SUBCATEGORY,
   DELETE_SUBCATEGORY,
   SEARCH_SUBCATEGORY,
+  CHANGE_SEARCH_SUBCATEGORY,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
+  searchValue: '',
   loading: false,
 };
 
@@ -46,11 +50,9 @@ function supplyApp(state = initialState, action) {
         ...state,
         data: state.data.map((supply) => {
           if (supply.id === action.id) {
-            return {
-              ...supply,
-              data: action.data,
-              expandable: true,
-            };
+            supply.data = action.data;
+            supply.searchValue = '';
+            supply.expandable = true;
           }
           return supply;
         }),
@@ -67,6 +69,7 @@ function supplyApp(state = initialState, action) {
               data: supply.data.map((category) => {
                 if (category.id === action.id) {
                   category.data = action.data;
+                  category.searchValue = '';
                   category.expandable = false;
                 }
                 return category;
@@ -198,6 +201,7 @@ function supplyApp(state = initialState, action) {
     case SEARCH_SUPPLY: {
       return {
         ...state,
+        searchValue: action.value,
         data: state.data.map((supply) => {
           let visible = true;
           if (action.value !== '' && !supply.name.toLowerCase().includes(action.value.toLowerCase())) {
@@ -213,12 +217,14 @@ function supplyApp(state = initialState, action) {
               }
               return {
                 ...category,
+                searchValue: '',
                 visible: true,
               };
             });
           }
           return {
             ...supply,
+            searchValue: '',
             visible,
           };
         }),
@@ -231,6 +237,7 @@ function supplyApp(state = initialState, action) {
           if (supply.data && supply.id === action.parentId) {
             return {
               ...supply,
+              searchValue: action.value,
               data: supply.data.map((category) => {
                 let visible = true;
                 if (action.value !== '' && !category.name.toLowerCase().includes(action.value.toLowerCase())) {
@@ -244,6 +251,7 @@ function supplyApp(state = initialState, action) {
                 }
                 return {
                   ...category,
+                  searchValue: '',
                   visible,
                 };
               }),
@@ -264,6 +272,7 @@ function supplyApp(state = initialState, action) {
                 if (category.data && category.id === action.parentId) {
                   return {
                     ...category,
+                    searchValue: action.value,
                     data: category.data.map((subcategory) => {
                       let visible = true;
                       if (action.value !== '' && !subcategory.name.toLowerCase().includes(action.value.toLowerCase())) {
@@ -284,11 +293,54 @@ function supplyApp(state = initialState, action) {
         }),
       };
     }
+    case CHANGE_SEARCH_SUPPLY: {
+      return {
+        ...state,
+        searchValue: action.value,
+      };
+    }
+    case CHANGE_SEARCH_CATEGORY: {
+      return {
+        ...state,
+        data: state.data.map((supply) => {
+          if (supply.data && supply.id === action.parentId) {
+            return {
+              ...supply,
+              searchValue: action.value,
+            };
+          }
+          return supply;
+        }),
+      };
+    }
+    case CHANGE_SEARCH_SUBCATEGORY: {
+      return {
+        ...state,
+        data: state.data.map((supply) => {
+          if (supply.data) {
+            return {
+              ...supply,
+              data: supply.data.map((category) => {
+                if (category.data && category.id === action.parentId) {
+                  return {
+                    ...category,
+                    searchValue: action.value,
+                  };
+                }
+                return category;
+              }),
+            };
+          }
+          return supply;
+        }),
+      };
+    }
     case COLLAPSE_SUPPLY: {
       return {
         ...state,
         data: state.data.map((supply) => {
           if (supply.data && supply.id === action.data.id) {
+            supply.searchValue = '';
             supply.data = supply.data.map((category) => {
               if (category.data) {
                 category.data = category.data.map(subcategory => ({
@@ -298,6 +350,7 @@ function supplyApp(state = initialState, action) {
               }
               return {
                 ...category,
+                searchValue: '',
                 visible: true,
               };
             });
@@ -313,6 +366,7 @@ function supplyApp(state = initialState, action) {
           if (supply.data && supply.id === action.data.idSupply) {
             supply.data = supply.data.map((category) => {
               if (category.data && category.id === action.data.id) {
+                category.searchValue = '';
                 category.data = category.data.map(subcategory => ({
                   ...subcategory,
                   visible: true,

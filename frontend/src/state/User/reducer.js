@@ -6,11 +6,13 @@ import {
   UPDATE_USER,
   DELETE_USER,
   SEARCH_USER,
+  CHANGE_SEARCH_USER,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
+  searchValue: '',
   masters: {},
   loading: false,
 };
@@ -55,6 +57,7 @@ function userApp(state = initialState, action) {
     case SEARCH_USER: {
       return {
         ...state,
+        searchValue: action.value,
         data: state.data.map((element) => {
           let visible = true;
           const value = action.value.toLowerCase();
@@ -70,6 +73,12 @@ function userApp(state = initialState, action) {
             visible,
           };
         }),
+      };
+    }
+    case CHANGE_SEARCH_USER: {
+      return {
+        ...state,
+        searchValue: action.value,
       };
     }
     case REQUEST_FAILED:

@@ -17,6 +17,7 @@ class UserContainer extends Component {
         component: User,
         columns: columnsData(this.props.masters),
         deleteMethod: this.props.deleteUser,
+        onChangeSearchMethod: this.props.changeSearchUser,
         onSearchMethod: this.props.searchUser,
       },
     ];
@@ -25,7 +26,6 @@ class UserContainer extends Component {
       <GenericTable
         {...this.props}
         level={0}
-        parentId=""
         componentList={componentList}
         expandable={false}
         pagination
@@ -36,9 +36,10 @@ class UserContainer extends Component {
 
 const mapStateToProps = state => (
   {
-    loading: state.user.loading,
     data: state.user.data,
+    searchValue: state.user.searchValue,
     masters: state.user.masters,
+    loading: state.user.loading,
   }
 );
 

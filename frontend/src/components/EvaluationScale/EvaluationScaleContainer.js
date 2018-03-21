@@ -17,6 +17,7 @@ class EvaluationScaleontainer extends Component {
         component: EvaluationScale,
         columns: columnsData(this.props.masters),
         deleteMethod: this.props.deleteEvaluationScale,
+        onChangeSearchMethod: this.props.changeSearchEvaluationScale,
         onSearchMethod: this.props.searchEvaluationScale,
       },
     ];
@@ -25,7 +26,6 @@ class EvaluationScaleontainer extends Component {
       <GenericTable
         {...this.props}
         level={0}
-        parentId=""
         componentList={componentList}
         expandable={false}
         pagination
@@ -36,9 +36,10 @@ class EvaluationScaleontainer extends Component {
 
 const mapStateToProps = state => (
   {
-    loading: state.evaluationScale.loading,
     data: state.evaluationScale.data,
+    searchValue: state.evaluationScale.searchValue,
     masters: state.evaluationScale.masters,
+    loading: state.evaluationScale.loading,
   }
 );
 

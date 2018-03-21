@@ -21,6 +21,7 @@ class SupplyContainer extends Component {
         deleteMethod: this.props.deleteSupply,
         onExpandMethod: this.props.getCategoryBySupply,
         onCollapseMethod: this.props.collapseSupply,
+        onChangeSearchMethod: this.props.changeSearchSupply,
         onSearchMethod: this.props.searchSupply,
       },
       {
@@ -30,6 +31,7 @@ class SupplyContainer extends Component {
         deleteMethod: this.props.deleteCategory,
         onExpandMethod: this.props.getSubcategoryByCategory,
         onCollapseMethod: this.props.collapseCategory,
+        onChangeSearchMethod: this.props.changeSearchCategory,
         onSearchMethod: this.props.searchCategory,
       },
       {
@@ -37,6 +39,7 @@ class SupplyContainer extends Component {
         component: Subcategory,
         columns: columnsData,
         deleteMethod: this.props.deleteSubcategory,
+        onChangeSearchMethod: this.props.changeSearchSubcategory,
         onSearchMethod: this.props.searchSubcategory,
       },
     ];
@@ -45,7 +48,6 @@ class SupplyContainer extends Component {
       <GenericTable
         {...this.props}
         level={0}
-        parentId=""
         componentList={componentList}
         expandable
         pagination
@@ -56,8 +58,9 @@ class SupplyContainer extends Component {
 
 const mapStateToProps = state => (
   {
-    loading: state.supply.loading,
     data: state.supply.data,
+    searchValue: state.supply.searchValue,
+    loading: state.supply.loading,
   }
 );
 

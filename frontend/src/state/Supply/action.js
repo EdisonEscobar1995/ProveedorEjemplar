@@ -10,14 +10,17 @@ import {
   UPDATE_SUPPLY,
   DELETE_SUPPLY,
   SEARCH_SUPPLY,
+  CHANGE_SEARCH_SUPPLY,
   ADD_CATEGORY,
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
   SEARCH_CATEGORY,
+  CHANGE_SEARCH_CATEGORY,
   ADD_SUBCATEGORY,
   UPDATE_SUBCATEGORY,
   DELETE_SUBCATEGORY,
   SEARCH_SUBCATEGORY,
+  CHANGE_SEARCH_SUBCATEGORY,
 } from './const';
 import { getSuppliesApi, saveSupplyApi, deleteSupplyApi } from '../../api/supply';
 import { getCategoryBySupplyApi, saveCategoryApi, deleteCategoryApi } from '../../api/category';
@@ -123,6 +126,29 @@ function searchCategory(value, parentId) {
 function searchSubcategory(value, parentId) {
   return {
     type: SEARCH_SUBCATEGORY,
+    value,
+    parentId,
+  };
+}
+
+function changeSearchSupply(value) {
+  return {
+    type: CHANGE_SEARCH_SUPPLY,
+    value,
+  };
+}
+
+function changeSearchCategory(value, parentId) {
+  return {
+    type: CHANGE_SEARCH_CATEGORY,
+    value,
+    parentId,
+  };
+}
+
+function changeSearchSubcategory(value, parentId) {
+  return {
+    type: CHANGE_SEARCH_SUBCATEGORY,
     value,
     parentId,
   };
@@ -276,14 +302,17 @@ export {
   saveSupply,
   deleteSupply,
   searchSupply,
+  changeSearchSupply,
   getCategoryBySupply,
   saveCategory,
   deleteCategory,
   searchCategory,
+  changeSearchCategory,
   getSubcategoryByCategory,
   saveSubcategory,
   deleteSubcategory,
   searchSubcategory,
+  changeSearchSubcategory,
   collapseSupply,
   collapseCategory,
   openModal,

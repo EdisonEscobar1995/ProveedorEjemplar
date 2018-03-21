@@ -6,6 +6,7 @@ import {
   UPDATE_EVALUATION_SCALE,
   DELETE_EVALUATION_SCALE,
   SEARCH_EVALUATION_SCALE,
+  CHANGE_SEARCH_EVALUATION_SCALE,
 } from './const';
 import { getEvaluationScalesApi, saveEvaluationScaleApi, deleteEvaluationScaleApi } from '../../api/evaluationScale';
 import { openModal, closeModal } from '../Main/action';
@@ -48,6 +49,13 @@ function deleteDataEvaluationScale(data) {
 function searchEvaluationScale(value) {
   return {
     type: SEARCH_EVALUATION_SCALE,
+    value,
+  };
+}
+
+function changeSearchEvaluationScale(value) {
+  return {
+    type: CHANGE_SEARCH_EVALUATION_SCALE,
     value,
   };
 }
@@ -101,6 +109,7 @@ export {
   saveEvaluationScale,
   deleteEvaluationScale,
   searchEvaluationScale,
+  changeSearchEvaluationScale,
   openModal,
   closeModal,
 };

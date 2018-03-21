@@ -6,11 +6,13 @@ import {
   UPDATE_EVALUATION_SCALE,
   DELETE_EVALUATION_SCALE,
   SEARCH_EVALUATION_SCALE,
+  CHANGE_SEARCH_EVALUATION_SCALE,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
+  searchValue: '',
   masters: {
     ApplyTo: [
       { id: 'TECHNICAL_TEAM', name: 'Comité técnico' },
@@ -59,6 +61,7 @@ function evaluationScaleApp(state = initialState, action) {
     case SEARCH_EVALUATION_SCALE: {
       return {
         ...state,
+        searchValue: action.value,
         data: state.data.map((element) => {
           let visible = true;
           const value = action.value.toLowerCase();
@@ -76,6 +79,12 @@ function evaluationScaleApp(state = initialState, action) {
             visible,
           };
         }),
+      };
+    }
+    case CHANGE_SEARCH_EVALUATION_SCALE: {
+      return {
+        ...state,
+        searchValue: action.value,
       };
     }
     case REQUEST_FAILED:

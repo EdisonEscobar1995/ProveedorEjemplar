@@ -7,6 +7,7 @@ import {
   DELETE_TECHNICAL_TEAM,
   GET_CATEGORIES_SUCCESS,
   SEARCH_TECHNICAL_TEAM,
+  CHANGE_SEARCH_TECHNICAL_TEAM,
 } from './const';
 import { getTechnicalTeamApi, saveTechnicalTeamApi, deleteTechnicalTeamApi } from '../../api/technicalTeam';
 import getMasterApi from '../../api/master';
@@ -52,6 +53,13 @@ function deleteDataTechnicalTeam(data) {
 function searchTechnicalTeam(value) {
   return {
     type: SEARCH_TECHNICAL_TEAM,
+    value,
+  };
+}
+
+function changeSearchTechnicalTeam(value) {
+  return {
+    type: CHANGE_SEARCH_TECHNICAL_TEAM,
     value,
   };
 }
@@ -143,6 +151,7 @@ export {
   saveTechnicalTeam,
   deleteTechnicalTeam,
   searchTechnicalTeam,
+  changeSearchTechnicalTeam,
   getCategoryBySupply,
   openModal,
   closeModal,

@@ -17,6 +17,7 @@ class SectorContainer extends Component {
         component: Sector,
         columns: columnsData,
         deleteMethod: this.props.deleteSector,
+        onChangeSearchMethod: this.props.changeSearchSector,
         onSearchMethod: this.props.searchSector,
       },
     ];
@@ -25,7 +26,6 @@ class SectorContainer extends Component {
       <GenericTable
         {...this.props}
         level={0}
-        parentId=""
         componentList={componentList}
         expandable={false}
         pagination
@@ -36,8 +36,9 @@ class SectorContainer extends Component {
 
 const mapStateToProps = state => (
   {
-    loading: state.sector.loading,
     data: state.sector.data,
+    searchValue: state.sector.searchValue,
+    loading: state.sector.loading,
   }
 );
 

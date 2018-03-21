@@ -7,11 +7,13 @@ import {
   DELETE_TECHNICAL_TEAM,
   GET_CATEGORIES_SUCCESS,
   SEARCH_TECHNICAL_TEAM,
+  CHANGE_SEARCH_TECHNICAL_TEAM,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
+  searchValue: '',
   masters: {},
   loading: false,
 };
@@ -66,6 +68,7 @@ function technicalTeamApp(state = initialState, action) {
     case SEARCH_TECHNICAL_TEAM: {
       return {
         ...state,
+        searchValue: action.value,
         data: state.data.map((element) => {
           let visible = true;
           const value = action.value.toLowerCase();
@@ -87,6 +90,12 @@ function technicalTeamApp(state = initialState, action) {
             visible,
           };
         }),
+      };
+    }
+    case CHANGE_SEARCH_TECHNICAL_TEAM: {
+      return {
+        ...state,
+        searchValue: action.value,
       };
     }
     case REQUEST_FAILED: {

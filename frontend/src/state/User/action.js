@@ -6,6 +6,7 @@ import {
   UPDATE_USER,
   DELETE_USER,
   SEARCH_USER,
+  CHANGE_SEARCH_USER,
 } from './const';
 import { getUsersApi, saveUserApi, deleteUserApi } from '../../api/user';
 import getRolesApi from '../../api/role';
@@ -50,6 +51,13 @@ function deleteDataUser(data) {
 function searchUser(value) {
   return {
     type: SEARCH_USER,
+    value,
+  };
+}
+
+function changeSearchUser(value) {
+  return {
+    type: CHANGE_SEARCH_USER,
     value,
   };
 }
@@ -111,6 +119,7 @@ export {
   saveUser,
   deleteUser,
   searchUser,
+  changeSearchUser,
   openModal,
   closeModal,
 };

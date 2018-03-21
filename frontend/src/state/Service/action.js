@@ -11,6 +11,8 @@ import {
   DELETE_ITEM,
   SEARCH_SERVICE,
   SEARCH_ITEM,
+  CHANGE_SEARCH_SERVICE,
+  CHANGE_SEARCH_ITEM,
   COLLAPSE_SERVICE,
 } from './const';
 import {
@@ -87,6 +89,21 @@ function searchService(value) {
 function searchItem(value, parentId) {
   return {
     type: SEARCH_ITEM,
+    value,
+    parentId,
+  };
+}
+
+function changeSearchService(value) {
+  return {
+    type: CHANGE_SEARCH_SERVICE,
+    value,
+  };
+}
+
+function changeSearchItem(value, parentId) {
+  return {
+    type: CHANGE_SEARCH_ITEM,
     value,
     parentId,
   };
@@ -194,6 +211,8 @@ export {
   saveItem,
   searchService,
   searchItem,
+  changeSearchService,
+  changeSearchItem,
   collapseService,
   openModal,
   closeModal,

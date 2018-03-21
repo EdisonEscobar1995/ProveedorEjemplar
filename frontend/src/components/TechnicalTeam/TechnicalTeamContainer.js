@@ -17,6 +17,7 @@ class TechnicalTeamContainer extends Component {
         component: TechnicalTeam,
         columns: columnsData(this.props.masters),
         deleteMethod: this.props.deleteTechnicalTeam,
+        onChangeSearchMethod: this.props.changeSearchTechnicalTeam,
         onSearchMethod: this.props.searchTechnicalTeam,
       },
     ];
@@ -25,7 +26,6 @@ class TechnicalTeamContainer extends Component {
       <GenericTable
         {...this.props}
         level={0}
-        parentId=""
         componentList={componentList}
         expandable={false}
         pagination
@@ -36,9 +36,10 @@ class TechnicalTeamContainer extends Component {
 
 const mapStateToProps = state => (
   {
-    loading: state.technicalTeam.loading,
     data: state.technicalTeam.data,
+    searchValue: state.technicalTeam.searchValue,
     masters: state.technicalTeam.masters,
+    loading: state.technicalTeam.loading,
   }
 );
 

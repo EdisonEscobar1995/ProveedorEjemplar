@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Spin, Button, Tooltip, Input } from 'antd';
+import { Table, Spin, Button, Tooltip, Input, Icon } from 'antd';
 // import Confirm from './Confirm';
 import FormattedMessage from './FormattedMessage';
 import H1 from '../shared/H1';
@@ -18,6 +18,7 @@ function GenericTable(props) {
     disabled,
     expandable,
     pagination,
+    searchValue,
   } = props;
 
   return (
@@ -28,7 +29,17 @@ function GenericTable(props) {
           <div>
             {
               componentList[level].onSearchMethod ? (
-                <Search placeholder="Buscar" style={{ width: 200 }} size="large" onSearch={value => (componentList[level].onSearchMethod(value, parentId))} />
+                <Search
+                  size="large"
+                  placeholder="Buscar"
+                  style={{ width: 200 }}
+                  value={searchValue}
+                  prefix={<Icon type="close" style={{ cursor: 'pointer' }} onClick={() => (componentList[level].onSearchMethod('', parentId))} />}
+                  onChange={event => (
+                    componentList[level].onChangeSearchMethod(event.target.value, parentId))}
+                  onSearch={value => (
+                    componentList[level].onSearchMethod(value, parentId))}
+                />
               ) : null
             }
             <Table
@@ -54,6 +65,7 @@ function GenericTable(props) {
                       data={record.data}
                       disabled={record.disabled}
                       expandable={record.expandable}
+                      searchValue={record.searchValue}
                       loading={false}
                       pagination={pagination}
                     />

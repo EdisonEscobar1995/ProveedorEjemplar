@@ -20,6 +20,7 @@ class ServiceContainer extends Component {
         deleteMethod: this.props.deleteService,
         onExpandMethod: this.props.getItemByService,
         onCollapseMethod: this.props.collapseService,
+        onChangeSearchMethod: this.props.changeSearchService,
         onSearchMethod: this.props.searchService,
       },
       {
@@ -27,6 +28,7 @@ class ServiceContainer extends Component {
         component: Item,
         columns: columnsData,
         deleteMethod: this.props.deleteItem,
+        onChangeSearchMethod: this.props.changeSearchItem,
         onSearchMethod: this.props.searchItem,
       },
     ];
@@ -35,7 +37,6 @@ class ServiceContainer extends Component {
       <GenericTable
         {...this.props}
         level={0}
-        parentId=""
         componentList={componentList}
         expandable
         pagination
@@ -46,8 +47,9 @@ class ServiceContainer extends Component {
 
 const mapStateToProps = state => (
   {
-    loading: state.service.loading,
     data: state.service.data,
+    searchValue: state.service.searchValue,
+    loading: state.service.loading,
   }
 );
 
