@@ -16,6 +16,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class UserDAO extends GenericDAO<UserDTO> {
     private static final short MAX_RESULTS = 20;
+
     public UserDAO() {
         super(UserDTO.class);
     }
@@ -60,14 +61,18 @@ public class UserDAO extends GenericDAO<UserDTO> {
         Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
         Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("namesPathApplication"));
         View vwNames = namesDatabase.getView("($Users)");
-        String query = "(Field type = Person and FIELD fullname CONTAINS ".concat(text.concat("*)"));
+        String query = "(Field type = Person and ".concat(text.concat("*)"));
         if (null != vwNames) {
             int resultNumber = vwNames.FTSearch(query, MAX_RESULTS);
             if (resultNumber > 0) {
                 Document document = vwNames.getFirstDocument();
                 while (document != null) {
                     UserDTO user = new UserDTO();
-                    user.setName(document.getItemValueString("fullname"));
+                    String fullname = document.getItemValueString("fullname");
+                    if (fullname.trim().isEmpty()) {
+                        fullname = document.getItemValueString("fullname2");
+                    }
+                    user.setName(fullname);
                     user.setEmail(document.getItemValueString("MailAddress"));
                     users.add(user);
                     document = vwNames.getNextDocument(document);
@@ -77,7 +82,6 @@ public class UserDAO extends GenericDAO<UserDTO> {
         }
 
         return users;
-
     }
 
 }
