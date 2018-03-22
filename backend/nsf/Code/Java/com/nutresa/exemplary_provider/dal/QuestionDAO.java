@@ -124,6 +124,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
                     Document document = entry.getDocument();
                     response.add(castDocument(document));
                 }
+                view.clear();
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);

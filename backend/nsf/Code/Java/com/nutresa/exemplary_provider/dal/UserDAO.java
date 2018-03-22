@@ -73,6 +73,7 @@ public class UserDAO extends GenericDAO<UserDTO> {
                     document = vwNames.getNextDocument(document);
                 }
             }
+            vwNames.clear();
         }
 
         return users;
