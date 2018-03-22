@@ -12,15 +12,16 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 class TechnicalTeamSurvey extends Component {
-  getHelp = title => (
+  getHelp = (title, isTab) => (
     title ? (
       <Tooltip placement="topRight" title={title}>
         <Icon
           style={{
             marginLeft: 5,
             marginRight: 0,
+            color: isTab ? '#fff' : '#37907c',
           }}
-          type="question-circle-o"
+          type={`question-circle${isTab ? '-o' : ''}`}
         />
       </Tooltip>
     ) : null
@@ -35,7 +36,7 @@ class TechnicalTeamSurvey extends Component {
         tab={
           <ContentStyle>
             {service.name}
-            {this.getHelp(service.helpText)}
+            {this.getHelp(service.helpText, true)}
           </ContentStyle>
         }
         key={service.id}
@@ -142,7 +143,7 @@ class TechnicalTeamSurvey extends Component {
             switch (item.type) {
               case 'comment': return this.getComment(service, record);
               case 'subtotal': return this.getSubTotal(item, record);
-              case 'total': return record.total.toFixed(2);
+              case 'total': return record.total ? record.total.toFixed(2) : null;
               default: return this.getScore(item, record);
             }
           }}
@@ -162,11 +163,12 @@ class TechnicalTeamSurvey extends Component {
     ) : defaultValue;
   }
 
-  getSubTotal = (item, record) => (
-    record.totals
+  getSubTotal = (item, record) => {
+    const value = record.totals
       .find(element => element.idService === item.idServiceForTotal)
-      .value.toFixed(2)
-  )
+      .value;
+    return value ? value.toFixed(2) : null;
+  }
 
   getScore = (item, record) => {
     const { data } = this.props;

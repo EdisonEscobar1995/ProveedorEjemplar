@@ -7,8 +7,11 @@ import {
   DELETE_USER,
   SEARCH_USER,
   CHANGE_SEARCH_USER,
+  GET_USERS_BY_KEY_PROGRESS,
+  GET_USERS_BY_KEY_SUCCESS,
+  EDIT_USER,
 } from './const';
-import { getUsersApi, saveUserApi, deleteUserApi } from '../../api/user';
+import { getUsersApi, saveUserApi, deleteUserApi, getUsersByKeyApi } from '../../api/user';
 import getRolesApi from '../../api/role';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
@@ -62,6 +65,25 @@ function changeSearchUser(value) {
   };
 }
 
+function getUsersBykeyProgress() {
+  return {
+    type: GET_USERS_BY_KEY_PROGRESS,
+  };
+}
+
+function getUsersByKeySuccess(data) {
+  return {
+    type: GET_USERS_BY_KEY_SUCCESS,
+    data,
+  };
+}
+
+function editUser() {
+  return {
+    type: EDIT_USER,
+  };
+}
+
 function getUsers() {
   return (dispatch) => {
     requestApi(dispatch, getUserProgress, getRolesApi)
@@ -74,6 +96,7 @@ function getUsers() {
             }));
             const masters = {
               Roles: rolesResponse.data.data,
+              Users: [],
             };
             dispatch(getUserSuccess(data, masters));
           }).catch(() => {
@@ -86,6 +109,9 @@ function getUsers() {
 }
 
 function saveUser(clientData, remoteId, next) {
+  if (typeof clientData.idRols === 'string') {
+    clientData.idRols = [clientData.idRols];
+  }
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getUserProgress, saveUserApi, clientData)
@@ -114,12 +140,29 @@ function deleteUser(clientData) {
   };
 }
 
+function getUsersByKey(value) {
+  return (dispatch) => {
+    requestApi(dispatch, getUsersBykeyProgress, getUsersByKeyApi, value)
+      .then((response) => {
+        const data = response.data.data.map(element => ({
+          ...element,
+          id: element.name,
+        }));
+        dispatch(getUsersByKeySuccess(data));
+      }).catch(() => {
+        dispatch(getFailedRequest());
+      });
+  };
+}
+
 export {
   getUsers,
   saveUser,
   deleteUser,
   searchUser,
   changeSearchUser,
+  getUsersByKey,
+  editUser,
   openModal,
   closeModal,
 };

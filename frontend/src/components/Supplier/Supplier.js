@@ -93,7 +93,7 @@ class Supplier extends Component {
           type="circle"
           percent={percent}
           status={status}
-          width={40}
+          width={38}
           format={value => (value === 0 ? '?' : `${value}%`)}
         />
         <Title text={name} />

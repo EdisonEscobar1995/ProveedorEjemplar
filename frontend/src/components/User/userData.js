@@ -1,4 +1,6 @@
-const formData = ({ record = {}, closeModal, masters }) => [
+const formData = ({
+  record = {}, closeModal, masters, getUsersByKey, fetching,
+}) => [
   {
     key: 1.0,
     value: [
@@ -27,11 +29,16 @@ const formData = ({ record = {}, closeModal, masters }) => [
     value: [
       {
         span: 24,
-        type: 'input',
+        type: 'select',
+        mode: 'combobox',
+        autoComplete: true,
         label: 'Nombre',
         key: 'name',
-        required: true,
         value: record.name,
+        required: true,
+        options: masters.Users,
+        onSearch: getUsersByKey,
+        fetching,
       },
     ],
   },
@@ -54,12 +61,12 @@ const formData = ({ record = {}, closeModal, masters }) => [
       {
         span: 24,
         type: 'select',
-        mode: 'multiple',
+        mode: 'default',
         options: masters.Roles,
-        label: 'Roles',
+        label: 'Rol',
         key: 'idRols',
         required: true,
-        value: record.idRols,
+        value: record.idRols && record.idRols[0],
       },
     ],
   },

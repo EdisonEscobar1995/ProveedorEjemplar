@@ -422,7 +422,7 @@ function getDataSupplier(idSupplier, idSupplierByCall) {
     }).then(data => loadStateData(dispatch, getDataStateApi, data))
       .then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
       .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))
-      .then(data => loadDependingOptions(dispatch, getDataDepartmentsByCountryApi, data, 'idCountry', 'departments'))
+      .then(data => loadDependingOptions(dispatch, getDataDepartmentsByCountryApi, data, 'idOriginCountry', 'departments'))
       .then(data => loadDependingOptions(dispatch, getDataCitiesByDepartmentApi, data, 'idDepartment', 'cities'))
       .then((data) => {
         dispatch(getDataSupplierSuccess(data));

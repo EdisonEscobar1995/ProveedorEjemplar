@@ -7,6 +7,9 @@ import {
   DELETE_USER,
   SEARCH_USER,
   CHANGE_SEARCH_USER,
+  GET_USERS_BY_KEY_PROGRESS,
+  GET_USERS_BY_KEY_SUCCESS,
+  EDIT_USER,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
@@ -15,6 +18,7 @@ const initialState = {
   searchValue: '',
   masters: {},
   loading: false,
+  fetching: false,
 };
 
 function userApp(state = initialState, action) {
@@ -79,6 +83,31 @@ function userApp(state = initialState, action) {
       return {
         ...state,
         searchValue: action.value,
+      };
+    }
+    case GET_USERS_BY_KEY_PROGRESS: {
+      return {
+        ...state,
+        fetching: true,
+      };
+    }
+    case GET_USERS_BY_KEY_SUCCESS: {
+      return {
+        ...state,
+        fetching: false,
+        masters: {
+          ...state.masters,
+          Users: action.data,
+        },
+      };
+    }
+    case EDIT_USER: {
+      return {
+        ...state,
+        masters: {
+          ...state.masters,
+          Users: [],
+        },
       };
     }
     case REQUEST_FAILED:

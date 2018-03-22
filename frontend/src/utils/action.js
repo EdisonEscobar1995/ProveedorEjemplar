@@ -54,13 +54,13 @@ function validateResponse(args) {
 
 const executeApi = (dispatch, apiMethod, clientData) => (
   apiMethod(clientData)
-    .then((respone) => {
-      let validateresponse = respone;
-      if (!Array.isArray(respone)) {
-        validateresponse = [respone];
+    .then((response) => {
+      let validateresponse = response;
+      if (!Array.isArray(response)) {
+        validateresponse = [response];
       }
       validateResponse(validateresponse);
-      return respone;
+      return response;
     }).catch((err) => {
       const error = getMessage(err.response.statusText.toUpperCase());
       dispatch(setMessage(error, 'error'));

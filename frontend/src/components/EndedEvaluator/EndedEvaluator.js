@@ -11,7 +11,7 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
 
   const openNotification = (list) => {
     const plural = list.length > 1 ? 's' : '';
-    notification.open({
+    notification.success({
       message: 'Operación exitosa',
       description: `${list.length} documento${plural} procesado${plural}`,
     });
@@ -22,7 +22,7 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
     if (checked.length > 0) {
       sendMethod(checked, openNotification);
     } else {
-      message({ text: 'Debe seleccionar al menos un proveedor', type: 'error' });
+      message({ text: 'Debe seleccionar al menos un proveedor', type: 'info' });
     }
   };
 

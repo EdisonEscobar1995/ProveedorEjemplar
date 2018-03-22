@@ -13,10 +13,15 @@ function deleteUserApi(data) {
   return instance.get(`User?action=delete&id=${id}`);
 }
 
+function getUsersByKeyApi(text) {
+  return instance.get(`User?action=searchUser&text=${text}`);
+}
+
 export {
   getUserContextApi,
   getUsersApi,
   saveUserApi,
   deleteUserApi,
+  getUsersByKeyApi,
 };
 

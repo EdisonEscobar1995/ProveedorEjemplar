@@ -24,8 +24,8 @@ const backArrow = css`
 const forwardArrow = css`
   ${emptyArrow};
   right: -18px;
-  border-top: 28px solid transparent;
-  border-bottom: 28px solid transparent;
+  border-top: 32px solid transparent;
+  border-bottom: 32px solid transparent;
 `;
 
 const TabsStyle = styled(Tabs)`
@@ -40,8 +40,8 @@ const TabsStyle = styled(Tabs)`
       }
       &:before {
         ${backArrow}
-        border-top: 28px solid ${props => props.theme.color.tabNormal};
-        border-bottom: 28px solid ${props => props.theme.color.tabNormal};
+        border-top: 32px solid ${props => props.theme.color.tabNormal};
+        border-bottom: 32px solid ${props => props.theme.color.tabNormal};
       }
       &:after {
         ${forwardArrow}
@@ -53,8 +53,8 @@ const TabsStyle = styled(Tabs)`
       color: ${props => props.theme.color.normal};
       &:before {
         ${backArrow}
-        border-top: 28px solid ${props => props.theme.color.primary};
-        border-bottom: 28px solid ${props => props.theme.color.primary};
+        border-top: 32px solid ${props => props.theme.color.primary};
+        border-bottom: 32px solid ${props => props.theme.color.primary};
       }
       &:after {
         ${forwardArrow}

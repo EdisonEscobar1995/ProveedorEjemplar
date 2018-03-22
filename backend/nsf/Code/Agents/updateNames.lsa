@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='(updateNames)' alias='updateNames' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='8e28a' unid='050C4BB69B46336F0525825800582D0E' sequence='7'>
+<created><datetime>20180322T110307,02-05</datetime></created>
+<modified><datetime>20180322T111407,33-05</datetime></modified>
+<revised><datetime>20180322T111407,32-05</datetime></revised>
+<lastaccessed><datetime>20180322T111407,33-05</datetime></lastaccessed>
+<addedtofile><datetime>20180322T110307,21-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180322T111407,31-05</datetime></designchange>
+<trigger type='agentlist'/>
+<documentset type='runonce'/><code event='options'><lotusscript>%REM
+	Agent updateNames
+	Created Mar 22, 2018 by Juan Carlos Gonzalez Arroyave/desarrollo
+	Description: Comments for Agent
+%END REM
+Option Public
+Option Declare
+
+
+</lotusscript></code><code event='initialize'><lotusscript>Sub Initialize
+	Dim ns As New NotesSession
+	Dim db As NotesDatabase
+	Dim vwSuppliersByCall As NotesView
+	Dim vwUsers As NotesView
+	Dim ndSupplierByCall As NotesDocument
+	Dim ndUser As NotesDocument
+	
+	Set db = ns.Currentdatabase
+	Set vwSuppliersByCall = db.Getview("vwSuppliersByCall")
+	Set vwUsers = db.Getview("vwUsers")
+	
+	Set ndSupplierByCall = vwSuppliersByCall.Getfirstdocument()
+	While Not ndSupplierByCall Is Nothing 
+		If ndSupplierByCall.Hasitem("whoEvaluate") Then 
+			Set ndUser = vwUsers.Getdocumentbykey(ndSupplierByCall.whoEvaluate(0), True)
+			If Not ndUser Is Nothing Then 
+				ndSupplierByCall.whoEvaluate = ndUser.name
+				Call ndSupplierByCall.save(True, False)
+			End If
+		End If
+		Set ndSupplierByCall = vwSuppliersByCall.Getnextdocument(ndSupplierByCall)
+	Wend
+End Sub</lotusscript></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180322T111356,02-05</datetime></agentmodified></rundata></agent>
+

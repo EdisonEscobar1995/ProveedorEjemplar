@@ -34,6 +34,8 @@ const InputNumberStyle = styled(InputNumber)`
   width: 100%;
 `;
 
+let timer;
+
 function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
   return (
     <Spin spinning={loadingModal === true}>
@@ -117,67 +119,60 @@ function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
                         }
                         break;
                       case 'select': {
-                        const { valuesToClean, mode, noSearch } = current;
-                        if (!noSearch) {
-                          fieldContent = (
-                            <Select
-                              disabled={disabled}
-                              showSearch
-                              mode={mode}
-                              allowClear={allowClear}
-                              filterOption={(input, option) =>
-                                option.props.children.props.id
-                                  .toLowerCase().indexOf(input.toLowerCase()) >= 0
-                              }
-                              onChange={(selectValue) => {
-                                if (valuesToClean) {
-                                  setFields(valuesToClean);
-                                }
-                                if (handleChange) {
-                                  handleChange(selectValue);
-                                }
-                              }}
-                            >
-                              {
-                                options.map(option => (
-                                  <Option
-                                    key={option.id}
-                                    value={option.id}
-                                  >
-                                    <FormattedMessage id={option.name} />
-                                  </Option>
-                                ))
-                              }
-                            </Select>);
+                        const {
+                          valuesToClean, mode, noSearch, autoComplete, onSearch, fetching,
+                        } = current;
+                        const selectProps = {};
+                        if (noSearch) {
+                          selectProps.filterOption = selectValue =>
+                            selectValue.startsWith(' ') || selectValue.endsWith(' ');
+                        } else if (autoComplete) {
+                          selectProps.defaultActiveFirstOption = false;
+                          selectProps.showArrow = false;
+                          selectProps.placeholder = 'Buscar';
+                          selectProps.filterOption = false;
+                          selectProps.notFoundContent = fetching ? <Spin size="small" /> : 'No se encontraron resultados';
+                          selectProps.onSearch = (selectValue) => {
+                            clearTimeout(timer);
+                            if (onSearch && selectValue.length > 2) {
+                              timer = setTimeout(() => {
+                                onSearch(selectValue);
+                              }, 500);
+                            }
+                          };
                         } else {
-                          fieldContent = (
-                            <Select
-                              disabled={disabled}
-                              showSearch
-                              mode={mode}
-                              allowClear={allowClear}
-                              filterOption={selectValue => selectValue.startsWith(' ') || selectValue.endsWith(' ')}
-                              onChange={(selectValue) => {
-                                if (valuesToClean) {
-                                  setFields(valuesToClean);
-                                }
-                                if (handleChange) {
-                                  handleChange(selectValue);
-                                }
-                              }}
-                            >
-                              {
-                                options.map(option => (
-                                  <Option
-                                    key={option.id}
-                                    value={option.id}
-                                  >
-                                    {option.name}
-                                  </Option>
-                                ))
-                              }
-                            </Select>);
+                          selectProps.filterOption = (input, option) =>
+                            option.props.children.props.id
+                              .toLowerCase().indexOf(input.toLowerCase()) >= 0;
                         }
+                        fieldContent = (
+                          <Select
+                            showSearch
+                            mode={mode}
+                            disabled={disabled}
+                            allowClear={allowClear}
+                            onChange={(selectValue) => {
+                              if (valuesToClean) {
+                                setFields(valuesToClean);
+                              }
+                              if (handleChange) {
+                                handleChange(selectValue);
+                              }
+                            }}
+                            {...selectProps}
+                          >
+                            {
+                              options.map(option => (
+                                <Option
+                                  key={option.id}
+                                  value={option.id}
+                                >
+                                  <FormattedMessage id={option.name} />
+                                </Option>
+                              ))
+                            }
+                          </Select>
+                        );
                       }
                         break;
                       case 'radio':

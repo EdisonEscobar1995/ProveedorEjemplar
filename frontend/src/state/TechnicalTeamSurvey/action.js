@@ -130,7 +130,7 @@ const getTechnicalTeamSurvey = year => (dispatch) => {
           });
           totals.push({
             idService: service.id,
-            value: 0,
+            value: null,
           });
         });
 
@@ -149,7 +149,7 @@ const getTechnicalTeamSurvey = year => (dispatch) => {
         supplier.items = items;
         supplier.comments = comments;
         supplier.totals = totals;
-        supplier.total = 0;
+        supplier.total = null;
         return supplier;
       });
       data.masters.Service.push({

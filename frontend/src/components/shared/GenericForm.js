@@ -10,8 +10,9 @@ function Generic(props) {
   const template = formData(props);
 
   const openNotification = () => {
-    notification.open({
+    notification.success({
       message: 'Operación exitosa',
+      description: 'Documento guardado',
     });
   };
 

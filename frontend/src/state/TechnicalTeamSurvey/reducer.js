@@ -60,13 +60,13 @@ function technicalTeamSurveyApp(state = initialState, action) {
                   value: subset.length > 0 ?
                     subset.reduce((a, b) => ({
                       value: a.value + b.value,
-                    })).value / subset.length : 0,
+                    })).value / subset.length : null,
                 };
               }),
               total: items.length > 0 ?
                 supplier.items.reduce((a, b) => ({
                   value: a.value + b.value,
-                })).value / items.length : 0,
+                })).value / items.length : null,
             };
           }),
         },
