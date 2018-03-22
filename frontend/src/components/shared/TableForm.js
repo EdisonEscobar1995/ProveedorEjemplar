@@ -90,7 +90,7 @@ class GenericFormTable extends Component {
       });
     }
     content = (
-      <TableStyle pagination={false} dataSource={data}>
+      <TableStyle dataSource={data}>
         {
           colummns.map(column => (
             (

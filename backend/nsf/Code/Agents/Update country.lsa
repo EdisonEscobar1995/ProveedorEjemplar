@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='Update country' alias='updateCountry' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='8e25a' unid='4E7738014F4B7519052582570066488A' sequence='11'>
+<created><datetime>20180321T133712,42-05</datetime></created>
+<modified><datetime>20180321T135303,14-05</datetime></modified>
+<revised><datetime>20180321T135303,13-05</datetime></revised>
+<lastaccessed><datetime>20180321T135303,14-05</datetime></lastaccessed>
+<addedtofile><datetime>20180321T133712,50-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180321T135303,14-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='runonce'/><code event='options'><lotusscript>Option Public
+Option Declare
+
+</lotusscript></code><code event='initialize'><lotusscript>
+Sub Initialize
+	On Error GoTo label 
+	
+	Dim ns As New NotesSession
+	Dim ws As New NotesUIWorkspace
+	Dim db As NotesDatabase
+	Dim vwSuppliers As NotesView
+	Dim vwCountries As NotesView  
+	
+	Dim ndSupplier As NotesDocument
+	Dim ndCountry As NotesDocument
+	
+	Dim objExcel As Variant						
+	Dim objLibro As Variant						
+	Dim objHoja As Variant						
+	Dim objHojaLog As Variant
+	Dim objExcelLog As Variant
+		
+	Dim archivo As Variant
+	Dim blArchivoApto As Boolean
+	
+	Dim fila As Long					
+	Dim filaLog As Long
+	Dim sapCode As String
+	Dim country As String 
+	Dim strError As String	
+	Dim numProveedores As Long 
+	Dim macro As Variant 
+		
+	Set db = ns.currentDatabase
+	Set vwSuppliers = db.getView("vwSuppliersBySapCode")
+	Set vwCountries = db.Getview("ImportCountriesByName")
+	
+	blArchivoApto = False
+	
+	While Not blArchivoApto
+		archivo = Ws.OpenFileDialog(False , "Actualización de países", "*.xls|*.xlsx")
+		If IsEmpty(archivo) Then
+			Exit Sub
+		End If
+		
+		If Right(archivo(0),4) &lt;&gt; ".xls" And Right(archivo(0),5) &lt;&gt; ".xlsx" Then 
+			MsgBox "Debe seleccionar un archivo con extension '.xls' o '.xlsx'", 16, "Error"
+		Else
+			blArchivoApto = True
+		End If
+	Wend
+	
+	Set objExcel = CreateObject( "Excel.Application" )
+	objExcel.WorkBooks.Open (archivo(0))
+	Set objLibro=objExcel.activeWorkBook
+	Set objHoja=objLibro.Worksheets(1)	
+	
+	Set objExcelLog =CreateObject("Excel.Application")
+	Call objExcelLog.Workbooks.Add()
+	Set objHojaLog=objExcelLog.ActiveSheet  
+	
+	filaLog = 2
+	fila = 2
+		
+	Set objHoja=objLibro.Worksheets(1)	
+	fila = 2
+	sapCode = Trim(CStr(objHoja.cells(fila, 1).value))
+	
+	While (sapCode &lt;&gt; "") 
+		strError = ""
+		
+		Set ndSupplier = vwSuppliers.getDocumentByKey(sapCode, True)
+		
+		If Not ndSupplier Is Nothing Then 
+			If Not ndSupplier.Hasitem("idOriginCountry") Then 
+				Set ndCountry = vwCountries.Getdocumentbykey(Trim(CStr(objHoja.cells(fila, 2).value)), True)
+				
+				If Not ndCountry Is Nothing Then 
+					ndSupplier.idOriginCountry = ndSupplier.idCountry
+					ndSupplier.idCountry = ndCountry.id
+					Call ndSupplier.save(True, False)
+					numProveedores = numProveedores + 1
+				Else
+					strError = "País no registrado"
+				End If
+			Else
+				strError = "Proveedor actualizado previamente"	
+			End If
+		Else
+			strError = "Codigo SAP no asociado con proveedor"
+		End If
+		
+		If strError &lt;&gt; "" Then
+			objHojaLog.Cells(filaLog,1) = Trim(CStr(objHoja.cells(fila, 1).value))
+			objHojaLog.Cells(filaLog,2) = strError
+			filaLog = filaLog+1
+		End If
+		
+		fila = fila + 1
+		sapCode = Trim(CStr(objHoja.cells(fila, 1).value))
+	Wend
+	
+	objLibro.close False
+	objExcel.quit
+	Set objExcel=Nothing					
+	
+	If filaLog &gt; 2 Then
+		objHojaLog.Cells(1,1)="PROVEEDOR"
+		objHojaLog.Cells(1,2)="INCONSISTENCIA"
+	Else
+		filaLog = 0
+	End If
+	
+	filaLog = filaLog+1
+	objHojaLog.Cells(filaLog,1) = "Total de proveedores actualizados"
+	objHojaLog.Cells(filaLog,2) = CStr(numProveedores)
+	
+	objHojaLog.UsedRange.Columns.AutoFit
+	objHojaLog.UsedRange.Rows.AutoFit
+	objExcelLog.visible=True	
+
+	Exit Sub	
+label: 
+	MsgBox Error$ &amp; " " &amp; Erl() &amp; " fila " &amp; fila
+End Sub</lotusscript></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180321T135302,90-05</datetime></agentmodified></rundata></agent>
+

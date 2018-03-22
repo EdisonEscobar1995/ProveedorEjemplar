@@ -3,10 +3,15 @@ import { loginUrl } from './api';
 
 function getMessage(type) {
   switch (type) {
+    case 'DOCUMENT_EXISTS':
+      return 'Validation.documentExists';
     case 'DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED':
+    case 'DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED':
       return 'Validation.dateToEvaluate';
     case 'ALREADY_HAS_AN_EVALUATOR':
       return 'Validation.alreadyBeingEvaluated';
+    case 'ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER':
+      return 'Validation.alreadyBeingQualified';
     case 'DATE_TO_MAKE_SURVEY_EXCEEDED':
       return 'Validation.dateToSend';
     case 'NO_DATA':
@@ -36,7 +41,8 @@ function validateResponse(args) {
       if (element.headers['content-type'].toLowerCase().includes('text/html')) {
         location.href = loginUrl;
       } else if (!element.data.status) {
-        const notice = element.data.message === 'ALREADY_HAS_AN_EVALUATOR' ? element.data.notice : '';
+        const notice = (element.data.message === 'ALREADY_HAS_AN_EVALUATOR' ||
+        element.data.message === 'ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER') ? element.data.notice : '';
         setMessage(getMessage(element.data.message), 'info', notice);
         throw new Error(element.data.message);
       }
@@ -48,13 +54,13 @@ function validateResponse(args) {
 
 const executeApi = (dispatch, apiMethod, clientData) => (
   apiMethod(clientData)
-    .then((respone) => {
-      let validateresponse = respone;
-      if (!Array.isArray(respone)) {
-        validateresponse = [respone];
+    .then((response) => {
+      let validateresponse = response;
+      if (!Array.isArray(response)) {
+        validateresponse = [response];
       }
       validateResponse(validateresponse);
-      return respone;
+      return response;
     }).catch((err) => {
       const error = getMessage(err.response.statusText.toUpperCase());
       dispatch(setMessage(error, 'error'));

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Spin, Form } from 'antd';
+import { Spin } from 'antd';
 import * as actions from '../../state/ModifiedSuppliers/action';
-import Filters from './Filters';
+import formData from './formData';
+import GenericForm from '../shared/GenericForm';
 import ModifiedSuppliers from './ModifiedSuppliers';
-
-const FormFiltersHoc = Form.create()(Filters);
 
 class ModifiedSuppliersContainer extends Component {
   componentDidMount() {
@@ -15,9 +14,9 @@ class ModifiedSuppliersContainer extends Component {
   render() {
     return (
       <Spin spinning={this.props.loading}>
-        <FormFiltersHoc
+        <GenericForm
           {...this.props}
-          Form={Form}
+          formData={formData}
         />
         <ModifiedSuppliers
           {...this.props}

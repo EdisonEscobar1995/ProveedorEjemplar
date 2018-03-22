@@ -1,17 +1,25 @@
-import intance from './instance';
+import instance from './instance';
 
-function getDataCategoryApi() {
-  return intance.get('Category?action=getAll');
-}
 function getDataCategoryBySuplyApi(idSupply) {
-  return intance.get(`Category?action=getAll&idSupply=${idSupply}`);
+  return instance.get(`Category?action=getAll&idSupply=${idSupply}`);
 }
-function saveDataCategoryApi(data) {
-  return intance.post('Category?action=save', data);
+
+function getCategoryBySupplyApi(id) {
+  return instance.get(`Category?action=getByIdSupply&idSupply=${id}`);
+}
+
+function saveCategoryApi(data) {
+  return instance.post('Category?action=save', data);
+}
+
+function deleteCategoryApi(data) {
+  const { id } = data;
+  return instance.get(`Category?action=delete&id=${id}`);
 }
 
 export {
-  getDataCategoryApi,
-  saveDataCategoryApi,
   getDataCategoryBySuplyApi,
+  getCategoryBySupplyApi,
+  saveCategoryApi,
+  deleteCategoryApi,
 };

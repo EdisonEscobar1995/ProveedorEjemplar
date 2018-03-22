@@ -1,10 +1,14 @@
 import React from 'react';
-import TableForm from '../shared/TableForm';
+import sectorData from './sectorData';
+import GenericForm from '../shared/GenericForm';
 
 function Sector(props) {
   return (
-    <TableForm
+    <GenericForm
       {...props}
+      formData={sectorData}
+      submitMethod={props.saveSector}
+      validate
     />
   );
 }

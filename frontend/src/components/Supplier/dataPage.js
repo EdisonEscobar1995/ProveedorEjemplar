@@ -105,7 +105,7 @@ function generalInfo(fields) {
     idSocietyType,
     yearOfEstablishment,
     principalAdress,
-    idCountry,
+    idOriginCountry,
     idDepartment,
     idCity,
     branchOffice,
@@ -462,11 +462,11 @@ function generalInfo(fields) {
         {
           span: 6,
           type: 'select',
-          label: 'Supplier.idCountry',
-          key: 'idCountry',
+          label: 'Supplier.idOriginCountry',
+          key: 'idOriginCountry',
           options: countries,
           disabled,
-          value: idCountry,
+          value: idOriginCountry,
           valuesToClean: {
             idDepartment: {
               value: '',

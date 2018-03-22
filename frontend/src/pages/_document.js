@@ -3,8 +3,8 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout, Icon, BackTop } from 'antd';
-import getUserContext from '../state/User/action';
+import { Layout, Icon, BackTop, Modal } from 'antd';
+import * as action from '../state/Main/action';
 import FormattedMessage from '../components/shared/FormattedMessage';
 import Menu from '../components/shared/Menu';
 import Router from '../components/shared/Router';
@@ -100,7 +100,6 @@ const LanguageStyle = styled.a`
   background-size: contain;
 `;
 
-
 class Document extends Component {
   componentDidMount() {
     setIntl(this.props.intl);
@@ -145,6 +144,17 @@ class Document extends Component {
             <BackTop />
             <Router />
           </MainContentStyle>
+          <Modal
+            width="50%"
+            title={this.props.title}
+            visible={this.props.visibleModal}
+            onCancel={this.props.closeModal}
+            footer={null}
+          >
+            {
+              this.props.visibleModal && this.props.component
+            }
+          </Modal>
         </ContentStyle>
         <FooterStyle>
           <FooterContentStyle>
@@ -157,12 +167,10 @@ class Document extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.user.data,
-  loading: state.user.loading,
+  data: state.main.data,
+  visibleModal: state.main.visibleModal,
+  component: state.main.component,
+  loading: state.main.loading,
 });
 
-const mapDispatchToProps = dispatch => ({
-  getUserContext: () => dispatch(getUserContext()),
-});
-
-export default injectIntl(withRouter(connect(mapStateToProps, mapDispatchToProps)(Document)));
+export default injectIntl(withRouter(connect(mapStateToProps, action)(Document)));

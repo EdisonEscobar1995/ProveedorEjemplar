@@ -1,87 +1,81 @@
 import {
-  GET_DATA_SECTOR_PROGRESS,
-  GET_DATA_SECTOR_SUCCESS,
+  GET_SECTOR_PROGRESS,
+  GET_SECTOR_SUCCESS,
   REQUEST_FAILED,
   ADD_SECTOR,
-  SAVE_SECTOR,
-  EDIT_SECTOR,
+  UPDATE_SECTOR,
   DELETE_SECTOR,
-  CANCEL_SECTOR,
+  SEARCH_SECTOR,
+  CHANGE_SEARCH_SECTOR,
 } from './const';
-
-import reloadKeys from '../../utils/reducer';
+import { insertData, updateData, deleteData } from '../../utils/reducer';
 
 const initialState = {
   data: [],
-  actual: {},
+  searchValue: '',
   loading: false,
 };
 
-
 function sectorApp(state = initialState, action) {
   switch (action.type) {
-    case GET_DATA_SECTOR_PROGRESS: {
+    case GET_SECTOR_PROGRESS: {
       return {
         ...state,
         loading: true,
       };
     }
-    case GET_DATA_SECTOR_SUCCESS: {
-      const data = reloadKeys(action.data);
+    case GET_SECTOR_SUCCESS: {
       return {
         ...state,
-        data,
+        data: action.data,
         loading: false,
       };
     }
     case ADD_SECTOR: {
-      const { data } = state;
-      let newData = [...data];
-      newData.splice(action.index, 0, action.newItem);
-      newData = reloadKeys(newData);
       return {
         ...state,
-        data: newData,
-      };
-    }
-    case SAVE_SECTOR: {
-      const { data, index } = action;
-      const stateData = state.data;
-      let newData = [...stateData];
-      newData[index] = data;
-      newData = reloadKeys(newData);
-      return {
-        ...state,
-        data: newData,
+        data: insertData(state.data, action.remoteId, action.data),
         loading: false,
       };
     }
-    case EDIT_SECTOR: {
-      const { data } = state;
-      const newData = [...data];
-      newData[action.index].editable = true;
+    case UPDATE_SECTOR: {
       return {
         ...state,
-        data: newData,
+        data: updateData(state.data, action.data),
+        loading: false,
       };
     }
     case DELETE_SECTOR: {
-      const { data } = state;
-      const newData = [...data];
-      newData.splice(action.index, 1);
       return {
         ...state,
+        data: deleteData(state.data, action.data.id),
         loading: false,
-        data: newData,
       };
     }
-    case CANCEL_SECTOR: {
-      const { data } = state;
-      const newData = [...data];
-      newData[action.index].editable = false;
+    case SEARCH_SECTOR: {
       return {
         ...state,
-        data: newData,
+        searchValue: action.value,
+        data: state.data.map((element) => {
+          let visible = true;
+          const value = action.value.toLowerCase();
+          if (
+            action.value !== '' &&
+            !element.name.toLowerCase().includes(value)
+          ) {
+            visible = false;
+          }
+          return {
+            ...element,
+            visible,
+          };
+        }),
+      };
+    }
+    case CHANGE_SEARCH_SECTOR: {
+      return {
+        ...state,
+        searchValue: action.value,
       };
     }
     case REQUEST_FAILED:

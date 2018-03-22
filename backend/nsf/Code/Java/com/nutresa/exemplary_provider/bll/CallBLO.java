@@ -8,10 +8,13 @@ import java.util.Map;
 import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.utils.Common;
@@ -31,7 +34,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         suppliers = supplierByCallBLO.getSuppliersByCallDontInvited(idCall);
         for (SupplierDTO supplier : suppliers) {
             NotificationBLO notification = new NotificationBLO();
-            notification.sendInvitation(supplier);
+            notification.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_CALLED_BY_LIBERATOR);
             supplierByCallBLO.markToInvited(supplier.getId(), idCall);
         }
 
@@ -44,7 +47,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         SuppliersInCallDTO response = new SuppliersInCallDTO();
         Map<String, List<Object>> listIds;
         SupplierBLO supplierBLO = new SupplierBLO();
-        List<DTO> supplierByCall = supplierByCallBLO.getAllBy("idCall", idCall, "vwSuppliersByCallIdCall");
+        List<DTO> supplierByCall = supplierByCallBLO.getAllBy(FieldToFilter.FIELD_CALL, idCall,
+                "vwSuppliersByCallIdCall");
         try {
             listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
             // Consultar los proveedores que se encuentran bloqueados o
@@ -87,13 +91,13 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
                 response = supplierBLO.getSummaryWithSurvey(year);
             } else {
-                throw new HandlerGenericException("ROL_INVALID");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
         } else {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             Map<String, String> filter = new HashMap<String, String>();
-            filter.put("idSupplier", supplier.getId());
-            filter.put("idCall", getIdCallByYear(year));
+            filter.put(FieldToFilter.FIELD_SUPPLIER, supplier.getId());
+            filter.put(FieldToFilter.FIELD_CALL, getIdCallByYear(year));
             List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, "vwSuppliersByCallInIdSupplierAndIdCall");
             response = supplierBLO.getInformationFromSuppliers(listYears, callsBySupplier);
         }
@@ -102,12 +106,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
-     * @return Collección de datos obtenidos según los parámetros <code>parameters</code>
-     * @throws HandlerGenericException Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía el
-     *         identificador de la convocatoria en los parámetros de búsqueda.
-     *         Con mensaje <code>INFORMATION_NOT_FOUND</code> si no se encontró información para exportar.
-     *         Con mensaje <code>ROL_INVALID</code> si el usuario en sesión no tiene el rol permitido.
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
+     * @return Collección de datos obtenidos según los parámetros
+     *         <code>parameters</code>
+     * @throws HandlerGenericException
+     *             Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía
+     *             el identificador de la convocatoria en los parámetros de
+     *             búsqueda. Con mensaje <code>INFORMATION_NOT_FOUND</code> si
+     *             no se encontró información para exportar. Con mensaje
+     *             <code>ROL_INVALID</code> si el usuario en sesión no tiene el
+     *             rol permitido.
      */
     public List<ReportOfAverageGradeBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
@@ -124,23 +134,27 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                     response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
                 }
             } else {
-                throw new HandlerGenericException("CALL_NOT_ESPECIFIED");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.CALL_NOT_ESPECIFIED.toString());
             }
 
             if (response.isEmpty()) {
-                throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
             }
         } else {
-            throw new HandlerGenericException("ROL_INVALID");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
         }
 
         return response;
     }
 
     /**
-     * @param idCall Identificador de la convocatoria que se va consultar.
-     * @param suppliers Collección de proveedores
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param idCall
+     *            Identificador de la convocatoria que se va consultar.
+     * @param suppliers
+     *            Collección de proveedores
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Collección de registros del reporte
      * @throws HandlerGenericException
      */
@@ -152,24 +166,131 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
                     supplier.getId());
             if (supplierByCall instanceof SupplierByCallDTO) {
-                ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
-                AnswerBLO answerBLO = new AnswerBLO();
-                SupplyBLO supplyBLO = new SupplyBLO();
-                CategoryBLO categoryBLO = new CategoryBLO();
-                CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-                recordOfReport.setNit(supplier.getNit());
-                recordOfReport.setSapCode(supplier.getSapCode());
-                recordOfReport.setName(supplier.getBusinessName());
-                recordOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
-                recordOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
-                recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
-                recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
-                        parameters);
-                response.add(recordOfReport);
+                response.add(getRecordOfReport(supplierByCall, supplier, parameters));
             }
         }
 
         return response;
+    }
+
+    private ReportOfAverageGradeBySuppliers getRecordOfReport(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
+            Map<String, String> parameters) throws HandlerGenericException {
+        ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
+        AnswerBLO answerBLO = new AnswerBLO();
+        SupplyBLO supplyBLO = new SupplyBLO();
+        CategoryBLO categoryBLO = new CategoryBLO();
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        recordOfReport.setNit(supplier.getNit());
+        recordOfReport.setSapCode(supplier.getSapCode());
+        recordOfReport.setName(supplier.getBusinessName());
+        recordOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
+        recordOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
+        recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
+        recordOfReport.setIdSupplier(supplierByCall.getIdSupplier());
+        recordOfReport.setIdSupplierByCall(supplierByCall.getId());
+        recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
+                parameters);
+
+        return recordOfReport;
+    }
+
+    public List<ReportOfAverageGradeBySuppliers> getThemWillPassToTechnicalTeam() throws HandlerGenericException {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        List<SupplierByCallDTO> evaluated = supplierByCallBLO.getFinishedByEvaluator();
+        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        for (SupplierByCallDTO supplierByCall : evaluated) {
+            response.add(getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
+                    new HashMap<String, String>()));
+        }
+
+        if (response.isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
+        }
+
+        return response;
+    }
+
+    public InformationFromSupplier getParticipantsToTechnicalTeam(String year) throws HandlerGenericException {
+        String viewName = "vwSuppliersByCallIdStateAndIdCall";
+        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        if (null == year || year.trim().isEmpty()) {
+            year = (String) listYears.get(0);
+        }
+
+        SupplierBLO supplierBLO = new SupplierBLO();
+        StateBLO stateBLO = new StateBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        Map<String, String> filter = new HashMap<String, String>();
+        String idState = stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId();
+        filter.put(FieldToFilter.FIELD_STATE, idState);
+        filter.put(FieldToFilter.FIELD_CALL, getIdCallByYear(year));
+        List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, viewName);
+        idState = stateBLO.getStateByShortName(SurveyStates.TECHNICAL_TEAM.toString()).getId();
+        filter.put(FieldToFilter.FIELD_STATE, idState);
+        callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
+        idState = stateBLO.getStateByShortName(SurveyStates.ENDED_TECHNICAL_TEAM.toString()).getId();
+        filter.put(FieldToFilter.FIELD_STATE, idState);
+        callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
+
+        SupplierToTechnicalTeamBLO supplierToTechnicalTeamBLO = new SupplierToTechnicalTeamBLO();
+        callsBySupplier = supplierToTechnicalTeamBLO.getParticipantsByTechnicalTeamMember(callsBySupplier);
+
+        InformationFromSupplier participantsToTechnicalTeam = supplierBLO.getInformationFromSuppliers(listYears,
+                callsBySupplier);
+
+        Map<String, List<DTO>> currentMasters = participantsToTechnicalTeam.getMasters();
+        ServiceBLO serviceBLO = new ServiceBLO();
+        ItemBLO itemBLO = new ItemBLO();
+        UserBLO userBLO = new UserBLO();
+        TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
+        TechnicalTeamCommentBLO technicalTeamCommentBLO = new TechnicalTeamCommentBLO();
+        EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
+        currentMasters.put("Service", serviceBLO.getAll());
+        currentMasters.put("Item", itemBLO.getAll());
+        currentMasters.put("State", stateBLO.getAll());
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
+                SurveyStates.TECHNICAL_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
+
+        Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
+                SupplierByCallDTO.class);
+
+        List<Object> idsSupplierByCall = listIdsSupplierByCall.get("[id]");
+
+        List<DTO> answers = new ArrayList<DTO>();
+        List<DTO> comments = new ArrayList<DTO>();
+        for (Object idSupplierByCall : idsSupplierByCall) {
+            List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy("idSupplierByCall", idSupplierByCall.toString(),
+                    "vwTechnicalTeamAnswersByIdSupplierByCall");
+            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall",
+                    idSupplierByCall.toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
+
+            if (!auxiliarAnswer.isEmpty()) {
+                answers.addAll(auxiliarAnswer);
+            }
+
+            if (!auxiliarComment.isEmpty()) {
+                comments.addAll(auxiliarComment);
+            }
+
+        }
+
+        currentMasters.put("TechnicalTeamAnswer", answers);
+        currentMasters.put("TechnicalTeamComment", comments);
+        participantsToTechnicalTeam.setMasters(currentMasters);
+
+        return participantsToTechnicalTeam;
+    }
+
+    private class FieldToFilter {
+        public static final String FIELD_SUPPLIER = "idSupplier";
+        public static final String FIELD_STATE = "idState";
+        public static final String FIELD_CALL = "idCall";
+
+        private FieldToFilter() {
+            throw new IllegalStateException("Utility class");
+        }
     }
 
 }

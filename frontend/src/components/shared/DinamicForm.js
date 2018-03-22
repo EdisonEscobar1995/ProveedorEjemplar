@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker,
+  Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker, Spin,
 } from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
@@ -34,9 +34,11 @@ const InputNumberStyle = styled(InputNumber)`
   width: 100%;
 `;
 
-function DinamicForm({ content, getFieldDecorator, setFields }) {
+let timer;
+
+function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
   return (
-    <div>
+    <Spin spinning={loadingModal === true}>
       {
         content.map(item => (
           <Row key={item.key} justify={item.justify} align="middle" type="flex" gutter={24}>
@@ -57,6 +59,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                   format,
                   rules = [],
                   hidden,
+                  style,
                 } = current;
                 allowClear = allowClear === undefined ? true : allowClear;
                 options = options || [];
@@ -93,10 +96,13 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         const {
                           formatter = defaultFormatter,
                           parser = defaultParser,
+                          min = 0,
+                          max,
                         } = current;
                         fieldContent = (
                           <InputNumberStyle
-                            min={0}
+                            min={min}
+                            max={max}
                             disabled={disabled}
                             formatter={formatter}
                             parser={parser}
@@ -113,67 +119,60 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                         }
                         break;
                       case 'select': {
-                        const { valuesToClean, mode, noSearch } = current;
-                        if (!noSearch) {
-                          fieldContent = (
-                            <Select
-                              disabled={disabled}
-                              showSearch
-                              mode={mode}
-                              allowClear={allowClear}
-                              filterOption={(input, option) =>
-                                option.props.children.props.id
-                                  .toLowerCase().indexOf(input.toLowerCase()) >= 0
-                              }
-                              onChange={(selectValue) => {
-                                if (valuesToClean) {
-                                  setFields(valuesToClean);
-                                }
-                                if (handleChange) {
-                                  handleChange(selectValue);
-                                }
-                              }}
-                            >
-                              {
-                                options.map(option => (
-                                  <Option
-                                    key={option.id}
-                                    value={option.id}
-                                  >
-                                    <FormattedMessage id={option.name} />
-                                  </Option>
-                                ))
-                              }
-                            </Select>);
+                        const {
+                          valuesToClean, mode, noSearch, autoComplete, onSearch, fetching,
+                        } = current;
+                        const selectProps = {};
+                        if (noSearch) {
+                          selectProps.filterOption = selectValue =>
+                            selectValue.startsWith(' ') || selectValue.endsWith(' ');
+                        } else if (autoComplete) {
+                          selectProps.defaultActiveFirstOption = false;
+                          selectProps.showArrow = false;
+                          selectProps.placeholder = 'Buscar';
+                          selectProps.filterOption = false;
+                          selectProps.notFoundContent = fetching ? <Spin size="small" /> : 'No se encontraron resultados';
+                          selectProps.onSearch = (selectValue) => {
+                            clearTimeout(timer);
+                            if (onSearch && selectValue.length > 2) {
+                              timer = setTimeout(() => {
+                                onSearch(selectValue);
+                              }, 500);
+                            }
+                          };
                         } else {
-                          fieldContent = (
-                            <Select
-                              disabled={disabled}
-                              showSearch
-                              mode={mode}
-                              allowClear={allowClear}
-                              filterOption={selectValue => selectValue.startsWith(' ') || selectValue.endsWith(' ')}
-                              onChange={(selectValue) => {
-                                if (valuesToClean) {
-                                  setFields(valuesToClean);
-                                }
-                                if (handleChange) {
-                                  handleChange(selectValue);
-                                }
-                              }}
-                            >
-                              {
-                                options.map(option => (
-                                  <Option
-                                    key={option.id}
-                                    value={option.id}
-                                  >
-                                    {option.name}
-                                  </Option>
-                                ))
-                              }
-                            </Select>);
+                          selectProps.filterOption = (input, option) =>
+                            option.props.children.props.id
+                              .toLowerCase().indexOf(input.toLowerCase()) >= 0;
                         }
+                        fieldContent = (
+                          <Select
+                            showSearch
+                            mode={mode}
+                            disabled={disabled}
+                            allowClear={allowClear}
+                            onChange={(selectValue) => {
+                              if (valuesToClean) {
+                                setFields(valuesToClean);
+                              }
+                              if (handleChange) {
+                                handleChange(selectValue);
+                              }
+                            }}
+                            {...selectProps}
+                          >
+                            {
+                              options.map(option => (
+                                <Option
+                                  key={option.id}
+                                  value={option.id}
+                                >
+                                  <FormattedMessage id={option.name} />
+                                </Option>
+                              ))
+                            }
+                          </Select>
+                        );
                       }
                         break;
                       case 'radio':
@@ -195,7 +194,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
                       <div>
                         {
                           !hidden ?
-                            <Field label={label} help={help} required={required}>
+                            <Field label={label} help={help} required={required} style={style}>
                               <ItemStyle>
                                 {getFieldDecorator(key, {
                                   rules: [
@@ -303,7 +302,7 @@ function DinamicForm({ content, getFieldDecorator, setFields }) {
           </Row>
         ))
       }
-    </div>
+    </Spin>
   );
 }
 export default DinamicForm;

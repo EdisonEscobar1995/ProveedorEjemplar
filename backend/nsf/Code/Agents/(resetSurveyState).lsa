@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='(resetSurveyState)' alias='resetSurveyState' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='8c352' unid='04867502A5296B0A0525824800771119' sequence='30'>
+<created><datetime>20180306T164031,61-05</datetime></created>
+<modified><datetime>20180317T205820,81-05</datetime></modified>
+<revised><datetime>20180317T205820,80-05</datetime></revised>
+<lastaccessed><datetime>20180317T205820,81-05</datetime></lastaccessed>
+<addedtofile><datetime>20180316T152901,71-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180317T205820,80-05</datetime></designchange>
+<trigger type='agentlist'/>
+<documentset type='runonce'/><code event='options'><lotusscript>%REM
+	Agent resetSurveyState
+	Created Feb 6, 2018 by Administrador Aplicaciones/GNCH
+	Description: Comments for Agent
+%END REM
+Option Public
+Option Declare
+
+
+</lotusscript></code><code event='initialize'><lotusscript>Sub Initialize
+	On Error Goto label
+	Dim ns As New NotesSession
+	Dim db As NotesDatabase
+	Dim vwStates As NotesView 
+	Dim vwStatesName As NotesView
+	Dim ndState As NotesDocument
+	Dim ndStateSupplier As NotesDocument
+	Dim ndStateEvaluator
+	Dim vwSuppliers As NotesView
+	Dim vwSuppliersByCall As NotesView 
+	Dim nd As NotesDocument
+	Dim ndAux As NotesDocument
+	Dim ndSupplier As NotesDocument 
+	Dim ndSupplierByCall As NotesDocument
+	Dim sParametros As String 
+	Dim arrParametros As Variant 
+	
+	Set db = ns.Currentdatabase
+	Set vwSuppliers = db.Getview("vwSuppliersBySapCode")
+	Set vwSuppliersByCall = db.Getview("vwSuppliersByCallSupplier")
+	Set nd = ns.Documentcontext
+	
+	Set ndAux = New NotesDocument(db)
+	
+	sParametros = Strright(nd.Query_String_Decoded(0),"&amp;")
+	arrParametros = Split(sParametros,"&amp;")
+	
+	Forall parametro In arrParametros
+		Call ndAux.ReplaceItemValue(Strleft(parametro,"="), Strright(parametro,"="))
+	End Forall
+	
+	Set vwStates = db.Getview("vwStates")
+	Set vwStatesName = db.Getview("vwStatesByShortName")
+	Set ndStateSupplier = vwStatesName.Getdocumentbykey("ENDED_SUPPLIER", True)
+	Set ndStateEvaluator = vwStatesName.Getdocumentbykey("NOT_STARTED_TECHNICAL_TEAM", True)
+	
+	Set ndSupplier = vwSuppliers.Getdocumentbykey(ndAux.sapCode(0), True)
+	If Not ndSupplier Is Nothing Then 
+		Set ndSupplierByCall = vwSuppliersByCall.Getdocumentbykey(ndSupplier.id(0), True)
+		
+		'If ndSupplierByCall.idState(0) = ndStateSupplier.id(0) Then 
+			ndSupplierByCall.idState = ndStateEvaluator.id
+			Call ndSupplierByCall.Removeitem("whoEvaluateOfTechnicalTeam")
+			'ndSupplierByCall.dateAssignedToEvaluator = Now 
+			Call ndSupplierByCall.save(True, False)
+			Print "Documento procesado"
+		'Else
+		'	Set ndState = vwStates.Getdocumentbykey(ndSupplierByCall.idState(0), True)
+		'	Print "Encuesta en estado " + ndSupplierByCall.idState(0) 'ndState.name(0)
+		'End If
+	Else
+		Print "No se encontró un proveedor asociado al codigo sap"
+	End If
+	Exit Sub
+label:
+	Print Error$ &amp; " " &amp; Erl()
+End Sub</lotusscript></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180317T205820,66-05</datetime></agentmodified></rundata></agent>
+

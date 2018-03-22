@@ -1,25 +1,26 @@
 import {
-  GET_DATA_SECTOR_PROGRESS,
-  GET_DATA_SECTOR_SUCCESS,
+  GET_SECTOR_PROGRESS,
+  GET_SECTOR_SUCCESS,
   REQUEST_FAILED,
   ADD_SECTOR,
-  SAVE_SECTOR,
-  EDIT_SECTOR,
+  UPDATE_SECTOR,
   DELETE_SECTOR,
-  CANCEL_SECTOR,
+  SEARCH_SECTOR,
+  CHANGE_SEARCH_SECTOR,
 } from './const';
-import { getAllSectorApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
+import { getSectorsApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
+import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
 
-function getDataSectorProgress() {
+function getSectorProgress() {
   return {
-    type: GET_DATA_SECTOR_PROGRESS,
+    type: GET_SECTOR_PROGRESS,
   };
 }
 
-function getDataSectorSuccess(data) {
+function getSectorSuccess(data) {
   return {
-    type: GET_DATA_SECTOR_SUCCESS,
+    type: GET_SECTOR_SUCCESS,
     data,
   };
 }
@@ -30,66 +31,73 @@ function getFailedRequest() {
   };
 }
 
-function addDataSector(newItem, index) {
+function saveDataSector(id, data, remoteId) {
   return {
-    type: ADD_SECTOR,
-    newItem,
-    index,
-  };
-}
-function editDataSector(index) {
-  return {
-    type: EDIT_SECTOR,
-    index,
-  };
-}
-function saveDataSector(data, index) {
-  return {
-    type: SAVE_SECTOR,
+    type: id ? UPDATE_SECTOR : ADD_SECTOR,
     data,
-    index,
-  };
-}
-function deleteDataSector(index) {
-  return {
-    type: DELETE_SECTOR,
-    index,
-  };
-}
-function cancelDataSector(index) {
-  return {
-    type: CANCEL_SECTOR,
-    index,
+    remoteId,
   };
 }
 
-function getAllSector() {
+function deleteDataSector(data) {
+  return {
+    type: DELETE_SECTOR,
+    data,
+  };
+}
+
+function searchSector(value) {
+  return {
+    type: SEARCH_SECTOR,
+    value,
+  };
+}
+
+function changeSearchSector(value) {
+  return {
+    type: CHANGE_SEARCH_SECTOR,
+    value,
+  };
+}
+
+function getSectors() {
   return (dispatch) => {
-    requestApi(dispatch, getDataSectorProgress, getAllSectorApi)
-      .then((respose) => {
-        const { data } = respose.data;
-        dispatch(getDataSectorSuccess(data));
+    requestApi(dispatch, getSectorProgress, getSectorsApi)
+      .then((response) => {
+        const data = response.data.data.map(element => ({
+          ...element,
+          visible: true,
+        }));
+        dispatch(getSectorSuccess(data));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
-function saveSector(clientData, index) {
+
+function saveSector(clientData, remoteId, next) {
   return (dispatch) => {
-    requestApi(dispatch, getDataSectorProgress, saveSectorApi, clientData)
-      .then((respose) => {
-        const { data } = respose.data;
-        dispatch(saveDataSector(data, index));
+    dispatch(closeModal());
+    requestApi(dispatch, getSectorProgress, saveSectorApi, clientData)
+      .then((response) => {
+        const { data } = response.data;
+        data.visible = true;
+        dispatch(saveDataSector(clientData.id, data, remoteId));
+        if (next) {
+          next();
+        }
       }).catch(() => {
         dispatch(getFailedRequest());
       });
   };
 }
-function deleteSector(clientData, index) {
+
+function deleteSector(clientData) {
   return (dispatch) => {
-    requestApi(dispatch, getDataSectorProgress, deleteSectorApi, clientData)
+    dispatch(closeModal());
+    requestApi(dispatch, getSectorProgress, deleteSectorApi, clientData)
       .then(() => {
-        dispatch(deleteDataSector(index));
+        dispatch(deleteDataSector(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
@@ -97,10 +105,11 @@ function deleteSector(clientData, index) {
 }
 
 export {
-  getAllSector,
-  saveSector as saveDataSector,
-  deleteSector as deleteDataSector,
-  addDataSector,
-  editDataSector,
-  cancelDataSector,
+  getSectors,
+  saveSector,
+  deleteSector,
+  searchSector,
+  changeSearchSector,
+  openModal,
+  closeModal,
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import SectorContainer from '../components/Sector/SectorCotainer';
+import SectorContainer from '../components/Sector/SectorContainer';
 
 function Sector() {
   return (

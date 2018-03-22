@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import com.nutresa.exemplary_provider.dal.StateDAO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.StateDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -16,7 +17,7 @@ public class StateBLO extends GenericBLO<StateDTO, StateDAO> {
         response = stateDAO.getStateByShortName(shortName);
 
         if (null == response) {
-            throw new HandlerGenericException("STATE_NOT_FOUND");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.STATE_NOT_FOUND.toString());
         }
 
         return response;

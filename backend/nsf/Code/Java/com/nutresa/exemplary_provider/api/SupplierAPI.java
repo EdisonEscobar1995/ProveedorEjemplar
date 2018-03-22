@@ -78,7 +78,7 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
 
         return response;
     }
-    
+
     public ServletResponseDTO<InformationFromSupplier> pendingToQualify(Map<String, String> parameters) {
         SupplierBLO supplierBLO = new SupplierBLO();
         ServletResponseDTO<InformationFromSupplier> response = null;

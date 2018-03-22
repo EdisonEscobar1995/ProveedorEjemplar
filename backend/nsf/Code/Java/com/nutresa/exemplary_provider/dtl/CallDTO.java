@@ -18,7 +18,7 @@ public class CallDTO {
     @Expose
     private Date deadlineToMakeSurveyEvaluator;
     @Expose
-    private Date deadlineToMakeSurveyTecniqueCommittee;
+    private Date deadlineToMakeSurveyTechnicalTeam;
     @Expose
     private Date deadlineToMakeSurveyManagementCommittee;
     @Expose
@@ -52,12 +52,12 @@ public class CallDTO {
         this.deadlineToMakeSurveyEvaluator = deadlineToMakeSurveyEvaluator;
     }
 
-    public Date getDeadlineToMakeSurveyTecniqueCommittee() {
-        return deadlineToMakeSurveyTecniqueCommittee;
+    public Date getDeadlineToMakeSurveyTechnicalTeam() {
+        return deadlineToMakeSurveyTechnicalTeam;
     }
 
-    public void setDeadlineToMakeSurveyTecniqueCommittee(Date deadlineToMakeSurveyTecniqueCommittee) {
-        this.deadlineToMakeSurveyTecniqueCommittee = deadlineToMakeSurveyTecniqueCommittee;
+    public void setDeadlineToMakeSurveyTechnicalTeam(Date deadlineToMakeSurveyTechnicalTeam) {
+        this.deadlineToMakeSurveyTechnicalTeam = deadlineToMakeSurveyTechnicalTeam;
     }
 
     public Date getDeadlineToMakeSurveyManagementCommittee() {
@@ -114,6 +114,10 @@ public class CallDTO {
 
     public boolean isCaducedDeadLineToMakeSurveyEvaluator() throws HandlerGenericException {
         return isCaducedDate(this.deadlineToMakeSurveyEvaluator, new Date());
+    }
+    
+    public boolean isCaducedDeadLineToMakeSurveyTechnicalTeam() throws HandlerGenericException {
+        return isCaducedDate(this.deadlineToMakeSurveyTechnicalTeam, new Date());
     }
 
     private boolean isCaducedDate(Date dateToCompare, Date today) throws HandlerGenericException {

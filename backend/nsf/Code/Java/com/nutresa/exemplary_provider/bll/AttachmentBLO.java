@@ -29,12 +29,20 @@ public class AttachmentBLO {
         AttachmentDAO attachmentDAO = new AttachmentDAO();
         for (String idDocument : idDocuements) {
             AttachmentDTO document = attachmentDAO.get(idDocument);
-            if(null != document && null != document.getId()){
+            if (null != document && null != document.getId()) {
                 response.add(document);
             }
         }
-        
+
         return response;
+    }
+
+    protected void deleteDocuments(List<AttachmentDTO> documents) {
+        if (null != documents) {
+            for (AttachmentDTO attachment : documents) {
+                delete(attachment.getId());
+            }
+        }
     }
 
 }

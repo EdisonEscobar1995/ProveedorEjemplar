@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(TechnicalTeam by properties)' alias='TechnicalTeam|vwTechnicalTeamByProperties'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
+ hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
+ unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
+ opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
+ extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
+ headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='46046' unid='F33CD1EB78FB384E05258247004C34A0' sequence='14'>
+<created><datetime>20180305T085222,08-05</datetime></created>
+<modified><datetime>20180305T141534,17-05</datetime></modified>
+<revised><datetime>20180305T141534,16-05</datetime></revised>
+<lastaccessed><datetime>20180305T141534,17-05</datetime></lastaccessed>
+<addedtofile><datetime>20180305T085222,15-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frTechnicalTeam"</formula></code><code
+ event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+	Continue = False
+End Sub
+</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='idUser' width='10.7500'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idUser'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idSupply' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
+ showaslinks='false'><columnheader title='idSupply'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idCategory' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
+ showaslinks='false'><columnheader title='idCategory'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idCountry' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
+ showaslinks='false'><columnheader title='idCountry'><font size='9pt' style='bold'/></columnheader></column></view>
+

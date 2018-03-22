@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Spin, Form } from 'antd';
+import { Spin } from 'antd';
 import * as actions from '../../state/Results/action';
-import Filters from './Filters';
-
-const FormFiltersHoc = Form.create()(Filters);
+import formData from './formData';
+import GenericForm from '../shared/GenericForm';
 
 class ResultsContainer extends Component {
   componentDidMount() {
@@ -14,9 +13,9 @@ class ResultsContainer extends Component {
   render() {
     return (
       <Spin spinning={this.props.loading}>
-        <FormFiltersHoc
+        <GenericForm
           {...this.props}
-          Form={Form}
+          formData={formData}
         />
       </Spin>
     );

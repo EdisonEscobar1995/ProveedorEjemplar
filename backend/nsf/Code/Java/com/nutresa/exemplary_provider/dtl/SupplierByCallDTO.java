@@ -37,6 +37,8 @@ public class SupplierByCallDTO {
     private Date dateAssignedToEvaluator;
     @Expose
     private String whoEvaluate;
+    @Expose
+    private String whoEvaluateOfTechnicalTeam;
 
     public String getIdCall() {
         return idCall;
@@ -160,6 +162,14 @@ public class SupplierByCallDTO {
 
     public String getWhoEvaluate() {
         return whoEvaluate;
+    }
+
+    public void setWhoEvaluateOfTechnicalTeam(String whoEvaluateOfTechnicalTeam) {
+        this.whoEvaluateOfTechnicalTeam = whoEvaluateOfTechnicalTeam;
+    }
+
+    public String getWhoEvaluateOfTechnicalTeam() {
+        return whoEvaluateOfTechnicalTeam;
     }
 
 }
