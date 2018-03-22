@@ -76,17 +76,20 @@ public class AttachmentDAO {
 
     private String getAttachmentUrl(Document document) {
         String url = Common.buildPathResource();
-        url += "/" + entityView + "/" + document.getUniversalID() + "/$FILE" + "/" + getFileName(document);
+        url += "/" + entityView + "/" + document.getUniversalID() + "/$FILE" + "/" + getUrlEncode(document);
 
         return url;
     }
 
-    private String getFileName(Document document) {
-        return (String) session.evaluate("@AttachmentNames", document).elementAt(0);
+    private String getUrlEncode(Document document) {
+        return (String) session.evaluate("@URLEncode('Domino';@AttachmentNames)", document).elementAt(0);
     }
 
+    private String getFileName(Document document) {
+        return (String) session.evaluate("@AttachmentNames", document).elementAt(0);
+    } 
+    
     private void processUploadedFile(FileItem item, MIMEEntity mime) throws HandlerGenericException {
-
         try {
             MIMEEntity child = mime.createChildEntity();
 

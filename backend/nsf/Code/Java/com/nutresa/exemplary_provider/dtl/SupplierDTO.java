@@ -50,6 +50,8 @@ public class SupplierDTO {
     @Expose
     private String idCountry;
     @Expose
+    private String idOriginCountry;
+    @Expose
     private String idDepartment;
     @Expose
     private String idCity;
@@ -419,6 +421,14 @@ public class SupplierDTO {
 
     public void setIdCountry(String idCountry) {
         this.idCountry = idCountry;
+    }
+
+    public String getIdOriginCountry() {
+        return idOriginCountry;
+    }
+
+    public void setIdOriginCountry(String idOriginCountry) {
+        this.idOriginCountry = idOriginCountry;
     }
 
     public String getIdDepartment() {

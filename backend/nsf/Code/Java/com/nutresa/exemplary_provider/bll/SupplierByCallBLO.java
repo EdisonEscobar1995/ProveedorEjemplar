@@ -8,6 +8,7 @@ import java.util.Map;
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
@@ -31,14 +32,18 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Obtiene la convocatoria de un proveedor, identificada con <code>idSupplierByCall</code> 
-     * en caso de <b>NO</b> ser <code>null</code>; en caso de serlo, busca la convocatoria que
-     * tenga asiganda y no esté vencida.
+     * Obtiene la convocatoria de un proveedor, identificada con
+     * <code>idSupplierByCall</code> en caso de <b>NO</b> ser <code>null</code>;
+     * en caso de serlo, busca la convocatoria que tenga asiganda y no esté
+     * vencida.
      * <p>
-     * Si el rol del usuario en sessión es <b>LIBERATOR</b> o <b>ADMINISTRATOR</b> se envía la instrucción de modo
-     * lectura. Si el rol es <b>EVALUATOR</b> la sección de este rol se envía modo escritura.
+     * Si el rol del usuario en sessión es <b>LIBERATOR</b> o
+     * <b>ADMINISTRATOR</b> se envía la instrucción de modo lectura. Si el rol
+     * es <b>EVALUATOR</b> la sección de este rol se envía modo escritura.
      * 
-     * @param String <code>idSupplierByCall</code> Identificador de la convocatoria asiganda al proveedor
+     * @param String
+     *            <code>idSupplierByCall</code> Identificador de la convocatoria
+     *            asiganda al proveedor
      * @return <code>SupplierByCallDTO</code>
      * @throws HandlerGenericException
      */
@@ -61,7 +66,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                     permissionForEvaluator(response);
                 }
             } else {
-                throw new HandlerGenericException("ROL_INVALID");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
         }
 
@@ -70,7 +75,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         if (!(response instanceof SupplierByCallDTO)) {
-            throw new HandlerGenericException("DONT_HAVE_SURVEY_ASSOCIED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DONT_HAVE_SURVEY_ASSOCIED.toString());
         }
 
         if ((response instanceof SupplierByCallDTO)
@@ -82,8 +87,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Verifica si la fecha para hacer la encuesta por parte del <b>EVALUATOR</b> está habilitada
-     * @param supplierByCall Identificador de la convocatoria definitivia de un proveedor
+     * Verifica si la fecha para hacer la encuesta por parte del
+     * <b>EVALUATOR</b> está habilitada
+     * 
+     * @param supplierByCall
+     *            Identificador de la convocatoria definitivia de un proveedor
      * @throws HandlerGenericException
      */
     private void permissionForEvaluator(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
@@ -94,33 +102,37 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
             } else {
                 StateBLO stateBLO = new StateBLO();
-                if (supplierByCall.getIdState()
-                        .equals(stateBLO.getStateByShortName(SurveyStates.EVALUATOR.toString()).getId())
-                        || supplierByCall.getIdState().equals(
-                                stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_EVALUATOR.toString()).getId())) {
-
-                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
-                } else {
-                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(false, true));
-
-                }
-
-                if (supplierByCall.getIdState()
-                        .equals(stateBLO.getStateByShortName(SurveyStates.ENDED_EVALUATOR.toString()).getId())) {
+                if (supplierByCall.getIdState().equals(
+                        stateBLO.getStateByShortName(SurveyStates.DONT_PARTICIPATE.toString()).getId())
+                        && supplierByCall.getIdState().equals(
+                                stateBLO.getStateByShortName(SurveyStates.NOT_STARTED.toString()).getId())
+                        && supplierByCall.getIdState().equals(
+                                stateBLO.getStateByShortName(SurveyStates.SUPPLIER.toString()).getId())) {
 
                     rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
+                } else {
+                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(false, true));
                 }
+
+                if (supplierByCall.getIdState().equals(
+                        stateBLO.getStateByShortName(SurveyStates.EVALUATOR.toString()).getId())
+                        || supplierByCall.getIdState().equals(
+                                stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_EVALUATOR.toString()).getId())) {
+                    rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, false));
+                }
+
             }
         } else {
             rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED
+                    .toString());
         }
     }
 
     /**
-     * Verifica la convocatoria de un proveedor esté siendo evaluada por un <b>EVALUATOR</b>
-     * @param idSupplierByCall Identificador definitivo de la convocatoria (convocatoria de un proveedor)
-     * @return <code>true</code> si la convocatoria está siendo evaluada o <code>false</code> si aún está libre.
+     * @param idSupplierByCall
+     *            Identificador de la convocatoria por proveedor
+     * @return
      * @throws HandlerGenericException
      */
     protected boolean isFromEvaluator(String idSupplierByCall) throws HandlerGenericException {
@@ -128,19 +140,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO supplierByCall = get(idSupplierByCall);
         UserBLO userBLO = new UserBLO();
         if (null != supplierByCall && !supplierByCall.getWhoEvaluate().isEmpty()
-                && !supplierByCall.getWhoEvaluate().equals(userBLO.getUserInSession().getId())) {
+                && !supplierByCall.getWhoEvaluate().equals(userBLO.getNameUserInSession())) {
             isFromEvaluator = true;
         }
 
         return isFromEvaluator;
     }
 
-    /**
-     * Por medio del estado de la convocatoria identifica si la encuesta se debe mostrar en modo lectura.
-     * @param nameCurrentState Nombre del estado en el que se encuentra la convocatoria
-     * @return <code>true</code> si el nombre del estado es difente de <code>DONT_PARTICIPATE</code>,
-     *         <code>NOT_STARTED</code> y <code>SUPPLIER</code> de lo contrario <code>false</code>
-     */
     private boolean shouldBeReadOnly(String nameCurrentState) {
         boolean isReadOnly = false;
         if (!nameCurrentState.equals(SurveyStates.DONT_PARTICIPATE.toString())
@@ -185,7 +191,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         if (null != call && call.isCaducedDeadLineToMakeSurvey()) {
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
         }
 
         return response;
@@ -220,16 +226,45 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         if (userBLO.isRol(Rol.EVALUATOR.toString())) {
             response = finishSurveyOfEvalutor(call, supplierByCall);
-        } else {
+        }
+
+        if (userBLO.isRol(Rol.TECHNICAL_TEAM.toString())) {
+            response = finishSurveyOfTechnicalTeam(call, supplierByCall);
+        }
+
+        if (userBLO.isRol(Rol.SUPPLIER.toString())) {
             response = finishSurveyOfSupplier(call, supplierByCall);
         }
 
         return response;
     }
 
+    private SupplierByCallDTO finishSurveyOfTechnicalTeam(CallDTO call, SupplierByCallDTO supplierByCall)
+            throws HandlerGenericException {
+        SupplierByCallDTO response = null;
+
+        if (!call.isCaducedDeadLineToMakeSurveyTechnicalTeam()) {
+            if (changeState(SurveyStates.ENDED_TECHNICAL_TEAM.toString(), supplierByCall.getId())) {
+                response = get(supplierByCall.getId());
+                NotificationBLO notificationBLO = new NotificationBLO();
+                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.TECHNICAL_TEAM);
+            } else {
+                throw new HandlerGenericException(
+                        HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED.toString());
+            }
+        } else {
+            throw new HandlerGenericException(
+                    HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED.toString());
+        }
+
+        return response;
+    }
+
     /**
-     * @param call Convocatoria
-     * @param supplierByCall Convocatoria del proveedor
+     * @param call
+     *            Convocatoria
+     * @param supplierByCall
+     *            Convocatoria del proveedor
      * @return
      * @throws HandlerGenericException
      */
@@ -243,18 +278,21 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.SUPPLIER);
             } else {
-                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
+                        .toString());
             }
         } else {
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
         }
 
         return response;
     }
 
     /**
-     * @param call Convocatoria
-     * @param supplierByCall Convocatoria del proveedor
+     * @param call
+     *            Convocatoria
+     * @param supplierByCall
+     *            Convocatoria del proveedor
      * @return
      * @throws HandlerGenericException
      */
@@ -268,10 +306,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.EVALUATOR);
             } else {
-                throw new HandlerGenericException("THE_SURVEY_COULD_NOT_BE_COMPLETED");
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
+                        .toString());
             }
         } else {
-            throw new HandlerGenericException("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED
+                    .toString());
         }
 
         return response;
@@ -307,8 +347,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
             supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
-            currentSupplierByCall
-                    .setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize()).getId());
+            currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize())
+                    .getId());
             notification.notifyToSupplierForContinue(supplier);
             supplierBLO.update(supplier);
             response = supplierByCallDAO.update(currentSupplierByCall.getId(), currentSupplierByCall);
@@ -332,8 +372,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         parameters.put("idSupplier", idSupplier);
         parameters.put("idCall", idCall);
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        SupplierByCallDTO supplierByCall = supplierByCallDAO.getBy(parameters,
-                "vwSuppliersByCallByIdSupplierAndIdCall");
+        SupplierByCallDTO supplierByCall = supplierByCallDAO
+                .getBy(parameters, "vwSuppliersByCallByIdSupplierAndIdCall");
         supplierByCall.setInvitedToCall(true);
         supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
@@ -380,7 +420,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     /**
      * Obtiene los proveedores asociados a una convocatoria.
      * 
-     * @param idCall Identificador de la convocatoria.
+     * @param idCall
+     *            Identificador de la convocatoria.
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -392,9 +433,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     /**
      * Buscar la convocatoria de un proveedor en caso de estar finalizada
      * 
-     * @param idCall Identificador de la convocatoria
-     * @param idSupplier Identificador del proveedor
-     * @return Objeto con la información en caso de hallar considencia en la búsqueda.
+     * @param idCall
+     *            Identificador de la convocatoria
+     * @param idSupplier
+     *            Identificador del proveedor
+     * @return Objeto con la información en caso de hallar considencia en la
+     *         búsqueda.
      * @throws HandlerGenericException
      */
     public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
@@ -404,9 +448,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por cada uno de los estados especificados
-     * @param idCall Identificador de la convocatoria
-     * @param states Colección con los estados a filtrar.
+     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por
+     * cada uno de los estados especificados
+     * 
+     * @param idCall
+     *            Identificador de la convocatoria
+     * @param states
+     *            Colección con los estados a filtrar.
      * @return Colección de datos encontrados
      * @throws HandlerGenericException
      */
@@ -414,7 +462,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         List<DTO> response = supplierByCallDAO.getByStates(idCall, states);
         if (response.isEmpty()) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;
@@ -427,4 +475,48 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return super.save(supplierByCall);
     }
 
+    protected List<SupplierByCallDTO> getFinishedByEvaluator() throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        StateBLO stateBLO = new StateBLO();
+        CallBLO callBLO = new CallBLO();
+        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        String year = (String) listYears.get(0);
+
+        List<SupplierByCallDTO> evaluated = supplierByCallDAO.getByStateInCall(stateBLO.getStateByShortName(
+                SurveyStates.ENDED_EVALUATOR.toString()).getId(), callBLO.getIdCallByYear(year));
+
+        if (evaluated.isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
+        }
+
+        return evaluated;
+    }
+
+    protected SupplierByCallDTO update(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
+        if (null == supplierByCall.getId() || supplierByCall.getId().trim().isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+        return super.save(supplierByCall);
+    }
+
+    protected boolean isFromTechnicalTeam(String idSupplierByCall) throws HandlerGenericException {
+        boolean isFromTechnicalTeamMember = false;
+        SupplierByCallDTO supplierByCall = get(idSupplierByCall);
+        UserBLO userBLO = new UserBLO();
+        if (null != supplierByCall
+                && !supplierByCall.getWhoEvaluateOfTechnicalTeam().isEmpty()
+                && !supplierByCall.getWhoEvaluateOfTechnicalTeam().equals(
+                        userBLO.getNameUserInSession())) {
+            isFromTechnicalTeamMember = true;
+        }
+
+        return isFromTechnicalTeamMember;
+    }
+
+    protected SupplierByCallDTO setWhoTechnicalTeamMember(String idSupplierByCall, String nameEvaluator)
+            throws HandlerGenericException {
+        SupplierByCallDTO supplierByCall = get(idSupplierByCall);
+        supplierByCall.setWhoEvaluateOfTechnicalTeam(nameEvaluator);
+        return super.save(supplierByCall);
+    }
 }

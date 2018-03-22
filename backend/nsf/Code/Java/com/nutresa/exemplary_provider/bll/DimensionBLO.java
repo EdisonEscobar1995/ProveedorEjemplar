@@ -29,5 +29,5 @@ public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
 
         return responseWithDimensions;
     }
-    
+
 }

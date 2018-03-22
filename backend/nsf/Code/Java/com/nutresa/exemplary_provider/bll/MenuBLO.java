@@ -13,7 +13,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class MenuBLO extends GenericBLO<MenuDTO, MenuDAO> {
 
-    public MenuBLO() { 
+    public MenuBLO() {
         super(MenuDAO.class);
     }
 

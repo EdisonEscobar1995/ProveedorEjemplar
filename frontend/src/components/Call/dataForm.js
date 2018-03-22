@@ -8,8 +8,6 @@ const generalInfo = (fields) => {
     deadlineToMakeSurveyEvaluator,
     deadlineToMakeSurveyManagementCommittee,
     deadlineToMakeSurveyTecniqueCommittee,
-    /* managementCommittee,
-    supplier, */
     year,
   } = fields;
 

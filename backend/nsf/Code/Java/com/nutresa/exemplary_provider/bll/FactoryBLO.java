@@ -8,11 +8,11 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class FactoryBLO {
 
     private static String namespace = Common.getNamespace(FactoryBLO.class);
-    
+
     private FactoryBLO() {
         throw new IllegalStateException("Factory class");
     }
-    
+
     @SuppressWarnings("unchecked")
     public static GenericBLO getBlo(String bloClass) throws HandlerGenericException {
         GenericBLO response = null;
@@ -21,11 +21,11 @@ public class FactoryBLO {
             response = FactoryBLO.getBlo(clazz);
         } catch (ClassNotFoundException exception) {
             throw new HandlerGenericException(exception, "Class " + bloClass + " not found");
-        } catch (Exception exception){
+        } catch (Exception exception) {
             DominoUtils.handleException(new Throwable(exception));
             throw new HandlerGenericException(exception);
         }
-        
+
         return response;
     }
 

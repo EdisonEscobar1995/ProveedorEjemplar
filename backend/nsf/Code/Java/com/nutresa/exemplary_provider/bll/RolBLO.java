@@ -10,7 +10,7 @@ public class RolBLO extends GenericBLO<RolDTO, RolDAO> {
         super(RolDAO.class);
     }
 
-    public RolDTO getIdRolLiberator(String nameRol) throws HandlerGenericException {
+    public RolDTO getRolByShortName(String nameRol) throws HandlerGenericException {
         RolDAO dao = new RolDAO();
         RolDTO response = null;
         try {

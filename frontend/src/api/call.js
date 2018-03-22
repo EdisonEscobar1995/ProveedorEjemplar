@@ -28,6 +28,10 @@ const getResultsApi = data => instance.get(`Call?action=getResults&call=${data.c
   `&country=${data.country || ''}
 `);
 
+const getEndedEvaluatorApi = () => instance.get('Call?action=getThemForTechnicalTeam');
+
+const getTechnicalTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToTechnicalTeam&year=${year || ''}`);
+
 export {
   getCallApi,
   saveCallApi,
@@ -37,4 +41,6 @@ export {
   massiveShipmentCallApi,
   getParticipantsByYearApi,
   getResultsApi,
+  getEndedEvaluatorApi,
+  getTechnicalTeamSurveyApi,
 };

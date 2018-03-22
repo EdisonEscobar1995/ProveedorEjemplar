@@ -34,6 +34,11 @@ const getParticipantsByYear = year => (dispatch) => {
         item.visible = true;
         return item;
       });
+      data.masters.Participated = [
+        { id: 'true', name: 'Si' },
+        { id: 'false', name: 'No' },
+        { id: 'empty', name: 'Sin respuesta' },
+      ];
       dispatch(getDataCallReportSuccess(data));
     }).catch(() => {
       dispatch(getFailedRequest());

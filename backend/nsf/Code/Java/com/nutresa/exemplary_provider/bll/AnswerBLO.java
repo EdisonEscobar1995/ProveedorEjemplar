@@ -9,8 +9,8 @@ import com.nutresa.exemplary_provider.dal.AnswerDAO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
-import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.dtl.OptionDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
@@ -84,12 +84,11 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             if (supplierByCallBLO.isFromEvaluator(dto.getIdSupplierByCall())) {
                 rules.setRulesToSection(SurveySection.EVALUATOR.getNameSection(), rules.buildRules(true, true));
                 SupplierByCallDTO supplierByCall = supplierByCallBLO.get(dto.getIdSupplierByCall());
-                UserDTO evaluator = userBLO.get(supplierByCall.getWhoEvaluate());
-                notice = userBLO.getCommonName(evaluator.getName());
-                throw new HandlerGenericException("ALREADY_HAS_AN_EVALUATOR");
+                notice = supplierByCall.getWhoEvaluate();
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_HAS_AN_EVALUATOR.toString());
             }
             supplierByCallBLO.changeState(SurveyStates.EVALUATOR.toString(), dto.getIdSupplierByCall());
-            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getUserInSession().getId());
+            supplierByCallBLO.setWhoEvaluate(dto.getIdSupplierByCall(), userBLO.getNameUserInSession());
             dto.setDateResponseEvaluator(new Date());
         } else {
             supplierByCallBLO.changeState(SurveyStates.SUPPLIER.toString(), dto.getIdSupplierByCall());
@@ -108,11 +107,17 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     }
 
     /**
-     * Construye reporte de nota promedio por proveedor, basado en las respuestas suministradas por el proveedor.
+     * Construye reporte de nota promedio por proveedor, basado en las
+     * respuestas suministradas por el proveedor.
      * 
-     * @param idSupplierByCall Identificador de la convocaria definitiva y finalizada de un proveedor.
-     * @param recordOfReport Registro del reporte
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param idSupplierByCall
+     *            Identificador de la convocaria definitiva y finalizada de un
+     *            proveedor.
+     * @param recordOfReport
+     *            Registro del reporte
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Registro del reporte
      * @throws HandlerGenericException
      */
@@ -232,16 +237,21 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
     }
 
     /**
-     * Obtiene las respuestas que se van a tener en cuenta para el reporte de Nota promedio.
+     * Obtiene las respuestas que se van a tener en cuenta para el reporte de
+     * Nota promedio.
      * 
-     * @param idSupplierByCall Identificador de la convocaria definitiva y finalizada de un proveedor.
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param idSupplierByCall
+     *            Identificador de la convocaria definitiva y finalizada de un
+     *            proveedor.
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Collección de respuestas
      * @throws HandlerGenericException
      */
     private List<AnswerDTO> getAnswersForReportOfAverageGrade(String idSupplierByCall, Map<String, String> parameters)
             throws HandlerGenericException {
-        List<AnswerDTO> response = null;
+        List<AnswerDTO> response;
 
         AnswerDAO answerDAO = new AnswerDAO();
         Map<String, String> fieldsToFilterQuestion = answerDAO.identifyFieldsToFTSearch(parameters);
@@ -253,18 +263,22 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             response = answerDAO.getAsnwersByIdSupplierByCall(idSupplierByCall);
         }
 
-        if (null == response) {
-            throw new HandlerGenericException("INFORMATION_NOT_FOUND");
+        if (response.isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;
     }
 
     /**
-     * Obtiene las respuestas por pregunta y convocatoria definitiva de un proveedor.
+     * Obtiene las respuestas por pregunta y convocatoria definitiva de un
+     * proveedor.
      * 
-     * @param idSupplierByCall Identificador de la convocatoria definitiva de un proveedor.
-     * @param questions Collección de preguntas a las que se desea obtener la respuesta.
+     * @param idSupplierByCall
+     *            Identificador de la convocatoria definitiva de un proveedor.
+     * @param questions
+     *            Collección de preguntas a las que se desea obtener la
+     *            respuesta.
      * @return Colección de respuestas
      * @throws HandlerGenericException
      */

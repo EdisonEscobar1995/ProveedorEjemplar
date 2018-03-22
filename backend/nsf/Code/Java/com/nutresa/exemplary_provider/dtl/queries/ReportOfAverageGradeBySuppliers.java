@@ -6,6 +6,10 @@ import com.google.gson.annotations.Expose;
 
 public class ReportOfAverageGradeBySuppliers {
     @Expose
+    private String idSupplier;
+    @Expose
+    private String idSupplierByCall;
+    @Expose
     private String sapCode;
     @Expose
     private String nit;
@@ -147,6 +151,22 @@ public class ReportOfAverageGradeBySuppliers {
 
     public String getCompanySize() {
         return companySize;
+    }
+
+    public void setIdSupplier(String idSupplier) {
+        this.idSupplier = idSupplier;
+    }
+
+    public String getIdSupplier() {
+        return idSupplier;
+    }
+
+    public void setIdSupplierByCall(String idSupplierByCall) {
+        this.idSupplierByCall = idSupplierByCall;
+    }
+
+    public String getIdSupplierByCall() {
+        return idSupplierByCall;
     }
 
     public class SummarySurvey {

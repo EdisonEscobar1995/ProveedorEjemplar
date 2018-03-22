@@ -85,6 +85,7 @@ public abstract class GenericDAO<T> {
             if (view.FTSearch(query, 1) > 0) {
                 document = view.getFirstDocument();
             }
+            view.clear();
         } else {
             ArrayList<String> indexedParameters = getIndexedParameters(view, parameters);
             document = view.getFirstDocumentByKey(indexedParameters, true);
@@ -420,7 +421,7 @@ public abstract class GenericDAO<T> {
         return session;
     }
 
-    protected String getNameUserInSession() {
+    public String getNameUserInSession() {
         return session.getEffectiveUserName();
     }
 

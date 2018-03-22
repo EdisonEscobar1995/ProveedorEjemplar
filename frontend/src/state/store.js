@@ -1,9 +1,8 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import user from './User/reducer';
+import main from './Main/reducer';
 import generic from './Generic/reducer';
-import sector from './Sector/reducer';
 import supplier from './Supplier/reducer';
 import call from './Call/reducer';
 import calledSuppliers from './CalledSuppliers/reducer';
@@ -12,11 +11,18 @@ import surveys from './Surveys/reducer';
 import callReport from './CallReport/reducer';
 import results from './Results/reducer';
 import pendings from './Pendings/reducer';
+import endedEvaluator from './EndedEvaluator/reducer';
+import sector from './Sector/reducer';
+import service from './Service/reducer';
+import evaluationScale from './EvaluationScale/reducer';
+import user from './User/reducer';
+import supply from './Supply/reducer';
+import technicalTeam from './TechnicalTeam/reducer';
+import technicalTeamSurvey from './TechnicalTeamSurvey/reducer';
 
 const app = combineReducers({
-  user,
+  main,
   generic,
-  sector,
   supplier,
   call,
   calledSuppliers,
@@ -25,6 +31,14 @@ const app = combineReducers({
   callReport,
   results,
   pendings,
+  endedEvaluator,
+  sector,
+  service,
+  evaluationScale,
+  user,
+  supply,
+  technicalTeam,
+  technicalTeamSurvey,
 });
 
 let middleware = {};

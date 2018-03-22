@@ -22,24 +22,24 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     private static final Translator cleanTranslator = new Translator();
     private static final String DEFAULT_LANGUAGE = "es";
     private String language = DEFAULT_LANGUAGE;
-    
+
     public TranslationBLO() {
         super(TranslationDAO.class);
     }
-    
+
     public static TranslationBLO getInstance() {
         if (null == instance) {
             instance = new TranslationBLO();
         }
         return instance;
-    }    
-    
+    }
+
     protected void loadTranslation(String language, String entity) throws HandlerGenericException {
         Map<String, String> filter = new HashMap<String, String>();
         filter.put("language", language);
         filter.put("entity", entity);
         List<DTO> listTranslations = getAllBy(filter);
-        
+
         HashMap<String, String> entityTranslations = new HashMap<String, String>();
         for (Object translation : listTranslations) {
             TranslationDTO dto = (TranslationDTO) translation;
@@ -47,21 +47,21 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         }
         translationTable.put(language + "_" + entity, entityTranslations);
     }
-    
+
     protected void loadDictionary(String component) throws HandlerGenericException {
         Map<String, String> filter = new HashMap<String, String>();
         DictionaryDAO dictionaryDAO = new DictionaryDAO();
-        
+
         filter.put("component", component);
         List<DictionaryDTO> listDictionary = dictionaryDAO.getAllBy(filter);
-        
+
         HashMap<String, String> componentDictionary = new HashMap<String, String>();
         for (DictionaryDTO itemDictionary : listDictionary) {
             componentDictionary.put(itemDictionary.getName(), itemDictionary.getLabel());
         }
         dictionaryTable.put(component, componentDictionary);
     }
-    
+
     public Translator getTranslator(String language, String entity) {
         if (!translationTable.containsKey(language + "_" + entity)) {
             try {
@@ -107,12 +107,12 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
             translationTable.remove(entity);
         }
     }
-    
+
     public void clearLanguage() {
         translationTable = new HashMap<String, HashMap<String, String>>();
         dictionaryTable = new HashMap<String, HashMap<String, String>>();
     }
-    
+
     public String getClientLanguage(Map<String, String> parameters, Locale locale, Cookie[] cookies) {
         String clientLanguage = null;
         String response = null;
@@ -148,7 +148,6 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         return cookieValue;
     }
 
-
     public static class Translator {
 
         private HashMap<String, String> translations = null;
@@ -174,7 +173,7 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         }
 
     }
-    
+
     public static class Dictionary {
 
         private HashMap<String, String> dictionaries = null;
@@ -196,5 +195,5 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         }
 
     }
-    
+
 }

@@ -5,4 +5,7 @@ injectGlobal`
     min-height: 100%;
     display: flex;
   }
+  .ant-table-tbody>tr>td, .ant-table-thead>tr>th{
+    word-break: inherit;
+  }
 `;

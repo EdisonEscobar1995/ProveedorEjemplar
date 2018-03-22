@@ -4,6 +4,7 @@ const messages = {
   'Supplier.businessName': 'Name or Corporate Name',
   'Supplier.idCompanySize': 'Company size',
   'Supplier.idSupply': 'Supplies',
+  'Supplier.idCountry': 'Country to which it supplies',
   'Supplier.idCategory': 'Type of Category',
   'Supplier.idSubCategory': 'Type of Sub-category',
   'Supplier.document': 'Official documents: For example, For Colombia, attach RUT + Certificate of Existence and Legal Representation. For Costa Rica, attach Cédula and Legal Constitution. For Peru, attach RUC - Unique Contributor Registration (Registro Único de Contribuyente) (Maximum two documents)',
@@ -15,7 +16,7 @@ const messages = {
   'Supplier.yearOfEstablishment': 'Year of establishment of the company ',
   'Supplier.location': 'Location',
   'Supplier.principalAdress': 'Main address',
-  'Supplier.idCountry': 'Country',
+  'Supplier.idOriginCountry': 'Country',
   'Supplier.idDepartment': 'Department, State or Province',
   'Supplier.idCity': 'City',
   'Supplier.branchOffice': 'Do you have branch offices, plants or alternate centers? Where are they located?',
@@ -104,6 +105,7 @@ const messages = {
   'Validation.dateToSend': 'The date to make the survey has expired',
   'Validation.dateToEvaluate': 'The date exceeds the time to evaluate',
   'Validation.alreadyBeingEvaluated': 'The survey is already being evaluated by',
+  'Validation.alreadyBeingQualified': 'The supplier is already being evaluated by',
   'Validation.noData': 'No data received',
   'Validation.noOpenCall': 'At this time there are no open calls',
   'Validation.supplier': 'There is no assessment for the type of supply and company size selected',
@@ -118,5 +120,6 @@ const messages = {
   'Validation.requiredField': 'This field is required',
   'Validation.surveyCouldNotComplete': 'The survey could not be completed',
   'Validation.informationNotFound': 'Information not found',
+  'Validation.documentExists': 'There is another document with the same data',
 };
 export default messages;

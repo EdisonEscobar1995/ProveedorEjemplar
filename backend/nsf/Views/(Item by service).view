@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(Item by service)' alias='Items|vwItemsByIdService' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='43a7a' unid='F08A28988697FBD305258243006948E5' sequence='2'>
+<created><datetime>20180301T140959,41-05</datetime></created>
+<modified><datetime>20180301T141055,68-05</datetime></modified>
+<revised><datetime>20180301T141055,67-05</datetime></revised>
+<lastaccessed><datetime>20180301T141055,68-05</datetime></lastaccessed>
+<addedtofile><datetime>20180301T140959,43-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frItem"</formula></code><code event='querypaste'><lotusscript
+>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+	Continue = False
+End Sub
+</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='idService' width='17.2500'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idService'><font size='9pt' style='bold'/></columnheader></column></view>
+

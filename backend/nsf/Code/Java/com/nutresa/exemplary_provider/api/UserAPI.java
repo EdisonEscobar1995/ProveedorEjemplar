@@ -30,4 +30,10 @@ public class UserAPI extends GenericAPI<UserDTO, UserBLO> {
         UserBLO userBLO = new UserBLO();
         return new ServletResponseDTO<UserDTO>(userBLO.whoEvaluateSurvey(parametersInReques.get("idSupplierByCall")));
     }
+
+    public ServletResponseDTO<List<UserDTO>> searchUser(Map<String, String> parametersInReques)
+            throws HandlerGenericException {
+        UserBLO userBLO = new UserBLO();
+        return new ServletResponseDTO<List<UserDTO>>(userBLO.searchUser(parametersInReques.get("text")));
+    }
 }

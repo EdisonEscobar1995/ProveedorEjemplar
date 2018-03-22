@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
 
-function CallReport({ data, participateInCall }) {
+function CallReport({ data }) {
   const { suppliers, suppliersByCall, masters } = data;
 
   const columns = [{
@@ -37,9 +37,11 @@ function CallReport({ data, participateInCall }) {
     dataIndex: 'participated',
     key: 'participated',
     render(text, record) {
-      return participateInCall(suppliersByCall
-        .find(item => item.idSupplier === record.id)
-        .participateInCall);
+      return masters.Participated
+        .find(option => option.id === (suppliersByCall
+          .find(item => item.idSupplier === record.id)
+          .participateInCall || 'empty'))
+        .name;
     },
   }, {
     title: 'Enlace',

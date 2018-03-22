@@ -2,8 +2,9 @@
   "name": "proveedor-ejemplar",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
-    "antd": "2.13.10",
+    "antd": "^3.3.1",
     "autoprefixer": "7.1.2",
     "axios": "^0.17.0",
     "babel-core": "6.25.0",
@@ -16,6 +17,7 @@
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
     "css-loader": "0.28.4",
+    "detect-browser": "^2.1.0",
     "dotenv": "4.0.0",
     "eslint": "4.4.1",
     "eslint-config-react-app": "^2.0.1",
@@ -60,7 +62,7 @@
   "scripts": {
     "replace:index": "node scripts/replaceIndexPath.js",
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js && npm run replace:index",
+    "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {
