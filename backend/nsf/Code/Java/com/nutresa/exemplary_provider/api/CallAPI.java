@@ -45,8 +45,8 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         ServletResponseDTO<InformationFromSupplier> response = null;
         CallBLO callBLO = new CallBLO();
         try {
-            response = new ServletResponseDTO<InformationFromSupplier>(callBLO.getParticipantsByYear(parameters
-                    .get("year")));
+            response = new ServletResponseDTO<InformationFromSupplier>(
+                    callBLO.getParticipantsByYear(parameters.get("year")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<InformationFromSupplier>(exception);
         }
@@ -58,8 +58,8 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> response = null;
         CallBLO callBLO = new CallBLO();
         try {
-            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(callBLO
-                    .getReportOfAverageGradeBySupplier(parameters));
+            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(
+                    callBLO.getReportOfAverageGradeBySupplier(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(exception);
         }
@@ -71,8 +71,8 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> response = null;
         CallBLO callBLO = new CallBLO();
         try {
-            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(callBLO
-                    .getThemWillPassToTechnicalTeam());
+            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(
+                    callBLO.getThemWillPassToTechnicalTeam());
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(exception);
         }
@@ -84,8 +84,8 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         ServletResponseDTO<InformationFromSupplier> response = null;
         CallBLO callBLO = new CallBLO();
         try {
-            response = new ServletResponseDTO<InformationFromSupplier>(callBLO
-                    .getParticipantsToTechnicalTeam(parameters.get("year")));
+            response = new ServletResponseDTO<InformationFromSupplier>(
+                    callBLO.getParticipantsToTechnicalTeam(parameters.get("year")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<InformationFromSupplier>(exception);
         }
