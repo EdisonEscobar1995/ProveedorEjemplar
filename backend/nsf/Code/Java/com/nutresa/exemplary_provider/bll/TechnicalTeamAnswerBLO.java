@@ -1,6 +1,8 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.TechnicalTeamAnswerDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
@@ -8,6 +10,7 @@ import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamAnswerDTO;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, TechnicalTeamAnswerDAO> {
@@ -48,6 +51,13 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
         }
+    }
+
+    protected ReportOfAverageGradeBySuppliers buildReportOfTechnicalTeam(String idSupplierByCall,
+            ReportOfAverageGradeBySuppliers recordOfReport, Map<String, String> parameters)
+            throws HandlerGenericException {
+        List<TechnicalTeamAnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
+        return null;
     }
 
 }

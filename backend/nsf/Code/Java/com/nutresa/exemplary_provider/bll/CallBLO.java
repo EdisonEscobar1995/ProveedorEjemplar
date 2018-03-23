@@ -127,21 +127,15 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
                 || userBLO.isRol(Rol.EVALUATOR.toString())) {
             String idCall = parameters.get("call");
-            if (null != idCall && !idCall.isEmpty()) {
-                SupplierBLO supplierBLO = new SupplierBLO();
-                List<SupplierDTO> suppliers = supplierBLO.getThemByIdCallOrFiltered(idCall, parameters);
-                if (!suppliers.isEmpty()) {
-                    response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
-                }
-            } else {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.CALL_NOT_ESPECIFIED.toString());
-            }
-
-            if (response.isEmpty()) {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-            }
+            SupplierBLO supplierBLO = new SupplierBLO();
+            List<SupplierDTO> suppliers = supplierBLO.getThemByIdCallOrFiltered(idCall, parameters);
+            response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
+        }
+
+        if (response.isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;
@@ -165,6 +159,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
                     supplier.getId());
+                    
             if (supplierByCall instanceof SupplierByCallDTO) {
                 response.add(getRecordOfReport(supplierByCall, supplier, parameters));
             }
@@ -176,7 +171,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     private ReportOfAverageGradeBySuppliers getRecordOfReport(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
             Map<String, String> parameters) throws HandlerGenericException {
         ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
-        AnswerBLO answerBLO = new AnswerBLO();
         SupplyBLO supplyBLO = new SupplyBLO();
         CategoryBLO categoryBLO = new CategoryBLO();
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
@@ -188,8 +182,22 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
         recordOfReport.setIdSupplier(supplierByCall.getIdSupplier());
         recordOfReport.setIdSupplierByCall(supplierByCall.getId());
-        recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
-                parameters);
+
+        // TODO cambiar el nombre de la variable que definie el tipo de reporte
+        String typeReport = parameters.get("typeReport");
+        // TODO cambiar por los valores enviados por el FRONT
+        if (typeReport.equals("SUPPLIER_EVALUATOR")) {
+            AnswerBLO answerBLO = new AnswerBLO();
+            recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
+                    parameters);
+        } else {
+            if (typeReport.equals("TECHNICAL_MANAGER")) {
+                TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
+                recordOfReport = technicalTeamAnswerBLO.buildReportOfTechnicalTeam(supplierByCall.getId(),
+                        recordOfReport, parameters);
+
+            }
+        }
 
         return recordOfReport;
     }

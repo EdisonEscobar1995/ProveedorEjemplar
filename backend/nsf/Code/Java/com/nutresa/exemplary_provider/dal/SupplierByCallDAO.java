@@ -84,6 +84,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
+        
         return suppliers;
     }
 
