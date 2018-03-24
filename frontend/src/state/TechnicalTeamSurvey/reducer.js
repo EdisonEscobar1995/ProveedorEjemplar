@@ -74,10 +74,18 @@ function technicalTeamSurveyApp(state = initialState, action) {
       };
     }
     case CHANGE_SCORE: {
+      const answers = [...state.data.masters.TechnicalTeamAnswer];
+      if (action.new) {
+        answers.push(action.answer);
+      }
       return {
         ...state,
         data: {
           ...state.data,
+          masters: {
+            ...state.data.masters,
+            TechnicalTeamAnswer: answers,
+          },
           suppliers: state.data.suppliers.map(supplier => (
             supplier.id === action.idSupplier ? {
               ...supplier,
@@ -107,10 +115,18 @@ function technicalTeamSurveyApp(state = initialState, action) {
       };
     }
     case CHANGE_COMMENT: {
+      const comments = [...state.data.masters.TechnicalTeamComment];
+      if (action.new) {
+        comments.push(action.comment);
+      }
       return {
         ...state,
         data: {
           ...state.data,
+          masters: {
+            ...state.data.masters,
+            TechnicalTeamComment: comments,
+          },
           suppliers: state.data.suppliers.map(supplier => (
             supplier.id === action.idSupplier ? {
               ...supplier,
