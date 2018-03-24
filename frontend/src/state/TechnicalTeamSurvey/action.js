@@ -38,18 +38,20 @@ const calculateTotal = () => ({
   type: CALCULATE_TOTAL,
 });
 
-const changeScore = (idSupplier, answer, value) => ({
+const changeScore = (idSupplier, id, answer, value) => ({
   type: CHANGE_SCORE,
   idSupplier,
   answer,
   value,
+  new: !id,
 });
 
-const changeComment = (idSupplier, comment, value) => ({
+const changeComment = (idSupplier, id, comment, value) => ({
   type: CHANGE_COMMENT,
   idSupplier,
   comment,
   value,
+  new: !id,
 });
 
 const updateErrors = data => ({
@@ -65,8 +67,8 @@ const updateSuppliers = (idSuppliers, idSuppliersByCall) => ({
 
 const setScore = (idSupplier, value, answer) => (dispatch) => {
   requestApi(dispatch, getDataTechnicalTeamSurveyProgress, saveTechnicalTeamAnswerApi, answer)
-    .then(() => {
-      dispatch(changeScore(idSupplier, answer, value));
+    .then((response) => {
+      dispatch(changeScore(idSupplier, answer.id, response.data.data, value));
       dispatch(calculateTotal());
     }).catch(() => {
       dispatch(changeScore(idSupplier, answer, null));
@@ -80,8 +82,8 @@ const setComment = (idSupplier, value, comment) => (dispatch, getState) => {
     element => element.idService === comment.idService).value;
   if (storedValue !== value) {
     requestApi(dispatch, getDataTechnicalTeamSurveyProgress, saveTechnicalTeamCommentApi, comment)
-      .then(() => {
-        dispatch(changeComment(idSupplier, comment, value));
+      .then((response) => {
+        dispatch(changeComment(idSupplier, comment.id, response.data.data, value));
       }).catch(() => {
         dispatch(changeComment(idSupplier, comment, null));
         dispatch(getFailedRequest());
