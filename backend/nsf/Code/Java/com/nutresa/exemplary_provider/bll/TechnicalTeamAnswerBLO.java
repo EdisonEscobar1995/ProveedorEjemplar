@@ -67,7 +67,6 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         ServiceBLO serviceBLO = new ServiceBLO();
         List<ServiceDTO> services = new ArrayList<ServiceDTO>();
         List<ItemDTO> items;
-        short sumScoreByAllItems = 0;
         if (null != idService && !idService.trim().isEmpty()) {
             services.add(serviceBLO.get(idService));
         } else {
@@ -80,6 +79,7 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         List<Service> serviceToReport = new ArrayList<Service>();
         ReportOfAverageGradeBySuppliers report = new ReportOfAverageGradeBySuppliers();
         for (ServiceDTO service : services) {
+            short sumScoreByAllItems = 0;
             ReportOfAverageGradeBySuppliers.Service serviceRecord = report.new Service();
             serviceRecord.name = service.getName();
             ItemBLO itemBLO = new ItemBLO();
