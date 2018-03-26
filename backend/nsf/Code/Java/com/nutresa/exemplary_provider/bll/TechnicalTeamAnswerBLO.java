@@ -68,7 +68,7 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         List<ServiceDTO> services = new ArrayList<ServiceDTO>();
         List<ItemDTO> items;
         short sumScoreByAllItems = 0;
-        if (null != idService) {
+        if (null != idService && !idService.trim().isEmpty()) {
             services.add(serviceBLO.get(idService));
         } else {
             List<DTO> temporalServices = serviceBLO.getAll();

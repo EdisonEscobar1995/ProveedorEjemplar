@@ -75,7 +75,7 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
 
     public List<ItemDTO> getItemsByIdItemOrIdService(String idItem, String idService) throws HandlerGenericException {
         List<ItemDTO> items = new ArrayList<ItemDTO>();
-        if (null != idItem) {
+        if (null != idItem && !idItem.trim().isEmpty()) {
             items.add(super.get(idItem));
         } else {
             Map<String, String> parameterToService = new HashMap<String, String>();
