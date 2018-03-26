@@ -249,12 +249,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.TECHNICAL_TEAM);
             } else {
-                throw new HandlerGenericException(
-                        HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED.toString());
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
+                        .toString());
             }
         } else {
-            throw new HandlerGenericException(
-                    HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED.toString());
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED
+                    .toString());
         }
 
         return response;
@@ -441,10 +441,10 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      *         búsqueda.
      * @throws HandlerGenericException
      */
-    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
-            throws HandlerGenericException {
+    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier,
+            List<SurveyStates> surveyStatesAllowed) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        return supplierByCallDAO.getByIdCallAndIdSupplierFinished(idCall, idSupplier);
+        return supplierByCallDAO.getByIdCallAndIdSupplierFinished(idCall, idSupplier, surveyStatesAllowed);
     }
 
     /**
@@ -503,10 +503,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         boolean isFromTechnicalTeamMember = false;
         SupplierByCallDTO supplierByCall = get(idSupplierByCall);
         UserBLO userBLO = new UserBLO();
-        if (null != supplierByCall
-                && !supplierByCall.getWhoEvaluateOfTechnicalTeam().isEmpty()
-                && !supplierByCall.getWhoEvaluateOfTechnicalTeam().equals(
-                        userBLO.getNameUserInSession())) {
+        if (null != supplierByCall && !supplierByCall.getWhoEvaluateOfTechnicalTeam().isEmpty()
+                && !supplierByCall.getWhoEvaluateOfTechnicalTeam().equals(userBLO.getNameUserInSession())) {
             isFromTechnicalTeamMember = true;
         }
 

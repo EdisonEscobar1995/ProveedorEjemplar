@@ -84,7 +84,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-        
+
         return suppliers;
     }
 
@@ -101,17 +101,16 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
      *         búsqueda.
      * @throws HandlerGenericException
      */
-    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier)
-            throws HandlerGenericException {
+    public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier,
+            List<SurveyStates> surveyStatesAllowed) throws HandlerGenericException {
         SupplierByCallDTO response = null;
 
         for (SurveyStates stateName : SurveyStates.values()) {
-            if (!stateName.equals(SurveyStates.DONT_PARTICIPATE) && !stateName.equals(SurveyStates.NOT_STARTED)
-                    && !stateName.equals(SurveyStates.SUPPLIER)) {
+            if (surveyStatesAllowed.contains(stateName)) {
                 StateDAO stateDAO = new StateDAO();
                 String idState = stateDAO.getStateByShortName(stateName.toString()).getId();
                 List<String> filter = new ArrayList<String>();
-
+                
                 if (null != idState) {
                     filter.add(idSupplier);
                     filter.add(idCall);
@@ -119,13 +118,12 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
                 } else {
                     continue;
                 }
-
+                
                 View view = getDatabase().getView("vwSuppliersByCallInIdSupplierAndIdCallFinished");
                 Document document = view.getFirstDocumentByKey(filter, true);
                 if (null != document) {
                     response = castDocument(document);
                 }
-
             }
         }
 

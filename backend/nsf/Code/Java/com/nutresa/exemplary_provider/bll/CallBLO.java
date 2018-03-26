@@ -155,14 +155,21 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     private List<ReportOfAverageGradeBySuppliers> buildReportOfAverageGradeBySupplier(String idCall,
             List<SupplierDTO> suppliers, Map<String, String> parameters) throws HandlerGenericException {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
-        for (SupplierDTO supplier : suppliers) {
-            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
-                    .getId());
+        StateBLO stateBLO = new StateBLO();
+        String typeReport = parameters.get("type");
+        if (null != typeReport) {
+            List<SurveyStates> surveyStatesAllowed = stateBLO.getStatesByTypeReport(typeReport);
+            for (SupplierDTO supplier : suppliers) {
+                SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+                SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
+                        .getId(), surveyStatesAllowed);
 
-            if (supplierByCall instanceof SupplierByCallDTO) {
-                response.add(getRecordOfReport(supplierByCall, supplier, parameters));
+                if (supplierByCall instanceof SupplierByCallDTO) {
+                    response.add(getRecordOfReport(supplierByCall, supplier, parameters));
+                }
             }
+        } else {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
         return response;
