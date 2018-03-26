@@ -12,6 +12,8 @@ import callReport from './CallReport/reducer';
 import results from './Results/reducer';
 import pendings from './Pendings/reducer';
 import endedEvaluator from './EndedEvaluator/reducer';
+import access from './Access/reducer';
+import accessByRol from './AccessByRol/reducer';
 import sector from './Sector/reducer';
 import service from './Service/reducer';
 import evaluationScale from './EvaluationScale/reducer';
@@ -32,6 +34,8 @@ const app = combineReducers({
   results,
   pendings,
   endedEvaluator,
+  access,
+  accessByRol,
   sector,
   service,
   evaluationScale,

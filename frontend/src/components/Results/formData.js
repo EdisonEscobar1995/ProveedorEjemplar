@@ -1,4 +1,4 @@
-import { SUPPLIER_AND_EVALUATOR, TECHNICAL_AND_MANAGER } from '../../utils/const';
+import { SUPPLIER_EVALUATOR, TECHNICAL_MANAGER } from '../../utils/const';
 
 const formData = ({
   data, type, changeType, getCriterionsByDimension, getItemsByService, form,
@@ -29,7 +29,7 @@ const formData = ({
     options: Country,
   }];
 
-  if (type === SUPPLIER_AND_EVALUATOR) {
+  if (type === SUPPLIER_EVALUATOR) {
     denpendentFields = denpendentFields.concat({
       span: 8,
       type: 'select',
@@ -56,7 +56,7 @@ const formData = ({
     });
   }
 
-  if (type === TECHNICAL_AND_MANAGER) {
+  if (type === TECHNICAL_MANAGER) {
     denpendentFields = denpendentFields.concat({
       span: 8,
       type: 'select',
@@ -95,10 +95,10 @@ const formData = ({
           value: type,
           required: true,
           options: [{
-            id: SUPPLIER_AND_EVALUATOR,
+            id: SUPPLIER_EVALUATOR,
             name: 'Resultados por Proveedor y Equipo evaluador',
           }, {
-            id: TECHNICAL_AND_MANAGER,
+            id: TECHNICAL_MANAGER,
             name: 'Resultados por Comité técnico y Comité Gerencial',
           }],
           handleChange: changeType,
