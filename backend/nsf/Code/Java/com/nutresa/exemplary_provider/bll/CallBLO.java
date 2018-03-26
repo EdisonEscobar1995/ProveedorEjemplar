@@ -121,27 +121,21 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      */
     public List<ReportOfAverageGradeBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
-        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        List<ReportOfAverageGradeBySuppliers> response = null;
 
         UserBLO userBLO = new UserBLO();
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
                 || userBLO.isRol(Rol.EVALUATOR.toString())) {
             String idCall = parameters.get("call");
-            if (null != idCall && !idCall.isEmpty()) {
-                SupplierBLO supplierBLO = new SupplierBLO();
-                List<SupplierDTO> suppliers = supplierBLO.getThemByIdCallOrFiltered(idCall, parameters);
-                if (!suppliers.isEmpty()) {
-                    response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
-                }
-            } else {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.CALL_NOT_ESPECIFIED.toString());
-            }
-
-            if (response.isEmpty()) {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-            }
+            SupplierBLO supplierBLO = new SupplierBLO();
+            List<SupplierDTO> suppliers = supplierBLO.getThemByIdCallOrFiltered(idCall, parameters);
+            response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
+        }
+
+        if (response.isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;
@@ -163,8 +157,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
         for (SupplierDTO supplier : suppliers) {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
-                    supplier.getId());
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
+                    .getId());
+
             if (supplierByCall instanceof SupplierByCallDTO) {
                 response.add(getRecordOfReport(supplierByCall, supplier, parameters));
             }
@@ -176,7 +171,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     private ReportOfAverageGradeBySuppliers getRecordOfReport(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
             Map<String, String> parameters) throws HandlerGenericException {
         ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
-        AnswerBLO answerBLO = new AnswerBLO();
         SupplyBLO supplyBLO = new SupplyBLO();
         CategoryBLO categoryBLO = new CategoryBLO();
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
@@ -188,8 +182,19 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
         recordOfReport.setIdSupplier(supplierByCall.getIdSupplier());
         recordOfReport.setIdSupplierByCall(supplierByCall.getId());
-        recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
-                parameters);
+
+        String typeReport = parameters.get("type");
+        if (typeReport.equals("SUPPLIER_EVALUATOR")) {
+            AnswerBLO answerBLO = new AnswerBLO();
+            recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
+                    parameters);
+        } else {
+            if (typeReport.equals("TECHNICAL_MANAGER")) {
+                TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
+                recordOfReport = technicalTeamAnswerBLO.buildReportOfTechnicalTeam(supplierByCall.getId(),
+                        recordOfReport, parameters);
+            }
+        }
 
         return recordOfReport;
     }
@@ -249,8 +254,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         currentMasters.put("Service", serviceBLO.getAll());
         currentMasters.put("Item", itemBLO.getAll());
         currentMasters.put("State", stateBLO.getAll());
-        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
-                SurveyStates.TECHNICAL_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo", SurveyStates.TECHNICAL_TEAM
+                .toString(), "vwEvaluationScalesByApplyTo"));
         currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
 
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
@@ -263,8 +268,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         for (Object idSupplierByCall : idsSupplierByCall) {
             List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy("idSupplierByCall", idSupplierByCall.toString(),
                     "vwTechnicalTeamAnswersByIdSupplierByCall");
-            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall",
-                    idSupplierByCall.toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
+            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall", idSupplierByCall
+                    .toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
 
             if (!auxiliarAnswer.isEmpty()) {
                 answers.addAll(auxiliarAnswer);

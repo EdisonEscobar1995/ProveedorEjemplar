@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(TechnicalTeamComment by id supplier by call)' alias='TechnicalTeamComment|vwTechnicalTeamCommentsByIdSupplierByCall'
+<view name='(TechnicalTeamComment by id supplier by call and id service)'
+ alias='TechnicalTeamComment|vwTechnicalTeamCommentByIdSupplierByCallAndIdService'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,17 +10,20 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='46fc6' unid='660E93AC4F7550350525824E0056370D' sequence='24'>
-<created><datetime>20180312T104141,89-05</datetime></created>
-<modified><datetime>20180323T100441,36-05</datetime></modified>
-<revised><datetime>20180323T100441,35-05</datetime></revised>
-<lastaccessed><datetime>20180323T100441,36-05</datetime></lastaccessed>
-<addedtofile><datetime>20180316T141628,87-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='48206' unid='D33487EC4D1CD4C10525825C0047AA2E' sequence='5'>
+<created><datetime>20180326T080246,22-05</datetime></created>
+<modified><datetime>20180326T080508,85-05</datetime></modified>
+<revised><datetime>20180326T080508,84-05</datetime></revised>
+<lastaccessed><datetime>20180326T080508,85-05</datetime></lastaccessed>
+<addedtofile><datetime>20180326T080246,29-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frTechnicalTeamComment"</formula></code>
 <column sort='ascending' hidedetailrows='false' itemname='idSupplierByCall'
  width='10' resizable='true' separatemultiplevalues='false' sortnoaccent='true'
  sortnocase='true' showaslinks='false'><columnheader title='idSupplierByCall'><font
- size='9pt' style='bold'/></columnheader></column></view>
+ size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idService' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
+ showaslinks='false'><columnheader title='idService'><font size='9pt' style='bold'/></columnheader></column></view>
 

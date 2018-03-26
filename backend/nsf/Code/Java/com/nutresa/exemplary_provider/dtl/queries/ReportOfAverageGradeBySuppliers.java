@@ -35,6 +35,8 @@ public class ReportOfAverageGradeBySuppliers {
     private double totalScoreOfEvaluator;
     @Expose
     private List<SummarySurvey> summarySurvey;
+    @Expose
+    private List<Service> services;
 
     public String getSapCode() {
         return sapCode;
@@ -127,6 +129,14 @@ public class ReportOfAverageGradeBySuppliers {
 
     public void setSummarySurvey(List<SummarySurvey> summarySurvey) {
         this.summarySurvey = summarySurvey;
+    }
+
+    public List<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
     public void setSupply(String supply) {
@@ -291,5 +301,23 @@ public class ReportOfAverageGradeBySuppliers {
             return commentEvaluator;
         }
 
+    }
+
+    public class Service {
+        @Expose
+        public String name;
+        @Expose
+        public String comment;
+        @Expose
+        public double total;
+        @Expose
+        public List<Item> items;
+    }
+
+    public class Item {
+        @Expose
+        public String name;
+        @Expose
+        public short answer;
     }
 }

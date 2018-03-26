@@ -11,15 +11,14 @@ import com.nutresa.exemplary_provider.dtl.TechnicalTeamCommentDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class TechnicalTeamCommentBLO extends GenericBLO<TechnicalTeamCommentDTO, TechnicalTeamCommentDAO> {
-
     private String notice;
-
-    public String getNotice() {
-        return notice;
-    }
 
     public TechnicalTeamCommentBLO() {
         super(TechnicalTeamCommentDAO.class);
+    }
+
+    public String getNotice() {
+        return notice;
     }
 
     @Override
@@ -31,8 +30,8 @@ public class TechnicalTeamCommentBLO extends GenericBLO<TechnicalTeamCommentDTO,
             if (supplierByCallBLO.isFromTechnicalTeam(comment.getIdSupplierByCall())) {
                 SupplierByCallDTO supplierByCall = supplierByCallBLO.get(comment.getIdSupplierByCall());
                 notice = supplierByCall.getWhoEvaluateOfTechnicalTeam();
-                throw new HandlerGenericException(
-                        HandlerGenericExceptionTypes.ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER.toString());
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER
+                        .toString());
             }
 
             supplierByCallBLO.changeState(SurveyStates.TECHNICAL_TEAM.toString(), comment.getIdSupplierByCall());
@@ -42,6 +41,12 @@ public class TechnicalTeamCommentBLO extends GenericBLO<TechnicalTeamCommentDTO,
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
         }
+    }
+
+    public String getCommentBySupplierByCallAndIdService(String idSupplierByCall, String idService)
+            throws HandlerGenericException {
+        TechnicalTeamCommentDAO technicalTeamCommentDAO = new TechnicalTeamCommentDAO();
+        return technicalTeamCommentDAO.getCommentBySupplierByCallAndIdService(idSupplierByCall, idService);
     }
 
 }
