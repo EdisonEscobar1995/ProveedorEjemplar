@@ -63,20 +63,18 @@ public class UserDAO extends GenericDAO<UserDTO> {
         View vwNames = namesDatabase.getView("($Users)");
         String query = "(Field type = Person and ".concat(text.concat("*)"));
         if (null != vwNames) {
-            int resultNumber = vwNames.FTSearch(query, MAX_RESULTS);
-            if (resultNumber > 0) {
-                Document document = vwNames.getFirstDocument();
-                while (document != null) {
-                    UserDTO user = new UserDTO();
-                    String fullname = document.getItemValueString("fullname");
-                    if (fullname.trim().isEmpty()) {
-                        fullname = document.getItemValueString("fullname2");
-                    }
-                    user.setName(fullname);
-                    user.setEmail(document.getItemValueString("MailAddress"));
-                    users.add(user);
-                    document = vwNames.getNextDocument(document);
+            vwNames.FTSearch(query, MAX_RESULTS);
+            Document document = vwNames.getFirstDocument();
+            while (document != null) {
+                UserDTO user = new UserDTO();
+                String fullname = document.getItemValueString("fullname");
+                if (fullname.trim().isEmpty()) {
+                    fullname = document.getItemValueString("fullname2");
                 }
+                user.setName(fullname);
+                user.setEmail(document.getItemValueString("MailAddress"));
+                users.add(user);
+                document = vwNames.getNextDocument(document);
             }
             vwNames.clear();
         }

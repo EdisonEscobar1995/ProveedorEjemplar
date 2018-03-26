@@ -309,7 +309,7 @@ public class ReportOfAverageGradeBySuppliers {
         @Expose
         public String comment;
         @Expose
-        public short total;
+        public double total;
         @Expose
         public List<Item> items;
     }

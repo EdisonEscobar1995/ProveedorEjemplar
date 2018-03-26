@@ -121,7 +121,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      */
     public List<ReportOfAverageGradeBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
-        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        List<ReportOfAverageGradeBySuppliers> response = null;
 
         UserBLO userBLO = new UserBLO();
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
@@ -157,9 +157,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
         for (SupplierDTO supplier : suppliers) {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
-                    supplier.getId());
-                    
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
+                    .getId());
+
             if (supplierByCall instanceof SupplierByCallDTO) {
                 response.add(getRecordOfReport(supplierByCall, supplier, parameters));
             }
@@ -183,9 +183,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setIdSupplier(supplierByCall.getIdSupplier());
         recordOfReport.setIdSupplierByCall(supplierByCall.getId());
 
-        // TODO cambiar el nombre de la variable que definie el tipo de reporte
-        String typeReport = parameters.get("typeReport");
-        // TODO cambiar por los valores enviados por el FRONT
+        String typeReport = parameters.get("type");
         if (typeReport.equals("SUPPLIER_EVALUATOR")) {
             AnswerBLO answerBLO = new AnswerBLO();
             recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
@@ -195,7 +193,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                 TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
                 recordOfReport = technicalTeamAnswerBLO.buildReportOfTechnicalTeam(supplierByCall.getId(),
                         recordOfReport, parameters);
-
             }
         }
 
@@ -257,8 +254,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         currentMasters.put("Service", serviceBLO.getAll());
         currentMasters.put("Item", itemBLO.getAll());
         currentMasters.put("State", stateBLO.getAll());
-        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
-                SurveyStates.TECHNICAL_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo", SurveyStates.TECHNICAL_TEAM
+                .toString(), "vwEvaluationScalesByApplyTo"));
         currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
 
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
@@ -271,8 +268,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         for (Object idSupplierByCall : idsSupplierByCall) {
             List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy("idSupplierByCall", idSupplierByCall.toString(),
                     "vwTechnicalTeamAnswersByIdSupplierByCall");
-            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall",
-                    idSupplierByCall.toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
+            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall", idSupplierByCall
+                    .toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
 
             if (!auxiliarAnswer.isEmpty()) {
                 answers.addAll(auxiliarAnswer);
