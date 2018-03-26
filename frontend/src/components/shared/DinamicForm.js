@@ -36,7 +36,9 @@ const InputNumberStyle = styled(InputNumber)`
 
 let timer;
 
-function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
+function DinamicForm({
+  content, getFieldDecorator, setFields, loadingModal, dontFormatMessage,
+}) {
   return (
     <Spin spinning={loadingModal === true}>
       {
@@ -167,7 +169,11 @@ function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
                                   key={option.id}
                                   value={option.id}
                                 >
-                                  <FormattedMessage id={option.name} />
+                                  {
+                                    dontFormatMessage ?
+                                      option.name :
+                                      <FormattedMessage id={option.name} />
+                                  }
                                 </Option>
                               ))
                             }
@@ -180,7 +186,11 @@ function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
                           {
                             options.map(option => (
                               <Radio key={option.id} value={option.id}>
-                                <FormattedMessage id={option.name} />
+                                {
+                                  dontFormatMessage ?
+                                    option.name :
+                                    <FormattedMessage id={option.name} />
+                                }
                               </Radio>
                             ))
                           }

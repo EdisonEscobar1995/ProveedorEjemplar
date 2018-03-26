@@ -38,6 +38,7 @@ function Generic(props) {
         setFields={setFields}
         content={template}
         loadingModal={loadingModal}
+        dontFormatMessage
       />
     </Form>
   );

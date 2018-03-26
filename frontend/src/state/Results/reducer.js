@@ -2,12 +2,15 @@ import {
   GET_MASTERS_PROGRESS,
   GET_MASTERS_SUCCESS,
   GET_CRITERIONS_SUCCESS,
+  GET_ITEMS_SUCCESS,
+  CHANGE_TYPE,
   GET_RESULTS_SUCCESS,
   REQUEST_FAILED,
 } from './const';
 
 const initialState = {
   data: {},
+  type: '',
   loading: false,
 };
 
@@ -36,10 +39,31 @@ function resultsApp(state = initialState, action) {
         loading: false,
       };
     }
+    case GET_ITEMS_SUCCESS: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          Item: action.items,
+        },
+        loading: false,
+      };
+    }
     case GET_RESULTS_SUCCESS: {
       return {
         ...state,
         loading: false,
+      };
+    }
+    case CHANGE_TYPE: {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          Criterion: [],
+          Item: [],
+        },
+        type: action.value,
       };
     }
     case REQUEST_FAILED: {
