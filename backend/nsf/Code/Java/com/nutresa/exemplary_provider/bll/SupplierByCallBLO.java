@@ -475,15 +475,15 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return super.save(supplierByCall);
     }
 
-    protected List<SupplierByCallDTO> getFinishedByEvaluator() throws HandlerGenericException {
+    protected List<SupplierByCallDTO> getFinishedByStage(SurveyStates stageState) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         StateBLO stateBLO = new StateBLO();
         CallBLO callBLO = new CallBLO();
         List<Object> listYears = getFieldAll(0, "vwCallsByYear");
         String year = (String) listYears.get(0);
 
-        List<SupplierByCallDTO> evaluated = supplierByCallDAO.getByStateInCall(stateBLO.getStateByShortName(
-                SurveyStates.ENDED_EVALUATOR.toString()).getId(), callBLO.getIdCallByYear(year));
+        List<SupplierByCallDTO> evaluated = supplierByCallDAO.getByStateInCall(
+                stateBLO.getStateByShortName(stageState.toString()).getId(), callBLO.getIdCallByYear(year));
 
         if (evaluated.isEmpty()) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
