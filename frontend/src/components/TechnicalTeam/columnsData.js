@@ -24,7 +24,8 @@ const columnsData = masters => [
     title: 'Negociador',
     key: 'idUser',
     render(text, record) {
-      return masters.User && masters.User.find(item => item.id === record.idUser).name;
+      const user = masters.User && masters.User.find(item => item.id === record.idUser);
+      return user && user.name;
     },
   },
 ];

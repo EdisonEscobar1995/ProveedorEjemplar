@@ -6,6 +6,9 @@ export default (sheets, fileName) => {
   const wb = XLSX.utils.book_new();
   sheets.forEach((sheet) => {
     const ws = XLSX.utils.aoa_to_sheet(sheet.data);
+    if (sheet.merge) {
+      ws['!merges'] = sheet.merge;
+    }
     XLSX.utils.book_append_sheet(wb, ws, sheet.title);
   });
   const wbout = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });

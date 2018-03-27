@@ -143,9 +143,11 @@ function DinamicForm({
                             }
                           };
                         } else {
-                          selectProps.filterOption = (input, option) =>
-                            option.props.children.props.id
-                              .toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                          selectProps.filterOption = (input, option) => {
+                            const word = option.props.children.props ?
+                              option.props.children.props.id : option.props.children;
+                            return word.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                          };
                         }
                         fieldContent = (
                           <Select
