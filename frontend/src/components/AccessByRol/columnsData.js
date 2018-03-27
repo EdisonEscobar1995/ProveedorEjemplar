@@ -1,10 +1,16 @@
 const columnsData = masters => [
   {
-    title: 'Acceso',
+    title: 'Api',
     key: 'idAccess',
     render(text, record) {
-      return masters.Access && `${masters.Access.find(item => item.id === record.idAccess).api} - 
-      ${masters.Access.find(item => item.id === record.idAccess).action}`;
+      return masters.Access && masters.Access.find(item => item.id === record.idAccess).api;
+    },
+  },
+  {
+    title: 'Acción',
+    key: 'idAccess',
+    render(text, record) {
+      return masters.Access && masters.Access.find(item => item.id === record.idAccess).action;
     },
   },
   {

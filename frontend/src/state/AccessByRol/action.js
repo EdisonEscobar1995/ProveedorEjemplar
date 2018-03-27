@@ -73,7 +73,10 @@ function getAccessByRol() {
               visible: true,
             }));
             const masters = {
-              Access: mastersResponse.data.data.Access,
+              Access: mastersResponse.data.data.Access.map(element => ({
+                ...element,
+                name: `${element.api} - ${element.action}`,
+              })),
               Roles: mastersResponse.data.data.Rol,
             };
             dispatch(getAccessByRolSuccess(data, masters));

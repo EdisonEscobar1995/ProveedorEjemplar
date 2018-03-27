@@ -63,8 +63,10 @@ function accessByRolApp(state = initialState, action) {
           const value = action.value.toLowerCase();
           if (
             action.value !== '' &&
-            !element.api.toLowerCase().includes(value) &&
-            !element.action.toLowerCase().includes(value)
+            !(state.masters.Access.find(item => item.id === element.idAccess).name)
+              .toLowerCase().includes(value) &&
+            !(state.masters.Roles.find(item => item.id === element.idRol).name)
+              .toLowerCase().includes(value)
           ) {
             visible = false;
           }
