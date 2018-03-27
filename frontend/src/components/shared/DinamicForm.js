@@ -36,7 +36,9 @@ const InputNumberStyle = styled(InputNumber)`
 
 let timer;
 
-function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
+function DinamicForm({
+  content, getFieldDecorator, setFields, loadingModal, dontFormatMessage,
+}) {
   return (
     <Spin spinning={loadingModal === true}>
       {
@@ -141,9 +143,11 @@ function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
                             }
                           };
                         } else {
-                          selectProps.filterOption = (input, option) =>
-                            option.props.children.props.id
-                              .toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                          selectProps.filterOption = (input, option) => {
+                            const word = option.props.children.props ?
+                              option.props.children.props.id : option.props.children;
+                            return word.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                          };
                         }
                         fieldContent = (
                           <Select
@@ -167,7 +171,11 @@ function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
                                   key={option.id}
                                   value={option.id}
                                 >
-                                  <FormattedMessage id={option.name} />
+                                  {
+                                    dontFormatMessage ?
+                                      option.name :
+                                      <FormattedMessage id={option.name} />
+                                  }
                                 </Option>
                               ))
                             }
@@ -180,7 +188,11 @@ function DinamicForm({ content, getFieldDecorator, setFields, loadingModal }) {
                           {
                             options.map(option => (
                               <Radio key={option.id} value={option.id}>
-                                <FormattedMessage id={option.name} />
+                                {
+                                  dontFormatMessage ?
+                                    option.name :
+                                    <FormattedMessage id={option.name} />
+                                }
                               </Radio>
                             ))
                           }

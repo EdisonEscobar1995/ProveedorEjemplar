@@ -1,8 +1,12 @@
 import asyncComponent from './AsyncComponent';
 
+const index = -1;
+
+const increment = () => index + 1;
+
 const routes = [
   {
-    index: 0,
+    index: increment(),
     name: 'HOME',
     path: '/',
     exact: true,
@@ -11,7 +15,7 @@ const routes = [
     ),
   },
   {
-    index: 1,
+    index: increment(),
     name: 'SUPPLIER',
     path: '/supplier',
     exact: true,
@@ -20,7 +24,7 @@ const routes = [
     ),
   },
   {
-    index: 2,
+    index: increment(),
     name: 'SUPPLIER_BY_ID',
     path: '/supplier/:idSupplier/:idSupplierByCall',
     exact: true,
@@ -29,7 +33,7 @@ const routes = [
     ),
   },
   {
-    index: 3,
+    index: increment(),
     name: 'CALL',
     path: '/call',
     exact: true,
@@ -38,7 +42,7 @@ const routes = [
     ),
   },
   {
-    index: 4,
+    index: increment(),
     name: 'CALL_FORM',
     path: '/call/form',
     exact: true,
@@ -47,7 +51,7 @@ const routes = [
     ),
   },
   {
-    index: 5,
+    index: increment(),
     name: 'CALL_BY_ID',
     path: '/call/form/:id',
     exact: true,
@@ -56,7 +60,7 @@ const routes = [
     ),
   },
   {
-    index: 6,
+    index: increment(),
     name: 'MODIFIED_SUPPLIERS',
     path: '/modifiedSuppliers',
     exact: true,
@@ -65,7 +69,7 @@ const routes = [
     ),
   },
   {
-    index: 7,
+    index: increment(),
     name: 'SURVEYS',
     path: '/surveys',
     exact: true,
@@ -74,7 +78,7 @@ const routes = [
     ),
   },
   {
-    index: 8,
+    index: increment(),
     name: 'CALLREPORT',
     path: '/callReport',
     exact: true,
@@ -83,7 +87,7 @@ const routes = [
     ),
   },
   {
-    index: 9,
+    index: increment(),
     name: 'RESULTS',
     path: '/results',
     exact: true,
@@ -92,7 +96,7 @@ const routes = [
     ),
   },
   {
-    index: 10,
+    index: increment(),
     name: 'PENDINGS',
     path: '/pendings',
     exact: true,
@@ -101,7 +105,7 @@ const routes = [
     ),
   },
   {
-    index: 11,
+    index: increment(),
     name: 'TECHNICALTEAMSURVEY',
     path: '/technicalTeamSurvey',
     exact: true,
@@ -110,7 +114,7 @@ const routes = [
     ),
   },
   {
-    index: 12,
+    index: increment(),
     name: 'ENDEDEVALUATOR',
     path: '/endedEvaluator',
     exact: true,
@@ -119,7 +123,25 @@ const routes = [
     ),
   },
   {
-    index: 13,
+    index: increment(),
+    name: 'ACCESS',
+    path: '/access',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Access').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'ACCESSBYROL',
+    path: '/accessByRol',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/AccessByRol').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
     name: 'SECTOR',
     path: '/sector',
     exact: true,
@@ -128,7 +150,7 @@ const routes = [
     ),
   },
   {
-    index: 14,
+    index: increment(),
     name: 'SERVICE',
     path: '/service',
     exact: true,
@@ -137,7 +159,7 @@ const routes = [
     ),
   },
   {
-    index: 15,
+    index: increment(),
     name: 'EVALUATIONSCALE',
     path: '/evaluationScale',
     exact: true,
@@ -146,7 +168,7 @@ const routes = [
     ),
   },
   {
-    index: 16,
+    index: increment(),
     name: 'USER',
     path: '/user',
     exact: true,
@@ -155,7 +177,7 @@ const routes = [
     ),
   },
   {
-    index: 17,
+    index: increment(),
     name: 'SUPPLY',
     path: '/supply',
     exact: true,
@@ -164,7 +186,7 @@ const routes = [
     ),
   },
   {
-    index: 18,
+    index: increment(),
     name: 'TECHNICALTEAM',
     path: '/technicalTeam',
     exact: true,

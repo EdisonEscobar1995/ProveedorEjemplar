@@ -1,6 +1,8 @@
-import exportData from '../../utils/excel';
+import { SUPPLIER_EVALUATOR, TECHNICAL_MANAGER } from '../../utils/const';
 
-const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
+const formData = ({
+  data, type, changeType, getCriterionsByDimension, getItemsByService, form,
+}) => {
   const {
     Call,
     Supply,
@@ -9,6 +11,8 @@ const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
     Supplier,
     Dimension,
     Criterion,
+    Service,
+    Item,
     Country,
   } = data;
 
@@ -16,82 +20,90 @@ const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
     form.resetFields();
   };
 
-  const exportExcel = (excelData) => {
-    const header = [
-      'Código SAP',
-      'NIT',
-      'Proveedor',
-      'Tipo de suministro',
-      'Categoría',
-      'Tamaño de empresa',
-      'Dimensión',
-      'Criterio',
-      'Pregunta',
-      'Respuesta proveedor',
-      'Comentarios',
-      'Resultado proveedor',
-      'Resultado esperado',
-      'Total proveedor',
-      'Total esperado',
-      'Porcentaje obtenido',
-      'Respuesta evaluador',
-      'Comentarios',
-      'Resultado evaluador',
-      'Resultado esperado',
-      'Total evaluador',
-      'Total esperado',
-      'Porcentaje obtenido',
-    ];
-    const report = [header];
-    excelData.forEach((supplier) => {
-      supplier.summarySurvey.forEach((item) => {
-        let labelForExpected;
-        if (item.questionType === 'Abierta') {
-          labelForExpected = 'Pregunta abierta';
-        } else {
-          labelForExpected = 'No aplica';
-        }
-        report.push([
-          supplier.sapCode,
-          supplier.nit,
-          supplier.name,
-          supplier.supply,
-          supplier.category,
-          supplier.companySize,
-          item.dimension,
-          item.criterion,
-          item.question,
-          item.answerSupplier,
-          item.commentSupplier,
-          item.expectedScoreSupplier < 0 || item.scoreOfSupplier < 0 ? 'No aplica' : item.scoreOfSupplier,
-          item.expectedScoreSupplier < 0 ? labelForExpected : item.expectedScoreSupplier,
-          supplier.scoreOfSupplier < 0 ? 'No aplica' : supplier.scoreOfSupplier,
-          supplier.expectedScoreSupplier < 0 ? 'No aplica' : supplier.expectedScoreSupplier,
-          supplier.totalScoreOfSupplier < 0 ? 'No aplica' : supplier.totalScoreOfSupplier,
-          item.answerEvaluator,
-          item.commentEvaluator,
-          item.expectedScoreEvaluator < 0 || item.scoreOfEvaluator < 0 ? 'No aplica' : item.scoreOfEvaluator,
-          item.expectedScoreEvaluator < 0 ? labelForExpected : item.expectedScoreEvaluator,
-          supplier.scoreOfEvaluator < 0 ? 'No aplica' : supplier.scoreOfEvaluator,
-          supplier.expectedScoreEvaluator < 0 ? 'No aplica' : supplier.expectedScoreEvaluator,
-          supplier.totalScoreOfEvaluator < 0 ? 'No aplica' : supplier.totalScoreOfEvaluator,
-        ]);
-      });
-    });
-    exportData([{
-      data: report,
-      title: 'Resultados',
-    }], 'ResultadosProveedorEquipoEvaluador.xlsx');
-  };
+  let denpendentFields = [{
+    span: 8,
+    type: 'select',
+    label: 'País',
+    key: 'country',
+    value: '',
+    options: Country,
+  }];
 
-  const handleResults = () => {
-    getResults(form.getFieldsValue(), exportExcel);
-  };
+  if (type === SUPPLIER_EVALUATOR) {
+    denpendentFields = denpendentFields.concat({
+      span: 8,
+      type: 'select',
+      label: 'Dimensión',
+      key: 'dimension',
+      value: '',
+      options: Dimension,
+      handleChange: (value) => {
+        getCriterionsByDimension(value);
+      },
+      valuesToClean: {
+        criterion: {
+          value: '',
+        },
+      },
+    },
+    {
+      span: 8,
+      type: 'select',
+      label: 'Criterio',
+      key: 'criterion',
+      value: '',
+      options: Criterion,
+    });
+  }
+
+  if (type === TECHNICAL_MANAGER) {
+    denpendentFields = denpendentFields.concat({
+      span: 8,
+      type: 'select',
+      label: 'Servicio',
+      key: 'service',
+      value: '',
+      options: Service,
+      handleChange: (value) => {
+        getItemsByService(value);
+      },
+      valuesToClean: {
+        item: {
+          value: '',
+        },
+      },
+    },
+    {
+      span: 8,
+      type: 'select',
+      label: 'Item',
+      key: 'item',
+      value: '',
+      options: Item,
+    });
+  }
 
   return [
     {
       key: 1.1,
       value: [
+        {
+          span: 8,
+          type: 'select',
+          label: 'Tipo',
+          key: 'type',
+          value: type,
+          required: true,
+          options: [{
+            id: SUPPLIER_EVALUATOR,
+            name: 'Resultados por Proveedor y Equipo evaluador',
+          }, {
+            id: TECHNICAL_MANAGER,
+            name: 'Resultados por Comité técnico y Comité Gerencial',
+          }],
+          handleChange: changeType,
+          allowClear: false,
+        },
         {
           span: 8,
           type: 'select',
@@ -112,6 +124,11 @@ const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
           value: '',
           options: Supply,
         },
+      ],
+    },
+    {
+      key: 1.2,
+      value: [
         {
           span: 8,
           type: 'select',
@@ -120,11 +137,6 @@ const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
           value: '',
           options: Category,
         },
-      ],
-    },
-    {
-      key: 1.2,
-      value: [
         {
           span: 8,
           type: 'select',
@@ -144,44 +156,11 @@ const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
             name: item.businessName,
           })) : [],
         },
-        {
-          span: 8,
-          type: 'select',
-          label: 'Dimensión',
-          key: 'dimension',
-          value: '',
-          options: Dimension,
-          handleChange: (value) => {
-            getCriterionsByDimension(value);
-          },
-          valuesToClean: {
-            criterion: {
-              value: '',
-            },
-          },
-        },
       ],
     },
     {
       key: 1.3,
-      value: [
-        {
-          span: 8,
-          type: 'select',
-          label: 'Criterio',
-          key: 'criterion',
-          value: '',
-          options: Criterion,
-        },
-        {
-          span: 8,
-          type: 'select',
-          label: 'País',
-          key: 'country',
-          value: '',
-          options: Country,
-        },
-      ],
+      value: denpendentFields,
     },
     {
       key: 1.4,
@@ -200,7 +179,7 @@ const formData = ({ data, getCriterionsByDimension, getResults, form }) => {
           label: 'Exportar a Excel',
           key: 'export',
           buttonType: 'primary',
-          handleclick: handleResults,
+          htmlType: 'submit',
         },
       ],
     },

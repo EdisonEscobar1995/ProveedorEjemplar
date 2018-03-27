@@ -12,7 +12,7 @@ import {
   EDIT_USER,
 } from './const';
 import { getUsersApi, saveUserApi, deleteUserApi, getUsersByKeyApi } from '../../api/user';
-import getRolesApi from '../../api/role';
+import getMasterApi from '../../api/master';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
 
@@ -86,8 +86,8 @@ function editUser() {
 
 function getUsers() {
   return (dispatch) => {
-    requestApi(dispatch, getUserProgress, getRolesApi)
-      .then((rolesResponse) => {
+    requestApi(dispatch, getUserProgress, getMasterApi, ['Rol'])
+      .then((masterResponse) => {
         requestApi(dispatch, getUserProgress, getUsersApi)
           .then((response) => {
             const data = response.data.data.map(element => ({
@@ -95,7 +95,7 @@ function getUsers() {
               visible: true,
             }));
             const masters = {
-              Roles: rolesResponse.data.data,
+              Roles: masterResponse.data.data.Rol,
               Users: [],
             };
             dispatch(getUserSuccess(data, masters));

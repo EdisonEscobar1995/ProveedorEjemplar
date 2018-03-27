@@ -2,6 +2,8 @@ import {
   GET_MASTERS_PROGRESS,
   GET_MASTERS_SUCCESS,
   GET_CRITERIONS_SUCCESS,
+  GET_ITEMS_SUCCESS,
+  CHANGE_TYPE,
   GET_RESULTS_SUCCESS,
   REQUEST_FAILED,
 } from './const';
@@ -9,6 +11,7 @@ import {
 import getMasterApi from '../../api/master';
 import { getResultsApi } from '../../api/call';
 import getCriterionsByDimensionApi from '../../api/criterions';
+import getItemsByServiceApi from '../../api/items';
 import { requestApi, sortByField } from '../../utils/action';
 
 const getMastersProgress = () => ({
@@ -25,12 +28,22 @@ const getCriterionsByDimensionSuccess = criterions => ({
   criterions,
 });
 
+const getItemsByServiceSuccess = items => ({
+  type: GET_ITEMS_SUCCESS,
+  items,
+});
+
 const getResultsSuccess = () => ({
   type: GET_RESULTS_SUCCESS,
 });
 
 const getFailedRequest = () => ({
   type: REQUEST_FAILED,
+});
+
+const changeType = value => ({
+  type: CHANGE_TYPE,
+  value,
 });
 
 const getMasters = () => (dispatch) => {
@@ -41,6 +54,7 @@ const getMasters = () => (dispatch) => {
     'CompanySize',
     'Supplier',
     'Dimension',
+    'Service',
     'Country',
   ])
     .then((response) => {
@@ -64,12 +78,24 @@ const getCriterionsByDimension = idDimension => (
   }
 );
 
-const getResults = (data, exportExcel = () => {}) => (
+const getItemsByService = idService => (
+  (dispatch) => {
+    requestApi(dispatch, getMastersProgress, getItemsByServiceApi, idService)
+      .then((response) => {
+        const items = sortByField(response.data.data, 'name');
+        dispatch(getItemsByServiceSuccess(items));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  }
+);
+
+const getResults = (data, exportMethod = () => {}) => (
   (dispatch) => {
     requestApi(dispatch, getMastersProgress, getResultsApi, data)
       .then((response) => {
         dispatch(getResultsSuccess());
-        exportExcel(response.data.data);
+        exportMethod(response.data.data);
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -79,6 +105,8 @@ const getResults = (data, exportExcel = () => {}) => (
 export {
   getMasters,
   getCriterionsByDimension,
+  getItemsByService,
+  changeType,
   getResults,
   getFailedRequest,
 };
