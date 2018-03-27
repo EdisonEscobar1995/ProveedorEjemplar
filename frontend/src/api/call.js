@@ -31,7 +31,7 @@ const getResultsApi = data => instance.get(`Call?action=getResults&call=${data.c
   `&country=${data.country || ''}
 `);
 
-const getEndedEvaluatorApi = () => instance.get('Call?action=getThemForTechnicalTeam');
+const getSupplierSelectionApi = type => instance.get(`Call?action=getSuppliersForSelection&stage=${type}`);
 
 const getTechnicalTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToTechnicalTeam&year=${year || ''}`);
 
@@ -44,6 +44,6 @@ export {
   massiveShipmentCallApi,
   getParticipantsByYearApi,
   getResultsApi,
-  getEndedEvaluatorApi,
+  getSupplierSelectionApi,
   getTechnicalTeamSurveyApi,
 };

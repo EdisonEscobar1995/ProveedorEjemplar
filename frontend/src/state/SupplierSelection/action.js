@@ -1,26 +1,26 @@
 import {
-  GET_ENDED_EVALUATOR_PROGRESS,
-  GET_ENDED_EVALUATOR_SUCCESS,
+  GET_SUPPLIER_SELECTION_PROGRESS,
+  GET_SUPPLIER_SELECTION_SUCCESS,
   CHECK_SUPPLIER,
-  UPDATE_ENDED_EVALUATOR,
+  UPDATE_SUPPLIER_SELECTION,
   REQUEST_FAILED,
 } from './const';
 
-import { getEndedEvaluatorApi } from '../../api/call';
+import { getSupplierSelectionApi } from '../../api/call';
 import { sendApprovalsApi, sendRejectionsApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
 
-const getEndedEvaluatorProgress = () => ({
-  type: GET_ENDED_EVALUATOR_PROGRESS,
+const getSupplierSelectionProgress = () => ({
+  type: GET_SUPPLIER_SELECTION_PROGRESS,
 });
 
-const getEndedEvaluatorSuccess = data => ({
-  type: GET_ENDED_EVALUATOR_SUCCESS,
+const getSupplierSelectionSuccess = data => ({
+  type: GET_SUPPLIER_SELECTION_SUCCESS,
   data,
 });
 
-const updateEndedEvaluator = data => ({
-  type: UPDATE_ENDED_EVALUATOR,
+const updateSupplierSelection = data => ({
+  type: UPDATE_SUPPLIER_SELECTION,
   data,
 });
 
@@ -28,12 +28,12 @@ const getFailedRequest = () => ({
   type: REQUEST_FAILED,
 });
 
-const getEndedEvaluator = () => (
+const getSupplierSelection = type => (
   (dispatch) => {
-    requestApi(dispatch, getEndedEvaluatorProgress, getEndedEvaluatorApi)
+    requestApi(dispatch, getSupplierSelectionProgress, getSupplierSelectionApi, type)
       .then((response) => {
         const data = sortByField(response.data.data, 'totalScoreOfEvaluator', true);
-        dispatch(getEndedEvaluatorSuccess(data));
+        dispatch(getSupplierSelectionSuccess(data));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -48,9 +48,10 @@ const checkSupplier = (idSupplier, checked) => ({
 
 const sendApprovals = (list, next) => (
   (dispatch) => {
-    requestApi(dispatch, getEndedEvaluatorProgress, sendApprovalsApi, { idSuppliersByCall: list })
+    requestApi(
+      dispatch, getSupplierSelectionProgress, sendApprovalsApi, { idSuppliersByCall: list })
       .then(() => {
-        dispatch(updateEndedEvaluator(list));
+        dispatch(updateSupplierSelection(list));
         next(list);
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -60,9 +61,10 @@ const sendApprovals = (list, next) => (
 
 const sendRejections = (list, next) => (
   (dispatch) => {
-    requestApi(dispatch, getEndedEvaluatorProgress, sendRejectionsApi, { idSuppliersByCall: list })
+    requestApi(
+      dispatch, getSupplierSelectionProgress, sendRejectionsApi, { idSuppliersByCall: list })
       .then(() => {
-        dispatch(updateEndedEvaluator(list));
+        dispatch(updateSupplierSelection(list));
         next(list);
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -71,7 +73,7 @@ const sendRejections = (list, next) => (
 );
 
 export {
-  getEndedEvaluator,
+  getSupplierSelection,
   getFailedRequest,
   checkSupplier,
   sendApprovals,

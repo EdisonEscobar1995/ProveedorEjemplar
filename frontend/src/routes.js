@@ -124,6 +124,15 @@ const routes = [
   },
   {
     index: increment(),
+    name: 'ENDEDTECHNICALTEAM',
+    path: '/endedTechnicalTeam',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/EndedTechnicalTeam').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
     name: 'ACCESS',
     path: '/access',
     exact: true,

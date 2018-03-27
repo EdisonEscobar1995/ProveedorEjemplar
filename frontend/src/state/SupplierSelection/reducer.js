@@ -1,8 +1,8 @@
 import {
-  GET_ENDED_EVALUATOR_PROGRESS,
-  GET_ENDED_EVALUATOR_SUCCESS,
+  GET_SUPPLIER_SELECTION_PROGRESS,
+  GET_SUPPLIER_SELECTION_SUCCESS,
   CHECK_SUPPLIER,
-  UPDATE_ENDED_EVALUATOR,
+  UPDATE_SUPPLIER_SELECTION,
   REQUEST_FAILED,
 } from './const';
 
@@ -13,13 +13,13 @@ const initialState = {
 
 function resultsApp(state = initialState, action) {
   switch (action.type) {
-    case GET_ENDED_EVALUATOR_PROGRESS: {
+    case GET_SUPPLIER_SELECTION_PROGRESS: {
       return {
         ...state,
         loading: true,
       };
     }
-    case GET_ENDED_EVALUATOR_SUCCESS: {
+    case GET_SUPPLIER_SELECTION_SUCCESS: {
       return {
         ...state,
         data: action.data,
@@ -37,7 +37,7 @@ function resultsApp(state = initialState, action) {
         )),
       };
     }
-    case UPDATE_ENDED_EVALUATOR: {
+    case UPDATE_SUPPLIER_SELECTION: {
       return {
         ...state,
         data: state.data.filter(item => action.data.indexOf(item.idSupplierByCall) < 0),
