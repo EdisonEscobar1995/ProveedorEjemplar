@@ -41,8 +41,8 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         if (userBLO.isRol(Rol.TECHNICAL_TEAM.toString())) {
             if (supplierByCallBLO.isFromTechnicalTeam(answer.getIdSupplierByCall())) {
                 notice = supplierByCall.getWhoEvaluateOfTechnicalTeam();
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER
-                        .toString());
+                throw new HandlerGenericException(
+                        HandlerGenericExceptionTypes.ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER.toString());
             }
 
             if (callBLO.get(supplierByCall.getIdCall()).isCaducedDeadLineToMakeSurveyTechnicalTeam()) {
@@ -78,8 +78,11 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
 
         List<Service> serviceToReport = new ArrayList<Service>();
         ReportOfAverageGradeBySuppliers report = new ReportOfAverageGradeBySuppliers();
+        short counterAllItems = 0;
+        short sumScoreAllItems = 0;
+        short counterAllItemsWithoutAnswer = 0;
         for (ServiceDTO service : services) {
-            short sumScoreByAllItems = 0;
+            short sumScoreByItemsInService = 0;
             ReportOfAverageGradeBySuppliers.Service serviceRecord = report.new Service();
             serviceRecord.name = service.getName();
             ItemBLO itemBLO = new ItemBLO();
@@ -91,23 +94,26 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
             List<Item> itemToReport = new ArrayList<Item>();
             short counterItems = (short) items.size();
             short counterItemsWithoutAnswer = 0;
+            counterAllItems = (short) (counterAllItems + (short) items.size());
             for (ItemDTO item : items) {
                 ReportOfAverageGradeBySuppliers.Item itemRecord = report.new Item();
                 itemRecord.name = item.getName();
 
                 TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
-                TechnicalTeamAnswerDTO technicalTeamAnswer = technicalTeamAnswerBLO.getTechnicalteamAnswer(
-                        idSupplierByCall, service.getId(), item.getId());
+                TechnicalTeamAnswerDTO technicalTeamAnswer = technicalTeamAnswerBLO
+                        .getTechnicalteamAnswer(idSupplierByCall, service.getId(), item.getId());
 
                 short scoreEvaluation = 0;
                 if (null != technicalTeamAnswer.getId()) {
                     EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
                     scoreEvaluation = evaluationScaleBLO.get(technicalTeamAnswer.getIdEvaluationScale()).getScore();
-                    sumScoreByAllItems = (short) (sumScoreByAllItems + scoreEvaluation);
+                    sumScoreByItemsInService = (short) (sumScoreByItemsInService + scoreEvaluation);
+                    sumScoreAllItems = (short) (sumScoreAllItems + scoreEvaluation);
                     itemRecord.answer = scoreEvaluation;
                 } else {
                     itemRecord.answer = SCORE_OF_NA;
                     counterItemsWithoutAnswer = (short) (counterItemsWithoutAnswer + 1);
+                    counterAllItemsWithoutAnswer = (short) (counterAllItemsWithoutAnswer + 1);
                 }
 
                 itemToReport.add(itemRecord);
@@ -117,10 +123,17 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
             if (counterItems == counterItemsWithoutAnswer) {
                 serviceRecord.total = SCORE_OF_NA;
             } else {
-                serviceRecord.total = (double) sumScoreByAllItems / (double) counterItems;
+                serviceRecord.total = (double) sumScoreByItemsInService / (double) counterItems;
             }
 
             serviceToReport.add(serviceRecord);
+        }
+
+        if (counterAllItems == counterAllItemsWithoutAnswer) {
+            recordOfReport.setTotalScoreInService(SCORE_OF_NA);
+        } else {
+            double totalScoreInService = (double) sumScoreAllItems / (double) counterAllItems;
+            recordOfReport.setTotalScoreInService(totalScoreInService);
         }
 
         recordOfReport.setServices(serviceToReport);
