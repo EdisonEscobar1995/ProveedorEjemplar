@@ -211,9 +211,11 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         List<SupplierByCallDTO> evaluated = supplierByCallBLO.getFinishedByEvaluator();
         List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("type", "SUPPLIER_EVALUATOR");
         for (SupplierByCallDTO supplierByCall : evaluated) {
             response.add(getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
-                    new HashMap<String, String>()));
+            		parameters));
         }
 
         if (response.isEmpty()) {
