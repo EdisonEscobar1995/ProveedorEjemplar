@@ -24,4 +24,5 @@ yarn.lock
 .idea
 .project
 .settings
+.vscode
 /backend/target/*
