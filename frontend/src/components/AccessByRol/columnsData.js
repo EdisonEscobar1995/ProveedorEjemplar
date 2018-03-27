@@ -1,14 +1,14 @@
 const columnsData = masters => [
   {
     title: 'Api',
-    key: 'idAccess',
+    key: 'idAccessApi',
     render(text, record) {
       return masters.Access && masters.Access.find(item => item.id === record.idAccess).api;
     },
   },
   {
     title: 'Acción',
-    key: 'idAccess',
+    key: 'idAccessAction',
     render(text, record) {
       return masters.Access && masters.Access.find(item => item.id === record.idAccess).action;
     },
