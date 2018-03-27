@@ -29,10 +29,8 @@ public class TechnicalTeamBLO extends GenericBLO<TechnicalTeamDTO, TechnicalTeam
     public TechnicalTeamDTO save(TechnicalTeamDTO technicalTeam) throws HandlerGenericException {
         TechnicalTeamDTO response = null;
 
-        if (null != technicalTeam.getIdSupply() && !technicalTeam.getIdSupply().trim().isEmpty()
-                && null != technicalTeam.getIdCategory() && !technicalTeam.getIdCategory().trim().isEmpty()
-                && null != technicalTeam.getIdCountry() && !technicalTeam.getIdCountry().trim().isEmpty()
-                && null != technicalTeam.getIdUser() && !technicalTeam.getIdUser().trim().isEmpty()) {
+        if (null != technicalTeam.getIdSupply() && null != technicalTeam.getIdCategory()
+                && null != technicalTeam.getIdCountry() && null != technicalTeam.getIdUser()) {
             if (existTechnicalTeam(technicalTeam)) {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
             } else {
@@ -64,8 +62,9 @@ public class TechnicalTeamBLO extends GenericBLO<TechnicalTeamDTO, TechnicalTeam
             TechnicalTeamDTO memberExisting = technicalTeamMember.get(0);
 
             String idTechnicalTeamExisting = memberExisting.getId();
-            String temporalIdRecordExisting = memberExisting.getIdUser().concat(memberExisting.getIdSupply()
-                    .concat(memberExisting.getIdCategory().concat(memberExisting.getIdCountry())));
+            String temporalIdRecordExisting = memberExisting.getIdUser().concat(
+                    memberExisting.getIdSupply().concat(
+                            memberExisting.getIdCategory().concat(memberExisting.getIdCountry())));
 
             if ((null == idTechnicalTeam || idTechnicalTeam.isEmpty())
                     && (null != temporalIdRecordExisting && temporalIdRecord.equals(temporalIdRecordExisting))) {

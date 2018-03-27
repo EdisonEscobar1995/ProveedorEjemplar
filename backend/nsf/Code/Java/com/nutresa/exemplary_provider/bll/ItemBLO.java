@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +71,19 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
         }
 
         return response;
+    }
+
+    public List<ItemDTO> getItemsByIdItemOrIdService(String idItem, String idService) throws HandlerGenericException {
+        List<ItemDTO> items = new ArrayList<ItemDTO>();
+        if (null != idItem && !idItem.trim().isEmpty()) {
+            items.add(super.get(idItem));
+        } else {
+            Map<String, String> parameterToService = new HashMap<String, String>();
+            parameterToService.put("idService", idService);
+            items = getByIdService(parameterToService);
+        }
+        
+        return items;
     }
 
 }

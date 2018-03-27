@@ -92,7 +92,7 @@ const formData = ({
         record.idSocietyType ? masters.SocietyType.find(item => item.id === record.idSocietyType).name : '',
         record.yearOfEstablishment,
         record.principalAdress,
-        record.idOriginCountry ? masters.Country.find(item => item.id === record.idOriginCountry).name : '',
+        record.idOriginCountry ? masters.OriginCountry.find(item => item.id === record.idOriginCountry).name : '',
         record.idDepartment ? masters.Department.find(item => item.id === record.idDepartment).name : '',
         record.idCity ? masters.City.find(item => item.id === record.idCity).name : '',
         record.branchOffice.replace(enter, ' '),
