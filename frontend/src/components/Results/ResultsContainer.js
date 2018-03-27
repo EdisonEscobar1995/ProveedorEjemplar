@@ -4,7 +4,7 @@ import { Spin } from 'antd';
 import * as actions from '../../state/Results/action';
 import formData from './formData';
 import GenericForm from '../shared/GenericForm';
-import { SUPPLIER_AND_EVALUATOR, TECHNICAL_AND_MANAGER } from '../../utils/const';
+import { SUPPLIER_EVALUATOR, TECHNICAL_MANAGER } from '../../utils/const';
 import exportSupplierAndEvaluator from './exportSupplierAndEvaluator';
 import exportTechnicalAndManager from './exportTechnicalAndManager';
 
@@ -14,9 +14,9 @@ class ResultsContainer extends Component {
   }
 
   handleResults = (values) => {
-    if (values.type === SUPPLIER_AND_EVALUATOR) {
+    if (values.type === SUPPLIER_EVALUATOR) {
       this.props.getResults(values, exportSupplierAndEvaluator);
-    } else if (values.type === TECHNICAL_AND_MANAGER) {
+    } else if (values.type === TECHNICAL_MANAGER) {
       this.props.getResults(values, exportTechnicalAndManager);
     }
   };
