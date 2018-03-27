@@ -87,7 +87,7 @@ function editUser() {
 function getUsers() {
   return (dispatch) => {
     requestApi(dispatch, getUserProgress, getMasterApi, ['Rol'])
-      .then((rolesResponse) => {
+      .then((masterResponse) => {
         requestApi(dispatch, getUserProgress, getUsersApi)
           .then((response) => {
             const data = response.data.data.map(element => ({
@@ -95,7 +95,7 @@ function getUsers() {
               visible: true,
             }));
             const masters = {
-              Roles: rolesResponse.data.data.Rol,
+              Roles: masterResponse.data.data.Rol,
               Users: [],
             };
             dispatch(getUserSuccess(data, masters));
