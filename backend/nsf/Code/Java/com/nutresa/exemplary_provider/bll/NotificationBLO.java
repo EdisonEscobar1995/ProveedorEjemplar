@@ -201,8 +201,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDTO notification = notificationDAO
                     .getNotificationByAlias(NotificationType.MANAGER_TEAM_CALLED_BY_LIBERATOR.toString());
 
-            // TODO asignar link para realizar la encuesta.
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/xxxxxxxxxxxxxx";
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/managerTeamSurvey";
             sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
