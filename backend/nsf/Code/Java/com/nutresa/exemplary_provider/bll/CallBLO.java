@@ -16,7 +16,7 @@ import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
-import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -119,9 +119,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      *             <code>ROL_INVALID</code> si el usuario en sesión no tiene el
      *             rol permitido.
      */
-    public List<ReportOfAverageGradeBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
+    public List<ReportOfCalificationsBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
-        List<ReportOfAverageGradeBySuppliers> response = null;
+        List<ReportOfCalificationsBySuppliers> response = null;
 
         UserBLO userBLO = new UserBLO();
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
@@ -152,9 +152,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      * @return Collección de registros del reporte
      * @throws HandlerGenericException
      */
-    private List<ReportOfAverageGradeBySuppliers> buildReportOfAverageGradeBySupplier(String idCall,
+    private List<ReportOfCalificationsBySuppliers> buildReportOfAverageGradeBySupplier(String idCall,
             List<SupplierDTO> suppliers, Map<String, String> parameters) throws HandlerGenericException {
-        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        List<ReportOfCalificationsBySuppliers> response = new ArrayList<ReportOfCalificationsBySuppliers>();
         StateBLO stateBLO = new StateBLO();
         String typeReport = parameters.get("type");
         if (null != typeReport) {
@@ -175,9 +175,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         return response;
     }
 
-    private ReportOfAverageGradeBySuppliers getRecordOfReport(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
+    private ReportOfCalificationsBySuppliers getRecordOfReport(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
             Map<String, String> parameters) throws HandlerGenericException {
-        ReportOfAverageGradeBySuppliers recordOfReport = new ReportOfAverageGradeBySuppliers();
+        ReportOfCalificationsBySuppliers recordOfReport = new ReportOfCalificationsBySuppliers();
         SupplyBLO supplyBLO = new SupplyBLO();
         CategoryBLO categoryBLO = new CategoryBLO();
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
@@ -206,7 +206,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         return recordOfReport;
     }
 
-    public List<ReportOfAverageGradeBySuppliers> getThemWillPassToNextStage(Map<String, String> parameters)
+    public List<ReportOfCalificationsBySuppliers> getThemWillPassToNextStage(Map<String, String> parameters)
             throws HandlerGenericException {
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
@@ -224,15 +224,15 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             evaluatedSuppliers = supplierByCallBLO.getFinishedByStage(SurveyStates.ENDED_TECHNICAL_TEAM);
         }
 
-        List<ReportOfAverageGradeBySuppliers> response = new ArrayList<ReportOfAverageGradeBySuppliers>();
+        List<ReportOfCalificationsBySuppliers> response = new ArrayList<ReportOfCalificationsBySuppliers>();
         Map<String, String> parametersToGenerateReport = new HashMap<String, String>();
         parametersToGenerateReport.put("type", "SUPPLIER_EVALUATOR");
         for (SupplierByCallDTO supplierByCall : evaluatedSuppliers) {
-            ReportOfAverageGradeBySuppliers reportBySupplier = getRecordOfReport(supplierByCall,
+            ReportOfCalificationsBySuppliers reportBySupplier = getRecordOfReport(supplierByCall,
                     supplierBLO.get(supplierByCall.getIdSupplier()), parametersToGenerateReport);
             if (nameNextStage.equals("ManagerTeam")) {
                 parametersToGenerateReport.put("type", "TECHNICAL_MANAGER");
-                ReportOfAverageGradeBySuppliers reportUntilTechnicalTeam = getRecordOfReport(supplierByCall,
+                ReportOfCalificationsBySuppliers reportUntilTechnicalTeam = getRecordOfReport(supplierByCall,
                         supplierBLO.get(supplierByCall.getIdSupplier()), parametersToGenerateReport);
                 reportBySupplier.setTotalScoreInService(reportUntilTechnicalTeam.getTotalScoreInService());
             }
@@ -265,7 +265,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         filter.put(FieldToFilter.FIELD_STATE, idState);
         callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
 
-        SupplierToTechnicalTeamBLO supplierToTechnicalTeamBLO = new SupplierToTechnicalTeamBLO();
+        SupplierToNextStageBLO supplierToTechnicalTeamBLO = new SupplierToNextStageBLO();
         callsBySupplier = supplierToTechnicalTeamBLO.getParticipantsByTechnicalTeamMember(callsBySupplier);
 
         InformationFromSupplier participantsToTechnicalTeam = supplierBLO.getInformationFromSuppliers(listYears,

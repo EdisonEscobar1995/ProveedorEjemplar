@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
-public class ReportOfAverageGradeBySuppliers {
+public class ReportOfCalificationsBySuppliers {
     @Expose
     private String idSupplier;
     @Expose
