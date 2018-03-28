@@ -9,6 +9,7 @@ import {
 import { getSupplierSelectionApi } from '../../api/call';
 import { sendApprovalsApi, sendRejectionsApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
+import { MANAGER_TEAM } from '../../utils/const';
 
 const getSupplierSelectionProgress = () => ({
   type: GET_SUPPLIER_SELECTION_PROGRESS,
@@ -32,7 +33,12 @@ const getSupplierSelection = type => (
   (dispatch) => {
     requestApi(dispatch, getSupplierSelectionProgress, getSupplierSelectionApi, type)
       .then((response) => {
-        const data = sortByField(response.data.data, 'totalScoreOfEvaluator', true);
+        let data;
+        if (type === MANAGER_TEAM) {
+          data = sortByField(response.data.data, 'totalScoreInService', true);
+        } else {
+          data = sortByField(response.data.data, 'totalScoreOfEvaluator', true);
+        }
         dispatch(getSupplierSelectionSuccess(data));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -46,10 +52,11 @@ const checkSupplier = (idSupplier, checked) => ({
   checked,
 });
 
-const sendApprovals = (list, next) => (
+const sendApprovals = (list, type, next) => (
   (dispatch) => {
     requestApi(
-      dispatch, getSupplierSelectionProgress, sendApprovalsApi, { idSuppliersByCall: list })
+      dispatch, getSupplierSelectionProgress, sendApprovalsApi,
+      { idSuppliersByCall: list, stage: type })
       .then(() => {
         dispatch(updateSupplierSelection(list));
         next(list);
@@ -59,10 +66,11 @@ const sendApprovals = (list, next) => (
   }
 );
 
-const sendRejections = (list, next) => (
+const sendRejections = (list, type, next) => (
   (dispatch) => {
     requestApi(
-      dispatch, getSupplierSelectionProgress, sendRejectionsApi, { idSuppliersByCall: list })
+      dispatch, getSupplierSelectionProgress, sendRejectionsApi,
+      { idSuppliersByCall: list, stage: type })
       .then(() => {
         dispatch(updateSupplierSelection(list));
         next(list);

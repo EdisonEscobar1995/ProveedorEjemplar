@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Spin } from 'antd';
-import * as actions from '../../state/TechnicalTeamSurvey/action';
+import * as actions from '../../state/ManagerTeamSurvey/action';
 import formData from './formData';
 import GenericForm from '../shared/GenericForm';
-import TechnicalTeamSurvey from './TechnicalTeamSurvey';
+import ManagerTeamSurvey from './ManagerTeamSurvey';
 import H1 from '../shared/H1';
 
-class TechnicalTeamSurveyContainer extends Component {
+class ManagerTeamSurveyContainer extends Component {
   componentDidMount() {
-    this.props.getTechnicalTeamSurvey();
+    this.props.getManagerTeamSurvey();
   }
 
   render() {
     return (
       <Spin spinning={this.props.loading}>
         <H1
-          text="Calificación comité técnico"
+          text="Calificación comité gerencial"
         />
         <GenericForm
           {...this.props}
           formData={formData}
         />
-        <TechnicalTeamSurvey
+        <ManagerTeamSurvey
           {...this.props}
         />
       </Spin>
@@ -31,11 +31,11 @@ class TechnicalTeamSurveyContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.technicalTeamSurvey.data,
-  loading: state.technicalTeamSurvey.loading,
+  data: state.managerTeamSurvey.data,
+  loading: state.managerTeamSurvey.loading,
 });
 
 export default connect(
   mapStateToProps,
   actions,
-)(TechnicalTeamSurveyContainer);
+)(ManagerTeamSurveyContainer);

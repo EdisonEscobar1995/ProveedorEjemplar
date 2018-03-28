@@ -35,6 +35,8 @@ const getSupplierSelectionApi = type => instance.get(`Call?action=getSuppliersFo
 
 const getTechnicalTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToTechnicalTeam&year=${year || ''}`);
 
+const getManagerTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToManagerTeam&year=${year || ''}`);
+
 export {
   getCallApi,
   saveCallApi,
@@ -46,4 +48,5 @@ export {
   getResultsApi,
   getSupplierSelectionApi,
   getTechnicalTeamSurveyApi,
+  getManagerTeamSurveyApi,
 };

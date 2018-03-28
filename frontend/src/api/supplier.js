@@ -42,15 +42,15 @@ function getPendingsApi(year) {
 }
 
 function sendApprovalsApi(data) {
-  return instance.post('SupplierToTechnicalTeam?action=approveToTechnicalTeam', data);
+  return instance.post('SupplierToNextStage?action=approveToNextStage', data);
 }
 
 function sendRejectionsApi(data) {
-  return instance.post('SupplierToTechnicalTeam?action=dontApproveToTechnicalTeam', data);
+  return instance.post('SupplierToNextStage?action=dontApproveToNextStage', data);
 }
 
 function finishTechnicalTeamSurveyApi(data) {
-  return instance.post('SupplierToTechnicalTeam?action=finishTechnicalTeamSurvey', data);
+  return instance.post('SupplierToNextStage?action=finishTechnicalTeamSurvey', data);
 }
 
 export {

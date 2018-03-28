@@ -71,7 +71,7 @@ const setScore = (idSupplier, value, answer) => (dispatch) => {
       dispatch(changeScore(idSupplier, answer.id, response.data.data, value));
       dispatch(calculateTotal());
     }).catch(() => {
-      dispatch(changeScore(idSupplier, answer, null));
+      dispatch(changeScore(idSupplier, answer.id, answer, null));
       dispatch(getFailedRequest());
     });
 };
@@ -85,7 +85,7 @@ const setComment = (idSupplier, value, comment) => (dispatch, getState) => {
       .then((response) => {
         dispatch(changeComment(idSupplier, comment.id, response.data.data, value));
       }).catch(() => {
-        dispatch(changeComment(idSupplier, comment, null));
+        dispatch(changeComment(idSupplier, comment.id, comment, null));
         dispatch(getFailedRequest());
       });
   }
