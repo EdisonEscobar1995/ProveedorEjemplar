@@ -5,29 +5,45 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nutresa.exemplary_provider.dal.SupplierToTechnicalTeamDAO;
+import com.nutresa.exemplary_provider.dal.SupplierToNextStageDAO;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
-import com.nutresa.exemplary_provider.dtl.SupplierToTechnicalTeamDTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
+import com.nutresa.exemplary_provider.dtl.SupplierToNextStageDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
-public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTeamDTO, SupplierToTechnicalTeamDAO> {
+public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, SupplierToNextStageDAO> {
     private static final String STATE_SUCCESS = "OK";
     private static final String STATE_FAILED = "KO";
     private static final String SEPARATOR = ":";
 
-    public SupplierToTechnicalTeamBLO() {
-        super(SupplierToTechnicalTeamDAO.class);
+    public SupplierToNextStageBLO() {
+        super(SupplierToNextStageDAO.class);
     }
 
-    public String approveToTechnicalTeam(SupplierToTechnicalTeamDTO suppliersToTechnicalTeam)
-            throws HandlerGenericException {
+    public String approveToNextStage(SupplierToNextStageDTO suppliersToNextStage) throws HandlerGenericException {
         String notified = STATE_FAILED;
-        List<String> idSuppliersToApprove = suppliersToTechnicalTeam.getIdSuppliersByCall();
+        if (null == suppliersToNextStage.getStage()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+
+        if (suppliersToNextStage.getStage().equals("TechnicalTeam")) {
+            notified = approveToTechnicalTeam(suppliersToNextStage.getIdSuppliersByCall());
+        }
+
+        if (suppliersToNextStage.getStage().equals("ManagerTeam")) {
+            notified = approveToManagerTeam(suppliersToNextStage.getIdSuppliersByCall());
+        }
+
+        return notified;
+    }
+
+    private String approveToTechnicalTeam(List<String> idSuppliersToApprove) throws HandlerGenericException {
+        String notified = STATE_FAILED;
         NotificationBLO notificationBLO = new NotificationBLO();
         Map<String, String> filter = new LinkedHashMap<String, String>();
         for (String idSupplierByCall : idSuppliersToApprove) {
@@ -53,11 +69,36 @@ public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTe
         return notified;
     }
 
-    public String dontApproveToTechnicalTeam(SupplierToTechnicalTeamDTO suppliersToTechnicalTeam)
-            throws HandlerGenericException {
+    private String approveToManagerTeam(List<String> idSuppliersToApprove) throws HandlerGenericException {
         String notified = STATE_FAILED;
-        List<String> idSuppliersToApprove = suppliersToTechnicalTeam.getIdSuppliersByCall();
+        NotificationBLO notificationBLO = new NotificationBLO();
+        String idCall = null;
         for (String idSupplierByCall : idSuppliersToApprove) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            SupplierBLO supplierBLO = new SupplierBLO();
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
+            SupplierDTO supplier = supplierBLO.get(supplierByCall.getIdSupplier());
+            idCall = supplierByCall.getIdCall();
+            if (supplier instanceof SupplierDTO) {
+                StateBLO stateBLO = new StateBLO();
+                notificationBLO.sendNotificationTypeToSupplier(supplier,
+                        NotificationType.SUPPLIER_CALLED_BY_MANAGER_TEAM);
+                supplierByCall.setIdState(
+                        stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_MANAGER_TEAM.toString()).getId());
+                supplierByCallBLO.update(supplierByCall);
+                notified = STATE_SUCCESS;
+            }
+        }
+
+        UserBLO userBLO = new UserBLO();
+        userBLO.notifyToManagerTeam(idCall);
+        return notified;
+    }
+
+    public String dontApproveToNextStage(SupplierToNextStageDTO suppliersToNextStage) throws HandlerGenericException {
+        String notified = STATE_FAILED;
+        List<String> idSuppliersToDontApprove = suppliersToNextStage.getIdSuppliersByCall();
+        for (String idSupplierByCall : idSuppliersToDontApprove) {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             SupplierBLO supplierBLO = new SupplierBLO();
             SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
@@ -66,8 +107,17 @@ public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTe
                 NotificationBLO notificationBLO = new NotificationBLO();
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_DISCARDED);
-                supplierByCall.setIdState(
-                        stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
+
+                if (suppliersToNextStage.getStage().equals("TechnicalTeam")) {
+                    supplierByCall.setIdState(
+                            stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
+                }
+
+                if (suppliersToNextStage.getStage().equals("ManagerTeam")) {
+                    supplierByCall.setIdState(
+                            stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_MANAGER_TEAM.toString()).getId());
+                }
+
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
             }
@@ -76,7 +126,7 @@ public class SupplierToTechnicalTeamBLO extends GenericBLO<SupplierToTechnicalTe
         return notified;
     }
 
-    public String finishTechnicalTeamSurvey(SupplierToTechnicalTeamDTO suppliersToTechnicalTeam)
+    public String finishTechnicalTeamSurvey(SupplierToNextStageDTO suppliersToTechnicalTeam)
             throws HandlerGenericException {
         String notified = STATE_FAILED;
         List<String> idSuppliersToApprove = suppliersToTechnicalTeam.getIdSuppliersByCall();

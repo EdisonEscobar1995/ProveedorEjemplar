@@ -146,37 +146,51 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     }
 
     protected void notifyToTechnicalTeam(Map<String, String> fieldsToIdentifyTechnicalTeam)
-    throws HandlerGenericException {
-		Map<String, String> filter = new LinkedHashMap<String, String>();
-		Iterator<String> iterator = fieldsToIdentifyTechnicalTeam.keySet().iterator();
-		String key;
-		String[] valueInFields;
-		while (iterator.hasNext()) {
-			UserDAO userDAO = new UserDAO();
-		    RolBLO rolBLO = new RolBLO();
-		    TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
-		    List<UserDTO> userWithTechnicalTeamRol = userDAO.getUsersByRol(rolBLO.getRolByShortName(
-		            Rol.TECHNICAL_TEAM.toString()).getId());
-		    NotificationBLO notificationBLO = new NotificationBLO();
-		    List<String> technicalTeamEmails = new ArrayList<String>();
-		    
-		    key = iterator.next();
-		    valueInFields = key.split(":");
-		    
-		    for (UserDTO user : userWithTechnicalTeamRol) {
-		        filter.put("USER", user.getId());
-		        filter.put("SUPPLY", valueInFields[0]);
-		        filter.put("CATEGORY", valueInFields[1]);
-		        filter.put("COUNTRY", valueInFields[2]);
-		        List<TechnicalTeamDTO> especificTechnicalTeamMembers = technicalTeamBLO
-		                .getMembersByEspecificFeactures(filter);
-		        if (!especificTechnicalTeamMembers.isEmpty()) {
-		            technicalTeamEmails.add(user.getEmail());
-		        }
-		    }
-		
-		    notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
-		}
+            throws HandlerGenericException {
+        Map<String, String> filter = new LinkedHashMap<String, String>();
+        Iterator<String> iterator = fieldsToIdentifyTechnicalTeam.keySet().iterator();
+        String key;
+        String[] valueInFields;
+        while (iterator.hasNext()) {
+            UserDAO userDAO = new UserDAO();
+            RolBLO rolBLO = new RolBLO();
+            TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
+            List<UserDTO> userWithTechnicalTeamRol = userDAO
+                    .getUsersByRol(rolBLO.getRolByShortName(Rol.TECHNICAL_TEAM.toString()).getId());
+            NotificationBLO notificationBLO = new NotificationBLO();
+            List<String> technicalTeamEmails = new ArrayList<String>();
+
+            key = iterator.next();
+            valueInFields = key.split(":");
+
+            for (UserDTO user : userWithTechnicalTeamRol) {
+                filter.put("USER", user.getId());
+                filter.put("SUPPLY", valueInFields[0]);
+                filter.put("CATEGORY", valueInFields[1]);
+                filter.put("COUNTRY", valueInFields[2]);
+                List<TechnicalTeamDTO> especificTechnicalTeamMembers = technicalTeamBLO
+                        .getMembersByEspecificFeactures(filter);
+                if (!especificTechnicalTeamMembers.isEmpty()) {
+                    technicalTeamEmails.add(user.getEmail());
+                }
+            }
+
+            notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
+        }
+    }
+
+    protected void notifyToManagerTeam(String idCall) throws HandlerGenericException {
+        ManagerTeamByCallBLO managerTeamByCallBLO = new ManagerTeamByCallBLO();
+        NotificationBLO notificationBLO = new NotificationBLO();
+        List<String> idManagerTeamMembers = managerTeamByCallBLO.getIdOfManagerTeamMembersInCall(idCall);
+        List<String> managerTeamEmails = new ArrayList<String>();
+
+        for (String idMember : idManagerTeamMembers) {
+            UserDAO userDAO = new UserDAO();
+            managerTeamEmails.add(userDAO.get(idMember).getEmail());
+        }
+
+        notificationBLO.notifyToManagerTeam(managerTeamEmails);
     }
 
     protected String getNameUserInSession() {
@@ -188,6 +202,5 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         UserDAO userDAO = new UserDAO();
         return userDAO.searchUser(text);
     }
-
 
 }
