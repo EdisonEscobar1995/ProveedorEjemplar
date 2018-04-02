@@ -212,6 +212,15 @@ const routes = [
       import('./pages/ManagerTeamSurvey').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'MANAGERTEAM',
+    path: '/managerTeam',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ManagerTeam').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

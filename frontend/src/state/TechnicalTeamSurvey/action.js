@@ -3,10 +3,10 @@ import {
   GET_TECHNICAL_TEAM_SURVEY_SUCCESS,
   FILTER_TECHNICAL_TEAM_SURVEY,
   CALCULATE_TOTAL,
-  CHANGE_SCORE,
-  CHANGE_COMMENT,
-  UPDATE_ERRORS,
-  UPDATE_SUPPLIERS,
+  CHANGE_SCORE_TECHNICAL,
+  CHANGE_COMMENT_TECHNICAL,
+  UPDATE_ERRORS_TECHNICAL,
+  UPDATE_SUPPLIERS_TECHNICAL,
   REQUEST_FAILED,
 } from './const';
 
@@ -39,7 +39,7 @@ const calculateTotal = () => ({
 });
 
 const changeScore = (idSupplier, id, answer, value) => ({
-  type: CHANGE_SCORE,
+  type: CHANGE_SCORE_TECHNICAL,
   idSupplier,
   answer,
   value,
@@ -47,7 +47,7 @@ const changeScore = (idSupplier, id, answer, value) => ({
 });
 
 const changeComment = (idSupplier, id, comment, value) => ({
-  type: CHANGE_COMMENT,
+  type: CHANGE_COMMENT_TECHNICAL,
   idSupplier,
   comment,
   value,
@@ -55,12 +55,12 @@ const changeComment = (idSupplier, id, comment, value) => ({
 });
 
 const updateErrors = data => ({
-  type: UPDATE_ERRORS,
+  type: UPDATE_ERRORS_TECHNICAL,
   data,
 });
 
 const updateSuppliers = (idSuppliers, idSuppliersByCall) => ({
-  type: UPDATE_SUPPLIERS,
+  type: UPDATE_SUPPLIERS_TECHNICAL,
   idSuppliers,
   idSuppliersByCall,
 });

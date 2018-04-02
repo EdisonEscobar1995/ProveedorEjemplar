@@ -2,9 +2,10 @@ import {
   GET_MANAGER_TEAM_SURVEY_PROGRESS,
   GET_MANAGER_TEAM_SURVEY_SUCCESS,
   FILTER_MANAGER_TEAM_SURVEY,
-  CHANGE_ANSWER,
-  // UPDATE_ERRORS,
-  // UPDATE_SUPPLIERS,
+  CHANGE_COMMENT_MANAGER,
+  CHANGE_SCORE_MANAGER,
+  // UPDATE_ERRORS_MANAGER,
+  // UPDATE_SUPPLIERS_MANAGER,
   REQUEST_FAILED,
 } from './const';
 
@@ -12,7 +13,6 @@ import { getManagerTeamSurveyApi } from '../../api/call';
 import saveManagerTeamAnswerApi from '../../api/managerTeamAnswer';
 // import { finishManagerTeamSurveyApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
-import { COMMENT, SCORE } from '../../utils/const';
 // import setMessage from '../Generic/action';
 
 const getDataManagerTeamSurveyProgress = () => ({
@@ -33,33 +33,52 @@ const filterManagerTeamSurvey = data => ({
   data,
 });
 
-const changeAnswer = (idSupplier, id, answer) => ({
-  type: CHANGE_ANSWER,
+const changeScore = (idSupplier, id, score, value) => ({
+  type: CHANGE_SCORE_MANAGER,
   idSupplier,
-  answer,
+  score,
+  value,
+  new: !id,
+});
+
+const changeComment = (idSupplier, id, comment, value) => ({
+  type: CHANGE_COMMENT_MANAGER,
+  idSupplier,
+  comment,
+  value,
   new: !id,
 });
 
 // const updateErrors = data => ({
-//   type: UPDATE_ERRORS,
+//   type: UPDATE_ERRORS_MANAGER,
 //   data,
 // });
 
 // const updateSuppliers = (idSuppliers, idSuppliersByCall) => ({
-//   type: UPDATE_SUPPLIERS,
+//   type: UPDATE_SUPPLIERS_MANAGER,
 //   idSuppliers,
 //   idSuppliersByCall,
 // });
 
-const setAnswer = (idSupplier, value, answer, type) => (dispatch, getState) => {
-  const storedComment = getState().managerTeamSurvey.data.suppliers.comment.value;
-  const storedScore = getState().managerTeamSurvey.data.suppliers.score.value;
-  if ((type === COMMENT && storedComment !== value) || (type === SCORE && storedScore !== value)) {
+const setScore = (idSupplier, value, answer) => (dispatch) => {
+  requestApi(dispatch, getDataManagerTeamSurveyProgress, saveManagerTeamAnswerApi, answer)
+    .then((response) => {
+      dispatch(changeScore(idSupplier, answer.id, response.data.data, value));
+    }).catch(() => {
+      dispatch(changeScore(idSupplier, answer.id, answer, null));
+      dispatch(getFailedRequest());
+    });
+};
+
+const setComment = (idSupplier, value, answer) => (dispatch, getState) => {
+  const storedComment = getState()
+    .managerTeamSurvey.data.suppliers.find(element => element.id === idSupplier).comment.value;
+  if (storedComment !== value) {
     requestApi(dispatch, getDataManagerTeamSurveyProgress, saveManagerTeamAnswerApi, answer)
       .then((response) => {
-        dispatch(changeAnswer(idSupplier, answer.id, response.data.data));
+        dispatch(changeComment(idSupplier, answer.id, response.data.data, value));
       }).catch(() => {
-        dispatch(changeAnswer(idSupplier, answer.id, null));
+        dispatch(changeComment(idSupplier, answer.id, answer, null));
         dispatch(getFailedRequest());
       });
   }
@@ -90,7 +109,7 @@ const getManagerTeamSurvey = year => (dispatch) => {
           error: false,
         };
 
-        supplier.comment = answer ? answer.comment : '';
+        supplier.comment = answer ? answer.comment : { value: '', error: false };
 
         const state = data.masters.State.find(element => element.id === idState).shortName;
         const readOnly =
@@ -109,6 +128,7 @@ const getManagerTeamSurvey = year => (dispatch) => {
 
 export {
   getManagerTeamSurvey,
-  setAnswer,
+  setScore,
+  setComment,
   filterManagerTeamSurvey,
 };
