@@ -328,6 +328,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         UserBLO userBLO = new UserBLO();
         Map<String, List<DTO>> currentMasters = participantsToManagerTeam.getMasters();
         ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
+        StateBLO stateBLO = new StateBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
         currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
                 SurveyStates.MANAGER_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
