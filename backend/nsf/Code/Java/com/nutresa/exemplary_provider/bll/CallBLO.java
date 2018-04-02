@@ -325,11 +325,20 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         InformationFromSupplier participantsToManagerTeam = supplierBLO.getInformationFromSuppliers(listYears,
                 callsBySupplier);
 
+        UserBLO userBLO = new UserBLO();
         Map<String, List<DTO>> currentMasters = participantsToManagerTeam.getMasters();
         ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
         currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
                 SurveyStates.MANAGER_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+
+        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
+            currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
+        } else {
+            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+                currentMasters.put("User", userBLO.getAll());
+            }
+        }
 
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
                 SupplierByCallDTO.class);
@@ -337,12 +346,13 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<Object> idsSupplierByCall = listIdsSupplierByCall.get("[id]");
 
         List<DTO> answers = new ArrayList<DTO>();
-        UserBLO userBLO = new UserBLO();
         String idUserInSession = userBLO.getUserInSession().getId();
         for (Object idSupplierByCall : idsSupplierByCall) {
             Map<String, String> filter = new HashMap<String, String>();
             filter.put("idSupplierByCall", idSupplierByCall.toString());
-            filter.put("idUser", idUserInSession);
+            if (!userBLO.isRol(Rol.LIBERATOR.toString()) && !userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+                filter.put("idUser", idUserInSession);
+            }
             List<DTO> auxiliarAnswer = managerTeamAnswerBLO.getAllBy(filter,
                     "vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
 
