@@ -203,6 +203,15 @@ const routes = [
       import('./pages/TechnicalTeam').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'MANAGERTEAMSURVEY',
+    path: '/managerTeamSurvey',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ManagerTeamSurvey').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

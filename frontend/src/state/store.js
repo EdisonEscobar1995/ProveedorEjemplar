@@ -21,6 +21,8 @@ import user from './User/reducer';
 import supply from './Supply/reducer';
 import technicalTeam from './TechnicalTeam/reducer';
 import technicalTeamSurvey from './TechnicalTeamSurvey/reducer';
+import managerTeamSurvey from './ManagerTeamSurvey/reducer';
+
 
 const app = combineReducers({
   main,
@@ -43,6 +45,7 @@ const app = combineReducers({
   supply,
   technicalTeam,
   technicalTeamSurvey,
+  managerTeamSurvey,
 });
 
 let middleware = {};

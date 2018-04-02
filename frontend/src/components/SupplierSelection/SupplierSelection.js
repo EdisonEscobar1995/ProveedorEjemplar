@@ -22,7 +22,7 @@ function SupplierSelection(props) {
   const validateChecked = (sendMethod) => {
     const checked = data.filter(item => item.checked).map(item => item.idSupplierByCall);
     if (checked.length > 0) {
-      sendMethod(checked, openNotification);
+      sendMethod(checked, props.type, openNotification);
     } else {
       message({ text: 'Debe seleccionar al menos un proveedor', type: 'info' });
     }
