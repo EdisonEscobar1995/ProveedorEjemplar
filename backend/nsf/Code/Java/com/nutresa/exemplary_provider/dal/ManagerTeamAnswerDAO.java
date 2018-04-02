@@ -14,11 +14,11 @@ public class ManagerTeamAnswerDAO extends GenericDAO<ManagerTeamAnswerDTO> {
         super(ManagerTeamAnswerDTO.class);
     }
 
-    public ManagerTeamAnswerDTO getManagerTeamAnswer(String idSupplierByCall, String idManageTeamMember)
+    public ManagerTeamAnswerDTO getManagerTeamAnswer(String idSupplierByCall, String nameManagerTeamMember)
             throws HandlerGenericException {
         List<String> filter = new ArrayList<String>();
         filter.add(idSupplierByCall);
-        filter.add(idManageTeamMember);
+        filter.add(nameManagerTeamMember);
         ManagerTeamAnswerDTO evaluationScale = new ManagerTeamAnswerDTO();
         View currentView = getDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
         Document document = currentView.getFirstDocumentByKey(filter, true);

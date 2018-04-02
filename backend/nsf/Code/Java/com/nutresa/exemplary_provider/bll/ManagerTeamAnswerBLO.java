@@ -41,8 +41,8 @@ public class ManagerTeamAnswerBLO extends GenericBLO<ManagerTeamAnswerDTO, Manag
     public ManagerTeamAnswerDTO getManagerTeamAnswer(String idSupplierByCall) throws HandlerGenericException {
         ManagerTeamAnswerDAO managerTeamAnswerDAO = new ManagerTeamAnswerDAO();
         UserBLO userBLO = new UserBLO();
-        String idUserInSession = userBLO.getUserInSession().getId();
-        return managerTeamAnswerDAO.getManagerTeamAnswer(idSupplierByCall, idUserInSession);
+        String nameUserInSession = userBLO.getNameUserInSession();
+        return managerTeamAnswerDAO.getManagerTeamAnswer(idSupplierByCall, nameUserInSession);
     }
 
 }

@@ -348,12 +348,12 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<Object> idsSupplierByCall = listIdsSupplierByCall.get("[id]");
 
         List<DTO> answers = new ArrayList<DTO>();
-        String idUserInSession = userBLO.getUserInSession().getId();
+        String nameUserInSession = userBLO.getNameUserInSession();
         for (Object idSupplierByCall : idsSupplierByCall) {
             Map<String, String> filter = new HashMap<String, String>();
             filter.put("idSupplierByCall", idSupplierByCall.toString());
             if (!userBLO.isRol(Rol.LIBERATOR.toString()) && !userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
-                filter.put("idUser", idUserInSession);
+                filter.put("idUser", nameUserInSession);
             }
             List<DTO> auxiliarAnswer = managerTeamAnswerBLO.getAllBy(filter,
                     "vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
