@@ -94,4 +94,17 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         return response;
     }
 
+    public ServletResponseDTO<InformationFromSupplier> getParticipantsToManagerTeam(Map<String, String> parameters) {
+        ServletResponseDTO<InformationFromSupplier> response = null;
+        CallBLO callBLO = new CallBLO();
+        try {
+            response = new ServletResponseDTO<InformationFromSupplier>(
+                    callBLO.getParticipantsToManagerTeam(parameters.get("year")));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<InformationFromSupplier>(exception);
+        }
+
+        return response;
+    }
+
 }
