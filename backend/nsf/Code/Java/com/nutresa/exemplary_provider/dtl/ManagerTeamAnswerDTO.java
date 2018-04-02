@@ -10,7 +10,7 @@ public class ManagerTeamAnswerDTO {
     @Expose
     private String idSupplierByCall;
     @Expose
-    private String idManagerTeamMember;
+    private String whoEvaluate;
     @Expose
     private String idEvaluationScale;
     @Expose
@@ -34,12 +34,12 @@ public class ManagerTeamAnswerDTO {
         this.idSupplierByCall = idSupplierByCall;
     }
 
-    public String getIdManagerTeamMember() {
-        return idManagerTeamMember;
+    public void setWhoEvaluate(String whoEvaluate) {
+        this.whoEvaluate = whoEvaluate;
     }
 
-    public void setIdManagerTeamMember(String idManagerTeamMember) {
-        this.idManagerTeamMember = idManagerTeamMember;
+    public String getWhoEvaluate() {
+        return whoEvaluate;
     }
 
     public String getIdEvaluationScale() {

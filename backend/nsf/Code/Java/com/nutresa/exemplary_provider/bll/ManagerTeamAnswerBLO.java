@@ -33,7 +33,7 @@ public class ManagerTeamAnswerBLO extends GenericBLO<ManagerTeamAnswerDTO, Manag
         }
 
         supplierByCallBLO.changeState(SurveyStates.MANAGER_TEAM.toString(), answer.getIdSupplierByCall());
-        answer.setIdManagerTeamMember(userBLO.getUserInSession().getId());
+        answer.setWhoEvaluate(userBLO.getNameUserInSession());
         answer.setDateResponse(new Date());
         return super.save(answer);
     }
