@@ -356,7 +356,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                 filter.put("whoEvaluate", nameUserInSession);
             }
             List<DTO> auxiliarAnswer = managerTeamAnswerBLO.getAllBy(filter,
-                    "vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
+                    "vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate");
 
             if (!auxiliarAnswer.isEmpty()) {
                 answers.addAll(auxiliarAnswer);
