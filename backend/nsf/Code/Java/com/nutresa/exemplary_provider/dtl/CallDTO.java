@@ -20,7 +20,7 @@ public class CallDTO {
     @Expose
     private Date deadlineToMakeSurveyTechnicalTeam;
     @Expose
-    private Date deadlineToMakeSurveyManagementCommittee;
+    private Date deadlineToMakeSurveyManagerTeam;
     @Expose
     private List<String> managementCommittee;
     @Expose
@@ -60,12 +60,12 @@ public class CallDTO {
         this.deadlineToMakeSurveyTechnicalTeam = deadlineToMakeSurveyTechnicalTeam;
     }
 
-    public Date getDeadlineToMakeSurveyManagementCommittee() {
-        return deadlineToMakeSurveyManagementCommittee;
+    public Date getDeadlineToMakeSurveyManagerTeam() {
+        return deadlineToMakeSurveyManagerTeam;
     }
 
-    public void setDeadlineToMakeSurveyManagementCommittee(Date deadlineToMakeSurveyManagementCommittee) {
-        this.deadlineToMakeSurveyManagementCommittee = deadlineToMakeSurveyManagementCommittee;
+    public void setDeadlineToMakeSurveyManagerTeam(Date deadlineToMakeSurveyManagerTeam) {
+        this.deadlineToMakeSurveyManagerTeam = deadlineToMakeSurveyManagerTeam;
     }
 
     public List<String> getManagementCommittee() {
@@ -118,6 +118,10 @@ public class CallDTO {
     
     public boolean isCaducedDeadLineToMakeSurveyTechnicalTeam() throws HandlerGenericException {
         return isCaducedDate(this.deadlineToMakeSurveyTechnicalTeam, new Date());
+    }
+
+    public boolean isCaducedDeadLineToMakeSurveyManagerTeam() throws HandlerGenericException {
+        return isCaducedDate(this.deadlineToMakeSurveyManagerTeam, new Date());
     }
 
     private boolean isCaducedDate(Date dateToCompare, Date today) throws HandlerGenericException {

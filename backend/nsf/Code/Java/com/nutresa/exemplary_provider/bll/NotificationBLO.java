@@ -82,6 +82,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             notification = notificationDAO
                     .getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_TECHNICAL_TEAM.toString());
             break;
+        case MANAGER_TEAM:
+            notification = notificationDAO
+                    .getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_MANAGER_TEAM.toString());
+            break;
         default:
             notification = new NotificationDTO();
             break;
