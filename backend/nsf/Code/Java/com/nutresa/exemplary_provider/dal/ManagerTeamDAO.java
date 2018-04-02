@@ -7,17 +7,18 @@ import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
-import com.nutresa.exemplary_provider.dtl.ManagerTeamByCallDTO;
+import com.nutresa.exemplary_provider.dtl.ManagerTeamDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
-public class ManagerTeamByCallDAO extends GenericDAO<ManagerTeamByCallDTO> {
+public class ManagerTeamDAO extends GenericDAO<ManagerTeamDTO> {
 
-    public ManagerTeamByCallDAO() {
-        super(ManagerTeamByCallDTO.class);
+    public ManagerTeamDAO() {
+        super(ManagerTeamDTO.class);
+        entityView = "vwManagerTeam";
     }
 
-    public List<ManagerTeamByCallDTO> getManagerTeamMembersInCall(String idCall) throws HandlerGenericException {
-        List<ManagerTeamByCallDTO> response = new ArrayList<ManagerTeamByCallDTO>();
+    public List<ManagerTeamDTO> getManagerTeamMembersInCall(String idCall) throws HandlerGenericException {
+        List<ManagerTeamDTO> response = new ArrayList<ManagerTeamDTO>();
         View currentView = getDatabase().getView("vwManagerTeamByIdCall");
         DocumentCollection documents = currentView.getAllDocumentsByKey(idCall, true);
         if (documents != null) {

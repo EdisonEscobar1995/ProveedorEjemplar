@@ -180,7 +180,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     }
 
     protected void notifyToManagerTeam(String idCall) throws HandlerGenericException {
-        ManagerTeamByCallBLO managerTeamByCallBLO = new ManagerTeamByCallBLO();
+        ManagerTeamBLO managerTeamByCallBLO = new ManagerTeamBLO();
         NotificationBLO notificationBLO = new NotificationBLO();
         List<String> idManagerTeamMembers = managerTeamByCallBLO.getIdOfManagerTeamMembersInCall(idCall);
         List<String> managerTeamEmails = new ArrayList<String>();

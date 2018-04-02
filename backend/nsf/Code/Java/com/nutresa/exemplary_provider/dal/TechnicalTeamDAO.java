@@ -14,6 +14,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class TechnicalTeamDAO extends GenericDAO<TechnicalTeamDTO> {
     public TechnicalTeamDAO() {
         super(TechnicalTeamDTO.class);
+        entityView = "vwTechnicalTeam";
     }
 
     public List<TechnicalTeamDTO> getMembersByEspecificFeactures(List<String> filterEspecificFeactures)
