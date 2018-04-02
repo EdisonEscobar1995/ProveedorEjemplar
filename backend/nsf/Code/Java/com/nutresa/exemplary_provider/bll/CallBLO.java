@@ -244,26 +244,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     public InformationFromSupplier getParticipantsToTechnicalTeam(String year) throws HandlerGenericException {
-        String viewName = "vwSuppliersByCallIdStateAndIdCall";
         List<Object> listYears = getFieldAll(0, "vwCallsByYear");
         if (null == year || year.trim().isEmpty()) {
             year = (String) listYears.get(0);
         }
 
+        List<SurveyStates> statesIncludInTechnicalTeamStage = new ArrayList<SurveyStates>();
+        statesIncludInTechnicalTeamStage.add(SurveyStates.NOT_STARTED_TECHNICAL_TEAM);
+        statesIncludInTechnicalTeamStage.add(SurveyStates.TECHNICAL_TEAM);
+        statesIncludInTechnicalTeamStage.add(SurveyStates.ENDED_TECHNICAL_TEAM);
+
         SupplierBLO supplierBLO = new SupplierBLO();
-        StateBLO stateBLO = new StateBLO();
-        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        Map<String, String> filter = new HashMap<String, String>();
-        String idState = stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId();
-        filter.put(FieldToFilter.FIELD_STATE, idState);
-        filter.put(FieldToFilter.FIELD_CALL, getIdCallByYear(year));
-        List<DTO> callsBySupplier = supplierByCallBLO.getAllBy(filter, viewName);
-        idState = stateBLO.getStateByShortName(SurveyStates.TECHNICAL_TEAM.toString()).getId();
-        filter.put(FieldToFilter.FIELD_STATE, idState);
-        callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
-        idState = stateBLO.getStateByShortName(SurveyStates.ENDED_TECHNICAL_TEAM.toString()).getId();
-        filter.put(FieldToFilter.FIELD_STATE, idState);
-        callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
+        List<DTO> callsBySupplier = identifyParticpantsByCallYearAndStageStates(year, statesIncludInTechnicalTeamStage);
 
         SupplierToNextStageBLO supplierToTechnicalTeamBLO = new SupplierToNextStageBLO();
         callsBySupplier = supplierToTechnicalTeamBLO.getParticipantsByTechnicalTeamMember(callsBySupplier);
@@ -275,6 +267,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         ServiceBLO serviceBLO = new ServiceBLO();
         ItemBLO itemBLO = new ItemBLO();
         UserBLO userBLO = new UserBLO();
+        StateBLO stateBLO = new StateBLO();
         TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
         TechnicalTeamCommentBLO technicalTeamCommentBLO = new TechnicalTeamCommentBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
@@ -313,6 +306,85 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         participantsToTechnicalTeam.setMasters(currentMasters);
 
         return participantsToTechnicalTeam;
+    }
+
+    public InformationFromSupplier getParticipantsToManagerTeam(String year) throws HandlerGenericException {
+        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        if (null == year || year.trim().isEmpty()) {
+            year = (String) listYears.get(0);
+        }
+
+        List<SurveyStates> statesIncludInManagerTeamStage = new ArrayList<SurveyStates>();
+        statesIncludInManagerTeamStage.add(SurveyStates.NOT_STARTED_MANAGER_TEAM);
+        statesIncludInManagerTeamStage.add(SurveyStates.MANAGER_TEAM);
+        statesIncludInManagerTeamStage.add(SurveyStates.ENDED_MANAGER_TEAM);
+
+        SupplierBLO supplierBLO = new SupplierBLO();
+        List<DTO> callsBySupplier = identifyParticpantsByCallYearAndStageStates(year, statesIncludInManagerTeamStage);
+
+        InformationFromSupplier participantsToManagerTeam = supplierBLO.getInformationFromSuppliers(listYears,
+                callsBySupplier);
+
+        UserBLO userBLO = new UserBLO();
+        Map<String, List<DTO>> currentMasters = participantsToManagerTeam.getMasters();
+        ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
+        StateBLO stateBLO = new StateBLO();
+        EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
+                SurveyStates.MANAGER_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("State", stateBLO.getAll());
+
+        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
+            currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
+        } else {
+            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+                currentMasters.put("User", userBLO.getAll());
+            }
+        }
+
+        Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
+                SupplierByCallDTO.class);
+
+        List<Object> idsSupplierByCall = listIdsSupplierByCall.get("[id]");
+
+        List<DTO> answers = new ArrayList<DTO>();
+        String nameUserInSession = userBLO.getNameUserInSession();
+        for (Object idSupplierByCall : idsSupplierByCall) {
+            Map<String, String> filter = new HashMap<String, String>();
+            filter.put("idSupplierByCall", idSupplierByCall.toString());
+            if (!userBLO.isRol(Rol.LIBERATOR.toString()) && !userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+                filter.put("whoEvaluate", nameUserInSession);
+            }
+            List<DTO> auxiliarAnswer = managerTeamAnswerBLO.getAllBy(filter,
+                    "vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
+
+            if (!auxiliarAnswer.isEmpty()) {
+                answers.addAll(auxiliarAnswer);
+            }
+
+        }
+
+        currentMasters.put("ManagerTeamAnswer", answers);
+        participantsToManagerTeam.setMasters(currentMasters);
+
+        return participantsToManagerTeam;
+    }
+
+    private List<DTO> identifyParticpantsByCallYearAndStageStates(String year, List<SurveyStates> statesOfStage)
+            throws HandlerGenericException {
+        String viewName = "vwSuppliersByCallIdStateAndIdCall";
+        StateBLO stateBLO = new StateBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put(FieldToFilter.FIELD_CALL, getIdCallByYear(year));
+        List<DTO> callsBySupplier = new ArrayList<DTO>();
+        for (SurveyStates state : statesOfStage) {
+            String idState = stateBLO.getStateByShortName(state.toString()).getId();
+            filter.put(FieldToFilter.FIELD_STATE, idState);
+            callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
+        }
+
+        return callsBySupplier;
     }
 
     private class FieldToFilter {

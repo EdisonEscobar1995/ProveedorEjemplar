@@ -2,7 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class ManagerTeamByCallDTO {
+public class ManagerTeamDTO {
     @Expose
     private String id;
     @Expose

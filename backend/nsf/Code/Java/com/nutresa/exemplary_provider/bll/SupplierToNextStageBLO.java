@@ -126,8 +126,7 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         return notified;
     }
 
-    public String finishTechnicalTeamSurvey(SupplierToNextStageDTO suppliersToTechnicalTeam)
-            throws HandlerGenericException {
+    public String finishSurveyMassive(SupplierToNextStageDTO suppliersToTechnicalTeam) throws HandlerGenericException {
         String notified = STATE_FAILED;
         List<String> idSuppliersToApprove = suppliersToTechnicalTeam.getIdSuppliersByCall();
         for (String idSupplierByCall : idSuppliersToApprove) {

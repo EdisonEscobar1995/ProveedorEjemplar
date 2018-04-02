@@ -35,11 +35,11 @@ public class SupplierToNextStageAPI extends GenericAPI<SupplierToNextStageDTO, S
         return response;
     }
 
-    public ServletResponseDTO<String> finishTechnicalTeamSurvey(SupplierToNextStageDTO parameters) {
+    public ServletResponseDTO<String> finishSurveyMassive(SupplierToNextStageDTO parameters) {
         SupplierToNextStageBLO supplierToTechnicalTeamBLO = new SupplierToNextStageBLO();
         ServletResponseDTO<String> response = null;
         try {
-            response = new ServletResponseDTO<String>(supplierToTechnicalTeamBLO.finishTechnicalTeamSurvey(parameters));
+            response = new ServletResponseDTO<String>(supplierToTechnicalTeamBLO.finishSurveyMassive(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<String>(exception);
         }
