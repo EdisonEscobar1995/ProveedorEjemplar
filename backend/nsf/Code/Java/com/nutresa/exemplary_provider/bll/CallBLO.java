@@ -331,6 +331,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
         currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
                 SurveyStates.MANAGER_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("State", stateBLO.getAll());
 
         if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
             currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
