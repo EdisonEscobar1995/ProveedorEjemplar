@@ -12,6 +12,8 @@ import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SectionRule;
+import com.nutresa.exemplary_provider.dtl.SurveySection;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
@@ -21,9 +23,14 @@ import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
+    private SectionRule rules;
 
     public CallBLO() {
         super(CallDAO.class);
+    }
+
+    public SectionRule getRule() {
+        return rules;
     }
 
     public CallDTO massiveShipmentCall(String idCall) throws HandlerGenericException {
@@ -339,6 +346,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         } else {
             if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
                 currentMasters.put("User", userBLO.getAll());
+                rules = new SectionRule();
+                rules.setRulesToSection(SurveySection.LIBERATOR.getNameSection(), rules.buildRules(true, true));
             }
         }
 
