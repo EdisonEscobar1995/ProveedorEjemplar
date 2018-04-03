@@ -340,15 +340,11 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
                 SurveyStates.MANAGER_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
         currentMasters.put("State", stateBLO.getAll());
+        currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
+        rules = new SectionRule();
 
-        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
-            currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
-        } else {
-            if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
-                currentMasters.put("User", userBLO.getAll());
-                rules = new SectionRule();
-                rules.setRulesToSection(SurveySection.LIBERATOR.getNameSection(), rules.buildRules(true, true));
-            }
+        if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+            rules.setRulesToSection(SurveySection.LIBERATOR.getNameSection(), rules.buildRules(true, true));
         }
 
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
