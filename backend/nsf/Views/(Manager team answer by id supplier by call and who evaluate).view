@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(Manager team answer by id supplier by call and id user)' alias='ManagerTeamAnswer|vwManagerTeamAnswersByIdSupplierByCallAndIdUser'
+<view name='(Manager team answer by id supplier by call and who evaluate)'
+ alias='ManagerTeamAnswer|vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
  showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
  unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
@@ -9,11 +10,11 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='5e87a' unid='BA4DF8AD424375B505258263004BC048' sequence='4'>
+<noteinfo noteid='5e87a' unid='BA4DF8AD424375B505258263004BC048' sequence='6'>
 <created><datetime>20180402T084724,24-05</datetime></created>
-<modified><datetime>20180402T084945,21-05</datetime></modified>
-<revised><datetime>20180402T084945,20-05</datetime></revised>
-<lastaccessed><datetime>20180402T084945,21-05</datetime></lastaccessed>
+<modified><datetime>20180402T170054,71-05</datetime></modified>
+<revised><datetime>20180402T170054,70-05</datetime></revised>
+<lastaccessed><datetime>20180402T170054,71-05</datetime></lastaccessed>
 <addedtofile><datetime>20180402T084724,27-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
@@ -22,7 +23,7 @@
  width='10' resizable='true' separatemultiplevalues='false' sortnoaccent='true'
  sortnocase='true' showaslinks='false'><columnheader title='idSupplierByCall'><font
  size='9pt' style='bold'/></columnheader></column>
-<column sort='ascending' hidedetailrows='false' itemname='idUser' width='10'
+<column sort='ascending' hidedetailrows='false' itemname='whoEvaluate' width='10'
  resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
- showaslinks='false'><columnheader title='idUser'><font size='9pt' style='bold'/></columnheader></column></view>
+ showaslinks='false'><columnheader title='whoEvaluate'><font size='9pt' style='bold'/></columnheader></column></view>
 

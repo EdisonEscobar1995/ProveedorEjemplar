@@ -1,7 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
 public enum SurveySection {
-    SUPPLIER("supplier"), EVALUATOR("evaluator");
+    SUPPLIER("supplier"), EVALUATOR("evaluator"), LIBERATOR("liberator");
 
     private final String nameSection;
 

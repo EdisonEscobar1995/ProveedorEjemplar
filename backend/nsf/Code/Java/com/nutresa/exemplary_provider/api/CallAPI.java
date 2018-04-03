@@ -104,6 +104,8 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
             response = new ServletResponseDTO<InformationFromSupplier>(exception);
         }
 
+        response.setRule(callBLO.getRule().getRules());
+
         return response;
     }
 
