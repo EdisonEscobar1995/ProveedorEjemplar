@@ -122,7 +122,8 @@ const getManagerTeamSurvey = year => (dispatch) => {
             readOnly = rules.liberator.readOnly;
           }
         });
-        supplier.visible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
+        data.finishVisible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
+        supplier.visible = true;
         supplier.readOnly = readOnly;
         return supplier;
       });

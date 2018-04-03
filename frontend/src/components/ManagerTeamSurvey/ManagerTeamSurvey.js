@@ -179,14 +179,14 @@ class ManagerTeamSurvey extends Component {
         }
         <Table
           rowKey={record => record.id}
-          dataSource={suppliers}
+          dataSource={suppliers.filter(supplier => supplier.visible)}
         >
           {
             this.getSupplierColumns()
           }
         </Table>
         {
-          suppliers.filter(element => element.visible).length > 0 ? (
+          suppliers.filter(element => element.visible).length > 0 && data.finishVisible ? (
             <Row type="flex" justify="center">
               <Col span={2}>
                 <Confirm
