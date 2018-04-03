@@ -321,6 +321,16 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             year = (String) listYears.get(0);
         }
 
+        UserBLO userBLO = new UserBLO();
+        String idCall = getIdCallByYear(year);
+        ManagerTeamBLO managerTeamBLO = new ManagerTeamBLO();
+        List<String> managerTeamInCall = managerTeamBLO.getIdOfManagerTeamMembersInCall(idCall);
+        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
+            if (!managerTeamInCall.contains(userBLO.getUserInSession().getId())) {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
+            }
+        }
+
         List<SurveyStates> statesIncludInManagerTeamStage = new ArrayList<SurveyStates>();
         statesIncludInManagerTeamStage.add(SurveyStates.NOT_STARTED_MANAGER_TEAM);
         statesIncludInManagerTeamStage.add(SurveyStates.MANAGER_TEAM);
@@ -332,14 +342,15 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         InformationFromSupplier participantsToManagerTeam = supplierBLO.getInformationFromSuppliers(listYears,
                 callsBySupplier);
 
-        UserBLO userBLO = new UserBLO();
         Map<String, List<DTO>> currentMasters = participantsToManagerTeam.getMasters();
         ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
         StateBLO stateBLO = new StateBLO();
+        RolBLO rolBLO = new RolBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
         currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
                 SurveyStates.MANAGER_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
         currentMasters.put("State", stateBLO.getAll());
+        currentMasters.put("Rol", rolBLO.getAll());
         currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
         rules = new SectionRule();
 
