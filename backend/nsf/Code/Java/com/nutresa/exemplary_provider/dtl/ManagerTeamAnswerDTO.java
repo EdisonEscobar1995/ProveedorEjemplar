@@ -18,22 +18,6 @@ public class ManagerTeamAnswerDTO {
     @Expose
     private Date dateResponse;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getIdSupplierByCall() {
-        return idSupplierByCall;
-    }
-
-    public void setIdSupplierByCall(String idSupplierByCall) {
-        this.idSupplierByCall = idSupplierByCall;
-    }
-
     public void setWhoEvaluate(String whoEvaluate) {
         this.whoEvaluate = whoEvaluate;
     }
@@ -64,5 +48,21 @@ public class ManagerTeamAnswerDTO {
 
     public Date getDateResponse() {
         return dateResponse;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIdSupplierByCall() {
+        return idSupplierByCall;
+    }
+
+    public void setIdSupplierByCall(String idSupplierByCall) {
+        this.idSupplierByCall = idSupplierByCall;
     }
 }

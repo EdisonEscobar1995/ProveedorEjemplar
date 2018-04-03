@@ -24,6 +24,7 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     private SectionRule rules;
+    private static final String VIEW_CALL_BY_YEAR = "vwCallsByYear";
 
     public CallBLO() {
         super(CallDAO.class);
@@ -85,7 +86,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     public InformationFromSupplier getParticipantsByYear(String year) throws HandlerGenericException {
-        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        List<Object> listYears = getFieldAll(0, VIEW_CALL_BY_YEAR);
         if (null == year || year.trim().isEmpty()) {
             year = (String) listYears.get(0);
         }
@@ -251,7 +252,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     public InformationFromSupplier getParticipantsToTechnicalTeam(String year) throws HandlerGenericException {
-        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        List<Object> listYears = getFieldAll(0, VIEW_CALL_BY_YEAR);
         if (null == year || year.trim().isEmpty()) {
             year = (String) listYears.get(0);
         }
@@ -293,9 +294,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         List<DTO> answers = new ArrayList<DTO>();
         List<DTO> comments = new ArrayList<DTO>();
         for (Object idSupplierByCall : idsSupplierByCall) {
-            List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy("idSupplierByCall", idSupplierByCall.toString(),
-                    "vwTechnicalTeamAnswersByIdSupplierByCall");
-            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy("idSupplierByCall",
+            List<DTO> auxiliarAnswer = technicalTeamAnswerBLO.getAllBy(FieldToFilter.FIELD_SUPPLIER_BY_CALL,
+                    idSupplierByCall.toString(), "vwTechnicalTeamAnswersByIdSupplierByCall");
+            List<DTO> auxiliarComment = technicalTeamCommentBLO.getAllBy(FieldToFilter.FIELD_SUPPLIER_BY_CALL,
                     idSupplierByCall.toString(), "vwTechnicalTeamCommentsByIdSupplierByCall");
 
             if (!auxiliarAnswer.isEmpty()) {
@@ -316,7 +317,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     public InformationFromSupplier getParticipantsToManagerTeam(String year) throws HandlerGenericException {
-        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        List<Object> listYears = getFieldAll(0, VIEW_CALL_BY_YEAR);
         if (null == year || year.trim().isEmpty()) {
             year = (String) listYears.get(0);
         }
@@ -326,10 +327,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         String idCall = getIdCallByYear(year);
         ManagerTeamBLO managerTeamBLO = new ManagerTeamBLO();
         List<String> managerTeamInCall = managerTeamBLO.getIdOfManagerTeamMembersInCall(idCall);
-        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
-            if (!managerTeamInCall.contains(userBLO.getUserInSession().getId())) {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-            }
+        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())
+                && !managerTeamInCall.contains(userBLO.getUserInSession().getId())) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         List<SurveyStates> statesIncludInManagerTeamStage = new ArrayList<SurveyStates>();
@@ -367,7 +367,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         String nameUserInSession = userBLO.getNameUserInSession();
         for (Object idSupplierByCall : idsSupplierByCall) {
             Map<String, String> filter = new HashMap<String, String>();
-            filter.put("idSupplierByCall", idSupplierByCall.toString());
+            filter.put(FieldToFilter.FIELD_SUPPLIER_BY_CALL, idSupplierByCall.toString());
             if (!userBLO.isRol(Rol.LIBERATOR.toString()) && !userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
                 filter.put("whoEvaluate", nameUserInSession);
             }
@@ -405,6 +405,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     private class FieldToFilter {
         public static final String FIELD_SUPPLIER = "idSupplier";
+        public static final String FIELD_SUPPLIER_BY_CALL = "idSupplierByCall";
         public static final String FIELD_STATE = "idState";
         public static final String FIELD_CALL = "idCall";
 

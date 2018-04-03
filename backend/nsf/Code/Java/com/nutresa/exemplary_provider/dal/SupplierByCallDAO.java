@@ -17,6 +17,9 @@ import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
 public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
+
+    private static final String VIEW_SUPPLIER_BY_CALL_AND_ID_CALL = "vwSuppliersByCallIdCall";
+
     public SupplierByCallDAO() {
         super(SupplierByCallDTO.class);
         this.entityView = "vwSuppliersByCall";
@@ -41,7 +44,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         SupplierByCallDTO supplierByCallDTO = null;
         SupplierDAO supplierDAO = new SupplierDAO();
         try {
-            View currentView = getDatabase().getView("vwSuppliersByCallIdCall");
+            View currentView = getDatabase().getView(VIEW_SUPPLIER_BY_CALL_AND_ID_CALL);
             List<String> filter = new ArrayList<String>();
             filter.add(idCall);
             filter.add("0");
@@ -72,7 +75,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         SupplierByCallDTO supplierByCallDTO = null;
         SupplierDAO supplierDAO = new SupplierDAO();
         try {
-            View currentView = getDatabase().getView("vwSuppliersByCallIdCall");
+            View currentView = getDatabase().getView(VIEW_SUPPLIER_BY_CALL_AND_ID_CALL);
             DocumentCollection documents = currentView.getAllDocumentsByKey(idCall, true);
             for (Document document : documents) {
                 supplierByCallDTO = castDocument(document);
@@ -110,7 +113,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
                 StateDAO stateDAO = new StateDAO();
                 String idState = stateDAO.getStateByShortName(stateName.toString()).getId();
                 List<String> filter = new ArrayList<String>();
-                
+
                 if (null != idState) {
                     filter.add(idSupplier);
                     filter.add(idCall);
@@ -118,7 +121,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
                 } else {
                     continue;
                 }
-                
+
                 View view = getDatabase().getView("vwSuppliersByCallInIdSupplierAndIdCallFinished");
                 Document document = view.getFirstDocumentByKey(filter, true);
                 if (null != document) {
@@ -153,7 +156,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             }
 
             String queryFTSearch = "[idCall] = " + idCall + " AND (" + Common.implodeList(" OR ", states) + ")";
-            String viewName = "vwSuppliersByCallIdCall";
+            String viewName = VIEW_SUPPLIER_BY_CALL_AND_ID_CALL;
             View view = getDatabase().getView(viewName);
             view.FTSearch(queryFTSearch, 0);
 
