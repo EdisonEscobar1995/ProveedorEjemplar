@@ -3,22 +3,22 @@ import { connect } from 'react-redux';
 import * as actions from '../../state/Menu/action';
 import GenericTable from '../shared/GenericTable';
 import columnsData from './columnsData';
-import MenuTeam from './Menu';
+import Menu from './Menu';
 
 class MenuContainer extends Component {
   componentDidMount() {
-    this.props.getMenuTeam();
+    this.props.getMenu();
   }
 
   render() {
     const componentList = [
       {
         title: 'Configurar opciones de menú',
-        component: MenuTeam,
+        component: Menu,
         columns: columnsData(this.props.masters),
-        deleteMethod: this.props.deleteMenuTeam,
-        onChangeSearchMethod: this.props.changeSearchMenuTeam,
-        onSearchMethod: this.props.searchMenuTeam,
+        deleteMethod: this.props.deleteMenu,
+        onChangeSearchMethod: this.props.changeSearchMenu,
+        onSearchMethod: this.props.searchMenu,
       },
     ];
 
@@ -36,10 +36,10 @@ class MenuContainer extends Component {
 
 const mapStateToProps = state => (
   {
-    data: state.menuTeam.data,
-    searchValue: state.menuTeam.searchValue,
-    masters: state.menuTeam.masters,
-    loading: state.menuTeam.loading,
+    data: state.menu.data,
+    searchValue: state.menu.searchValue,
+    masters: state.menu.masters,
+    loading: state.menu.loading,
   }
 );
 

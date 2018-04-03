@@ -8,7 +8,7 @@ function Menu(props) {
     <GenericForm
       {...props}
       formData={menuData}
-      submitMethod={props.saveManagerTeam}
+      submitMethod={props.saveMenu}
       validate
     />
   );

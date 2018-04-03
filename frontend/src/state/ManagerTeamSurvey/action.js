@@ -4,16 +4,16 @@ import {
   FILTER_MANAGER_TEAM_SURVEY,
   CHANGE_COMMENT_MANAGER,
   CHANGE_SCORE_MANAGER,
-  // UPDATE_ERRORS_MANAGER,
-  // UPDATE_SUPPLIERS_MANAGER,
+  UPDATE_ERRORS_MANAGER,
+  UPDATE_SUPPLIERS_MANAGER,
   REQUEST_FAILED,
 } from './const';
 
 import { getManagerTeamSurveyApi } from '../../api/call';
 import saveManagerTeamAnswerApi from '../../api/managerTeamAnswer';
-// import { finishManagerTeamSurveyApi } from '../../api/supplier';
+import { finishTechnicalTeamSurveyApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
-// import setMessage from '../Generic/action';
+import setMessage from '../Generic/action';
 
 const getDataManagerTeamSurveyProgress = () => ({
   type: GET_MANAGER_TEAM_SURVEY_PROGRESS,
@@ -49,16 +49,16 @@ const changeComment = (idSupplier, id, comment, value) => ({
   new: !id,
 });
 
-// const updateErrors = data => ({
-//   type: UPDATE_ERRORS_MANAGER,
-//   data,
-// });
+const updateErrors = data => ({
+  type: UPDATE_ERRORS_MANAGER,
+  data,
+});
 
-// const updateSuppliers = (idSuppliers, idSuppliersByCall) => ({
-//   type: UPDATE_SUPPLIERS_MANAGER,
-//   idSuppliers,
-//   idSuppliersByCall,
-// });
+const updateSuppliers = (idSuppliers, idSuppliersByCall) => ({
+  type: UPDATE_SUPPLIERS_MANAGER,
+  idSuppliers,
+  idSuppliersByCall,
+});
 
 const setScore = (idSupplier, value, answer) => (dispatch) => {
   requestApi(dispatch, getDataManagerTeamSurveyProgress, saveManagerTeamAnswerApi, answer)
@@ -87,7 +87,7 @@ const setComment = (idSupplier, value, answer) => (dispatch, getState) => {
 const getManagerTeamSurvey = year => (dispatch) => {
   requestApi(dispatch, getDataManagerTeamSurveyProgress, getManagerTeamSurveyApi, year)
     .then((response) => {
-      const { data } = response.data;
+      const { data, rules } = response.data;
       data.suppliers = data.suppliers.map((supplier) => {
         const supplierByCall = data.suppliersByCall.find(
           element => element.idSupplier === supplier.id);
@@ -109,12 +109,20 @@ const getManagerTeamSurvey = year => (dispatch) => {
           error: false,
         };
 
-        supplier.comment = answer ? answer.comment : { value: '', error: false };
+        supplier.comment = { value: answer ? answer.comment : '', error: false };
 
         const state = data.masters.State.find(element => element.id === idState).shortName;
-        const readOnly =
+        let readOnly =
           (state !== 'NOT_STARTED_MANAGER_TEAM' && state !== 'MANAGER_TEAM');
-
+        let rol;
+        data.masters.User[0].idRols.forEach((idRol) => {
+          rol = data.masters.Rol
+            .find(element => element.id === idRol).shortName;
+          if (rol !== 'MANAGER_TEAM') {
+            readOnly = rules.liberator.readOnly;
+          }
+        });
+        data.finishVisible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
         supplier.visible = true;
         supplier.readOnly = readOnly;
         return supplier;
@@ -126,9 +134,47 @@ const getManagerTeamSurvey = year => (dispatch) => {
     });
 };
 
+const finishManagerTeamSurvey = () => (dispatch, getState) => {
+  const { suppliers, suppliersByCall } = getState().managerTeamSurvey.data;
+  const idSuppliersByCall = [];
+  const idSuppliers = [];
+  const updatedErrors = suppliers.map((supplier) => {
+    const updatedError = {
+      ...supplier,
+      items: supplier.items.map(item => ({
+        ...item,
+        error: supplier.visible && supplier.required && !item.value,
+      })),
+    };
+    if (supplier.visible && !supplier.readOnly) {
+      if (supplier.items.filter(item => item.value).length === supplier.items.length) {
+        idSuppliersByCall.push(
+          suppliersByCall.find(element => element.idSupplier === supplier.id).id);
+        idSuppliers.push(supplier.id);
+      }
+    }
+    return updatedError;
+  });
+
+  if (suppliers.filter(element => element.required).length === idSuppliersByCall.length) {
+    requestApi(dispatch, getDataManagerTeamSurveyProgress, finishTechnicalTeamSurveyApi,
+      { idSuppliersByCall })
+      .then(() => {
+        dispatch(updateErrors(updatedErrors));
+        dispatch(updateSuppliers(idSuppliers, idSuppliersByCall));
+      }).catch(() => {
+        dispatch(getFailedRequest());
+      });
+  } else {
+    dispatch(updateErrors(updatedErrors));
+    setMessage('Algunos proveedores no han sido calificados completamente', 'error');
+  }
+};
+
 export {
   getManagerTeamSurvey,
   setScore,
   setComment,
   filterManagerTeamSurvey,
+  finishManagerTeamSurvey,
 };
