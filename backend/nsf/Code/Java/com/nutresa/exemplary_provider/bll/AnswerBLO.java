@@ -263,10 +263,6 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             response = answerDAO.getAsnwersByIdSupplierByCall(idSupplierByCall);
         }
 
-        if (response.isEmpty()) {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
-        }
-
         return response;
     }
 
