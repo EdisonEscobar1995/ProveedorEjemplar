@@ -322,6 +322,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
 
         UserBLO userBLO = new UserBLO();
+        rules = new SectionRule();
         String idCall = getIdCallByYear(year);
         ManagerTeamBLO managerTeamBLO = new ManagerTeamBLO();
         List<String> managerTeamInCall = managerTeamBLO.getIdOfManagerTeamMembersInCall(idCall);
@@ -352,7 +353,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         currentMasters.put("State", stateBLO.getAll());
         currentMasters.put("Rol", rolBLO.getAll());
         currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
-        rules = new SectionRule();
 
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
             rules.setRulesToSection(SurveySection.LIBERATOR.getNameSection(), rules.buildRules(true, true));
