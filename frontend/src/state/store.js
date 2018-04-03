@@ -23,6 +23,7 @@ import technicalTeam from './TechnicalTeam/reducer';
 import technicalTeamSurvey from './TechnicalTeamSurvey/reducer';
 import managerTeamSurvey from './ManagerTeamSurvey/reducer';
 import managerTeam from './ManagerTeam/reducer';
+import menu from './Menu/reducer';
 
 
 const app = combineReducers({
@@ -48,6 +49,7 @@ const app = combineReducers({
   technicalTeamSurvey,
   managerTeamSurvey,
   managerTeam,
+  menu,
 });
 
 let middleware = {};

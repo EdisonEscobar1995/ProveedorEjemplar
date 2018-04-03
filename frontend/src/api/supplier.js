@@ -53,6 +53,10 @@ function finishTechnicalTeamSurveyApi(data) {
   return instance.post('SupplierToNextStage?action=finishTechnicalTeamSurvey', data);
 }
 
+function finishManagerTeamSurveyApi(data) {
+  return instance.post('SupplierToNextStage?action=finishManagerTeamSurvey', data);
+}
+
 export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
@@ -67,4 +71,5 @@ export {
   sendApprovalsApi,
   sendRejectionsApi,
   finishTechnicalTeamSurveyApi,
+  finishManagerTeamSurveyApi,
 };

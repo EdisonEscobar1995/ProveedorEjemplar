@@ -42,7 +42,7 @@ class ManagerTeamSurvey extends Component {
     const { data } = this.props;
     const { masters } = data;
 
-    const defaultValue = record.score;
+    const defaultValue = record.score.defaultValue;
     return !record.readOnly ? (
       <div>
         <Select
@@ -157,14 +157,14 @@ class ManagerTeamSurvey extends Component {
       answer.comment = record.comment.value;
       setScore(idSupplier, value, answer);
     } else {
-      answer.idEvaluationScale = record.score.value;
+      answer.idEvaluationScale = record.score.defaultValue.key;
       answer.comment = value;
       setComment(idSupplier, value, answer);
     }
   }
 
   render() {
-    const { data, finishTechnicalTeamSurvey } = this.props;
+    const { data, finishManagerTeamSurvey } = this.props;
     const { suppliers, masters } = data;
 
     return suppliers ? (
@@ -179,7 +179,7 @@ class ManagerTeamSurvey extends Component {
         }
         <Table
           rowKey={record => record.id}
-          dataSource={suppliers.filter(supplier => supplier.visible)}
+          dataSource={suppliers}
         >
           {
             this.getSupplierColumns()
@@ -191,7 +191,7 @@ class ManagerTeamSurvey extends Component {
               <Col span={2}>
                 <Confirm
                   title="¿Confirma que desea finalizar?"
-                  method={() => finishTechnicalTeamSurvey()}
+                  method={() => finishManagerTeamSurvey()}
                 >
                   <Button
                     type="primary"

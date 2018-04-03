@@ -221,6 +221,15 @@ const routes = [
       import('./pages/ManagerTeam').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'MENU',
+    path: '/menu',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Menu').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

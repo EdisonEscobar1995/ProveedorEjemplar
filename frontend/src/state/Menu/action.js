@@ -1,28 +1,28 @@
 import {
-  GET_MANAGER_TEAM_PROGRESS,
-  GET_MANAGER_TEAM_SUCCESS,
+  GET_MENU_PROGRESS,
+  GET_MENU_SUCCESS,
   REQUEST_FAILED,
-  ADD_MANAGER_TEAM,
-  UPDATE_MANAGER_TEAM,
-  DELETE_MANAGER_TEAM,
-  SEARCH_MANAGER_TEAM,
-  CHANGE_SEARCH_MANAGER_TEAM,
+  ADD_MENU,
+  UPDATE_MENU,
+  DELETE_MENU,
+  SEARCH_MENU,
+  CHANGE_SEARCH_MENU,
 } from './const';
 
-import { getManagerTeamApi, saveManagerTeamApi, deleteManagerTeamApi } from '../../api/managerTeam';
+import { getMenuApi, saveMenuApi, deleteMenuApi } from '../../api/menu';
 import getMasterApi from '../../api/master';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
 
-function getManagerTeamProgress() {
+function getMenuProgress() {
   return {
-    type: GET_MANAGER_TEAM_PROGRESS,
+    type: GET_MENU_PROGRESS,
   };
 }
 
-function getManagerTeamSuccess(data, masters) {
+function getMenuSuccess(data, masters) {
   return {
-    type: GET_MANAGER_TEAM_SUCCESS,
+    type: GET_MENU_SUCCESS,
     data,
     masters,
   };
@@ -34,60 +34,49 @@ function getFailedRequest() {
   };
 }
 
-function saveDataManagerTeam(id, data, remoteId) {
+function saveDataMenu(id, data, remoteId) {
   return {
-    type: id ? UPDATE_MANAGER_TEAM : ADD_MANAGER_TEAM,
+    type: id ? UPDATE_MENU : ADD_MENU,
     data,
     remoteId,
   };
 }
 
-function deleteDataManagerTeam(data) {
+function deleteDataMenu(data) {
   return {
-    type: DELETE_MANAGER_TEAM,
+    type: DELETE_MENU,
     data,
   };
 }
 
-function searchManagerTeam(value) {
+function searchMenu(value) {
   return {
-    type: SEARCH_MANAGER_TEAM,
+    type: SEARCH_MENU,
     value,
   };
 }
 
-function changeSearchManagerTeam(value) {
+function changeSearchMenu(value) {
   return {
-    type: CHANGE_SEARCH_MANAGER_TEAM,
+    type: CHANGE_SEARCH_MENU,
     value,
   };
 }
 
-function getManagerTeam() {
+function getMenu() {
   return (dispatch) => {
-    requestApi(dispatch, getManagerTeamProgress, getMasterApi, [
-      'Call',
-      'User',
+    requestApi(dispatch, getMenuProgress, getMasterApi, [
       'Rol',
     ])
       .then((masterResponse) => {
-        requestApi(dispatch, getManagerTeamProgress, getManagerTeamApi)
+        requestApi(dispatch, getMenuProgress, getMenuApi)
           .then((response) => {
             const data = response.data.data.map(element => ({
               ...element,
               visible: true,
             }));
             const masters = masterResponse.data.data;
-            masters.Call = masters.Call.map(element => ({
-              ...element,
-              name: element.year,
-            }));
-            masters.User = masters.User.filter((user) => {
-              const roles = user.idRols.map(id =>
-                masters.Rol.find(item => item.id === id).shortName);
-              return roles.indexOf('MANAGER_TEAM') >= 0;
-            });
-            dispatch(getManagerTeamSuccess(data, masters));
+            dispatch(getMenuSuccess(data, masters));
           }).catch(() => {
             dispatch(getFailedRequest());
           });
@@ -97,14 +86,14 @@ function getManagerTeam() {
   };
 }
 
-function saveManagerTeam(clientData, remoteId, next) {
+function saveMenu(clientData, remoteId, next) {
   return (dispatch) => {
     dispatch(closeModal());
-    requestApi(dispatch, getManagerTeamProgress, saveManagerTeamApi, clientData)
+    requestApi(dispatch, getMenuProgress, saveMenuApi, clientData)
       .then((response) => {
         const { data } = response.data;
         data.visible = true;
-        dispatch(saveDataManagerTeam(clientData.id, data, remoteId));
+        dispatch(saveDataMenu(clientData.id, data, remoteId));
         if (next) {
           next();
         }
@@ -114,12 +103,12 @@ function saveManagerTeam(clientData, remoteId, next) {
   };
 }
 
-function deleteManagerTeam(clientData) {
+function deleteMenu(clientData) {
   return (dispatch) => {
     dispatch(closeModal());
-    requestApi(dispatch, getManagerTeamProgress, deleteManagerTeamApi, clientData)
+    requestApi(dispatch, getMenuProgress, deleteMenuApi, clientData)
       .then(() => {
-        dispatch(deleteDataManagerTeam(clientData));
+        dispatch(deleteDataMenu(clientData));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
@@ -127,11 +116,11 @@ function deleteManagerTeam(clientData) {
 }
 
 export {
-  getManagerTeam,
-  saveManagerTeam,
-  deleteManagerTeam,
-  searchManagerTeam,
-  changeSearchManagerTeam,
+  getMenu,
+  saveMenu,
+  deleteMenu,
+  searchMenu,
+  changeSearchMenu,
   openModal,
   closeModal,
 };

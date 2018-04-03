@@ -1,12 +1,12 @@
 import {
-  GET_MANAGER_TEAM_PROGRESS,
-  GET_MANAGER_TEAM_SUCCESS,
+  GET_MENU_PROGRESS,
+  GET_MENU_SUCCESS,
   REQUEST_FAILED,
-  ADD_MANAGER_TEAM,
-  UPDATE_MANAGER_TEAM,
-  DELETE_MANAGER_TEAM,
-  SEARCH_MANAGER_TEAM,
-  CHANGE_SEARCH_MANAGER_TEAM,
+  ADD_MENU,
+  UPDATE_MENU,
+  DELETE_MENU,
+  SEARCH_MENU,
+  CHANGE_SEARCH_MENU,
 } from './const';
 import { insertData, updateData, deleteData } from '../../utils/reducer';
 
@@ -17,15 +17,15 @@ const initialState = {
   loading: false,
 };
 
-function managerTeamApp(state = initialState, action) {
+function menuApp(state = initialState, action) {
   switch (action.type) {
-    case GET_MANAGER_TEAM_PROGRESS: {
+    case GET_MENU_PROGRESS: {
       return {
         ...state,
         loading: true,
       };
     }
-    case GET_MANAGER_TEAM_SUCCESS: {
+    case GET_MENU_SUCCESS: {
       return {
         ...state,
         data: action.data,
@@ -33,28 +33,28 @@ function managerTeamApp(state = initialState, action) {
         loading: false,
       };
     }
-    case ADD_MANAGER_TEAM: {
+    case ADD_MENU: {
       return {
         ...state,
         data: insertData(state.data, action.remoteId, action.data),
         loading: false,
       };
     }
-    case UPDATE_MANAGER_TEAM: {
+    case UPDATE_MENU: {
       return {
         ...state,
         data: updateData(state.data, action.data),
         loading: false,
       };
     }
-    case DELETE_MANAGER_TEAM: {
+    case DELETE_MENU: {
       return {
         ...state,
         data: deleteData(state.data, action.data.id),
         loading: false,
       };
     }
-    case SEARCH_MANAGER_TEAM: {
+    case SEARCH_MENU: {
       return {
         ...state,
         searchValue: action.value,
@@ -77,7 +77,7 @@ function managerTeamApp(state = initialState, action) {
         }),
       };
     }
-    case CHANGE_SEARCH_MANAGER_TEAM: {
+    case CHANGE_SEARCH_MENU: {
       return {
         ...state,
         searchValue: action.value,
@@ -95,4 +95,4 @@ function managerTeamApp(state = initialState, action) {
   }
 }
 
-export default managerTeamApp;
+export default menuApp;

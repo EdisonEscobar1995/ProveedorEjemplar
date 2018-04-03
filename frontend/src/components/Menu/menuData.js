@@ -67,7 +67,7 @@ const formData = ({ record = {}, closeModal, masters }) => [
         span: 24,
         type: 'select',
         mode: 'multiple',
-        options: masters.Roles,
+        options: masters.Rol,
         label: 'Roles',
         key: 'idsRol',
         required: true,
