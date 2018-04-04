@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.api;
 
+import java.util.Map;
+
 import com.nutresa.exemplary_provider.bll.SupplierToNextStageBLO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierToNextStageDTO;
@@ -40,6 +42,20 @@ public class SupplierToNextStageAPI extends GenericAPI<SupplierToNextStageDTO, S
         ServletResponseDTO<String> response = null;
         try {
             response = new ServletResponseDTO<String>(supplierToTechnicalTeamBLO.finishSurveyMassive(parameters));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<String>(exception);
+        }
+
+        return response;
+    }
+
+    public ServletResponseDTO<String> finishSurveyManagerTeam(Map<String, String> parameters) {
+        SupplierToNextStageBLO supplierToTechnicalTeamBLO = new SupplierToNextStageBLO();
+        ServletResponseDTO<String> response = null;
+        try {
+            response = new ServletResponseDTO<String>(
+                    supplierToTechnicalTeamBLO.finishSurveyManagerTeam(parameters.get("year")));
+            response.setNotice(supplierToTechnicalTeamBLO.getNotice());
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<String>(exception);
         }

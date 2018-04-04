@@ -1,12 +1,16 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.ManagerTeamAnswerDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.ManagerTeamAnswerDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers.SummaryManagerSurvey;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class ManagerTeamAnswerBLO extends GenericBLO<ManagerTeamAnswerDTO, ManagerTeamAnswerDAO> {
@@ -38,11 +42,27 @@ public class ManagerTeamAnswerBLO extends GenericBLO<ManagerTeamAnswerDTO, Manag
         return super.save(answer);
     }
 
-    public ManagerTeamAnswerDTO getManagerTeamAnswer(String idSupplierByCall) throws HandlerGenericException {
+    public List<ManagerTeamAnswerDTO> getAnswersOfSupplier(String idSupplierByCall) throws HandlerGenericException {
         ManagerTeamAnswerDAO managerTeamAnswerDAO = new ManagerTeamAnswerDAO();
-        UserBLO userBLO = new UserBLO();
-        String nameUserInSession = userBLO.getNameUserInSession();
-        return managerTeamAnswerDAO.getManagerTeamAnswer(idSupplierByCall, nameUserInSession);
+        return managerTeamAnswerDAO.getAnswersOfSupplier(idSupplierByCall);
+    }
+
+    public ReportOfCalificationsBySuppliers buildReportOfManagerTeam(String idSupplierByCall,
+            ReportOfCalificationsBySuppliers recordOfReport) throws HandlerGenericException {
+        List<SummaryManagerSurvey> answerToReport = new ArrayList<SummaryManagerSurvey>();
+        ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
+        List<ManagerTeamAnswerDTO> managerAnswers = getAnswersOfSupplier(idSupplierByCall);
+        for (ManagerTeamAnswerDTO answer : managerAnswers) {
+            EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
+            ReportOfCalificationsBySuppliers.SummaryManagerSurvey answerRecord = report.new SummaryManagerSurvey();
+            answerRecord.comment = answer.getComment();
+            answerRecord.whoEvaluate = answer.getWhoEvaluate();
+            answerRecord.score = evaluationScaleBLO.get(answer.getIdEvaluationScale()).getScore();
+            answerToReport.add(answerRecord);
+        }
+        recordOfReport.setManagerAnswers(answerToReport);
+
+        return recordOfReport;
     }
 
 }

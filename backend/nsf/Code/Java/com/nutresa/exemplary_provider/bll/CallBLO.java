@@ -9,6 +9,7 @@ import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
+import com.nutresa.exemplary_provider.dtl.ManagerTeamDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
@@ -208,6 +209,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                 TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
                 recordOfReport = technicalTeamAnswerBLO.buildReportOfTechnicalTeam(supplierByCall.getId(),
                         recordOfReport, parameters);
+                ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
+                recordOfReport = managerTeamAnswerBLO.buildReportOfManagerTeam(supplierByCall.getId(), recordOfReport);
             }
         }
 
@@ -380,13 +383,17 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         }
 
+        List<DTO> managersInCall = managerTeamBLO.getAllBy(FieldToFilter.FIELD_CALL, idCall, "vwManagerTeam");
+        Map<String, List<Object>> listIds = Common.getDtoFields(managersInCall, new String[] { "[idUser]" },
+                ManagerTeamDTO.class);
+        currentMasters.put("Managers", userBLO.getAllBy("id", Common.getIdsFromList(listIds.get("[idUser]"))));
         currentMasters.put("ManagerTeamAnswer", answers);
         participantsToManagerTeam.setMasters(currentMasters);
 
         return participantsToManagerTeam;
     }
 
-    private List<DTO> identifyParticpantsByCallYearAndStageStates(String year, List<SurveyStates> statesOfStage)
+    protected List<DTO> identifyParticpantsByCallYearAndStageStates(String year, List<SurveyStates> statesOfStage)
             throws HandlerGenericException {
         String viewName = "vwSuppliersByCallIdStateAndIdCall";
         StateBLO stateBLO = new StateBLO();
