@@ -209,6 +209,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                 TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
                 recordOfReport = technicalTeamAnswerBLO.buildReportOfTechnicalTeam(supplierByCall.getId(),
                         recordOfReport, parameters);
+                ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
+                recordOfReport = managerTeamAnswerBLO.buildReportOfManagerTeam(supplierByCall.getId(), recordOfReport);
             }
         }
 
@@ -380,7 +382,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             }
 
         }
-
 
         List<DTO> managersInCall = managerTeamBLO.getAllBy("idCall", idCall, "vwManagerTeam");
         Map<String, List<Object>> listIds = Common.getDtoFields(managersInCall, new String[] { "[idUser]" },

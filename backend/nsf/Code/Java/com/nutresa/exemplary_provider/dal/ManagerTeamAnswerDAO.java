@@ -15,25 +15,9 @@ public class ManagerTeamAnswerDAO extends GenericDAO<ManagerTeamAnswerDTO> {
         super(ManagerTeamAnswerDTO.class);
     }
 
-    public ManagerTeamAnswerDTO getManagerTeamAnswer(String idSupplierByCall, String nameManagerTeamMember)
-            throws HandlerGenericException {
-        List<String> filter = new ArrayList<String>();
-        filter.add(idSupplierByCall);
-        filter.add(nameManagerTeamMember);
-        ManagerTeamAnswerDTO evaluationScale = new ManagerTeamAnswerDTO();
-        View currentView = getDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
-        Document document = currentView.getFirstDocumentByKey(filter, true);
-
-        if (null != document) {
-            evaluationScale = castDocument(document);
-        }
-
-        return evaluationScale;
-    }
-
     public List<ManagerTeamAnswerDTO> getAnswersOfSupplier(String idSupplierByCall) throws HandlerGenericException {
         List<ManagerTeamAnswerDTO> answersOfSupplier = new ArrayList<ManagerTeamAnswerDTO>();
-        View view = getDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
+        View view = getDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate");
         DocumentCollection documents = view.getAllDocumentsByKey(idSupplierByCall, true);
         if (null != documents) {
             for (Document document : documents) {
