@@ -9,20 +9,26 @@ import com.nutresa.exemplary_provider.dal.SupplierToNextStageDAO;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierToNextStageDTO;
-import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, SupplierToNextStageDAO> {
     private static final String STATE_SUCCESS = "OK";
     private static final String STATE_FAILED = "KO";
     private static final String SEPARATOR = ":";
+    private String notice;
 
     public SupplierToNextStageBLO() {
         super(SupplierToNextStageDAO.class);
+    }
+
+    public String getNotice() {
+        return notice;
     }
 
     public String approveToNextStage(SupplierToNextStageDTO suppliersToNextStage) throws HandlerGenericException {
@@ -135,6 +141,45 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
             supplierByCallBLO.finishSurvey(supplierByCall);
             notified = STATE_SUCCESS;
         }
+
+        return notified;
+    }
+
+    public String finishSurveyManagerTeam(String year) throws HandlerGenericException {
+        String notified = STATE_FAILED;
+        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        if (null == year || year.trim().isEmpty()) {
+            year = (String) listYears.get(0);
+        }
+
+        List<SurveyStates> statesIncludInManagerTeamStage = new ArrayList<SurveyStates>();
+        statesIncludInManagerTeamStage.add(SurveyStates.MANAGER_TEAM);
+
+        CallBLO callBLO = new CallBLO();
+        List<DTO> callsBySupplier = callBLO.identifyParticpantsByCallYearAndStageStates(year,
+                statesIncludInManagerTeamStage);
+
+        Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
+                SupplierByCallDTO.class);
+        List<Object> idsSupplierByCall = listIdsSupplierByCall.get("[id]");
+
+        String idCall = callBLO.getIdCallByYear(year);
+        ManagerTeamBLO managerTeamBLO = new ManagerTeamBLO();
+        List<String> managerTeamInCall = managerTeamBLO.getIdOfManagerTeamMembersInCall(idCall);
+
+        short counterFinished = 0;
+        for (Object idSupplierByCall : idsSupplierByCall) {
+            String temporalId = idSupplierByCall.toString();
+            ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
+            if (managerTeamInCall.size() == managerTeamAnswerBLO.getAnswersOfSupplier(temporalId).size()) {
+                SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+                supplierByCallBLO.finishSurvey(supplierByCallBLO.get(temporalId));
+                notified = STATE_SUCCESS;
+                counterFinished = (short) (counterFinished + 1);
+            }
+        }
+
+        notice = Short.toString(counterFinished);
 
         return notified;
     }

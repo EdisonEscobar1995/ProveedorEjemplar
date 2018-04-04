@@ -39,6 +39,8 @@ public class ReportOfCalificationsBySuppliers {
     private List<Service> services;
     @Expose
     private double totalScoreInService;
+    @Expose
+    private List<SummaryManagerSurvey> managerAnswers;
 
     public String getSapCode() {
         return sapCode;
@@ -189,6 +191,14 @@ public class ReportOfCalificationsBySuppliers {
         return idSupplierByCall;
     }
 
+    public void setManagerAnswers(List<SummaryManagerSurvey> managerAnswers) {
+        this.managerAnswers = managerAnswers;
+    }
+
+    public List<SummaryManagerSurvey> getManagerAnswers() {
+        return managerAnswers;
+    }
+
     public class SummarySurvey {
         @Expose
         private String dimension;
@@ -330,4 +340,14 @@ public class ReportOfCalificationsBySuppliers {
         @Expose
         public short answer;
     }
+
+    public class SummaryManagerSurvey {
+        @Expose
+        public String whoEvaluate;
+        @Expose
+        public short score;
+        @Expose
+        public String comment;
+    }
+
 }
