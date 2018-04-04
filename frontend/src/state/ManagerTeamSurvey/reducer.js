@@ -14,18 +14,18 @@ const initialState = {
   loading: false,
 };
 
-const updateSuppliersByCall = (state, idSuppliersByCall = [], stateCode) => (
-  state.data.suppliersByCall.map((supplierByCall) => {
-    if (idSuppliersByCall.indexOf(supplierByCall.id) >= 0) {
-      return {
-        ...supplierByCall,
-        idState: state.data.masters.State.find(
-          element => element.shortName === stateCode).id,
-      };
-    }
-    return supplierByCall;
-  })
-);
+// const updateSuppliersByCall = (state, idSuppliersByCall = [], stateCode) => (
+//   state.data.suppliersByCall.map((supplierByCall) => {
+//     if (idSuppliersByCall.indexOf(supplierByCall.id) >= 0) {
+//       return {
+//         ...supplierByCall,
+//         idState: state.data.masters.State.find(
+//           element => element.shortName === stateCode).id,
+//       };
+//     }
+//     return supplierByCall;
+//   })
+// );
 
 function managerTeamSurveyApp(state = initialState, action) {
   switch (action.type) {
@@ -72,11 +72,10 @@ function managerTeamSurveyApp(state = initialState, action) {
                 value: action.value ? parseInt(action.value.label, 10) : null,
                 error: false,
               },
+              idState: state.data.masters.State.find(
+                element => element.shortName === 'MANAGER_TEAM').id,
             } : supplier
           )),
-          suppliersByCall: action.value ?
-            updateSuppliersByCall(state, [action.score.idSupplierByCall], 'MANAGER_TEAM')
-            : state.data.suppliersByCall,
         },
         loading: false,
       };
@@ -102,11 +101,10 @@ function managerTeamSurveyApp(state = initialState, action) {
                 ...supplier.comment,
                 value: action.value,
               },
+              idState: state.data.masters.State.find(
+                element => element.shortName === 'MANAGER_TEAM').id,
             } : supplier
           )),
-          suppliersByCall: action.value ?
-            updateSuppliersByCall(state, [action.comment.idSupplierByCall], 'MANAGER_TEAM')
-            : state.data.suppliersByCall,
         },
         loading: false,
       };

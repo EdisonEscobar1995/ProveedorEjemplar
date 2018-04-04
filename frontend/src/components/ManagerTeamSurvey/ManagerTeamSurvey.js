@@ -74,26 +74,19 @@ class ManagerTeamSurvey extends Component {
 
   getSupplierColumns = () => {
     const { data } = this.props;
-    const { suppliersByCall, masters } = data;
+    const { masters } = data;
 
     const columns = [{
       title: 'Estado',
       key: 'surveyState',
       render(text, record) {
-        const idState = suppliersByCall
-          .find(supplierByCall => supplierByCall.idSupplier === record.id)
-          .idState;
-        return masters.State.find(state => state.id === idState).name;
+        return masters.State.find(state => state.id === record.idState).name;
       },
     }, {
       title: 'Evaluado por',
       key: 'manager',
       render(text, record) {
-        const idSupplierByCall = suppliersByCall
-          .find(supplierByCall => supplierByCall.idSupplier === record.id).id;
-        const answer = masters.ManagerTeamAnswer
-          .find(element => element.idSupplierByCall === idSupplierByCall);
-        return answer && answer.whoEvaluate;
+        return record.whoEvaluate;
       },
     }, {
       title: 'Nombre del proveedor',
