@@ -21,9 +21,14 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
     private static final String STATE_SUCCESS = "OK";
     private static final String STATE_FAILED = "KO";
     private static final String SEPARATOR = ":";
+    private String notice;
 
     public SupplierToNextStageBLO() {
         super(SupplierToNextStageDAO.class);
+    }
+
+    public String getNotice() {
+        return notice;
     }
 
     public String approveToNextStage(SupplierToNextStageDTO suppliersToNextStage) throws HandlerGenericException {
@@ -162,6 +167,7 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         ManagerTeamBLO managerTeamBLO = new ManagerTeamBLO();
         List<String> managerTeamInCall = managerTeamBLO.getIdOfManagerTeamMembersInCall(idCall);
 
+        short counterFinished = 0;
         for (Object idSupplierByCall : idsSupplierByCall) {
             String temporalId = idSupplierByCall.toString();
             ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
@@ -169,8 +175,11 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
                 SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
                 supplierByCallBLO.finishSurvey(supplierByCallBLO.get(temporalId));
                 notified = STATE_SUCCESS;
+                counterFinished = (short) (counterFinished + 1);
             }
         }
+
+        notice = Short.toString(counterFinished);
 
         return notified;
     }
