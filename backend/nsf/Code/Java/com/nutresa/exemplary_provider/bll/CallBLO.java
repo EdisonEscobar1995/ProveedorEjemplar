@@ -383,7 +383,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         }
 
-        List<DTO> managersInCall = managerTeamBLO.getAllBy("idCall", idCall, "vwManagerTeam");
+        List<DTO> managersInCall = managerTeamBLO.getAllBy(FieldToFilter.FIELD_CALL, idCall, "vwManagerTeam");
         Map<String, List<Object>> listIds = Common.getDtoFields(managersInCall, new String[] { "[idUser]" },
                 ManagerTeamDTO.class);
         currentMasters.put("Managers", userBLO.getAllBy("id", Common.getIdsFromList(listIds.get("[idUser]"))));
