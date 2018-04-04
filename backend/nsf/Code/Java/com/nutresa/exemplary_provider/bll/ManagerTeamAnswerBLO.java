@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.Date;
+import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.ManagerTeamAnswerDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
@@ -43,6 +44,11 @@ public class ManagerTeamAnswerBLO extends GenericBLO<ManagerTeamAnswerDTO, Manag
         UserBLO userBLO = new UserBLO();
         String nameUserInSession = userBLO.getNameUserInSession();
         return managerTeamAnswerDAO.getManagerTeamAnswer(idSupplierByCall, nameUserInSession);
+    }
+    
+    public List<ManagerTeamAnswerDTO> getAnswersOfSupplier(String idSupplierByCall) throws HandlerGenericException {
+        ManagerTeamAnswerDAO managerTeamAnswerDAO = new ManagerTeamAnswerDAO();
+        return managerTeamAnswerDAO.getAnswersOfSupplier(idSupplierByCall);
     }
 
 }

@@ -9,11 +9,12 @@ import com.nutresa.exemplary_provider.dal.SupplierToNextStageDAO;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierToNextStageDTO;
-import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, SupplierToNextStageDAO> {
@@ -134,6 +135,41 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
             SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
             supplierByCallBLO.finishSurvey(supplierByCall);
             notified = STATE_SUCCESS;
+        }
+
+        return notified;
+    }
+
+    public String finishSurveyManagerTeam(String year) throws HandlerGenericException {
+        String notified = STATE_FAILED;
+        List<Object> listYears = getFieldAll(0, "vwCallsByYear");
+        if (null == year || year.trim().isEmpty()) {
+            year = (String) listYears.get(0);
+        }
+
+        List<SurveyStates> statesIncludInManagerTeamStage = new ArrayList<SurveyStates>();
+        statesIncludInManagerTeamStage.add(SurveyStates.MANAGER_TEAM);
+
+        CallBLO callBLO = new CallBLO();
+        List<DTO> callsBySupplier = callBLO.identifyParticpantsByCallYearAndStageStates(year,
+                statesIncludInManagerTeamStage);
+
+        Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
+                SupplierByCallDTO.class);
+        List<Object> idsSupplierByCall = listIdsSupplierByCall.get("[id]");
+
+        String idCall = callBLO.getIdCallByYear(year);
+        ManagerTeamBLO managerTeamBLO = new ManagerTeamBLO();
+        List<String> managerTeamInCall = managerTeamBLO.getIdOfManagerTeamMembersInCall(idCall);
+
+        for (Object idSupplierByCall : idsSupplierByCall) {
+            String temporalId = idSupplierByCall.toString();
+            ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
+            if (managerTeamInCall.size() == managerTeamAnswerBLO.getAnswersOfSupplier(temporalId).size()) {
+                SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+                supplierByCallBLO.finishSurvey(supplierByCallBLO.get(temporalId));
+                notified = STATE_SUCCESS;
+            }
         }
 
         return notified;

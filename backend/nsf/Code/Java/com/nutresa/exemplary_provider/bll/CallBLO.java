@@ -386,7 +386,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         return participantsToManagerTeam;
     }
 
-    private List<DTO> identifyParticpantsByCallYearAndStageStates(String year, List<SurveyStates> statesOfStage)
+    protected List<DTO> identifyParticpantsByCallYearAndStageStates(String year, List<SurveyStates> statesOfStage)
             throws HandlerGenericException {
         String viewName = "vwSuppliersByCallIdStateAndIdCall";
         StateBLO stateBLO = new StateBLO();

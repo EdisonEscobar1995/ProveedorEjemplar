@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openntf.domino.Document;
+import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.ManagerTeamAnswerDTO;
@@ -29,4 +30,18 @@ public class ManagerTeamAnswerDAO extends GenericDAO<ManagerTeamAnswerDTO> {
 
         return evaluationScale;
     }
+
+    public List<ManagerTeamAnswerDTO> getAnswersOfSupplier(String idSupplierByCall) throws HandlerGenericException {
+        List<ManagerTeamAnswerDTO> answersOfSupplier = new ArrayList<ManagerTeamAnswerDTO>();
+        View view = getDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndIdUser");
+        DocumentCollection documents = view.getAllDocumentsByKey(idSupplierByCall, true);
+        if (null != documents) {
+            for (Document document : documents) {
+                answersOfSupplier.add(castDocument(document));
+            }
+        }
+
+        return answersOfSupplier;
+    }
+
 }
