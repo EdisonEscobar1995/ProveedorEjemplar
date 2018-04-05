@@ -1,5 +1,61 @@
 import exportData from '../../utils/excel';
 
+const ManagerReport = (dataReport) => {
+  if (false) {
+    const report = [];
+    const merge = [];
+    let range = {};
+    let column = 0;
+    // Armado de Cabecera
+    range = { s: { r: 0, c: column } };
+    let row = ['PROVEEDOR'];
+    row = row.concat(['', '', '', '']);
+    column += 4;
+    range.e = { r: 0, c: column };
+    merge.push(range);
+    column += 1;
+    range = { s: { r: 0, c: column } };
+    row = ['CALIFICACIÓN'];
+    row = row.concat(['']);
+    column += 1;
+    range.e = { r: 0, c: column };
+    merge.push(range);
+    report.push(row);
+
+    // Armado de Datos Cabecera
+    row = [
+      'Código SAP',
+      'Proveedor',
+      'Tipo de suministro',
+      'Categoría',
+      'Tamaño de empresa',
+      'Comentarios',
+      'TOTAL',
+    ];
+    report.push(row);
+
+    // Armado Datos del Reporte
+    dataReport.forEach((supplier) => {
+      row = [
+        supplier.sapCode,
+        supplier.name,
+        supplier.supply,
+        supplier.category,
+        supplier.companySize,
+      ];
+      supplier.services.forEach((service) => {
+        service.items.forEach((item) => {
+          row.push(item.answer < 0 ? '' : item.answer);
+        });
+        row.push(service.comment);
+        row.push(service.total < 0 ? '' : service.total.toFixed(2));
+      });
+      row.push(supplier.totalScoreInService < 0 ? '' : supplier.totalScoreInService.toFixed(2));
+      report.push(row);
+    });
+  }
+};
+
 const exportTechnicalAndManager = (excelData) => {
   const report = [];
   const merge = [];
@@ -70,6 +126,7 @@ const exportTechnicalAndManager = (excelData) => {
       row.push(supplier.totalScoreInService < 0 ? '' : supplier.totalScoreInService.toFixed(2));
       report.push(row);
     });
+    ManagerReport(excelData);
   }
 
   exportData([{

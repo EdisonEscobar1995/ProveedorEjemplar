@@ -1,5 +1,5 @@
-import intance from './instance';
+import instance from './instance';
 
-const saveManagerTeamAnswerApi = data => intance.post('ManagerTeamAnswer?action=save', data);
+const saveManagerTeamAnswerApi = data => instance.post('ManagerTeamAnswer?action=save', data);
 
 export default saveManagerTeamAnswerApi;

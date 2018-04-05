@@ -1,7 +1,7 @@
 import {
   GET_MANAGER_TEAM_SURVEY_PROGRESS,
-  // GET_MANAGER_TEAM_SURVEY_SUCCESS,
-  // FINISH_MANAGER_TEAM_SURVEY_PROGRESS,
+  GET_MANAGER_TEAM_SURVEY_SUCCESS,
+  FINISH_MANAGER_TEAM_SURVEY_PROGRESS,
   FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
   FILTER_MANAGER_TEAM_SURVEY,
   CHANGE_COMMENT_MANAGER,
@@ -11,26 +11,26 @@ import {
 
 import { getManagerTeamSurveyApi } from '../../api/call';
 import saveManagerTeamAnswerApi from '../../api/managerTeamAnswer';
-// import { finishTechnicalTeamSurveyApi } from '../../api/supplier';
+import { finishManagerTeamSurveyApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
-// import setMessage from '../Generic/action';
+import setMessage from '../Generic/action';
 
 const getDataManagerTeamSurveyProgress = () => ({
   type: GET_MANAGER_TEAM_SURVEY_PROGRESS,
 });
 
 const getDataManagerTeamSurveySuccess = data => ({
-  type: FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
+  type: GET_MANAGER_TEAM_SURVEY_SUCCESS,
   data,
 });
 
-// const getDataManagerTeamSurveyProgress = data => ({
-//   type: FINISH_MANAGER_TEAM_SURVEY_PROGRESS,
-//   data,
-// });
+const finishManagerTeamSurveyProgress = data => ({
+  type: FINISH_MANAGER_TEAM_SURVEY_PROGRESS,
+  data,
+});
 
-const finishManagerTeamSurvey = () => ({
-  type: GET_MANAGER_TEAM_SURVEY_PROGRESS,
+const finishManagerTeamSurveySuccess = () => ({
+  type: FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
 });
 
 const getFailedRequest = () => ({
@@ -168,6 +168,7 @@ const getManagerTeamSurvey = year => (dispatch) => {
       });
       data.suppliers = supplierAux;
       data.finishVisible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
+      data.yearCall = year !== undefined ? year : data.years[0];
       data.masters.EvaluationScale = sortByField(data.masters.EvaluationScale, 'score');
       dispatch(getDataManagerTeamSurveySuccess(data));
     }).catch(() => {
@@ -175,12 +176,15 @@ const getManagerTeamSurvey = year => (dispatch) => {
     });
 };
 
-// const finishManagerTeamSurvey = year => (dispatch) => {
-//   requestApi(dispatch, getDataManagerTeamSurveyProgress, getManagerTeamSurveyApi, year)
-//     .then((response) => {
-
-//     });
-// };
+const finishManagerTeamSurvey = () => (dispatch) => {
+  requestApi(dispatch, finishManagerTeamSurveyProgress, finishManagerTeamSurveyApi)
+    .then((response) => {
+      dispatch(finishManagerTeamSurveySuccess());
+      dispatch(setMessage(`Se han finalizado las respuestas de ${response.data.notice} proveedores.`, 'success'));
+    }).catch(() => {
+      dispatch(getFailedRequest());
+    });
+};
 
 export {
   getManagerTeamSurvey,

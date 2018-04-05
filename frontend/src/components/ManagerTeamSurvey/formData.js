@@ -10,7 +10,23 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
     getManagerTeamSurvey();
   };
 
-  return [
+  const getUniqueSuppliers = () => {
+    const suppliersAux = [];
+    const idSuppliers = [];
+    if (suppliers) {
+      suppliers.forEach((item) => {
+        const idSupplier = item.id;
+        if (idSuppliers.indexOf(idSupplier) === -1) {
+          item.name = item.businessName;
+          idSuppliers.push(idSupplier);
+          suppliersAux.push(item);
+        }
+      });
+    }
+    return suppliersAux;
+  };
+
+  const FormData = [
     {
       key: 1.1,
       value: [
@@ -77,10 +93,7 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
           label: 'Proveedor',
           key: 'supplier',
           value: '',
-          options: suppliers ? suppliers.map((item) => {
-            item.name = item.businessName;
-            return item;
-          }) : [],
+          options: getUniqueSuppliers(),
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
             filterManagerTeamSurvey(values);
@@ -103,6 +116,42 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
       ],
     },
   ];
+
+  if (data.finishVisible) {
+    FormData[1].value.splice(1, 0, {
+      span: 8,
+      type: 'select',
+      label: 'Gerente',
+      key: 'managers',
+      value: '',
+      options: masters ? masters.Managers : [],
+      handleChange: (value) => {
+        const values = { ...form.getFieldsValue(), managers: value };
+        filterManagerTeamSurvey(values);
+      },
+    });
+
+    FormData.splice(2, 0,
+      {
+        key: 1.3,
+        value: [
+          {
+            span: 8,
+            type: 'select',
+            label: 'Estado',
+            key: 'states',
+            value: '',
+            options: masters ? masters.State : [],
+            handleChange: (value) => {
+              const values = { ...form.getFieldsValue(), states: value };
+              filterManagerTeamSurvey(values);
+            },
+          },
+        ],
+      });
+  }
+
+  return FormData;
 };
 
 export default formData;

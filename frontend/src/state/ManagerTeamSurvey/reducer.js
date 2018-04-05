@@ -1,11 +1,11 @@
 import {
   GET_MANAGER_TEAM_SURVEY_PROGRESS,
   GET_MANAGER_TEAM_SURVEY_SUCCESS,
+  FINISH_MANAGER_TEAM_SURVEY_PROGRESS,
+  FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
   FILTER_MANAGER_TEAM_SURVEY,
   CHANGE_COMMENT_MANAGER,
   CHANGE_SCORE_MANAGER,
-  // UPDATE_ERRORS_MANAGER,
-  // UPDATE_SUPPLIERS_MANAGER,
   REQUEST_FAILED,
 } from './const';
 
@@ -14,22 +14,11 @@ const initialState = {
   loading: false,
 };
 
-// const updateSuppliersByCall = (state, idSuppliersByCall = [], stateCode) => (
-//   state.data.suppliersByCall.map((supplierByCall) => {
-//     if (idSuppliersByCall.indexOf(supplierByCall.id) >= 0) {
-//       return {
-//         ...supplierByCall,
-//         idState: state.data.masters.State.find(
-//           element => element.shortName === stateCode).id,
-//       };
-//     }
-//     return supplierByCall;
-//   })
-// );
-
 function managerTeamSurveyApp(state = initialState, action) {
   switch (action.type) {
-    case GET_MANAGER_TEAM_SURVEY_PROGRESS: {
+    case GET_MANAGER_TEAM_SURVEY_PROGRESS:
+    case FINISH_MANAGER_TEAM_SURVEY_PROGRESS:
+    {
       return {
         ...state,
         loading: true,
@@ -110,6 +99,7 @@ function managerTeamSurveyApp(state = initialState, action) {
       };
     }
     case FILTER_MANAGER_TEAM_SURVEY: {
+      const managerProcess = [...state.data.masters.Managers];
       return {
         ...state,
         data: {
@@ -120,7 +110,10 @@ function managerTeamSurveyApp(state = initialState, action) {
               category = '',
               country = '',
               supplier = '',
+              managers = '',
+              states = '',
             } = action.data;
+            const manager = managerProcess.find(x => x.name === (item.whoEvaluate ? item.whoEvaluate : ''));
             let visible = true;
             if (category !== '' && category !== item.idCategory) {
               visible = false;
@@ -129,6 +122,10 @@ function managerTeamSurveyApp(state = initialState, action) {
             } else if (supplier !== '' && supplier !== item.id) {
               visible = false;
             } else if (supply !== '' && supply !== item.idSupply) {
+              visible = false;
+            } else if (managers !== '' && managers !== (manager !== undefined ? manager.id : null)) {
+              visible = false;
+            } else if (states !== '' && states !== item.idState) {
               visible = false;
             }
             return {
@@ -139,37 +136,9 @@ function managerTeamSurveyApp(state = initialState, action) {
         },
       };
     }
-    // case UPDATE_ERRORS_MANAGER: {
-    //   return {
-    //     ...state,
-    //     data: {
-    //       ...state.data,
-    //       suppliers: [...action.data],
-    //     },
-    //   };
-    // }
-    // case UPDATE_SUPPLIERS_MANAGER: {
-    //   return {
-    //     ...state,
-    //     data: {
-    //       ...state.data,
-    //       suppliers: state.data.suppliers.map((supplier) => {
-    //         if (action.idSuppliers.indexOf(supplier.id) >= 0) {
-    //           return {
-    //             ...supplier,
-    //             required: false,
-    //             readOnly: true,
-    //           };
-    //         }
-    //         return supplier;
-    //       }),
-    //       suppliersByCall: 
-    //  updateSuppliersByCall(state, action.idSuppliersByCall, 'ENDED_Manager_TEAM'),
-    //     },
-    //     loading: false,
-    //   };
-    // }
-    case REQUEST_FAILED: {
+    case REQUEST_FAILED:
+    case FINISH_MANAGER_TEAM_SURVEY_SUCCESS:
+    {
       return {
         ...state,
         loading: false,
