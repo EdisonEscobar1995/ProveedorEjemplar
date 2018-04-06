@@ -20,6 +20,14 @@ const formData = ({ record = {}, closeModal, masters }) => [
         value: record.id,
         style: { display: 'none' },
       },
+      {
+        span: 24,
+        type: 'input',
+        label: 'Tipo',
+        key: 'type',
+        value: 'menu',
+        style: { display: 'none' },
+      },
     ],
   },
   {
@@ -30,14 +38,26 @@ const formData = ({ record = {}, closeModal, masters }) => [
         type: 'select',
         options: masters.Category,
         label: 'Categoría',
-        key: 'categoryNumber',
+        key: 'categoryName',
         required: true,
-        value: record.categoryNumber,
+        value: record.categoryName,
       },
     ],
   },
   {
     key: 1.3,
+    value: [
+      {
+        span: 24,
+        type: 'inputNumber',
+        label: 'Índice',
+        key: 'categoryNumber',
+        value: record.categoryNumber,
+      },
+    ],
+  },
+  {
+    key: 1.5,
     value: [
       {
         span: 24,
@@ -49,7 +69,7 @@ const formData = ({ record = {}, closeModal, masters }) => [
     ],
   },
   {
-    key: 1.4,
+    key: 1.6,
     value: [
       {
         span: 24,
@@ -61,7 +81,7 @@ const formData = ({ record = {}, closeModal, masters }) => [
     ],
   },
   {
-    key: 1.5,
+    key: 1.7,
     value: [
       {
         span: 24,
@@ -76,7 +96,7 @@ const formData = ({ record = {}, closeModal, masters }) => [
     ],
   },
   {
-    key: 1.6,
+    key: 1.8,
     justify: 'center',
     value: [
       {

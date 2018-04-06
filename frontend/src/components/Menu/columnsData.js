@@ -1,11 +1,7 @@
-const columnsData = masters => [
+const columnsData = () => [
   {
     title: 'Categoría',
-    key: 'categoryNumber',
-    render(text, record) {
-      return masters.Category
-        && masters.Category.find(item => item.id === record.categoryNumber).name;
-    },
+    key: 'categoryName',
   },
   {
     title: 'Título',

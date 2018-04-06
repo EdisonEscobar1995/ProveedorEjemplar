@@ -63,10 +63,8 @@ function menuApp(state = initialState, action) {
           const value = action.value.toLowerCase();
           if (
             action.value !== '' &&
-            !(state.masters.Call.find(item => item.id === element.idCall).name)
-              .toLowerCase().includes(value) &&
-            !(state.masters.User.find(item => item.id === element.idUser).name)
-              .toLowerCase().includes(value)
+            !element.categoryName.toLowerCase().includes(value) &&
+            !element.title.toLowerCase().includes(value)
           ) {
             visible = false;
           }
