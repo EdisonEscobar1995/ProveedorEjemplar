@@ -189,6 +189,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         ReportOfCalificationsBySuppliers recordOfReport = new ReportOfCalificationsBySuppliers();
         SupplyBLO supplyBLO = new SupplyBLO();
         CategoryBLO categoryBLO = new CategoryBLO();
+        StateBLO stateBLO = new StateBLO();
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         recordOfReport.setNit(supplier.getNit());
         recordOfReport.setSapCode(supplier.getSapCode());
@@ -198,6 +199,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
         recordOfReport.setIdSupplier(supplierByCall.getIdSupplier());
         recordOfReport.setIdSupplierByCall(supplierByCall.getId());
+        recordOfReport.setIdState(supplierByCall.getIdState());
+        recordOfReport.setStates(stateBLO.getAll());
 
         String typeReport = parameters.get("type");
         if (typeReport.equals("SUPPLIER_EVALUATOR")) {
