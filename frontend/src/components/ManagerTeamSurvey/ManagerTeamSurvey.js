@@ -74,26 +74,19 @@ class ManagerTeamSurvey extends Component {
 
   getSupplierColumns = () => {
     const { data } = this.props;
-    const { suppliersByCall, masters } = data;
+    const { masters } = data;
 
     const columns = [{
       title: 'Estado',
       key: 'surveyState',
       render(text, record) {
-        const idState = suppliersByCall
-          .find(supplierByCall => supplierByCall.idSupplier === record.id)
-          .idState;
-        return masters.State.find(state => state.id === idState).name;
+        return masters.State.find(state => state.id === record.idState).name;
       },
     }, {
       title: 'Evaluado por',
       key: 'manager',
       render(text, record) {
-        const idSupplierByCall = suppliersByCall
-          .find(supplierByCall => supplierByCall.idSupplier === record.id).id;
-        const answer = masters.ManagerTeamAnswer
-          .find(element => element.idSupplierByCall === idSupplierByCall);
-        return answer && answer.whoEvaluate;
+        return record.whoEvaluate;
       },
     }, {
       title: 'Nombre del proveedor',
@@ -178,7 +171,6 @@ class ManagerTeamSurvey extends Component {
           )
         }
         <Table
-          rowKey={record => record.id}
           dataSource={suppliers.filter(supplier => supplier.visible)}
         >
           {
@@ -186,22 +178,24 @@ class ManagerTeamSurvey extends Component {
           }
         </Table>
         {
-          suppliers.filter(element => element.visible).length > 0 && data.finishVisible ? (
-            <Row type="flex" justify="center">
-              <Col span={2}>
-                <Confirm
-                  title="¿Confirma que desea finalizar?"
-                  method={() => finishManagerTeamSurvey()}
-                >
-                  <Button
-                    type="primary"
+          suppliers.filter(element => element.visible === false).length === 0
+            && data.finishVisible
+            && data.yearCall === (data.years && data.years.length > 0 ? data.years[0] : '') ? (
+              <Row type="flex" justify="center">
+                <Col span={2}>
+                  <Confirm
+                    title="¿Confirma que desea finalizar?"
+                    method={() => finishManagerTeamSurvey()}
                   >
+                    <Button
+                      type="primary"
+                    >
                     Finalizar
-                  </Button>
-                </Confirm>
-              </Col>
-            </Row>
-          ) : null
+                    </Button>
+                  </Confirm>
+                </Col>
+              </Row>
+            ) : null
         }
       </div>
     ) : null;

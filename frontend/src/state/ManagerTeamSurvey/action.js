@@ -1,17 +1,17 @@
 import {
   GET_MANAGER_TEAM_SURVEY_PROGRESS,
   GET_MANAGER_TEAM_SURVEY_SUCCESS,
+  FINISH_MANAGER_TEAM_SURVEY_PROGRESS,
+  FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
   FILTER_MANAGER_TEAM_SURVEY,
   CHANGE_COMMENT_MANAGER,
   CHANGE_SCORE_MANAGER,
-  UPDATE_ERRORS_MANAGER,
-  UPDATE_SUPPLIERS_MANAGER,
   REQUEST_FAILED,
 } from './const';
 
 import { getManagerTeamSurveyApi } from '../../api/call';
 import saveManagerTeamAnswerApi from '../../api/managerTeamAnswer';
-import { finishTechnicalTeamSurveyApi } from '../../api/supplier';
+import { finishManagerTeamSurveyApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
 
@@ -22,6 +22,15 @@ const getDataManagerTeamSurveyProgress = () => ({
 const getDataManagerTeamSurveySuccess = data => ({
   type: GET_MANAGER_TEAM_SURVEY_SUCCESS,
   data,
+});
+
+const finishManagerTeamSurveyProgress = data => ({
+  type: FINISH_MANAGER_TEAM_SURVEY_PROGRESS,
+  data,
+});
+
+const finishManagerTeamSurveySuccess = () => ({
+  type: FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
 });
 
 const getFailedRequest = () => ({
@@ -47,17 +56,6 @@ const changeComment = (idSupplier, id, comment, value) => ({
   comment,
   value,
   new: !id,
-});
-
-const updateErrors = data => ({
-  type: UPDATE_ERRORS_MANAGER,
-  data,
-});
-
-const updateSuppliers = (idSuppliers, idSuppliersByCall) => ({
-  type: UPDATE_SUPPLIERS_MANAGER,
-  idSuppliers,
-  idSuppliersByCall,
 });
 
 const setScore = (idSupplier, value, answer) => (dispatch) => {
@@ -88,18 +86,71 @@ const getManagerTeamSurvey = year => (dispatch) => {
   requestApi(dispatch, getDataManagerTeamSurveyProgress, getManagerTeamSurveyApi, year)
     .then((response) => {
       const { data, rules } = response.data;
-      data.suppliers = data.suppliers.map((supplier) => {
-        const supplierByCall = data.suppliersByCall.find(
-          element => element.idSupplier === supplier.id);
-
+      let rol;
+      let supplierAux = [...data.suppliers];
+      supplierAux = supplierAux.map((supplier) => {
+        const idState = data.suppliersByCall.find(
+          element => element.idSupplier === supplier.id).idState;
+        const state = data.masters.State.find(element => element.id === idState).shortName;
+        let readOnly =
+          (state !== 'NOT_STARTED_MANAGER_TEAM' && state !== 'MANAGER_TEAM');
+        data.masters.User[0].idRols.forEach((idRol) => {
+          rol = data.masters.Rol
+            .find(element => element.id === idRol).shortName;
+          if (rol !== 'MANAGER_TEAM') {
+            readOnly = rules.liberator.readOnly;
+          }
+        });
+        supplier.score = {
+          defaultValue: {
+            key: null,
+            name: null,
+          },
+          value: null,
+          error: false,
+        };
+        supplier.comment = { value: '', error: false };
+        supplier.visible = true;
+        supplier.whoEvaluate = null;
+        supplier.idState = idState;
+        supplier.readOnly = readOnly;
+        return supplier;
+      });
+      let idx = 0;
+      data.masters.ManagerTeamAnswer.forEach((managerAnswer) => {
+        const supplierByCall = data.suppliersByCall
+          .find(call => call.id === managerAnswer.idSupplierByCall);
+        const idSupplier = supplierByCall.idSupplier;
         const idSupplierByCall = supplierByCall.id;
         const idState = supplierByCall.idState;
 
-        const answer = data.masters.ManagerTeamAnswer
-          .find(element => element.idSupplierByCall === idSupplierByCall);
+        const supplier =
+          Object.assign({}, data.suppliers.find(element => element.id === idSupplier));
+        const index = supplierAux
+          .indexOf(data.suppliers.find(element => element.id === idSupplier));
+        if (index !== -1) {
+          supplierAux.splice(index, 1);
+        }
+        const answers = data.masters.ManagerTeamAnswer
+          .filter(element => element.idSupplierByCall === idSupplierByCall);
+        idx = idx >= answers.length ? 0 : idx;
+        const answer = answers[idx];
+        idx += 1;
         const option = answer ?
           data.masters.EvaluationScale
             .find(element => element.id === answer.idEvaluationScale) : null;
+
+        const state = data.masters.State.find(element => element.id === idState).shortName;
+        let readOnly =
+          (state !== 'NOT_STARTED_MANAGER_TEAM' && state !== 'MANAGER_TEAM');
+        data.masters.User[0].idRols.forEach((idRol) => {
+          rol = data.masters.Rol
+            .find(element => element.id === idRol).shortName;
+          if (rol !== 'MANAGER_TEAM') {
+            readOnly = rules.liberator.readOnly;
+          }
+        });
+
         supplier.score = {
           defaultValue: {
             key: option ? option.id : null,
@@ -108,25 +159,16 @@ const getManagerTeamSurvey = year => (dispatch) => {
           value: option ? option.score : null,
           error: false,
         };
-
         supplier.comment = { value: answer ? answer.comment : '', error: false };
-
-        const state = data.masters.State.find(element => element.id === idState).shortName;
-        let readOnly =
-          (state !== 'NOT_STARTED_MANAGER_TEAM' && state !== 'MANAGER_TEAM');
-        let rol;
-        data.masters.User[0].idRols.forEach((idRol) => {
-          rol = data.masters.Rol
-            .find(element => element.id === idRol).shortName;
-          if (rol !== 'MANAGER_TEAM') {
-            readOnly = rules.liberator.readOnly;
-          }
-        });
-        data.finishVisible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
         supplier.visible = true;
         supplier.readOnly = readOnly;
-        return supplier;
+        supplier.idState = idState;
+        supplier.whoEvaluate = answer.whoEvaluate;
+        supplierAux.push(supplier);
       });
+      data.suppliers = supplierAux;
+      data.finishVisible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
+      data.yearCall = year !== undefined ? year : data.years[0];
       data.masters.EvaluationScale = sortByField(data.masters.EvaluationScale, 'score');
       dispatch(getDataManagerTeamSurveySuccess(data));
     }).catch(() => {
@@ -134,41 +176,14 @@ const getManagerTeamSurvey = year => (dispatch) => {
     });
 };
 
-const finishManagerTeamSurvey = () => (dispatch, getState) => {
-  const { suppliers, suppliersByCall } = getState().managerTeamSurvey.data;
-  const idSuppliersByCall = [];
-  const idSuppliers = [];
-  const updatedErrors = suppliers.map((supplier) => {
-    const updatedError = {
-      ...supplier,
-      items: supplier.items.map(item => ({
-        ...item,
-        error: supplier.visible && supplier.required && !item.value,
-      })),
-    };
-    if (supplier.visible && !supplier.readOnly) {
-      if (supplier.items.filter(item => item.value).length === supplier.items.length) {
-        idSuppliersByCall.push(
-          suppliersByCall.find(element => element.idSupplier === supplier.id).id);
-        idSuppliers.push(supplier.id);
-      }
-    }
-    return updatedError;
-  });
-
-  if (suppliers.filter(element => element.required).length === idSuppliersByCall.length) {
-    requestApi(dispatch, getDataManagerTeamSurveyProgress, finishTechnicalTeamSurveyApi,
-      { idSuppliersByCall })
-      .then(() => {
-        dispatch(updateErrors(updatedErrors));
-        dispatch(updateSuppliers(idSuppliers, idSuppliersByCall));
-      }).catch(() => {
-        dispatch(getFailedRequest());
-      });
-  } else {
-    dispatch(updateErrors(updatedErrors));
-    setMessage('Algunos proveedores no han sido calificados completamente', 'error');
-  }
+const finishManagerTeamSurvey = () => (dispatch) => {
+  requestApi(dispatch, finishManagerTeamSurveyProgress, finishManagerTeamSurveyApi)
+    .then((response) => {
+      dispatch(finishManagerTeamSurveySuccess());
+      dispatch(setMessage(`Se han finalizado las respuestas de ${response.data.notice} proveedores.`, 'success'));
+    }).catch(() => {
+      dispatch(getFailedRequest());
+    });
 };
 
 export {

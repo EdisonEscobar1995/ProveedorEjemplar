@@ -53,8 +53,8 @@ function finishTechnicalTeamSurveyApi(data) {
   return instance.post('SupplierToNextStage?action=finishTechnicalTeamSurvey', data);
 }
 
-function finishManagerTeamSurveyApi(data) {
-  return instance.post('SupplierToNextStage?action=finishManagerTeamSurvey', data);
+function finishManagerTeamSurveyApi() {
+  return instance.get('SupplierToNextStage?action=finishSurveyManagerTeam&year=2018');
 }
 
 export {
