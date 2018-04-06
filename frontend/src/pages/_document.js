@@ -86,6 +86,7 @@ const NameStyle = styled.h3`
   margin-bottom: 6px;
   font-weight: 600;
   font-style: normal;
+  text-overflow: ellipsis;
 `;
 const CloseStyle = styled.h4`
   color: ${props => props.theme.color.secondary}
