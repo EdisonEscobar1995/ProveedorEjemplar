@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dtl.queries;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.DTO;
 
 public class ReportOfCalificationsBySuppliers {
     @Expose
@@ -33,6 +34,10 @@ public class ReportOfCalificationsBySuppliers {
     private double scoreOfEvaluator;
     @Expose
     private double totalScoreOfEvaluator;
+    @Expose
+    private String idState;
+    @Expose
+    private List<DTO> states;
     @Expose
     private List<SummarySurvey> summarySurvey;
     @Expose
@@ -197,6 +202,22 @@ public class ReportOfCalificationsBySuppliers {
 
     public List<SummaryManagerSurvey> getManagerAnswers() {
         return managerAnswers;
+    }
+
+    public void setIdState(String idState) {
+        this.idState = idState;
+    }
+
+    public String getIdState() {
+        return idState;
+    }
+
+    public void setStates(List<DTO> states) {
+        this.states = states;
+    }
+
+    public List<DTO> getStates() {
+        return states;
     }
 
     public class SummarySurvey {
