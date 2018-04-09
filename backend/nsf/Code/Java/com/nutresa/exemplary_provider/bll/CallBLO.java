@@ -240,15 +240,22 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         List<ReportOfCalificationsBySuppliers> response = new ArrayList<ReportOfCalificationsBySuppliers>();
         Map<String, String> parametersToGenerateReport = new HashMap<String, String>();
-        parametersToGenerateReport.put("type", "SUPPLIER_EVALUATOR");
         for (SupplierByCallDTO supplierByCall : evaluatedSuppliers) {
-            ReportOfCalificationsBySuppliers reportBySupplier = getRecordOfReport(supplierByCall,
-                    supplierBLO.get(supplierByCall.getIdSupplier()), parametersToGenerateReport);
+            parametersToGenerateReport.put("type", "SUPPLIER_EVALUATOR");
+            ReportOfCalificationsBySuppliers reportBySupplier = new ReportOfCalificationsBySuppliers();
+            if (nameNextStage.equals("TechnicalTeam")) {
+                reportBySupplier = getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
+                        parametersToGenerateReport);
+            }
+
             if (nameNextStage.equals("ManagerTeam")) {
+                reportBySupplier = getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
+                        parametersToGenerateReport);
                 parametersToGenerateReport.put("type", "TECHNICAL_MANAGER");
                 ReportOfCalificationsBySuppliers reportUntilTechnicalTeam = getRecordOfReport(supplierByCall,
                         supplierBLO.get(supplierByCall.getIdSupplier()), parametersToGenerateReport);
                 reportBySupplier.setTotalScoreInService(reportUntilTechnicalTeam.getTotalScoreInService());
+                reportBySupplier.setServices(reportUntilTechnicalTeam.getServices());
             }
 
             response.add(reportBySupplier);
