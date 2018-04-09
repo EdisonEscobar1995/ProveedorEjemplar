@@ -1,3 +1,4 @@
+import { notification } from 'antd';
 import {
   GET_MANAGER_TEAM_SURVEY_PROGRESS,
   GET_MANAGER_TEAM_SURVEY_SUCCESS,
@@ -58,12 +59,37 @@ const changeComment = (idSupplier, id, comment, value) => ({
   new: !id,
 });
 
+const openNotificationWithIcon = (type) => {
+  let messageToShow = '';
+  let descriptionToShow = '';
+
+  switch (type) {
+    case 'success':
+      messageToShow = 'Guardado exitoso';
+      descriptionToShow = 'Respuesta guardada.';
+      break;
+    case 'error':
+    default:
+      messageToShow = 'Error guardando';
+      descriptionToShow = 'La respuesta no pudo ser guardada';
+      break;
+  }
+
+  notification[type]({
+    message: messageToShow,
+    description: descriptionToShow,
+  });
+};
+
+
 const setScore = (idSupplier, value, answer) => (dispatch) => {
   requestApi(dispatch, getDataManagerTeamSurveyProgress, saveManagerTeamAnswerApi, answer)
     .then((response) => {
       dispatch(changeScore(idSupplier, answer.id, response.data.data, value));
+      openNotificationWithIcon('success');
     }).catch(() => {
       dispatch(changeScore(idSupplier, answer.id, answer, null));
+      openNotificationWithIcon('error');
       dispatch(getFailedRequest());
     });
 };
@@ -75,8 +101,10 @@ const setComment = (idSupplier, value, answer) => (dispatch, getState) => {
     requestApi(dispatch, getDataManagerTeamSurveyProgress, saveManagerTeamAnswerApi, answer)
       .then((response) => {
         dispatch(changeComment(idSupplier, answer.id, response.data.data, value));
+        openNotificationWithIcon('success');
       }).catch(() => {
         dispatch(changeComment(idSupplier, answer.id, answer, null));
+        openNotificationWithIcon('error');
         dispatch(getFailedRequest());
       });
   }

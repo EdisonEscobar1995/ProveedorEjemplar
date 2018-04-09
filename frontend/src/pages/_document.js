@@ -86,6 +86,9 @@ const NameStyle = styled.h3`
   margin-bottom: 6px;
   font-weight: 600;
   font-style: normal;
+  white-space: nowrap;
+  width: 100px;
+  overflow: hidden;
   text-overflow: ellipsis;
 `;
 const CloseStyle = styled.h4`

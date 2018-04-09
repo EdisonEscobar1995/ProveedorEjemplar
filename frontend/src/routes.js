@@ -230,6 +230,15 @@ const routes = [
       import('./pages/Menu').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'PRUEBA',
+    path: '/prueba',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/prueba').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

@@ -15,7 +15,8 @@ const { Item } = Form;
 const { Option } = Select;
 const { TextArea } = Input;
 const { Group } = Radio;
-const message = getIntl().formatMessage({ id: 'Validation.requiredField' });
+const message = getIntl() && getIntl().formatMessage({ id: 'Validation.requiredField' });
+
 
 const ParagraphStyle = styled.p`
   margin-bottom: ${props => props.theme.spaces.main};

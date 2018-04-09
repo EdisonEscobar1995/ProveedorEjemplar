@@ -4,8 +4,8 @@ import { Spin } from 'antd';
 import { connect } from 'react-redux';
 import * as actions from '../../state/ManagerTeamSurvey/action';
 import ManagerTeamSurveyMobile from './ManagerTeamSurveyMobile';
-// import formData from './formData';
-// import GenericForm from '../shared/GenericForm';
+import formData from './formData';
+import GenericForm from '../shared/GenericForm';
 
 const H3 = styled.h3`
   color: ${props => props.theme.color.primary};
@@ -28,6 +28,10 @@ class ManagerTeamSurveyMobileContainer extends Component {
       <Spin spinning={this.props.loading}>
         <H3>CALIFICACIÓN COMITÉ GERENCIAL</H3>
         <Linea />
+        <GenericForm
+          {...this.props}
+          formData={formData}
+        />
         <ManagerTeamSurveyMobile
           {...this.props}
         />

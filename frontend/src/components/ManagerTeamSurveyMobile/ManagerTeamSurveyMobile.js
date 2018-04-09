@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
-import { Tooltip,
-  Icon, Select, Button,
-  Row, Col,
+import { Tooltip, Button,
+  Icon, Select, List, Row, Col,
 } from 'antd';
+import styled from 'styled-components';
 import { ErrorStyle } from '../../utils/style';
 import { SCORE } from '../../utils/const';
 import Confirm from '../shared/Confirm';
 
 const { Option } = Select;
+const { Item } = List;
+const { Meta } = Item;
+
+const MetaStyled = styled(Meta)`
+  & .ant-list-item-meta-title {
+    color: ${props => props.theme.color.primary};
+  }
+
+  & .ant-list-item-meta-description {
+    color: #404040;
+  }
+`;
 
 class ManagerTeamSurveyMobile extends Component {
   getHelp = (title, isTab) => (
@@ -24,6 +36,7 @@ class ManagerTeamSurveyMobile extends Component {
       </Tooltip>
     ) : null
   )
+
   getScore = (record) => {
     const { data } = this.props;
     const { masters } = data;
@@ -36,7 +49,7 @@ class ManagerTeamSurveyMobile extends Component {
           key={record.id}
           defaultValue={defaultValue}
           allowClear={false}
-          style={{ width: 50 }}
+          style={{ width: 200 }}
           onChange={(value) => {
             this.changeAnswer(record, value, SCORE);
           }}
@@ -58,65 +71,44 @@ class ManagerTeamSurveyMobile extends Component {
     ) : defaultValue.name;
   }
 
-  // getSupplierColumns = () => {
-  //   const { data } = this.props;
-  //   const { masters } = data;
+  getDataRows = (item) => {
+    const { data } = this.props;
+    const { masters } = data;
+    const category = masters.Category.find(element => element.id === item.idCategory);
+    const rows = [
+      {
+        title: 'Nombre del Proveedor',
+        description: item.businessName,
+      },
+      {
+        title: 'Categoría',
+        description: category ? category.name : '',
+      },
+      {
+        title: 'Calificación',
+        description: this.getScore(item),
+      },
+    ];
 
-  //   const columns = [{
-  //     title: 'Estado',
-  //     key: 'surveyState',
-  //     render(text, record) {
-  //       return masters.State.find(state => state.id === record.idState).name;
-  //     },
-  //   }, {
-  //     title: 'Evaluado por',
-  //     key: 'manager',
-  //     render(text, record) {
-  //       return record.whoEvaluate;
-  //     },
-  //   }, {
-  //     title: 'Nombre del proveedor',
-  //     key: 'businessName',
-  //   }, {
-  //     title: 'Tipo de suministro',
-  //     key: 'idSupply',
-  //     render(text, record) {
-  //       return masters.Supply.find(supply => supply.id === record.idSupply).name;
-  //     },
-  //   }, {
-  //     title: 'Categoría',
-  //     key: 'idCategory',
-  //     render(text, record) {
-  //       const category = masters.Category.find(element => element.id === record.idCategory);
-  //       return category ? category.name : '';
-  //     },
-  //   }, {
-  //     title: 'Tamaño de empresa',
-  //     key: 'idCompanySize',
-  //     render(text, record) {
-  //       const companySize = masters.CompanySize.find(
-  //         element => element.id === record.idCompanySize);
-  //       return companySize ? companySize.name : '';
-  //     },
-  //   }, {
-  //     title: 'Calificación',
-  //     key: 'score.value',
-  //     render: (text, record) => this.getScore(record),
-  //   }, {
-  //     title: 'Comentarios',
-  //     key: 'comment.value',
-  //     render: (text, record) => this.getComment(record),
-  //   }];
+    if (data.finishVisible) {
+      rows.splice(1, 0, {
+        title: 'Evaluado por',
+        description: item.whoEvaluate,
+      });
+    }
 
-  //   return columns.map(column => (
-  //     <Column
-  //       title={column.title}
-  //       key={column.key}
-  //       dataIndex={column.key}
-  //       render={column.render}
-  //     />
-  //   ));
-  // }
+    return rows;
+  };
+
+  // pagination={{
+  //   pageSize: 2,
+  //   current: 1,
+  //   size: 'small',
+  //   total: suppliers.length,
+  //   onChange: ((page, pageSize) => {
+  //     console.log(page, '   -   ', pageSize);
+  //   }),
+  // }}
 
   changeAnswer = (record, value, type) => {
     const { data, setScore } = this.props;
@@ -152,6 +144,27 @@ class ManagerTeamSurveyMobile extends Component {
             )),
           )
         }
+        <List
+          dataSource={suppliers.filter(x => x.visible)}
+          itemLayout="vertical"
+          size="small"
+          bordered
+          style={{ 'margin-bottom': '5px' }}
+          renderItem={(item, idx) => (
+            <Item
+              key={item.id}
+              style={{ 'background-color': idx % 2 === 0 ? '#f2f2f2' : '#ffffff' }}
+            >
+              {
+                this.getDataRows(item).map(row => (
+                  <MetaStyled
+                    title={row.title}
+                    description={row.description}
+                  />))
+              }
+            </Item>
+          )}
+        />
         {
           suppliers.filter(element => element.visible === false).length === 0
             && data.finishVisible
