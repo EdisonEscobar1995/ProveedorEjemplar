@@ -76,6 +76,19 @@ function getMenu() {
               visible: true,
             }));
             const masters = masterResponse.data.data;
+            masters.Category = [{
+              id: 'Administración',
+              name: 'Administración',
+            },
+            {
+              id: 'Consultas',
+              name: 'Consultas',
+            },
+            {
+              id: 'Reportes',
+              name: 'Reportes',
+            }];
+
             dispatch(getMenuSuccess(data, masters));
           }).catch(() => {
             dispatch(getFailedRequest());
