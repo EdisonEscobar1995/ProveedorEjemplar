@@ -1,7 +1,6 @@
 package com.nutresa.exemplary_provider.dal;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -89,20 +88,17 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
      */
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
-        Iterator<String> iterator = parameters.keySet().iterator();
-        while (iterator.hasNext()) {
-            String valueInField = "";
-            String key = iterator.next();
-            try {
-                valueInField = parameters.get(key);
-                if (null != valueInField && !valueInField.trim().isEmpty()) {
-                    FieldsSupplier fieldSupplier = FieldsSupplier.getType(key);
-                    Common.setFieldsToFilterFTSearch(valueInField, fieldSupplier.getFieldName(), fields);
+        try {
+            for (FieldsSupplier field : FieldsSupplier.values()) {
+                if (parameters.containsKey(field.toString().toLowerCase())) {
+                    String valueInField = parameters.get(field.getFieldName());
+                    if (null != valueInField && !valueInField.trim().isEmpty()) {
+                        Common.setFieldsToFilterFTSearch(valueInField, field.getFieldName(), fields);
+                    }
                 }
-            } catch (IllegalArgumentException exception) {
-                Common.logError("Error saving to log ", exception);
-                continue;
             }
+        } catch (IllegalArgumentException exception) {
+            Common.logError("Error saving to log ", exception);
         }
 
         return fields;
