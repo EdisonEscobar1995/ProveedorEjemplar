@@ -65,7 +65,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
 
         return response;
     }
-    
+
     @Override
     public List<SupplierDTO> getAllBy(String field, String value) throws HandlerGenericException {
         List<SupplierDTO> suppliers = super.getAllBy(field, value);
@@ -79,7 +79,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
 
         return suppliers;
     }
-    
+
     /**
      * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar los proveedores.
      * 
@@ -94,9 +94,11 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
             String valueInField = "";
             String key = iterator.next();
             try {
-                FieldsSupplier fieldSupplier = FieldsSupplier.getType(key);
                 valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, fieldSupplier.getFieldName(), fields);
+                if (null != valueInField && !valueInField.trim().isEmpty()) {
+                    FieldsSupplier fieldSupplier = FieldsSupplier.getType(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, fieldSupplier.getFieldName(), fields);
+                }
             } catch (IllegalArgumentException exception) {
                 Common.logError("Error saving to log ", exception);
                 continue;

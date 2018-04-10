@@ -157,7 +157,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
 
         return response;
     }
-    
+
     /**
      * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar las preguntas.
      * 
@@ -172,9 +172,11 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
             String valueInField = "";
             String key = iterator.next();
             try {
-                FieldsQuestion fieldQuestion = FieldsQuestion.getType(key);
                 valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, fieldQuestion.getFieldName(), fields);
+                if (null != valueInField && !valueInField.trim().isEmpty()) {
+                    FieldsQuestion fieldQuestion = FieldsQuestion.getType(key);
+                    Common.setFieldsToFilterFTSearch(valueInField, fieldQuestion.getFieldName(), fields);
+                }
             } catch (IllegalArgumentException exception) {
                 Common.logError("Error saving to log ", exception);
                 continue;
