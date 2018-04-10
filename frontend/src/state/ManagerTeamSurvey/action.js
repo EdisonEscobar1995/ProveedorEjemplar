@@ -209,6 +209,7 @@ const finishManagerTeamSurvey = () => (dispatch) => {
     .then((response) => {
       dispatch(finishManagerTeamSurveySuccess());
       dispatch(setMessage(`Se han finalizado las respuestas de ${response.data.notice} proveedores.`, 'success'));
+      dispatch(getManagerTeamSurvey());
     }).catch(() => {
       dispatch(getFailedRequest());
     });
