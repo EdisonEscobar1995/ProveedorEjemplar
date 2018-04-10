@@ -100,16 +100,6 @@ class ManagerTeamSurveyMobile extends Component {
     return rows;
   };
 
-  // pagination={{
-  //   pageSize: 2,
-  //   current: 1,
-  //   size: 'small',
-  //   total: suppliers.length,
-  //   onChange: ((page, pageSize) => {
-  //     console.log(page, '   -   ', pageSize);
-  //   }),
-  // }}
-
   changeAnswer = (record, value, type) => {
     const { data, setScore } = this.props;
     const { suppliersByCall, masters } = data;

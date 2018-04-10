@@ -89,7 +89,6 @@ const setScore = (idSupplier, value, answer) => (dispatch) => {
       openNotificationWithIcon('success');
     }).catch(() => {
       dispatch(changeScore(idSupplier, answer.id, answer, null));
-      openNotificationWithIcon('error');
       dispatch(getFailedRequest());
     });
 };
@@ -104,7 +103,6 @@ const setComment = (idSupplier, value, answer) => (dispatch, getState) => {
         openNotificationWithIcon('success');
       }).catch(() => {
         dispatch(changeComment(idSupplier, answer.id, answer, null));
-        openNotificationWithIcon('error');
         dispatch(getFailedRequest());
       });
   }
