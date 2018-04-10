@@ -232,7 +232,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             response = finishSurveyOfTechnicalTeam(call, supplierByCall);
         }
 
-        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
+        if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
             response = finishSurveyOfManagerTeam(call, supplierByCall);
         }
 
@@ -268,18 +268,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             throws HandlerGenericException {
         SupplierByCallDTO response = null;
 
-        if (!call.isCaducedDeadLineToMakeSurveyManagerTeam()) {
-            if (changeState(SurveyStates.ENDED_MANAGER_TEAM.toString(), supplierByCall.getId())) {
-                response = get(supplierByCall.getId());
-                NotificationBLO notificationBLO = new NotificationBLO();
-                notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.MANAGER_TEAM);
-            } else {
-                throw new HandlerGenericException(
-                        HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED.toString());
-            }
+        if (changeState(SurveyStates.ENDED_MANAGER_TEAM.toString(), supplierByCall.getId())) {
+            response = get(supplierByCall.getId());
+            NotificationBLO notificationBLO = new NotificationBLO();
+            notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.MANAGER_TEAM);
         } else {
             throw new HandlerGenericException(
-                    HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_MANAGER_TEAM_EXCEEDED.toString());
+                    HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED.toString());
         }
 
         return response;
