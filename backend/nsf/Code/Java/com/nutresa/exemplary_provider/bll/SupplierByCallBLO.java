@@ -233,7 +233,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
-            response = finishSurveyOfManagerTeam(call, supplierByCall);
+            response = finishSurveyOfManagerTeam(supplierByCall);
         }
 
         if (userBLO.isRol(Rol.SUPPLIER.toString())) {
@@ -264,7 +264,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return response;
     }
 
-    private SupplierByCallDTO finishSurveyOfManagerTeam(CallDTO call, SupplierByCallDTO supplierByCall)
+    private SupplierByCallDTO finishSurveyOfManagerTeam(SupplierByCallDTO supplierByCall)
             throws HandlerGenericException {
         SupplierByCallDTO response = null;
 
