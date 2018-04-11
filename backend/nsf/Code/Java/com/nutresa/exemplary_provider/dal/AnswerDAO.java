@@ -2,7 +2,6 @@ package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -157,7 +156,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
 
         return response;
     }
-    
+
     /**
      * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar las preguntas.
      * 
@@ -167,18 +166,17 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
      */
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
-        Iterator<String> iterator = parameters.keySet().iterator();
-        while (iterator.hasNext()) {
-            String valueInField = "";
-            String key = iterator.next();
-            try {
-                FieldsQuestion fieldQuestion = FieldsQuestion.getType(key);
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, fieldQuestion.getFieldName(), fields);
-            } catch (IllegalArgumentException exception) {
-                Common.logError("Error saving to log ", exception);
-                continue;
+        try {
+            for (FieldsQuestion field : FieldsQuestion.values()) {
+                if (parameters.containsKey(field.getFieldName())) {
+                    String valueInField = parameters.get(field.toString().toLowerCase());
+                    if (null != valueInField && !valueInField.trim().isEmpty()) {
+                        Common.setFieldsToFilterFTSearch(valueInField, field.getFieldName(), fields);
+                    }
+                }
             }
+        } catch (IllegalArgumentException exception) {
+            Common.logError("Error saving to log ", exception);
         }
 
         return fields;
