@@ -21,6 +21,13 @@ const MetaStyled = styled(Meta)`
   }
 `;
 
+const Scroll = styled.div`
+  height: 100vh;   
+  overflow-y: scroll;
+  width: 95%;
+  margin: 0 auto;
+`;
+
 class ManagerTeamSurveyMobile extends Component {
   getHelp = (title, isTab) => (
     title ? (
@@ -29,6 +36,8 @@ class ManagerTeamSurveyMobile extends Component {
           style={{
             marginLeft: 5,
             marginRight: 0,
+            fontSize: 20,
+            float: 'right',
             color: isTab ? '#fff' : '#37907c',
           }}
           type={`question-circle${isTab ? '-o' : ''}`}
@@ -134,27 +143,29 @@ class ManagerTeamSurveyMobile extends Component {
             )),
           )
         }
-        <List
-          dataSource={suppliers.filter(x => x.visible)}
-          itemLayout="vertical"
-          size="small"
-          bordered
-          style={{ 'margin-bottom': '5px' }}
-          renderItem={(item, idx) => (
-            <Item
-              key={item.id}
-              style={{ 'background-color': idx % 2 === 0 ? '#f2f2f2' : '#ffffff' }}
-            >
-              {
-                this.getDataRows(item).map(row => (
-                  <MetaStyled
-                    title={row.title}
-                    description={row.description}
-                  />))
-              }
-            </Item>
-          )}
-        />
+        <Scroll>
+          <List
+            dataSource={suppliers.filter(x => x.visible)}
+            itemLayout="vertical"
+            size="small"
+            bordered
+            style={{ margin: '5px 0', overflow: 'auto' }}
+            renderItem={(item, idx) => (
+              <Item
+                key={item.id}
+                style={{ backgroundColor: idx % 2 === 0 ? '#f2f2f2' : '#ffffff' }}
+              >
+                {
+                  this.getDataRows(item).map(row => (
+                    <MetaStyled
+                      title={row.title}
+                      description={row.description}
+                    />))
+                }
+              </Item>
+            )}
+          />
+        </Scroll>
         {
           suppliers.filter(element => element.visible === false).length === 0
             && data.finishVisible

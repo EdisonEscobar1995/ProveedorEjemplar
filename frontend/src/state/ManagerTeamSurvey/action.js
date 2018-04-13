@@ -205,8 +205,11 @@ const getManagerTeamSurvey = year => (dispatch) => {
 const finishManagerTeamSurvey = () => (dispatch) => {
   requestApi(dispatch, finishManagerTeamSurveyProgress, finishManagerTeamSurveyApi)
     .then((response) => {
+      const message = parseInt(response.data.notice, 10) !== 1
+        ? `Se han finalizado las respuestas de ${response.data.notice} proveedores.`
+        : `Se ha finalizado la respuesta de ${response.data.notice} proveedor.`;
       dispatch(finishManagerTeamSurveySuccess());
-      dispatch(setMessage(`Se han finalizado las respuestas de ${response.data.notice} proveedores.`, 'success'));
+      dispatch(setMessage(message, 'success'));
       dispatch(getManagerTeamSurvey());
     }).catch(() => {
       dispatch(getFailedRequest());

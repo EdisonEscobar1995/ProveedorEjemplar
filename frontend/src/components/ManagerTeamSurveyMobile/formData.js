@@ -47,6 +47,7 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
           label: 'Proveedor',
           key: 'supplier',
           value: '',
+          style: { width: '90%', display: 'block', margin: ' 0 auto' },
           options: getUniqueSuppliers(),
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
