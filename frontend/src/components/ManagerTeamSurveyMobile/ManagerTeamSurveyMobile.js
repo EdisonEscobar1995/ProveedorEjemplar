@@ -31,13 +31,12 @@ const Scroll = styled.div`
 class ManagerTeamSurveyMobile extends Component {
   getHelp = (title, isTab) => (
     title ? (
-      <Tooltip placement="topRight" title={title}>
+      <Tooltip placement="top" title={title}>
         <Icon
           style={{
             marginLeft: 5,
             marginRight: 0,
             fontSize: 20,
-            float: 'right',
             color: isTab ? '#fff' : '#37907c',
           }}
           type={`question-circle${isTab ? '-o' : ''}`}
@@ -178,6 +177,7 @@ class ManagerTeamSurveyMobile extends Component {
                   >
                     <Button
                       type="primary"
+                      style={{ marginTop: 10 }}
                     >
                     Finalizar
                     </Button>
