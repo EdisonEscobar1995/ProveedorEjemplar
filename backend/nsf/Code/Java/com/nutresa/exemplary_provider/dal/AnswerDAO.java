@@ -169,7 +169,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         try {
             for (FieldsQuestion field : FieldsQuestion.values()) {
                 if (parameters.containsKey(field.getFieldName())) {
-                    String valueInField = parameters.get(field.toString().toLowerCase());
+                    String valueInField = parameters.get(field.getFieldName());
                     if (null != valueInField && !valueInField.trim().isEmpty()) {
                         Common.setFieldsToFilterFTSearch(valueInField, field.getFieldName(), fields);
                     }

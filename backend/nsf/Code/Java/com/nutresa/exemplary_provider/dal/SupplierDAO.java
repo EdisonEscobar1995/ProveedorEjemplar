@@ -90,7 +90,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         Map<String, String> fields = new HashMap<String, String>();
         try {
             for (FieldsSupplier field : FieldsSupplier.values()) {
-                if (parameters.containsKey(field.toString().toLowerCase())) {
+                if (parameters.containsKey(field.getFieldName())) {
                     String valueInField = parameters.get(field.getFieldName());
                     if (null != valueInField && !valueInField.trim().isEmpty()) {
                         Common.setFieldsToFilterFTSearch(valueInField, field.getFieldName(), fields);

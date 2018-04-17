@@ -268,11 +268,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             throws HandlerGenericException {
         SupplierByCallDTO response = null;
 
-        if (changeState(SurveyStates.ENDED_MANAGER_TEAM.toString(), supplierByCall.getId())) {
-            response = get(supplierByCall.getId());
-            NotificationBLO notificationBLO = new NotificationBLO();
-            notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.MANAGER_TEAM);
-        } else {
+        if (!changeState(SurveyStates.ENDED_MANAGER_TEAM.toString(), supplierByCall.getId())) {
             throw new HandlerGenericException(
                     HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED.toString());
         }
