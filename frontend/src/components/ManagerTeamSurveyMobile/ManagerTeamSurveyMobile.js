@@ -142,6 +142,10 @@ class ManagerTeamSurveyMobile extends Component {
             )),
           )
         }
+        <div>
+          <strong>Total resultados: </strong>
+          {suppliers.filter(supplier => supplier.visible).length}
+        </div>
         <Scroll>
           <List
             dataSource={suppliers.filter(x => x.visible)}

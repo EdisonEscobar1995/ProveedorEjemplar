@@ -162,14 +162,18 @@ class ManagerTeamSurvey extends Component {
 
     return suppliers ? (
       <div>
-        Escala de evaluación
-        {
-          this.getHelp(
-            masters.EvaluationScale.map(element => (
-              <div>{`${element.name}: ${element.helpText}`}</div>
-            )),
-          )
-        }
+        <span>
+          Escala de evaluación
+          {
+            this.getHelp(
+              masters.EvaluationScale.map(element => (
+                <div>{`${element.name}: ${element.helpText}`}</div>
+              )),
+            )
+          }
+          <strong style={{ marginLeft: 20 }}>Total resultados: </strong>
+          {suppliers.filter(supplier => supplier.visible).length}
+        </span>
         <Table
           dataSource={suppliers.filter(supplier => supplier.visible)}
         >
