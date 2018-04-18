@@ -1,8 +1,8 @@
 import { Modal } from 'antd';
-import { getIntl } from '../../utils/translate';
+import LangIntl from '../../utils/translate';
 
 function message({ type = 'info', text = '', aditionalInfo = '' }) {
-  const translate = getIntl();
+  const translate = LangIntl.getIntl();
   const content = `${translate.formatMessage({ id: text })} ${aditionalInfo}`;
   let modal = null;
   const title = translate.formatMessage({ id: 'Message.title' });

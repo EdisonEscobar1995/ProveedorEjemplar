@@ -1,11 +1,9 @@
-let intl;
+class LangIntl {
+  static intl;
+  static setIntl = (intlt) => {
+    LangIntl.intl = intlt;
+  };
+  static getIntl = () => LangIntl.intl;
+}
 
-const setIntl = (intlt) => {
-  intl = intlt;
-};
-const getIntl = () => intl;
-
-export {
-  setIntl,
-  getIntl,
-};
+export default LangIntl;

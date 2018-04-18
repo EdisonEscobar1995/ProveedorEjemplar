@@ -3,7 +3,7 @@ import { Table, Input, InputNumber, Button, Tooltip } from 'antd';
 import styled from 'styled-components';
 import FormattedMessage from '../shared/FormattedMessage';
 import Confirm from '../shared/Confirm';
-import { getIntl } from '../../utils/translate';
+import LangIntl from '../../utils/translate';
 
 const TableStyle = styled(Table)`
   margin: ${props => props.theme.spaces.main} 0;
@@ -16,7 +16,7 @@ const { Column } = Table;
 class SimpleTable extends Component {
   static translator;
   componentWillMount() {
-    SimpleTable.translator = getIntl();
+    SimpleTable.translator = LangIntl.getIntl();
   }
   addData = () => {
     let key = 0;

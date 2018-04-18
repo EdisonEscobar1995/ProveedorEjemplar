@@ -11,7 +11,7 @@ import ManagerTeamSurveyMobile from '../pages/ManagerTeamSurveyMobile';
 import Router from '../components/shared/Router';
 import { loginUrl } from '../utils/api';
 import { changeLanguage } from '../translation/functions';
-import { setIntl } from '../utils/translate';
+import LangIntl from '../utils/translate';
 import setLanguageApi from '../api/language';
 import isMobile from '../utils/isMobile';
 
@@ -115,7 +115,7 @@ const LanguageStyle = styled.a`
 
 class Document extends Component {
   componentDidMount() {
-    setIntl(this.props.intl);
+    LangIntl.setIntl(this.props.intl);
     setLanguageApi().then(() => this.props.getUserContext());
   }
 

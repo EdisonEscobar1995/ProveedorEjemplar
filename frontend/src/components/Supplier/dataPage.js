@@ -213,6 +213,7 @@ function generalInfo(fields) {
           key: 'idCategory',
           value: idCategory,
           options: categories,
+          required: true,
           disabled,
           valuesToClean: {
             idSubCategory: {
