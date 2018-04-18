@@ -88,17 +88,13 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
      */
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
-        try {
-            for (FieldsSupplier field : FieldsSupplier.values()) {
-                if (parameters.containsKey(field.getFieldName())) {
-                    String valueInField = parameters.get(field.getFieldName());
-                    if (null != valueInField && !valueInField.trim().isEmpty()) {
-                        Common.setFieldsToFilterFTSearch(valueInField, field.getFieldName(), fields);
-                    }
+        for (FieldsSupplier field : FieldsSupplier.values()) {
+            if (parameters.containsKey(field.getFieldName())) {
+                String valueInField = parameters.get(field.getFieldName());
+                if (null != valueInField && !valueInField.trim().isEmpty()) {
+                    Common.setFieldsToFilterFTSearch(valueInField, field.getFieldName(), fields);
                 }
             }
-        } catch (IllegalArgumentException exception) {
-            Common.logError("Error saving to log ", exception);
         }
 
         return fields;

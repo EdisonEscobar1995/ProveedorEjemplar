@@ -37,11 +37,11 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
-        if (suppliersToNextStage.getStage().equals("TechnicalTeam")) {
+        if ("TechnicalTeam".equals(suppliersToNextStage.getStage())) {
             notified = approveToTechnicalTeam(suppliersToNextStage.getIdSuppliersByCall());
         }
 
-        if (suppliersToNextStage.getStage().equals("ManagerTeam")) {
+        if ("ManagerTeam".equals(suppliersToNextStage.getStage())) {
             notified = approveToManagerTeam(suppliersToNextStage.getIdSuppliersByCall());
         }
 
@@ -104,6 +104,11 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
     public String dontApproveToNextStage(SupplierToNextStageDTO suppliersToNextStage) throws HandlerGenericException {
         String notified = STATE_FAILED;
         List<String> idSuppliersToDontApprove = suppliersToNextStage.getIdSuppliersByCall();
+
+        if (null == suppliersToNextStage.getStage()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+
         for (String idSupplierByCall : idSuppliersToDontApprove) {
             SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
             SupplierBLO supplierBLO = new SupplierBLO();
@@ -114,12 +119,12 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_DISCARDED);
 
-                if (suppliersToNextStage.getStage().equals("TechnicalTeam")) {
+                if ("TechnicalTeam".equals(suppliersToNextStage.getStage())) {
                     supplierByCall.setIdState(
                             stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
                 }
 
-                if (suppliersToNextStage.getStage().equals("ManagerTeam")) {
+                if ("ManagerTeam".equals(suppliersToNextStage.getStage())) {
                     supplierByCall.setIdState(
                             stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_MANAGER_TEAM.toString()).getId());
                 }

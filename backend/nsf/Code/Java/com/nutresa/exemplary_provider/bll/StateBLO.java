@@ -30,7 +30,7 @@ public class StateBLO extends GenericBLO<StateDTO, StateDAO> {
     protected List<SurveyStates> getStatesByTypeReport(String typeReport) {
         List<SurveyStates> statesByTypeReport = new ArrayList<SurveyStates>();
 
-        if (typeReport.equals("SUPPLIER_EVALUATOR")) {
+        if ("SUPPLIER_EVALUATOR".equals(typeReport)) {
             statesByTypeReport.add(SurveyStates.ENDED_SUPPLIER);
             statesByTypeReport.add(SurveyStates.DONT_APPLY_EVALUATOR);
             statesByTypeReport.add(SurveyStates.NOT_STARTED_EVALUATOR);
@@ -45,7 +45,7 @@ public class StateBLO extends GenericBLO<StateDTO, StateDAO> {
             statesByTypeReport.add(SurveyStates.MANAGER_TEAM);
             statesByTypeReport.add(SurveyStates.ENDED_MANAGER_TEAM);
         } else {
-            if (typeReport.equals("TECHNICAL_MANAGER")) {
+            if ("TECHNICAL_MANAGER".equals(typeReport)) {
                 statesByTypeReport.add(SurveyStates.NOT_STARTED_TECHNICAL_TEAM);
                 statesByTypeReport.add(SurveyStates.TECHNICAL_TEAM);
                 statesByTypeReport.add(SurveyStates.ENDED_TECHNICAL_TEAM);
@@ -55,7 +55,7 @@ public class StateBLO extends GenericBLO<StateDTO, StateDAO> {
                 statesByTypeReport.add(SurveyStates.ENDED_MANAGER_TEAM);
             }
         }
-        
+
         return statesByTypeReport;
     }
 
