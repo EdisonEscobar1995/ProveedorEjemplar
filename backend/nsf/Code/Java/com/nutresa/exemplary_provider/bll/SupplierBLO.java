@@ -260,12 +260,6 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 states.add(SurveyStates.ENDED_EVALUATOR.toString());
                 List<DTO> callsByYear = supplierByCallBLO.getByStates(callBLO.getIdCallByYear(year), states);
                 response = getInformationFromSuppliers(listYears, callsByYear);
-
-                RolBLO rolBLO = new RolBLO();
-                Map<String, List<DTO>> currentMasters = response.getMasters();
-                String idRol = rolBLO.getRolByShortName(Rol.EVALUATOR.toString()).getId();
-                currentMasters.put("Evaluators", userBLO.getAllBy("idRols", idRol, "vwUsers"));
-                response.setMasters(currentMasters);
             } else {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
