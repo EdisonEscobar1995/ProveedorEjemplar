@@ -3,10 +3,10 @@ import {
   GET_TECHNICAL_TEAM_SURVEY_SUCCESS,
   FILTER_TECHNICAL_TEAM_SURVEY,
   CALCULATE_TOTAL,
-  CHANGE_SCORE,
-  CHANGE_COMMENT,
-  UPDATE_ERRORS,
-  UPDATE_SUPPLIERS,
+  CHANGE_SCORE_TECHNICAL,
+  CHANGE_COMMENT_TECHNICAL,
+  UPDATE_ERRORS_TECHNICAL,
+  UPDATE_SUPPLIERS_TECHNICAL,
   REQUEST_FAILED,
 } from './const';
 
@@ -73,7 +73,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
         loading: false,
       };
     }
-    case CHANGE_SCORE: {
+    case CHANGE_SCORE_TECHNICAL: {
       const answers = [...state.data.masters.TechnicalTeamAnswer];
       if (action.new) {
         answers.push(action.answer);
@@ -114,7 +114,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
         },
       };
     }
-    case CHANGE_COMMENT: {
+    case CHANGE_COMMENT_TECHNICAL: {
       const comments = [...state.data.masters.TechnicalTeamComment];
       if (action.new) {
         comments.push(action.comment);
@@ -177,7 +177,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
         },
       };
     }
-    case UPDATE_ERRORS: {
+    case UPDATE_ERRORS_TECHNICAL: {
       return {
         ...state,
         data: {
@@ -186,7 +186,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
         },
       };
     }
-    case UPDATE_SUPPLIERS: {
+    case UPDATE_SUPPLIERS_TECHNICAL: {
       return {
         ...state,
         data: {

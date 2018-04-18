@@ -2,15 +2,15 @@
 <agent name='(resetSurveyState)' alias='resetSurveyState' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
  publicaccess='false' designerversion='8.5.3'>
-<noteinfo noteid='8c352' unid='04867502A5296B0A0525824800771119' sequence='30'>
+<noteinfo noteid='8c352' unid='04867502A5296B0A0525824800771119' sequence='36'>
 <created><datetime>20180306T164031,61-05</datetime></created>
-<modified><datetime>20180317T205820,81-05</datetime></modified>
-<revised><datetime>20180317T205820,80-05</datetime></revised>
-<lastaccessed><datetime>20180317T205820,81-05</datetime></lastaccessed>
+<modified><datetime>20180404T151047,69-05</datetime></modified>
+<revised><datetime>20180404T151047,68-05</datetime></revised>
+<lastaccessed><datetime>20180404T151047,69-05</datetime></lastaccessed>
 <addedtofile><datetime>20180316T152901,71-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
-<designchange><datetime>20180317T205820,80-05</datetime></designchange>
+<designchange><datetime>20180404T151047,68-05</datetime></designchange>
 <trigger type='agentlist'/>
 <documentset type='runonce'/><code event='options'><lotusscript>%REM
 	Agent resetSurveyState
@@ -56,7 +56,7 @@ Option Declare
 	Set vwStates = db.Getview("vwStates")
 	Set vwStatesName = db.Getview("vwStatesByShortName")
 	Set ndStateSupplier = vwStatesName.Getdocumentbykey("ENDED_SUPPLIER", True)
-	Set ndStateEvaluator = vwStatesName.Getdocumentbykey("NOT_STARTED_TECHNICAL_TEAM", True)
+	Set ndStateEvaluator = vwStatesName.Getdocumentbykey("NOT_STARTED_MANAGER_TEAM", True)
 	
 	Set ndSupplier = vwSuppliers.Getdocumentbykey(ndAux.sapCode(0), True)
 	If Not ndSupplier Is Nothing Then 
@@ -80,5 +80,5 @@ label:
 	Print Error$ &amp; " " &amp; Erl()
 End Sub</lotusscript></code>
 <rundata processeddocs='0' exitcode='0'>
-<agentmodified><datetime>20180317T205820,66-05</datetime></agentmodified></rundata></agent>
+<agentmodified><datetime>20180404T151046,02-05</datetime></agentmodified></rundata></agent>
 

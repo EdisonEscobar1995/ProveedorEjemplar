@@ -94,8 +94,8 @@ const getResults = (data, exportMethod = () => {}) => (
   (dispatch) => {
     requestApi(dispatch, getMastersProgress, getResultsApi, data)
       .then((response) => {
-        dispatch(getResultsSuccess());
         exportMethod(response.data.data);
+        dispatch(getResultsSuccess());
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });

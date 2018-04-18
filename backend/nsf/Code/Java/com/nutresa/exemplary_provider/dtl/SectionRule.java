@@ -13,9 +13,10 @@ public class SectionRule {
         Map<String, Map<String, Object>> specificRule = new HashMap<String, Map<String, Object>>();
         Map<String, Object> rule = new HashMap<String, Object>();
         rule.put("show", false);
-        rule.put("readonly", true);
+        rule.put("readOnly", true);
         specificRule.put(SurveySection.SUPPLIER.getNameSection(), rule);
         specificRule.put(SurveySection.EVALUATOR.getNameSection(), rule);
+        specificRule.put(SurveySection.LIBERATOR.getNameSection(), rule);
         setRules(specificRule);
     }
 

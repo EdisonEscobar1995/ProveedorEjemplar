@@ -5,8 +5,6 @@ import FormattedMessage from '../shared/FormattedMessage';
 import Confirm from '../shared/Confirm';
 import { getIntl } from '../../utils/translate';
 
-const translator = getIntl();
-
 const TableStyle = styled(Table)`
   margin: ${props => props.theme.spaces.main} 0;
 `;
@@ -16,6 +14,10 @@ const InputNumberStyle = styled(InputNumber)`
 const { Column } = Table;
 
 class SimpleTable extends Component {
+  static translator;
+  componentWillMount() {
+    SimpleTable.translator = getIntl();
+  }
   addData = () => {
     let key = 0;
     this.props.data.forEach((element) => {
@@ -54,7 +56,7 @@ class SimpleTable extends Component {
                   const inputProps = {
                     defaultValue: text,
                     disabled,
-                    placeholder: translator.formatMessage({ id: column.title }),
+                    placeholder: SimpleTable.translator.formatMessage({ id: column.title }),
                     onBlur: (e) => {
                       const value = e.target.value;
                       if (updateField && value) {

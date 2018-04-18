@@ -134,7 +134,11 @@ class TechnicalTeamSurvey extends Component {
           title={
             <div>
               {item.name}
-              {this.getHelp(item.helpText)}
+              {this.getHelp(item.helpText &&
+                item.helpText.split('\r\n').map(element => (
+                  <div>{`${element}`}</div>
+                )),
+              )}
             </div>
           }
           key={item.id}

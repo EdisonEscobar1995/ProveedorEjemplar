@@ -3,8 +3,10 @@ import { Table, Checkbox, Button, Row, Col, notification } from 'antd';
 import { Link } from 'react-router-dom';
 import message from '../../components/shared/message';
 import Confirm from '../shared/Confirm';
+import { MANAGER_TEAM } from '../../utils/const';
 
-function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) {
+function SupplierSelection(props) {
+  const { data, checkSupplier, sendApprovals, sendRejections } = props;
   const onChange = (event, record) => {
     checkSupplier(record.idSupplier, event.target.checked);
   };
@@ -20,7 +22,7 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
   const validateChecked = (sendMethod) => {
     const checked = data.filter(item => item.checked).map(item => item.idSupplierByCall);
     if (checked.length > 0) {
-      sendMethod(checked, openNotification);
+      sendMethod(checked, props.type, openNotification);
     } else {
       message({ text: 'Debe seleccionar al menos un proveedor', type: 'info' });
     }
@@ -86,6 +88,17 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
     },
   }];
 
+  if (props.type === MANAGER_TEAM) {
+    columns.splice(8, 0, {
+      title: 'Calificación comité técnico',
+      dataIndex: 'totalScoreInService',
+      key: 'totalScoreInService',
+      render(value) {
+        return value.toFixed(2);
+      },
+    });
+  }
+
   return (
     <div>
       <div>
@@ -103,14 +116,14 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
             <Col>
               <Confirm method={() => validateChecked(sendApprovals)}>
                 <Button type="primary">
-                  Pasan a evaluación de comité ténico
+                  {props.approvalText}
                 </Button>
               </Confirm>
             </Col>
             <Col>
               <Confirm method={() => validateChecked(sendRejections)}>
                 <Button type="primary">
-                  No pasan a evaluación de comité ténico
+                  {props.rejectionText}
                 </Button>
               </Confirm>
             </Col>
@@ -121,4 +134,4 @@ function EndedEvaluator({ data, checkSupplier, sendApprovals, sendRejections }) 
   );
 }
 
-export default EndedEvaluator;
+export default SupplierSelection;

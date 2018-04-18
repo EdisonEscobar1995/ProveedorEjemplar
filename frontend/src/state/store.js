@@ -11,7 +11,7 @@ import surveys from './Surveys/reducer';
 import callReport from './CallReport/reducer';
 import results from './Results/reducer';
 import pendings from './Pendings/reducer';
-import endedEvaluator from './EndedEvaluator/reducer';
+import supplierSelection from './SupplierSelection/reducer';
 import access from './Access/reducer';
 import accessByRol from './AccessByRol/reducer';
 import sector from './Sector/reducer';
@@ -21,6 +21,10 @@ import user from './User/reducer';
 import supply from './Supply/reducer';
 import technicalTeam from './TechnicalTeam/reducer';
 import technicalTeamSurvey from './TechnicalTeamSurvey/reducer';
+import managerTeamSurvey from './ManagerTeamSurvey/reducer';
+import managerTeam from './ManagerTeam/reducer';
+import menu from './Menu/reducer';
+
 
 const app = combineReducers({
   main,
@@ -33,7 +37,7 @@ const app = combineReducers({
   callReport,
   results,
   pendings,
-  endedEvaluator,
+  supplierSelection,
   access,
   accessByRol,
   sector,
@@ -43,6 +47,9 @@ const app = combineReducers({
   supply,
   technicalTeam,
   technicalTeamSurvey,
+  managerTeamSurvey,
+  managerTeam,
+  menu,
 });
 
 let middleware = {};

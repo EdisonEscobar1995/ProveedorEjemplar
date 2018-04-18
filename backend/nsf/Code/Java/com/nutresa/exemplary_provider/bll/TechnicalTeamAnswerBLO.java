@@ -14,9 +14,9 @@ import com.nutresa.exemplary_provider.dtl.ItemDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamAnswerDTO;
-import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
-import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers.Service;
-import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers.Item;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers.Service;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers.Item;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, TechnicalTeamAnswerDAO> {
@@ -59,8 +59,8 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         }
     }
 
-    protected ReportOfAverageGradeBySuppliers buildReportOfTechnicalTeam(String idSupplierByCall,
-            ReportOfAverageGradeBySuppliers recordOfReport, Map<String, String> parameters)
+    protected ReportOfCalificationsBySuppliers buildReportOfTechnicalTeam(String idSupplierByCall,
+            ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         String idService = parameters.get("service");
         String idItem = parameters.get("item");
@@ -77,13 +77,13 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         }
 
         List<Service> serviceToReport = new ArrayList<Service>();
-        ReportOfAverageGradeBySuppliers report = new ReportOfAverageGradeBySuppliers();
+        ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
         short counterAllItems = 0;
         short sumScoreAllItems = 0;
         short counterAllItemsWithoutAnswer = 0;
         for (ServiceDTO service : services) {
             short sumScoreByItemsInService = 0;
-            ReportOfAverageGradeBySuppliers.Service serviceRecord = report.new Service();
+            ReportOfCalificationsBySuppliers.Service serviceRecord = report.new Service();
             serviceRecord.name = service.getName();
             ItemBLO itemBLO = new ItemBLO();
             items = itemBLO.getItemsByIdItemOrIdService(idItem, service.getId());
@@ -96,7 +96,7 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
             short counterItemsWithoutAnswer = 0;
             counterAllItems = (short) (counterAllItems + (short) items.size());
             for (ItemDTO item : items) {
-                ReportOfAverageGradeBySuppliers.Item itemRecord = report.new Item();
+                ReportOfCalificationsBySuppliers.Item itemRecord = report.new Item();
                 itemRecord.name = item.getName();
 
                 TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();

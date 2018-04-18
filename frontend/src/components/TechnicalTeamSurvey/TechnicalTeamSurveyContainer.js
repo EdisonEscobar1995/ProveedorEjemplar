@@ -5,6 +5,7 @@ import * as actions from '../../state/TechnicalTeamSurvey/action';
 import formData from './formData';
 import GenericForm from '../shared/GenericForm';
 import TechnicalTeamSurvey from './TechnicalTeamSurvey';
+import H1 from '../shared/H1';
 
 class TechnicalTeamSurveyContainer extends Component {
   componentDidMount() {
@@ -14,6 +15,9 @@ class TechnicalTeamSurveyContainer extends Component {
   render() {
     return (
       <Spin spinning={this.props.loading}>
+        <H1
+          text="Calificación comité técnico"
+        />
         <GenericForm
           {...this.props}
           formData={formData}

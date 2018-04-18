@@ -17,8 +17,8 @@ import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
-import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
-import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers.SummarySurvey;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers.SummarySurvey;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
@@ -121,8 +121,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
      * @return Registro del reporte
      * @throws HandlerGenericException
      */
-    public ReportOfAverageGradeBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
-            ReportOfAverageGradeBySuppliers recordOfReport, Map<String, String> parameters)
+    public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
+            ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
         short sumScoreAnsweredBySupplierNA = 0;
@@ -142,8 +142,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             CriterionDTO criterion = criterionBLO.get(question.getIdCriterion());
             DimensionBLO dimensionBLO = new DimensionBLO();
             DimensionDTO dimension = dimensionBLO.get(question.getIdDimension());
-            ReportOfAverageGradeBySuppliers report = new ReportOfAverageGradeBySuppliers();
-            ReportOfAverageGradeBySuppliers.SummarySurvey summarySurvey = report.new SummarySurvey();
+            ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
+            ReportOfCalificationsBySuppliers.SummarySurvey summarySurvey = report.new SummarySurvey();
 
             short expectedScoreSupplier = 0;
             short expectedScoreEvaluator = 0;
@@ -200,13 +200,13 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
         recordOfReport.setExpectedScoreSupplier(sumExpectedScoreSupplier);
         recordOfReport.setExpectedScoreEvaluator(sumExpectedScoreEvaluator);
-        
+
         if (counterQuestions == sumScoreAnsweredBySupplierNA) {
             sumScoreAnsweredBySupplier = SCORE_OF_NA;
             recordOfReport.setExpectedScoreSupplier(SCORE_OF_NA);
         }
         recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
-        
+
         if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
             sumScoreAnsweredByEvaluator = SCORE_OF_NA;
             recordOfReport.setExpectedScoreEvaluator(SCORE_OF_NA);
@@ -261,10 +261,6 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             response = getByQuestionsAndSupplierByCall(idSupplierByCall, questions);
         } else {
             response = answerDAO.getAsnwersByIdSupplierByCall(idSupplierByCall);
-        }
-
-        if (response.isEmpty()) {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
         return response;
