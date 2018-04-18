@@ -20,20 +20,22 @@ const getParticipantsByYearApi = year => instance.get(`Call?action=getParticipan
 
 const getResultsApi = data => instance.get(`Call?action=getResults&call=${data.call || ''}` +
   `&type=${data.type || ''}` +
-  `&supply=${data.supply || ''}` +
-  `&category=${data.category || ''}` +
-  `&companySize=${data.companySize || ''}` +
-  `&supplier=${data.supplier || ''}` +
-  `&dimension=${data.dimension || ''}` +
-  `&criterion=${data.criterion || ''}` +
+  `&idSupply=${data.supply || ''}` +
+  `&idCategory=${data.category || ''}` +
+  `&idCompanySize=${data.companySize || ''}` +
+  `&id=${data.supplier || ''}` +
+  `&idDimension=${data.dimension || ''}` +
+  `&idCriterion=${data.criterion || ''}` +
   `&service=${data.service || ''}` +
   `&item=${data.item || ''}` +
-  `&country=${data.country || ''}
+  `&idCountry=${data.country || ''}
 `);
 
-const getEndedEvaluatorApi = () => instance.get('Call?action=getThemForTechnicalTeam');
+const getSupplierSelectionApi = type => instance.get(`Call?action=getSuppliersForSelection&stage=${type}`);
 
 const getTechnicalTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToTechnicalTeam&year=${year || ''}`);
+
+const getManagerTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToManagerTeam&year=${year || ''}`);
 
 export {
   getCallApi,
@@ -44,6 +46,7 @@ export {
   massiveShipmentCallApi,
   getParticipantsByYearApi,
   getResultsApi,
-  getEndedEvaluatorApi,
+  getSupplierSelectionApi,
   getTechnicalTeamSurveyApi,
+  getManagerTeamSurveyApi,
 };

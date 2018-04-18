@@ -124,6 +124,15 @@ const routes = [
   },
   {
     index: increment(),
+    name: 'ENDEDTECHNICALTEAM',
+    path: '/endedTechnicalTeam',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/EndedTechnicalTeam').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
     name: 'ACCESS',
     path: '/access',
     exact: true,
@@ -192,6 +201,42 @@ const routes = [
     exact: true,
     component: asyncComponent(() =>
       import('./pages/TechnicalTeam').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'MANAGERTEAMSURVEY',
+    path: '/managerTeamSurvey',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ManagerTeamSurvey').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'MANAGERTEAM',
+    path: '/managerTeam',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ManagerTeam').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'MENU',
+    path: '/menu',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Menu').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'PRUEBA',
+    path: '/prueba',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/prueba').then(module => module.default),
     ),
   },
 ];

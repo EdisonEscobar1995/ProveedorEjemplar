@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Spin } from 'antd';
-import * as actions from '../../state/EndedEvaluator/action';
-import EndedEvaluator from './EndedEvaluator';
+import * as actions from '../../state/SupplierSelection/action';
+import SupplierSelection from './SupplierSelection';
 import H1 from '../shared/H1';
 
-class EndedEvaluatorContainer extends Component {
+class SupplierSelectionContainer extends Component {
   componentDidMount() {
-    this.props.getEndedEvaluator();
+    this.props.getSupplierSelection(this.props.type);
   }
 
   render() {
     return (
       <Spin spinning={this.props.loading}>
         <H1
-          text="Seleccionar proveedores que pasarán a evaluación por parte del comité técnico"
+          text={this.props.title}
         />
-        <EndedEvaluator
+        <SupplierSelection
           {...this.props}
         />
       </Spin>
@@ -25,11 +25,11 @@ class EndedEvaluatorContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.endedEvaluator.data,
-  loading: state.endedEvaluator.loading,
+  data: state.supplierSelection.data,
+  loading: state.supplierSelection.loading,
 });
 
 export default connect(
   mapStateToProps,
   actions,
-)(EndedEvaluatorContainer);
+)(SupplierSelectionContainer);

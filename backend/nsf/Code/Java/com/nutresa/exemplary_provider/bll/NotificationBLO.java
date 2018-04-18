@@ -45,8 +45,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             detailUserToSend.put("Tamaño anterior", oldCampanySize);
 
             NotificationDAO notificationDAO = new NotificationDAO();
-            NotificationDTO notification = notificationDAO.getNotificationByAlias(NotificationType.CHANGE_COMPANY_SIZE
-                    .toString());
+            NotificationDTO notification = notificationDAO
+                    .getNotificationByAlias(NotificationType.CHANGE_COMPANY_SIZE.toString());
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
             sendNotification(sendTo, notification, true, detailUserToSend, true, linkOfButton);
         } catch (HandlerGenericException exception) {
@@ -79,8 +79,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_SUPPLIER.toString());
             break;
         case TECHNICAL_TEAM:
-            notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_TECHNICAL_TEAM
-                    .toString());
+            notification = notificationDAO
+                    .getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_TECHNICAL_TEAM.toString());
             break;
         default:
             notification = new NotificationDTO();
@@ -164,7 +164,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             List<String> emails = new ArrayList<String>();
 
             if (notificationType.equals(NotificationType.SUPPLIER_DISCARDED)
-                    || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM)) {
+                    || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM)
+                    || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_MANAGER_TEAM)) {
                 emails.add(supplier.getEmailOfContact());
             } else {
                 emails = supplier.getEmails();
@@ -187,6 +188,20 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                     .getNotificationByAlias(NotificationType.TECHNICAL_TEAM_CALLED_BY_LIBERATOR.toString());
 
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/technicalTeamSurvey";
+            sendNotification(emails, notification, false, null, true, linkOfButton);
+        } catch (HandlerGenericException exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+    }
+
+    public void notifyToManagerTeam(List<String> emails) throws HandlerGenericException {
+        try {
+            NotificationDAO notificationDAO = new NotificationDAO();
+            NotificationDTO notification = notificationDAO
+                    .getNotificationByAlias(NotificationType.MANAGER_TEAM_CALLED_BY_LIBERATOR.toString());
+
+            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/managerTeamSurvey";
             sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);

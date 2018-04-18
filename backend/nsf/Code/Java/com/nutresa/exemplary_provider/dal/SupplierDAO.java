@@ -1,7 +1,6 @@
 package com.nutresa.exemplary_provider.dal;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -65,7 +64,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
 
         return response;
     }
-    
+
     @Override
     public List<SupplierDTO> getAllBy(String field, String value) throws HandlerGenericException {
         List<SupplierDTO> suppliers = super.getAllBy(field, value);
@@ -79,7 +78,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
 
         return suppliers;
     }
-    
+
     /**
      * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar los proveedores.
      * 
@@ -89,18 +88,17 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
      */
     public Map<String, String> identifyFieldsToFTSearch(Map<String, String> parameters) throws HandlerGenericException {
         Map<String, String> fields = new HashMap<String, String>();
-        Iterator<String> iterator = parameters.keySet().iterator();
-        while (iterator.hasNext()) {
-            String valueInField = "";
-            String key = iterator.next();
-            try {
-                FieldsSupplier fieldSupplier = FieldsSupplier.getType(key);
-                valueInField = parameters.get(key);
-                Common.setFieldsToFilterFTSearch(valueInField, fieldSupplier.getFieldName(), fields);
-            } catch (IllegalArgumentException exception) {
-                Common.logError("Error saving to log ", exception);
-                continue;
+        try {
+            for (FieldsSupplier field : FieldsSupplier.values()) {
+                if (parameters.containsKey(field.getFieldName())) {
+                    String valueInField = parameters.get(field.getFieldName());
+                    if (null != valueInField && !valueInField.trim().isEmpty()) {
+                        Common.setFieldsToFilterFTSearch(valueInField, field.getFieldName(), fields);
+                    }
+                }
             }
+        } catch (IllegalArgumentException exception) {
+            Common.logError("Error saving to log ", exception);
         }
 
         return fields;

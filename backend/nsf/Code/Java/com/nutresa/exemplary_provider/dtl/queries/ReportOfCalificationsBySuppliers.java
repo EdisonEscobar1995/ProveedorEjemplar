@@ -3,8 +3,9 @@ package com.nutresa.exemplary_provider.dtl.queries;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.DTO;
 
-public class ReportOfAverageGradeBySuppliers {
+public class ReportOfCalificationsBySuppliers {
     @Expose
     private String idSupplier;
     @Expose
@@ -34,11 +35,17 @@ public class ReportOfAverageGradeBySuppliers {
     @Expose
     private double totalScoreOfEvaluator;
     @Expose
+    private String idState;
+    @Expose
+    private List<DTO> states;
+    @Expose
     private List<SummarySurvey> summarySurvey;
     @Expose
     private List<Service> services;
     @Expose
     private double totalScoreInService;
+    @Expose
+    private List<SummaryManagerSurvey> managerAnswers;
 
     public String getSapCode() {
         return sapCode;
@@ -189,6 +196,30 @@ public class ReportOfAverageGradeBySuppliers {
         return idSupplierByCall;
     }
 
+    public void setManagerAnswers(List<SummaryManagerSurvey> managerAnswers) {
+        this.managerAnswers = managerAnswers;
+    }
+
+    public List<SummaryManagerSurvey> getManagerAnswers() {
+        return managerAnswers;
+    }
+
+    public void setIdState(String idState) {
+        this.idState = idState;
+    }
+
+    public String getIdState() {
+        return idState;
+    }
+
+    public void setStates(List<DTO> states) {
+        this.states = states;
+    }
+
+    public List<DTO> getStates() {
+        return states;
+    }
+
     public class SummarySurvey {
         @Expose
         private String dimension;
@@ -330,4 +361,14 @@ public class ReportOfAverageGradeBySuppliers {
         @Expose
         public short answer;
     }
+
+    public class SummaryManagerSurvey {
+        @Expose
+        public String whoEvaluate;
+        @Expose
+        public short score;
+        @Expose
+        public String comment;
+    }
+
 }

@@ -7,6 +7,7 @@ function getMessage(type) {
       return 'Validation.documentExists';
     case 'DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED':
     case 'DATE_TO_MAKE_SURVEY_TECHNICAL_TEAM_EXCEEDED':
+    case 'DATE_TO_MAKE_SURVEY_MANAGER_TEAM_EXCEEDED':
       return 'Validation.dateToEvaluate';
     case 'ALREADY_HAS_AN_EVALUATOR':
       return 'Validation.alreadyBeingEvaluated';

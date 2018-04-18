@@ -8,7 +8,7 @@ import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
-import com.nutresa.exemplary_provider.dtl.queries.ReportOfAverageGradeBySuppliers;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
@@ -54,27 +54,28 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         return response;
     }
 
-    public ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> getResults(Map<String, String> parameters) {
-        ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> response = null;
+    public ServletResponseDTO<List<ReportOfCalificationsBySuppliers>> getResults(Map<String, String> parameters) {
+        ServletResponseDTO<List<ReportOfCalificationsBySuppliers>> response = null;
         CallBLO callBLO = new CallBLO();
         try {
-            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(
+            response = new ServletResponseDTO<List<ReportOfCalificationsBySuppliers>>(
                     callBLO.getReportOfAverageGradeBySupplier(parameters));
         } catch (HandlerGenericException exception) {
-            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(exception);
+            response = new ServletResponseDTO<List<ReportOfCalificationsBySuppliers>>(exception);
         }
 
         return response;
     }
 
-    public ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> getThemForTechnicalTeam() {
-        ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>> response = null;
+    public ServletResponseDTO<List<ReportOfCalificationsBySuppliers>> getSuppliersForSelection(
+            Map<String, String> parameters) {
+        ServletResponseDTO<List<ReportOfCalificationsBySuppliers>> response = null;
         CallBLO callBLO = new CallBLO();
         try {
-            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(
-                    callBLO.getThemWillPassToTechnicalTeam());
+            response = new ServletResponseDTO<List<ReportOfCalificationsBySuppliers>>(
+                    callBLO.getThemWillPassToNextStage(parameters));
         } catch (HandlerGenericException exception) {
-            response = new ServletResponseDTO<List<ReportOfAverageGradeBySuppliers>>(exception);
+            response = new ServletResponseDTO<List<ReportOfCalificationsBySuppliers>>(exception);
         }
 
         return response;
@@ -89,6 +90,21 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<InformationFromSupplier>(exception);
         }
+
+        return response;
+    }
+
+    public ServletResponseDTO<InformationFromSupplier> getParticipantsToManagerTeam(Map<String, String> parameters) {
+        ServletResponseDTO<InformationFromSupplier> response = null;
+        CallBLO callBLO = new CallBLO();
+        try {
+            response = new ServletResponseDTO<InformationFromSupplier>(
+                    callBLO.getParticipantsToManagerTeam(parameters.get("year")));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<InformationFromSupplier>(exception);
+        }
+
+        response.setRule(callBLO.getRule().getRules());
 
         return response;
     }

@@ -7,11 +7,13 @@ import { Layout, Icon, BackTop, Modal } from 'antd';
 import * as action from '../state/Main/action';
 import FormattedMessage from '../components/shared/FormattedMessage';
 import Menu from '../components/shared/Menu';
+import ManagerTeamSurveyMobile from '../pages/ManagerTeamSurveyMobile';
 import Router from '../components/shared/Router';
 import { loginUrl } from '../utils/api';
 import { changeLanguage } from '../translation/functions';
 import { setIntl } from '../utils/translate';
 import setLanguageApi from '../api/language';
+import isMobile from '../utils/isMobile';
 
 const { Header, Footer, Content } = Layout;
 
@@ -19,20 +21,27 @@ const HeaderStyle = styled(Header)`
   background: ${props => props.theme.color.primary};
 `;
 const HeaderLogoStyle = styled(Header)`
-  padding: 0 74px;
+  padding: 0 5%;
 `;
 const ContentStyle = styled(Content)`  
   padding: 10px 40px 0 40px;
   background: ${props => props.theme.color.back};
 `;
-const MainContentStyle = styled.div`  
-  padding: 24px;
+
+const ContentStyleMobile = styled(Content)`  
+  padding: 10px 5px 0 5px;
+  background: ${props => props.theme.color.back};
+`;
+
+const MainContentStyle = styled.div`
+  padding: 2%;
   background: ${props => props.theme.color.normal};  
 `;
+
 const FooterImgStyle = styled.img`  
   max-width: 100%;
 `;
-const LogoStyle = styled.div`  
+const LogoStyle = styled.div`
   width: 120px;
   height: 59px;
   margin: 0;
@@ -77,6 +86,10 @@ const NameStyle = styled.h3`
   margin-bottom: 6px;
   font-weight: 600;
   font-style: normal;
+  white-space: nowrap;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const CloseStyle = styled.h4`
   color: ${props => props.theme.color.secondary}
@@ -136,26 +149,36 @@ class Document extends Component {
             </LogStyle>
           </HeaderContentStyle>
         </HeaderLogoStyle>
-        <HeaderStyle>
-          <Menu {...this.props} />
-        </HeaderStyle>
-        <ContentStyle>
-          <MainContentStyle>
-            <BackTop />
-            <Router />
-          </MainContentStyle>
-          <Modal
-            width="50%"
-            title={this.props.title}
-            visible={this.props.visibleModal}
-            onCancel={this.props.closeModal}
-            footer={null}
-          >
-            {
-              this.props.visibleModal && this.props.component
-            }
-          </Modal>
-        </ContentStyle>
+        {!isMobile.any() && (
+          <HeaderStyle>
+            <Menu {...this.props} />
+          </HeaderStyle>
+        )}
+        {!isMobile.any() ? (
+          <ContentStyle>
+            <MainContentStyle>
+              <BackTop />
+              <Router />
+            </MainContentStyle>
+            <Modal
+              width="50%"
+              title={this.props.title}
+              visible={this.props.visibleModal}
+              onCancel={this.props.closeModal}
+              footer={null}
+            >
+              {
+                this.props.visibleModal && this.props.component
+              }
+            </Modal>
+          </ContentStyle>
+        ) : (
+          <ContentStyleMobile>
+            <MainContentStyle>
+              <ManagerTeamSurveyMobile />
+            </MainContentStyle>
+          </ContentStyleMobile>
+        )}
         <FooterStyle>
           <FooterContentStyle>
             <FooterImgStyle src="assets/images/footer.png" alt="footer" />
