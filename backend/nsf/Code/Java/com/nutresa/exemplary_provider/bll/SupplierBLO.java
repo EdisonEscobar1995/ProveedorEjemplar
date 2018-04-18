@@ -135,10 +135,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         try {
             listIdsSupplierByCall = Common.getDtoFields(callsFound, new String[] { "[idSupplier]", "[idState]" },
                     SupplierByCallDTO.class);
-            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
-                    .get("[idSupplier]")));
-            List<StateDTO> states = stateDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
-                    .get("[idState]"), true));
+            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id",
+                    Common.getIdsFromList(listIdsSupplierByCall.get("[idSupplier]")));
+            List<StateDTO> states = stateDAO.getAllBy("id",
+                    Common.getIdsFromList(listIdsSupplierByCall.get("[idState]"), true));
 
             String[] idFieldNames = { "Category", "Country", "Department", "City", "Supply", "SubCategory",
                     "CompanyType", "SocietyType", "Sector" };
@@ -260,6 +260,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
                 states.add(SurveyStates.ENDED_EVALUATOR.toString());
                 List<DTO> callsByYear = supplierByCallBLO.getByStates(callBLO.getIdCallByYear(year), states);
                 response = getInformationFromSuppliers(listYears, callsByYear);
+
+                RolBLO rolBLO = new RolBLO();
+                Map<String, List<DTO>> currentMasters = response.getMasters();
+                String idRol = rolBLO.getRolByShortName(Rol.EVALUATOR.toString()).getId();
+                currentMasters.put("Evaluators", userBLO.getAllBy("idRols", idRol, "vwUsers"));
+                response.setMasters(currentMasters);
             } else {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }
