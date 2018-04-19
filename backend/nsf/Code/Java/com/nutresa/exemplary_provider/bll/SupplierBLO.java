@@ -135,10 +135,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         try {
             listIdsSupplierByCall = Common.getDtoFields(callsFound, new String[] { "[idSupplier]", "[idState]" },
                     SupplierByCallDTO.class);
-            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
-                    .get("[idSupplier]")));
-            List<StateDTO> states = stateDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
-                    .get("[idState]"), true));
+            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id",
+                    Common.getIdsFromList(listIdsSupplierByCall.get("[idSupplier]")));
+            List<StateDTO> states = stateDAO.getAllBy("id",
+                    Common.getIdsFromList(listIdsSupplierByCall.get("[idState]"), true));
 
             String[] idFieldNames = { "Category", "Country", "Department", "City", "Supply", "SubCategory",
                     "CompanyType", "SocietyType", "Sector" };

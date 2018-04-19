@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker, Spin,
 } from 'antd';
@@ -9,14 +9,12 @@ import Upload from '../shared/Upload';
 import SimpleTable from '../shared/SimpleTable';
 import FormattedMessage from '../shared/FormattedMessage';
 import { baseUrl } from '../../utils/api';
-import { getIntl } from '../../utils/translate';
+import LangIntl from '../../utils/translate';
 
 const { Item } = Form;
 const { Option } = Select;
 const { TextArea } = Input;
 const { Group } = Radio;
-const message = getIntl() && getIntl().formatMessage({ id: 'Validation.requiredField' });
-
 
 const ParagraphStyle = styled.p`
   margin-bottom: ${props => props.theme.spaces.main};
@@ -37,285 +35,293 @@ const InputNumberStyle = styled(InputNumber)`
 
 let timer;
 
-function DinamicForm({
-  content, getFieldDecorator, setFields, loadingModal, dontFormatMessage,
-}) {
-  return (
-    <Spin spinning={loadingModal === true}>
-      {
-        content.map(item => (
-          <Row key={item.key} justify={item.justify} align="middle" type="flex" gutter={24}>
-            {
-              item.value.map((current) => {
-                let rowValue;
-                let { span, allowClear, options } = current;
-                const {
-                  key,
-                  type,
-                  label,
-                  inputType,
-                  value,
-                  help,
-                  required,
-                  handleChange,
-                  disabled,
-                  format,
-                  rules = [],
-                  hidden,
-                  style,
-                } = current;
-                allowClear = allowClear === undefined ? true : allowClear;
-                options = options || [];
-                span = span || 24;
-                switch (type) {
-                  case 'date':
-                  case 'input':
-                  case 'inputNumber':
-                  case 'textarea':
-                  case 'radio':
-                  case 'select': {
-                    let fieldContent;
-                    switch (type) {
-                      case 'date': {
-                        fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} format={format} />;
-                        break;
-                      }
-                      case 'input':
-                        fieldContent = (
-                          <Input
-                            disabled={disabled}
-                            type={inputType || 'text'}
-                            onChange={(inputValue) => {
-                              if (handleChange) {
-                                handleChange(inputValue.target.value);
-                              }
-                            }}
-                          />
-                        );
-                        break;
-                      case 'inputNumber': {
-                        const defaultFormatter = numberValue => `${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                        const defaultParser = numberValue => numberValue.replace(/\$\s?|(\.*)/g, '');
-                        const {
-                          formatter = defaultFormatter,
-                          parser = defaultParser,
-                          min = 0,
-                          max,
-                        } = current;
-                        fieldContent = (
-                          <InputNumberStyle
-                            min={min}
-                            max={max}
-                            disabled={disabled}
-                            formatter={formatter}
-                            parser={parser}
-                            onChange={handleChange}
-                          />
-                        );
-                      }
-                        break;
-                      case 'textarea':
-                        if (disabled) {
-                          fieldContent = <TextStyle>{value}</TextStyle>;
-                        } else {
-                          fieldContent = <TextArea rows="4" disabled={disabled} />;
+class DinamicForm extends Component {
+  static message;
+  componentWillMount() {
+    DinamicForm.message = LangIntl.getIntl().formatMessage({ id: 'Validation.requiredField' });
+  }
+
+  render() {
+    const {
+      content, getFieldDecorator, setFields, loadingModal, dontFormatMessage,
+    } = this.props;
+    return (
+      <Spin spinning={loadingModal === true}>
+        {
+          content.map(item => (
+            <Row key={item.key} justify={item.justify} align="middle" type="flex" gutter={24}>
+              {
+                item.value.map((current) => {
+                  let rowValue;
+                  let { span, allowClear, options } = current;
+                  const {
+                    key,
+                    type,
+                    label,
+                    inputType,
+                    value,
+                    help,
+                    required,
+                    handleChange,
+                    disabled,
+                    format,
+                    rules = [],
+                    hidden,
+                    style,
+                  } = current;
+                  allowClear = allowClear === undefined ? true : allowClear;
+                  options = options || [];
+                  span = span || 24;
+                  switch (type) {
+                    case 'date':
+                    case 'input':
+                    case 'inputNumber':
+                    case 'textarea':
+                    case 'radio':
+                    case 'select': {
+                      let fieldContent;
+                      switch (type) {
+                        case 'date': {
+                          fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} format={format} />;
+                          break;
                         }
-                        break;
-                      case 'select': {
-                        const {
-                          valuesToClean, mode, noSearch, autoComplete, onSearch, fetching,
-                        } = current;
-                        const selectProps = {};
-                        if (noSearch) {
-                          selectProps.filterOption = selectValue =>
-                            selectValue.startsWith(' ') || selectValue.endsWith(' ');
-                        } else if (autoComplete) {
-                          selectProps.defaultActiveFirstOption = false;
-                          selectProps.showArrow = false;
-                          selectProps.placeholder = 'Buscar';
-                          selectProps.filterOption = false;
-                          selectProps.notFoundContent = fetching ? <Spin size="small" /> : 'No se encontraron resultados';
-                          selectProps.onSearch = (selectValue) => {
-                            clearTimeout(timer);
-                            if (onSearch && selectValue.length > 2) {
-                              timer = setTimeout(() => {
-                                onSearch(selectValue);
-                              }, 500);
-                            }
-                          };
-                        } else {
-                          selectProps.filterOption = (input, option) => {
-                            const word = option.props.children.props ?
-                              option.props.children.props.id : option.props.children;
-                            return word.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-                          };
+                        case 'input':
+                          fieldContent = (
+                            <Input
+                              disabled={disabled}
+                              type={inputType || 'text'}
+                              onChange={(inputValue) => {
+                                if (handleChange) {
+                                  handleChange(inputValue.target.value);
+                                }
+                              }}
+                            />
+                          );
+                          break;
+                        case 'inputNumber': {
+                          const defaultFormatter = numberValue => `${numberValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                          const defaultParser = numberValue => numberValue.replace(/\$\s?|(\.*)/g, '');
+                          const {
+                            formatter = defaultFormatter,
+                            parser = defaultParser,
+                            min = 0,
+                            max,
+                          } = current;
+                          fieldContent = (
+                            <InputNumberStyle
+                              min={min}
+                              max={max}
+                              disabled={disabled}
+                              formatter={formatter}
+                              parser={parser}
+                              onChange={handleChange}
+                            />
+                          );
                         }
-                        fieldContent = (
-                          <Select
-                            showSearch
-                            mode={mode}
-                            disabled={disabled}
-                            allowClear={allowClear}
-                            onChange={(selectValue) => {
-                              if (valuesToClean) {
-                                setFields(valuesToClean);
+                          break;
+                        case 'textarea':
+                          if (disabled) {
+                            fieldContent = <TextStyle>{value}</TextStyle>;
+                          } else {
+                            fieldContent = <TextArea rows="4" disabled={disabled} />;
+                          }
+                          break;
+                        case 'select': {
+                          const {
+                            valuesToClean, mode, noSearch, autoComplete, onSearch, fetching,
+                          } = current;
+                          const selectProps = {};
+                          if (noSearch) {
+                            selectProps.filterOption = selectValue =>
+                              selectValue.startsWith(' ') || selectValue.endsWith(' ');
+                          } else if (autoComplete) {
+                            selectProps.defaultActiveFirstOption = false;
+                            selectProps.showArrow = false;
+                            selectProps.placeholder = 'Buscar';
+                            selectProps.filterOption = false;
+                            selectProps.notFoundContent = fetching ? <Spin size="small" /> : 'No se encontraron resultados';
+                            selectProps.onSearch = (selectValue) => {
+                              clearTimeout(timer);
+                              if (onSearch && selectValue.length > 2) {
+                                timer = setTimeout(() => {
+                                  onSearch(selectValue);
+                                }, 500);
                               }
-                              if (handleChange) {
-                                handleChange(selectValue);
+                            };
+                          } else {
+                            selectProps.filterOption = (input, option) => {
+                              const word = option.props.children.props ?
+                                option.props.children.props.id : option.props.children;
+                              return word.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                            };
+                          }
+                          fieldContent = (
+                            <Select
+                              showSearch
+                              mode={mode}
+                              disabled={disabled}
+                              allowClear={allowClear}
+                              onChange={(selectValue) => {
+                                if (valuesToClean) {
+                                  setFields(valuesToClean);
+                                }
+                                if (handleChange) {
+                                  handleChange(selectValue);
+                                }
+                              }}
+                              {...selectProps}
+                            >
+                              {
+                                options.map(option => (
+                                  <Option
+                                    key={option.id}
+                                    value={option.id}
+                                  >
+                                    {
+                                      dontFormatMessage ?
+                                        option.name :
+                                        <FormattedMessage id={option.name} />
+                                    }
+                                  </Option>
+                                ))
                               }
-                            }}
-                            {...selectProps}
-                          >
+                            </Select>
+                          );
+                        }
+                          break;
+                        case 'radio':
+                          fieldContent = (<Group disabled={disabled}>
                             {
                               options.map(option => (
-                                <Option
-                                  key={option.id}
-                                  value={option.id}
-                                >
+                                <Radio key={option.id} value={option.id}>
                                   {
                                     dontFormatMessage ?
                                       option.name :
                                       <FormattedMessage id={option.name} />
                                   }
-                                </Option>
+                                </Radio>
                               ))
                             }
-                          </Select>
-                        );
+                          </Group>);
+                          break;
+                        default:
+                          fieldContent = '';
+                          break;
                       }
-                        break;
-                      case 'radio':
-                        fieldContent = (<Group disabled={disabled}>
+                      rowValue = (
+                        <div>
                           {
-                            options.map(option => (
-                              <Radio key={option.id} value={option.id}>
-                                {
-                                  dontFormatMessage ?
-                                    option.name :
-                                    <FormattedMessage id={option.name} />
-                                }
-                              </Radio>
-                            ))
+                            !hidden ?
+                              <Field label={label} help={help} required={required} style={style}>
+                                <ItemStyle>
+                                  {getFieldDecorator(key, {
+                                    rules: [
+                                      { required, message: DinamicForm.message },
+                                      ...rules,
+                                    ],
+                                    initialValue: value,
+                                  })(
+                                    fieldContent,
+                                  )}
+                                </ItemStyle>
+                              </Field>
+                              :
+                              null
                           }
-                        </Group>);
-                        break;
-                      default:
-                        fieldContent = '';
-                        break;
+                        </div>
+                      );
+                      break;
                     }
-                    rowValue = (
-                      <div>
-                        {
-                          !hidden ?
-                            <Field label={label} help={help} required={required} style={style}>
-                              <ItemStyle>
-                                {getFieldDecorator(key, {
-                                  rules: [
-                                    { required, message },
-                                    ...rules,
-                                  ],
-                                  initialValue: value,
-                                })(
-                                  fieldContent,
-                                )}
-                              </ItemStyle>
-                            </Field>
-                            :
-                            null
-                        }
-                      </div>
-                    );
-                    break;
-                  }
-                  case 'title':
-                    rowValue = (
-                      <SubTitle text={value} />
-                    );
-                    break;
-                  case 'table': {
-                    const {
-                      colummns,
-                      addData,
-                      deleteData,
-                      loading,
-                      updateField,
-                    } = current;
-                    rowValue = (
-                      <SimpleTable
-                        loading={loading}
-                        data={value}
-                        colummns={colummns}
-                        disabled={disabled}
-                        addData={addData}
-                        deleteData={deleteData}
-                        updateField={updateField}
-                      />
-                    );
-                  }
-                    break;
-                  case 'upload': {
-                    const {
-                      fileList,
-                      sizeAllowed,
-                      max,
-                      onChange,
-                      onRemove,
-                      uploadMaxFilesize,
-                      uploadExtensions,
-                    } = current;
-                    rowValue = (
-                      <Field label={label}>
-                        <Upload
-                          datakey={key}
-                          list={fileList}
+                    case 'title':
+                      rowValue = (
+                        <SubTitle text={value} />
+                      );
+                      break;
+                    case 'table': {
+                      const {
+                        colummns,
+                        addData,
+                        deleteData,
+                        loading,
+                        updateField,
+                      } = current;
+                      rowValue = (
+                        <SimpleTable
+                          loading={loading}
+                          data={value}
+                          colummns={colummns}
                           disabled={disabled}
-                          multiple
-                          max={max}
-                          uploadExtensions={uploadExtensions}
-                          uploadMaxFilesize={uploadMaxFilesize}
-                          sizeAllowed={sizeAllowed}
-                          onChange={onChange}
-                          onRemove={onRemove}
-                          baseUrl={`${baseUrl}/Attachment?action=save`}
+                          addData={addData}
+                          deleteData={deleteData}
+                          updateField={updateField}
                         />
-                      </Field>
-                    );
-                  }
-                    break;
-                  case 'button': {
-                    const {
-                      buttonType,
-                      htmlType,
-                      handleclick,
-                    } = current;
-                    rowValue = (
-                      <Button
-                        type={buttonType}
-                        htmlType={htmlType}
-                        onClick={handleclick}
-                      >
-                        {label}
-                      </Button>
-                    );
-                  }
-                    break;
-                  default:
-                    rowValue = (<ParagraphStyle>{value}</ParagraphStyle>);
-                    break;
-                }
-                return (
-                  <Col xs={24} sm={24} md={24} lg={span} key={key}>
-                    {
-                      rowValue
+                      );
                     }
-                  </Col>
-                );
-              })
-            }
-          </Row>
-        ))
-      }
-    </Spin>
-  );
+                      break;
+                    case 'upload': {
+                      const {
+                        fileList,
+                        sizeAllowed,
+                        max,
+                        onChange,
+                        onRemove,
+                        uploadMaxFilesize,
+                        uploadExtensions,
+                      } = current;
+                      rowValue = (
+                        <Field label={label}>
+                          <Upload
+                            datakey={key}
+                            list={fileList}
+                            disabled={disabled}
+                            multiple
+                            max={max}
+                            uploadExtensions={uploadExtensions}
+                            uploadMaxFilesize={uploadMaxFilesize}
+                            sizeAllowed={sizeAllowed}
+                            onChange={onChange}
+                            onRemove={onRemove}
+                            baseUrl={`${baseUrl}/Attachment?action=save`}
+                          />
+                        </Field>
+                      );
+                    }
+                      break;
+                    case 'button': {
+                      const {
+                        buttonType,
+                        htmlType,
+                        handleclick,
+                      } = current;
+                      rowValue = (
+                        <Button
+                          type={buttonType}
+                          htmlType={htmlType}
+                          onClick={handleclick}
+                        >
+                          {label}
+                        </Button>
+                      );
+                    }
+                      break;
+                    default:
+                      rowValue = (<ParagraphStyle>{value}</ParagraphStyle>);
+                      break;
+                  }
+                  return (
+                    <Col xs={24} sm={24} md={24} lg={span} key={key}>
+                      {
+                        rowValue
+                      }
+                    </Col>
+                  );
+                })
+              }
+            </Row>
+          ))
+        }
+      </Spin>
+    );
+  }
 }
 export default DinamicForm;

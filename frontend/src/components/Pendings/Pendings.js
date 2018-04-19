@@ -47,6 +47,13 @@ function Pendings({ data }) {
       return states.find(item => item.id === idState).name;
     },
   }, {
+    title: 'Evaluador',
+    dataIndex: 'whoEvaluate',
+    key: 'whoEvaluate',
+    render(text, record) {
+      return data.suppliersByCall.find(x => x.idSupplier === record.id).whoEvaluate;
+    },
+  }, {
     title: 'Proveedor',
     dataIndex: 'linkSupplier',
     key: 'linkSupplier',

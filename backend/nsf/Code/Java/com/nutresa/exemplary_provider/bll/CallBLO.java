@@ -203,12 +203,17 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setStates(stateBLO.getAll());
 
         String typeReport = parameters.get("type");
-        if (typeReport.equals("SUPPLIER_EVALUATOR")) {
+
+        if (null == typeReport) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+
+        if ("SUPPLIER_EVALUATOR".equals(typeReport)) {
             AnswerBLO answerBLO = new AnswerBLO();
             recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
                     parameters);
         } else {
-            if (typeReport.equals("TECHNICAL_MANAGER")) {
+            if ("TECHNICAL_MANAGER".equals(typeReport)) {
                 TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
                 recordOfReport = technicalTeamAnswerBLO.buildReportOfTechnicalTeam(supplierByCall.getId(),
                         recordOfReport, parameters);
@@ -230,11 +235,11 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
 
         List<SupplierByCallDTO> evaluatedSuppliers = new ArrayList<SupplierByCallDTO>();
-        if (nameNextStage.equals("TechnicalTeam")) {
+        if ("TechnicalTeam".equals(nameNextStage)) {
             evaluatedSuppliers = supplierByCallBLO.getFinishedByStage(SurveyStates.ENDED_EVALUATOR);
         }
 
-        if (nameNextStage.equals("ManagerTeam")) {
+        if ("ManagerTeam".equals(nameNextStage)) {
             evaluatedSuppliers = supplierByCallBLO.getFinishedByStage(SurveyStates.ENDED_TECHNICAL_TEAM);
         }
 
@@ -243,12 +248,12 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         for (SupplierByCallDTO supplierByCall : evaluatedSuppliers) {
             parametersToGenerateReport.put("type", "SUPPLIER_EVALUATOR");
             ReportOfCalificationsBySuppliers reportBySupplier = new ReportOfCalificationsBySuppliers();
-            if (nameNextStage.equals("TechnicalTeam")) {
+            if ("TechnicalTeam".equals(nameNextStage)) {
                 reportBySupplier = getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
                         parametersToGenerateReport);
             }
 
-            if (nameNextStage.equals("ManagerTeam")) {
+            if ("ManagerTeam".equals(nameNextStage)) {
                 reportBySupplier = getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
                         parametersToGenerateReport);
                 parametersToGenerateReport.put("type", "TECHNICAL_MANAGER");
