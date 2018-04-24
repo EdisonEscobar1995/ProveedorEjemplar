@@ -22,15 +22,11 @@ public class SystemDTO {
     @Expose
     private String inputPoll;
     @Expose
-    private String uploadPathApplication;
-    @Expose
-    private String namesPathApplication;
-    @Expose
-    private String supplierPathApplication;
-    @Expose
-    private String filesPathApplication;
-    @Expose
     private short uploadMaxFilesize;
+    private String uploadPathApplication;
+    private String namesPathApplication;
+    private String supplierPathApplication;
+    private String filesPathApplication;
     @Expose
     private List<String> uploadExtensions;
     @Expose

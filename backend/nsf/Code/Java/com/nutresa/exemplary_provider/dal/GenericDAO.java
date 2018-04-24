@@ -34,7 +34,7 @@ public abstract class GenericDAO<T> {
     private Session session;
     private Database database;
     private Class<T> dtoClass;
-    private String entityForm;
+    protected String entityForm;
     protected String entityView;
     protected String entity;
     protected Translator translator;
@@ -138,14 +138,14 @@ public abstract class GenericDAO<T> {
         } else {
             view = database.getView(defaultView);
         }
-        
+
         List<T> list = new ArrayList<T>();
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
             Document document;
             for (ViewEntry viewEntry : vec) {
                 document = viewEntry.getDocument();
-                if(null != document){
+                if (null != document) {
                     list.add((T) this.castDocument(document));
                 }
             }
@@ -199,7 +199,7 @@ public abstract class GenericDAO<T> {
             DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
 
             for (Document document : documents) {
-                if(null != document){
+                if (null != document) {
                     list.add((T) this.castDocument(document));
                 }
             }
@@ -330,20 +330,21 @@ public abstract class GenericDAO<T> {
         T newDto;
         try {
             newDto = (T) dto.getClass().newInstance();
+            Document document = vw.getFirstDocumentByKey(this.entityForm, true);
+            if (null == document) {
+                newDto = this.save(dto);
+            } else {
+                String documentId = document.getItemValueString("id");
+                String dtoId = (String) Common.getFieldValue(dto, "id");
+                if (documentId.equals(dtoId)) {
+                    newDto = this.saveDocument(document, dto, false);
+                }
+            }
+
+            return newDto;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-        Document document = vw.getFirstDocumentByKey(this.entityForm, true);
-        if (null == document) {
-            newDto = this.save(dto);
-        } else {
-            String documentId = document.getItemValueString("id");
-            String dtoId = (String) Common.getFieldValue(dto, "id");
-            if (documentId.equals(dtoId)) {
-                newDto = this.saveDocument(document, dto, false);
-            }
-        }
-        return newDto;
     }
 
     @SuppressWarnings("unchecked")
