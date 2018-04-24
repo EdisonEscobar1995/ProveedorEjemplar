@@ -99,6 +99,18 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
             filterManagerTeamSurvey(values);
           },
         },
+        {
+          span: 8,
+          type: 'select',
+          label: 'Tamaño',
+          key: 'companySize',
+          value: '',
+          options: masters ? masters.CompanySize : [],
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), companySize: value };
+            filterManagerTeamSurvey(values);
+          },
+        },
       ],
     },
     {
@@ -118,19 +130,6 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
   ];
 
   if (data.finishVisible) {
-    FormData[1].value.splice(1, 0, {
-      span: 8,
-      type: 'select',
-      label: 'Gerente',
-      key: 'managers',
-      value: '',
-      options: masters ? masters.Managers : [],
-      handleChange: (value) => {
-        const values = { ...form.getFieldsValue(), managers: value };
-        filterManagerTeamSurvey(values);
-      },
-    });
-
     FormData.splice(2, 0,
       {
         key: 1.3,
@@ -149,6 +148,18 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
           },
         ],
       });
+    FormData[2].value.splice(1, 0, {
+      span: 8,
+      type: 'select',
+      label: 'Gerente',
+      key: 'managers',
+      value: '',
+      options: masters ? masters.Managers : [],
+      handleChange: (value) => {
+        const values = { ...form.getFieldsValue(), managers: value };
+        filterManagerTeamSurvey(values);
+      },
+    });
   }
 
   return FormData;
