@@ -86,6 +86,18 @@ const formData = ({ data, getTechnicalTeamSurvey, filterTechnicalTeamSurvey, for
             filterTechnicalTeamSurvey(values);
           },
         },
+        {
+          span: 8,
+          type: 'select',
+          label: 'Tamaño',
+          key: 'companySize',
+          value: '',
+          options: masters ? masters.CompanySize : [],
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), companySize: value };
+            filterTechnicalTeamSurvey(values);
+          },
+        },
       ],
     },
     {

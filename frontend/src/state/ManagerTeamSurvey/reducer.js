@@ -112,6 +112,7 @@ function managerTeamSurveyApp(state = initialState, action) {
               supplier = '',
               managers = '',
               states = '',
+              companySize = '',
             } = action.data;
             const manager = managerProcess.find(x => x.name === (item.whoEvaluate ? item.whoEvaluate : ''));
             let visible = true;
@@ -120,6 +121,8 @@ function managerTeamSurveyApp(state = initialState, action) {
             } else if (country !== '' && country !== item.idCountry) {
               visible = false;
             } else if (supplier !== '' && supplier !== item.id) {
+              visible = false;
+            } else if (companySize !== '' && companySize !== item.idCompanySize) {
               visible = false;
             } else if (supply !== '' && supply !== item.idSupply) {
               visible = false;

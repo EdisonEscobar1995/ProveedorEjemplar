@@ -158,6 +158,7 @@ function technicalTeamSurveyApp(state = initialState, action) {
               category = '',
               country = '',
               supplier = '',
+              companySize = '',
             } = action.data;
             let visible = true;
             if (category !== '' && category !== item.idCategory) {
@@ -167,6 +168,8 @@ function technicalTeamSurveyApp(state = initialState, action) {
             } else if (supplier !== '' && supplier !== item.id) {
               visible = false;
             } else if (supply !== '' && supply !== item.idSupply) {
+              visible = false;
+            } else if (companySize !== '' && companySize !== item.idCompanySize) {
               visible = false;
             }
             return {
