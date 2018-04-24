@@ -232,11 +232,11 @@ const routes = [
   },
   {
     index: increment(),
-    name: 'PRUEBA',
-    path: '/prueba',
+    name: 'GENERALADMINISTRATOR',
+    path: '/generalAdmon',
     exact: true,
     component: asyncComponent(() =>
-      import('./pages/prueba').then(module => module.default),
+     import('./pages/GeneralAdministrator').then(module => module.default),
     ),
   },
 ];
