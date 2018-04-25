@@ -17,6 +17,7 @@ import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.RolDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.utils.Common;
@@ -78,6 +79,16 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             Name dominoUser = userDAO.getDominoUser();
             Map<String, String> userInfo = new LinkedHashMap<String, String>();
             userInfo.put("name", dominoUser.getNamePart(NamePartKey.Common));
+
+            SupplierBLO supplierBLO = new SupplierBLO();
+            SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
+            if (null != supplier) {
+                CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+                userInfo.put("company_size", companySizeBLO.get(supplier.getIdCompanySize()).getName());
+                SupplyBLO supplyBLO = new SupplyBLO();
+                userInfo.put("supply", supplyBLO.get(supplier.getIdSupply()).getName());
+            }
+
             userInfo.put("canonical", dominoUser.getNamePart(NamePartKey.Canonical));
             userContext.put("userInfo", userInfo);
             userContext.put("rols", rols);
