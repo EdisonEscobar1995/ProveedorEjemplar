@@ -87,6 +87,12 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return userContext;
     }
 
+    /**
+     * Determina si el usuario en sesión tiene el rol específico <code>shortNameRol</code>
+     * @param shortNameRol
+     * @return <code>false</code> en caso de no tener el rol, de lo contrario <code>true</code>
+     * @throws HandlerGenericException
+     */
     protected boolean isRol(String shortNameRol) throws HandlerGenericException {
         List<DTO> rols = getRolsByUser();
         boolean response = false;

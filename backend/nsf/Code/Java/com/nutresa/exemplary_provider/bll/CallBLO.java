@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import com.nutresa.exemplary_provider.dal.CallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
@@ -15,10 +17,12 @@ import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
+import com.nutresa.exemplary_provider.dtl.StagesCall;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
+import com.nutresa.exemplary_provider.dtl.queries.StatisticalProgress;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -423,6 +427,119 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
 
         return callsBySupplier;
+    }
+
+    /**
+     * De todas las convocatorias creadas optiene la última que fue creada.
+     * @return Última convocatoria creada
+     * @throws HandlerGenericException
+     */
+    private CallDTO getCurrentCall() throws HandlerGenericException {
+        List<Object> listYears = getFieldAll(0, VIEW_CALL_BY_YEAR);
+        String year = (String) listYears.get(0);
+        return get(getIdCallByYear(year));
+    }
+
+    /**
+     * Dadas las fechas de vencimiento, se determina que fase es en la que se encuentra la convocatoria
+     * @return Fase en la que se encuentra la convocatoria
+     * @throws HandlerGenericException
+     */
+    public StagesCall identifyCurrentStage() throws HandlerGenericException {
+        Map<StagesCall, Boolean> stageCaduced = new LinkedHashMap<StagesCall, Boolean>();
+        StagesCall currentStage = null;
+        CallDTO call = getCurrentCall();
+        stageCaduced.put(StagesCall.SUPPLIER, call.isCaducedDeadLineToMakeSurvey());
+        stageCaduced.put(StagesCall.EVALUATOR, call.isCaducedDeadLineToMakeSurveyEvaluator());
+        stageCaduced.put(StagesCall.TECHNICAL_TEAM, call.isCaducedDeadLineToMakeSurveyTechnicalTeam());
+        // Si las anteriores no están vencidas, es porque la fase final está activa
+        stageCaduced.put(StagesCall.MANAGER_TEAM, false);
+
+        Iterator<StagesCall> iterator = stageCaduced.keySet().iterator();
+        while (iterator.hasNext()) {
+            StagesCall stage = iterator.next();
+            if (!stageCaduced.get(stage)) {
+                currentStage = stage;
+                break;
+            }
+        }
+
+        return currentStage;
+    }
+
+    /**
+     * Dado el rol del usuario en sessión se identifica cual es la fase que le pertenece a cada rol del sistema
+     * @return Fase a la que pertenece el rol del usuario en session
+     * @throws HandlerGenericException
+     */
+    private StagesCall currentStageByRol() throws HandlerGenericException {
+        StagesCall currentStage = null;
+        UserBLO userBLO = new UserBLO();
+        if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+            currentStage = identifyCurrentStage();
+        }
+
+        if (userBLO.isRol(Rol.EVALUATOR.toString())) {
+            currentStage = StagesCall.EVALUATOR;
+        }
+
+        if (userBLO.isRol(Rol.TECHNICAL_TEAM.toString())) {
+            currentStage = StagesCall.TECHNICAL_TEAM;
+        }
+
+        if (userBLO.isRol(Rol.MANAGER_TEAM.toString())) {
+            currentStage = StagesCall.MANAGER_TEAM;
+        }
+
+        if (null == currentStage) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
+        }
+
+        return currentStage;
+    }
+
+    public StatisticalProgress getStatisticalProgress(String filterName) throws HandlerGenericException {
+        filterName = filterName.trim();
+
+        StateBLO stateBLO = new StateBLO();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        StatisticalProgress summaryProgress = new StatisticalProgress();
+
+        StagesCall currentStage = currentStageByRol();
+        List<SurveyStates> statesOfStage = stateBLO.getStatesByStageCall(currentStage);
+        List<SupplierByCallDTO> suppliersByCall = supplierByCallBLO.getAllByStates(getCurrentCall().getId(),
+                statesOfStage);
+        SurveyStates finalStateOfStage = stateBLO.getFinalStateByStageCall(currentStage);
+        String idStateOfEndedStage = stateBLO.getStateByShortName(finalStateOfStage.toString()).getId();
+        summaryProgress.totalSupplier = (short) suppliersByCall.size();
+        for (SupplierByCallDTO supplierByCall : suppliersByCall) {
+            if (idStateOfEndedStage.equals(supplierByCall.getIdState())) {
+                SupplierBLO supplierBLO = new SupplierBLO();
+                String anyName = "";
+                SupplierDTO supplier = supplierBLO.get(supplierByCall.getIdSupplier());
+                if ("COMPANY_SIZE_FILTER".equals(filterName)) {
+                    CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+                    String idCompanySize = supplier.getIdCompanySize();
+                    anyName = companySizeBLO.get(idCompanySize).getName();
+                }
+
+                if ("SUPPLY_FILTER".equals(filterName)) {
+                    SupplyBLO supplyBLO = new SupplyBLO();
+                    String idSupply = supplier.getIdSupply();
+                    anyName = supplyBLO.get(idSupply).getName();
+                }
+
+                if ("COUNTRY_FILTER".equals(filterName)) {
+                    CountryBLO countryBLO = new CountryBLO();
+                    String idCountry = supplier.getIdCountry();
+                    anyName = countryBLO.get(idCountry).getName();
+                }
+
+                summaryProgress.createAxisOrCounter(anyName);
+            }
+        }
+        summaryProgress.calculatePercentageInAxes();
+        return summaryProgress;
     }
 
     private class FieldToFilter {

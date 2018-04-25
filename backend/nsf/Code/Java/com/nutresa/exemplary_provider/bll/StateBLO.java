@@ -6,6 +6,7 @@ import java.util.List;
 import com.nutresa.exemplary_provider.dal.StateDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.StateDTO;
+import com.nutresa.exemplary_provider.dtl.StagesCall;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -57,6 +58,58 @@ public class StateBLO extends GenericBLO<StateDTO, StateDAO> {
         }
 
         return statesByTypeReport;
+    }
+
+    protected List<SurveyStates> getStatesByStageCall(StagesCall stage) throws HandlerGenericException {
+        List<SurveyStates> statesByStage = new ArrayList<SurveyStates>();
+        switch (stage) {
+        case SUPPLIER:
+            statesByStage.add(SurveyStates.NOT_STARTED);
+            statesByStage.add(SurveyStates.SUPPLIER);
+            statesByStage.add(SurveyStates.ENDED_SUPPLIER);
+            break;
+        case EVALUATOR:
+            statesByStage.add(SurveyStates.NOT_STARTED_EVALUATOR);
+            statesByStage.add(SurveyStates.EVALUATOR);
+            statesByStage.add(SurveyStates.ENDED_EVALUATOR);
+            break;
+        case TECHNICAL_TEAM:
+            statesByStage.add(SurveyStates.NOT_STARTED_TECHNICAL_TEAM);
+            statesByStage.add(SurveyStates.TECHNICAL_TEAM);
+            statesByStage.add(SurveyStates.ENDED_TECHNICAL_TEAM);
+            break;
+        case MANAGER_TEAM:
+            statesByStage.add(SurveyStates.NOT_STARTED_MANAGER_TEAM);
+            statesByStage.add(SurveyStates.MANAGER_TEAM);
+            statesByStage.add(SurveyStates.ENDED_MANAGER_TEAM);
+            break;
+        default:
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INVALID_VALUE.toString());
+        }
+
+        return statesByStage;
+    }
+
+    protected SurveyStates getFinalStateByStageCall(StagesCall stage) throws HandlerGenericException {
+        SurveyStates finalStates = null;
+        switch (stage) {
+        case SUPPLIER:
+            finalStates = SurveyStates.ENDED_SUPPLIER;
+            break;
+        case EVALUATOR:
+            finalStates = SurveyStates.ENDED_EVALUATOR;
+            break;
+        case TECHNICAL_TEAM:
+            finalStates = SurveyStates.ENDED_TECHNICAL_TEAM;
+            break;
+        case MANAGER_TEAM:
+            finalStates = SurveyStates.ENDED_MANAGER_TEAM;
+            break;
+        default:
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INVALID_VALUE.toString());
+        }
+
+        return finalStates;
     }
 
 }

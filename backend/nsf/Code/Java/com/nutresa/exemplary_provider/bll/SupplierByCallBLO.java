@@ -533,4 +533,10 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         supplierByCall.setWhoEvaluateOfTechnicalTeam(nameEvaluator);
         return super.save(supplierByCall);
     }
+
+    public List<SupplierByCallDTO> getAllByStates(String idCall, List<SurveyStates> states)
+            throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.getAllByStates(idCall, states);
+    }
 }
