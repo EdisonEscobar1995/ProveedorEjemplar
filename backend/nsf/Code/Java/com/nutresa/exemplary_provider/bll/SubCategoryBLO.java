@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.SubCategoryDAO;
@@ -50,7 +51,7 @@ public class SubCategoryBLO extends GenericBLO<SubCategoryDTO, SubCategoryDAO> {
         String temporalIdentifier = subCategory.getName().trim().concat(subCategory.getIdCategory());
 
         SubCategoryDAO subCategoryDAO = new SubCategoryDAO();
-        List<CategoryDTO> existingSubCategories = subCategoryDAO.getByProperties(filter);
+        List<SubCategoryDTO> existingSubCategories = subCategoryDAO.getByProperties(filter);
 
         if (!existingSubCategories.isEmpty()) {
             SubCategoryDTO existingSubCategory = existingSubCategories.get(0);
