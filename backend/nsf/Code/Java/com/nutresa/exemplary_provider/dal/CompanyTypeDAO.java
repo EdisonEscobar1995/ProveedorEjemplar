@@ -18,16 +18,16 @@ public class CompanyTypeDAO extends GenericDAO<CompanyTypeDTO> {
     }
 
     public List<CompanyTypeDTO> getByProperties(List<String> filter) throws HandlerGenericException {
-        List<CompanyTypeDTO> scales = new ArrayList<CompanyTypeDTO>();
+        List<CompanyTypeDTO> company = new ArrayList<CompanyTypeDTO>();
         View currentView = getDatabase().getView("vwCompanyTypeByName");
         DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
         if (null != documents) {
             for (Document document : documents) {
-                scales.add(castDocument(document));
+                company.add(castDocument(document));
             }
         }
 
-        return scales;
+        return company;
     }
 
 }
