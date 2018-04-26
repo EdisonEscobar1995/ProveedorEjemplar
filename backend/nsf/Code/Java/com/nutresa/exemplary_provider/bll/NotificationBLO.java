@@ -47,6 +47,11 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO
                     .getNotificationByAlias(NotificationType.CHANGE_COMPANY_SIZE.toString());
+
+            if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
+                sendTo.addAll(notification.getWithCopy());
+            }
+
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
             sendNotification(sendTo, notification, true, detailUserToSend, true, linkOfButton);
         } catch (HandlerGenericException exception) {
@@ -77,6 +82,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             break;
         case SUPPLIER:
             notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_SUPPLIER.toString());
+
             break;
         case TECHNICAL_TEAM:
             notification = notificationDAO
@@ -85,6 +91,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         default:
             notification = new NotificationDTO();
             break;
+        }
+
+        if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
+            sendTo.addAll(notification.getWithCopy());
         }
 
         sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), true, linkOfButton);
@@ -148,6 +158,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDTO notification = notificationDAO
                     .getNotificationByAlias(NotificationType.CHANGE_COMPANY_SIZE_CONFIRMED.toString());
 
+            if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
+                emails.addAll(notification.getWithCopy());
+            }
+
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
             sendNotification(emails, notification, true, detail, true, linkOfButton);
         } catch (HandlerGenericException exception) {
@@ -176,6 +190,11 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             detail.put("Contraseña", informationInOtherDataBase.get("password"));
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias(notificationType.toString());
+
+            if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
+                emails.addAll(notification.getWithCopy());
+            }
+
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
             sendNotification(emails, notification, true, detail, true, linkOfButton);
         }
@@ -186,6 +205,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO
                     .getNotificationByAlias(NotificationType.TECHNICAL_TEAM_CALLED_BY_LIBERATOR.toString());
+
+            if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
+                emails.addAll(notification.getWithCopy());
+            }
 
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/technicalTeamSurvey";
             sendNotification(emails, notification, false, null, true, linkOfButton);
@@ -200,6 +223,10 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO
                     .getNotificationByAlias(NotificationType.MANAGER_TEAM_CALLED_BY_LIBERATOR.toString());
+
+            if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
+                emails.addAll(notification.getWithCopy());
+            }
 
             String linkOfButton = Common.buildPathResource() + "/dist/index.html#/managerTeamSurvey";
             sendNotification(emails, notification, false, null, true, linkOfButton);
