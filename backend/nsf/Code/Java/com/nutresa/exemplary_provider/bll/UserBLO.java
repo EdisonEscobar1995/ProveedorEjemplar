@@ -80,13 +80,17 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             Map<String, String> userInfo = new LinkedHashMap<String, String>();
             userInfo.put("name", dominoUser.getNamePart(NamePartKey.Common));
 
-            SupplierBLO supplierBLO = new SupplierBLO();
-            SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
-            if (null != supplier) {
-                CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-                userInfo.put("company_size", companySizeBLO.get(supplier.getIdCompanySize()).getName());
-                SupplyBLO supplyBLO = new SupplyBLO();
-                userInfo.put("supply", supplyBLO.get(supplier.getIdSupply()).getName());
+            boolean isSupplier = true;
+
+            if (isRol(Rol.SUPPLIER.toString())) {
+                SupplierBLO supplierBLO = new SupplierBLO();
+                SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
+                if (null != supplier) {
+                    CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+                    userInfo.put("company_size", companySizeBLO.get(supplier.getIdCompanySize()).getName());
+                    SupplyBLO supplyBLO = new SupplyBLO();
+                    userInfo.put("supply", supplyBLO.get(supplier.getIdSupply()).getName());
+                }
             }
 
             userInfo.put("canonical", dominoUser.getNamePart(NamePartKey.Canonical));
