@@ -1,51 +1,69 @@
-import React from 'react';
-import ReactChartkick, { PieChart } from 'react-chartkick';
-import Chart from 'chart.js';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { Row, Col, Spin } from 'antd';
+import * as actions from '../../state/Home/action';
+import { Carousel, Doughnut, Pendings } from './';
 
-ReactChartkick.addAdapter(Chart);
-// import styled from 'styled-components';
-// import { Col, Row, Carousel } from 'antd';
+const H3 = styled.h3`
+  color: ${props => props.theme.color.primary};
+  margin-bottom: ${props => props.theme.spaces.main};
+  font-weight: bold;
+`;
 
-// const H3 = styled.h3`
-//   color: ${props => props.theme.color.primary};
-//   margin-bottom: ${props => props.theme.spaces.main};
-//   font-weight: bold;
-// `;
+const Linea = styled.div`
+  border: 1px solid #37907c7a;
+  margin: 20px 0;
+`;
 
-// const CarouselStyle = styled(Carousel)`
-//   & .slick-track {
-//     width: 90% !important;
-//   }
-//   text-align: center;
-//   height: 513px;
-//   line-height: 513px;
-//   overflow: hidden;
-// `;
+class HomeContainer extends Component {
+  state = {
+    value: 1,
+  }
+  componentDidMount() {
+    this.props.getAllGeneralData();
+    this.props.getStatisticalData();
+    // this.props.getCurrentData();
+  }
 
-// const Linea = styled.div`
-//   border: 1px solid #37907c7a;
-// `;
-
-function HomeContainer() {
-  return (
-    // <Row>
-    //   <Col span={12}>
-    //     <H3>Galería de imágenes</H3>
-    //     <CarouselStyle>
-    //       <img src="assets/images/1.jpg" alt="1" />
-    //       <img src="assets/images/2.jpg" alt="1" />
-    //       <img src="assets/images/3.jpg" alt="1" />
-    //     </CarouselStyle>
-    //   </Col>
-    //   {/* <Col span={12}>
-    //     <Card>
-    //       <H3>Porcentaje de avance</H3>
-    //     </Card>
-    //   </Col> */}
-    // </Row>
-
-    <PieChart donut data={{ Blueberry: 44, Strawberry: 23 }} />
-  );
+  render() {
+    const { loading } = this.props;
+    return (
+      <Spin spinning={loading}>
+        <Row type="flex" justify="center">
+          <Col span={10} offset={2}>
+            <H3>Galería de imágenes</H3>
+            <Carousel {...this.props} />
+          </Col>
+          <Col span={10} offset={2}>
+            <H3>Porcentaje de avance</H3>
+            <Doughnut {...this.props} />
+          </Col>
+        </Row>
+        <Linea />
+        <Row>
+          <Col span={24}>
+            <H3>Mis pendientes</H3>
+            <p>A continuación se presentan los proveedores que están pendientes por evaluar.</p>
+            <Pendings />
+          </Col>
+        </Row>
+      </Spin>
+    );
+  }
 }
 
-export default HomeContainer;
+const mapStateToProps = state => (
+  {
+    statisticalData: state.home.statisticalData,
+    data: state.home.data,
+    loading: state.home.loading,
+    dataUser: state.main.data,
+    // dataCurrent: state.home.dataCurrent,
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  actions,
+)(HomeContainer);

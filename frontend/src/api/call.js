@@ -37,6 +37,10 @@ const getTechnicalTeamSurveyApi = year => instance.get(`Call?action=getParticipa
 
 const getManagerTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToManagerTeam&year=${year || ''}`);
 
+const getStatisticalProgressApi = filter => instance.get(`Call?action=getStatisticalProgress&filterName=${filter || 'SUPPLY_FILTER'}`);
+
+const identifyCurrentStageApi = () => instance.get('Call?action=identifyCurrentStage');
+
 export {
   getCallApi,
   saveCallApi,
@@ -49,4 +53,6 @@ export {
   getSupplierSelectionApi,
   getTechnicalTeamSurveyApi,
   getManagerTeamSurveyApi,
+  getStatisticalProgressApi,
+  identifyCurrentStageApi,
 };

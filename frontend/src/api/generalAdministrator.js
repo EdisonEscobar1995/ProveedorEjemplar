@@ -4,4 +4,11 @@ function getGeneralAdministratorApi() {
   return instance.get('System?action=getConfiguration');
 }
 
-export default getGeneralAdministratorApi;
+function saveGeneralAdministratorApi(data) {
+  return instance.post('System?action=save', data);
+}
+
+export {
+  getGeneralAdministratorApi,
+  saveGeneralAdministratorApi,
+};

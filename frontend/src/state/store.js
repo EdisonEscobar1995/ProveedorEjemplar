@@ -25,6 +25,7 @@ import managerTeamSurvey from './ManagerTeamSurvey/reducer';
 import managerTeam from './ManagerTeam/reducer';
 import menu from './Menu/reducer';
 import generalAdministrator from './GeneralAdministrator/reducer';
+import home from './Home/reducer';
 
 
 const app = combineReducers({
@@ -52,6 +53,7 @@ const app = combineReducers({
   managerTeam,
   menu,
   generalAdministrator,
+  home,
 });
 
 let middleware = {};

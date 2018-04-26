@@ -139,6 +139,7 @@ const getManagerTeamSurvey = year => (dispatch) => {
         supplier.visible = true;
         supplier.whoEvaluate = null;
         supplier.idState = idState;
+        supplier.state = state;
         supplier.readOnly = readOnly;
         return supplier;
       });
@@ -169,7 +170,7 @@ const getManagerTeamSurvey = year => (dispatch) => {
         const state = data.masters.State.find(element => element.id === idState).shortName;
         let readOnly =
           (state !== 'NOT_STARTED_MANAGER_TEAM' && state !== 'MANAGER_TEAM');
-        data.masters.User[0].idRols.forEach((idRol) => {
+        data.masters.User.find(x => x).idRols.forEach((idRol) => {
           rol = data.masters.Rol
             .find(element => element.id === idRol).shortName;
           if (rol !== 'MANAGER_TEAM') {
@@ -189,6 +190,7 @@ const getManagerTeamSurvey = year => (dispatch) => {
         supplier.visible = true;
         supplier.readOnly = readOnly;
         supplier.idState = idState;
+        supplier.state = state;
         supplier.whoEvaluate = answer.whoEvaluate;
         supplierAux.push(supplier);
       });

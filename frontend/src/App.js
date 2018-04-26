@@ -5,6 +5,7 @@ import { createHashHistory } from 'history';
 import { ThemeProvider } from 'styled-components';
 import { LocaleProvider } from 'antd';
 import { addLocaleData, IntlProvider } from 'react-intl';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './styles/ant-theme-vars.less';
 import store from './state/store';
 import Document from './pages/_document';

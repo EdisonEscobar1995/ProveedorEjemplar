@@ -20,6 +20,8 @@ class GeneralAdministratorContainer extends Component {
         <GenericForm
           {...this.props}
           formData={dataForm}
+          submitMethod={this.props.saveGeneralAdministrator}
+          validate
         />
       </Spin>
     );
