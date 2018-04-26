@@ -80,8 +80,6 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             Map<String, String> userInfo = new LinkedHashMap<String, String>();
             userInfo.put("name", dominoUser.getNamePart(NamePartKey.Common));
 
-            boolean isSupplier = true;
-
             if (isRol(Rol.SUPPLIER.toString())) {
                 SupplierBLO supplierBLO = new SupplierBLO();
                 SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
