@@ -70,8 +70,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         }
         return response;
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     public ServletResponseDTO<T> save(T dto) {
         B blo;
@@ -93,8 +92,8 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         ServletResponseDTO<T> response = null;
         try {
             blo = this.bloClass.newInstance();
-            Method method = blo.getClass().getMethod("delete", Map.class);
-            response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters));
+            Method method = blo.getClass().getMethod("delete", Map.class, Boolean.class);
+            response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters, Boolean.TRUE));
         } catch (Exception exception) {
             response = new ServletResponseDTO<T>(exception);
         }

@@ -25,6 +25,7 @@ import com.nutresa.exemplary_provider.bll.LogBLO;
 import com.nutresa.exemplary_provider.bll.TranslationBLO;
 import com.nutresa.exemplary_provider.bll.TranslationBLO.Translator;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.LogDTO.ErrorType;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -226,6 +227,21 @@ public abstract class GenericDAO<T> {
         return list;
     }
 
+    /**
+     * Determina si un documento está relacionado en otros documentos.
+     * @param idDocument
+     * @throws HandlerGenericException con código <code>DOCUMENT_MULTI_CONNECTED</code> si el documento está
+     *                                  relacionado con otros documentos.
+     */
+    protected void existIdInOthersDocuments(String idDocument) throws HandlerGenericException {
+        View view = database.getView("vwUniverse");
+        if (view.FTSearch(idDocument, 2) > 1) {
+            view.clear();
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());
+        }
+        view.clear();
+    }
+
     @SuppressWarnings("unchecked")
     protected T castDocument(Document document) throws HandlerGenericException {
         T result = null;
@@ -400,12 +416,15 @@ public abstract class GenericDAO<T> {
         return dto;
     }
 
-    public boolean delete(String id) throws HandlerGenericException {
+    public boolean delete(String id, Boolean checkRelationship) throws HandlerGenericException {
         boolean response = false;
         try {
             View view = database.getView(entityView);
             Document document = view.getFirstDocumentByKey(id, true);
             if (null != document) {
+                if (checkRelationship) {
+                    existIdInOthersDocuments(id);
+                }
                 response = document.remove(true);
             }
         } catch (Exception exception) {

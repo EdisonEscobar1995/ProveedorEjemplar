@@ -191,4 +191,26 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
 
         return result;
     }
+
+    public List<SupplierByCallDTO> getAllByStates(String idCall, List<SurveyStates> states)
+            throws HandlerGenericException {
+        List<SupplierByCallDTO> result = new ArrayList<SupplierByCallDTO>();
+        for (SurveyStates state : states) {
+            StateDAO stateDAO = new StateDAO();
+            String idState = stateDAO.getStateByShortName(state.toString()).getId();
+            List<String> filter = new ArrayList<String>();
+            filter.add(idState);
+            filter.add(idCall);
+
+            View currentView = getDatabase().getView("vwSuppliersByCallIdStateAndIdCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+            if (null != documents) {
+                for (Document document : documents) {
+                    result.add(castDocument(document));
+                }
+            }
+        }
+
+        return result;
+    }
 }

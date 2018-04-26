@@ -24,7 +24,7 @@ public class CustomerBLO extends GenericBLO<CustomerDTO, CustomerDAO> {
             for (CustomerDTO customer : customers) {
                 Map<String, String> parameters = new HashMap<String, String>();
                 parameters.put("id", customer.getId());
-                delete(parameters);
+                delete(parameters, Boolean.FALSE);
             }
         }
     }

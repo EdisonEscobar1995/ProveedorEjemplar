@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 
 public class SystemDTO {
     @Expose
@@ -15,6 +16,8 @@ public class SystemDTO {
     private String content;
     @Expose
     private List<String> images;
+    @Expose
+    private List<AttachmentDTO> document;
     @Expose
     private String informationProgram;
     @Expose
@@ -156,6 +159,14 @@ public class SystemDTO {
 
     public String getPackagingMaterialCategoryId() {
         return packagingMaterialCategoryId;
+    }
+
+    public void setDocument(List<AttachmentDTO> document) {
+        this.document = document;
+    }
+
+    public List<AttachmentDTO> getDocument() {
+        return document;
     }
 
 }

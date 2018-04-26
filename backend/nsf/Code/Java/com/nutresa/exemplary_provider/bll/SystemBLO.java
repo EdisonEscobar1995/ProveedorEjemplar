@@ -36,6 +36,9 @@ public class SystemBLO extends GenericBLO<SystemDTO, SystemDAO> {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
         }
 
+        AttachmentBLO attachmentBLO = new AttachmentBLO();
+        system.setDocument(attachmentBLO.getDocuments(system.getImages()));
+
         return system;
 
     }

@@ -30,4 +30,17 @@ public class CategoryDAO extends GenericDAO<CategoryDTO> {
 
         return categories;
     }
+
+    public List<CategoryDTO> getByProperties(List<String> filter) throws HandlerGenericException {
+        List<CategoryDTO> category = new ArrayList<CategoryDTO>();
+        View currentView = getDatabase().getView("vwCategoriesByNameAndIdSupply");
+        DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+        if (null != documents) {
+            for (Document document : documents) {
+                category.add(castDocument(document));
+            }
+        }
+
+        return category;
+    }
 }

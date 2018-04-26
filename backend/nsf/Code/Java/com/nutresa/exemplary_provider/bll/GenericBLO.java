@@ -130,13 +130,13 @@ public class GenericBLO<T, D> {
         return dtoList;
     }
 
-    public boolean delete(Map<String, String> parameters) throws HandlerGenericException {
+    public boolean delete(Map<String, String> parameters, Boolean checkRelationship) throws HandlerGenericException {
         boolean response = false;
         D dao;
         try {
             dao = daoClass.newInstance();
-            Method method = dao.getClass().getMethod("delete", String.class);
-            response = (Boolean) method.invoke(dao, parameters.get("id"));
+            Method method = dao.getClass().getMethod("delete", String.class, Boolean.class);
+            response = (Boolean) method.invoke(dao, parameters.get("id"), checkRelationship);
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
