@@ -1,7 +1,13 @@
 package com.nutresa.exemplary_provider.dal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.openntf.domino.Document;
+import org.openntf.domino.DocumentCollection;
+import org.openntf.domino.View;
 
 import com.nutresa.exemplary_provider.dtl.SurveyDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -28,6 +34,19 @@ public class SurveyDAO extends GenericDAO<SurveyDTO> {
         }
 
         return response;
+    }
+
+    public List<SurveyDTO> getByProperties(List<String> filter) throws HandlerGenericException {
+        List<SurveyDTO> survey = new ArrayList<SurveyDTO>();
+        View currentView = getDatabase().getView("vwSurveysBySupplyAndCompanySize");
+        DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+        if (null != documents) {
+            for (Document document : documents) {
+                survey.add(castDocument(document));
+            }
+        }
+
+        return survey;
     }
 
 }
