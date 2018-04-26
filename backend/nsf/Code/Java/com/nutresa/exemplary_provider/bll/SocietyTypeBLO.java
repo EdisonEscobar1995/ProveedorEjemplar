@@ -38,7 +38,7 @@ public class SocietyTypeBLO extends GenericBLO<SocietyTypeDTO, SocietyTypeDAO> {
         filter.add(societyType.getName());
 
         String idItem = societyType.getId();
-        String temporalIdentifier = societyType.getName().trim();
+        String temporalIdentifier = societyType.getName().trim().toUpperCase();
 
         SocietyTypeDAO societyTypeDAO = new SocietyTypeDAO();
         List<SocietyTypeDTO> existingSocietyTypes = societyTypeDAO.getByProperties(filter);
@@ -47,7 +47,7 @@ public class SocietyTypeBLO extends GenericBLO<SocietyTypeDTO, SocietyTypeDAO> {
             SocietyTypeDTO existingSocietyType = existingSocietyTypes.get(0);
 
             String idItemExisting = existingSocietyType.getId();
-            String temporalIdentifierExisting = existingSocietyType.getName().trim();
+            String temporalIdentifierExisting = existingSocietyType.getName().trim().toUpperCase();
 
             if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
                     && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {

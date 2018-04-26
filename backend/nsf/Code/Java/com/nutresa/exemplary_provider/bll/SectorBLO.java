@@ -38,7 +38,7 @@ public class SectorBLO extends GenericBLO<SectorDTO, SectorDAO> {
         filter.add(sector.getName());
 
         String idItem = sector.getId();
-        String temporalIdentifier = sector.getName().trim();
+        String temporalIdentifier = sector.getName().trim().toUpperCase();
 
         SectorDAO sectorDAO = new SectorDAO();
         List<SectorDTO> existingSectors = sectorDAO.getByProperties(filter);
@@ -47,7 +47,7 @@ public class SectorBLO extends GenericBLO<SectorDTO, SectorDAO> {
             SectorDTO existingSector = existingSectors.get(0);
 
             String idItemExisting = existingSector.getId();
-            String temporalIdentifierExisting = existingSector.getName().trim();
+            String temporalIdentifierExisting = existingSector.getName().trim().toUpperCase();
 
             if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
                     && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {

@@ -48,7 +48,7 @@ public class SubCategoryBLO extends GenericBLO<SubCategoryDTO, SubCategoryDAO> {
         filter.add(subCategory.getName());
 
         String idItem = subCategory.getId();
-        String temporalIdentifier = subCategory.getName().trim().concat(subCategory.getIdCategory());
+        String temporalIdentifier = subCategory.getName().trim().toUpperCase().concat(subCategory.getIdCategory());
 
         SubCategoryDAO subCategoryDAO = new SubCategoryDAO();
         List<SubCategoryDTO> existingSubCategories = subCategoryDAO.getByProperties(filter);
@@ -57,7 +57,7 @@ public class SubCategoryBLO extends GenericBLO<SubCategoryDTO, SubCategoryDAO> {
             SubCategoryDTO existingSubCategory = existingSubCategories.get(0);
 
             String idItemExisting = existingSubCategory.getId();
-            String temporalIdentifierExisting = existingSubCategory.getName().trim()
+            String temporalIdentifierExisting = existingSubCategory.getName().trim().toUpperCase()
                     .concat(existingSubCategory.getIdCategory());
 
             if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting

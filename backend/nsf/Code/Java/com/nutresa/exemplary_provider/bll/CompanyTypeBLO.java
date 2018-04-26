@@ -36,7 +36,7 @@ public class CompanyTypeBLO extends GenericBLO<CompanyTypeDTO, CompanyTypeDAO> {
         filter.add(companyType.getName());
 
         String idItem = companyType.getId();
-        String temporalIdentifier = companyType.getName().trim();
+        String temporalIdentifier = companyType.getName().trim().toUpperCase();
 
         CompanyTypeDAO companyTypeDAO = new CompanyTypeDAO();
         List<CompanyTypeDTO> existingCompanyType = companyTypeDAO.getByProperties(filter);
@@ -45,7 +45,7 @@ public class CompanyTypeBLO extends GenericBLO<CompanyTypeDTO, CompanyTypeDAO> {
             CompanyTypeDTO existingType = existingCompanyType.get(0);
 
             String idItemExisting = existingType.getId();
-            String temporalIdentifierExisting = existingType.getName().trim();
+            String temporalIdentifierExisting = existingType.getName().trim().toUpperCase();
 
             if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
                     && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {

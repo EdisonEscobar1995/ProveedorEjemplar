@@ -55,7 +55,7 @@ public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
         filter.add(dimension.getName());
 
         String idItem = dimension.getId();
-        String temporalIdentifier = dimension.getName().trim();
+        String temporalIdentifier = dimension.getName().trim().toUpperCase();
 
         DimensionDAO dimensionDAO = new DimensionDAO();
         List<DimensionDTO> existingDimensions = dimensionDAO.getByProperties(filter);
@@ -64,7 +64,7 @@ public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
             DimensionDTO existingDimension = existingDimensions.get(0);
 
             String idItemExisting = existingDimension.getId();
-            String temporalIdentifierExisting = existingDimension.getName().trim();
+            String temporalIdentifierExisting = existingDimension.getName().trim().toUpperCase();
 
             if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
                     && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {

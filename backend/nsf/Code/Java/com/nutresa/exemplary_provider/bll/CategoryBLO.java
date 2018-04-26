@@ -48,7 +48,7 @@ public class CategoryBLO extends GenericBLO<CategoryDTO, CategoryDAO> {
         filter.add(category.getName());
 
         String idItem = category.getId();
-        String temporalIdentifier = category.getName().trim().concat(category.getIdSupply());
+        String temporalIdentifier = category.getName().trim().toUpperCase().concat(category.getIdSupply());
 
         CategoryDAO categoryDAO = new CategoryDAO();
         List<CategoryDTO> existingCategories = categoryDAO.getByProperties(filter);
@@ -57,7 +57,7 @@ public class CategoryBLO extends GenericBLO<CategoryDTO, CategoryDAO> {
             CategoryDTO existingCategory = existingCategories.get(0);
 
             String idItemExisting = existingCategory.getId();
-            String temporalIdentifierExisting = existingCategory.getName().trim()
+            String temporalIdentifierExisting = existingCategory.getName().trim().toUpperCase()
                     .concat(existingCategory.getIdSupply());
 
             if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting

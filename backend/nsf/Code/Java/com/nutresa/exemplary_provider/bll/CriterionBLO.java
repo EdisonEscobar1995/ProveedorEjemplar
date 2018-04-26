@@ -57,7 +57,7 @@ public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
         filter.add(criterion.getName());
 
         String idItem = criterion.getId();
-        String temporalIdentifier = criterion.getName().trim().concat(criterion.getIdDimension());
+        String temporalIdentifier = criterion.getName().trim().toUpperCase().concat(criterion.getIdDimension());
 
         CriterionDAO criterionDAO = new CriterionDAO();
         List<CriterionDTO> existingCriterions = criterionDAO.getByProperties(filter);
@@ -66,7 +66,8 @@ public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
             CriterionDTO existingCriterion = existingCriterions.get(0);
 
             String idItemExisting = existingCriterion.getId();
-            String temporalIdentifierExisting = existingCriterion.getName().trim().concat(criterion.getIdDimension());
+            String temporalIdentifierExisting = existingCriterion.getName().trim().toUpperCase()
+                    .concat(criterion.getIdDimension());
 
             if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
                     && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
