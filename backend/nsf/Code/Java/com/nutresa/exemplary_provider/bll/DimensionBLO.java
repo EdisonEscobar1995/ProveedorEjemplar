@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.DimensionDAO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
@@ -30,4 +31,52 @@ public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
         return responseWithDimensions;
     }
 
+    @Override
+    public DimensionDTO save(DimensionDTO dimension) throws HandlerGenericException {
+        DimensionDTO response = null;
+
+        if (null != dimension.getName()) {
+            if (existDimension(dimension)) {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
+            } else {
+                response = super.save(dimension);
+            }
+        } else {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+
+        return response;
+    }
+
+    private boolean existDimension(DimensionDTO dimension) throws HandlerGenericException {
+        boolean existItem = false;
+
+        List<String> filter = new ArrayList<String>();
+        filter.add(dimension.getName());
+
+        String idItem = dimension.getId();
+        String temporalIdentifier = dimension.getName().trim();
+
+        DimensionDAO dimensionDAO = new DimensionDAO();
+        List<DimensionDTO> existingDimensions = dimensionDAO.getByProperties(filter);
+
+        if (!existingDimensions.isEmpty()) {
+            DimensionDTO existingDimension = existingDimensions.get(0);
+
+            String idItemExisting = existingDimension.getId();
+            String temporalIdentifierExisting = existingDimension.getName().trim();
+
+            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
+                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+                existItem = true;
+            } else {
+                if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)
+                        && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting)) {
+                    existItem = true;
+                }
+            }
+        }
+
+        return existItem;
+    }
 }
