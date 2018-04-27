@@ -108,7 +108,7 @@ const setComment = (idSupplier, value, answer) => (dispatch, getState) => {
   }
 };
 
-const getManagerTeamSurvey = year => (dispatch) => {
+const getManagerTeamSurvey = (year = '', supplierId = '') => (dispatch) => {
   requestApi(dispatch, getDataManagerTeamSurveyProgress, getManagerTeamSurveyApi, year)
     .then((response) => {
       const { data, rules } = response.data;
@@ -198,6 +198,7 @@ const getManagerTeamSurvey = year => (dispatch) => {
       data.finishVisible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
       data.yearCall = year !== undefined ? year : data.years[0];
       data.masters.EvaluationScale = sortByField(data.masters.EvaluationScale, 'score');
+      data.supplierId = supplierId;
       dispatch(getDataManagerTeamSurveySuccess(data));
     }).catch(() => {
       dispatch(getFailedRequest());

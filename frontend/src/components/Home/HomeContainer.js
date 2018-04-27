@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Row, Col, Spin } from 'antd';
 import * as actions from '../../state/Home/action';
-import { Carousel, Doughnut, Pendings } from './';
+import { Carousel, Doughnut, PendingsManager, PendingsTechnical } from './';
 
 const H3 = styled.h3`
   color: ${props => props.theme.color.primary};
@@ -23,11 +23,11 @@ class HomeContainer extends Component {
   componentDidMount() {
     this.props.getAllGeneralData();
     this.props.getStatisticalData();
-    // this.props.getCurrentData();
+    this.props.getCurrentData();
   }
 
   render() {
-    const { loading } = this.props;
+    const { loading, dataCurrent, dataUser } = this.props;
     return (
       <Spin spinning={loading}>
         <Row type="flex" justify="center">
@@ -40,14 +40,27 @@ class HomeContainer extends Component {
             <Doughnut {...this.props} />
           </Col>
         </Row>
-        <Linea />
-        <Row>
-          <Col span={24}>
-            <H3>Mis pendientes</H3>
-            <p>A continuación se presentan los proveedores que están pendientes por evaluar.</p>
-            <Pendings />
-          </Col>
-        </Row>
+        {
+          dataUser.rols
+              && dataUser.rols.find(x => x).shortName === dataCurrent &&
+              (
+                <div>
+                  <Linea />
+                  <Row>
+                    <Col span={24}>
+                      <H3>Mis pendientes</H3>
+                      <p>A continuación se presentan los proveedores
+                      que están pendientes por evaluar.</p>
+                      {
+                        dataCurrent === 'MANAGER_TEAM' && <PendingsManager />
+                      },
+                      {
+                        dataCurrent === 'TECHNICAL_TEAM' && <PendingsTechnical />
+                      }
+                    </Col>
+                  </Row>
+                </div>
+              )}
       </Spin>
     );
   }
@@ -59,7 +72,7 @@ const mapStateToProps = state => (
     data: state.home.data,
     loading: state.home.loading,
     dataUser: state.main.data,
-    // dataCurrent: state.home.dataCurrent,
+    dataCurrent: state.home.dataCurrent,
   }
 );
 

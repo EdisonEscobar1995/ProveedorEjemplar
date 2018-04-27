@@ -239,6 +239,24 @@ const routes = [
      import('./pages/GeneralAdministrator').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'MANAGER_BY_ID',
+    path: '/managerTeamSurvey/:idSupplier',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ManagerTeamSurvey').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'TECHNICAL_BY_ID',
+    path: '/technicalTeamSurvey/:idSupplier',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/TechnicalTeamSurvey').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

@@ -3,6 +3,7 @@ const formData = ({ data, getTechnicalTeamSurvey, filterTechnicalTeamSurvey, for
     years,
     suppliers,
     masters,
+    supplierId,
   } = data;
 
   const handleReset = () => {
@@ -76,7 +77,7 @@ const formData = ({ data, getTechnicalTeamSurvey, filterTechnicalTeamSurvey, for
           type: 'select',
           label: 'Proveedor',
           key: 'supplier',
-          value: '',
+          value: supplierId,
           options: suppliers ? suppliers.map((item) => {
             item.name = item.businessName;
             return item;

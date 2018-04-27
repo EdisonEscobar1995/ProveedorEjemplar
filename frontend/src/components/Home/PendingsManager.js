@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Table, Spin } from 'antd';
 import * as actions from '../../state/ManagerTeamSurvey/action';
 
 const { Column } = Table;
 
-class Pendings extends Component {
+class PendingsManager extends Component {
   componentDidMount() {
     this.props.getManagerTeamSurvey();
   }
@@ -29,6 +30,16 @@ class Pendings extends Component {
         const companySize = masters.CompanySize.find(
           element => element.id === record.idCompanySize);
         return companySize ? companySize.name : '';
+      },
+    }, {
+      title: 'Acción',
+      key: 'linkManager',
+      render(text, record) {
+        return (
+          <Link to={`/managerTeamSurvey/${record.id}`}>
+            Ver
+          </Link>
+        );
       },
     }];
 
@@ -67,4 +78,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   actions,
-)(Pendings);
+)(PendingsManager);
