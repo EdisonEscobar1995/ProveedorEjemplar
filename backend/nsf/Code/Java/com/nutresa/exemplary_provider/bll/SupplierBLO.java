@@ -55,6 +55,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return currentSupplier;
     }
 
+    protected void createInitialSupplier(SupplierDTO supplier) throws HandlerGenericException {
+        super.save(supplier);
+    }
+
     public SupplierDTO getSupplierInSession(String idSupplier) throws HandlerGenericException {
         SupplierDTO response = null;
         SupplierDAO dao = new SupplierDAO();
@@ -272,6 +276,32 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+
+    protected SupplierDTO createByFirstTime(SupplierDTO supplier) throws HandlerGenericException {
+        return super.save(supplier);
+    }
+
+    /**
+     * @param nit
+     * @return <code>true</code> si el proveedor existe en el directorio general, de lo contrario <code>false</code>
+     * @throws HandlerGenericException
+     */
+    protected boolean existInGeneralDirectoryByNit(String nit) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        return supplierDAO.existInGeneralDirectoryByNit(nit);
+    }
+
+    /**
+     * @param sapCode
+     * @param nit
+     * @return Proveedor existente
+     * @throws HandlerGenericException
+     */
+    protected SupplierDTO getBySAPCodeOrNIT(String sapCode, String nit) throws HandlerGenericException {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        SupplierDTO supplier = supplierBLO.getBy("sapCode", sapCode);
+        return (supplier == null ? supplierBLO.getBy("nit", nit) : supplier);
     }
 
 }

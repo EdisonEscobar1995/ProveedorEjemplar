@@ -25,15 +25,14 @@ public class SurveyDAO extends GenericDAO<SurveyDTO> {
             parameters.put("idSupply", idSupply);
             parameters.put("idCompanySize", idCompanySize);
             response = getBy(parameters, "vwSurveysBySupplyAndCompanySize");
+            if (null == response) {
+                throw new HandlerGenericException("SURVEY_DOES_NOT_EXIST");
+            }
+
+            return response;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-
-        if (null == response) {
-            throw new HandlerGenericException("SURVEY_DOES_NOT_EXIST");
-        }
-
-        return response;
     }
 
     public List<SurveyDTO> getByProperties(List<String> filter) throws HandlerGenericException {

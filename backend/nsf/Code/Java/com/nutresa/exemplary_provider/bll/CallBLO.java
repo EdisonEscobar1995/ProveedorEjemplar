@@ -22,6 +22,7 @@ import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
+import com.nutresa.exemplary_provider.dtl.queries.SummaryToLoadSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.StatisticalProgress;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
 import com.nutresa.exemplary_provider.utils.Common;
@@ -37,6 +38,34 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     public SectionRule getRule() {
         return rules;
+    }
+
+    @Override
+    public CallDTO save(CallDTO call) throws HandlerGenericException {
+        CallDTO existingCall = null;
+        CallDTO callActive = getCallActive();
+        String idCallExisting = getIdCallByYear(String.valueOf(call.getYear()));
+        if (null != idCallExisting && !idCallExisting.isEmpty()) {
+            existingCall = get(idCallExisting);
+        }
+
+        if (call.getYear() == callActive.getYear() || existingCall instanceof CallDTO) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_EXIST_CALL.toString());
+        } else {
+            callActive = super.save(call);
+        }
+
+        return callActive;
+    }
+
+    /**
+     * Busca la convocatoria que esté activa
+     * @return Convocatoria activa
+     * @throws HandlerGenericException
+     */
+    private CallDTO getCallActive() throws HandlerGenericException {
+        CallDAO callDAO = new CallDAO();
+        return callDAO.getCallActive();
     }
 
     public CallDTO massiveShipmentCall(String idCall) throws HandlerGenericException {
@@ -540,6 +569,90 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
         summaryProgress.calculatePercentageInAxes();
         return summaryProgress;
+    }
+
+    /**
+     * @param call
+     * @return Colección con el resumén de la carga de proveedores
+     * @throws HandlerGenericException
+     */
+    public List<SummaryToLoadSupplier> loadSupplierToCall(CallDTO call) throws HandlerGenericException {
+        checkRulesToLoadSuppliers(call);
+        List<SummaryToLoadSupplier> summary = new ArrayList<SummaryToLoadSupplier>();
+        for (SupplierDTO supplier : call.getSupplier()) {
+            SupplierBLO supplierBLO = new SupplierBLO();
+            SummaryToLoadSupplier summaryRecord = new SummaryToLoadSupplier();
+            if (allowLoadSupplierToCall(call, supplier, summaryRecord)) {
+                try {
+                    supplierBLO.createByFirstTime(supplier);
+                    summaryRecord.status = "CREATED";
+                    SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+                    supplierByCallBLO.asociateSupplierToCall(supplier, call.getId()).getId();
+                } catch (HandlerGenericException exception) {
+                    summaryRecord.status = exception.getMessage();
+                }
+            }
+            summaryRecord.sapCode = supplier.getSapCode();
+            summaryRecord.nit = supplier.getNit();
+            summaryRecord.name = supplier.getBusinessName();
+            summary.add(summaryRecord);
+        }
+
+        return summary;
+    }
+
+    /**
+     * Verifica que la fecha para los proveedores hacer la encuesta no este caducada y que existan proveedores definidos
+     * para cargar
+     * @throws HandlerGenericException
+     */
+    private void checkRulesToLoadSuppliers(CallDTO call) throws HandlerGenericException {
+        if (call.isCaducedDeadLineToMakeSurvey()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
+        } else {
+            if (call.getSupplier().isEmpty()) {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.UNDEFINED_SUPPLIERS.toString());
+            }
+        }
+    }
+
+    /**
+     * Verifica las reglas para cargar los proveedores a la convocatoria
+     * @param supplier Proveedor a cargar
+     * @param summaryRecord actualiza el estado del registro a cargar
+     * @throws HandlerGenericException
+     */
+    private boolean allowLoadSupplierToCall(CallDTO call, SupplierDTO supplier, SummaryToLoadSupplier summaryRecord)
+            throws HandlerGenericException {
+        boolean allowLoad = true;
+        SupplierBLO supplierBLO = new SupplierBLO();
+        SupplierDTO existingSupplier = supplierBLO.getBySAPCodeOrNIT(supplier.getSapCode(), supplier.getNit());
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        SupplyBLO supplyBLO = new SupplyBLO();
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        String idSupply = supplyBLO.get(supplier.getIdSupply()).getId();
+        String idCompanySize = companySizeBLO.get(supplier.getIdCompanySize()).getId();
+        if (supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
+            summaryRecord.status = "DUPLICATED";
+            allowLoad = false;
+        }
+
+        if (!supplierBLO.existInGeneralDirectoryByNit(supplier.getNit())) {
+            summaryRecord.status = "DONT_EXIST_IN_DIRECTORY";
+            allowLoad = false;
+        }
+
+        if (null == idSupply || idSupply.isEmpty()) {
+            summaryRecord.status = "SUPPLY_DONT_EXIST";
+            allowLoad = false;
+        }
+
+        if (null == idCompanySize || idCompanySize.isEmpty()) {
+            summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
+            allowLoad = false;
+        }
+
+        return allowLoad;
     }
 
     private class FieldToFilter {

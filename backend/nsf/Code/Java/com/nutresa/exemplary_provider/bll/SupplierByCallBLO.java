@@ -11,7 +11,9 @@ import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
+import com.nutresa.exemplary_provider.dtl.StateDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
@@ -539,4 +541,51 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         return supplierByCallDAO.getAllByStates(idCall, states);
     }
+
+    /**
+     * Verifica que el proveedor <code>idSupplier</code> no exista en la convocatoria <code>idCall</code>
+     * @param idSupplier
+     * @param idCall
+     * @return <code>true</code> si el proveedor ya se encuentra en la convocatoria, de lo contrario <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public boolean existSupplierInCall(String idSupplier, String idCall) throws HandlerGenericException {
+        boolean existSupplier = false;
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("idSupplier", idSupplier);
+        parameters.put("idCall", idCall);
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        SupplierByCallDTO supplierByCall = supplierByCallDAO.getBy(parameters,
+                "vwSuppliersByCallByIdSupplierAndIdCall");
+        if (supplierByCall instanceof SupplierByCallDTO) {
+            existSupplier = true;
+        }
+
+        return existSupplier;
+    }
+
+    /**
+     * Asocia el proveedor a la convocatoria y adicionalmente lo asocica con la encuesta indicada, basandose en
+     * en el tipo de ministro y el tamaño de la empresa.
+     * @param supplier
+     * @param idCall
+     * @return Asignación de la convocatoria a un proveedor con su respectiva encuesta.
+     * @throws HandlerGenericException
+     */
+    public SupplierByCallDTO asociateSupplierToCall(SupplierDTO supplier, String idCall)
+            throws HandlerGenericException {
+        SurveyBLO surveyBLO = new SurveyBLO();
+        SurveyDTO survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
+        SupplierByCallDTO supplierByCall = new SupplierByCallDTO();
+        StateBLO stateBLO = new StateBLO();
+        StateDTO state = stateBLO.getStateByShortName(SurveyStates.NOT_STARTED.toString());
+        supplierByCall.setIdSupplier(supplier.getId());
+        supplierByCall.setIdCall(idCall);
+        supplierByCall.setIdSurvey(survey.getId());
+        supplierByCall.setInvitedToCall(false);
+        supplierByCall.setParticipateInCall("false");
+        supplierByCall.setIdState(state.getId());
+        return super.save(supplierByCall);
+    }
+
 }

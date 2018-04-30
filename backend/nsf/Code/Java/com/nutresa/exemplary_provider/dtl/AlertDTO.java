@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 
 public class AlertDTO extends MasterDTO {
     @Expose
+    private String shortName;
+    @Expose
     private boolean active;
     @Expose
     private String subject;
@@ -42,6 +44,14 @@ public class AlertDTO extends MasterDTO {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public String getShortName() {
+        return shortName;
     }
 
 }

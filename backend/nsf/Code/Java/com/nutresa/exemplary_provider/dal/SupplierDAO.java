@@ -128,4 +128,32 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         return response;
     }
 
+    /**
+     * @param nit
+     * @return <code>true</code> si existe un registro en el directorio general con dicho <code>nit</code>, de lo
+     * contrario <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public boolean existInGeneralDirectoryByNit(String nit) throws HandlerGenericException {
+        try {
+            boolean existInGeneralDirectory = false;
+            View vwSystem = getDatabase().getView("vwSystems");
+            Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
+            Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("namesPathApplication"));
+            View vwNames = namesDatabase.getView("PeopleXcedula");
+            Document docNames = vwNames.getFirstDocumentByKey(nit, true);
+
+            if (null != docNames) {
+                String employeeId = docNames.getItemValueString("EmployeeID");
+                if (null != employeeId && !employeeId.isEmpty()) {
+                    existInGeneralDirectory = true;
+                }
+            }
+
+            return existInGeneralDirectory;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
+
 }
