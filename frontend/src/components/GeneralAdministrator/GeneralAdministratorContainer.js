@@ -1,10 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Spin } from 'antd';
-import * as actions from '../../state/GeneralAdministrator/action';
-import dataForm from './dataForm';
-import GenericForm from '../shared/GenericForm';
+import GeneralAdministrator from './GeneralAdministrator';
 import H1 from '../shared/H1';
+import {
+  getAllGeneralAdministrators,
+  cleanFields,
+  updateAttachment,
+  deleteAttachment,
+  saveGeneralAdministrator,
+  cleanStore,
+} from '../../state/GeneralAdministrator/action';
 
 class GeneralAdministratorContainer extends Component {
   componentDidMount() {
@@ -12,18 +18,23 @@ class GeneralAdministratorContainer extends Component {
   }
 
   render() {
+    if (this.props.loading === true) {
+      return (
+        <Spin spinning={this.props.loading}>
+          <H1
+            text="ADMINISTRACIÓN GENERAL"
+          />
+        </Spin>
+      );
+    }
+
     return (
-      <Spin spinning={this.props.loading}>
+      <Fragment>
         <H1
           text="ADMINISTRACIÓN GENERAL"
         />
-        <GenericForm
-          {...this.props}
-          formData={dataForm}
-          submitMethod={this.props.saveGeneralAdministrator}
-          validate
-        />
-      </Spin>
+        <GeneralAdministrator {...this.props} />
+      </Fragment>
     );
   }
 }
@@ -33,8 +44,29 @@ const mapStateToProps = state => ({
   loading: state.generalAdministrator.loading,
 });
 
+const mapDispatchToProps = dispatch => ({
+  getAllGeneralAdministrators: () => {
+    dispatch(getAllGeneralAdministrators());
+  },
+  cleanFields: () => {
+    dispatch(cleanFields());
+  },
+  updateAttachment: (data, field) => {
+    dispatch(updateAttachment(data, field));
+  },
+  deleteAttachment: (data, field) => {
+    dispatch(deleteAttachment(data, field));
+  },
+  saveGeneralAdministrator: (clientData, remoteId, next) => {
+    dispatch(saveGeneralAdministrator(clientData, remoteId, next));
+  },
+  cleanStore: () => {
+    dispatch(cleanStore());
+  },
+});
+
 export default connect(
   mapStateToProps,
-  actions,
+  mapDispatchToProps,
 )(GeneralAdministratorContainer);
 

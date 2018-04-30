@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import ReactChartkick, { PieChart } from 'react-chartkick';
 import Chart from 'chart.js';
 import { Radio } from 'antd';
 import { ADMINISTRATOR, LIBERATOR, READER } from '../../utils/const';
+import * as actions from '../../state/Home/action';
+import FormattedMessage from '../shared/FormattedMessage';
 
 const RadioGroup = Radio.Group;
 ReactChartkick.addAdapter(Chart);
@@ -17,6 +20,14 @@ const RadioGroupStyle = styled(RadioGroup)`
 class Doughnut extends Component {
   state = {
     value: 'COMPANY_SIZE_FILTER',
+  }
+
+  componentDidMount() {
+    const { dataUser } = this.props;
+    if (dataUser.rols
+      && dataUser.rols.find(x => x).shortName !== 'SUPPLIER') {
+      this.props.getStatisticalData();
+    }
   }
   onChange = (e) => {
     const value = e.target.value;
@@ -45,15 +56,19 @@ class Doughnut extends Component {
         },
       },
     };
+    if (dataUser.rols
+      && dataUser.rols.find(x => x).shortName === 'SUPPLIER') {
+      return null;
+    }
     return (
       <span>
         <RadioGroupStyle onChange={this.onChange} value={this.state.value}>
-          <Radio value="COMPANY_SIZE_FILTER">Por tamaño de empresa</Radio>
-          <Radio value="SUPPLY_FILTER">Por tipo de empresa</Radio>
+          <Radio value="COMPANY_SIZE_FILTER"><FormattedMessage id="Title.companySize" /></Radio>
+          <Radio value="SUPPLY_FILTER"><FormattedMessage id="Title.companyType" /></Radio>
           {
             dataUser.rols
               && dataUser.rols.find(x => x).shortName === (ADMINISTRATOR || LIBERATOR || READER) &&
-              (<Radio value="COUNTRY_FILTER">Por país</Radio>)
+              (<Radio value="COUNTRY_FILTER"><FormattedMessage id="Title.country" /></Radio>)
           }
         </RadioGroupStyle>
         <PieChart {...options} />
@@ -62,4 +77,13 @@ class Doughnut extends Component {
   }
 }
 
-export default Doughnut;
+const mapStateToProps = state => (
+  {
+    statisticalData: state.home.statisticalData,
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  actions,
+)(Doughnut);

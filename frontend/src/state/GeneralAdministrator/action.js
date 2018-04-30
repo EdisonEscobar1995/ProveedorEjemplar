@@ -6,6 +6,7 @@ import {
   CLEAN_DATA,
   SAVE_DATA_PROGRESS,
   SAVE_DATA_SUCCESS,
+  CLEAN_STORE,
 } from './const';
 
 import { getGeneralAdministratorApi, saveGeneralAdministratorApi } from '../../api/generalAdministrator';
@@ -53,9 +54,9 @@ const updateAttachment = (data, field) => (dispatch, getActualState) => {
 
 const deleteAttachment = (idAttachment, field) => (
   (dispatch, getActualState) => {
-    const images = getActualState().generalAdministrator.data.images;
-    images[field] = images[field].filter(attach => attach.id !== idAttachment);
-    dispatch(updateImages(images));
+    const data = getActualState().generalAdministrator.data;
+    data[field] = data[field].filter(attach => attach !== idAttachment);
+    dispatch(updateImages(data));
   }
 );
 
@@ -70,6 +71,10 @@ const saveDataProgress = () => ({
 const saveDataSuccess = data => ({
   type: SAVE_DATA_SUCCESS,
   data,
+});
+
+const cleanStore = () => ({
+  type: CLEAN_STORE,
 });
 
 const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getState) => {
@@ -112,4 +117,5 @@ export {
   updateAttachment,
   deleteAttachment,
   saveGeneralAdministrator,
+  cleanStore,
 };

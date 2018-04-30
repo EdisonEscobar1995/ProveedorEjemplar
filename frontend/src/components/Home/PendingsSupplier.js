@@ -2,42 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Table, Spin } from 'antd';
-import * as actions from '../../state/ManagerTeamSurvey/action';
 import FormattedMessage from '../shared/FormattedMessage';
 
 const { Column } = Table;
 
-class PendingsManager extends Component {
-  componentDidMount() {
-    this.props.getManagerTeamSurvey();
-  }
+class PendingsSupplier extends Component {
   getPendingsColumns = () => {
-    const { data } = this.props;
-    const { masters } = data;
-
     const columns = [{
       title: 'Supplier.supplier',
-      key: 'businessName',
+      key: 'name',
     }, {
       title: 'Supplier.supplyType',
-      key: 'idSupply',
-      render(text, record) {
-        return masters.Supply.find(supply => supply.id === record.idSupply).name;
-      },
+      key: 'supply',
     }, {
       title: 'Supplier.idCompanySize',
-      key: 'idCompanySize',
-      render(text, record) {
-        const companySize = masters.CompanySize.find(
-          element => element.id === record.idCompanySize);
-        return companySize ? companySize.name : '';
-      },
+      key: 'company_size',
     }, {
       title: 'Supplier.action',
       key: 'linkManager',
-      render(text, record) {
+      render() {
         return (
-          <Link to={`/managerTeamSurvey/${record.id}`}>
+          <Link to={'/supplier'}>
             Ver
           </Link>
         );
@@ -55,12 +40,12 @@ class PendingsManager extends Component {
   }
   render() {
     const { data, loading } = this.props;
-    const { suppliers } = data;
+    const { userInfo } = data;
     return (
       <Spin spinning={loading}>
         <Table
           rowKey={record => record.id}
-          dataSource={suppliers && suppliers.filter(x => x.state === 'NOT_STARTED_MANAGER_TEAM')}
+          dataSource={[userInfo]}
         >
           {
             this.getPendingsColumns()
@@ -72,11 +57,10 @@ class PendingsManager extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.managerTeamSurvey.data,
-  loading: state.managerTeamSurvey.loading,
+  data: state.main.data,
+  loading: state.main.loading,
 });
 
 export default connect(
   mapStateToProps,
-  actions,
-)(PendingsManager);
+)(PendingsSupplier);

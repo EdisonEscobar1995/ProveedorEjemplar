@@ -1,9 +1,12 @@
 const messages = {
   'Call.year': 'Año de convocatoria',
   'SupplierByCall.participateInCall': '¿Participa del programa?',
+  'Supplier.supplier': 'Proveedor',
+  'Supplier.action': 'Acción',
   'Supplier.businessName': 'Nombre o Razón social',
   'Supplier.idCompanySize': 'Tamaño de la empresa',
   'Supplier.idSupply': 'Suministros',
+  'Supplier.supplyType': 'Tipo de suministro',
   'Supplier.idCountry': 'País al que le suministra',
   'Supplier.idCategory': 'Categoría',
   'Supplier.idSubCategory': 'Tipo de subcategoría',
@@ -121,5 +124,12 @@ const messages = {
   'Validation.surveyCouldNotComplete': 'La encuesta no pudo ser finalizada',
   'Validation.informationNotFound': 'Información no encontrada',
   'Validation.documentExists': 'La información ingresada coincide con la de otro documento ingresado previamente',
+  'Title.percentageAdvance': 'Porcentaje de avance',
+  'Title.imageGallery': 'Galería de imágenes',
+  'Title.pendings': 'Mis pendientes',
+  'Title.informationMessage': 'A continuación se presentan los proveedores que están pendientes por evaluar.',
+  'Title.companySize': 'Por tamaño de empresa',
+  'Title.companyType': 'Por tipo de empresa',
+  'Title.country': 'Por país',
 };
 export default messages;

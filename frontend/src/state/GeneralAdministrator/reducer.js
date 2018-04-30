@@ -6,6 +6,7 @@ import {
   UPDATE_ATTACHMENT,
   SAVE_DATA_PROGRESS,
   SAVE_DATA_SUCCESS,
+  CLEAN_STORE,
 } from './const';
 
 const initialState = {
@@ -65,6 +66,10 @@ function generalAdministratorApp(state = initialState, action) {
         },
       };
     }
+    case CLEAN_STORE:
+      return {
+        ...initialState,
+      };
     default: {
       return state;
     }

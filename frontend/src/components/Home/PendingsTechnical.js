@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Table, Spin } from 'antd';
 import * as actions from '../../state/TechnicalTeamSurvey/action';
+import FormattedMessage from '../shared/FormattedMessage';
 
 const { Column } = Table;
 
@@ -15,16 +16,16 @@ class PendingsTechnical extends Component {
     const { masters } = data;
 
     const columns = [{
-      title: 'Proveedor',
+      title: 'Supplier.supplier',
       key: 'businessName',
     }, {
-      title: 'Tipo de suministro',
+      title: 'Supplier.supplyType',
       key: 'idSupply',
       render(text, record) {
         return masters.Supply.find(supply => supply.id === record.idSupply).name;
       },
     }, {
-      title: 'Tamaño de empresa',
+      title: 'Supplier.idCompanySize',
       key: 'idCompanySize',
       render(text, record) {
         const companySize = masters.CompanySize.find(
@@ -32,7 +33,7 @@ class PendingsTechnical extends Component {
         return companySize ? companySize.name : '';
       },
     }, {
-      title: 'Acción',
+      title: 'Supplier.action',
       key: 'linkTechnical',
       render(text, record) {
         return (
@@ -45,7 +46,7 @@ class PendingsTechnical extends Component {
 
     return columns.map(column => (
       <Column
-        title={column.title}
+        title={<FormattedMessage id={column.title} />}
         key={column.key}
         dataIndex={column.key}
         render={column.render}

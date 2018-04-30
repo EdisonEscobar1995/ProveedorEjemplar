@@ -11,3 +11,5 @@ export const CLEAN_DATA = 'CLEAN_DATA';
 
 export const SAVE_DATA_PROGRESS = 'SAVE_DATA_PROGRESS';
 export const SAVE_DATA_SUCCESS = 'SAVE_DATA_SUCCESS';
+
+export const CLEAN_STORE = 'CLEAN_STORE';

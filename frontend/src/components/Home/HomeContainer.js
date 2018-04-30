@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Row, Col, Spin } from 'antd';
 import * as actions from '../../state/Home/action';
-import { Carousel, Doughnut, PendingsManager, PendingsTechnical } from './';
+import { Carousel, Doughnut, PendingsManager, PendingsTechnical, PendingsEvaluator, PendingsSupplier } from './';
+import FormattedMessage from '../shared/FormattedMessage';
 
 const H3 = styled.h3`
   color: ${props => props.theme.color.primary};
@@ -20,42 +21,53 @@ class HomeContainer extends Component {
   state = {
     value: 1,
   }
+
   componentDidMount() {
     this.props.getAllGeneralData();
-    this.props.getStatisticalData();
     this.props.getCurrentData();
   }
 
   render() {
     const { loading, dataCurrent, dataUser } = this.props;
+    const rol = dataUser.rols
+      && dataUser.rols.find(x => x).shortName;
     return (
       <Spin spinning={loading}>
         <Row type="flex" justify="center">
           <Col span={10} offset={2}>
-            <H3>Galería de imágenes</H3>
+            <H3><FormattedMessage id="Title.imageGallery" /></H3>
             <Carousel {...this.props} />
           </Col>
-          <Col span={10} offset={2}>
-            <H3>Porcentaje de avance</H3>
-            <Doughnut {...this.props} />
-          </Col>
+          {
+            rol !== 'SUPPLIER' &&
+              (
+                <Col span={10} offset={2}>
+                  <H3><FormattedMessage id="Title.percentageAdvance" /></H3>
+                  <Doughnut {...this.props} />
+                </Col>
+              )
+          }
         </Row>
         {
-          dataUser.rols
-              && dataUser.rols.find(x => x).shortName === dataCurrent &&
+          rol === dataCurrent &&
               (
                 <div>
                   <Linea />
                   <Row>
                     <Col span={24}>
-                      <H3>Mis pendientes</H3>
-                      <p>A continuación se presentan los proveedores
-                      que están pendientes por evaluar.</p>
+                      <H3><FormattedMessage id="Title.pendings" /></H3>
+                      <p><FormattedMessage id="Title.informationMessage" /></p>
                       {
                         dataCurrent === 'MANAGER_TEAM' && <PendingsManager />
-                      },
+                      }
                       {
                         dataCurrent === 'TECHNICAL_TEAM' && <PendingsTechnical />
+                      }
+                      {
+                        dataCurrent === 'EVALUATOR' && <PendingsEvaluator />
+                      }
+                      {
+                        dataCurrent === 'SUPPLIER' && <PendingsSupplier />
                       }
                     </Col>
                   </Row>
@@ -68,7 +80,6 @@ class HomeContainer extends Component {
 
 const mapStateToProps = state => (
   {
-    statisticalData: state.home.statisticalData,
     data: state.home.data,
     loading: state.home.loading,
     dataUser: state.main.data,
