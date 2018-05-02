@@ -15,7 +15,7 @@ public class CallDAO extends GenericDAO<CallDTO> {
     public CallDTO getCallActive() throws HandlerGenericException {
         CallDTO call = null;
         View view = getDatabase().getView("vwCallByActive");
-        Document document = view.getFirstDocumentByKey(true, true);
+        Document document = view.getFirstDocumentByKey("1", true);
         if (null != document) {
             call = castDocument(document);
         }

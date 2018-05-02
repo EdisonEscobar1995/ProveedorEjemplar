@@ -9,16 +9,16 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='a050a' unid='01B2299F8870221C0525827C00578637' sequence='5'>
+<noteinfo noteid='a050a' unid='01B2299F8870221C0525827C00578637' sequence='6'>
 <created><datetime>20180427T105559,91-05</datetime></created>
-<modified><datetime>20180427T105851,88-05</datetime></modified>
-<revised><datetime>20180427T105851,87-05</datetime></revised>
-<lastaccessed><datetime>20180427T105855,46-05</datetime></lastaccessed>
+<modified><datetime>20180430T164257,10-05</datetime></modified>
+<revised><datetime>20180430T164257,09-05</datetime></revised>
+<lastaccessed><datetime>20180430T164257,10-05</datetime></lastaccessed>
 <addedtofile><datetime>20180427T105559,95-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frCall" &amp; active = "1"</formula></code>
-<column sort='ascending' hidedetailrows='false' itemname='id' width='10' resizable='true'
- separatemultiplevalues='false' sortnoaccent='true' sortnocase='true' showaslinks='false'><columnheader
- title='id'><font size='9pt' style='bold'/></columnheader></column></view>
+<column sort='ascending' hidedetailrows='false' itemname='active' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='active'><font size='9pt' style='bold'/></columnheader></column></view>
 

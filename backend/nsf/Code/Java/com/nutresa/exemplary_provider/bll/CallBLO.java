@@ -15,6 +15,8 @@ import com.nutresa.exemplary_provider.dtl.ManagerTeamDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.SupplyDTO;
+import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
 import com.nutresa.exemplary_provider.dtl.StagesCall;
@@ -49,11 +51,15 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             existingCall = get(idCallExisting);
         }
 
-        if (call.getYear() == callActive.getYear() || existingCall instanceof CallDTO) {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_EXIST_CALL.toString());
-        } else {
-            callActive = super.save(call);
+        if (call.getYear() != callActive.getYear()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_EXIST_CALL_ACTIVE.toString());
         }
+
+        if (existingCall instanceof CallDTO) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_EXIST_CALL.toString());
+        }
+
+        callActive = super.save(call);
 
         return callActive;
     }
@@ -630,8 +636,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         SupplyBLO supplyBLO = new SupplyBLO();
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-        String idSupply = supplyBLO.get(supplier.getIdSupply()).getId();
-        String idCompanySize = companySizeBLO.get(supplier.getIdCompanySize()).getId();
+        SupplyDTO supply = supplyBLO.get(supplier.getIdSupply());
+        String idSupply = supply == null ? null : supply.getId();
+
+        if (null != supplier.getIdCompanySize() && !supplier.getIdCompanySize().isEmpty()) {
+            CompanySizeDTO companySize = companySizeBLO.get(supplier.getIdCompanySize());
+            String idCompanySize = companySize == null ? null : companySize.getId();
+            if (null == idCompanySize || idCompanySize.isEmpty()) {
+                summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
+                allowLoad = false;
+            }
+        }
+
         if (supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
             summaryRecord.status = "DUPLICATED";
             allowLoad = false;
@@ -644,11 +660,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         if (null == idSupply || idSupply.isEmpty()) {
             summaryRecord.status = "SUPPLY_DONT_EXIST";
-            allowLoad = false;
-        }
-
-        if (null == idCompanySize || idCompanySize.isEmpty()) {
-            summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
             allowLoad = false;
         }
 
