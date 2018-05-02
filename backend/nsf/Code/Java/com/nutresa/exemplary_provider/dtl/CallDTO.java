@@ -22,8 +22,6 @@ public class CallDTO {
     @Expose
     private Date deadlineToMakeSurveyManagerTeam;
     @Expose
-    private List<String> managementCommittee;
-    @Expose
     private List<SupplierDTO> supplier;
     @Expose
     private boolean active;
@@ -66,14 +64,6 @@ public class CallDTO {
 
     public void setDeadlineToMakeSurveyManagerTeam(Date deadlineToMakeSurveyManagerTeam) {
         this.deadlineToMakeSurveyManagerTeam = deadlineToMakeSurveyManagerTeam;
-    }
-
-    public List<String> getManagementCommittee() {
-        return managementCommittee;
-    }
-
-    public void setManagementCommittee(List<String> managementCommittee) {
-        this.managementCommittee = managementCommittee;
     }
 
     public String getId() {

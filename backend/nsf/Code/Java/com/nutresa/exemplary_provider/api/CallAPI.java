@@ -10,6 +10,7 @@ import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
+import com.nutresa.exemplary_provider.dtl.queries.SummaryToLoadSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.StatisticalProgress;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -131,6 +132,18 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
                     callBLO.getStatisticalProgress(parameters.get("filterName")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<StatisticalProgress>(exception);
+        }
+
+        return response;
+    }
+
+    public ServletResponseDTO<List<SummaryToLoadSupplier>> loadSupplierToCall(CallDTO call) {
+        ServletResponseDTO<List<SummaryToLoadSupplier>> response = null;
+        CallBLO callBLO = new CallBLO();
+        try {
+            response = new ServletResponseDTO<List<SummaryToLoadSupplier>>(callBLO.loadSupplierToCall(call));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<List<SummaryToLoadSupplier>>(exception);
         }
 
         return response;
