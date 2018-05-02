@@ -1,51 +1,93 @@
-import React from 'react';
-import ReactChartkick, { PieChart } from 'react-chartkick';
-import Chart from 'chart.js';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { Row, Col, Spin } from 'antd';
+import * as actions from '../../state/Home/action';
+import { Carousel, Doughnut, PendingsManager, PendingsTechnical, PendingsEvaluator, PendingsSupplier } from './';
+import FormattedMessage from '../shared/FormattedMessage';
 
-ReactChartkick.addAdapter(Chart);
-// import styled from 'styled-components';
-// import { Col, Row, Carousel } from 'antd';
+const H3 = styled.h3`
+  color: ${props => props.theme.color.primary};
+  margin-bottom: ${props => props.theme.spaces.main};
+  font-weight: bold;
+`;
 
-// const H3 = styled.h3`
-//   color: ${props => props.theme.color.primary};
-//   margin-bottom: ${props => props.theme.spaces.main};
-//   font-weight: bold;
-// `;
+const Linea = styled.div`
+  border: 1px solid #37907c7a;
+  margin: 20px 0;
+`;
 
-// const CarouselStyle = styled(Carousel)`
-//   & .slick-track {
-//     width: 90% !important;
-//   }
-//   text-align: center;
-//   height: 513px;
-//   line-height: 513px;
-//   overflow: hidden;
-// `;
+class HomeContainer extends Component {
+  state = {
+    value: 1,
+  }
 
-// const Linea = styled.div`
-//   border: 1px solid #37907c7a;
-// `;
+  componentDidMount() {
+    this.props.getAllGeneralData();
+    this.props.getCurrentData();
+  }
 
-function HomeContainer() {
-  return (
-    // <Row>
-    //   <Col span={12}>
-    //     <H3>Galería de imágenes</H3>
-    //     <CarouselStyle>
-    //       <img src="assets/images/1.jpg" alt="1" />
-    //       <img src="assets/images/2.jpg" alt="1" />
-    //       <img src="assets/images/3.jpg" alt="1" />
-    //     </CarouselStyle>
-    //   </Col>
-    //   {/* <Col span={12}>
-    //     <Card>
-    //       <H3>Porcentaje de avance</H3>
-    //     </Card>
-    //   </Col> */}
-    // </Row>
-
-    <PieChart donut data={{ Blueberry: 44, Strawberry: 23 }} />
-  );
+  render() {
+    const { loading, dataCurrent, dataUser } = this.props;
+    const rol = dataUser.rols
+      && dataUser.rols.find(x => x).shortName;
+    return (
+      <Spin spinning={loading}>
+        <Row type="flex" justify="center">
+          <Col span={10} offset={2}>
+            <H3><FormattedMessage id="Title.imageGallery" /></H3>
+            <Carousel {...this.props} />
+          </Col>
+          {
+            rol !== 'SUPPLIER' &&
+              (
+                <Col span={10} offset={2}>
+                  <H3><FormattedMessage id="Title.percentageAdvance" /></H3>
+                  <Doughnut {...this.props} />
+                </Col>
+              )
+          }
+        </Row>
+        {
+          rol === dataCurrent &&
+              (
+                <div>
+                  <Linea />
+                  <Row>
+                    <Col span={24}>
+                      <H3><FormattedMessage id="Title.pendings" /></H3>
+                      <p><FormattedMessage id="Title.informationMessage" /></p>
+                      {
+                        dataCurrent === 'MANAGER_TEAM' && <PendingsManager />
+                      }
+                      {
+                        dataCurrent === 'TECHNICAL_TEAM' && <PendingsTechnical />
+                      }
+                      {
+                        dataCurrent === 'EVALUATOR' && <PendingsEvaluator />
+                      }
+                      {
+                        dataCurrent === 'SUPPLIER' && <PendingsSupplier />
+                      }
+                    </Col>
+                  </Row>
+                </div>
+              )}
+      </Spin>
+    );
+  }
 }
 
-export default HomeContainer;
+const mapStateToProps = state => (
+  {
+    data: state.home.data,
+    loading: state.home.loading,
+    dataUser: state.main.data,
+    dataCurrent: state.home.dataCurrent,
+  }
+);
+
+export default connect(
+  mapStateToProps,
+  actions,
+)(HomeContainer);

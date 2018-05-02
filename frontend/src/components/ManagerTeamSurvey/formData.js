@@ -3,6 +3,7 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
     years,
     suppliers,
     masters,
+    supplierId,
   } = data;
 
   const handleReset = () => {
@@ -92,7 +93,7 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
           type: 'select',
           label: 'Proveedor',
           key: 'supplier',
-          value: '',
+          value: supplierId,
           options: getUniqueSuppliers(),
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };

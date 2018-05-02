@@ -99,6 +99,9 @@ function managerTeamSurveyApp(state = initialState, action) {
       };
     }
     case FILTER_MANAGER_TEAM_SURVEY: {
+      if (!state.data.masters) {
+        return state;
+      }
       const managerProcess = [...state.data.masters.Managers];
       return {
         ...state,

@@ -1,161 +1,173 @@
 
-const dataForm = ({ data }) => [
-  {
-    key: 1,
-    value: [
-      {
-        span: 12,
-        type: 'title',
-        value: 'Home',
-        key: 'Home',
-      },
-    ],
-  },
-  {
-    key: 1.1,
-    value: [
-      {
-        span: 24,
-        type: 'input',
-        label: 'Id',
-        key: 'id',
-        value: data && data.id,
-        style: { display: 'none' },
-      },
-      {
-        span: 12,
-        type: 'input',
-        label: 'Tiempo de rotación (Seg)',
-        key: 'rotationName',
-        value: data && data.rotationTime,
-        required: true,
-      },
-      {
-        span: 12,
-        type: 'input',
-        label: 'Título',
-        key: 'title',
-        value: data && data.title,
-        required: true,
-      },
-    ],
-  },
-  {
-    key: 1.2,
-    value: [
-      {
-        span: 24,
-        type: 'textarea',
-        label: 'Contenido',
-        key: 'content',
-        value: data && data.content,
-      },
-    ],
-  },
-  {
-    key: 1.3,
-    value: [
-      {
-        label: 'Imagen',
-        span: 12,
-        type: 'upload',
-        name: 'file',
-        key: 'document',
-        fileList: data.images,
-      },
-    ],
-  },
-  {
-    key: 1.4,
-    value: [
-      {
-        span: 12,
-        type: 'title',
-        value: 'Información del Programa',
-        key: 'programInformation',
-      },
-    ],
-  },
-  {
-    key: 1.5,
-    value: [
-      {
-        span: 24,
-        type: 'textarea',
-        label: ' ',
-        key: 'informationProgram',
-        value: data && data.informationProgram,
-      },
-    ],
-  },
-  {
-    key: 1.6,
-    value: [
-      {
-        span: 12,
-        type: 'title',
-        value: 'Información de la encuesta',
-        key: 'poolInformation',
-      },
-    ],
-  },
-  {
-    key: 1.7,
-    value: [
-      {
-        span: 24,
-        type: 'textarea',
-        label: ' ',
-        key: 'inputPoll',
-        value: data && data.inputPoll,
-      },
-    ],
-  },
-  {
-    key: 1.8,
-    value: [
-      {
-        span: 12,
-        type: 'title',
-        value: 'Información General',
-        key: 'generalInformation',
-      },
-    ],
-  },
-  {
-    key: 1.9,
-    value: [
-      {
-        span: 24,
-        type: 'inputNumber',
-        label: 'Tamaño total de los archivos (MB)',
-        key: 'uploadMaxFilesize',
-        value: data && data.uploadMaxFilesize,
-        required: true,
-      },
-    ],
-  },
-  {
-    key: 2,
-    justify: 'center',
-    value: [
-      {
-        span: 4,
-        type: 'button',
-        label: 'Limpiar',
-        key: 'cancel',
-        buttonType: 'primary',
-        handleclick: '',
-      }, {
-        span: 4,
-        type: 'button',
-        label: 'Guardar',
-        key: 'save',
-        buttonType: 'primary',
-        htmlType: 'submit',
-      },
-    ],
-  },
-];
+const dataForm = ({ data, updateAttachment, form, cleanFields, deleteAttachment }) => {
+  const uploadExtensions = [
+    '.jpg',
+    '.png',
+    '.jpeg',
+  ];
+
+  const {
+    uploadMaxFilesize,
+    id,
+    rotationTime,
+    title,
+    content,
+    document,
+    informationProgram,
+    inputPoll,
+  } = data;
+
+  const handleReset = () => {
+    form.resetFields();
+    cleanFields();
+  };
+  return [
+    {
+      key: 1,
+      value: [
+        {
+          span: 12,
+          type: 'title',
+          value: 'Home',
+          key: 'Home',
+        },
+      ],
+    },
+    {
+      key: 1.1,
+      value: [
+        {
+          span: 24,
+          type: 'input',
+          label: 'Id',
+          key: 'id',
+          value: id,
+          style: { display: 'none' },
+        },
+        {
+          span: 12,
+          type: 'input',
+          label: 'Tiempo de rotación (Seg)',
+          key: 'rotationTime',
+          value: rotationTime,
+          required: true,
+        },
+        {
+          span: 12,
+          type: 'input',
+          label: 'Título',
+          key: 'title',
+          value: title,
+          required: true,
+        },
+      ],
+    },
+    {
+      key: 1.2,
+      value: [
+        {
+          span: 24,
+          type: 'textarea',
+          label: 'Contenido',
+          key: 'content',
+          value: content,
+          required: true,
+        },
+      ],
+    },
+    {
+      key: 1.3,
+      value: [
+        {
+          label: 'Imagen: (Solo formatos PNG. JPG, JPEG)',
+          span: 12,
+          type: 'upload',
+          name: 'images',
+          key: 'images',
+          fileList: document,
+          uploadMaxFilesize,
+          uploadExtensions,
+          onChange: updateAttachment,
+          onRemove: deleteAttachment,
+          required: true,
+        },
+      ],
+    },
+    {
+      key: 1.5,
+      value: [
+        {
+          span: 24,
+          type: 'textarea',
+          label: 'Información del Programa',
+          style: { marginTop: '20px' },
+          key: 'informationProgram',
+          value: informationProgram,
+          required: true,
+        },
+      ],
+    },
+    {
+      key: 1.7,
+      value: [
+        {
+          span: 24,
+          type: 'textarea',
+          label: 'Información de la encuesta',
+          key: 'inputPoll',
+          value: inputPoll,
+          required: true,
+        },
+      ],
+    },
+    {
+      key: 1.8,
+      value: [
+        {
+          span: 12,
+          type: 'title',
+          value: 'Información General',
+          key: 'generalInformation',
+        },
+      ],
+    },
+    {
+      key: 1.9,
+      value: [
+        {
+          span: 24,
+          type: 'inputNumber',
+          label: 'Tamaño total de los archivos (MB)',
+          key: 'uploadMaxFilesize',
+          value: uploadMaxFilesize,
+          required: true,
+        },
+      ],
+    },
+    {
+      key: 2,
+      justify: 'center',
+      value: [
+        {
+          span: 2,
+          type: 'button',
+          label: 'Limpiar',
+          key: 'clear',
+          buttonType: 'primary',
+          handleclick: handleReset,
+        },
+        {
+          span: 4,
+          type: 'button',
+          label: 'Guardar',
+          key: 'save',
+          buttonType: 'primary',
+          htmlType: 'submit',
+        },
+      ],
+    },
+  ];
+};
+
 
 export default dataForm;

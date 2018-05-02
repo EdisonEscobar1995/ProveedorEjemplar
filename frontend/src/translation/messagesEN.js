@@ -1,9 +1,12 @@
 const messages = {
   'Call.year': 'Year of call',
   'SupplierByCall.participateInCall': 'Do you want to join the program?',
+  'Supplier.supplier': 'Supplier',
+  'Supplier.action': 'Action',
   'Supplier.businessName': 'Name or Corporate Name',
   'Supplier.idCompanySize': 'Company size',
   'Supplier.idSupply': 'Supplies',
+  'Supplier.supplyType': 'Type of supply',
   'Supplier.idCountry': 'Country to which it supplies',
   'Supplier.idCategory': 'Type of Category',
   'Supplier.idSubCategory': 'Type of Sub-category',
@@ -121,5 +124,12 @@ const messages = {
   'Validation.surveyCouldNotComplete': 'The survey could not be completed',
   'Validation.informationNotFound': 'Information not found',
   'Validation.documentExists': 'There is another document with the same data',
+  'Title.imageGallery': 'Image Gallery',
+  'Title.percentageAdvance': 'Percentage of Advance',
+  'Title.pendings': 'My pendings',
+  'Title.informationMessage': 'Below are the suppliers that are pending to evaluate.',
+  'Title.companySize': 'By company size',
+  'Title.companyType': 'By company type',
+  'Title.country': 'By country',
 };
 export default messages;

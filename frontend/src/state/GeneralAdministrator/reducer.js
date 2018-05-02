@@ -2,34 +2,35 @@ import {
   GET_DATA_GENERAL_ADMINISTRATOR_PROGRESS,
   GET_DATA_GENERAL_ADMINISTRATOR_SUCCESS,
   REQUEST_FAILED,
-  CLEAR_EDIT,
+  CLEAN_DATA,
+  UPDATE_ATTACHMENT,
+  SAVE_DATA_PROGRESS,
+  SAVE_DATA_SUCCESS,
+  CLEAN_STORE,
 } from './const';
 
 const initialState = {
-  data: [],
-  editData: {},
+  data: {},
   loading: false,
 };
 
 function generalAdministratorApp(state = initialState, action) {
   switch (action.type) {
-    case GET_DATA_GENERAL_ADMINISTRATOR_PROGRESS: {
+    case GET_DATA_GENERAL_ADMINISTRATOR_PROGRESS:
+    case SAVE_DATA_PROGRESS:
+    {
       return {
         ...state,
         loading: true,
       };
     }
-    case GET_DATA_GENERAL_ADMINISTRATOR_SUCCESS: {
+    case GET_DATA_GENERAL_ADMINISTRATOR_SUCCESS:
+    case SAVE_DATA_SUCCESS:
+    {
       return {
         ...state,
         data: action.data,
         loading: false,
-      };
-    }
-    case CLEAR_EDIT: {
-      return {
-        ...state,
-        editData: {},
       };
     }
     case REQUEST_FAILED:
@@ -39,6 +40,36 @@ function generalAdministratorApp(state = initialState, action) {
         loading: false,
       };
     }
+    case CLEAN_DATA: {
+      return {
+        ...state,
+        loading: false,
+        data: {
+          ...state.data,
+          id: '',
+          rotationTime: '',
+          title: '',
+          content: '',
+          informationProgram: '',
+          inputPoll: '',
+          uploadMaxFilesize: '',
+        },
+      };
+    }
+    case UPDATE_ATTACHMENT: {
+      return {
+        ...state,
+        loading: false,
+        data: {
+          ...state.data,
+          images: action.images,
+        },
+      };
+    }
+    case CLEAN_STORE:
+      return {
+        ...initialState,
+      };
     default: {
       return state;
     }

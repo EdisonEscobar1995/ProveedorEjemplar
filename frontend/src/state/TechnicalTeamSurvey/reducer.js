@@ -148,6 +148,9 @@ function technicalTeamSurveyApp(state = initialState, action) {
       };
     }
     case FILTER_TECHNICAL_TEAM_SURVEY: {
+      if (!state.data.suppliers) {
+        return state;
+      }
       return {
         ...state,
         data: {
