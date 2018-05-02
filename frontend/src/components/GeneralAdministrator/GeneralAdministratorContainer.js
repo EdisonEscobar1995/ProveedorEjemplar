@@ -18,23 +18,22 @@ class GeneralAdministratorContainer extends Component {
   }
 
   render() {
-    if (this.props.loading === true) {
+    if (this.props.loading === false) {
       return (
-        <Spin spinning={this.props.loading}>
+        <Fragment>
           <H1
             text="ADMINISTRACIÓN GENERAL"
           />
-        </Spin>
+          <GeneralAdministrator {...this.props} />
+        </Fragment>
       );
     }
-
     return (
-      <Fragment>
+      <Spin spinning={this.props.loading}>
         <H1
           text="ADMINISTRACIÓN GENERAL"
         />
-        <GeneralAdministrator {...this.props} />
-      </Fragment>
+      </Spin>
     );
   }
 }
@@ -51,8 +50,8 @@ const mapDispatchToProps = dispatch => ({
   cleanFields: () => {
     dispatch(cleanFields());
   },
-  updateAttachment: (data, field) => {
-    dispatch(updateAttachment(data, field));
+  updateAttachment: (data, field, list) => {
+    dispatch(updateAttachment(data, field, list));
   },
   deleteAttachment: (data, field) => {
     dispatch(deleteAttachment(data, field));

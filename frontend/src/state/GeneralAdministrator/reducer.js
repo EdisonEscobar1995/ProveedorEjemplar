@@ -25,7 +25,6 @@ function generalAdministratorApp(state = initialState, action) {
       };
     }
     case GET_DATA_GENERAL_ADMINISTRATOR_SUCCESS:
-    case SAVE_DATA_SUCCESS:
     {
       return {
         ...state,
@@ -34,6 +33,7 @@ function generalAdministratorApp(state = initialState, action) {
       };
     }
     case REQUEST_FAILED:
+    case SAVE_DATA_SUCCESS:
     {
       return {
         ...state,
@@ -62,7 +62,8 @@ function generalAdministratorApp(state = initialState, action) {
         loading: false,
         data: {
           ...state.data,
-          images: action.images,
+          images: action.images.images,
+          document: action.images.document,
         },
       };
     }
