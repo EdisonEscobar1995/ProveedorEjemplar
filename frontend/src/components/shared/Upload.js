@@ -76,7 +76,7 @@ class Upload extends Component {
         const { listValue } = this.state;
         const onChange = this.props.onChange;
         if (onChange) {
-          onChange(listValue.map(item => ({ id: item.uid })), this.props.datakey);
+          onChange(listValue.map(item => ({ id: item.uid })), this.props.datakey, listValue);
         }
       } else if (info.file.status === 'error') {
         messageConfig.text = 'Validation.uploadFail';

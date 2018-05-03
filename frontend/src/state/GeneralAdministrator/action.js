@@ -44,8 +44,12 @@ const getAllGeneralAdministrators = () => (dispatch) => {
     });
 };
 
-const updateAttachment = (data, field) => (dispatch, getActualState) => {
+const updateAttachment = (data, field, list) => (dispatch, getActualState) => {
+  const newDocuments = list.filter(x => x.response);
   const images = getActualState().generalAdministrator.data;
+  newDocuments.forEach((document) => {
+    images.document.push(document.response.data);
+  });
   if (data) {
     images[field] = data;
   }
@@ -56,6 +60,7 @@ const deleteAttachment = (idAttachment, field) => (
   (dispatch, getActualState) => {
     const data = getActualState().generalAdministrator.data;
     data[field] = data[field].filter(attach => attach !== idAttachment);
+    data.document = data.document.filter(attach => attach.id !== idAttachment);
     dispatch(updateImages(data));
   }
 );
@@ -68,9 +73,8 @@ const saveDataProgress = () => ({
   type: SAVE_DATA_PROGRESS,
 });
 
-const saveDataSuccess = data => ({
+const saveDataSuccess = () => ({
   type: SAVE_DATA_SUCCESS,
-  data,
 });
 
 const cleanStore = () => ({
@@ -78,7 +82,7 @@ const cleanStore = () => ({
 });
 
 const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getState) => {
-  const dataState = getState().generalAdministrator.data.images;
+  const dataState = getState().generalAdministrator.data;
   const {
     content,
     id,
@@ -92,7 +96,8 @@ const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getS
     ...dataState,
     content,
     id,
-    images: dataState.images && dataState.images.map(x => x.id),
+    images: dataState.images.length > 0 &&
+      dataState.images[0].id ? dataState.images.map(x => x.id) : dataState.images,
     informationProgram,
     inputPoll,
     rotationTime,
@@ -100,9 +105,8 @@ const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getS
     uploadMaxFilesize,
   };
   requestApi(dispatch, saveDataProgress, saveGeneralAdministratorApi, clientDataNew)
-    .then((response) => {
-      const { data } = response.data;
-      dispatch(saveDataSuccess(clientData.id, data, remoteId));
+    .then(() => {
+      dispatch(saveDataSuccess());
       if (next) {
         next();
       }
