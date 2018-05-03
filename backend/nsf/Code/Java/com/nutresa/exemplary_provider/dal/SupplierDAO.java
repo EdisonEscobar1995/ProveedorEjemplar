@@ -17,6 +17,7 @@ import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierDAO extends GenericDAO<SupplierDTO> {
+    private static final short MAX_RESULTS = 20;
 
     public SupplierDAO() {
         super(SupplierDTO.class);
@@ -80,9 +81,11 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
     }
 
     /**
-     * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar los proveedores.
+     * Dada la información en <code>parameters</code> identifica por cuales campos 
+     * e deben filtrar los proveedores.
      * 
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param parameters Mapa clave valor de los filtros por los que se van a
+     *                   optener los resultados
      * @return Mapa clave valor con los campos que se debe filtrar.
      * @throws HandlerGenericException
      */
@@ -101,9 +104,11 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
     }
 
     /**
-     * Filtra los proveedores según los campos especificados en <code>fieldsToFilter</code>
+     * Filtra los proveedores según los campos especificados en 
+     * code>fieldsToFilter</code>
      * 
-     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se filtrarán los proveedores.
+     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se
+     *                       filtrarán los proveedores.
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -130,8 +135,8 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
 
     /**
      * @param nit
-     * @return <code>true</code> si existe un registro en el directorio general con dicho <code>nit</code>, de lo
-     * contrario <code>false</code>
+     * @return <code>true</code> si existe un registro en el directorio general con
+     *         dicho <code>nit</code>, de lo contrario <code>false</code>
      * @throws HandlerGenericException
      */
     public boolean existInGeneralDirectoryByNit(String nit) throws HandlerGenericException {
@@ -154,6 +159,41 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+
+    /**
+     * Busca los proveedores que contengan <code>text</code> en el campo código sap
+     * 
+     * @param text valor a buscar en los documentos
+     * @return Colección de proveedores que coinciden con el valor a buscar
+     * @throws HandlerGenericException
+     */
+    public List<SupplierDTO> searchSupplier(String text) throws HandlerGenericException {
+        List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
+        View vwSystem = getDatabase().getView("vwSystems");
+        Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
+        Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("supplierPathApplication"));
+        View vwNames = namesDatabase.getView("dnvwFVSociedadCodigoProv");
+        String query = "(Field dnfdCodigo1 = *".concat(text.concat("*)"));
+        if (null != vwNames) {
+            vwNames.FTSearch(query, MAX_RESULTS);
+            Document document = vwNames.getFirstDocument();
+            while (document != null) {
+                SupplierDTO supplier = new SupplierDTO();
+                String sapCode = document.getItemValueString("dnfdCodigo");
+                String businessName = document.getItemValueString("dnfdNombre");
+                String nit = document.getItemValueString("dnfdNit");
+
+                supplier.setSapCode(sapCode);
+                supplier.setBusinessName(businessName);
+                supplier.setNit(nit);
+                suppliers.add(supplier);
+                document = vwNames.getNextDocument(document);
+            }
+            vwNames.clear();
+        }
+
+        return suppliers;
     }
 
 }

@@ -65,8 +65,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     /**
      * Obtiene los proveedores asociados a una convocatoria.
      * 
-     * @param idCall
-     *            Identificador de la convocatoria.
+     * @param idCall Identificador de la convocatoria.
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -96,10 +95,8 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
      * búsqueda debe coincidir justo con los parámetros <code>idCall</code> y
      * <code>idSupplier</code>
      * 
-     * @param idCall
-     *            Identificador de la convocatoria
-     * @param idSupplier
-     *            Identificador del proveedor
+     * @param idCall     Identificador de la convocatoria
+     * @param idSupplier Identificador del proveedor
      * @return Objeto con la información en caso de hallar considencia en la
      *         búsqueda.
      * @throws HandlerGenericException
@@ -134,13 +131,11 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     }
 
     /**
-     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por
-     * cada uno de los estados especificados
+     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por cada
+     * uno de los estados especificados
      * 
-     * @param idCall
-     *            Identificador de la convocatoria
-     * @param states
-     *            Colección con los estados a filtrar.
+     * @param idCall Identificador de la convocatoria
+     * @param states Colección con los estados a filtrar.
      * @return Colección de datos encontrados
      * @throws HandlerGenericException
      */
@@ -212,5 +207,26 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         }
 
         return result;
+    }
+
+    /**
+     * Elimina todos los documentos donde se coincida con el
+     * <code>idSupplierByCall</code>
+     * 
+     * @param idSupplierByCall
+     * @return <code>true</code> en caso de eliminar exitosamente los documentos, de
+     *         lo contrario <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public boolean deleteAllReference(String idSupplierByCall) throws HandlerGenericException {
+        boolean stateDeleted = false;
+        View view = getDatabase().getView("vwUniverse");
+        if (view.FTSearch(idSupplierByCall) > 0) {
+            view.getAllEntries().removeAll(true);
+            stateDeleted = true;
+        }
+        view.clear();
+        return stateDeleted;
+
     }
 }

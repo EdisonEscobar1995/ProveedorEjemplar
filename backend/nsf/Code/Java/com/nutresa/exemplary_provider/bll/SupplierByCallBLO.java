@@ -35,17 +35,15 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     /**
      * Obtiene la convocatoria de un proveedor, identificada con
-     * <code>idSupplierByCall</code> en caso de <b>NO</b> ser <code>null</code>;
-     * en caso de serlo, busca la convocatoria que tenga asiganda y no esté
-     * vencida.
+     * <code>idSupplierByCall</code> en caso de <b>NO</b> ser <code>null</code>; en
+     * caso de serlo, busca la convocatoria que tenga asiganda y no esté vencida.
      * <p>
-     * Si el rol del usuario en sessión es <b>LIBERATOR</b> o
-     * <b>ADMINISTRATOR</b> se envía la instrucción de modo lectura. Si el rol
-     * es <b>EVALUATOR</b> la sección de este rol se envía modo escritura.
+     * Si el rol del usuario en sessión es <b>LIBERATOR</b> o <b>ADMINISTRATOR</b>
+     * se envía la instrucción de modo lectura. Si el rol es <b>EVALUATOR</b> la
+     * sección de este rol se envía modo escritura.
      * 
-     * @param String
-     *            <code>idSupplierByCall</code> Identificador de la convocatoria
-     *            asiganda al proveedor
+     * @param String <code>idSupplierByCall</code> Identificador de la convocatoria
+     *               asiganda al proveedor
      * @return <code>SupplierByCallDTO</code>
      * @throws HandlerGenericException
      */
@@ -89,11 +87,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Verifica si la fecha para hacer la encuesta por parte del
-     * <b>EVALUATOR</b> está habilitada
+     * Verifica si la fecha para hacer la encuesta por parte del <b>EVALUATOR</b>
+     * está habilitada
      * 
-     * @param supplierByCall
-     *            Identificador de la convocatoria definitivia de un proveedor
+     * @param supplierByCall Identificador de la convocatoria definitivia de un
+     *                       proveedor
      * @throws HandlerGenericException
      */
     private void permissionForEvaluator(SupplierByCallDTO supplierByCall) throws HandlerGenericException {
@@ -132,8 +130,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * @param idSupplierByCall
-     *            Identificador de la convocatoria por proveedor
+     * @param idSupplierByCall Identificador de la convocatoria por proveedor
      * @return
      * @throws HandlerGenericException
      */
@@ -279,10 +276,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * @param call
-     *            Convocatoria
-     * @param supplierByCall
-     *            Convocatoria del proveedor
+     * @param call           Convocatoria
+     * @param supplierByCall Convocatoria del proveedor
      * @return
      * @throws HandlerGenericException
      */
@@ -307,10 +302,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * @param call
-     *            Convocatoria
-     * @param supplierByCall
-     *            Convocatoria del proveedor
+     * @param call           Convocatoria
+     * @param supplierByCall Convocatoria del proveedor
      * @return
      * @throws HandlerGenericException
      */
@@ -438,8 +431,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     /**
      * Obtiene los proveedores asociados a una convocatoria.
      * 
-     * @param idCall
-     *            Identificador de la convocatoria.
+     * @param idCall Identificador de la convocatoria.
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -451,10 +443,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     /**
      * Buscar la convocatoria de un proveedor en caso de estar finalizada
      * 
-     * @param idCall
-     *            Identificador de la convocatoria
-     * @param idSupplier
-     *            Identificador del proveedor
+     * @param idCall     Identificador de la convocatoria
+     * @param idSupplier Identificador del proveedor
      * @return Objeto con la información en caso de hallar considencia en la
      *         búsqueda.
      * @throws HandlerGenericException
@@ -466,13 +456,11 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por
-     * cada uno de los estados especificados
+     * Obtiene las convocatorias por proveedor. Solo aquellas que concidan por cada
+     * uno de los estados especificados
      * 
-     * @param idCall
-     *            Identificador de la convocatoria
-     * @param states
-     *            Colección con los estados a filtrar.
+     * @param idCall Identificador de la convocatoria
+     * @param states Colección con los estados a filtrar.
      * @return Colección de datos encontrados
      * @throws HandlerGenericException
      */
@@ -543,10 +531,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Verifica que el proveedor <code>idSupplier</code> no exista en la convocatoria <code>idCall</code>
+     * Verifica que el proveedor <code>idSupplier</code> no exista en la
+     * convocatoria <code>idCall</code>
+     * 
      * @param idSupplier
      * @param idCall
-     * @return <code>true</code> si el proveedor ya se encuentra en la convocatoria, de lo contrario <code>false</code>
+     * @return <code>true</code> si el proveedor ya se encuentra en la convocatoria,
+     *         de lo contrario <code>false</code>
      * @throws HandlerGenericException
      */
     public boolean existSupplierInCall(String idSupplier, String idCall) throws HandlerGenericException {
@@ -565,11 +556,14 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Asocia el proveedor a la convocatoria y adicionalmente lo asocica con la encuesta indicada, basandose en
-     * en el tipo de ministro y el tamaño de la empresa.
+     * Asocia el proveedor a la convocatoria y adicionalmente lo asocica con la
+     * encuesta indicada, basandose en en el tipo de ministro y el tamaño de la 
+     * empresa.
+     * 
      * @param supplier
      * @param idCall
-     * @return Asignación de la convocatoria a un proveedor con su respectiva encuesta.
+     * @return Asignación de la convocatoria a un proveedor con su respectiva 
+     *         encuesta.
      * @throws HandlerGenericException
      */
     public SupplierByCallDTO asociateSupplierToCall(SupplierDTO supplier, String idCall)
@@ -586,6 +580,20 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         supplierByCall.setParticipateInCall("false");
         supplierByCall.setIdState(state.getId());
         return super.save(supplierByCall);
+    }
+
+    /**
+     * Elimina todos los documentos donde se utilice el
+     * <code>idSupplierByCall</code>
+     * 
+     * @param idSupplierByCall
+     * @return <code>true</code> en caso de eliminar exitosamente los documentos, de
+     *         lo contrario <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public boolean delete(String idSupplierByCall) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.deleteAllReference(idSupplierByCall);
     }
 
 }
