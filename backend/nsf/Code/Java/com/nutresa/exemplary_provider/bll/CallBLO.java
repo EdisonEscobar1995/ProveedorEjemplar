@@ -52,7 +52,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             existingCall = get(idCallExisting);
         }
 
-        if (call.getYear() != callActive.getYear()) {
+        if ((callActive instanceof CallDTO) && call.getYear() != callActive.getYear()) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_EXIST_CALL_ACTIVE.toString());
         }
 
@@ -168,12 +168,12 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      *         <code>parameters</code>
      * @throws HandlerGenericException Con mensaje <code>CALL_NOT_ESPECIFIED</code>
      *                                 si no se envía el identificador de la
-     *                                 convocatoria en los parámetros de búsqueda. 
-     *                                 on mensaje 
-     *                                 code>INFORMATION_NOT_FOUND</code> si no se
-     *                                 encontró información para exportar. Con m
-     *                                 nsaje <code>ROL_INVALID</code> si el
-     *                                 usuario en sesión no tiene el rol permitido.
+     *                                 convocatoria en los parámetros de búsqueda.
+     *                                 on mensaje code>INFORMATION_NOT_FOUND</code>
+     *                                 si no se encontró información para e
+     *                                 portar. Con m nsaje <code>ROL_INVALID</code>
+     *                                 si el usuario en sesión no tiene el rol 
+     *                                 ermitido.
      */
     public List<ReportOfCalificationsBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
@@ -511,7 +511,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Dado el rol del usuario en sessión se identifica cual es la fase que le 
+     * Dado el rol del usuario en sessión se identifica cual es la fase que le
      * ertenece a cada rol del sistema
      * 
      * @return Fase a la que pertenece el rol del usuario en session
@@ -603,7 +603,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                     supplier.nameCompanySizeToLoad = null;
                     supplier.nameSupplyToLoad = null;
                     supplier.nameCountryToLoad = null;
-                    supplierBLO.createByFirstTime(supplier);
+                    supplier = supplierBLO.createByFirstTime(supplier);
                     summaryRecord.status = "CREATED";
                     SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
                     supplierByCallBLO.asociateSupplierToCall(supplier, call.getId()).getId();
@@ -657,19 +657,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             }
         }
 
-        SupplierBLO supplierBLO = new SupplierBLO();
-        SupplierDTO existingSupplier = supplierBLO.getBySAPCodeOrNIT(supplier.getSapCode(), supplier.getNit());
-        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        if (supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
-            summaryRecord.status = "DUPLICATED";
-            allowLoad = false;
-        }
-
-        if (!supplierBLO.existInGeneralDirectoryByNit(supplier.getNit())) {
-            summaryRecord.status = "DONT_EXIST_IN_DIRECTORY";
-            allowLoad = false;
-        }
-
         SupplyBLO supplyBLO = new SupplyBLO();
         SupplyDTO supply = supplyBLO.getBy("name", supplier.nameSupplyToLoad);
         String idSupply = supply == null ? null : supply.getId();
@@ -685,6 +672,21 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             allowLoad = false;
         }
 
+        SupplierBLO supplierBLO = new SupplierBLO();
+        SupplierDTO existingSupplier = supplierBLO.getBySAPCodeOrNIT(supplier.getSapCode(), supplier.getNit());
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        if (supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
+            summaryRecord.status = "DUPLICATED";
+            allowLoad = false;
+        } else {
+            supplier = existingSupplier;
+        }
+
+        if (!supplierBLO.existInGeneralDirectoryByNit(supplier.getNit())) {
+            summaryRecord.status = "DONT_EXIST_IN_DIRECTORY";
+            allowLoad = false;
+        }
+        
         return allowLoad;
     }
 
