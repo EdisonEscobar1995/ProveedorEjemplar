@@ -591,9 +591,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      *         lo contrario <code>false</code>
      * @throws HandlerGenericException
      */
-    public boolean delete(String idSupplierByCall) throws HandlerGenericException {
+    public SupplierByCallDTO delete(String idSupplierByCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        return supplierByCallDAO.deleteAllReference(idSupplierByCall);
+        if(supplierByCallDAO.deleteAllReference(idSupplierByCall)){
+            return new SupplierByCallDTO();
+        } else {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.INVALID_VALUE.toString());
+        }
     }
 
 }
