@@ -112,7 +112,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             List<DTO> suppliers = supplierBLO.getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
             // Realizar el cruce de los maestros según los datos de los
             // proveedores seleccionados
-            String[] idFieldNames = { "CompanySize", "Supply" };
+            String[] idFieldNames = { "CompanySize", "Supply", "Country" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
 
             Map<String, List<DTO>> masters = getMasters(idFieldNames, masterIds, true);
