@@ -60,13 +60,12 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     }
 
     /**
-     * Notifica a los interesados de cada etapa de la encuesta finalizada. Dado
-     * el <code>Rol</code> que complete la fase envía su respectivo mensaje.
+     * Notifica a los interesados de cada etapa de la encuesta finalizada. Dado el
+     * <code>Rol</code> que complete la fase envía su respectivo mensaje.
      * 
-     * @param idSupplier
-     *            Identificador del proveedor que fue evaluado en la encuesta.
-     * @param rol
-     *            Rol que está finalizando la encuesta
+     * @param idSupplier Identificador del proveedor que fue evaluado en la
+     *                   encuesta.
+     * @param rol        Rol que está finalizando la encuesta
      * @throws HandlerGenericException
      */
     public void notifySurveyCompleted(String idSupplier, Rol rol) throws HandlerGenericException {
@@ -145,14 +144,11 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
     public void notifyToSupplierForContinue(SupplierDTO supplier) throws HandlerGenericException {
         try {
-            SupplierBLO supplierBLO = new SupplierBLO();
             List<String> emails = new ArrayList<String>();
             emails.add(supplier.getEmailOfContact());
 
-            Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
-            Map<String, String> detail = new LinkedHashMap<String, String>();
-            detail.put("Usuario", informationInOtherDataBase.get("userName"));
-            detail.put("Contraseña", informationInOtherDataBase.get("password"));
+            SupplierBLO supplierBLO = new SupplierBLO();
+            Map<String, String> detail = supplierBLO.getUserAndPassword(supplier);
 
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO
@@ -234,6 +230,17 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             throw new HandlerGenericException(exception);
         }
 
+    }
+
+    // TODO: create documentation
+    protected void sendAlarm(List<String> sendTo, NotificationDTO notification, String linkButton,
+            Map<String, String> detail) throws HandlerGenericException {
+
+        if (detail.containsKey("Usuario")) {
+            sendNotification(sendTo, notification, true, detail, true, linkButton);
+        } else {
+            sendNotification(sendTo, notification, false, detail, true, linkButton);
+        }
     }
 
 }

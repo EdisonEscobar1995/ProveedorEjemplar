@@ -1,10 +1,14 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.Date;
+
 import com.google.gson.annotations.Expose;
 
 public class AlertDTO extends MasterDTO {
     @Expose
     private String shortName;
+    @Expose
+    private String name;
     @Expose
     private boolean active;
     @Expose
@@ -13,6 +17,8 @@ public class AlertDTO extends MasterDTO {
     private String message;
     @Expose
     private short days;
+    @Expose
+    private Date dateExecuted;
 
     public String getSubject() {
         return subject;
@@ -52,6 +58,22 @@ public class AlertDTO extends MasterDTO {
 
     public String getShortName() {
         return shortName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setDateExecuted(Date date) {
+        this.dateExecuted = date;
+    }
+
+    public Date getDateExecuted() {
+        return dateExecuted;
     }
 
 }
