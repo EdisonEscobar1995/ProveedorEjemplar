@@ -101,9 +101,12 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     }
 
     /**
-     * Determina si el usuario en sesión tiene el rol específico <code>shortNameRol</code>
+     * Determina si el usuario en sesión tiene el rol específico
+     * <code>shortNameRol</code>
+     * 
      * @param shortNameRol
-     * @return <code>false</code> en caso de no tener el rol, de lo contrario <code>true</code>
+     * @return <code>false</code> en caso de no tener el rol, de lo contrario
+     *         <code>true</code>
      * @throws HandlerGenericException
      */
     protected boolean isRol(String shortNameRol) throws HandlerGenericException {
@@ -173,7 +176,6 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         while (iterator.hasNext()) {
             UserDAO userDAO = new UserDAO();
             RolBLO rolBLO = new RolBLO();
-            TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
             List<UserDTO> userWithTechnicalTeamRol = userDAO
                     .getUsersByRol(rolBLO.getRolByShortName(Rol.TECHNICAL_TEAM.toString()).getId());
             NotificationBLO notificationBLO = new NotificationBLO();
@@ -182,6 +184,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             key = iterator.next();
             valueInFields = key.split(":");
 
+            TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
             for (UserDTO user : userWithTechnicalTeamRol) {
                 filter.put("USER", user.getId());
                 filter.put("SUPPLY", valueInFields[0]);
@@ -220,6 +223,12 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     public List<UserDTO> searchUser(String text) throws HandlerGenericException {
         UserDAO userDAO = new UserDAO();
         return userDAO.searchUser(text);
+    }
+
+    // TODO: create document
+    protected UserDTO getUsersByName(String name) throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.getUsersByName(name);
     }
 
 }

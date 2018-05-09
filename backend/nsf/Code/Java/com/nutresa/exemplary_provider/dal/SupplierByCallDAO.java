@@ -33,10 +33,10 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             for (Document document : documents) {
                 callsBySupplier.add(castDocument(document));
             }
+            return callsBySupplier;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-        return callsBySupplier;
     }
 
     public List<SupplierDTO> getSuppliersByCallDontInvited(String idCall) throws HandlerGenericException {
@@ -228,5 +228,20 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         view.clear();
         return stateDeleted;
 
+    }
+
+    // TODO: create documentation
+    public boolean existSuppliersInCompanySizeChanged(String idCall) throws HandlerGenericException {
+        try {
+            boolean exist = false;
+            View currentView = getDatabase().getView("vwSuppliersByCallModifiedIdCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(idCall, true);
+            if (documents.getCount() > 0) {
+                exist = true;
+            }
+            return exist;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
     }
 }

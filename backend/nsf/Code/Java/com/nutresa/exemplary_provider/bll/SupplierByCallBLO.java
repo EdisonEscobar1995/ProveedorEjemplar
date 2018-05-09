@@ -3,6 +3,8 @@ package com.nutresa.exemplary_provider.bll;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
@@ -13,7 +15,10 @@ import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.StateDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.UserDTO;
+import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyDTO;
+import com.nutresa.exemplary_provider.dtl.ManagerTeamAnswerDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
@@ -570,15 +575,20 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             throws HandlerGenericException {
         SurveyBLO surveyBLO = new SurveyBLO();
         SurveyDTO survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
-        SupplierByCallDTO supplierByCall = new SupplierByCallDTO();
-        StateBLO stateBLO = new StateBLO();
-        StateDTO state = stateBLO.getStateByShortName(SurveyStates.NOT_STARTED.toString());
-        supplierByCall.setIdSupplier(supplier.getId());
-        supplierByCall.setIdCall(idCall);
+        SupplierByCallDTO supplierByCall = getCallActiveToParticipate(supplier.getId());
+
+        if (!(supplierByCall instanceof SupplierByCallDTO)) {
+            supplierByCall = new SupplierByCallDTO();
+            StateBLO stateBLO = new StateBLO();
+            StateDTO state = stateBLO.getStateByShortName(SurveyStates.NOT_STARTED.toString());
+            supplierByCall.setIdSupplier(supplier.getId());
+            supplierByCall.setIdCall(idCall);
+            supplierByCall.setInvitedToCall(false);
+            supplierByCall.setParticipateInCall("false");
+            supplierByCall.setIdState(state.getId());
+        }
+
         supplierByCall.setIdSurvey(survey.getId());
-        supplierByCall.setInvitedToCall(false);
-        supplierByCall.setParticipateInCall("false");
-        supplierByCall.setIdState(state.getId());
         return super.save(supplierByCall);
     }
 
@@ -593,10 +603,94 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      */
     public SupplierByCallDTO delete(String idSupplierByCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        if(supplierByCallDAO.deleteAllReference(idSupplierByCall)){
+        if (supplierByCallDAO.deleteAllReference(idSupplierByCall)) {
             return new SupplierByCallDTO();
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.INVALID_VALUE.toString());
+        }
+    }
+
+    // TODO: create documentation
+    protected boolean existSuppliersInCompanySizeChanged(String idCall) throws HandlerGenericException {
+        SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        return supplierByCallDAO.existSuppliersInCompanySizeChanged(idCall);
+    }
+
+    // TODO: create documentation
+    protected List<String> getResponsibleOfEvaluation(String idCall, List<SurveyStates> states)
+            throws HandlerGenericException {
+        List<String> responsibles = new ArrayList<String>();
+        List<SupplierByCallDTO> suppliersInState = getAllByStates(idCall, states);
+        for (SupplierByCallDTO supplierByCall : suppliersInState) {
+            switch (states.get(0)) {
+            case NOT_STARTED_TECHNICAL_TEAM:
+                SupplierBLO supplierBLO = new SupplierBLO();
+                SupplierDTO supplier = supplierBLO.get(supplierByCall.getIdSupplier());
+                Map<String, String> filter = new LinkedHashMap<String, String>();
+
+                UserBLO userBLO = new UserBLO();
+                RolBLO rolBLO = new RolBLO();
+                List<UserDTO> userWithTechnicalTeamRol = userBLO
+                        .getUsersByRol(rolBLO.getRolByShortName(Rol.TECHNICAL_TEAM.toString()).getId());
+
+                TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
+                for (UserDTO user : userWithTechnicalTeamRol) {
+                    filter.put("USER", user.getId());
+                    filter.put("SUPPLY", supplier.getIdSupply());
+                    filter.put("CATEGORY", supplier.getIdCategory());
+                    filter.put("COUNTRY", supplier.getIdCountry());
+                    List<TechnicalTeamDTO> especificTechnicalTeamMembers = technicalTeamBLO
+                            .getMembersByEspecificFeactures(filter);
+
+                    responsibles.add((!especificTechnicalTeamMembers.isEmpty() ? user.getEmail() : ""));
+                }
+
+                break;
+            case TECHNICAL_TEAM:
+                responsibles.add(supplierByCall.getWhoEvaluateOfTechnicalTeam());
+                break;
+            case NOT_STARTED_MANAGER_TEAM:
+            case MANAGER_TEAM:
+                ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
+                List<ManagerTeamAnswerDTO> managerTeamAnswer = managerTeamAnswerBLO
+                        .getAnswersOfSupplier(supplierByCall.getId());
+
+                for (ManagerTeamAnswerDTO managerAnswer : managerTeamAnswer) {
+                    responsibles.add(managerAnswer.getWhoEvaluate());
+                }
+
+                break;
+            case EVALUATOR:
+                responsibles.add(supplierByCall.getWhoEvaluate());
+                break;
+            default:
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+            }
+        }
+        return responsibles;
+    }
+
+    // TODO: create documentation
+    protected List<SupplierDTO> getSuppliersByCallAndStateEvaluation(String idCall, List<SurveyStates> states)
+            throws HandlerGenericException {
+        List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
+        List<SupplierByCallDTO> suppliersByCall = getAllByStates(idCall, states);
+        for (SupplierByCallDTO supplierByCall : suppliersByCall) {
+            SupplierBLO supplierBLO = new SupplierBLO();
+            suppliers.add(supplierBLO.get(supplierByCall.getIdSupplier()));
+        }
+
+        return suppliers;
+    }
+
+    // TODO: Create documentation
+    protected void markAsNotParticipated(String idCall) throws HandlerGenericException {
+        List<SurveyStates> states = new ArrayList<SurveyStates>();
+        states.add(SurveyStates.NOT_STARTED);
+        List<SupplierByCallDTO> suppliersByCall = getAllByStates(idCall, states);
+        for (SupplierByCallDTO supplierByCall : suppliersByCall) {
+            supplierByCall.setParticipateInCall("false");
+            super.save(supplierByCall);
         }
     }
 

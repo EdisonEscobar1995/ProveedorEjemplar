@@ -11,6 +11,7 @@ import org.openntf.domino.utils.Factory.SessionType;
 import org.openntf.domino.utils.Factory;
 import com.nutresa.exemplary_provider.dal.NotificationDAO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
+import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.NotificationDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
@@ -32,7 +33,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         try {
-            List<String> sendTo = getUsersByRolName(Rol.LIBERATOR.toString());
+            UserBLO userBLO = new UserBLO();
+            List<String> sendTo = userBLO.getUserEmailsByRol(Rol.LIBERATOR.toString());
 
             Map<String, String> detailUserToSend = buildDetailUserToSend(idSupplier);
             SupplierByCallDTO supplierByCall = supplierByCallBLO.getSupplierByCallActiveBySupplier(idSupplier);
@@ -52,7 +54,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 sendTo.addAll(notification.getWithCopy());
             }
 
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
+            String linkOfButton = buildLinkModifiedSupplier();
             sendNotification(sendTo, notification, true, detailUserToSend, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -70,8 +72,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
      */
     public void notifySurveyCompleted(String idSupplier, Rol rol) throws HandlerGenericException {
         NotificationDTO notification = null;
-        String linkOfButton = Common.buildPathResource() + "/dist/index.html#/surveys";
-        List<String> sendTo = getUsersByRolName(Rol.LIBERATOR.toString());
+        String linkOfButton = buildLinkSurvey();
+        UserBLO userBLO = new UserBLO();
+        List<String> sendTo = userBLO.getUserEmailsByRol(Rol.LIBERATOR.toString());
 
         NotificationDAO notificationDAO = new NotificationDAO();
         switch (rol) {
@@ -111,11 +114,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         detail.put("Suministro", supply.getName());
         detail.put("Tamaño de empresa", companySize.getName());
         return detail;
-    }
-
-    private List<String> getUsersByRolName(String nameRol) throws HandlerGenericException {
-        UserBLO userBLO = new UserBLO();
-        return userBLO.getUserEmailsByRol(nameRol);
     }
 
     private void sendNotification(List<String> sendTo, NotificationDTO notification, boolean requireTableDetail,
@@ -158,7 +156,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 emails.addAll(notification.getWithCopy());
             }
 
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
+            String linkOfButton = buildLinkSupplier();
             sendNotification(emails, notification, true, detail, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -191,7 +189,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 emails.addAll(notification.getWithCopy());
             }
 
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/supplier";
+            String linkOfButton = buildLinkSupplier();
             sendNotification(emails, notification, true, detail, true, linkOfButton);
         }
     }
@@ -206,7 +204,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 emails.addAll(notification.getWithCopy());
             }
 
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/technicalTeamSurvey";
+            String linkOfButton = buildLinkTechnicalTeam();
             sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -224,7 +222,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 emails.addAll(notification.getWithCopy());
             }
 
-            String linkOfButton = Common.buildPathResource() + "/dist/index.html#/managerTeamSurvey";
+            String linkOfButton = buildLinkManagerTeam();
             sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
@@ -241,6 +239,39 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         } else {
             sendNotification(sendTo, notification, false, detail, true, linkButton);
         }
+    }
+
+    public List<NotificationDTO> getAllNotification() throws HandlerGenericException {
+        List<NotificationDTO> notifications = new ArrayList<NotificationDTO>();
+        List<DTO> temporalNotifications = super.getAll();
+        for (DTO notification : temporalNotifications) {
+            NotificationDTO originalNotification = (NotificationDTO) notification;
+            AttachmentBLO attachmentBLO = new AttachmentBLO();
+            originalNotification.setBanner(attachmentBLO.get(originalNotification.getIdBanner()));
+            originalNotification.setFooter(attachmentBLO.get(originalNotification.getIdFooter()));
+            notifications.add(originalNotification);
+        }
+        return notifications;
+    }
+
+    protected String buildLinkModifiedSupplier() {
+        return Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
+    }
+
+    protected String buildLinkSupplier() {
+        return Common.buildPathResource() + "/dist/index.html#/supplier";
+    }
+
+    protected String buildLinkSurvey() {
+        return Common.buildPathResource() + "/dist/index.html#/surveys";
+    }
+
+    protected String buildLinkManagerTeam() {
+        return Common.buildPathResource() + "/dist/index.html#/managerTeamSurvey";
+    }
+
+    protected String buildLinkTechnicalTeam() {
+        return Common.buildPathResource() + "/dist/index.html#/technicalTeamSurvey";
     }
 
 }

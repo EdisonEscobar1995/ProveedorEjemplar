@@ -2,10 +2,18 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.List;
 import java.util.LinkedHashMap;
 
 import com.nutresa.exemplary_provider.dal.AlertDAO;
 import com.nutresa.exemplary_provider.dtl.AlertDTO;
+import com.nutresa.exemplary_provider.dtl.CallDTO;
+import com.nutresa.exemplary_provider.dtl.UserDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
+import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.NotificationDTO;
 import com.nutresa.exemplary_provider.dtl.AlertType;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
@@ -19,41 +27,93 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
 
     // TODO: Create documentation
     public AlertDTO executeAlerts() throws HandlerGenericException {
-        NotificationBLO notificationBLO = new NotificationBLO();
         for (AlertType alert : AlertType.values()) {
-            Map<String, String> detail = new LinkedHashMap<String, String>();
             NotificationDTO notification = buildNotification(alert);
-            switch (alert) {
-            case PENDING_VALIDATION_DUE_TO_CHANGE_IN_SIZE_IN_THE_COMPANY:
-                // TODO: build parameters of notification for this type
-                break;
-            case SURVEY_PARTIALLY_SAVED_BY_THE_PROVIDER:
-                // TODO: build parameters of notification for this type and build detail
-                break;
-            case SURVEY_PARTIALLY_SAVED_BY_THE_EVALUATION_TEAM:
-                // TODO: build parameters of notification for this type
-                break;
-            case PENDING_EVALUATION_BY_THE_TECHNICAL_TEAM:
-                // TODO: build parameters of notification for this type
-                break;
-            case PENDING_EVALUATION_BY_THE_MANAGER_TEAM:
-                // TODO: build parameters of notification for this type
-                break;
-            case SURVEY_PARTIALLY_SAVED_BY_THE_TECHNICAL_TEAM:
-                // TODO: build parameters of notification for this type
-                break;
-            case SURVEY_PARTIALLY_SAVED_BY_THE_MANAGER_TEAM:
-                // TODO: build parameters of notification for this type
-                break;
-            default:
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.INVALID_VALUE.toString());
+            if (!notification.getMessage().isEmpty()) {
+                executeAlert(alert, notification);
             }
-            notificationBLO.sendAlarm(new ArrayList<String>(), notification, "linkButton", detail);
+        }
+        CallBLO callBLO = new CallBLO();
+        callBLO.closeCall();
+
+        return new AlertDTO();
+    }
+
+    // TODO: crear documentación
+    private void executeAlert(AlertType alert, NotificationDTO notification) throws HandlerGenericException {
+        NotificationBLO notificationBLO = new NotificationBLO();
+        CallBLO callBLO = new CallBLO();
+        CallDTO call = callBLO.getCallActive();
+        Map<String, String> detail = new LinkedHashMap<String, String>();
+        String linkButton = "";
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        UserBLO userBLO = new UserBLO();
+        List<SurveyStates> stateOfThisEvaluator = new ArrayList<SurveyStates>();
+        List<String> evaluators = new ArrayList<String>();
+        List<String> sendTo = new ArrayList<String>();
+        SupplierBLO supplierBLO = new SupplierBLO();
+        switch (alert) {
+        case PENDING_VALIDATION_DUE_TO_CHANGE_IN_COMPANY_SIZE:
+            if (supplierByCallBLO.existSuppliersInCompanySizeChanged(call.getId())) {
+                sendTo = userBLO.getUserEmailsByRol(Rol.LIBERATOR.toString());
+                linkButton = notificationBLO.buildLinkModifiedSupplier();
+            }
+            break;
+        case SURVEY_PARTIALLY_SAVED_BY_THE_PROVIDER:
+            stateOfThisEvaluator.add(SurveyStates.EVALUATOR);
+            List<SupplierDTO> suppliers = supplierByCallBLO.getSuppliersByCallAndStateEvaluation(call.getId(),
+                    stateOfThisEvaluator);
+            for (SupplierDTO supplier : suppliers) {
+                sendTo.add(supplier.getEmailOfContact());
+                detail = new LinkedHashMap<String, String>();
+                Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
+                detail.put("Usuario", informationInOtherDataBase.get("userName"));
+                detail.put("Contraseña", informationInOtherDataBase.get("password"));
+            }
+            break;
+        case SURVEY_PARTIALLY_SAVED_BY_THE_EVALUATOR:
+            stateOfThisEvaluator.add(SurveyStates.EVALUATOR);
+            evaluators = supplierByCallBLO.getResponsibleOfEvaluation(call.getId(), stateOfThisEvaluator);
+            linkButton = notificationBLO.buildLinkSurvey();
+            break;
+        case PENDING_EVALUATION_BY_THE_TECHNICAL_TEAM:
+            stateOfThisEvaluator.add(SurveyStates.NOT_STARTED_TECHNICAL_TEAM);
+            evaluators = supplierByCallBLO.getResponsibleOfEvaluation(call.getId(), stateOfThisEvaluator);
+            linkButton = notificationBLO.buildLinkTechnicalTeam();
+            break;
+        case SURVEY_PARTIALLY_SAVED_BY_THE_TECHNICAL_TEAM:
+            stateOfThisEvaluator.add(SurveyStates.TECHNICAL_TEAM);
+            evaluators = supplierByCallBLO.getResponsibleOfEvaluation(call.getId(), stateOfThisEvaluator);
+            linkButton = notificationBLO.buildLinkTechnicalTeam();
+            break;
+        case PENDING_EVALUATION_BY_THE_MANAGER_TEAM:
+            sendTo = userBLO.getUserEmailsByRol(Rol.MANAGER_TEAM.toString());
+            linkButton = notificationBLO.buildLinkManagerTeam();
+            break;
+        case SURVEY_PARTIALLY_SAVED_BY_THE_MANAGER_TEAM:
+            stateOfThisEvaluator.add(SurveyStates.MANAGER_TEAM);
+            evaluators = supplierByCallBLO.getResponsibleOfEvaluation(call.getId(), stateOfThisEvaluator);
+            linkButton = notificationBLO.buildLinkManagerTeam();
+            break;
+        default:
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
-        // TODO: Incluir los requisitos de la convocatoria
-        
-        return new AlertDTO();
+        if (!evaluators.isEmpty()) {
+            for (String name : evaluators) {
+                UserDTO user = userBLO.getUsersByName(name);
+                if (user instanceof UserDTO) {
+                    sendTo.add(user.getEmail());
+                }
+            }
+        }
+
+        for (String email : sendTo) {
+            List<String> emails = new ArrayList<String>();
+            emails.add(email);
+            notificationBLO.sendAlarm(emails, notification, linkButton, detail);
+        }
+
     }
 
     // TODO: Create documentation
@@ -61,8 +121,20 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
         AlertDAO alertDAO = new AlertDAO();
         AlertDTO alertToSend = alertDAO.getBy("shortName", alert.toString());
         NotificationDTO notification = new NotificationDTO();
-        notification.setMessage(alertToSend.getMessage());
-        notification.setSubject(alertToSend.getSubject());
+
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(alertToSend.getDateExecuted());
+        calendar.add(Calendar.DATE, alertToSend.getDays());
+        Date dateExecutedNextAlert = calendar.getTime();
+
+        if (alertToSend.isActive() && currentDate.compareTo(dateExecutedNextAlert) >= 0) {
+            notification.setMessage(alertToSend.getMessage());
+            notification.setSubject(alertToSend.getSubject());
+        }
+
+        alertToSend.setDateExecuted(currentDate);
+        super.save(alertToSend);
 
         return notification;
     }

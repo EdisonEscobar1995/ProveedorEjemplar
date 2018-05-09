@@ -77,7 +77,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      * @return Convocatoria activa
      * @throws HandlerGenericException
      */
-    private CallDTO getCallActive() throws HandlerGenericException {
+    protected CallDTO getCallActive() throws HandlerGenericException {
         CallDAO callDAO = new CallDAO();
         return callDAO.getCallActive();
     }
@@ -170,10 +170,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      *                                 si no se envía el identificador de la
      *                                 convocatoria en los parámetros de búsqueda.
      *                                 on mensaje code>INFORMATION_NOT_FOUND</code>
-     *                                 si no se encontró información para e
-     *                                 portar. Con m nsaje <code>ROL_INVALID</code>
-     *                                 si el usuario en sesión no tiene el rol 
-     *                                 ermitido.
+     *                                 si no se encontró información para e p
+     *                                 rtar. Con m nsaje <code>ROL_INVALID</code> si
+     *                                 el usuario en sesión no tiene el rol 
+     *                                 rmitido.
      */
     public List<ReportOfCalificationsBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
@@ -647,14 +647,14 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             throws HandlerGenericException {
         boolean allowLoad = true;
 
-        if (null != supplier.getIdCompanySize() && !supplier.getIdCompanySize().isEmpty()) {
-            CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-            CompanySizeDTO companySize = companySizeBLO.getBy("name", supplier.nameCompanySizeToLoad);
-            String idCompanySize = companySize == null ? null : companySize.getId();
-            if (null == idCompanySize || idCompanySize.isEmpty()) {
-                summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
-                allowLoad = false;
-            }
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        CompanySizeDTO companySize = companySizeBLO.getBy("name", supplier.nameCompanySizeToLoad);
+        String idCompanySize = companySize == null ? null : companySize.getId();
+        if (null == idCompanySize || idCompanySize.isEmpty()) {
+            summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
+            allowLoad = false;
+        } else {
+            supplier.setIdCompanySize(idCompanySize);
         }
 
         SupplyBLO supplyBLO = new SupplyBLO();
@@ -663,31 +663,53 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         if (null == idSupply || idSupply.isEmpty()) {
             summaryRecord.status = "SUPPLY_DONT_EXIST";
             allowLoad = false;
+        } else {
+            supplier.setIdSupply(idSupply);
         }
 
         CountryBLO countryBLO = new CountryBLO();
         CountryDTO country = countryBLO.getBy("name", supplier.nameCountryToLoad);
-        if (null == country.getId() || country.getId().isEmpty()) {
+        if (!(country instanceof CountryDTO)) {
             summaryRecord.status = "COUNTRY_DONT_EXIST";
             allowLoad = false;
+        } else {
+            supplier.setIdCountry(country.getId());
         }
 
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO existingSupplier = supplierBLO.getBySAPCodeOrNIT(supplier.getSapCode(), supplier.getNit());
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        if (supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
+        if (existingSupplier != null && supplier.getId() == null
+                && supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
             summaryRecord.status = "DUPLICATED";
             allowLoad = false;
         } else {
-            supplier = existingSupplier;
+            if (existingSupplier != null) {
+                supplier = existingSupplier;
+            }
         }
 
         if (!supplierBLO.existInGeneralDirectoryByNit(supplier.getNit())) {
             summaryRecord.status = "DONT_EXIST_IN_DIRECTORY";
             allowLoad = false;
         }
-        
+
         return allowLoad;
+    }
+
+    // TODO: Create documentation
+    protected void closeCall() throws HandlerGenericException {
+        CallDTO call = getCallActive();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        if (call.isCaducedDateToFinishCall()) {
+            call.setActive(false);
+            super.save(call);
+            supplierByCallBLO.markAsNotParticipated(call.getId());
+        }
+
+        if (call.isCaducedDeadLineToMakeSurvey()) {
+            supplierByCallBLO.markAsNotParticipated(call.getId());
+        }
     }
 
     private class FieldToFilter {

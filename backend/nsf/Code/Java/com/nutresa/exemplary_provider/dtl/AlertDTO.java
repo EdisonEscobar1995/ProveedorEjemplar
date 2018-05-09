@@ -8,8 +8,6 @@ public class AlertDTO extends MasterDTO {
     @Expose
     private String shortName;
     @Expose
-    private String name;
-    @Expose
     private boolean active;
     @Expose
     private String subject;
@@ -58,14 +56,6 @@ public class AlertDTO extends MasterDTO {
 
     public String getShortName() {
         return shortName;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setDateExecuted(Date date) {
