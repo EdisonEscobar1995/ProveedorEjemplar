@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Spin, Button, Tooltip, Input, Icon } from 'antd';
-// import Confirm from './Confirm';
+import Confirm from './Confirm';
 import FormattedMessage from './FormattedMessage';
 import H1 from '../shared/H1';
 
@@ -19,6 +19,7 @@ function GenericTable(props) {
     expandable,
     pagination,
     searchValue,
+    withDelete = false,
   } = props;
 
   return (
@@ -117,14 +118,20 @@ function GenericTable(props) {
                             }}
                           />
                         </Tooltip>
-                        {/* <Confirm method={() => componentList[level].deleteMethod(record)}>
-                          <Tooltip title={<FormattedMessage id="Button.delete" />}>
-                            <Button
-                              shape="circle"
-                              icon="delete"
-                            />
-                          </Tooltip>
-                        </Confirm> */}
+                        {
+                          withDelete &&
+                          (
+                            <Confirm method={() => componentList[level].deleteMethod(record)}>
+                              <Tooltip title={<FormattedMessage id="Button.delete" />}>
+                                <Button
+                                  type="danger"
+                                  shape="circle"
+                                  icon="delete"
+                                />
+                              </Tooltip>
+                            </Confirm>
+                          )
+                        }
                         <Tooltip title={<FormattedMessage id="Button.add" />}>
                           <Button
                             shape="circle"
