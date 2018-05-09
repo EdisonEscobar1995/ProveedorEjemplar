@@ -17,6 +17,7 @@ import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SupplyDTO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
+import com.nutresa.exemplary_provider.dtl.CountryDTO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
 import com.nutresa.exemplary_provider.dtl.SurveySection;
 import com.nutresa.exemplary_provider.dtl.StagesCall;
@@ -51,12 +52,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             existingCall = get(idCallExisting);
         }
 
-        if (call.getYear() != callActive.getYear()) {
+        if ((callActive instanceof CallDTO) && call.getYear() != callActive.getYear()) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_EXIST_CALL_ACTIVE.toString());
         }
 
-        if (existingCall instanceof CallDTO) {
+        if ((existingCall instanceof CallDTO) && !existingCall.getId().equals(call.getId())) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_EXIST_CALL.toString());
+        }
+
+        if (!call.isCaducedDateToFinishCall()) {
+            call.setActive(true);
+        } else {
+            call.setActive(false);
         }
 
         callActive = super.save(call);
@@ -66,6 +73,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     /**
      * Busca la convocatoria que esté activa
+     * 
      * @return Convocatoria activa
      * @throws HandlerGenericException
      */
@@ -154,18 +162,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * @param parameters
-     *            Mapa clave valor de los filtros por los que se van a optener
-     *            los resultados
+     * @param parameters Mapa clave valor de los filtros por los que se van a
+     *                   optener los resultados
      * @return Collección de datos obtenidos según los parámetros
      *         <code>parameters</code>
-     * @throws HandlerGenericException
-     *             Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía
-     *             el identificador de la convocatoria en los parámetros de
-     *             búsqueda. Con mensaje <code>INFORMATION_NOT_FOUND</code> si
-     *             no se encontró información para exportar. Con mensaje
-     *             <code>ROL_INVALID</code> si el usuario en sesión no tiene el
-     *             rol permitido.
+     * @throws HandlerGenericException Con mensaje <code>CALL_NOT_ESPECIFIED</code>
+     *                                 si no se envía el identificador de la
+     *                                 convocatoria en los parámetros de búsqueda.
+     *                                 on mensaje code>INFORMATION_NOT_FOUND</code>
+     *                                 si no se encontró información para e
+     *                                 portar. Con m nsaje <code>ROL_INVALID</code>
+     *                                 si el usuario en sesión no tiene el rol 
+     *                                 ermitido.
      */
     public List<ReportOfCalificationsBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
@@ -190,13 +198,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * @param idCall
-     *            Identificador de la convocatoria que se va consultar.
-     * @param suppliers
-     *            Collección de proveedores
-     * @param parameters
-     *            Mapa clave valor de los filtros por los que se van a optener
-     *            los resultados
+     * @param idCall     Identificador de la convocatoria que se va consultar.
+     * @param suppliers  Collección de proveedores
+     * @param parameters Mapa clave valor de los filtros por los que se van a
+     *                   optener los resultados
      * @return Collección de registros del reporte
      * @throws HandlerGenericException
      */
@@ -466,6 +471,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     /**
      * De todas las convocatorias creadas optiene la última que fue creada.
+     * 
      * @return Última convocatoria creada
      * @throws HandlerGenericException
      */
@@ -476,7 +482,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Dadas las fechas de vencimiento, se determina que fase es en la que se encuentra la convocatoria
+     * Dadas las fechas de vencimiento, se determina que fase es en la que se
+     * encuentra la convocatoria
+     * 
      * @return Fase en la que se encuentra la convocatoria
      * @throws HandlerGenericException
      */
@@ -503,7 +511,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Dado el rol del usuario en sessión se identifica cual es la fase que le pertenece a cada rol del sistema
+     * Dado el rol del usuario en sessión se identifica cual es la fase que le
+     * ertenece a cada rol del sistema
+     * 
      * @return Fase a la que pertenece el rol del usuario en session
      * @throws HandlerGenericException
      */
@@ -590,7 +600,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             SummaryToLoadSupplier summaryRecord = new SummaryToLoadSupplier();
             if (allowLoadSupplierToCall(call, supplier, summaryRecord)) {
                 try {
-                    supplierBLO.createByFirstTime(supplier);
+                    supplier.nameCompanySizeToLoad = null;
+                    supplier.nameSupplyToLoad = null;
+                    supplier.nameCountryToLoad = null;
+                    supplier = supplierBLO.createByFirstTime(supplier);
                     summaryRecord.status = "CREATED";
                     SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
                     supplierByCallBLO.asociateSupplierToCall(supplier, call.getId()).getId();
@@ -608,8 +621,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Verifica que la fecha para los proveedores hacer la encuesta no este caducada y que existan proveedores definidos
-     * para cargar
+     * Verifica que la fecha para los proveedores hacer la encuesta no este caducada
+     * y que existan proveedores definidos para cargar
+     * 
      * @throws HandlerGenericException
      */
     private void checkRulesToLoadSuppliers(CallDTO call) throws HandlerGenericException {
@@ -624,23 +638,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     /**
      * Verifica las reglas para cargar los proveedores a la convocatoria
-     * @param supplier Proveedor a cargar
+     * 
+     * @param supplier      Proveedor a cargar
      * @param summaryRecord actualiza el estado del registro a cargar
      * @throws HandlerGenericException
      */
     private boolean allowLoadSupplierToCall(CallDTO call, SupplierDTO supplier, SummaryToLoadSupplier summaryRecord)
             throws HandlerGenericException {
         boolean allowLoad = true;
-        SupplierBLO supplierBLO = new SupplierBLO();
-        SupplierDTO existingSupplier = supplierBLO.getBySAPCodeOrNIT(supplier.getSapCode(), supplier.getNit());
-        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        SupplyBLO supplyBLO = new SupplyBLO();
-        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-        SupplyDTO supply = supplyBLO.get(supplier.getIdSupply());
-        String idSupply = supply == null ? null : supply.getId();
 
         if (null != supplier.getIdCompanySize() && !supplier.getIdCompanySize().isEmpty()) {
-            CompanySizeDTO companySize = companySizeBLO.get(supplier.getIdCompanySize());
+            CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+            CompanySizeDTO companySize = companySizeBLO.getBy("name", supplier.nameCompanySizeToLoad);
             String idCompanySize = companySize == null ? null : companySize.getId();
             if (null == idCompanySize || idCompanySize.isEmpty()) {
                 summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
@@ -648,21 +657,36 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             }
         }
 
+        SupplyBLO supplyBLO = new SupplyBLO();
+        SupplyDTO supply = supplyBLO.getBy("name", supplier.nameSupplyToLoad);
+        String idSupply = supply == null ? null : supply.getId();
+        if (null == idSupply || idSupply.isEmpty()) {
+            summaryRecord.status = "SUPPLY_DONT_EXIST";
+            allowLoad = false;
+        }
+
+        CountryBLO countryBLO = new CountryBLO();
+        CountryDTO country = countryBLO.getBy("name", supplier.nameCountryToLoad);
+        if (null == country.getId() || country.getId().isEmpty()) {
+            summaryRecord.status = "COUNTRY_DONT_EXIST";
+            allowLoad = false;
+        }
+
+        SupplierBLO supplierBLO = new SupplierBLO();
+        SupplierDTO existingSupplier = supplierBLO.getBySAPCodeOrNIT(supplier.getSapCode(), supplier.getNit());
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         if (supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
             summaryRecord.status = "DUPLICATED";
             allowLoad = false;
+        } else {
+            supplier = existingSupplier;
         }
 
         if (!supplierBLO.existInGeneralDirectoryByNit(supplier.getNit())) {
             summaryRecord.status = "DONT_EXIST_IN_DIRECTORY";
             allowLoad = false;
         }
-
-        if (null == idSupply || idSupply.isEmpty()) {
-            summaryRecord.status = "SUPPLY_DONT_EXIST";
-            allowLoad = false;
-        }
-
+        
         return allowLoad;
     }
 

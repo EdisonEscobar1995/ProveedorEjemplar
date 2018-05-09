@@ -50,4 +50,19 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         return response;
     }
 
+    @Override
+    public ServletResponseDTO<SupplierByCallDTO> delete(Map<String, String> parameters) {
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        ServletResponseDTO<SupplierByCallDTO> response = null;
+        try {
+            response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO.delete(parameters.get("id")));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<SupplierByCallDTO>(exception);
+        }
+
+        return response;
+    }
+    
+    
+
 }

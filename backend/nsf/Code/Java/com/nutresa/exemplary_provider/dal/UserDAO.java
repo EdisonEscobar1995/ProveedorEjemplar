@@ -61,7 +61,7 @@ public class UserDAO extends GenericDAO<UserDTO> {
         Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
         Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("namesPathApplication"));
         View vwNames = namesDatabase.getView("($Users)");
-        String query = "(Field type = Person and ".concat(text.concat("*)"));
+        String query = "(Field type = Person and *".concat(text.concat("*)"));
         if (null != vwNames) {
             vwNames.FTSearch(query, MAX_RESULTS);
             Document document = vwNames.getFirstDocument();

@@ -211,11 +211,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
      * Si y solo si no se especifica un filtro de búsqueda entonces busca por
      * convocatoria.
      * 
-     * @param idCall
-     *            Identificador de la convocatoria
-     * @param parameters
-     *            Mapa clave valor de los filtros por los que se van a optener
-     *            los resultados
+     * @param idCall     Identificador de la convocatoria
+     * @param parameters Mapa clave valor de los filtros por los que se van a
+     *                   optener los resultados
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -236,11 +234,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Obtiene los proveedores que ya terminaron la evaluación y los que han
-     * sido evaluados parcialmente por el evaluador.
+     * Obtiene los proveedores que ya terminaron la evaluación y los que han sido
+     * evaluados parcialmente por el evaluador.
      * 
-     * @param year
-     *            Año de la convocatoria
+     * @param year Año de la convocatoria
      * @return Colección de datos encontrados
      * @throws HandlerGenericException
      */
@@ -284,7 +281,8 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
     /**
      * @param nit
-     * @return <code>true</code> si el proveedor existe en el directorio general, de lo contrario <code>false</code>
+     * @return <code>true</code> si el proveedor existe en el directorio general, de
+     *         lo contrario <code>false</code>
      * @throws HandlerGenericException
      */
     protected boolean existInGeneralDirectoryByNit(String nit) throws HandlerGenericException {
@@ -302,6 +300,18 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO supplier = supplierBLO.getBy("sapCode", sapCode);
         return (supplier == null ? supplierBLO.getBy("nit", nit) : supplier);
+    }
+
+    /**
+     * Busca los proveedores que contengan <code>text</code> en el campo código sap
+     * 
+     * @param text valor a buscar en los documentos
+     * @return Colección de proveedores que coinciden con el valor a buscar
+     * @throws HandlerGenericException
+     */
+    public List<SupplierDTO> searchSupplier(String text) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        return supplierDAO.searchSupplier(text);
     }
 
 }
