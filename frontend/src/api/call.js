@@ -8,9 +8,13 @@ const getCallByIdApi = id => instance.get('Call?action=get', {
 
 const saveCallApi = data => instance.post('Call?action=save', data);
 
+const deleteCallApi = id => instance.get(`Call?action=delete&id=${id}`);
+
 const getCalledSuppliersApi = id => instance.get('Call?action=getSuppliersInCall', {
   params: { idCall: id },
 });
+
+const saveSuppliersToCallApi = data => instance.post('Call?action=loadSupplierToCall  ', data);
 
 const sendInvitationApi = supplier => instance.post('Supplier?action=sendInvitation', supplier);
 
@@ -44,9 +48,11 @@ const identifyCurrentStageApi = () => instance.get('Call?action=identifyCurrentS
 export {
   getCallApi,
   saveCallApi,
+  deleteCallApi,
   getCallByIdApi,
   getCalledSuppliersApi,
   sendInvitationApi,
+  saveSuppliersToCallApi,
   massiveShipmentCallApi,
   getParticipantsByYearApi,
   getResultsApi,

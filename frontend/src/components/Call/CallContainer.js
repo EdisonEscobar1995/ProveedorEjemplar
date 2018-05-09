@@ -12,18 +12,27 @@ class CallContainer extends Component {
     this.props.getAllCalls();
   }
 
-  onRowClick = (record) => {
+  onEdit = (record) => {
     const { history } = this.props;
     history.push(`${pathCallForm}/${record.id}`);
   }
 
+  onAdd = () => {
+    const { history } = this.props;
+    history.push(`${pathCallForm}`);
+  }
+
+  deleteCall = (id) => {
+    this.props.deleteCall(id);
+  }
+
   render() {
+    const template = columns(this.onAdd, this.deleteCall, this.onEdit);
     return (
       <Call
         {...this.props}
         toForm={pathCallForm}
-        columns={columns}
-        onRowClick={this.onRowClick}
+        columns={template}
       />
     );
   }
@@ -32,6 +41,7 @@ class CallContainer extends Component {
 const mapStateToProps = state => ({
   loading: state.call.loading,
   data: state.call.data,
+  searchValue: state.call.searchValue,
 });
 
 export default withRouter(connect(

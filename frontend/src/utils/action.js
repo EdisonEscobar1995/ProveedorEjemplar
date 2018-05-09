@@ -28,6 +28,14 @@ function getMessage(type) {
     case 'ROL_INVALID':
     case 'UNAUTHORIZED':
       return 'Validation.unauthorized';
+    case 'DOCUMENT_MULTI_CONNECTED':
+      return 'No se pueden eliminar los datos porque están siendo utilizados.';
+    case 'DONT_EXIST_IN_DIRECTORY':
+      return 'El proveedor no existe en el directorio';
+    case 'ALREADY_EXIST_CALL_ACTIVE':
+      return 'Validation.callExists';
+    case 'DATE_WITHOUT_FIXING':
+      return 'Validation.dateWithoutFixing';
     default:
       return 'Validation.wentWrong';
   }
