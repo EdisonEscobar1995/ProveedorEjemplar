@@ -14,8 +14,7 @@ public class AlertAPI extends GenericAPI<AlertDTO, AlertBLO> {
         AlertBLO alertBLO = new AlertBLO();
         ServletResponseDTO<AlertDTO> response = null;
         try {
-            // response = new ServletResponseDTO<AlertDTO>(alertBLO.executeAlerts());
-            response = new ServletResponseDTO<AlertDTO>(new AlertDTO());
+            response = new ServletResponseDTO<AlertDTO>(alertBLO.executeAlerts());
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<AlertDTO>(exception);
         }

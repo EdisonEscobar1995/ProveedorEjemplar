@@ -25,11 +25,17 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
         super(AlertDAO.class);
     }
 
-    // TODO: Create documentation
+    /**
+     * Toma todas las alertas configuradas y las ejecuta, cierra la convocatoria
+     * actual en caso de tener la fecha finalizada
+     * 
+     * @return Un objeto <code>AlertDTO</code> por defecto
+     * @throws HandlerGenericException
+     */
     public AlertDTO executeAlerts() throws HandlerGenericException {
         for (AlertType alert : AlertType.values()) {
             NotificationDTO notification = buildNotification(alert);
-            if (!notification.getMessage().isEmpty()) {
+            if (null != notification.getMessage()) {
                 executeAlert(alert, notification);
             }
         }
@@ -39,7 +45,13 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
         return new AlertDTO();
     }
 
-    // TODO: crear documentación
+    /**
+     * Ejecuta la alerta especificada
+     * 
+     * @param alert        Alerta a ejecutar
+     * @param notification Notificación a enviar
+     * @throws HandlerGenericException
+     */
     private void executeAlert(AlertType alert, NotificationDTO notification) throws HandlerGenericException {
         NotificationBLO notificationBLO = new NotificationBLO();
         CallBLO callBLO = new CallBLO();
@@ -52,6 +64,7 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
         List<String> evaluators = new ArrayList<String>();
         List<String> sendTo = new ArrayList<String>();
         SupplierBLO supplierBLO = new SupplierBLO();
+        boolean sentToSupplier = false;
         switch (alert) {
         case PENDING_VALIDATION_DUE_TO_CHANGE_IN_COMPANY_SIZE:
             if (supplierByCallBLO.existSuppliersInCompanySizeChanged(call.getId())) {
@@ -60,15 +73,19 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
             }
             break;
         case SURVEY_PARTIALLY_SAVED_BY_THE_PROVIDER:
-            stateOfThisEvaluator.add(SurveyStates.EVALUATOR);
+            stateOfThisEvaluator.add(SurveyStates.SUPPLIER);
             List<SupplierDTO> suppliers = supplierByCallBLO.getSuppliersByCallAndStateEvaluation(call.getId(),
                     stateOfThisEvaluator);
             for (SupplierDTO supplier : suppliers) {
-                sendTo.add(supplier.getEmailOfContact());
+                List<String> emails = new ArrayList<String>();
+                emails.add(supplier.getEmailOfContact());
                 detail = new LinkedHashMap<String, String>();
                 Map<String, String> informationInOtherDataBase = supplierBLO.getInformationInOtherDataBase(supplier);
                 detail.put("Usuario", informationInOtherDataBase.get("userName"));
                 detail.put("Contraseña", informationInOtherDataBase.get("password"));
+
+                notificationBLO.sendAlarm(emails, notification, linkButton, detail);
+                sentToSupplier = true;
             }
             break;
         case SURVEY_PARTIALLY_SAVED_BY_THE_EVALUATOR:
@@ -108,15 +125,23 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
             }
         }
 
-        for (String email : sendTo) {
-            List<String> emails = new ArrayList<String>();
-            emails.add(email);
-            notificationBLO.sendAlarm(emails, notification, linkButton, detail);
+        if (!sentToSupplier) {
+            for (String email : sendTo) {
+                List<String> emails = new ArrayList<String>();
+                emails.add(email);
+                notificationBLO.sendAlarm(emails, notification, linkButton, detail);
+            }
         }
 
     }
 
-    // TODO: Create documentation
+    /**
+     * Dada una alerta construye la notificación a enviar
+     * 
+     * @param alert Alerta a ejecutar
+     * @return Notificación a enviar
+     * @throws HandlerGenericException
+     */
     private NotificationDTO buildNotification(AlertType alert) throws HandlerGenericException {
         AlertDAO alertDAO = new AlertDAO();
         AlertDTO alertToSend = alertDAO.getBy("shortName", alert.toString());

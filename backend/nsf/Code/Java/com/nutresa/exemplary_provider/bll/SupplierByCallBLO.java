@@ -610,13 +610,30 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
     }
 
-    // TODO: create documentation
+    /**
+     * Verifica si existen proveedores sin haber aceptado su cambio de tamaño de
+     * empresa
+     * 
+     * @param idCall Identificador de la convocatoria a consultar
+     * @return <code>true</code> si existen proveedores, de lo contrario
+     *         <code>false</code>
+     * @throws HandlerGenericException
+     */
     protected boolean existSuppliersInCompanySizeChanged(String idCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         return supplierByCallDAO.existSuppliersInCompanySizeChanged(idCall);
     }
 
-    // TODO: create documentation
+    /**
+     * Busca direcciones de correo de los responsables de las evaluaciones en los
+     * estados <code>states</code>
+     * 
+     * @param idCall Identificador de la convocatoria a consultar
+     * @param states Estados a consultar
+     * @return Direcciones de correo electrónico de los responsables de las
+     *         evaluaciones
+     * @throws HandlerGenericException
+     */
     protected List<String> getResponsibleOfEvaluation(String idCall, List<SurveyStates> states)
             throws HandlerGenericException {
         List<String> responsibles = new ArrayList<String>();
@@ -670,7 +687,14 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return responsibles;
     }
 
-    // TODO: create documentation
+    /**
+     * Busca los proveedores que se encuentra en los estados <code>states</code>
+     * 
+     * @param idCall Identificador de la convocatoria a consultar
+     * @param states Estados a consultar
+     * @return Proveedores que se encuentra en los estados <code>states</code>
+     * @throws HandlerGenericException
+     */
     protected List<SupplierDTO> getSuppliersByCallAndStateEvaluation(String idCall, List<SurveyStates> states)
             throws HandlerGenericException {
         List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
@@ -683,7 +707,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         return suppliers;
     }
 
-    // TODO: Create documentation
+    /**
+     * Busca a los proveedores que aún no iniciado el proceso de evaluación y los
+     * marca como no participaron
+     * 
+     * @param idCall Identifiador de la convocatoria a buscar
+     * @throws HandlerGenericException
+     */
     protected void markAsNotParticipated(String idCall) throws HandlerGenericException {
         List<SurveyStates> states = new ArrayList<SurveyStates>();
         states.add(SurveyStates.NOT_STARTED);

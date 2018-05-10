@@ -225,7 +225,13 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return userDAO.searchUser(text);
     }
 
-    // TODO: create document
+    /**
+     * Busca un usuario por su nombre
+     * 
+     * @param name Nombre a buscar
+     * @return Usuario encontrado
+     * @throws HandlerGenericException
+     */
     protected UserDTO getUsersByName(String name) throws HandlerGenericException {
         UserDAO userDAO = new UserDAO();
         return userDAO.getUsersByName(name);

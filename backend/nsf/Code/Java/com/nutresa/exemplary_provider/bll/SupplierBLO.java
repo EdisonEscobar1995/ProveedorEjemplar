@@ -315,11 +315,17 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         return supplierDAO.searchSupplier(text);
     }
 
-    // TODO: Create documentation and implements
+    /**
+     * Obtiene el usuario y contraseña de un proveedor desde el directorio general
+     * 
+     * @param supplier Proveedor a buscar
+     * @return Colección clave valor de usuario y contraseña
+     * @throws HandlerGenericException
+     */
     protected Map<String, String> getUserAndPassword(SupplierDTO supplier) throws HandlerGenericException {
         Map<String, String> informationInOtherDataBase = getInformationInOtherDataBase(supplier);
         Map<String, String> detail = new LinkedHashMap<String, String>();
-        if(!informationInOtherDataBase.isEmpty()){
+        if (!informationInOtherDataBase.isEmpty()) {
             detail.put("Usuario", informationInOtherDataBase.get("userName"));
             detail.put("Contraseña", informationInOtherDataBase.get("password"));
         }

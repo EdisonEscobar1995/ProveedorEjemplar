@@ -230,7 +230,15 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
 
     }
 
-    // TODO: create documentation
+    /**
+     * Verifica si existen proveedores sin haber aceptado su cambio de tamaño de
+     * empresa
+     * 
+     * @param idCall Identificador de la convocatoria a consultar
+     * @return <code>true</code> si existen proveedores, de lo contrario
+     *         <code>false</code>
+     * @throws HandlerGenericException
+     */
     public boolean existSuppliersInCompanySizeChanged(String idCall) throws HandlerGenericException {
         try {
             boolean exist = false;

@@ -697,7 +697,14 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         return allowLoad;
     }
 
-    // TODO: Create documentation
+    /**
+     * Cierra la convocatoria actual en caso de que su fecha máxima para estar
+     * activa esté vencida. Adicionalmente Marca como <b>no participación</b> a los
+     * proveedores que no hayan decidido participar y la fecha para hacer la
+     * encuesta ya esté vencida.
+     * 
+     * @throws HandlerGenericException
+     */
     protected void closeCall() throws HandlerGenericException {
         CallDTO call = getCallActive();
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();

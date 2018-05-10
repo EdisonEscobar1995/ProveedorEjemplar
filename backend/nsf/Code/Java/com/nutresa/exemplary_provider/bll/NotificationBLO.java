@@ -230,7 +230,16 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
     }
 
-    // TODO: create documentation
+    /**
+     * Envia notificación a los detinatarios especificados. Si <code>detail</code>
+     * tiene contenido entonces envia información adicional
+     * 
+     * @param sendTo       Direcciones de correo a donde se enviará la notificación
+     * @param notification Notificación a enviar
+     * @param linkButton   Link de acceso directo
+     * @param detail       Información adicional a enviar en la notificación
+     * @throws HandlerGenericException
+     */
     protected void sendAlarm(List<String> sendTo, NotificationDTO notification, String linkButton,
             Map<String, String> detail) throws HandlerGenericException {
 
