@@ -1,42 +1,57 @@
 import { getMomentDate, format } from '../../utils/date';
 
-const generalInfo = (fields) => {
+const generalInfo =
+(fields, changeDateToFinishCall, disabled, validateCallDate, disabledByDate) => {
   const {
-    active,
+    id,
     dateToFinishCall,
     deadlineToMakeSurvey,
     deadlineToMakeSurveyEvaluator,
-    deadlineToMakeSurveyManagementCommittee,
-    deadlineToMakeSurveyTecniqueCommittee,
+    deadlineToMakeSurveyManagerTeam,
+    deadlineToMakeSurveyTechnicalTeam,
     year,
   } = fields;
 
   return [
     {
+      key: 1,
+      value: [
+        {
+          span: 12,
+          type: 'input',
+          label: 'Id',
+          key: 'id',
+          value: id,
+          style: { display: 'none' },
+        },
+      ],
+    },
+    {
       key: 1.1,
       value: [
         {
           span: 12,
-          type: 'select',
+          type: 'input',
           label: 'Año',
           key: 'year',
           value: year ? year.toString() : '',
-          disabled: true,
-          options: [],
+          disabled: disabledByDate,
+          required: true,
+          rules: [
+            { pattern: /^\d{4}$/g, message: 'Ingrese un año' },
+            { max: 4, message: 'Máximo 4 caracteres' },
+          ],
         },
         {
           span: 12,
           type: 'date',
           label: 'Fecha cierre de convocatoria',
           key: 'dateToFinishCall',
+          required: true,
+          disabled: disabledByDate,
           format,
           value: dateToFinishCall ? getMomentDate(dateToFinishCall) : dateToFinishCall,
-          disabled: true,
-          rules: [{
-            validator: (rule, value, cb) => {
-              cb();
-            },
-          }],
+          handleChange: changeDateToFinishCall,
         },
       ],
     },
@@ -48,20 +63,30 @@ const generalInfo = (fields) => {
           type: 'date',
           label: 'Fecha límite para hacer la encuesta',
           key: 'deadlineToMakeSurvey',
+          required: true,
           format,
+          disabled: disabled || disabledByDate,
           value: deadlineToMakeSurvey ? getMomentDate(deadlineToMakeSurvey) : deadlineToMakeSurvey,
-          disabled: true,
+          rules: [{
+            validator: validateCallDate,
+            message: 'La encuesta debe tener una fecha inferior al cierre de convocatoria',
+          }],
         },
         {
           span: 12,
           type: 'date',
           label: 'Fecha límite para encuestas equipo evaluador',
           key: 'deadlineToMakeSurveyEvaluator',
+          required: true,
           format,
+          disabled: disabled || disabledByDate,
           value: deadlineToMakeSurveyEvaluator
             ? getMomentDate(deadlineToMakeSurveyEvaluator)
             : deadlineToMakeSurveyEvaluator,
-          disabled: true,
+          rules: [{
+            validator: validateCallDate,
+            message: 'La encuesta debe tener una fecha inferior al cierre de convocatoria',
+          }],
         },
       ],
     },
@@ -72,45 +97,47 @@ const generalInfo = (fields) => {
           span: 12,
           type: 'date',
           label: 'Fecha límite para encuesta comité técnico',
-          key: 'deadlineToMakeSurveyTecniqueCommittee',
+          key: 'deadlineToMakeSurveyTechnicalTeam',
+          required: true,
           format,
-          value: deadlineToMakeSurveyTecniqueCommittee
-            ? getMomentDate(deadlineToMakeSurveyTecniqueCommittee)
-            : deadlineToMakeSurveyTecniqueCommittee,
-          disabled: true,
+          disabled: disabled || disabledByDate,
+          value: deadlineToMakeSurveyTechnicalTeam
+            ? getMomentDate(deadlineToMakeSurveyTechnicalTeam)
+            : deadlineToMakeSurveyTechnicalTeam,
+          rules: [{
+            validator: validateCallDate,
+            message: 'La encuesta debe tener una fecha inferior al cierre de convocatoria',
+          }],
         },
         {
           span: 12,
           type: 'date',
           label: 'Fecha límite para encuesta comité gerencial',
-          key: 'deadlineToMakeSurveyManagementCommittee',
+          key: 'deadlineToMakeSurveyManagerTeam',
+          required: true,
           format,
-          value: deadlineToMakeSurveyManagementCommittee
-            ? getMomentDate(deadlineToMakeSurveyManagementCommittee)
-            : deadlineToMakeSurveyManagementCommittee,
-          disabled: true,
+          disabled: disabled || disabledByDate,
+          value: deadlineToMakeSurveyManagerTeam
+            ? getMomentDate(deadlineToMakeSurveyManagerTeam)
+            : deadlineToMakeSurveyManagerTeam,
+          rules: [{
+            validator: validateCallDate,
+            message: 'La encuesta debe tener una fecha inferior al cierre de convocatoria',
+          }],
         },
       ],
     },
     {
-      key: 1.4,
+      key: 2,
+      justify: 'center',
       value: [
         {
-          type: 'radio',
-          label: 'Estado',
-          key: 'active',
-          value: active,
-          disabled: true,
-          options: [
-            {
-              id: true,
-              name: 'Abierto',
-            },
-            {
-              id: false,
-              name: 'Cerrado',
-            },
-          ],
+          span: 4,
+          type: 'button',
+          label: 'Guardar',
+          key: 'save',
+          buttonType: 'primary',
+          htmlType: 'submit',
         },
       ],
     },

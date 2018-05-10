@@ -82,7 +82,16 @@ class DinamicForm extends Component {
                       let fieldContent;
                       switch (type) {
                         case 'date': {
-                          fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} format={format} />;
+                          fieldContent = (<DatePicker
+                            disabled={disabled}
+                            onChange={(date, dateString) => {
+                              if (handleChange) {
+                                handleChange(date, dateString);
+                              }
+                            }}
+                            style={{ width: '100%' }}
+                            format={format}
+                          />);
                           break;
                         }
                         case 'input':
@@ -128,7 +137,12 @@ class DinamicForm extends Component {
                           break;
                         case 'select': {
                           const {
-                            valuesToClean, mode, noSearch, autoComplete, onSearch, fetching,
+                            valuesToClean,
+                            mode, noSearch,
+                            autoComplete,
+                            onSearch,
+                            fetching,
+                            handleSelect,
                           } = current;
                           const selectProps = {};
                           if (noSearch) {
@@ -167,6 +181,14 @@ class DinamicForm extends Component {
                                 }
                                 if (handleChange) {
                                   handleChange(selectValue);
+                                }
+                              }}
+                              onSelect={(selectValue) => {
+                                if (valuesToClean) {
+                                  setFields(valuesToClean);
+                                }
+                                if (handleSelect) {
+                                  handleSelect(selectValue);
                                 }
                               }}
                               {...selectProps}
