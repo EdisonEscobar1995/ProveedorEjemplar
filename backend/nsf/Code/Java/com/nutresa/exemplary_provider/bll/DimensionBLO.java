@@ -68,8 +68,9 @@ public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
             String idItemExisting = existingDimension.getId();
             String temporalIdentifierExisting = existingDimension.getName().trim().toUpperCase();
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)

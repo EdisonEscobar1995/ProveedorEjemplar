@@ -51,8 +51,8 @@ public class TranslationAPI extends GenericAPI<TranslationDTO, TranslationBLO> {
         ServletResponseDTO<TranslationDTO> response = null;
         TranslationBLO translationBLO = new TranslationBLO();
         try {
-            response = new ServletResponseDTO<TranslationDTO>(translationBLO.getByEntityIdAndLanguage(
-                    parameters.get("entityId"), parameters.get("lang"), parameters.get("fieldName")));
+            response = new ServletResponseDTO<TranslationDTO>(translationBLO.getByEntityIdAndLanguage(parameters
+                    .get("entityId"), parameters.get("lang"), parameters.get("fieldName")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<TranslationDTO>(exception);
         }

@@ -20,9 +20,12 @@ public class TranslationDAO extends GenericDAO<TranslationDTO> {
     }
 
     /**
-     * @param entityId  Documento a traducido
-     * @param language  Idioma
-     * @param fieldName Nombre del campo traducido
+     * @param entityId
+     *            Documento a traducido
+     * @param language
+     *            Idioma
+     * @param fieldName
+     *            Nombre del campo traducido
      * @return Registro traducido a el idioma especificado
      * @throws HandlerGenericException
      */

@@ -82,7 +82,7 @@ public class ItemBLO extends GenericBLO<ItemDTO, ItemDAO> {
             parameterToService.put("idService", idService);
             items = getByIdService(parameterToService);
         }
-        
+
         return items;
     }
 

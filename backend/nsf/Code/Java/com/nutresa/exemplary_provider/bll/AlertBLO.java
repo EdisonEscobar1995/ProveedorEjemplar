@@ -48,8 +48,10 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
     /**
      * Ejecuta la alerta especificada
      * 
-     * @param alert        Alerta a ejecutar
-     * @param notification Notificación a enviar
+     * @param alert
+     *            Alerta a ejecutar
+     * @param notification
+     *            Notificación a enviar
      * @throws HandlerGenericException
      */
     private void executeAlert(AlertType alert, NotificationDTO notification) throws HandlerGenericException {
@@ -138,7 +140,8 @@ public class AlertBLO extends GenericBLO<AlertDTO, AlertDAO> {
     /**
      * Dada una alerta construye la notificación a enviar
      * 
-     * @param alert Alerta a ejecutar
+     * @param alert
+     *            Alerta a ejecutar
      * @return Notificación a enviar
      * @throws HandlerGenericException
      */

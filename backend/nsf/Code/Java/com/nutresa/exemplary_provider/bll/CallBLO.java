@@ -162,18 +162,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * @param parameters Mapa clave valor de los filtros por los que se van a
-     *                   optener los resultados
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Collección de datos obtenidos según los parámetros
      *         <code>parameters</code>
-     * @throws HandlerGenericException Con mensaje <code>CALL_NOT_ESPECIFIED</code>
-     *                                 si no se envía el identificador de la
-     *                                 convocatoria en los parámetros de búsqueda.
-     *                                 on mensaje code>INFORMATION_NOT_FOUND</code>
-     *                                 si no se encontró información para e p
-     *                                 rtar. Con m nsaje <code>ROL_INVALID</code> si
-     *                                 el usuario en sesión no tiene el rol 
-     *                                 rmitido.
+     * @throws HandlerGenericException
+     *             Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía
+     *             el identificador de la convocatoria en los parámetros de
+     *             búsqueda. on mensaje code>INFORMATION_NOT_FOUND</code> si no
+     *             se encontró información para e p rtar. Con m nsaje
+     *             <code>ROL_INVALID</code> si el usuario en sesión no tiene el
+     *             rol rmitido.
      */
     public List<ReportOfCalificationsBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
             throws HandlerGenericException {
@@ -198,10 +198,13 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * @param idCall     Identificador de la convocatoria que se va consultar.
-     * @param suppliers  Collección de proveedores
-     * @param parameters Mapa clave valor de los filtros por los que se van a
-     *                   optener los resultados
+     * @param idCall
+     *            Identificador de la convocatoria que se va consultar.
+     * @param suppliers
+     *            Collección de proveedores
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Collección de registros del reporte
      * @throws HandlerGenericException
      */
@@ -214,8 +217,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             List<SurveyStates> surveyStatesAllowed = stateBLO.getStatesByTypeReport(typeReport);
             for (SupplierDTO supplier : suppliers) {
                 SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-                SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall,
-                        supplier.getId(), surveyStatesAllowed);
+                SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
+                        .getId(), surveyStatesAllowed);
 
                 if (supplierByCall instanceof SupplierByCallDTO) {
                     response.add(getRecordOfReport(supplierByCall, supplier, parameters));
@@ -344,8 +347,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         currentMasters.put("Service", serviceBLO.getAll());
         currentMasters.put("Item", itemBLO.getAll());
         currentMasters.put("State", stateBLO.getAll());
-        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
-                SurveyStates.TECHNICAL_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo", SurveyStates.TECHNICAL_TEAM
+                .toString(), "vwEvaluationScalesByApplyTo"));
         currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
 
         Map<String, List<Object>> listIdsSupplierByCall = Common.getDtoFields(callsBySupplier, new String[] { "[id]" },
@@ -410,8 +413,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         StateBLO stateBLO = new StateBLO();
         RolBLO rolBLO = new RolBLO();
         EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
-        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo",
-                SurveyStates.MANAGER_TEAM.toString(), "vwEvaluationScalesByApplyTo"));
+        currentMasters.put("EvaluationScale", evaluationScaleBLO.getAllBy("applyTo", SurveyStates.MANAGER_TEAM
+                .toString(), "vwEvaluationScalesByApplyTo"));
         currentMasters.put("State", stateBLO.getAll());
         currentMasters.put("Rol", rolBLO.getAll());
         currentMasters.put("User", userBLO.getAllBy("name", userBLO.getNameUserInSession(), "vwUsersByName"));
@@ -495,7 +498,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         stageCaduced.put(StagesCall.SUPPLIER, call.isCaducedDeadLineToMakeSurvey());
         stageCaduced.put(StagesCall.EVALUATOR, call.isCaducedDeadLineToMakeSurveyEvaluator());
         stageCaduced.put(StagesCall.TECHNICAL_TEAM, call.isCaducedDeadLineToMakeSurveyTechnicalTeam());
-        // Si las anteriores no están vencidas, es porque la fase final está activa
+        // Si las anteriores no están vencidas, es porque la fase final está
+        // activa
         stageCaduced.put(StagesCall.MANAGER_TEAM, false);
 
         Iterator<StagesCall> iterator = stageCaduced.keySet().iterator();
@@ -621,8 +625,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Verifica que la fecha para los proveedores hacer la encuesta no este caducada
-     * y que existan proveedores definidos para cargar
+     * Verifica que la fecha para los proveedores hacer la encuesta no este
+     * caducada y que existan proveedores definidos para cargar
      * 
      * @throws HandlerGenericException
      */
@@ -639,8 +643,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     /**
      * Verifica las reglas para cargar los proveedores a la convocatoria
      * 
-     * @param supplier      Proveedor a cargar
-     * @param summaryRecord actualiza el estado del registro a cargar
+     * @param supplier
+     *            Proveedor a cargar
+     * @param summaryRecord
+     *            actualiza el estado del registro a cargar
      * @throws HandlerGenericException
      */
     private boolean allowLoadSupplierToCall(CallDTO call, SupplierDTO supplier, SummaryToLoadSupplier summaryRecord)
@@ -699,8 +705,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     /**
      * Cierra la convocatoria actual en caso de que su fecha máxima para estar
-     * activa esté vencida. Adicionalmente Marca como <b>no participación</b> a los
-     * proveedores que no hayan decidido participar y la fecha para hacer la
+     * activa esté vencida. Adicionalmente Marca como <b>no participación</b> a
+     * los proveedores que no hayan decidido participar y la fecha para hacer la
      * encuesta ya esté vencida.
      * 
      * @throws HandlerGenericException

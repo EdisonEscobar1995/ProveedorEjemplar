@@ -171,9 +171,12 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
     }
 
     /**
-     * @param entityId  Documento a traducido
-     * @param language  Idioma
-     * @param fieldName Nombre del campo traducido
+     * @param entityId
+     *            Documento a traducido
+     * @param language
+     *            Idioma
+     * @param fieldName
+     *            Nombre del campo traducido
      * @return Registro traducido a el idioma especificado
      * @throws HandlerGenericException
      */

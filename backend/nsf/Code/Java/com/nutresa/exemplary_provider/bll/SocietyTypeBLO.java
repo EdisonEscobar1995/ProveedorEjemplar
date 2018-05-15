@@ -51,8 +51,9 @@ public class SocietyTypeBLO extends GenericBLO<SocietyTypeDTO, SocietyTypeDAO> {
             String idItemExisting = existingSocietyType.getId();
             String temporalIdentifierExisting = existingSocietyType.getName().trim().toUpperCase();
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)

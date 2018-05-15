@@ -58,8 +58,9 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
      * Filtra las preguntas según los campos especificados en
      * <code>fieldsToFilter</code>
      * 
-     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se
-     *                       filtrarán las preguntas
+     * @param fieldsToFilter
+     *            Mapa clave valor de los campos por los cuales se filtrarán las
+     *            preguntas
      * @return Colección de preguntas
      * @throws HandlerGenericException
      */

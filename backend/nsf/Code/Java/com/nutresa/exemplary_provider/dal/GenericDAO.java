@@ -79,8 +79,8 @@ public abstract class GenericDAO<T> {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
         if (null == view) {
-            LogBLO.log(ErrorType.WARNING, entity,
-                    String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
+            LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters
+                    .toString()));
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
             if (view.FTSearch(query, 1) > 0) {
@@ -213,8 +213,8 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
-        LogBLO.log(ErrorType.WARNING, entity,
-                String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
+        LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters
+                .toString()));
 
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
@@ -231,10 +231,9 @@ public abstract class GenericDAO<T> {
      * Determina si un documento está relacionado en otros documentos.
      * 
      * @param idDocument
-     * @throws HandlerGenericException con código
-     *                                 <code>DOCUMENT_MULTI_CONNECTED</code> si el
-     *                                 documento está relacionado con otros
-     *                                 documentos.
+     * @throws HandlerGenericException
+     *             con código <code>DOCUMENT_MULTI_CONNECTED</code> si el
+     *             documento está relacionado con otros documentos.
      */
     protected void existIdInOthersDocuments(String idDocument) throws HandlerGenericException {
         View view = database.getView("vwUniverse");
@@ -612,9 +611,12 @@ public abstract class GenericDAO<T> {
      * Busca en el respectivo maestro los documentos que coincidan con los
      * parámetros de búsqueda.
      * 
-     * @param nameField  Nombre del campo por que se va a realizar la búsqueda
-     * @param valueField Valor a buscar en el campo especificado
-     * @return Colección de registros encontrados con los parámetros de búsqueda.
+     * @param nameField
+     *            Nombre del campo por que se va a realizar la búsqueda
+     * @param valueField
+     *            Valor a buscar en el campo especificado
+     * @return Colección de registros encontrados con los parámetros de
+     *         búsqueda.
      * @throws HandlerGenericException
      */
     public List<T> searchMasterByField(String nameField, String valueField) throws HandlerGenericException {

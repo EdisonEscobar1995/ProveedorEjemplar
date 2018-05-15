@@ -59,11 +59,12 @@ public class SubCategoryBLO extends GenericBLO<SubCategoryDTO, SubCategoryDAO> {
             SubCategoryDTO existingSubCategory = existingSubCategories.get(0);
 
             String idItemExisting = existingSubCategory.getId();
-            String temporalIdentifierExisting = existingSubCategory.getName().trim().toUpperCase()
-                    .concat(existingSubCategory.getIdCategory());
+            String temporalIdentifierExisting = existingSubCategory.getName().trim().toUpperCase().concat(
+                    existingSubCategory.getIdCategory());
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)

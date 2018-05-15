@@ -29,26 +29,26 @@ public class SystemAPI extends GenericAPI<SystemDTO, SystemBLO> {
 
     @Override
     public ServletResponseDTO<SystemDTO> delete(Map<String, String> parameters) {
-        return new ServletResponseDTO<SystemDTO>(
-                new HandlerGenericException(HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
+        return new ServletResponseDTO<SystemDTO>(new HandlerGenericException(
+                HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
     }
 
     @Override
     public ServletResponseDTO<SystemDTO> get(Map<String, String> parameters) {
-        return new ServletResponseDTO<SystemDTO>(
-                new HandlerGenericException(HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
+        return new ServletResponseDTO<SystemDTO>(new HandlerGenericException(
+                HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
     }
 
     @Override
     public ServletResponseDTO<List<SystemDTO>> getAll() {
-        return new ServletResponseDTO<List<SystemDTO>>(
-                new HandlerGenericException(HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
+        return new ServletResponseDTO<List<SystemDTO>>(new HandlerGenericException(
+                HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
     }
 
     @Override
     public ServletResponseDTO<List<SystemDTO>> getAll(Map<String, String> parameters) {
-        return new ServletResponseDTO<List<SystemDTO>>(
-                new HandlerGenericException(HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
+        return new ServletResponseDTO<List<SystemDTO>>(new HandlerGenericException(
+                HandlerGenericExceptionTypes.UNABLED_REQUEST.toString()));
     }
 
 }

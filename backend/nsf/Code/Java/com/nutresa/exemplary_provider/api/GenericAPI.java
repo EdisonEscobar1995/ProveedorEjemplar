@@ -112,8 +112,8 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
             blo = this.bloClass.newInstance();
             method = blo.getClass().getMethod("searchMasterByField", String.class, String.class);
             if (parameters.containsKey("nameField") && parameters.containsKey("valueField")) {
-                response = new ServletResponseDTO<List<T>>(
-                        (List<T>) method.invoke(blo, parameters.get("nameField"), parameters.get("valueField")));
+                response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo, parameters.get("nameField"),
+                        parameters.get("valueField")));
             } else {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
             }

@@ -87,8 +87,8 @@ public class AttachmentDAO {
 
     private String getFileName(Document document) {
         return (String) session.evaluate("@AttachmentNames", document).elementAt(0);
-    } 
-    
+    }
+
     private void processUploadedFile(FileItem item, MIMEEntity mime) throws HandlerGenericException {
         try {
             MIMEEntity child = mime.createChildEntity();

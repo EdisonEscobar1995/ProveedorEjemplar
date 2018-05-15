@@ -59,11 +59,12 @@ public class CategoryBLO extends GenericBLO<CategoryDTO, CategoryDAO> {
             CategoryDTO existingCategory = existingCategories.get(0);
 
             String idItemExisting = existingCategory.getId();
-            String temporalIdentifierExisting = existingCategory.getName().trim().toUpperCase()
-                    .concat(existingCategory.getIdSupply());
+            String temporalIdentifierExisting = existingCategory.getName().trim().toUpperCase().concat(
+                    existingCategory.getIdSupply());
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)

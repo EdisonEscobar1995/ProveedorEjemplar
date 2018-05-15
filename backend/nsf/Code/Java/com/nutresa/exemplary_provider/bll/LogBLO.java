@@ -58,7 +58,8 @@ public class LogBLO extends GenericBLO<LogDTO, LogDAO> {
                 message = exceptionMessage;
             }
 
-            // Este fragmento fue comentado porque se tomó la decisión de usar FTSearch
+            // Este fragmento fue comentado porque se tomó la decisión de usar
+            // FTSearch
 
             // LogDTO log = new LogDTO(type, entity, message, exceptionLog);
             // LogDAO logDAO = new LogDAO();

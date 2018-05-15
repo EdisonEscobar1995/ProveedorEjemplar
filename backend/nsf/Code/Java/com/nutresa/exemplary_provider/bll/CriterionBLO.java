@@ -16,8 +16,7 @@ public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
         super(CriterionDAO.class);
     }
 
-    public List<CriterionDTO> getCriterionsBySurvey(String idSurvey, String idDimension)
-            throws HandlerGenericException {
+    public List<CriterionDTO> getCriterionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
         CriterionDAO dimensionDAO = new CriterionDAO();
         List<CriterionDTO> responseWithCriterions = new ArrayList<CriterionDTO>();
         List<String> questions = null;
@@ -68,11 +67,12 @@ public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
             CriterionDTO existingCriterion = existingCriterions.get(0);
 
             String idItemExisting = existingCriterion.getId();
-            String temporalIdentifierExisting = existingCriterion.getName().trim().toUpperCase()
-                    .concat(criterion.getIdDimension());
+            String temporalIdentifierExisting = existingCriterion.getName().trim().toUpperCase().concat(
+                    criterion.getIdDimension());
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)

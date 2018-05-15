@@ -176,8 +176,8 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         while (iterator.hasNext()) {
             UserDAO userDAO = new UserDAO();
             RolBLO rolBLO = new RolBLO();
-            List<UserDTO> userWithTechnicalTeamRol = userDAO
-                    .getUsersByRol(rolBLO.getRolByShortName(Rol.TECHNICAL_TEAM.toString()).getId());
+            List<UserDTO> userWithTechnicalTeamRol = userDAO.getUsersByRol(rolBLO.getRolByShortName(
+                    Rol.TECHNICAL_TEAM.toString()).getId());
             NotificationBLO notificationBLO = new NotificationBLO();
             List<String> technicalTeamEmails = new ArrayList<String>();
 
@@ -228,7 +228,8 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     /**
      * Busca un usuario por su nombre
      * 
-     * @param name Nombre a buscar
+     * @param name
+     *            Nombre a buscar
      * @return Usuario encontrado
      * @throws HandlerGenericException
      */

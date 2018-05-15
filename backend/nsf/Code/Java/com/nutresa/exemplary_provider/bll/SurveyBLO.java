@@ -55,8 +55,9 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
             String idItemExisting = existingSurvey.getId();
             String temporalIdentifierExisting = existingSurvey.getIdSupply().concat(existingSurvey.getIdCompanySize());
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)

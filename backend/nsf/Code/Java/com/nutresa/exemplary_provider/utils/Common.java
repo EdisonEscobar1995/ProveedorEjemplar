@@ -124,9 +124,9 @@ public class Common {
     }
 
     public static String getWebDbName() {
-    	return getExternalContext().getRequestContextPath();    	
+        return getExternalContext().getRequestContextPath();
     }
-    
+
     private static ExternalContext getExternalContext() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         return facesContext.getExternalContext();
@@ -183,7 +183,7 @@ public class Common {
 
     @SuppressWarnings("unchecked")
     public static <T> Map<String, List<Object>> getDtoFields(List<T> data, String[] idFieldsNames, Class clazz)
-        throws HandlerGenericException {
+            throws HandlerGenericException {
         Map<String, List<Object>> listIds = new HashMap<String, List<Object>>();
         Map<String, Field> listFields = new HashMap<String, Field>();
 
@@ -239,8 +239,10 @@ public class Common {
     /**
      * Convierte una Lista de valores a una cade de caracteres.
      * 
-     * @param separator Separador para cada posición de la lista de valores.
-     * @param valuesToImplode Colección con los valores a convertir
+     * @param separator
+     *            Separador para cada posición de la lista de valores.
+     * @param valuesToImplode
+     *            Colección con los valores a convertir
      * @return Cadena de texto concatenada
      */
     public static String implodeList(String separator, List<String> valuesToImplode) {
@@ -257,11 +259,15 @@ public class Common {
     }
 
     /**
-     * Fija mapa clave valor con los campos que se debe filtrar. Solo fija los campos si tienen valor para el filtro. 
+     * Fija mapa clave valor con los campos que se debe filtrar. Solo fija los
+     * campos si tienen valor para el filtro.
      * 
-     * @param value Valor para filtrar
-     * @param nameOfKey Nombre del campo de filtro
-     * @param fields Mapa para fijar los campos de filtro.
+     * @param value
+     *            Valor para filtrar
+     * @param nameOfKey
+     *            Nombre del campo de filtro
+     * @param fields
+     *            Mapa para fijar los campos de filtro.
      * @return Mapa clave valor con los campos por los que se va a filtrar.
      */
     public static Map<String, String> setFieldsToFilterFTSearch(String value, String nameOfKey,

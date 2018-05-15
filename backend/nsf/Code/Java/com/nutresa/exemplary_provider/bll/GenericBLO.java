@@ -179,8 +179,8 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds,
-            boolean uniqueIds) throws HandlerGenericException {
+    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds, boolean uniqueIds)
+            throws HandlerGenericException {
         Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
 
         try {

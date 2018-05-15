@@ -50,8 +50,9 @@ public class SupplyBLO extends GenericBLO<SupplyDTO, SupplyDAO> {
             String idItemExisting = existingSupply.getId();
             String temporalIdentifierExisting = existingSupply.getName().trim().toUpperCase();
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)

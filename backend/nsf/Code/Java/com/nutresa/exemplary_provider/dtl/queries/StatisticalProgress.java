@@ -20,9 +20,12 @@ public class StatisticalProgress {
     }
 
     /**
-     * Si el <code>axisName</code> aún no existe, entonces se crea, de lo contrario aumenta el contador del <code>axisName</code>
+     * Si el <code>axisName</code> aún no existe, entonces se crea, de lo
+     * contrario aumenta el contador del <code>axisName</code>
+     * 
      * @param axisName
-     * @throws HandlerGenericException si el <code>axisName</code> es <code>null</code> o es vacio.
+     * @throws HandlerGenericException
+     *             si el <code>axisName</code> es <code>null</code> o es vacio.
      */
     public void createAxisOrCounter(String axisName) throws HandlerGenericException {
         if (null != axisName && !axisName.trim().isEmpty()) {

@@ -47,8 +47,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             detailUserToSend.put("Tamaño anterior", oldCampanySize);
 
             NotificationDAO notificationDAO = new NotificationDAO();
-            NotificationDTO notification = notificationDAO
-                    .getNotificationByAlias(NotificationType.CHANGE_COMPANY_SIZE.toString());
+            NotificationDTO notification = notificationDAO.getNotificationByAlias(NotificationType.CHANGE_COMPANY_SIZE
+                    .toString());
 
             if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
                 sendTo.addAll(notification.getWithCopy());
@@ -62,12 +62,13 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     }
 
     /**
-     * Notifica a los interesados de cada etapa de la encuesta finalizada. Dado el
-     * <code>Rol</code> que complete la fase envía su respectivo mensaje.
+     * Notifica a los interesados de cada etapa de la encuesta finalizada. Dado
+     * el <code>Rol</code> que complete la fase envía su respectivo mensaje.
      * 
-     * @param idSupplier Identificador del proveedor que fue evaluado en la
-     *                   encuesta.
-     * @param rol        Rol que está finalizando la encuesta
+     * @param idSupplier
+     *            Identificador del proveedor que fue evaluado en la encuesta.
+     * @param rol
+     *            Rol que está finalizando la encuesta
      * @throws HandlerGenericException
      */
     public void notifySurveyCompleted(String idSupplier, Rol rol) throws HandlerGenericException {
@@ -87,8 +88,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
             break;
         case TECHNICAL_TEAM:
-            notification = notificationDAO
-                    .getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_TECHNICAL_TEAM.toString());
+            notification = notificationDAO.getNotificationByAlias(NotificationType.SURVEY_ENDED_BY_TECHNICAL_TEAM
+                    .toString());
             break;
         default:
             notification = new NotificationDTO();
@@ -231,13 +232,17 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     }
 
     /**
-     * Envia notificación a los detinatarios especificados. Si <code>detail</code>
-     * tiene contenido entonces envia información adicional
+     * Envia notificación a los detinatarios especificados. Si
+     * <code>detail</code> tiene contenido entonces envia información adicional
      * 
-     * @param sendTo       Direcciones de correo a donde se enviará la notificación
-     * @param notification Notificación a enviar
-     * @param linkButton   Link de acceso directo
-     * @param detail       Información adicional a enviar en la notificación
+     * @param sendTo
+     *            Direcciones de correo a donde se enviará la notificación
+     * @param notification
+     *            Notificación a enviar
+     * @param linkButton
+     *            Link de acceso directo
+     * @param detail
+     *            Información adicional a enviar en la notificación
      * @throws HandlerGenericException
      */
     protected void sendAlarm(List<String> sendTo, NotificationDTO notification, String linkButton,
