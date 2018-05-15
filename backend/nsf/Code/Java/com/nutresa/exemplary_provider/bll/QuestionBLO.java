@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,9 +58,8 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
      * Filtra las preguntas según los campos especificados en
      * <code>fieldsToFilter</code>
      * 
-     * @param fieldsToFilter
-     *            Mapa clave valor de los campos por los cuales se filtrarán las
-     *            preguntas
+     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se
+     *                       filtrarán las preguntas
      * @return Colección de preguntas
      * @throws HandlerGenericException
      */
@@ -76,6 +77,15 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
         }
 
         return response;
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("wording");
+        fields.add("helpText");
+        entityWithFields.put("Question", fields);
+        return entityWithFields;
     }
 
 }

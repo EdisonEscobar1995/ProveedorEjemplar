@@ -229,9 +229,12 @@ public abstract class GenericDAO<T> {
 
     /**
      * Determina si un documento está relacionado en otros documentos.
+     * 
      * @param idDocument
-     * @throws HandlerGenericException con código <code>DOCUMENT_MULTI_CONNECTED</code> si el documento está
-     *                                  relacionado con otros documentos.
+     * @throws HandlerGenericException con código
+     *                                 <code>DOCUMENT_MULTI_CONNECTED</code> si el
+     *                                 documento está relacionado con otros
+     *                                 documentos.
      */
     protected void existIdInOthersDocuments(String idDocument) throws HandlerGenericException {
         View view = database.getView("vwUniverse");
@@ -603,5 +606,33 @@ public abstract class GenericDAO<T> {
         } else {
             translator = null;
         }
+    }
+
+    /**
+     * Busca en el respectivo maestro los documentos que coincidan con los
+     * parámetros de búsqueda.
+     * 
+     * @param nameField  Nombre del campo por que se va a realizar la búsqueda
+     * @param valueField Valor a buscar en el campo especificado
+     * @return Colección de registros encontrados con los parámetros de búsqueda.
+     * @throws HandlerGenericException
+     */
+    public List<T> searchMasterByField(String nameField, String valueField) throws HandlerGenericException {
+        if (nameField.trim().isEmpty() || valueField.trim().isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+        List<T> masters = new ArrayList<T>();
+        View view = database.getView(this.entityView);
+        String queryFTSearch = "(Field ".concat(nameField.concat(" = *".concat(valueField.concat("*)"))));
+        view.FTSearch(queryFTSearch, 20);
+
+        Document document = view.getFirstDocument();
+        while (document != null) {
+            masters.add((T) this.castDocument(document));
+            document = view.getNextDocument(document);
+        }
+        view.clear();
+
+        return masters;
     }
 }

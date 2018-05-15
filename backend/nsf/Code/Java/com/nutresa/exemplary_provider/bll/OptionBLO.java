@@ -1,5 +1,10 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.nutresa.exemplary_provider.dal.OptionDAO;
 import com.nutresa.exemplary_provider.dtl.OptionDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -28,6 +33,14 @@ public class OptionBLO extends GenericBLO<OptionDTO, OptionDAO> {
         }
 
         return score;
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("wording");
+        entityWithFields.put("Option", fields);
+        return entityWithFields;
     }
 
 }

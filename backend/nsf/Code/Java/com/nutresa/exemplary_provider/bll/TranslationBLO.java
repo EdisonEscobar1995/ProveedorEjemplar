@@ -148,6 +148,42 @@ public class TranslationBLO extends GenericBLO<TranslationDTO, TranslationDAO> {
         return cookieValue;
     }
 
+    public Map<String, List<String>> getMastersWithFieldsToTranslate() {
+        Map<String, List<String>> mastersWithFields = new HashMap<String, List<String>>();
+        mastersWithFields.putAll(CompanySizeBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(CompanyTypeBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(CategoryBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(SubCategoryBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(SocietyTypeBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(SectorBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(DimensionBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(CriterionBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(CountryBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(DepartmentBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(CityBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(SupplyBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(QuestionBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(OptionBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(SystemBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(MenuBLO.getEntityWithFieldsToTranslate());
+        mastersWithFields.putAll(StateBLO.getEntityWithFieldsToTranslate());
+        return mastersWithFields;
+    }
+
+    /**
+     * @param entityId  Documento a traducido
+     * @param language  Idioma
+     * @param fieldName Nombre del campo traducido
+     * @return Registro traducido a el idioma especificado
+     * @throws HandlerGenericException
+     */
+    public TranslationDTO getByEntityIdAndLanguage(String entityId, String language, String fieldName)
+            throws HandlerGenericException {
+        TranslationDAO translationDAO = new TranslationDAO();
+        return translationDAO.getByEntityIdAndLanguage(entityId, language, fieldName);
+
+    }
+
     public static class Translator {
 
         private HashMap<String, String> translations = null;

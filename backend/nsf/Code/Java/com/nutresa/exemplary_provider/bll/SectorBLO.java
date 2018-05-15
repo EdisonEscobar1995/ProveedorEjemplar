@@ -1,7 +1,9 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.SectorDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
@@ -61,6 +63,14 @@ public class SectorBLO extends GenericBLO<SectorDTO, SectorDAO> {
         }
 
         return existItem;
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("name");
+        entityWithFields.put("Sector", fields);
+        return entityWithFields;
     }
 
 }
