@@ -287,17 +287,19 @@ class DinamicForm extends Component {
                         max,
                         onChange,
                         onRemove,
+                        unique,
                         uploadMaxFilesize,
                         uploadExtensions,
                       } = current;
                       rowValue = (
-                        <Field label={label}>
+                        <Field label={label} style={style}>
                           <Upload
                             datakey={key}
                             list={fileList}
                             disabled={disabled}
                             multiple
                             max={max}
+                            unique={unique}
                             uploadExtensions={uploadExtensions}
                             uploadMaxFilesize={uploadMaxFilesize}
                             sizeAllowed={sizeAllowed}
