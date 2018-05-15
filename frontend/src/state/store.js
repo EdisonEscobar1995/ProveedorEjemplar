@@ -26,7 +26,10 @@ import managerTeam from './ManagerTeam/reducer';
 import menu from './Menu/reducer';
 import generalAdministrator from './GeneralAdministrator/reducer';
 import home from './Home/reducer';
-
+import notification from './Notification/reducer';
+import companyType from './CompanyType/reducer';
+import societyType from './SocietyType/reducer';
+import dimensionAndCriterion from './DimensionAndCriterion/reducer';
 
 const app = combineReducers({
   main,
@@ -54,6 +57,10 @@ const app = combineReducers({
   menu,
   generalAdministrator,
   home,
+  notification,
+  companyType,
+  societyType,
+  dimensionAndCriterion,
 });
 
 let middleware = {};

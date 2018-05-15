@@ -1,13 +1,15 @@
-import intance from './instance';
+import instance from './instance';
 
-function getDataCompanyTypesApi() {
-  return intance.get('CompanyType?action=getAll');
-}
-function saveDataCompanyTypeApi(data) {
-  return intance.post('CompanyType?action=save', data);
-}
+const getDataCompanyTypesApi = () => instance.get('CompanyType?action=getAll');
+
+const saveDataCompanyTypeApi = data => instance.post('CompanyType?action=save', data);
+
+const deleteDataCompanyTypeApi = data => instance.get('CompanyType?action=delete', {
+  params: { id: data.id },
+});
 
 export {
-  getDataCompanyTypesApi as default,
+  getDataCompanyTypesApi,
   saveDataCompanyTypeApi,
+  deleteDataCompanyTypeApi,
 };

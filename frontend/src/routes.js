@@ -257,6 +257,42 @@ const routes = [
       import('./pages/TechnicalTeamSurvey').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'NOTIFICATION',
+    path: '/notification',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Notification').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'COMPANY_TYPE',
+    path: '/companyType',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/CompanyType').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SOCIETY_TYPE',
+    path: '/societyType',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SocietyType').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'DIMENSION_CRITERION',
+    path: '/dimension',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/DimensionAndCriterion').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

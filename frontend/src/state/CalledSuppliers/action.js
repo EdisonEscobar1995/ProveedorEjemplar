@@ -184,13 +184,18 @@ const saveSuppliers =
       const nameSupply = masters.Supply.find(sup => sup.id === clientData.nameSupplyToLoad).name;
       const nameCountry = masters.Country.find(c => c.id === clientData.nameCountryToLoad).name;
 
+      clientData.fullName = clientData.businessName;
       clientData.nameCompanySizeToLoad = nameCompanySize;
       clientData.nameSupplyToLoad = nameSupply;
       clientData.nameCountryToLoad = nameCountry;
       dispatch(closeModal());
     }
     if (Array.isArray(clientData)) {
-      call.supplier = [...clientData];
+      const data = clientData.map(element => ({
+        ...element,
+        fullName: element.businessName,
+      }));
+      call.supplier = [...data];
     } else if (edit) {
       const idSupplierByCall = suppliersByCall.find(x => x.idSupplier === clientData.id).id;
       const supplier = suppliers.find(sup => sup.id === clientData.id);

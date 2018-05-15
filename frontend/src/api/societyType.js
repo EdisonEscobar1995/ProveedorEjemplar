@@ -1,13 +1,15 @@
-import intance from './instance';
+import instance from './instance';
 
-function getDataSocietyTypesApi() {
-  return intance.get('SocietyType?action=getAll');
-}
-function saveDataSocietyTypeApi(data) {
-  return intance.post('SocietyType?action=save', data);
-}
+const getDataSocietyTypesApi = () => instance.get('SocietyType?action=getAll');
+
+const saveDataSocietyTypeApi = data => instance.post('SocietyType?action=save', data);
+
+const deleteDataSocietyTypeApi = data => instance.get('SocietyType?action=delete', {
+  params: { id: data.id },
+});
 
 export {
-  getDataSocietyTypesApi as default,
+  getDataSocietyTypesApi,
   saveDataSocietyTypeApi,
+  deleteDataSocietyTypeApi,
 };
