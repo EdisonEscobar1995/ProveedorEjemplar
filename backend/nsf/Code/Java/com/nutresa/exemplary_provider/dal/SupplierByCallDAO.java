@@ -33,10 +33,10 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             for (Document document : documents) {
                 callsBySupplier.add(castDocument(document));
             }
+            return callsBySupplier;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-        return callsBySupplier;
     }
 
     public List<SupplierDTO> getSuppliersByCallDontInvited(String idCall) throws HandlerGenericException {
@@ -228,5 +228,28 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         view.clear();
         return stateDeleted;
 
+    }
+
+    /**
+     * Verifica si existen proveedores sin haber aceptado su cambio de tamaño de
+     * empresa
+     * 
+     * @param idCall Identificador de la convocatoria a consultar
+     * @return <code>true</code> si existen proveedores, de lo contrario
+     *         <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public boolean existSuppliersInCompanySizeChanged(String idCall) throws HandlerGenericException {
+        try {
+            boolean exist = false;
+            View currentView = getDatabase().getView("vwSuppliersByCallModifiedIdCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(idCall, true);
+            if (documents.getCount() > 0) {
+                exist = true;
+            }
+            return exist;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.StateDAO;
@@ -312,6 +313,24 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     public List<SupplierDTO> searchSupplier(String text) throws HandlerGenericException {
         SupplierDAO supplierDAO = new SupplierDAO();
         return supplierDAO.searchSupplier(text);
+    }
+
+    /**
+     * Obtiene el usuario y contraseña de un proveedor desde el directorio general
+     * 
+     * @param supplier Proveedor a buscar
+     * @return Colección clave valor de usuario y contraseña
+     * @throws HandlerGenericException
+     */
+    protected Map<String, String> getUserAndPassword(SupplierDTO supplier) throws HandlerGenericException {
+        Map<String, String> informationInOtherDataBase = getInformationInOtherDataBase(supplier);
+        Map<String, String> detail = new LinkedHashMap<String, String>();
+        if (!informationInOtherDataBase.isEmpty()) {
+            detail.put("Usuario", informationInOtherDataBase.get("userName"));
+            detail.put("Contraseña", informationInOtherDataBase.get("password"));
+        }
+
+        return detail;
     }
 
 }

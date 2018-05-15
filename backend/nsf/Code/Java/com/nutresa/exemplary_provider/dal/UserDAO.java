@@ -82,4 +82,22 @@ public class UserDAO extends GenericDAO<UserDTO> {
         return users;
     }
 
+    /**
+     * Busca un usuario por su nombre
+     * 
+     * @param name Nombre a buscar
+     * @return Usuario encontrado
+     * @throws HandlerGenericException
+     */
+    public UserDTO getUsersByName(String name) throws HandlerGenericException {
+        UserDTO user = new UserDTO();
+        View currentView = getDatabase().getView("vwUsersByName");
+        Document document = currentView.getFirstDocumentByKey(name, true);
+        if (null != document) {
+            user = castDocument(document);
+        }
+
+        return user;
+    }
+
 }
