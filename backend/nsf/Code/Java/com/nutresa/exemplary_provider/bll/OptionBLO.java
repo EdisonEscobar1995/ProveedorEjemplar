@@ -43,4 +43,8 @@ public class OptionBLO extends GenericBLO<OptionDTO, OptionDAO> {
         return entityWithFields;
     }
 
+    public List<OptionDTO> getOptionsByQuestion(String idQuestion) throws HandlerGenericException {
+        OptionDAO optionDAO = new OptionDAO();
+        return optionDAO.getOptionsByQuestion(idQuestion);
+    }
 }
