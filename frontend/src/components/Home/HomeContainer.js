@@ -39,7 +39,7 @@ class HomeContainer extends Component {
             <Carousel {...this.props} />
           </Col>
           {
-            rol !== 'SUPPLIER' &&
+            rol && rol !== 'SUPPLIER' &&
               (
                 <Col span={10} offset={2}>
                   <H3><FormattedMessage id="Title.percentageAdvance" /></H3>

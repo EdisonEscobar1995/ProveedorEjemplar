@@ -9,12 +9,7 @@ const pathSurveyAdmonForm = '/surveyAdmon/form';
 
 class SurveyAdmonContainer extends Component {
   componentDidMount() {
-    this.props.getAllSurveyAdmons();
-  }
-
-  onEdit = (record) => {
-    const { history } = this.props;
-    history.push(`${pathSurveyAdmonForm}/${record.id}`);
+    this.props.getAllSurveys();
   }
 
   onAdd = () => {
@@ -22,13 +17,9 @@ class SurveyAdmonContainer extends Component {
     history.push(`${pathSurveyAdmonForm}`);
   }
 
-  deleteSurveyAdmon = (id) => {
-    this.props.deleteSurveyAdmon(id);
-  }
-
   render() {
     const template =
-    ColumnsSurveyAdmon(this.props, this.onAdd, this.deleteSurveyAdmon, this.onEdit);
+    ColumnsSurveyAdmon(this.props, this.onAdd);
     return (
       <SurveyAdmon
         {...this.props}
@@ -42,8 +33,8 @@ class SurveyAdmonContainer extends Component {
 const mapStateToProps = state => ({
   loading: state.surveyAdmon.loading,
   data: state.surveyAdmon.data,
-  dimension: state.surveyAdmon.dimension,
-  criterion: state.surveyAdmon.criterion,
+  companySize: state.surveyAdmon.companySize,
+  supply: state.surveyAdmon.supply,
   searchValue: state.surveyAdmon.searchValue,
 });
 

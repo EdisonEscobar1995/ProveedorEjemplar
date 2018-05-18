@@ -32,6 +32,7 @@ import societyType from './SocietyType/reducer';
 import dimensionAndCriterion from './DimensionAndCriterion/reducer';
 import question from './Question/reducer';
 import companySize from './CompanySize/reducer';
+import surveyAdmon from './SurveyAdmon/reducer';
 
 const app = combineReducers({
   main,
@@ -65,6 +66,7 @@ const app = combineReducers({
   dimensionAndCriterion,
   question,
   companySize,
+  surveyAdmon,
 });
 
 let middleware = {};
