@@ -58,6 +58,10 @@ const getStatisticalData = (filter = null) => (dispatch) => {
   requestApi(dispatch, getDataStatisticalProgress, getStatisticalProgressApi, filter)
     .then((response) => {
       const { data } = response.data;
+      const objectStatisticData = data ? data.axesStatisticData : {};
+      Object.entries(objectStatisticData).forEach((item) => {
+        data.axesStatisticData[item[0]] = parseFloat(item[1]).toFixed(2);
+      });
       dispatch(getDataStatisticalSuccess(data));
     }).catch(() => {
       dispatch(getFailedRequest());
