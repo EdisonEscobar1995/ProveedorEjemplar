@@ -1,5 +1,10 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.nutresa.exemplary_provider.dal.SystemDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SystemDTO;
@@ -41,6 +46,18 @@ public class SystemBLO extends GenericBLO<SystemDTO, SystemDAO> {
 
         return system;
 
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("title");
+        fields.add("content");
+        fields.add("informationProgram");
+        fields.add("messageByChangeSizeCompany");
+        fields.add("inputPoll");
+        entityWithFields.put("System", fields);
+        return entityWithFields;
     }
 
 }

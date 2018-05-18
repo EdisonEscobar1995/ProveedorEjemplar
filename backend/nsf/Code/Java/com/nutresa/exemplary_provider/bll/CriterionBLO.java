@@ -1,7 +1,9 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.CriterionDAO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
@@ -14,8 +16,7 @@ public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
         super(CriterionDAO.class);
     }
 
-    public List<CriterionDTO> getCriterionsBySurvey(String idSurvey, String idDimension)
-            throws HandlerGenericException {
+    public List<CriterionDTO> getCriterionsBySurvey(String idSurvey, String idDimension) throws HandlerGenericException {
         CriterionDAO dimensionDAO = new CriterionDAO();
         List<CriterionDTO> responseWithCriterions = new ArrayList<CriterionDTO>();
         List<String> questions = null;
@@ -66,11 +67,12 @@ public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
             CriterionDTO existingCriterion = existingCriterions.get(0);
 
             String idItemExisting = existingCriterion.getId();
-            String temporalIdentifierExisting = existingCriterion.getName().trim().toUpperCase()
-                    .concat(criterion.getIdDimension());
+            String temporalIdentifierExisting = existingCriterion.getName().trim().toUpperCase().concat(
+                    criterion.getIdDimension());
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)
@@ -81,6 +83,14 @@ public class CriterionBLO extends GenericBLO<CriterionDTO, CriterionDAO> {
         }
 
         return existItem;
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("name");
+        entityWithFields.put("Criterion", fields);
+        return entityWithFields;
     }
 
 }

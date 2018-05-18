@@ -85,7 +85,8 @@ public class UserDAO extends GenericDAO<UserDTO> {
     /**
      * Busca un usuario por su nombre
      * 
-     * @param name Nombre a buscar
+     * @param name
+     *            Nombre a buscar
      * @return Usuario encontrado
      * @throws HandlerGenericException
      */

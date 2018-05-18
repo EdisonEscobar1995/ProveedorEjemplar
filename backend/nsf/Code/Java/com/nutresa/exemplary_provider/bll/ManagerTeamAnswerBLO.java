@@ -32,8 +32,8 @@ public class ManagerTeamAnswerBLO extends GenericBLO<ManagerTeamAnswerDTO, Manag
         SupplierByCallDTO supplierByCall = supplierByCallBLO.get(answer.getIdSupplierByCall());
 
         if (callBLO.get(supplierByCall.getIdCall()).isCaducedDeadLineToMakeSurveyManagerTeam()) {
-            throw new HandlerGenericException(
-                    HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_MANAGER_TEAM_EXCEEDED.toString());
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_MANAGER_TEAM_EXCEEDED
+                    .toString());
         }
 
         supplierByCallBLO.changeState(SurveyStates.MANAGER_TEAM.toString(), answer.getIdSupplierByCall());

@@ -21,7 +21,7 @@ public class ServiceDAO extends GenericDAO<ServiceDTO> {
         } else {
             response = new ServiceDTO();
         }
-        
+
         return response;
     }
 

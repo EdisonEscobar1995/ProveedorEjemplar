@@ -15,7 +15,7 @@ public class MenuDTO extends MasterDTO {
     private String categoryName;
     @Expose
     private short categoryNumber;
-    
+
     public String getTitle() {
         return this.title;
     }
@@ -23,7 +23,7 @@ public class MenuDTO extends MasterDTO {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     public String getType() {
         return this.type;
     }
@@ -31,11 +31,11 @@ public class MenuDTO extends MasterDTO {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public List<String> getIdsRol() {
         return this.idsRol;
     }
-    
+
     public void setIdsRol(List<String> idsRol) {
         this.idsRol = idsRol;
     }

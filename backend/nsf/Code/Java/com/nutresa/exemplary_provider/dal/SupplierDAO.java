@@ -81,11 +81,12 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
     }
 
     /**
-     * Dada la información en <code>parameters</code> identifica por cuales campos 
-     * e deben filtrar los proveedores.
+     * Dada la información en <code>parameters</code> identifica por cuales
+     * campos e deben filtrar los proveedores.
      * 
-     * @param parameters Mapa clave valor de los filtros por los que se van a
-     *                   optener los resultados
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Mapa clave valor con los campos que se debe filtrar.
      * @throws HandlerGenericException
      */
@@ -104,11 +105,12 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
     }
 
     /**
-     * Filtra los proveedores según los campos especificados en 
+     * Filtra los proveedores según los campos especificados en
      * code>fieldsToFilter</code>
      * 
-     * @param fieldsToFilter Mapa clave valor de los campos por los cuales se
-     *                       filtrarán los proveedores.
+     * @param fieldsToFilter
+     *            Mapa clave valor de los campos por los cuales se filtrarán los
+     *            proveedores.
      * @return Colección de proveedores.
      * @throws HandlerGenericException
      */
@@ -135,8 +137,8 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
 
     /**
      * @param nit
-     * @return <code>true</code> si existe un registro en el directorio general con
-     *         dicho <code>nit</code>, de lo contrario <code>false</code>
+     * @return <code>true</code> si existe un registro en el directorio general
+     *         con dicho <code>nit</code>, de lo contrario <code>false</code>
      * @throws HandlerGenericException
      */
     public boolean existInGeneralDirectoryByNit(String nit) throws HandlerGenericException {
@@ -162,9 +164,11 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
     }
 
     /**
-     * Busca los proveedores que contengan <code>text</code> en el campo código sap
+     * Busca los proveedores que contengan <code>text</code> en el campo código
+     * sap
      * 
-     * @param text valor a buscar en los documentos
+     * @param text
+     *            valor a buscar en los documentos
      * @return Colección de proveedores que coinciden con el valor a buscar
      * @throws HandlerGenericException
      */

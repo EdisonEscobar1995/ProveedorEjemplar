@@ -50,7 +50,7 @@ public class ServletFactory implements IServletFactory {
             return getErrorServlet();
         }
     }
-    
+
     protected Servlet getErrorServlet() throws ServletException {
         return module.createServlet(namespace + "Error" + apiSuffix, "Error", null);
     }

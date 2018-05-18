@@ -1,7 +1,9 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.DimensionDAO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
@@ -66,8 +68,9 @@ public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
             String idItemExisting = existingDimension.getId();
             String temporalIdentifierExisting = existingDimension.getName().trim().toUpperCase();
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)
@@ -78,5 +81,13 @@ public class DimensionBLO extends GenericBLO<DimensionDTO, DimensionDAO> {
         }
 
         return existItem;
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("name");
+        entityWithFields.put("Dimension", fields);
+        return entityWithFields;
     }
 }

@@ -1,7 +1,9 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.SubCategoryDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
@@ -57,11 +59,12 @@ public class SubCategoryBLO extends GenericBLO<SubCategoryDTO, SubCategoryDAO> {
             SubCategoryDTO existingSubCategory = existingSubCategories.get(0);
 
             String idItemExisting = existingSubCategory.getId();
-            String temporalIdentifierExisting = existingSubCategory.getName().trim().toUpperCase()
-                    .concat(existingSubCategory.getIdCategory());
+            String temporalIdentifierExisting = existingSubCategory.getName().trim().toUpperCase().concat(
+                    existingSubCategory.getIdCategory());
 
-            if ((null == idItem || idItem.isEmpty()) && (null != temporalIdentifierExisting
-                    && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting))) {
+            if ((null == idItem || idItem.isEmpty())
+                    && (null != temporalIdentifierExisting && temporalIdentifier
+                            .equalsIgnoreCase(temporalIdentifierExisting))) {
                 existItem = true;
             } else {
                 if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)
@@ -72,5 +75,13 @@ public class SubCategoryBLO extends GenericBLO<SubCategoryDTO, SubCategoryDAO> {
         }
 
         return existItem;
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("name");
+        entityWithFields.put("SubCategory", fields);
+        return entityWithFields;
     }
 }

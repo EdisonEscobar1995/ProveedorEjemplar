@@ -179,8 +179,8 @@ public class GenericBLO<T, D> {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds,
-            boolean uniqueIds) throws HandlerGenericException {
+    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds, boolean uniqueIds)
+            throws HandlerGenericException {
         Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
 
         try {
@@ -247,4 +247,20 @@ public class GenericBLO<T, D> {
         filter.put(field, value);
         return getAllBy(filter, defaultView);
     }
+
+    @SuppressWarnings("unchecked")
+    public List<T> searchMasterByField(String nameField, String valueField) throws HandlerGenericException {
+        List<T> response = new ArrayList<T>();
+        D dao;
+        try {
+            dao = daoClass.newInstance();
+            Method method = dao.getClass().getMethod("searchMasterByField", String.class, String.class);
+            response = (List<T>) method.invoke(dao, nameField, valueField);
+        } catch (Exception e) {
+            throw new HandlerGenericException(e);
+        }
+
+        return response;
+    }
+
 }
