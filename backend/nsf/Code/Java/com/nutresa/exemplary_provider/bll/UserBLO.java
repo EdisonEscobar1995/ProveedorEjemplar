@@ -83,7 +83,7 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             if (isRol(Rol.SUPPLIER.toString())) {
                 SupplierBLO supplierBLO = new SupplierBLO();
                 SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
-                if (null != supplier) {
+                if (null != supplier && !supplier.getIdCompanySize().isEmpty() && !supplier.getIdSupply().isEmpty()) {
                     CompanySizeBLO companySizeBLO = new CompanySizeBLO();
                     userInfo.put("company_size", companySizeBLO.get(supplier.getIdCompanySize()).getName());
                     SupplyBLO supplyBLO = new SupplyBLO();
