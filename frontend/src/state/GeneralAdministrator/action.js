@@ -5,7 +5,6 @@ import {
   UPDATE_ATTACHMENT,
   CLEAN_DATA,
   SAVE_DATA_PROGRESS,
-  SAVE_DATA_SUCCESS,
   CLEAN_STORE,
 } from './const';
 
@@ -73,10 +72,6 @@ const saveDataProgress = () => ({
   type: SAVE_DATA_PROGRESS,
 });
 
-const saveDataSuccess = () => ({
-  type: SAVE_DATA_SUCCESS,
-});
-
 const cleanStore = () => ({
   type: CLEAN_STORE,
 });
@@ -106,7 +101,7 @@ const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getS
   };
   requestApi(dispatch, saveDataProgress, saveGeneralAdministratorApi, clientDataNew)
     .then(() => {
-      dispatch(saveDataSuccess());
+      dispatch(getAllGeneralAdministrators());
       if (next) {
         next();
       }

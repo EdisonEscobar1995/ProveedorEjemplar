@@ -72,6 +72,10 @@ const dataForm = ({ data, updateAttachment, form, cleanFields, deleteAttachment 
           key: 'content',
           value: content,
           required: true,
+          rules: [{
+            max: 200,
+            message: 'Máximo 200 caracteres',
+          }],
         },
       ],
     },

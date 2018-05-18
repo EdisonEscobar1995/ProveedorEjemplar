@@ -23,12 +23,18 @@ class Doughnut extends Component {
   }
 
   componentDidMount() {
-    const { dataUser } = this.props;
-    if (dataUser.rols
-      && dataUser.rols.find(x => x).shortName !== 'SUPPLIER') {
-      this.props.getStatisticalData();
+    this.props.getUserContext();
+  }
+  componentWillReceiveProps(nextProps) {
+    if (this.props.dataUser !== nextProps.dataUser) {
+      const { dataUser } = this.props;
+      if (dataUser.rols
+        && dataUser.rols.find(x => x).shortName !== 'SUPPLIER') {
+        this.props.getStatisticalData();
+      }
     }
   }
+
   onChange = (e) => {
     const value = e.target.value;
     this.setState({
@@ -64,7 +70,7 @@ class Doughnut extends Component {
       <span>
         <RadioGroupStyle onChange={this.onChange} value={this.state.value}>
           <Radio value="COMPANY_SIZE_FILTER"><FormattedMessage id="Title.companySize" /></Radio>
-          <Radio value="SUPPLY_FILTER"><FormattedMessage id="Title.companyType" /></Radio>
+          <Radio value="SUPPLY_FILTER"><FormattedMessage id="Title.supplyType" /></Radio>
           {
             dataUser.rols
               && dataUser.rols.find(x => x).shortName === (ADMINISTRATOR || LIBERATOR || READER) &&
@@ -77,13 +83,18 @@ class Doughnut extends Component {
   }
 }
 
+const mapDispatchToProps = {
+  ...actions,
+};
+
 const mapStateToProps = state => (
   {
     statisticalData: state.home.statisticalData,
+    dataUser: state.main.data,
   }
 );
 
 export default connect(
   mapStateToProps,
-  actions,
+  mapDispatchToProps,
 )(Doughnut);

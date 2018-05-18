@@ -132,7 +132,7 @@ const messages = {
   'Title.pendings': 'Mis pendientes',
   'Title.informationMessage': 'A continuación se presentan los proveedores que están pendientes por evaluar.',
   'Title.companySize': 'Por tamaño de empresa',
-  'Title.companyType': 'Por tipo de empresa',
+  'Title.supplyType': 'Por tipo de suministro',
   'Title.country': 'Por país',
 };
 export default messages;

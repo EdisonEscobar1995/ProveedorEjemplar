@@ -5,7 +5,6 @@ import {
   CLEAN_DATA,
   UPDATE_ATTACHMENT,
   SAVE_DATA_PROGRESS,
-  SAVE_DATA_SUCCESS,
   CLEAN_STORE,
 } from './const';
 
@@ -33,7 +32,6 @@ function generalAdministratorApp(state = initialState, action) {
       };
     }
     case REQUEST_FAILED:
-    case SAVE_DATA_SUCCESS:
     {
       return {
         ...state,

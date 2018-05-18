@@ -30,6 +30,8 @@ import notification from './Notification/reducer';
 import companyType from './CompanyType/reducer';
 import societyType from './SocietyType/reducer';
 import dimensionAndCriterion from './DimensionAndCriterion/reducer';
+import question from './Question/reducer';
+import companySize from './CompanySize/reducer';
 
 const app = combineReducers({
   main,
@@ -61,6 +63,8 @@ const app = combineReducers({
   companyType,
   societyType,
   dimensionAndCriterion,
+  question,
+  companySize,
 });
 
 let middleware = {};

@@ -11,6 +11,7 @@ import {
 import { getGeneralAdministratorApi } from '../../api/generalAdministrator';
 import { getStatisticalProgressApi, identifyCurrentStageApi } from '../../api/call';
 import { requestApi } from '../../utils/action';
+import { getUserContext } from '../Main/action';
 
 const getDataGeneralAdministratorProgress = () => ({
   type: GET_DATA_GENERAL_PROGRESS,
@@ -78,4 +79,5 @@ export {
   getFailedRequest,
   getStatisticalData,
   getCurrentData,
+  getUserContext,
 };

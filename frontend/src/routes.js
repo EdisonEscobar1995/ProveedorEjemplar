@@ -293,6 +293,69 @@ const routes = [
       import('./pages/DimensionAndCriterion').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'QUESTION',
+    path: '/question',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Question').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'QUESTION_FORM',
+    path: '/question/form',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/QuestionForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'QUESTION_BY_ID',
+    path: '/question/form/:id',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/QuestionForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SURVEY_ADMON',
+    path: '/surveyAdmon',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SurveyAdmon').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SURVEY_ADMON_FORM',
+    path: '/surveyAdmon/form',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SurveyAdmonForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SURVEY_ADMON_BY_ID',
+    path: '/surveyAdmon/form/:id',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SurveyAdmonForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'COMPANY_SIZE',
+    path: '/companySize',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/CompanySize').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

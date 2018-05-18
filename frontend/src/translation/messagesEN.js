@@ -132,7 +132,7 @@ const messages = {
   'Title.pendings': 'My pendings',
   'Title.informationMessage': 'Below are the suppliers that are pending to evaluate.',
   'Title.companySize': 'By company size',
-  'Title.companyType': 'By company type',
+  'Title.supplyType': 'By supply type',
   'Title.country': 'By country',
 };
 export default messages;
