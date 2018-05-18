@@ -8,12 +8,7 @@ import H1 from '../shared/H1';
 
 class SurveyAdmonFormContainer extends Component {
   componentDidMount() {
-    const { match: { params: { id = null } } } = this.props;
-    if (id && typeof id === 'string') {
-      this.props.getSurveyAdmon(id);
-    } else {
-      this.props.getAddSurveyAdmon();
-    }
+    this.props.getAllDataSurveyAdmon();
   }
 
   render() {
@@ -41,12 +36,8 @@ class SurveyAdmonFormContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  editData: state.surveyAdmon.editData,
-  dimension: state.surveyAdmon.dimension,
-  criterion: state.surveyAdmon.criterion,
-  SurveyAdmons: state.surveyAdmon.SurveyAdmons,
-  items: state.surveyAdmon.items,
-  options: state.surveyAdmon.options,
+  supply: state.surveyAdmon.supply,
+  companySize: state.surveyAdmon.companySize,
   loading: state.surveyAdmon.loading,
 });
 

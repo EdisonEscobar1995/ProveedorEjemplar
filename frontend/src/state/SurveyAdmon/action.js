@@ -12,7 +12,7 @@ import {
 } from './const';
 
 import
-{ getAllDataSurveyApi, getSurveyByIdApi, deleteSurveyApi } // saveSurveyApi
+{ getAllDataSurveyApi, deleteSurveyApi } // saveSurveyApi
   from '../../api/survey';
 import { getSuppliesApi } from '../../api/supply';
 import { getDataCompanySizeApi } from '../../api/companySize';
@@ -57,41 +57,22 @@ const getAllSurveys = () => (dispatch) => {
 //   type: GET_SURVEY_ADMON_PROGRESS,
 // });
 
-const getSurveySuccess = (editData, dimension, criterion, Surveys, options, items) => ({
+const getAllDataSurveyAdmonSuccess = (supply, companySize) => ({
   type: GET_SURVEY_ADMON_SUCCESS,
-  editData,
-  dimension,
-  criterion,
-  Surveys,
-  options,
-  items,
+  supply,
+  companySize,
 });
 
-function getSurvey(id) {
+function getAllDataSurveyAdmon() {
   return (dispatch) => {
     const promises = [
-      getSurveyByIdApi(id),
-      getAllDataSurveyApi(),
+      getSuppliesApi(),
+      getDataCompanySizeApi(),
     ];
     requestApi(dispatch, getDataSurveyProgress, axios.all, promises).then((arrayResponse) => {
-      const dimension = arrayResponse[0].data.data;
-      const criterion = arrayResponse[1].data.data;
-      const dataEdit = arrayResponse[2].data.data;
-      const dataSurveys = arrayResponse[3].data.data;
-      let options = arrayResponse[4].data.data;
-      options = options
-        .map(data => ({
-          ...data,
-          key: data.id,
-        }));
-      const Surveys =
-        dataSurveys
-          .filter(q => q.id !== dataEdit.id)
-          .map(data => ({
-            ...data,
-            name: data.wording,
-          }));
-      dispatch(getSurveySuccess(dataEdit, dimension, criterion, Surveys, options));
+      const supply = arrayResponse[0].data.data;
+      const companySize = arrayResponse[1].data.data;
+      dispatch(getAllDataSurveyAdmonSuccess(supply, companySize));
     }).catch((err) => {
       dispatch(getFailedRequest(err));
     });
@@ -169,7 +150,7 @@ const saveSurvey = () => ({
 
 export {
   getAllSurveys,
-  getSurvey,
+  getAllDataSurveyAdmon,
   changeSearchSurvey,
   searchSurvey,
   saveSurvey as saveData,

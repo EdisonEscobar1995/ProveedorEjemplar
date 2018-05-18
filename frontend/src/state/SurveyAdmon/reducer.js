@@ -45,12 +45,8 @@ function surveyAdmonApp(state = initialState, action) {
     case GET_SURVEY_ADMON_SUCCESS: {
       return {
         ...state,
-        editData: action.editData,
-        dimension: action.dimension,
-        criterion: action.criterion,
-        questions: action.questions,
-        options: action.options,
-        items: action.items,
+        supply: action.supply,
+        companySize: action.companySize,
         loading: false,
       };
     }

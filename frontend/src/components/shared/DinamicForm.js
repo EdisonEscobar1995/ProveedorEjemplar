@@ -155,7 +155,8 @@ class DinamicForm extends Component {
                         case 'select': {
                           const {
                             valuesToClean,
-                            mode, noSearch,
+                            mode,
+                            noSearch,
                             autoComplete,
                             onSearch,
                             fetching,
