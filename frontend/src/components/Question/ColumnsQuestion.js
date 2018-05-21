@@ -6,7 +6,8 @@ const columnsData = (props, onAdd, deleteQuestion, onEdit) => [{
   dataIndex: 'idDimension',
   key: 'idDimension',
   render: (text, record) => {
-    let dimension = props.dimension.data.find(x => x.id === record.idDimension);
+    let dimension = props.dimension.data ?
+      props.dimension.data.find(x => x.id === record.idDimension) : {};
     dimension = dimension ? dimension.name : '';
     return dimension;
   },
@@ -15,7 +16,8 @@ const columnsData = (props, onAdd, deleteQuestion, onEdit) => [{
   dataIndex: 'idCriterion',
   key: 'idCriterion',
   render: (text, record) => {
-    let criterion = props.criterion.data.find(x => x.id === record.idCriterion);
+    let criterion = props.criterion.data ?
+      props.criterion.data.find(x => x.id === record.idCriterion) : {};
     criterion = criterion ? criterion.name : '';
     return criterion;
   },

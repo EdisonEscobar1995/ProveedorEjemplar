@@ -19,7 +19,7 @@ const RadioGroupStyle = styled(RadioGroup)`
 
 class Doughnut extends Component {
   state = {
-    value: 'COMPANY_SIZE_FILTER',
+    value: 'SUPPLY_FILTER',
   }
 
   componentDidMount() {
@@ -69,8 +69,8 @@ class Doughnut extends Component {
     return (
       <span>
         <RadioGroupStyle onChange={this.onChange} value={this.state.value}>
-          <Radio value="COMPANY_SIZE_FILTER"><FormattedMessage id="Title.companySize" /></Radio>
           <Radio value="SUPPLY_FILTER"><FormattedMessage id="Title.supplyType" /></Radio>
+          <Radio value="COMPANY_SIZE_FILTER"><FormattedMessage id="Title.companySize" /></Radio>
           {
             dataUser.rols
               && dataUser.rols.find(x => x).shortName === (ADMINISTRATOR || LIBERATOR || READER) &&
