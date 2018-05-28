@@ -25,6 +25,7 @@ const mapStateToProps = state => ({
   loading: state.dictionary.loading,
   data: state.dictionary.data,
   masters: state.dictionary.masters,
+  fields: state.dictionary.fields,
 });
 
 export default connect(

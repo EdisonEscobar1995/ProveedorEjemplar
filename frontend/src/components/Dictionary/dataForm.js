@@ -5,7 +5,8 @@ const dataForm =
   getFieldsByMaster,
   // form,
   fields,
-  dataMaster,
+  getValuesByField,
+  // dataMaster,
   // cleanData
 }) => {
   // const handleReset = () => {
@@ -35,41 +36,41 @@ const dataForm =
           handleChange: getFieldsByMaster,
           value: '',
         },
-        {
-          key: 1.2,
-          value: [
-            {
-              span: 24,
-              type: 'select',
-              options,
-              label: 'Idioma',
-              key: 'language',
-              required: true,
-              disabled: true,
-              value: dataMaster.language,
-            },
-          ],
-        },
       ],
-    }];
-
-  // if (Object.keys(fields).length !== 0) {
-  formData.splice(2, 0,
-    {
-      key: 1.3,
+    }, {
+      key: 1.2,
       value: [
         {
           span: 24,
           type: 'select',
-          options: fields,
-          label: 'Campo',
-          key: 'name',
+          options,
+          label: 'Idioma',
+          key: 'language',
           required: true,
-          value: dataMaster.name,
+          disabled: true,
+          value: 'en',
         },
       ],
-    });
-  // }
+    }];
+
+  if (fields && fields.length !== 0) {
+    formData.splice(2, 0,
+      {
+        key: 1.3,
+        value: [
+          {
+            span: 24,
+            type: 'select',
+            options: fields,
+            label: 'Campo',
+            key: 'name',
+            handleChange: getValuesByField,
+            required: true,
+            value: '',
+          },
+        ],
+      });
+  }
 
   // if (Object.keys(fields).length !== 0) {
   //   formData.splice(2, 0,

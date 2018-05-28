@@ -2,6 +2,7 @@ import {
   GET_DICTIONARY_PROGRESS,
   GET_DICTIONARY_SUCCESS,
   SAVE_DICTIONARY,
+  GET_FIELDS_SUCCESS,
   REQUEST_FAILED,
 } from './const';
 
@@ -10,6 +11,8 @@ const initialState = {
   masters: [],
   dataMaster: {},
   mastersFields: {},
+  fields: [],
+  currentMaster: '',
   loading: false,
 };
 
@@ -28,6 +31,13 @@ function alertApp(state = initialState, action) {
         masters: action.masters,
         mastersFields: action.mastersFields,
         loading: false,
+      };
+    }
+    case GET_FIELDS_SUCCESS: {
+      return {
+        ...state,
+        fields: action.fields,
+        currentMaster: action.currentMaster,
       };
     }
     case SAVE_DICTIONARY: {

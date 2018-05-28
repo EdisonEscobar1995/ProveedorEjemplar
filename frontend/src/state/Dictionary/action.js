@@ -3,10 +3,16 @@ import {
   GET_DICTIONARY_SUCCESS,
   SAVE_DICTIONARY,
   GET_FIELDS_SUCCESS,
+  GET_VALUES_BY_MASTER,
   REQUEST_FAILED,
 } from './const';
 
-import { getAllTranslationApi, getMastersWithFieldsToTranslateApi, saveTranslationApi } from '../../api/translation';
+import {
+  getAllTranslationApi,
+  getMastersWithFieldsToTranslateApi,
+  saveTranslationApi,
+  getAllValuesByFieldApi,
+} from '../../api/translation';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
 
@@ -60,18 +66,42 @@ function getDictionary() {
   };
 }
 
-const setFieldsSuccess = fields => ({
+const setFieldsSuccess = (fields, currentMaster) => ({
   type: GET_FIELDS_SUCCESS,
   fields,
+  currentMaster,
 });
 
 const getFieldsByMaster = master => (dispatch, getState) => {
   const mastersFields = getState().dictionary.mastersFields;
-  const fields = {
-    id: mastersFields[master],
-    name: mastersFields[master],
-  };
-  dispatch(setFieldsSuccess(fields));
+  const fields = [];
+  if (mastersFields[master]) {
+    mastersFields[master].forEach((x) => {
+      const field = {
+        id: x,
+        name: x,
+      };
+      fields.push(field);
+    });
+  }
+  dispatch(setFieldsSuccess(fields, master));
+};
+
+const getValuesSuccess = values => ({
+  type: GET_VALUES_BY_MASTER,
+  values,
+});
+
+const getValuesByField = field => (dispatch, getState) => {
+  const currentMaster = getState().dictionary.currentMaster;
+  requestApi(dispatch, getDictionaryProgress, getAllValuesByFieldApi, currentMaster)
+    .then((response) => {
+      const data = response.data.data;
+      const valuesByField = data.map(x => x[field]);
+      dispatch(getValuesSuccess(valuesByField));
+    }).catch(() => {
+      dispatch(getFailedRequest());
+    });
 };
 
 function saveDictionary(clientData, remoteId, next) {
@@ -98,6 +128,7 @@ export {
   getDictionary,
   saveDictionary,
   getFieldsByMaster,
+  getValuesByField,
   openModal,
   closeModal,
 };

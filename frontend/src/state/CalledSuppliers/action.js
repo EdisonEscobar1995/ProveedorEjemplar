@@ -9,6 +9,7 @@ import {
   GET_SUPPLIERS_BY_KEY_PROGRESS,
   GET_SUPPLIERS_BY_KEY_SUCCESS,
   AUTOCOMPLETE_SUPPLIER,
+  GET_MASTER_SUCCESS,
   ADD_SUPPLIER,
   UPDATE_SUPPLIER,
   EDIT_SUPPLIER,
@@ -21,6 +22,7 @@ import { requestApi } from '../../utils/action';
 import { openModal, closeModal } from '../Main/action';
 import exportLog from '../../components/Call/exportLog';
 import setMessage from '../Generic/action';
+import getMasterApi from '../../api/master';
 
 const getCalledSuppliersProgress = () => ({
   type: GET_CALLED_SUPPLIERS_PROGRESS,
@@ -87,6 +89,25 @@ const getCalledSuppliers = id => (dispatch) => {
         .map(item => ({ ...item, visible: true }));
       const { data } = response.data;
       dispatch(getCalledSuppliersSuccess(data));
+    }).catch(() => {
+      dispatch(getFailedRequest());
+    });
+};
+
+const getMastersSuccess = masters => ({
+  type: GET_MASTER_SUCCESS,
+  masters,
+});
+
+const getMasters = () => (dispatch) => {
+  requestApi(dispatch, getCalledSuppliersProgress, getMasterApi, [
+    'Country',
+    'CompanySize',
+    'Supply',
+  ])
+    .then((masterResponse) => {
+      const masters = masterResponse.data.data;
+      dispatch(getMastersSuccess(masters));
     }).catch(() => {
       dispatch(getFailedRequest());
     });
@@ -249,4 +270,5 @@ export {
   editSupplier,
   saveSuppliers,
   autoComplete,
+  getMasters,
 };

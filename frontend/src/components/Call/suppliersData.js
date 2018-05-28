@@ -3,6 +3,7 @@ const suppliersData =
   record = {},
   closeModal,
   masters,
+  mastersToList,
   getSuppliersByKey,
   fetching,
   data,
@@ -98,7 +99,8 @@ const suppliersData =
       {
         span: 24,
         type: 'select',
-        options: data.masters.Supply,
+        options: data.masters && Object.keys(data.masters).length > 0 ?
+          data.masters.Supply : mastersToList.Supply,
         label: 'Tipo de suministro',
         key: 'nameSupplyToLoad',
         required: true,
@@ -112,10 +114,11 @@ const suppliersData =
       {
         span: 24,
         type: 'select',
-        options: data.masters.CompanySize,
+        options: data.masters && Object.keys(data.masters).length > 0 ?
+          data.masters.CompanySize : mastersToList.CompanySize,
         label: 'Tamaño de empresa',
         key: 'nameCompanySizeToLoad',
-        required: true,
+        required: false,
         value: record.idCompanySize,
       },
     ],
@@ -126,7 +129,8 @@ const suppliersData =
       {
         span: 24,
         type: 'select',
-        options: data.masters.Country,
+        options: data.masters && Object.keys(data.masters).length > 0 ?
+          data.masters.Country : mastersToList.Country,
         label: 'País',
         key: 'nameCountryToLoad',
         required: true,

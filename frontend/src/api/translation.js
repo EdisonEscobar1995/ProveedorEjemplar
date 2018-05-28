@@ -6,8 +6,11 @@ const getMastersWithFieldsToTranslateApi = () => instance.get('Translation?actio
 
 const saveTranslationApi = data => instance.post('Translation?action=save', data);
 
+const getAllValuesByFieldApi = master => instance.get(`${master}?action=getAll`);
+
 export {
   getAllTranslationApi,
+  getAllValuesByFieldApi,
   getMastersWithFieldsToTranslateApi,
   saveTranslationApi,
 };
