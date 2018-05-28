@@ -14,7 +14,7 @@ const getCalledSuppliersApi = id => instance.get('Call?action=getSuppliersInCall
   params: { idCall: id },
 });
 
-const saveSuppliersToCallApi = data => instance.post('Call?action=loadSupplierToCall  ', data);
+const saveSuppliersToCallApi = data => instance.post('Call?action=loadSupplierToCall', data);
 
 const sendInvitationApi = supplier => instance.post('Supplier?action=sendInvitation', supplier);
 

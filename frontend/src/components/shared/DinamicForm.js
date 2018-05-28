@@ -233,7 +233,11 @@ class DinamicForm extends Component {
                           fieldContent = (<Group disabled={disabled} onChange={handleChange}>
                             {
                               options && options.map(option => (
-                                <Radio key={option.id} value={option.id} size={size}>
+                                <Radio
+                                  key={option.id}
+                                  value={option.id}
+                                  size={size}
+                                >
                                   {
                                     dontFormatMessage ?
                                       option.name :

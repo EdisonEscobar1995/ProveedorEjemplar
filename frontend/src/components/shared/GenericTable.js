@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Spin, Button, Tooltip, Input, Icon } from 'antd';
+import styled from 'styled-components';
 import Confirm from './Confirm';
 import FormattedMessage from './FormattedMessage';
 import H1 from '../shared/H1';
@@ -7,6 +8,11 @@ import SimpleSelect from '../shared/SimpleSelect';
 
 const { Column } = Table;
 const Search = Input.Search;
+
+const Text = styled.span`
+  margin-bottom: 4px;
+  margin-left: 5px;
+`;
 
 function GenericTable(props) {
   const {
@@ -20,22 +26,33 @@ function GenericTable(props) {
     expandable,
     pagination,
     searchValue,
+    // rowSelection = false,
     withDelete = false,
     withOutActions = false,
     withOutAdd = false,
+    // changeSelection,
+    // selectRow,
+    // selectAllRows,
   } = props;
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      console.log(selected, selectedRows, changeRows);
-    },
-  };
+  // const rowSelectionActions = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     if (changeSelection) {
+  //       changeSelection(selectedRowKeys, selectedRows);
+  //     }
+  //   },
+  //   onSelect: (record, selected, selectedRows) => {
+  //     console.log(record, selected, selectedRows);
+  //     if (selectRow) {
+  //       selectRow(record, selected, selectedRows);
+  //     }
+  //   },
+  //   onSelectAll: (selected, selectedRows, changeRows) => {
+  //     if (selectAllRows) {
+  //       selectAllRows(selected, selectedRows, changeRows);
+  //     }
+  //   },
+  // };
 
   return (
     <Spin spinning={loading}>
@@ -44,16 +61,6 @@ function GenericTable(props) {
         data && data.length > 0 ? (
           <div>
             <span>
-              {
-                componentList[level].filters &&
-                  componentList[level].filters.map(filter => (
-                    <SimpleSelect
-                      options={filter.filterOptions}
-                      mode={filter.filterMode}
-                      handleChange={filter.onChangeFilter}
-                    />
-                  ))
-              }
               {
                 componentList[level].onSearchMethod && (
                   <Search
@@ -68,6 +75,24 @@ function GenericTable(props) {
                       componentList[level].onSearchMethod(value, parentId))}
                   />
                 )
+              }
+              {
+                componentList[level].filters &&
+                componentList[level].filters.map(filter => (
+                  <span>
+                    <Text>{filter.label ? filter.label : ''}</Text>
+                    <SimpleSelect
+                      options={filter.options}
+                      mode={filter.mode}
+                      handleChange={filter.handleChange}
+                      onSelect={filter.onSelect}
+                      onDeselect={filter.deselect}
+                      group={filter.group}
+                      style={{ width: 200 }}
+                      labelOptions={filter.labelOptions}
+                    />
+                  </span>
+                ))
               }
             </span>
             <Table
@@ -96,8 +121,10 @@ function GenericTable(props) {
                       searchValue={record.searchValue}
                       loading={false}
                       pagination={pagination}
+                      // rowSelection={rowSelection && rowSelectionActions}
                     />
                   ) : (
+                    !withOutAdd &&
                     <div>
                       <H1 text={componentList[level + 1].title} />
                       <Button
@@ -112,7 +139,19 @@ function GenericTable(props) {
                   )
                 ) : null
               }
-              rowSelection={!!componentList[level].filters && rowSelection}
+              // rowSelection={rowSelection && rowSelectionActions}
+              style={componentList[level].style}
+              onRowClick={componentList[level].onRowClick ? (record) => {
+                componentList[level].onRowClick(record);
+              } : null}
+              // onRow={(record, index) => {
+              //   if (componentList[level].rowSelected) {
+              //     return {
+              //       selectRow: componentList[level].rowSelected(record, index),
+              //     };
+              //   }
+              //   return null;
+              // }}
             >
               {
                 componentList[level].columns.map(column => (
@@ -128,9 +167,7 @@ function GenericTable(props) {
                 ))
               }
               {
-                disabled && !withOutActions ?
-                  null
-                  :
+                (disabled || !withOutActions) &&
                   <Column
                     title={<FormattedMessage id="Table.action" />}
                     key="action"
@@ -141,6 +178,9 @@ function GenericTable(props) {
                             shape="circle"
                             icon="edit"
                             onClick={() => {
+                              // if (componentList[level].editMethod) {
+                              //   componentList[level].editMethod(record);
+                              // }
                               const Component = componentList[level].component;
                               openModal(<Component {...props} record={record} />);
                             }}

@@ -8,6 +8,7 @@ import * as actions from '../../state/Notification/action';
 class NotificationContainer extends Component {
   componentDidMount() {
     this.props.getNotification();
+    this.props.getUsers();
   }
   render() {
     if (this.props.loading === false) {
@@ -34,6 +35,7 @@ const mapStateToProps = state => ({
   loading: state.notification.loading,
   data: state.notification.data,
   dataOption: state.notification.dataOption,
+  users: state.notification.users,
 });
 
 export default connect(

@@ -13,11 +13,13 @@ import {
   UPDATE_SUPPLIER,
   AUTOCOMPLETE_SUPPLIER,
   REQUEST_FAILED,
+  GET_MASTER_SUCCESS,
 } from './const';
 
 const initialState = {
   data: {},
   masters: [],
+  mastersToList: {},
   fetching: false,
   loading: false,
   autoCompleteData: {},
@@ -30,6 +32,13 @@ function calledSuppliersApp(state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    }
+    case GET_MASTER_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        mastersToList: action.masters,
       };
     }
     case CLEAR_DATA_CALLED_SUPPLIERS: {

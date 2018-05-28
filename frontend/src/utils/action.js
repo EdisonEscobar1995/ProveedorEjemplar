@@ -29,10 +29,12 @@ function getMessage(type) {
     case 'UNAUTHORIZED':
       return 'Validation.unauthorized';
     case 'DOCUMENT_MULTI_CONNECTED':
-      return 'No se pueden eliminar los datos porque están siendo utilizados.';
+      return 'Validation.documentMultiConect';
     case 'DONT_EXIST_IN_DIRECTORY':
-      return 'El proveedor no existe en el directorio';
+      return 'Validation.dontExistInDirectory';
     case 'ALREADY_EXIST_CALL_ACTIVE':
+      return 'Validation.callExists';
+    case 'ALREADY_EXIST_CALL':
       return 'Validation.callExists';
     case 'DATE_WITHOUT_FIXING':
       return 'Validation.dateWithoutFixing';

@@ -6,9 +6,11 @@ import {
   CLEAN_DATA,
   GET_NOTIFICATION_BY_ID_SUCCESS,
   UPDATE_NOTIFICATION_ATTACHMENT,
+  GET_USERS_NOTIFICATION_SUCCESS,
 } from './const';
 
 import { getNotificationApi, saveNotificationApi, getNotificationByIdApi } from '../../api/notification';
+import { getUsersApi } from '../../api/user';
 import { requestApi } from '../../utils/action';
 
 function getNotificationProgress() {
@@ -73,11 +75,28 @@ function getNotification() {
   };
 }
 
+const getUserSuccess = data => ({
+  type: GET_USERS_NOTIFICATION_SUCCESS,
+  data,
+});
+
+const getUsers = () => (dispatch) => {
+  requestApi(dispatch, getNotificationProgress, getUsersApi)
+    .then((response) => {
+      const data = response.data.data.map(element => ({
+        ...element,
+        visible: true,
+      }));
+      dispatch(getUserSuccess(data));
+    }).catch(() => {
+      dispatch(getFailedRequest());
+    });
+};
+
 const saveNotification = (clientData, remoteId, next) => (dispatch, getState) => {
   const { dataOption } = getState().notification;
   clientData.idFooter = dataOption.idFooter;
   clientData.idBanner = dataOption.idBanner;
-  clientData.withCopy = [];
   clientData.alias = dataOption.alias;
   clientData.name = dataOption.name;
   requestApi(dispatch, getNotificationProgress, saveNotificationApi, clientData)
@@ -124,12 +143,32 @@ const deleteAttachment = (idAttach, field) => (
     if (idAttach) {
       data[notificationIndex][field] = '';
       if (field === 'idBanner') {
-        data[notificationIndex].banner = {};
+        data[notificationIndex].banner = {
+          id: '',
+          name: '',
+          url: '',
+        };
+        dataOption.idBanner = '';
+        dataOption.banner = {
+          id: '',
+          name: '',
+          url: '',
+        };
       } else {
-        data[notificationIndex].footer = {};
+        data[notificationIndex].footer = {
+          id: '',
+          name: '',
+          url: '',
+        };
+        dataOption.idFooter = '';
+        dataOption.footer = {
+          id: '',
+          name: '',
+          url: '',
+        };
       }
     }
-    dispatch(updateImages(data));
+    dispatch(updateImages(data, dataOption));
   }
 );
 
@@ -140,4 +179,5 @@ export {
   cleanData,
   updateAttachment,
   deleteAttachment,
+  getUsers,
 };

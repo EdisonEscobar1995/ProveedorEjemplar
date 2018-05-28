@@ -1,6 +1,6 @@
 const columnsData = () => [
   {
-    title: 'Nombre del tamaño de compañia',
+    title: 'Estado',
     key: 'name',
     sorter: (a, b) => (a.name > b.name ? -1 : 1),
   },

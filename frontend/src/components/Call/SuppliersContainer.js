@@ -83,10 +83,14 @@ class SuppliersContainer extends Component {
       openModal,
       massiveShipmentCall,
       loading } = this.props;
-    const disabledButton = editData.id === null || editData.id === undefined;
-    const href = process.env.REACT_APP_URL;
+    const hrefCopy = process.env.REACT_APP_URL;
+    const href = hrefCopy.replace(/\/dist/, '');
     const url = `${href}plantilla_proveedores.xlsx`;
     const { suppliers, suppliersByCall, masters } = calledSuppliers;
+    const disabledButton = editData.id === null ||
+      editData.id === undefined;
+    const disabledButtonBySuppliers =
+      !suppliers || suppliers.filter(supplier => supplier.visible).length === 0;
     const This = this;
     const columns = [{
       title: 'Código SAP',
@@ -234,7 +238,7 @@ class SuppliersContainer extends Component {
             >
               <Button
                 type="primary"
-                disabled={disabledButton || loading}
+                disabled={disabledButton || loading || disabledButtonBySuppliers}
               >
                   Enviar
               </Button>
@@ -253,6 +257,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => ({
   data: state.calledSuppliers.data,
   loading: state.calledSuppliers.loading,
+  mastersToList: state.calledSuppliers.mastersToList,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SuppliersContainer);

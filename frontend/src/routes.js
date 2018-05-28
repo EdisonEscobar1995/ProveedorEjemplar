@@ -356,6 +356,24 @@ const routes = [
       import('./pages/CompanySize').then(module => module.default),
     ),
   },
+  {
+    index: increment(),
+    name: 'ALERT',
+    path: '/alert',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Alert').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'DICTIONARY',
+    path: '/dictionary',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Dictionary').then(module => module.default),
+    ),
+  },
 ];
 
 export default routes;

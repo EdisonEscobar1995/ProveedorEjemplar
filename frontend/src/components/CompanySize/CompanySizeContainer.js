@@ -13,7 +13,7 @@ class CompanySizeContainer extends Component {
   render() {
     const componentList = [
       {
-        title: 'Configurar tipos de compañía',
+        title: 'Configurar tamaño de compañía',
         component: CompanySize,
         columns: columnsData(this.props.data),
         deleteMethod: this.props.deleteCompanySize,

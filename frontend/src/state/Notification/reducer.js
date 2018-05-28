@@ -6,10 +6,12 @@ import {
   CLEAN_DATA,
   GET_NOTIFICATION_BY_ID_SUCCESS,
   UPDATE_NOTIFICATION_ATTACHMENT,
+  GET_USERS_NOTIFICATION_SUCCESS,
 } from './const';
 
 const initialState = {
   data: [],
+  users: [],
   searchValue: '',
   dataOption: {},
   loading: false,
@@ -17,6 +19,13 @@ const initialState = {
 
 function notificationApp(state = initialState, action) {
   switch (action.type) {
+    case GET_USERS_NOTIFICATION_SUCCESS: {
+      return {
+        ...state,
+        users: action.data,
+        loading: false,
+      };
+    }
     case GET_NOTIFICATION_PROGRESS: {
       return {
         ...state,

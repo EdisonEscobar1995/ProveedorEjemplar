@@ -127,6 +127,8 @@ const messages = {
   'Validation.pattern': 'Enter a year',
   'Validation.callExists': 'There are active calls',
   'Validation.dateWithoutFixing': 'The closing date of the survey is not configured',
+  'Validation.dontExistInDirectory': 'Supplier don´t exist in directory',
+  'Validation.documentMultiConect': 'Data is being used',
   'Title.imageGallery': 'Image Gallery',
   'Title.percentageAdvance': 'Percentage of Advance',
   'Title.pendings': 'My pendings',

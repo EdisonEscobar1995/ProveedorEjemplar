@@ -65,7 +65,8 @@ function getCompanyType() {
   return (dispatch) => {
     requestApi(dispatch, getCompanyTypeProgress, getDataCompanyTypesApi)
       .then((response) => {
-        const data = sortByField(response.data.data, 'name')
+        const data =
+        sortByField(response.data.data, 'name')
           .map(element => ({
             ...element,
             visible: true,

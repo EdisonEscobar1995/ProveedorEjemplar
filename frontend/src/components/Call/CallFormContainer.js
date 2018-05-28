@@ -21,6 +21,7 @@ class CallFormContainer extends Component {
       this.props.clearDataEdit();
       this.props.clearDataCalledSuppliers();
     }
+    this.props.getMasters();
   }
 
   render() {
@@ -50,6 +51,7 @@ const mapStateToProps = state => ({
   disabledByDate: state.call.disabledByDate,
   calledSuppliers: state.calledSuppliers.data,
   loadingSuppliers: state.calledSuppliers.loading,
+  mastersToList: state.calledSuppliers.mastersToList,
 });
 
 const mapDispatchToProps = {

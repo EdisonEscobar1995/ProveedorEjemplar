@@ -5,7 +5,7 @@ const columnsData = (props, onAdd) => [{
   title: 'Tipo de suministro',
   key: 'idSupply',
   render: (text, record) => {
-    let supply = props.supply.data.find(x => x.id === record.idSupply);
+    let supply = props.supply.find(x => x.id === record.idSupply);
     supply = supply ? supply.name : '';
     return supply;
   },
@@ -13,7 +13,7 @@ const columnsData = (props, onAdd) => [{
   title: 'Tamaño de la empresa',
   key: 'idCompanySize',
   render: (text, record) => {
-    let companySize = props.companySize.data.find(x => x.id === record.idCompanySize);
+    let companySize = props.companySize.find(x => x.id === record.idCompanySize);
     companySize = companySize ? companySize.name : '';
     return companySize;
   },
