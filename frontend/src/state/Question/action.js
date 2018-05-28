@@ -257,6 +257,7 @@ function saveOptionsQuestion(element) {
 
 function saveQuestion(clientData, next) {
   return (dispatch, getState) => {
+    clientData.idsSurvey = [];
     requestApi(dispatch, getQuestionProgress, saveQuestionApi, clientData)
       .then((response) => {
         const { data } = response.data;

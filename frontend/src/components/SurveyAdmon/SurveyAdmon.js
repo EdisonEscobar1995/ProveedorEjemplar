@@ -4,7 +4,7 @@ import { Table, Input, Icon } from 'antd';
 const Search = Input.Search;
 
 function SurveyAdmon(props) {
-  const { columns, data, loading, searchValue, searchSurveyAdmon, changeSearchSurveyAdmon } = props;
+  const { columns, data, loading, searchValue, searchSurvey, changeSearchSurvey } = props;
 
   return (
     <div>
@@ -13,11 +13,11 @@ function SurveyAdmon(props) {
         placeholder="Buscar"
         style={{ width: 200 }}
         value={searchValue}
-        prefix={<Icon type="close" style={{ cursor: 'pointer' }} onClick={e => searchSurveyAdmon(e.target.value)} />}
+        prefix={<Icon type="close" style={{ cursor: 'pointer' }} onClick={e => searchSurvey(e.target.value)} />}
         onChange={event => (
-          changeSearchSurveyAdmon(event.target.value))}
+          changeSearchSurvey(event.target.value))}
         onSearch={value => (
-          searchSurveyAdmon(value))}
+          searchSurvey(value))}
       />
       <Table
         rowKey={record => record.id}

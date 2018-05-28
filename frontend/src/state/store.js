@@ -33,6 +33,8 @@ import dimensionAndCriterion from './DimensionAndCriterion/reducer';
 import question from './Question/reducer';
 import companySize from './CompanySize/reducer';
 import surveyAdmon from './SurveyAdmon/reducer';
+import alert from './Alert/reducer';
+import dictionary from './Dictionary/reducer';
 
 const app = combineReducers({
   main,
@@ -67,6 +69,8 @@ const app = combineReducers({
   question,
   companySize,
   surveyAdmon,
+  alert,
+  dictionary,
 });
 
 let middleware = {};

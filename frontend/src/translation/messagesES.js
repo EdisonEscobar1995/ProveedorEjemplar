@@ -127,6 +127,8 @@ const messages = {
   'Validation.pattern': 'Ingrese un año',
   'Validation.callExists': 'Existen convocatorias activas',
   'Validation.dateWithoutFixing': 'La fecha de cierre de la encuesta no se encuentra configurada',
+  'Validation.dontExistInDirectory': 'El proveedor no existe en el directorio',
+  'Validation.documentMultiConect': 'No se pueden eliminar los datos porque están siendo utilizados.',
   'Title.percentageAdvance': 'Porcentaje de avance',
   'Title.imageGallery': 'Galería de imágenes',
   'Title.pendings': 'Mis pendientes',

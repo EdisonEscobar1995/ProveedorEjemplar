@@ -84,7 +84,8 @@ class SuppliersContainer extends Component {
       massiveShipmentCall,
       loading } = this.props;
     const disabledButton = editData.id === null || editData.id === undefined;
-    const href = process.env.REACT_APP_URL;
+    const hrefCopy = process.env.REACT_APP_URL;
+    const href = hrefCopy.replace(/\/dist/, '');
     const url = `${href}plantilla_proveedores.xlsx`;
     const { suppliers, suppliersByCall, masters } = calledSuppliers;
     const This = this;

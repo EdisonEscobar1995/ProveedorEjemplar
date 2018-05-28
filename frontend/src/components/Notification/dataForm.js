@@ -3,6 +3,7 @@ const dataForm =
 ({
   dataOption,
   data,
+  users,
   updateAttachment,
   getNotificationById,
   form,
@@ -117,25 +118,21 @@ const dataForm =
           },
         ],
       },
-      // {
-      //   key: 1.2,
-      //   value: [
-      //     {
-      //       span: 24,
-      //       type: 'select',
-      //       mode: 'combobox',
-      //       autoComplete: true,
-      //       label: 'Código SAP',
-      //       key: 'sapCode',
-      //       value: record.sapCode ? record.sapCode : '',
-      //       required: true,
-      //       options: masters,
-      //       onSearch: getSuppliersByKey,
-      //       handleSelect: autoComplete,
-      //       fetching,
-      //     },
-      //   ],
-      // },
+      {
+        key: 1.7,
+        value: [
+          {
+            span: 24,
+            type: 'select',
+            mode: 'multiple',
+            options: users,
+            label: 'Notificación adicional a',
+            key: 'withCopy',
+            required: false,
+            value: dataOption.withCopy,
+          },
+        ],
+      },
       {
         key: 2,
         justify: 'center',
