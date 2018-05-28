@@ -584,9 +584,13 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      */
     public SupplierByCallDTO asociateSupplierToCall(SupplierDTO supplier, String idCall) throws HandlerGenericException {
         SurveyBLO surveyBLO = new SurveyBLO();
-        SurveyDTO survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
-        SupplierByCallDTO supplierByCall = getCallActiveToParticipate(supplier.getId());
+        SupplierByCallDTO supplierByCall = new SupplierByCallDTO();
+        SurveyDTO survey = new SurveyDTO();
+        if (null != supplier.getIdCompanySize() && !supplier.getIdCompanySize().isEmpty()) {
+            survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
+        }
 
+        supplierByCall = getCallActiveToParticipate(supplier.getId());
         if (!(supplierByCall instanceof SupplierByCallDTO)) {
             supplierByCall = new SupplierByCallDTO();
             StateBLO stateBLO = new StateBLO();
@@ -598,7 +602,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             supplierByCall.setIdState(state.getId());
         }
 
-        supplierByCall.setIdSurvey(survey.getId());
+        supplierByCall.setIdSurvey(null == survey.getId() ? null : survey.getId());
         return super.save(supplierByCall);
     }
 

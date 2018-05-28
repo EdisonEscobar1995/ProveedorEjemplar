@@ -610,7 +610,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                     supplier = supplierBLO.createByFirstTime(supplier);
                     summaryRecord.status = "CREATED";
                     SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-                    supplierByCallBLO.asociateSupplierToCall(supplier, call.getId()).getId();
+                    supplierByCallBLO.asociateSupplierToCall(supplier, call.getId());
                 } catch (HandlerGenericException exception) {
                     summaryRecord.status = exception.getMessage();
                 }
@@ -654,13 +654,18 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         boolean allowLoad = true;
 
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-        CompanySizeDTO companySize = companySizeBLO.getBy("name", supplier.nameCompanySizeToLoad);
-        String idCompanySize = companySize == null ? null : companySize.getId();
-        if (null == idCompanySize || idCompanySize.isEmpty()) {
-            summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
-            allowLoad = false;
+
+        if (null == supplier.nameCompanySizeToLoad || supplier.nameCompanySizeToLoad.isEmpty()) {
+            allowLoad = true;
         } else {
-            supplier.setIdCompanySize(idCompanySize);
+            CompanySizeDTO companySize = companySizeBLO.getBy("name", supplier.nameCompanySizeToLoad);
+            String idCompanySize = companySize == null ? null : companySize.getId();
+            if (null == idCompanySize || idCompanySize.isEmpty()) {
+                summaryRecord.status = "COMPANY_SIZE_DONT_EXIST";
+                allowLoad = false;
+            } else {
+                supplier.setIdCompanySize(idCompanySize);
+            }
         }
 
         SupplyBLO supplyBLO = new SupplyBLO();
