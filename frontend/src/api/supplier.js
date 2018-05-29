@@ -58,7 +58,8 @@ function sendRejectionsApi(data) {
 }
 
 function finishTechnicalTeamSurveyApi(data) {
-  return instance.post('SupplierToNextStage?action=finishTechnicalTeamSurvey', data);
+  return instance.post('SupplierToNextStage?action=finishSurveyMassive', data);
+  // return instance.post('SupplierToNextStage?action=finishTechnicalTeamSurvey', data);
 }
 
 function finishManagerTeamSurveyApi() {
