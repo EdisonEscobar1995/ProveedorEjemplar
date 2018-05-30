@@ -200,4 +200,42 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
         return suppliers;
     }
 
+    /**
+     * @param sapCode
+     * @param nit
+     * @return Proveedor existente
+     * @throws HandlerGenericException
+     */
+    public SupplierDTO getBySAPCodeOrNIT(String sapCode, String nit) throws HandlerGenericException {
+        try {
+            SupplierDTO supplier = null;
+            View viewSap = null;
+            Document documentSap = null;
+            View viewNit = null;
+            Document documentNit = null;
+            if (null != sapCode && !sapCode.isEmpty()) {
+                viewSap = getDatabase().getView("vwSuppliersBySapCode");
+                documentSap = viewSap.getFirstDocumentByKey(sapCode, true);
+            }
+
+            if (null != nit && !nit.isEmpty()) {
+                viewNit = getDatabase().getView("vwSupplierByNit");
+                documentNit = viewNit.getFirstDocumentByKey(sapCode, true);
+            }
+
+            if (null != documentSap) {
+                supplier = castDocument(documentSap);
+            }
+
+            if (null != documentNit) {
+                supplier = castDocument(documentNit);
+            }
+
+            return supplier;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
+    }
+
 }

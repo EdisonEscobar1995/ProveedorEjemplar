@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.openntf.domino.email.DominoEmail;
-import org.openntf.domino.utils.Factory.SessionType;
 
 import org.openntf.domino.utils.Factory;
 import com.nutresa.exemplary_provider.dal.NotificationDAO;
@@ -145,7 +144,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         NotificationDAO notificationDAO = new NotificationDAO();
         try {
             StringBuilder body = new StringBuilder();
-            DominoEmail email = new DominoEmail(Factory.getSession(SessionType.NATIVE));
+            DominoEmail email = new DominoEmail(Factory.getNamedSession(NotificationDAO.SIGNER_EMAIL, true));
             body.append(TemplateMail.buildMessage(notification.getMessage(), requireTableDetail, dataDetail,
                     requireButton, linkButton, notificationDAO.getPublicResource(notification.getIdBanner()),
                     notificationDAO.getPublicResource(notification.getIdFooter())));

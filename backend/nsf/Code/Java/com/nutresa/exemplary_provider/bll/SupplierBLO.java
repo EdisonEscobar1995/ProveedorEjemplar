@@ -301,9 +301,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
      * @throws HandlerGenericException
      */
     protected SupplierDTO getBySAPCodeOrNIT(String sapCode, String nit) throws HandlerGenericException {
-        SupplierBLO supplierBLO = new SupplierBLO();
-        SupplierDTO supplier = supplierBLO.getBy("sapCode", sapCode);
-        return (supplier == null ? supplierBLO.getBy("nit", nit) : supplier);
+        SupplierDAO supplierDAO = new SupplierDAO();
+        SupplierDTO supplier = supplierDAO.getBySAPCodeOrNIT(sapCode, nit);
+        return supplier;
     }
 
     /**

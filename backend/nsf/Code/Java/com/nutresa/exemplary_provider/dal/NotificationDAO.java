@@ -11,27 +11,25 @@ import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 public class NotificationDAO extends GenericDAO<NotificationDTO> {
     public static final String SENDER_NAME = "Proveedor Ejemplar Grupo Nutresa";
     public static final String SENDER_EMAIL = "proveedorejemplar@serviciosnutresa.com";
+    public static final String SIGNER_EMAIL = "aaplica@serviciosnutresa.com";
 
     public NotificationDAO() {
         super(NotificationDTO.class);
     }
 
     public NotificationDTO getNotificationByAlias(String alias) throws HandlerGenericException {
-        NotificationDTO response = null;
         try {
             View currentView = getDatabase().getView("vwNotificationsByAlias");
             Document document = currentView.getFirstDocumentByKey(alias, true);
-            response = castDocument(document);
+            return castDocument(document);
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-
-        return response;
     }
 
     public String getPublicResource(String idResource) throws HandlerGenericException {
-        String response = "";
         try {
+            String response = "";
             String host = Common.getHostName();
             View vwSystem = getDatabase().getView("vwSystems");
             Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
@@ -50,11 +48,10 @@ public class NotificationDAO extends GenericDAO<NotificationDTO> {
                         + getFileName(docFiles);
             }
 
+            return response;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-
-        return response;
     }
 
     private String getFileName(Document document) {
