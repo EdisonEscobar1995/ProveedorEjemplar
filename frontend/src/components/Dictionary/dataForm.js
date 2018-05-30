@@ -3,17 +3,18 @@ const dataForm =
 ({
   masters,
   getFieldsByMaster,
-  // form,
+  form,
   fields,
+  spanishText,
   getValuesByField,
-  // dataMaster,
-  // cleanData
+  getTranslationBySpanishText,
+  translate,
+  cleanDataMaster,
 }) => {
-  // const handleReset = () => {
-  //   form.resetFields();
-  //   form.setFieldsValue({ id: '' });
-  //   cleanData();
-  // };
+  const handleReset = () => {
+    form.resetFields();
+    cleanDataMaster();
+  };
 
   const options = [
     {
@@ -31,9 +32,9 @@ const dataForm =
           type: 'select',
           options: masters,
           label: 'Maestro',
-          key: 'id',
+          key: 'entity',
           required: true,
-          handleChange: getFieldsByMaster,
+          handleSelect: getFieldsByMaster,
           value: '',
         },
       ],
@@ -64,7 +65,7 @@ const dataForm =
             options: fields,
             label: 'Campo',
             key: 'name',
-            handleChange: getValuesByField,
+            handleSelect: getValuesByField,
             required: true,
             value: '',
           },
@@ -72,46 +73,64 @@ const dataForm =
       });
   }
 
-  // if (Object.keys(fields).length !== 0) {
-  //   formData.splice(2, 0,
-  //     {
-  //       key: 1.3,
-  //       value: [
-  //         {
-  //           span: 24,
-  //           type: 'select',
-  //           options: fields,
-  //           label: 'Campo',
-  //           key: 'name',
-  //           required: true,
-  //           value: dataMaster.name,
-  //         },
-  //       ],
-  //     });
-  //   }
-  //   {
-  //     key: 2,
-  //     justify: 'center',
-  //     value: [
-  //       {
-  //         span: 2,
-  //         type: 'button',
-  //         label: 'Limpiar',
-  //         key: 'clear',
-  //         buttonType: 'primary',
-  //         handleclick: handleReset,
-  //       },
-  //       {
-  //         span: 4,
-  //         type: 'button',
-  //         label: 'Guardar',
-  //         key: 'save',
-  //         buttonType: 'primary',
-  //         htmlType: 'submit',
-  //       },
-  //     ],
-  //   });
-  // }
+  if (spanishText.length !== 0) {
+    formData.splice(3, 0,
+      {
+        key: 1.4,
+        value: [
+          {
+            span: 24,
+            type: 'select',
+            options: spanishText,
+            label: 'Texto en español',
+            key: 'spanishText',
+            handleSelect: getTranslationBySpanishText,
+            required: true,
+            value: '',
+          },
+        ],
+      });
+  }
+
+  if (translate !== undefined) {
+    formData.splice(4, 0,
+      {
+        key: 1.5,
+        value: [
+          {
+            span: 24,
+            type: 'input',
+            label: 'Traducción',
+            key: 'value',
+            required: true,
+            value: translate,
+          },
+        ],
+      });
+    formData.splice(5, 0,
+      {
+        key: 2,
+        justify: 'center',
+        value: [
+          {
+            span: 2,
+            type: 'button',
+            label: 'Limpiar',
+            key: 'clear',
+            buttonType: 'primary',
+            handleclick: handleReset,
+          },
+          {
+            span: 4,
+            type: 'button',
+            label: 'Guardar',
+            key: 'save',
+            buttonType: 'primary',
+            htmlType: 'submit',
+          },
+        ],
+      });
+  }
   return formData;
 };
 
