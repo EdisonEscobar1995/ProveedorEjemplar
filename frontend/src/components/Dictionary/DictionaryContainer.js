@@ -26,6 +26,8 @@ const mapStateToProps = state => ({
   data: state.dictionary.data,
   masters: state.dictionary.masters,
   fields: state.dictionary.fields,
+  spanishText: state.dictionary.spanishText,
+  translate: state.dictionary.translate,
 });
 
 export default connect(
