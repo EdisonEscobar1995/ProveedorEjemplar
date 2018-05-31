@@ -6,11 +6,13 @@ import {
   CLEAN_DATA,
   GET_NOTIFICATION_BY_ID_SUCCESS,
   UPDATE_NOTIFICATION_ATTACHMENT,
+  GET_USERS_BY_KEY_NOTIFICATION_SUCCESS,
   GET_USERS_NOTIFICATION_SUCCESS,
+  GET_USERS_BY_KEY_NOTIFICATION_PROGRESS,
 } from './const';
 
 import { getNotificationApi, saveNotificationApi, getNotificationByIdApi } from '../../api/notification';
-import { getUsersApi } from '../../api/user';
+import { getUsersApi, getUsersByKeyApi } from '../../api/user';
 import { requestApi } from '../../utils/action';
 import setMessage from '../Generic/action';
 
@@ -93,6 +95,34 @@ const getUsers = () => (dispatch) => {
       dispatch(getFailedRequest());
     });
 };
+
+function getUsersByKeySuccess(data) {
+  return {
+    type: GET_USERS_BY_KEY_NOTIFICATION_SUCCESS,
+    data,
+  };
+}
+
+function getUsersBykeyProgress() {
+  return {
+    type: GET_USERS_BY_KEY_NOTIFICATION_PROGRESS,
+  };
+}
+
+function getUsersByKey(value) {
+  return (dispatch) => {
+    requestApi(dispatch, getUsersBykeyProgress, getUsersByKeyApi, value)
+      .then((response) => {
+        const data = response.data.data.map(element => ({
+          ...element,
+          id: element.name,
+        }));
+        dispatch(getUsersByKeySuccess(data));
+      }).catch(() => {
+        dispatch(getFailedRequest());
+      });
+  };
+}
 
 const saveNotification = (clientData, remoteId, next) => (dispatch, getState) => {
   const { dataOption } = getState().notification;
@@ -186,4 +216,5 @@ export {
   updateAttachment,
   deleteAttachment,
   getUsers,
+  getUsersByKey,
 };

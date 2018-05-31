@@ -18,6 +18,7 @@ import {
 } from '../../api/translation';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
+import setMessage from '../Generic/action';
 
 function getDictionaryProgress() {
   return {
@@ -142,10 +143,13 @@ const getValuesByField = field => (dispatch, getState) => {
   requestApi(dispatch, getDictionaryProgress, getAllValuesByFieldApi, currentMaster)
     .then((response) => {
       const data = response.data.data;
-      const valuesByField = data.map(x => ({
-        id: x.id,
-        name: x[field],
-      }));
+      const valuesByField =
+      data
+        .filter(x => x[field] !== '')
+        .map(x => ({
+          id: x.id,
+          name: x[field],
+        }));
       dispatch(getValuesSuccess(valuesByField, field));
     }).catch(() => {
       dispatch(getFailedRequest());
@@ -158,6 +162,11 @@ const saveDataDictionarySuccess = () => ({
 
 function saveDictionary(clientData, remoteId, next) {
   return (dispatch, getState) => {
+    const pattern = new RegExp(/^\s+$/);
+    if (pattern.test(clientData.value)) {
+      dispatch(setMessage('La traducción no puede contener espacios solamente', 'info'));
+      return;
+    }
     const dataStore = getState().dictionary;
     const dataObject = {
       id: dataStore.id,

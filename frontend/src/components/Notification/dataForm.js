@@ -7,7 +7,9 @@ const dataForm =
   updateAttachment,
   getNotificationById,
   form,
+  fetching,
   cleanData,
+  getUsersByKey,
   deleteAttachment }) => {
   const uploadMaxFilesize = 10;
   const uploadExtensions = [
@@ -125,11 +127,14 @@ const dataForm =
             span: 24,
             type: 'select',
             mode: 'multiple',
+            autoComplete: true,
             options: users,
             label: 'Notificación adicional a',
             key: 'withCopy',
-            required: false,
-            value: dataOption.withCopy,
+            value: '', // dataOption.withCopy,
+            required: true,
+            onSearch: getUsersByKey,
+            fetching,
           },
         ],
       },
