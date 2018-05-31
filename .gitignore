@@ -26,4 +26,3 @@ yarn.lock
 .settings
 .vscode
 /backend/target/*
-frontend/src/pages/Prueba.js

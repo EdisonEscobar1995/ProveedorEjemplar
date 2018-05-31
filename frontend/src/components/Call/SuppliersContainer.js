@@ -50,9 +50,13 @@ class SuppliersContainer extends Component {
       uploading: true,
     }, () => {
       let data = [];
+      let validate = true;
       results.forEach((result) => {
         const [ev, file] = result;
-        if (!this.beforeUpload(file)) return;
+        if (!this.beforeUpload(file)) {
+          validate = false;
+          return;
+        }
         const binaryFile = ev.target.result;
         const workbook = XLSX.read(binaryFile, { type: 'binary' });
         const firstWorksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -67,8 +71,10 @@ class SuppliersContainer extends Component {
       this.setState({
         uploading: false,
       });
-      this.props.saveSuppliers(
-        data, null, false, true, editData.id, this.openNotification);
+      if (validate) {
+        this.props.saveSuppliers(
+          data, null, false, true, editData.id, this.openNotification);
+      }
     });
   };
   render() {
@@ -83,8 +89,8 @@ class SuppliersContainer extends Component {
       massiveShipmentCall,
       loading,
       loadingSuppliers } = this.props;
-    const hrefCopy = process.env.REACT_APP_URL;
-    const href = hrefCopy.replace(/\/dist/, '');
+    const hrefCopy = window.location.href;
+    const href = hrefCopy.replace(/dist.+/, '');
     const url = `${href}plantilla_proveedores.xlsx`;
     const { suppliers, suppliersByCall, masters } = calledSuppliers;
     const disabledButton = editData.id === null ||

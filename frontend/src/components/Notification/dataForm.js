@@ -131,7 +131,7 @@ const dataForm =
             options: users,
             label: 'Notificación adicional a',
             key: 'withCopy',
-            value: '', // dataOption.withCopy,
+            value: dataOption.withCopy,
             required: true,
             onSearch: getUsersByKey,
             fetching,

@@ -115,7 +115,7 @@ function getUsersByKey(value) {
       .then((response) => {
         const data = response.data.data.map(element => ({
           ...element,
-          id: element.name,
+          id: element.email === '' ? element.name : element.email,
         }));
         dispatch(getUsersByKeySuccess(data));
       }).catch(() => {
