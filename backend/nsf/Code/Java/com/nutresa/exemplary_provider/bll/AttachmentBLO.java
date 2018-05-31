@@ -5,6 +5,7 @@ import java.util.List;
 import com.ibm.xsp.http.fileupload.FileItem;
 import com.nutresa.exemplary_provider.dal.AttachmentDAO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+import com.nutresa.exemplary_provider.dtl.PublicAttachmentDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AttachmentBLO {
@@ -43,6 +44,18 @@ public class AttachmentBLO {
                 delete(attachment.getId());
             }
         }
+    }
+
+    /**
+     * Crea un adjunto en la base de datos publica de anexos
+     * 
+     * @param publicAttachment
+     *            Documento público
+     * @throws HandlerGenericException
+     */
+    protected void createAttachmentPublic(PublicAttachmentDTO publicAttachment) throws HandlerGenericException {
+        AttachmentDAO attachmentDAO = new AttachmentDAO();
+        attachmentDAO.createAttachmentPublic(publicAttachment);
     }
 
 }

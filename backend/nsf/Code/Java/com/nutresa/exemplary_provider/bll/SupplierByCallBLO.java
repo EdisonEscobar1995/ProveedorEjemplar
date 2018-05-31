@@ -617,11 +617,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      */
     public SupplierByCallDTO delete(String idSupplierByCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
-        if (supplierByCallDAO.deleteAllReference(idSupplierByCall)) {
-            return new SupplierByCallDTO();
-        } else {
-            throw new HandlerGenericException(HandlerGenericExceptionTypes.INVALID_VALUE.toString());
-        }
+        supplierByCallDAO.deleteAllReference(idSupplierByCall);
+        return new SupplierByCallDTO();
     }
 
     /**
@@ -740,6 +737,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         List<SupplierByCallDTO> suppliersByCall = getAllByStates(idCall, states);
         for (SupplierByCallDTO supplierByCall : suppliersByCall) {
             supplierByCall.setParticipateInCall("false");
+            StateBLO stateBLO = new StateBLO();
+            supplierByCall.setIdState(stateBLO.getStateByShortName(SurveyStates.DONT_PARTICIPATE.toString()).getId());
             super.save(supplierByCall);
         }
     }

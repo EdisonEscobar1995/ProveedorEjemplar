@@ -690,7 +690,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         SupplierBLO supplierBLO = new SupplierBLO();
         SupplierDTO existingSupplier = supplierBLO.getBySAPCodeOrNIT(supplier.getSapCode(), supplier.getNit());
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-        if (existingSupplier != null && supplier.getId() == null
+        if (existingSupplier != null && (supplier.getId() == null || supplier.getId().isEmpty())
                 && supplierByCallBLO.existSupplierInCall(existingSupplier.getId(), call.getId())) {
             summaryRecord.status = "DUPLICATED";
             allowLoad = false;

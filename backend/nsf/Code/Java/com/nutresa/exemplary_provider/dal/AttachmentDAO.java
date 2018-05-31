@@ -1,5 +1,7 @@
 package com.nutresa.exemplary_provider.dal;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openntf.domino.utils.Factory;
@@ -13,6 +15,7 @@ import org.openntf.domino.Stream;
 
 import com.ibm.xsp.http.fileupload.FileItem;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+import com.nutresa.exemplary_provider.dtl.PublicAttachmentDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -105,6 +108,42 @@ public class AttachmentDAO {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+
+    /**
+     * Crea un adjunto en la base de datos publica de anexos
+     * 
+     * @param publicAttachment
+     *            Documento público
+     * @throws HandlerGenericException
+     */
+    public void createAttachmentPublic(PublicAttachmentDTO publicAttachment) throws HandlerGenericException {
+        try {
+            View vwSystem = database.getView("vwSystems");
+            Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
+            String filesPathApplication = docSystem.getItemValueString("filesPathApplication");
+
+            if (null == filesPathApplication || filesPathApplication.isEmpty()) {
+                throw new HandlerGenericException("FILES_PATH_APPLICATION_NOT_FOUND");
+            }
+
+            Database publicDataBase = session.getDatabase(filesPathApplication);
+            Document document = publicDataBase.createDocument();
+
+            List<Field> fields = new ArrayList<Field>();
+            for (Field field : Common.getAllFields(fields, PublicAttachmentDTO.class)) {
+                field.setAccessible(true);
+                document.replaceItemValue(field.getName(), field.get(publicAttachment));
+            }
+
+            if (!document.save(true, false)) {
+                throw new HandlerGenericException("Cant create document");
+            }
+
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+
     }
 
 }
