@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const CarouselResponsiveStyle = styled(CarouselResponsive)`
   & .carousel .slide {
     margin: auto 0;
+    right: -2px;
   }
 
   & .carousel:hover .slide .legend {

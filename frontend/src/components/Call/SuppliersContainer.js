@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Table, Button, Row, Col, Tooltip, notification } from 'antd';
+import { Table, Button, Row, Col, Tooltip, notification, Spin } from 'antd';
 import FileReaderInput from 'react-file-reader-input';
 import XLSX from 'xlsx';
 import Confirm from '../shared/Confirm';
@@ -49,7 +49,7 @@ class SuppliersContainer extends Component {
     this.setState({
       uploading: true,
     }, () => {
-      let data;
+      let data = [];
       results.forEach((result) => {
         const [ev, file] = result;
         if (!this.beforeUpload(file)) return;
@@ -76,13 +76,13 @@ class SuppliersContainer extends Component {
     const {
       editData,
       calledSuppliers,
-      loadingSuppliers,
       // editSuppliers,
       deleteSupplierByCall,
       sendInvitation,
       openModal,
       massiveShipmentCall,
-      loading } = this.props;
+      loading,
+      loadingSuppliers } = this.props;
     const hrefCopy = process.env.REACT_APP_URL;
     const href = hrefCopy.replace(/\/dist/, '');
     const url = `${href}plantilla_proveedores.xlsx`;
@@ -181,10 +181,9 @@ class SuppliersContainer extends Component {
       },
     }];
     return (
-      <Fragment>
+      <Spin spinning={loadingSuppliers}>
         <Table
           rowKey={record => record.id}
-          loading={loadingSuppliers}
           dataSource={suppliers ? suppliers.filter(supplier => supplier.visible) : []}
           columns={columns}
         />
@@ -245,7 +244,7 @@ class SuppliersContainer extends Component {
             </Confirm>
           </Col>
         </Row>
-      </Fragment>
+      </Spin>
     );
   }
 }
@@ -256,7 +255,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => ({
   data: state.calledSuppliers.data,
-  loading: state.calledSuppliers.loading,
   mastersToList: state.calledSuppliers.mastersToList,
 });
 

@@ -14,6 +14,8 @@ function getMessage(status) {
       return 'tipo de suministro no existe';
     case 'COMPANY_SIZE_DONT_EXIST':
       return 'Tamaño de la compañía no existe';
+    case 'UNDEFINED_SUPPLIERS':
+      return 'Debe ingresar al menos un proveedor';
     default:
       return 'El error no ha sido configurado';
   }

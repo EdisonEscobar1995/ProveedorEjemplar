@@ -12,6 +12,7 @@ import {
 import { getNotificationApi, saveNotificationApi, getNotificationByIdApi } from '../../api/notification';
 import { getUsersApi } from '../../api/user';
 import { requestApi } from '../../utils/action';
+import setMessage from '../Generic/action';
 
 function getNotificationProgress() {
   return {
@@ -95,6 +96,11 @@ const getUsers = () => (dispatch) => {
 
 const saveNotification = (clientData, remoteId, next) => (dispatch, getState) => {
   const { dataOption } = getState().notification;
+  const pattern = new RegExp(/^\s+$/);
+  if (pattern.test(clientData.subject)) {
+    dispatch(setMessage('El asunto no puede contener espacios solamente', 'info'));
+    return;
+  }
   clientData.idFooter = dataOption.idFooter;
   clientData.idBanner = dataOption.idBanner;
   clientData.alias = dataOption.alias;

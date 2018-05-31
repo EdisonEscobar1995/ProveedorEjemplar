@@ -5,6 +5,7 @@ const columnsData = (props, onAdd, deleteQuestion, onEdit) => [{
   title: 'Dimensión',
   dataIndex: 'idDimension',
   key: 'idDimension',
+  sorter: (a, b) => (a.dimensionName > b.dimensionName ? -1 : 1),
   render: (text, record) => {
     let dimension = props.dimension.data ?
       props.dimension.data.find(x => x.id === record.idDimension) : {};
@@ -25,6 +26,7 @@ const columnsData = (props, onAdd, deleteQuestion, onEdit) => [{
   title: 'Pregunta',
   dataIndex: 'wording',
   key: 'wording',
+  style: { width: '80%' },
 }, {
   title: 'Acción',
   dataIndex: 'Id',

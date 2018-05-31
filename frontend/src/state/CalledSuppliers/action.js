@@ -8,6 +8,7 @@ import {
   DELETE_SUPPLIER_BY_CALL,
   GET_SUPPLIERS_BY_KEY_PROGRESS,
   GET_SUPPLIERS_BY_KEY_SUCCESS,
+  GET_CALLED_SUPPLIERS_LOADING_PROGRESS,
   AUTOCOMPLETE_SUPPLIER,
   GET_MASTER_SUCCESS,
   ADD_SUPPLIER,
@@ -26,6 +27,10 @@ import getMasterApi from '../../api/master';
 
 const getCalledSuppliersProgress = () => ({
   type: GET_CALLED_SUPPLIERS_PROGRESS,
+});
+
+const getCalledSuppliersLoadingProgress = () => ({
+  type: GET_CALLED_SUPPLIERS_LOADING_PROGRESS,
 });
 
 const getCalledSuppliersSuccess = data => ({
@@ -82,7 +87,7 @@ const clearDataCalledSuppliers = () => ({
 });
 
 const getCalledSuppliers = id => (dispatch) => {
-  requestApi(dispatch, getCalledSuppliersProgress, getCalledSuppliersApi, id)
+  requestApi(dispatch, getCalledSuppliersLoadingProgress, getCalledSuppliersApi, id)
     .then((response) => {
       response.data.data.suppliers = response.data.data.suppliers
         .sort((a, b) => (a.businessName < b.businessName ? -1 : 1))
@@ -191,19 +196,26 @@ const autoComplete = sapCode => (dispatch, getState) => {
 const saveSuppliers =
   (clientData, remoteId, edit = false, excel = false, idCall, next) => (dispatch, getState) => {
     const calledSuppliers = getState().calledSuppliers.data;
+    const mastersToList = getState().calledSuppliers.mastersToList;
     const callCopy = getState().call.editData;
     const call = Object.assign({}, callCopy);
     call.supplier = [];
     delete call.disabled;
     delete call.disabledByDate;
-    const { suppliers, suppliersByCall, masters } = calledSuppliers;
+    const { suppliers, suppliersByCall } = calledSuppliers;
 
     // Se obtienen los nombres del tam compañia, suministro y país cuando no hay carga de excel.
     if (!excel) {
-      const nameCompanySize =
-      masters.CompanySize.find(company => company.id === clientData.nameCompanySizeToLoad).name;
-      const nameSupply = masters.Supply.find(sup => sup.id === clientData.nameSupplyToLoad).name;
-      const nameCountry = masters.Country.find(c => c.id === clientData.nameCountryToLoad).name;
+      let nameCompanySize = '';
+      if (clientData.nameCompanySizeToLoad) {
+        nameCompanySize =
+        mastersToList.CompanySize
+          .find(company => company.id === clientData.nameCompanySizeToLoad).name;
+      }
+      const nameSupply = mastersToList.Supply
+        .find(sup => sup.id === clientData.nameSupplyToLoad).name;
+      const nameCountry = mastersToList.Country
+        .find(c => c.id === clientData.nameCountryToLoad).name;
 
       clientData.fullName = clientData.businessName;
       clientData.nameCompanySizeToLoad = nameCompanySize;
@@ -242,15 +254,17 @@ const saveSuppliers =
           return;
         }
         let errorsCount = 0;
+        const dataFiltered = [];
         data.forEach((element) => {
           if (element.status !== 'CREATED') {
             errorsCount += 1;
+            dataFiltered.push(element);
           }
         });
         if (errorsCount === 0 && next) {
           next();
         } else {
-          exportLog(data);
+          exportLog(dataFiltered);
         }
       }).catch(() => {
         dispatch(getFailedRequest());

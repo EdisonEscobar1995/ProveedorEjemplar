@@ -2,6 +2,7 @@ import {
   GET_CALLED_SUPPLIERS_PROGRESS,
   GET_CALLED_SUPPLIERS_SUCCESS,
   SEND_INVITATION_PROGRESS,
+  GET_CALLED_SUPPLIERS_LOADING_PROGRESS,
   SEND_INVITATION_SUCCESS,
   FILTER_CALLED_SUPPLIERS,
   CLEAR_DATA_CALLED_SUPPLIERS,
@@ -23,6 +24,7 @@ const initialState = {
   fetching: false,
   loading: false,
   autoCompleteData: {},
+  loadingSuppliers: false,
 };
 
 function calledSuppliersApp(state = initialState, action) {
@@ -32,6 +34,12 @@ function calledSuppliersApp(state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    }
+    case GET_CALLED_SUPPLIERS_LOADING_PROGRESS: {
+      return {
+        ...state,
+        loadingSuppliers: true,
       };
     }
     case GET_MASTER_SUCCESS: {
@@ -51,7 +59,7 @@ function calledSuppliersApp(state = initialState, action) {
       return {
         ...state,
         data: action.data,
-        loading: false,
+        loadingSuppliers: false,
       };
     }
     case GET_SUPPLIERS_BY_KEY_PROGRESS: {

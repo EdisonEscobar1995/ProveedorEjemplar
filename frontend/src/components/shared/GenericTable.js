@@ -26,33 +26,11 @@ function GenericTable(props) {
     expandable,
     pagination,
     searchValue,
-    // rowSelection = false,
     withDelete = false,
     withOutActions = false,
     withOutAdd = false,
-    // changeSelection,
-    // selectRow,
-    // selectAllRows,
+    withOutAddOptions = false,
   } = props;
-
-  // const rowSelectionActions = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     if (changeSelection) {
-  //       changeSelection(selectedRowKeys, selectedRows);
-  //     }
-  //   },
-  //   onSelect: (record, selected, selectedRows) => {
-  //     console.log(record, selected, selectedRows);
-  //     if (selectRow) {
-  //       selectRow(record, selected, selectedRows);
-  //     }
-  //   },
-  //   onSelectAll: (selected, selectedRows, changeRows) => {
-  //     if (selectAllRows) {
-  //       selectAllRows(selected, selectedRows, changeRows);
-  //     }
-  //   },
-  // };
 
   return (
     <Spin spinning={loading}>
@@ -121,7 +99,6 @@ function GenericTable(props) {
                       searchValue={record.searchValue}
                       loading={false}
                       pagination={pagination}
-                      // rowSelection={rowSelection && rowSelectionActions}
                     />
                   ) : (
                     !withOutAdd &&
@@ -139,19 +116,10 @@ function GenericTable(props) {
                   )
                 ) : null
               }
-              // rowSelection={rowSelection && rowSelectionActions}
               style={componentList[level].style}
               onRowClick={componentList[level].onRowClick ? (record) => {
                 componentList[level].onRowClick(record);
               } : null}
-              // onRow={(record, index) => {
-              //   if (componentList[level].rowSelected) {
-              //     return {
-              //       selectRow: componentList[level].rowSelected(record, index),
-              //     };
-              //   }
-              //   return null;
-              // }}
             >
               {
                 componentList[level].columns.map(column => (
@@ -178,9 +146,6 @@ function GenericTable(props) {
                             shape="circle"
                             icon="edit"
                             onClick={() => {
-                              // if (componentList[level].editMethod) {
-                              //   componentList[level].editMethod(record);
-                              // }
                               const Component = componentList[level].component;
                               openModal(<Component {...props} record={record} />);
                             }}
@@ -200,16 +165,20 @@ function GenericTable(props) {
                             </Confirm>
                           )
                         }
-                        <Tooltip title={<FormattedMessage id="Button.add" />}>
-                          <Button
-                            shape="circle"
-                            icon="plus"
-                            onClick={() => {
-                              const Component = componentList[level].component;
-                              openModal(<Component {...props} remoteId={record.id} />);
-                            }}
-                          />
-                        </Tooltip>
+                        {
+                          !withOutAddOptions && (
+                            <Tooltip title={<FormattedMessage id="Button.add" />}>
+                              <Button
+                                shape="circle"
+                                icon="plus"
+                                onClick={() => {
+                                  const Component = componentList[level].component;
+                                  openModal(<Component {...props} remoteId={record.id} />);
+                                }}
+                              />
+                            </Tooltip>
+                          )
+                        }
                       </div>
                     )}
                   />

@@ -63,7 +63,11 @@ const getAllSurveys = () => (dispatch) => {
           requestApi(dispatch, getDataSurveyProgress, getAllDataSurveyApi)
             .then((response) => {
               const { data } = response.data;
-              const dataFilter = data.map(item => ({ ...item, visible: true }));
+              const dataFilter = data.map(item => ({
+                ...item,
+                visible: true,
+                name: supply.find(x => x.id === item.idSupply).name,
+              }));
               dispatch(getDataSurveySuccess(dataFilter, supply, companySize));
             });
         });
@@ -346,7 +350,7 @@ function saveDataSurvey() {
   };
 }
 
-function saveSurvey(next) {
+function saveSurvey(next, redirect) {
   return (dispatch, getState) => {
     const surveyAdmon = getState().surveyAdmon;
     const idSupply = surveyAdmon.supplyValue;
@@ -379,11 +383,11 @@ function saveSurvey(next) {
     requestApi(dispatch, getDataSurveyProgress, saveSurveyApi, data)
       .then(() => {
         dispatch(saveDataSurvey());
-        if (next) {
+        if (next && redirect) {
+          redirect();
           next();
         }
-      }).catch((e) => {
-        console.log(e);
+      }).catch(() => {
         dispatch(getFailedRequest());
       });
   };

@@ -46,12 +46,12 @@ class CallFormContainer extends Component {
 
 const mapStateToProps = state => ({
   editData: state.call.editData,
-  loading: state.call.loading,
+  loading: state.call.loading || state.calledSuppliers.loading,
   disabled: state.call.disabled,
   disabledByDate: state.call.disabledByDate,
   calledSuppliers: state.calledSuppliers.data,
-  loadingSuppliers: state.calledSuppliers.loading,
   mastersToList: state.calledSuppliers.mastersToList,
+  loadingSuppliers: state.calledSuppliers.loadingSuppliers,
 });
 
 const mapDispatchToProps = {

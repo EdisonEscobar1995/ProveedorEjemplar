@@ -161,6 +161,7 @@ class DinamicForm extends Component {
                             onSearch,
                             fetching,
                             handleSelect,
+                            keyPress,
                           } = current;
                           const selectProps = {};
                           if (noSearch) {
@@ -193,6 +194,11 @@ class DinamicForm extends Component {
                               mode={mode}
                               disabled={disabled}
                               allowClear={allowClear}
+                              onInputKeyDown={(ev) => {
+                                if (keyPress) {
+                                  keyPress(ev);
+                                }
+                              }}
                               onChange={(selectValue) => {
                                 if (valuesToClean) {
                                   setFields(valuesToClean);

@@ -9,6 +9,7 @@ const columnsData = (props, onAdd) => [{
     supply = supply ? supply.name : '';
     return supply;
   },
+  sorter: (a, b) => (a.name > b.name ? -1 : 1),
 }, {
   title: 'Tamaño de la empresa',
   key: 'idCompanySize',

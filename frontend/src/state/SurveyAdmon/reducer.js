@@ -66,7 +66,6 @@ function surveyAdmonApp(state = initialState, action) {
     }
     case GET_DATA_SURVEY_ADMON_PROGRESS:
     case GET_DIMENSIONS_SURVEY_PROGRESS:
-    case SAVE_SURVEY_ADMON:
       return {
         ...state,
         loading: true,
@@ -263,6 +262,7 @@ function surveyAdmonApp(state = initialState, action) {
     }
     case REQUEST_FAILED:
     case DELETE_SURVEY_ADMON:
+    case SAVE_SURVEY_ADMON:
     {
       return {
         ...state,

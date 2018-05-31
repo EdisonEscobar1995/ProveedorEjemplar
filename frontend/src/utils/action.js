@@ -38,6 +38,8 @@ function getMessage(type) {
       return 'Validation.callExists';
     case 'DATE_WITHOUT_FIXING':
       return 'Validation.dateWithoutFixing';
+    case 'UNDEFINED_SUPPLIERS':
+      return 'Validation.undefinedSupplier';
     default:
       return 'Validation.wentWrong';
   }

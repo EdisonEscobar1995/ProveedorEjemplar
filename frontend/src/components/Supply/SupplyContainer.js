@@ -51,6 +51,7 @@ class SupplyContainer extends Component {
         componentList={componentList}
         expandable
         pagination
+        withDelete
       />
     );
   }

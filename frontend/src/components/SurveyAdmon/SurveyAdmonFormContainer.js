@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 import { Spin, Button, notification } from 'antd';
 import * as SurveyAdmonAction from '../../state/SurveyAdmon/action';
 import H1 from '../shared/H1';
@@ -22,16 +23,22 @@ class SurveyAdmonFormContainer extends Component {
     this.props.getDimensions();
   }
 
+  redirectToList = () => {
+    const { history } = this.props;
+    const pathSurveyAdmon = '/surveyAdmon';
+    history.push(pathSurveyAdmon);
+  }
+
+  saveData = () => {
+    this.props.saveData(this.openNotification, this.redirectToList);
+  }
+
   openNotification = () => {
     notification.success({
       message: 'Operación exitosa',
       description: 'Documento guardado',
     });
   };
-
-  saveData = () => {
-    this.props.saveData(this.openNotification);
-  }
 
   render() {
     const { loading, questionSelected } = this.props;
@@ -61,7 +68,7 @@ class SurveyAdmonFormContainer extends Component {
         <SubTitle text="Preguntas" />
         <Tab dataTabs={dataTabs} />
         <ButtonStyle type="primary" onClick={this.saveData}>Guardar</ButtonStyle>
-        <Button type="secondary" href="/#/surveyAdmon">Cancelar</Button>
+        <Button type="secondary" onClick={this.redirectToList}>Cancelar</Button>
       </Spin>
     );
   }
@@ -85,8 +92,8 @@ const mapDispatchToProps = dispatch => ({
   getCriterionByDimension: (id) => {
     dispatch(SurveyAdmonAction.getCriterionByDimension(id));
   },
-  saveData: (next) => {
-    dispatch(SurveyAdmonAction.saveData(next));
+  saveData: (next, redirect) => {
+    dispatch(SurveyAdmonAction.saveData(next, redirect));
   },
   supplyValue: (value) => {
     dispatch(SurveyAdmonAction.supplyValue(value));
@@ -96,7 +103,7 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SurveyAdmonFormContainer);
+)(SurveyAdmonFormContainer));

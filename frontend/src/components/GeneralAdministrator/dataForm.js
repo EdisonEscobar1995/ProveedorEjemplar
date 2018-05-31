@@ -83,7 +83,7 @@ const dataForm = ({ data, updateAttachment, form, cleanFields, deleteAttachment 
       key: 1.3,
       value: [
         {
-          label: 'Imagen: (Solo formatos PNG. JPG, JPEG)',
+          label: 'Imagen (600 x 480): Solo formatos PNG. JPG, JPEG',
           span: 12,
           type: 'upload',
           name: 'images',

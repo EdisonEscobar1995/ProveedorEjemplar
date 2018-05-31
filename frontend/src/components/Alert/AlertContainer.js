@@ -26,6 +26,7 @@ class AlertContainer extends Component {
         componentList={componentList}
         expandable={false}
         pagination
+        withOutAddOptions
       />
     );
   }

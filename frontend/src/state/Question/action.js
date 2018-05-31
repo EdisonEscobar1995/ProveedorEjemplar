@@ -60,7 +60,18 @@ const getAllQuestions = () => (dispatch) => {
           requestApi(dispatch, getDataQuestionProgress, getAllDataQuestionApi)
             .then((response) => {
               const { data } = response.data;
-              const dataFilter = data.map(item => ({ ...item, visible: true }));
+              const dataFilter = data.map((item) => {
+                const oDimensionName = dimension.data.find(x => x.id === item.idDimension);
+                let dimensionName = '';
+                if (oDimensionName) {
+                  dimensionName = oDimensionName.name;
+                }
+                return {
+                  ...item,
+                  visible: true,
+                  dimensionName,
+                };
+              });
               dispatch(getDataQuestionSuccess(dataFilter, dimension, criterion));
             }).catch(() => {
               dispatch(getFailedRequest());
