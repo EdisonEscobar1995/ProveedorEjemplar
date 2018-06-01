@@ -254,17 +254,13 @@ const saveSuppliers =
           return;
         }
         let errorsCount = 0;
-        const dataFiltered = [];
-        data.forEach((element) => {
-          if (element.status !== 'CREATED') {
-            errorsCount += 1;
-            dataFiltered.push(element);
-          }
+        data.forEach(() => {
+          errorsCount += 1;
         });
         if (errorsCount === 0 && next) {
           next();
         } else {
-          exportLog(dataFiltered);
+          exportLog(data);
         }
       }).catch(() => {
         dispatch(getFailedRequest());

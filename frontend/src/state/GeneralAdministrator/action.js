@@ -85,6 +85,7 @@ const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getS
     inputPoll,
     rotationTime,
     title,
+    messageByChangeSizeCompany,
     uploadMaxFilesize,
   } = clientData;
   const clientDataNew = {
@@ -97,6 +98,7 @@ const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getS
     inputPoll,
     rotationTime,
     title,
+    messageByChangeSizeCompany,
     uploadMaxFilesize,
   };
   requestApi(dispatch, saveDataProgress, saveGeneralAdministratorApi, clientDataNew)

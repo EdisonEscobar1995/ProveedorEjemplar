@@ -16,6 +16,12 @@ function getMessage(status) {
       return 'Tamaño de la compañía no existe';
     case 'UNDEFINED_SUPPLIERS':
       return 'Debe ingresar al menos un proveedor';
+    case 'INVALID_NIT':
+      return 'NIT Inválido';
+    case 'INVALID_SAP_CODE':
+      return 'Código SAP inválido';
+    case 'CREATED':
+      return 'Proveedor creado';
     default:
       return 'El error no ha sido configurado';
   }

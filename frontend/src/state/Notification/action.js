@@ -39,10 +39,11 @@ const saveDataNotification = () => ({
   type: SAVE_NOTIFICATION,
 });
 
-function getNotificationByIdSuccess(dataOption) {
+function getNotificationByIdSuccess(dataOption, users) {
   return {
     type: GET_NOTIFICATION_BY_ID_SUCCESS,
     dataOption,
+    users,
   };
 }
 
@@ -59,7 +60,11 @@ function getNotificationById(id) {
         const option = imagesData.find(x => x.id === data.id);
         data.banner = option.banner;
         data.footer = option.footer;
-        dispatch(getNotificationByIdSuccess(data));
+        const user = data.withCopy.map(element => ({
+          id: element,
+          name: element,
+        }));
+        dispatch(getNotificationByIdSuccess(data, user));
       }).catch(() => {
         dispatch(getFailedRequest());
       });
@@ -116,6 +121,7 @@ function getUsersByKey(value) {
         const data = response.data.data.map(element => ({
           ...element,
           id: element.email === '' ? element.name : element.email,
+          name: element.email === '' ? element.name : element.email,
         }));
         dispatch(getUsersByKeySuccess(data));
       }).catch(() => {
