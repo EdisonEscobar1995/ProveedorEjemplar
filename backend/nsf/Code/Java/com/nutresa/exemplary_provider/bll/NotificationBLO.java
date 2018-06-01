@@ -13,7 +13,6 @@ import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.NotificationDTO;
-import com.nutresa.exemplary_provider.dtl.PublicAttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SupplyDTO;
@@ -34,19 +33,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         NotificationDTO notificationSaved = super.save(notification);
         AttachmentBLO attachmentBLO = new AttachmentBLO();
         AttachmentDTO attachmentBanner = attachmentBLO.get(notification.getIdBanner());
-        PublicAttachmentDTO publicBanner = new PublicAttachmentDTO();
-        publicBanner.id = attachmentBanner.getId();
-        publicBanner.archivo = attachmentBanner.getName();
-        publicBanner.nombre = attachmentBanner.getName();
-        publicBanner.idPadre = notificationSaved.getId();
-        attachmentBLO.createAttachmentPublic(publicBanner);
+        attachmentBLO.createAttachmentPublic(attachmentBanner.getId());
         AttachmentDTO attachmentFooter = attachmentBLO.get(notification.getIdFooter());
-        PublicAttachmentDTO publicFooter = new PublicAttachmentDTO();
-        publicFooter.id = attachmentFooter.getId();
-        publicFooter.archivo = attachmentFooter.getName();
-        publicFooter.nombre = attachmentFooter.getName();
-        publicFooter.idPadre = notificationSaved.getId();
-        attachmentBLO.createAttachmentPublic(publicFooter);
+        attachmentBLO.createAttachmentPublic(attachmentFooter.getId());
         return notificationSaved;
     }
 

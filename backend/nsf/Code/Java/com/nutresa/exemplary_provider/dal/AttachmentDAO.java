@@ -1,7 +1,5 @@
 package com.nutresa.exemplary_provider.dal;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.openntf.domino.utils.Factory;
@@ -15,7 +13,6 @@ import org.openntf.domino.Stream;
 
 import com.ibm.xsp.http.fileupload.FileItem;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
-import com.nutresa.exemplary_provider.dtl.PublicAttachmentDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -117,7 +114,7 @@ public class AttachmentDAO {
      *            Documento público
      * @throws HandlerGenericException
      */
-    public void createAttachmentPublic(PublicAttachmentDTO publicAttachment) throws HandlerGenericException {
+    public void createAttachmentPublic(String idResource) throws HandlerGenericException {
         try {
             View vwSystem = database.getView("vwSystems");
             Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
@@ -129,13 +126,8 @@ public class AttachmentDAO {
 
             Database publicDataBase = session.getDatabase(filesPathApplication);
             Document document = publicDataBase.createDocument();
-
-            List<Field> fields = new ArrayList<Field>();
-            for (Field field : Common.getAllFields(fields, PublicAttachmentDTO.class)) {
-                field.setAccessible(true);
-                document.replaceItemValue(field.getName(), field.get(publicAttachment));
-            }
-
+            document = this.getDocument(idResource);
+            
             if (!document.save(true, false)) {
                 throw new HandlerGenericException("Cant create document");
             }
