@@ -59,6 +59,7 @@ function notificationApp(state = initialState, action) {
       return {
         ...state,
         dataOption: action.dataOption,
+        users: action.users,
         loading: false,
       };
     }

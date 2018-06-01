@@ -33,7 +33,7 @@ function getMessage(type) {
     case 'DONT_EXIST_IN_DIRECTORY':
       return 'Validation.dontExistInDirectory';
     case 'ALREADY_EXIST_CALL_ACTIVE':
-      return 'Validation.callExists';
+      return 'Validation.callExistsActive';
     case 'ALREADY_EXIST_CALL':
       return 'Validation.callExists';
     case 'DATE_WITHOUT_FIXING':

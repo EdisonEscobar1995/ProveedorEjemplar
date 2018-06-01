@@ -14,6 +14,7 @@ const dataForm = ({ data, updateAttachment, form, cleanFields, deleteAttachment 
     content,
     document,
     informationProgram,
+    messageByChangeSizeCompany,
     inputPoll,
   } = data;
 
@@ -94,6 +95,20 @@ const dataForm = ({ data, updateAttachment, form, cleanFields, deleteAttachment 
           onChange: updateAttachment,
           onRemove: deleteAttachment,
           required: true,
+        },
+      ],
+    },
+    {
+      key: 1.4,
+      value: [
+        {
+          span: 24,
+          type: 'input',
+          label: 'Cambio de tamaño de empresa',
+          key: 'messageByChangeSizeCompany',
+          value: messageByChangeSizeCompany,
+          required: true,
+          style: { marginTop: 20 },
         },
       ],
     },
