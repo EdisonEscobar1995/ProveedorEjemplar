@@ -11,6 +11,13 @@ const MenuStyle = styled(MenuAnt)`
   background: ${props => props.theme.color.primary};
 `;
 
+const SubMenuStyle = styled(SubMenu)`
+  & .ant-menu-vertical.ant-menu-sub {
+      max-height: 450px;
+      overflow-y: auto;
+    }
+`;
+
 const IconHome = styled(Icon)`
   font-size: 18px;
   color: white;
@@ -51,7 +58,7 @@ function Menu(props) {
 
         if (category.name) {
           return (
-            <SubMenu
+            <SubMenuStyle
               key={category.name}
               title={
                 <span style={ItemStyle}>
@@ -61,7 +68,7 @@ function Menu(props) {
               }
             >
               {items}
-            </SubMenu>
+            </SubMenuStyle>
           );
         }
         return items;
