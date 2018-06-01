@@ -215,6 +215,7 @@ function getSubcategoryByCategory(id) {
 
 function saveSupply(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSupplyApi, clientData)
       .then((response) => {
@@ -232,6 +233,7 @@ function saveSupply(clientData, remoteId, next) {
 
 function saveCategory(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveCategoryApi, clientData)
       .then((response) => {
@@ -249,6 +251,7 @@ function saveCategory(clientData, remoteId, next) {
 
 function saveSubcategory(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSubcategoryApi, clientData)
       .then((response) => {

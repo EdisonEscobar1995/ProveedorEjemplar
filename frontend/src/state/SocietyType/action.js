@@ -79,6 +79,7 @@ function getSocietyType() {
 
 function saveSocietyType(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSocietyTypeProgress, saveDataSocietyTypeApi, clientData)
       .then((response) => {
