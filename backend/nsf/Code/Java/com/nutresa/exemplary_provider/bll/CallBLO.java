@@ -653,8 +653,17 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             throws HandlerGenericException {
         boolean allowLoad = true;
 
-        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        if (null == supplier.getNit() || supplier.getNit().isEmpty()) {
+            summaryRecord.status = "INVALID_NIT";
+            allowLoad = false;
+        }
+        
+        if (null == supplier.getSapCode() || supplier.getSapCode().isEmpty()) {
+            summaryRecord.status = "INVALID_SAP_CODE";
+            allowLoad = false;
+        }
 
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         if (null == supplier.nameCompanySizeToLoad || supplier.nameCompanySizeToLoad.isEmpty()) {
             allowLoad = true;
         } else {
