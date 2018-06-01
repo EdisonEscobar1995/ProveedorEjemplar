@@ -79,6 +79,7 @@ function getCompanySize() {
 
 function saveCompanySize(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getCompanySizeProgress, saveDataCompanySizeApi, clientData)
       .then((response) => {

@@ -152,6 +152,7 @@ function getCriterionByDimension(id) {
 
 function saveDimension(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getDimensionProgress, saveDataDimensionApi, clientData)
       .then((response) => {
@@ -169,6 +170,7 @@ function saveDimension(clientData, remoteId, next) {
 
 function saveCriterion(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getDimensionProgress, saveDataCriterionApi, clientData)
       .then((response) => {

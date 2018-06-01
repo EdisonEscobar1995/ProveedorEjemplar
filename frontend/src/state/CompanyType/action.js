@@ -80,6 +80,7 @@ function getCompanyType() {
 
 function saveCompanyType(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getCompanyTypeProgress, saveDataCompanyTypeApi, clientData)
       .then((response) => {
