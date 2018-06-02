@@ -11,6 +11,7 @@ import {
 import { getSectorsApi, saveSectorApi, deleteSectorApi } from '../../api/sector';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
+import blankSpaces from '../../utils/blankSpaces';
 
 function getSectorProgress() {
   return {
@@ -77,6 +78,10 @@ function getSectors() {
 
 function saveSector(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSectorProgress, saveSectorApi, clientData)
       .then((response) => {

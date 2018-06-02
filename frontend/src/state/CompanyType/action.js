@@ -12,6 +12,7 @@ import {
 import { getDataCompanyTypesApi, saveDataCompanyTypeApi, deleteDataCompanyTypeApi } from '../../api/companyType';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi, sortByField } from '../../utils/action';
+import blankSpaces from '../../utils/blankSpaces';
 
 function getCompanyTypeProgress() {
   return {
@@ -80,6 +81,9 @@ function getCompanyType() {
 
 function saveCompanyType(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
     clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getCompanyTypeProgress, saveDataCompanyTypeApi, clientData)

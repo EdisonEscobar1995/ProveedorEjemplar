@@ -23,6 +23,7 @@ import {
 } from '../../api/criterions';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi, sortByField } from '../../utils/action';
+import blankSpaces from '../../utils/blankSpaces';
 
 function getDimensionProgress() {
   return {
@@ -152,6 +153,9 @@ function getCriterionByDimension(id) {
 
 function saveDimension(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
     clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getDimensionProgress, saveDataDimensionApi, clientData)
@@ -170,6 +174,9 @@ function saveDimension(clientData, remoteId, next) {
 
 function saveCriterion(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
     clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getDimensionProgress, saveDataCriterionApi, clientData)

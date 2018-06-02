@@ -36,6 +36,7 @@ import { getDataDimensionApi } from '../../api/dimension';
 import { getAllCriterionsByDimensionApi, getAllCriterionsApi } from '../../api/criterions';
 import { requestApi } from '../../utils/action';
 import setMessage from '../Generic/action';
+// import Notification from '../../components/shared/notification';
 
 // Encuesta listado
 const getDataSurveyProgress = () => ({
