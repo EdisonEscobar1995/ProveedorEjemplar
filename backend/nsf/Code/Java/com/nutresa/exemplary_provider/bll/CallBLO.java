@@ -653,16 +653,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             throws HandlerGenericException {
         boolean allowLoad = true;
 
-        if (null == supplier.getNit() || supplier.getNit().isEmpty()) {
-            summaryRecord.status = "INVALID_NIT";
-            allowLoad = false;
-        }
-        
-        if (null == supplier.getSapCode() || supplier.getSapCode().isEmpty()) {
-            summaryRecord.status = "INVALID_SAP_CODE";
-            allowLoad = false;
-        }
-
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         if (null == supplier.nameCompanySizeToLoad || supplier.nameCompanySizeToLoad.isEmpty()) {
             allowLoad = true;
@@ -675,6 +665,21 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             } else {
                 supplier.setIdCompanySize(idCompanySize);
             }
+        }
+        
+        if (null == supplier.getNit() || supplier.getNit().isEmpty()) {
+            summaryRecord.status = "INVALID_NIT";
+            allowLoad = false;
+        }
+        
+        if (null == supplier.getSapCode() || supplier.getSapCode().isEmpty()) {
+            summaryRecord.status = "INVALID_SAP_CODE";
+            allowLoad = false;
+        }
+        
+        if (null == supplier.getBusinessName() || supplier.getBusinessName().isEmpty()) {
+            summaryRecord.status = "INVALID_NAME";
+            allowLoad = false;
         }
 
         SupplyBLO supplyBLO = new SupplyBLO();
@@ -705,7 +710,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             allowLoad = false;
         } else {
             if (existingSupplier != null) {
-                supplier = existingSupplier;
+                supplier.setId(existingSupplier.getId());
             }
         }
 

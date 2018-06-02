@@ -280,6 +280,9 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     protected SupplierDTO createByFirstTime(SupplierDTO supplier) throws HandlerGenericException {
+        if(null != supplier.getId() && !supplier.getId().isEmpty()){
+            supplier = this.get(supplier.getId());
+        }
         return super.save(supplier);
     }
 

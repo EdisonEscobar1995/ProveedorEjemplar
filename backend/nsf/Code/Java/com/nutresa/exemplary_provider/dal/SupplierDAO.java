@@ -220,7 +220,7 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
 
             if (null != nit && !nit.isEmpty()) {
                 viewNit = getDatabase().getView("vwSupplierByNit");
-                documentNit = viewNit.getFirstDocumentByKey(sapCode, true);
+                documentNit = viewNit.getFirstDocumentByKey(nit, true);
             }
 
             if (null != documentSap) {

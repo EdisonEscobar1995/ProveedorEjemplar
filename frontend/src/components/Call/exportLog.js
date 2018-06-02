@@ -20,6 +20,8 @@ function getMessage(status) {
       return 'NIT Inválido';
     case 'INVALID_SAP_CODE':
       return 'Código SAP inválido';
+    case 'INVALID_NAME':
+      return 'Nombre inválido';
     case 'CREATED':
       return 'Proveedor creado';
     default:
