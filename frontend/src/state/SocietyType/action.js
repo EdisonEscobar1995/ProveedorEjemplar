@@ -12,6 +12,7 @@ import {
 import { getDataSocietyTypesApi, saveDataSocietyTypeApi, deleteDataSocietyTypeApi } from '../../api/societyType';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi, sortByField } from '../../utils/action';
+import blankSpaces from '../../utils/blankSpaces';
 
 function getSocietyTypeProgress() {
   return {
@@ -79,6 +80,9 @@ function getSocietyType() {
 
 function saveSocietyType(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
     clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSocietyTypeProgress, saveDataSocietyTypeApi, clientData)

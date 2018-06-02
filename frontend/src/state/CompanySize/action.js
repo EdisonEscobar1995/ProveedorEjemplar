@@ -12,6 +12,7 @@ import {
 import { getDataCompanySizeApi, saveDataCompanySizeApi, deleteDataCompanyTypeApi } from '../../api/companySize';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi, sortByField } from '../../utils/action';
+import blankSpaces from '../../utils/blankSpaces';
 
 function getCompanySizeProgress() {
   return {
@@ -79,6 +80,9 @@ function getCompanySize() {
 
 function saveCompanySize(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
     clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getCompanySizeProgress, saveDataCompanySizeApi, clientData)
