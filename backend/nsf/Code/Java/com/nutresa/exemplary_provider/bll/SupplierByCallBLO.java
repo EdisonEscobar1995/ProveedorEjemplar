@@ -41,12 +41,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     /**
      * Obtiene la convocatoria de un proveedor, identificada con
      * <code>idSupplierByCall</code> en caso de <b>NO</b> ser <code>null</code>;
-     * en caso de serlo, busca la convocatoria que tenga asiganda y no esté
+     * en caso de serlo, busca la convocatoria que tenga asiganda y no estÃ©
      * vencida.
      * <p>
-     * Si el rol del usuario en sessión es <b>LIBERATOR</b> o
-     * <b>ADMINISTRATOR</b> se envía la instrucción de modo lectura. Si el rol
-     * es <b>EVALUATOR</b> la sección de este rol se envía modo escritura.
+     * Si el rol del usuario en sessiÃ³n es <b>LIBERATOR</b> o
+     * <b>ADMINISTRATOR</b> se envÃ­a la instrucciÃ³n de modo lectura. Si el rol
+     * es <b>EVALUATOR</b> la secciÃ³n de este rol se envÃ­a modo escritura.
      * 
      * @param String
      *            <code>idSupplierByCall</code> Identificador de la convocatoria
@@ -95,7 +95,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     /**
      * Verifica si la fecha para hacer la encuesta por parte del
-     * <b>EVALUATOR</b> está habilitada
+     * <b>EVALUATOR</b> estÃ¡ habilitada
      * 
      * @param supplierByCall
      *            Identificador de la convocatoria definitivia de un proveedor
@@ -444,7 +444,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      * 
      * @param idCall
      *            Identificador de la convocatoria.
-     * @return Colección de proveedores.
+     * @return ColecciÃ³n de proveedores.
      * @throws HandlerGenericException
      */
     public List<SupplierDTO> getSuppliersByCall(String idCall) throws HandlerGenericException {
@@ -459,8 +459,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      *            Identificador de la convocatoria
      * @param idSupplier
      *            Identificador del proveedor
-     * @return Objeto con la información en caso de hallar considencia en la
-     *         búsqueda.
+     * @return Objeto con la informaciÃ³n en caso de hallar considencia en la
+     *         bÃºsqueda.
      * @throws HandlerGenericException
      */
     public SupplierByCallDTO getByIdCallAndIdSupplierFinished(String idCall, String idSupplier,
@@ -476,8 +476,8 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      * @param idCall
      *            Identificador de la convocatoria
      * @param states
-     *            Colección con los estados a filtrar.
-     * @return Colección de datos encontrados
+     *            ColecciÃ³n con los estados a filtrar.
+     * @return ColecciÃ³n de datos encontrados
      * @throws HandlerGenericException
      */
     public List<DTO> getByStates(String idCall, List<String> states) throws HandlerGenericException {
@@ -573,12 +573,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
     /**
      * Asocia el proveedor a la convocatoria y adicionalmente lo asocica con la
-     * encuesta indicada, basandose en en el tipo de ministro y el tamaño de la
+     * encuesta indicada, basandose en en el tipo de ministro y el tamaÃ±o de la
      * empresa.
      * 
      * @param supplier
      * @param idCall
-     * @return Asignación de la convocatoria a un proveedor con su respectiva
+     * @return AsignaciÃ³n de la convocatoria a un proveedor con su respectiva
      *         encuesta.
      * @throws HandlerGenericException
      */
@@ -622,7 +622,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Verifica si existen proveedores sin haber aceptado su cambio de tamaño de
+     * Verifica si existen proveedores sin haber aceptado su cambio de tamaÃ±o de
      * empresa
      * 
      * @param idCall
@@ -644,7 +644,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      *            Identificador de la convocatoria a consultar
      * @param states
      *            Estados a consultar
-     * @return Direcciones de correo electrónico de los responsables de las
+     * @return Direcciones de correo electrÃ³nico de los responsables de las
      *         evaluaciones
      * @throws HandlerGenericException
      */
@@ -724,7 +724,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
     }
 
     /**
-     * Busca a los proveedores que aún no iniciado el proceso de evaluación y
+     * Busca a los proveedores que aÃºn no iniciado el proceso de evaluaciÃ³n y
      * los marca como no participaron
      * 
      * @param idCall

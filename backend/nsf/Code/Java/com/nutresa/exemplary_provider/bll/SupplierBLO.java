@@ -206,10 +206,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Busca los proveedores por convocatoria o por la especificación de algún
+     * Busca los proveedores por convocatoria o por la especificaciÃ³n de algÃºn
      * filtro.
      * <p>
-     * Si y solo si no se especifica un filtro de búsqueda entonces busca por
+     * Si y solo si no se especifica un filtro de bÃºsqueda entonces busca por
      * convocatoria.
      * 
      * @param idCall
@@ -217,7 +217,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
      * @param parameters
      *            Mapa clave valor de los filtros por los que se van a optener
      *            los resultados
-     * @return Colección de proveedores.
+     * @return ColecciÃ³n de proveedores.
      * @throws HandlerGenericException
      */
     public List<SupplierDTO> getThemByIdCallOrFiltered(String idCall, Map<String, String> parameters)
@@ -237,12 +237,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Obtiene los proveedores que ya terminaron la evaluación y los que han
+     * Obtiene los proveedores que ya terminaron la evaluaciÃ³n y los que han
      * sido evaluados parcialmente por el evaluador.
      * 
      * @param year
-     *            Año de la convocatoria
-     * @return Colección de datos encontrados
+     *            AÃ±o de la convocatoria
+     * @return ColecciÃ³n de datos encontrados
      * @throws HandlerGenericException
      */
     public InformationFromSupplier pendingToQualify(String year) throws HandlerGenericException {
@@ -280,10 +280,22 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     protected SupplierDTO createByFirstTime(SupplierDTO supplier) throws HandlerGenericException {
+        SupplierDTO supplierExisting = null;
         if(null != supplier.getId() && !supplier.getId().isEmpty()){
-            supplier = this.get(supplier.getId());
+            supplierExisting = this.get(supplier.getId());
+            supplierExisting.setSapCode(supplier.getSapCode());
+            supplierExisting.setNit(supplier.getNit());
+            supplierExisting.setBusinessName(supplier.getBusinessName());
+            supplierExisting.setFullName(supplier.getFullName());
+            supplierExisting.setEmails(supplier.getEmails());
+            supplierExisting.setIdCountry(supplier.getIdCountry());
+            supplierExisting.setIdCompanySize(supplier.getIdCompanySize());
+            supplierExisting.setIdSupply(supplier.getIdSupply());
+            return super.save(supplierExisting);
+        } else {
+            return super.save(supplier);
         }
-        return super.save(supplier);
+        
     }
 
     /**
@@ -310,12 +322,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Busca los proveedores que contengan <code>text</code> en el campo código
+     * Busca los proveedores que contengan <code>text</code> en el campo cÃ³digo
      * sap
      * 
      * @param text
      *            valor a buscar en los documentos
-     * @return Colección de proveedores que coinciden con el valor a buscar
+     * @return ColecciÃ³n de proveedores que coinciden con el valor a buscar
      * @throws HandlerGenericException
      */
     public List<SupplierDTO> searchSupplier(String text) throws HandlerGenericException {
@@ -324,12 +336,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Obtiene el usuario y contraseña de un proveedor desde el directorio
+     * Obtiene el usuario y contraseÃ±a de un proveedor desde el directorio
      * general
      * 
      * @param supplier
      *            Proveedor a buscar
-     * @return Colección clave valor de usuario y contraseña
+     * @return ColecciÃ³n clave valor de usuario y contraseÃ±a
      * @throws HandlerGenericException
      */
     protected Map<String, String> getUserAndPassword(SupplierDTO supplier) throws HandlerGenericException {

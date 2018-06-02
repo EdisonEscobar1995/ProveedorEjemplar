@@ -72,7 +72,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Busca la convocatoria que esté activa
+     * Busca la convocatoria que estÃ© activa
      * 
      * @return Convocatoria activa
      * @throws HandlerGenericException
@@ -108,9 +108,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         try {
             listIds = Common.getDtoFields(supplierByCall, new String[] { "[idSupplier]" }, SupplierByCallDTO.class);
             // Consultar los proveedores que se encuentran bloqueados o
-            // notificados para las convocatorias del año seleccionado
+            // notificados para las convocatorias del aÃ±o seleccionado
             List<DTO> suppliers = supplierBLO.getAllBy("id", Common.getIdsFromList(listIds.get("[idSupplier]")));
-            // Realizar el cruce de los maestros según los datos de los
+            // Realizar el cruce de los maestros segÃºn los datos de los
             // proveedores seleccionados
             String[] idFieldNames = { "CompanySize", "Supply", "Country" };
             Map<String, List<Object>> masterIds = Common.getDtoFields(suppliers, idFieldNames, SupplierDTO.class);
@@ -165,14 +165,14 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      * @param parameters
      *            Mapa clave valor de los filtros por los que se van a optener
      *            los resultados
-     * @return Collección de datos obtenidos según los parámetros
+     * @return CollecciÃ³n de datos obtenidos segÃºn los parÃ¡metros
      *         <code>parameters</code>
      * @throws HandlerGenericException
-     *             Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envía
-     *             el identificador de la convocatoria en los parámetros de
-     *             búsqueda. on mensaje code>INFORMATION_NOT_FOUND</code> si no
-     *             se encontró información para e p rtar. Con m nsaje
-     *             <code>ROL_INVALID</code> si el usuario en sesión no tiene el
+     *             Con mensaje <code>CALL_NOT_ESPECIFIED</code> si no se envÃ­a
+     *             el identificador de la convocatoria en los parÃ¡metros de
+     *             bÃºsqueda. on mensaje code>INFORMATION_NOT_FOUND</code> si no
+     *             se encontrÃ³ informaciÃ³n para e p rtar. Con m nsaje
+     *             <code>ROL_INVALID</code> si el usuario en sesiÃ³n no tiene el
      *             rol rmitido.
      */
     public List<ReportOfCalificationsBySuppliers> getReportOfAverageGradeBySupplier(Map<String, String> parameters)
@@ -201,11 +201,11 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      * @param idCall
      *            Identificador de la convocatoria que se va consultar.
      * @param suppliers
-     *            Collección de proveedores
+     *            CollecciÃ³n de proveedores
      * @param parameters
      *            Mapa clave valor de los filtros por los que se van a optener
      *            los resultados
-     * @return Collección de registros del reporte
+     * @return CollecciÃ³n de registros del reporte
      * @throws HandlerGenericException
      */
     private List<ReportOfCalificationsBySuppliers> buildReportOfAverageGradeBySupplier(String idCall,
@@ -473,9 +473,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * De todas las convocatorias creadas optiene la última que fue creada.
+     * De todas las convocatorias creadas optiene la Ãºltima que fue creada.
      * 
-     * @return Última convocatoria creada
+     * @return Ãšltima convocatoria creada
      * @throws HandlerGenericException
      */
     private CallDTO getCurrentCall() throws HandlerGenericException {
@@ -498,7 +498,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         stageCaduced.put(StagesCall.SUPPLIER, call.isCaducedDeadLineToMakeSurvey());
         stageCaduced.put(StagesCall.EVALUATOR, call.isCaducedDeadLineToMakeSurveyEvaluator());
         stageCaduced.put(StagesCall.TECHNICAL_TEAM, call.isCaducedDeadLineToMakeSurveyTechnicalTeam());
-        // Si las anteriores no están vencidas, es porque la fase final está
+        // Si las anteriores no estÃ¡n vencidas, es porque la fase final estÃ¡
         // activa
         stageCaduced.put(StagesCall.MANAGER_TEAM, false);
 
@@ -515,7 +515,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Dado el rol del usuario en sessión se identifica cual es la fase que le
+     * Dado el rol del usuario en sessiÃ³n se identifica cual es la fase que le
      * ertenece a cada rol del sistema
      * 
      * @return Fase a la que pertenece el rol del usuario en session
@@ -593,7 +593,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
     /**
      * @param call
-     * @return Colección con el resumén de la carga de proveedores
+     * @return ColecciÃ³n con el resumÃ©n de la carga de proveedores
      * @throws HandlerGenericException
      */
     public List<SummaryToLoadSupplier> loadSupplierToCall(CallDTO call) throws HandlerGenericException {
@@ -723,10 +723,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     }
 
     /**
-     * Cierra la convocatoria actual en caso de que su fecha máxima para estar
-     * activa esté vencida. Adicionalmente Marca como <b>no participación</b> a
+     * Cierra la convocatoria actual en caso de que su fecha mÃ¡xima para estar
+     * activa estÃ© vencida. Adicionalmente Marca como <b>no participaciÃ³n</b> a
      * los proveedores que no hayan decidido participar y la fecha para hacer la
-     * encuesta ya esté vencida.
+     * encuesta ya estÃ© vencida.
      * 
      * @throws HandlerGenericException
      */
