@@ -137,6 +137,7 @@ const saveNotification = (clientData, remoteId, next) => (dispatch, getState) =>
     dispatch(setMessage('El asunto no puede contener espacios solamente', 'info'));
     return;
   }
+  clientData.subject = clientData.subject.trim();
   clientData.idFooter = dataOption.idFooter;
   clientData.idBanner = dataOption.idBanner;
   clientData.alias = dataOption.alias;

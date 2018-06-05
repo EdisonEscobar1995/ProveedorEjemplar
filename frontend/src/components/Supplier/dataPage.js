@@ -741,6 +741,7 @@ function generalInfo(fields) {
           key: 'nameContactPersonInGroupNutresa',
           value: nameContactPersonInGroupNutresa,
           disabled,
+          required: true,
         },
         {
           span: 8,

@@ -132,7 +132,7 @@ const dataForm =
             label: 'Notificación adicional a',
             key: 'withCopy',
             value: dataOption.withCopy,
-            required: true,
+            required: false,
             onSearch: getUsersByKey,
             fetching,
           },
