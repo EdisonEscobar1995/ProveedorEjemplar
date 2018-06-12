@@ -32,7 +32,7 @@ import
 import { getDataDimensionApi } from '../../api/dimension';
 import { getAllCriterionsApi } from '../../api/criterions';
 import { getOptionByQuestionApi, saveOptionsApi } from '../../api/option';
-import { requestApi } from '../../utils/action';
+import { requestApi, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
 
 const getDataQuestionProgress = () => ({
@@ -60,18 +60,25 @@ const getAllQuestions = () => (dispatch) => {
           requestApi(dispatch, getDataQuestionProgress, getAllDataQuestionApi)
             .then((response) => {
               const { data } = response.data;
-              const dataFilter = data.map((item) => {
+              let dataFilter = data.map((item) => {
                 const oDimensionName = dimension.data.find(x => x.id === item.idDimension);
                 let dimensionName = '';
                 if (oDimensionName) {
                   dimensionName = oDimensionName.name;
                 }
+                const oCriterionName = criterion.data.find(x => x.id === item.idCriterion);
+                let criterionName = '';
+                if (oCriterionName) {
+                  criterionName = oCriterionName.name;
+                }
                 return {
                   ...item,
                   visible: true,
                   dimensionName,
+                  criterionName,
                 };
               });
+              dataFilter = sortByField(dataFilter, 'dimensionName');
               dispatch(getDataQuestionSuccess(dataFilter, dimension, criterion));
             }).catch(() => {
               dispatch(getFailedRequest());

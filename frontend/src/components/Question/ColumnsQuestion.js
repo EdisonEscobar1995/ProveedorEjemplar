@@ -5,7 +5,7 @@ const columnsData = (props, onAdd, deleteQuestion, onEdit) => [{
   title: 'Dimensión',
   dataIndex: 'idDimension',
   key: 'idDimension',
-  sorter: (a, b) => (a.dimensionName > b.dimensionName ? -1 : 1),
+  sorter: (a, b) => (a.dimensionName < b.dimensionName ? -1 : 1),
   render: (text, record) => {
     let dimension = props.dimension.data ?
       props.dimension.data.find(x => x.id === record.idDimension) : {};
@@ -16,6 +16,13 @@ const columnsData = (props, onAdd, deleteQuestion, onEdit) => [{
   title: 'Criterio',
   dataIndex: 'idCriterion',
   key: 'idCriterion',
+  sorter: (a, b) => {
+    if (a.dimensionName === b.dimensionName) {
+      // eslint-disable-next-line
+      return (a.criterionName < b.criterionName) ? -1 : (a.criterionName > b.criterionName) ? 1 : 0;
+    }
+    return (a.dimensionName < b.dimensionName) ? -1 : 1;
+  },
   render: (text, record) => {
     let criterion = props.criterion.data ?
       props.criterion.data.find(x => x.id === record.idCriterion) : {};
