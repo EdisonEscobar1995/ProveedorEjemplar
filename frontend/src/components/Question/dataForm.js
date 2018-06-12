@@ -72,11 +72,15 @@ const generalInfo =
           required: true,
           handleChange: changeDimension,
           value: editData ? editData.idDimension : '',
+          valuesToClean: {
+            idCriterion: { value: '' },
+          },
         },
         {
           span: 7,
           type: 'select',
-          options: criterion,
+          options: editData && Array.isArray(criterion) ?
+            criterion.filter(x => x.idDimension === editData.idDimension) : [],
           label: 'Criterio',
           key: 'idCriterion',
           handleChange: changeCriterion,

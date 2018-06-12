@@ -24,13 +24,14 @@ class QuestionForm extends Component {
 
   render() {
     const { loading } = this.props;
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator, setFields } = this.props.form;
     const fields = generalInfo({ ...this.props });
     return (
       <Spin spinning={loading}>
         <Form onSubmit={this.handleSubmit}>
           <DinamicForm
             getFieldDecorator={getFieldDecorator}
+            setFields={setFields}
             content={fields}
             dontFormatMessage
           />

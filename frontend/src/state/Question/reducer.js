@@ -61,6 +61,7 @@ function questionApp(state = initialState, action) {
         editData: {
           ...state.editData,
           idDimension: action.value,
+          idCriterion: '',
         },
       };
     }
