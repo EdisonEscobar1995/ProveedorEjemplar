@@ -64,8 +64,8 @@ function questionApp(state = initialState, action) {
           idCriterion: '',
           dependOfQuestion: '',
           dependOfOptionId: '',
-          items: [],
         },
+        items: [],
       };
     }
     case CHANGE_CRITERION: {
@@ -76,8 +76,8 @@ function questionApp(state = initialState, action) {
           idCriterion: action.value,
           dependOfQuestion: '',
           dependOfOptionId: '',
-          items: [],
         },
+        items: [],
       };
     }
     case CHANGE_HELP_TEXT: {
@@ -172,6 +172,10 @@ function questionApp(state = initialState, action) {
     case GET_OPTIONS_BY_QUESTION: {
       return {
         ...state,
+        editData: {
+          ...state.editData,
+          dependOfOptionId: '',
+        },
         items: action.items,
         loading: false,
       };

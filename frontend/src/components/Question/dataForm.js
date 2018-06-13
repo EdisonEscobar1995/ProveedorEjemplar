@@ -76,6 +76,7 @@ const generalInfo =
           valuesToClean: {
             idCriterion: { value: '' },
             dependOfQuestion: { value: '' },
+            dependOfOptionId: { value: '' },
           },
         },
         {
@@ -89,6 +90,7 @@ const generalInfo =
           value: editData ? editData.idCriterion : '',
           valuesToClean: {
             dependOfQuestion: { value: '' },
+            dependOfOptionId: { value: '' },
           },
         },
         {
@@ -162,6 +164,9 @@ const generalInfo =
           key: 'dependOfQuestion',
           handleChange: onChangeDependingQuestion,
           value: editData && editData.dependOfQuestion,
+          valuesToClean: {
+            dependOfOptionId: { value: '' },
+          },
         },
       ],
     },
@@ -212,15 +217,8 @@ const generalInfo =
     });
   }
 
-  const boolean = !!editData.dependOfQuestion;
-  if (boolean && items.length > 0) {
-    let number;
-    if (formData.length === 6) {
-      number = 5;
-    } else {
-      number = 4;
-    }
-    formData.splice(number, 0, {
+  if (editData.dependOfQuestion && items.length > 0) {
+    formData.splice(formData.length - 1, 0, {
       key: 1.6,
       value: [
         {
