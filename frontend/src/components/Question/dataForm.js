@@ -64,7 +64,7 @@ const generalInfo =
       key: 1.1,
       value: [
         {
-          span: 7,
+          span: 8,
           type: 'select',
           options: dimension,
           label: 'Dimensión',
@@ -77,7 +77,7 @@ const generalInfo =
           },
         },
         {
-          span: 7,
+          span: 8,
           type: 'select',
           options: editData && Array.isArray(criterion) ?
             criterion.filter(x => x.idDimension === editData.idDimension) : [],
@@ -87,16 +87,7 @@ const generalInfo =
           value: editData ? editData.idCriterion : '',
         },
         {
-          span: 4,
-          type: 'switch',
-          label: '¿Requiere soporte?',
-          key: 'requireAttachment',
-          required: true,
-          handleChange: switchRequiredAttachment,
-          value: editData && editData.requireAttachment,
-        },
-        {
-          span: 6,
+          span: 8,
           type: 'select',
           options: typeAnswer,
           label: 'Tipo de respuesta',
@@ -122,10 +113,33 @@ const generalInfo =
       ],
     },
     {
+      key: 1.4,
+      value: [
+        {
+          span: 12,
+          type: 'switch',
+          label: '¿Requiere soporte?',
+          key: 'requireAttachment',
+          required: true,
+          handleChange: switchRequiredAttachment,
+          value: editData && editData.requireAttachment,
+        },
+        {
+          span: 12,
+          type: 'switch',
+          label: '¿Es requerido?',
+          key: 'required',
+          required: true,
+          handleChange: switchRequired,
+          value: editData && editData.required,
+        },
+      ],
+    },
+    {
       key: 1.5,
       value: [
         {
-          span: 10,
+          span: 12,
           type: 'input',
           label: 'Texto de ayuda de las preguntas',
           key: 'helpText',
@@ -133,22 +147,13 @@ const generalInfo =
           value: editData ? editData.helpText : '',
         },
         {
-          span: 10,
+          span: 12,
           type: 'select',
           options: questions,
           label: 'Esta pregunta depende de',
           key: 'dependOfQuestion',
           handleChange: onChangeDependingQuestion,
           value: editData && editData.dependOfQuestion,
-        },
-        {
-          span: 4,
-          type: 'switch',
-          label: '¿Es requerido?',
-          key: 'required',
-          required: true,
-          handleChange: switchRequired,
-          value: editData && editData.required,
         },
       ],
     },

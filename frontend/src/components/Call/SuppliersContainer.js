@@ -226,7 +226,7 @@ class SuppliersContainer extends Component {
           <Col span={2} offset={18}>
             <Button
               icon="download"
-              type="secondary"
+              type="primary"
               size="small"
               disabled={disabledButton || loading}
               href={url}
