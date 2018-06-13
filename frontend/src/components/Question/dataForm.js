@@ -75,6 +75,7 @@ const generalInfo =
           value: editData ? editData.idDimension : '',
           valuesToClean: {
             idCriterion: { value: '' },
+            dependOfQuestion: { value: '' },
           },
         },
         {
@@ -86,6 +87,9 @@ const generalInfo =
           key: 'idCriterion',
           handleChange: changeCriterion,
           value: editData ? editData.idCriterion : '',
+          valuesToClean: {
+            dependOfQuestion: { value: '' },
+          },
         },
         {
           span: 8,
@@ -150,7 +154,10 @@ const generalInfo =
         {
           span: 12,
           type: 'select',
-          options: questions,
+          options: editData && Array.isArray(questions) ?
+            questions.filter(x =>
+              x.idDimension === editData.idDimension &&
+              x.idCriterion === editData.idCriterion) : [],
           label: 'Esta pregunta depende de',
           key: 'dependOfQuestion',
           handleChange: onChangeDependingQuestion,

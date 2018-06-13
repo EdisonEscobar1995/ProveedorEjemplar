@@ -62,6 +62,9 @@ function questionApp(state = initialState, action) {
           ...state.editData,
           idDimension: action.value,
           idCriterion: '',
+          dependOfQuestion: '',
+          dependOfOptionId: '',
+          items: [],
         },
       };
     }
@@ -71,6 +74,9 @@ function questionApp(state = initialState, action) {
         editData: {
           ...state.editData,
           idCriterion: action.value,
+          dependOfQuestion: '',
+          dependOfOptionId: '',
+          items: [],
         },
       };
     }
