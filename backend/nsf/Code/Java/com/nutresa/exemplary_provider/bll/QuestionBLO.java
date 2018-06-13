@@ -88,5 +88,17 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
         entityWithFields.put("Question", fields);
         return entityWithFields;
     }
+    
+    /**
+     * @param idDimension
+     * @param idCriterion
+     * @return Colección de preguntas con sus opciones de respuesta
+     * @throws HandlerGenericException
+     */
+    public List<QuestionDTO> getByDimensionAndCriterion(String idDimension, String idCriterion)
+            throws HandlerGenericException {
+        QuestionDAO questionDAO = new QuestionDAO();
+        return questionDAO.getByDimensionAndCriterion(idDimension, idCriterion);
+    }
 
 }
