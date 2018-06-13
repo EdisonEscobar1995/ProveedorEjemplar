@@ -62,7 +62,10 @@ function questionApp(state = initialState, action) {
           ...state.editData,
           idDimension: action.value,
           idCriterion: '',
+          dependOfQuestion: '',
+          dependOfOptionId: '',
         },
+        items: [],
       };
     }
     case CHANGE_CRITERION: {
@@ -71,7 +74,10 @@ function questionApp(state = initialState, action) {
         editData: {
           ...state.editData,
           idCriterion: action.value,
+          dependOfQuestion: '',
+          dependOfOptionId: '',
         },
+        items: [],
       };
     }
     case CHANGE_HELP_TEXT: {
@@ -166,6 +172,10 @@ function questionApp(state = initialState, action) {
     case GET_OPTIONS_BY_QUESTION: {
       return {
         ...state,
+        editData: {
+          ...state.editData,
+          dependOfOptionId: '',
+        },
         items: action.items,
         loading: false,
       };

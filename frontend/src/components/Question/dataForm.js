@@ -18,6 +18,7 @@ const generalInfo =
   changeItems,
   switchRequired,
   switchRequiredAttachment,
+  history,
 }) => {
   const typeAnswer = [
     {
@@ -74,6 +75,8 @@ const generalInfo =
           value: editData ? editData.idDimension : '',
           valuesToClean: {
             idCriterion: { value: '' },
+            dependOfQuestion: { value: '' },
+            dependOfOptionId: { value: '' },
           },
         },
         {
@@ -85,6 +88,10 @@ const generalInfo =
           key: 'idCriterion',
           handleChange: changeCriterion,
           value: editData ? editData.idCriterion : '',
+          valuesToClean: {
+            dependOfQuestion: { value: '' },
+            dependOfOptionId: { value: '' },
+          },
         },
         {
           span: 8,
@@ -149,11 +156,17 @@ const generalInfo =
         {
           span: 12,
           type: 'select',
-          options: questions,
+          options: editData && Array.isArray(questions) ?
+            questions.filter(x =>
+              x.idDimension === editData.idDimension &&
+              x.idCriterion === editData.idCriterion) : [],
           label: 'Esta pregunta depende de',
           key: 'dependOfQuestion',
           handleChange: onChangeDependingQuestion,
           value: editData && editData.dependOfQuestion,
+          valuesToClean: {
+            dependOfOptionId: { value: '' },
+          },
         },
       ],
     },
@@ -162,12 +175,21 @@ const generalInfo =
       justify: 'center',
       value: [
         {
-          span: 4,
+          span: 2,
           type: 'button',
           label: 'Guardar',
           key: 'save',
           buttonType: 'primary',
           htmlType: 'submit',
+        },
+        {
+          span: 2,
+          type: 'button',
+          label: 'Cerrar',
+          key: 'save',
+          buttonType: 'primary',
+          htmlType: 'button',
+          handleclick: () => history.goBack(),
         },
       ],
     },
@@ -195,15 +217,8 @@ const generalInfo =
     });
   }
 
-  const boolean = !!editData.dependOfQuestion;
-  if (boolean && items.length > 0) {
-    let number;
-    if (formData.length === 6) {
-      number = 5;
-    } else {
-      number = 4;
-    }
-    formData.splice(number, 0, {
+  if (editData.dependOfQuestion && items.length > 0) {
+    formData.splice(formData.length - 1, 0, {
       key: 1.6,
       value: [
         {
