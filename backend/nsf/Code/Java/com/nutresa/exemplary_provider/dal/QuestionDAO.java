@@ -136,4 +136,33 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         return response;
     }
 
+    /**
+     * @param idDimension
+     * @param idCriterion
+     * @return Colección de preguntas con sus opciones de respuesta
+     * @throws HandlerGenericException
+     */
+    public List<QuestionDTO> getByDimensionAndCriterion(String idDimension, String idCriterion)
+            throws HandlerGenericException {
+        try {
+            idCriterion = null == idCriterion ? "" : idCriterion;
+            List<QuestionDTO> response = new ArrayList<QuestionDTO>();
+            OptionDAO optionDAO = new OptionDAO();
+            View currentView = getDatabase().getView("vwQuestionsByDimensionAndCriterion");
+            ArrayList<String> fiterBySurveyAndDimension = new ArrayList<String>();
+            fiterBySurveyAndDimension.add(idDimension);
+            fiterBySurveyAndDimension.add(idCriterion);
+            DocumentCollection documents = currentView.getAllDocumentsByKey(fiterBySurveyAndDimension, true);
+            for (Document document : documents) {
+                QuestionDTO question = castDocument(document);
+                question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
+                response.add(question);
+            }
+
+            return response;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
+
 }
