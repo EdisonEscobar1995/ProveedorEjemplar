@@ -1,3 +1,5 @@
+import messages from '../../translation/messagesES';
+
 const formData = ({ record = {}, closeModal }) => {
   const options = [
     {
@@ -41,7 +43,10 @@ const formData = ({ record = {}, closeModal }) => {
           type: 'input',
           label: 'Nombre',
           key: 'name',
-          required: false,
+          required: true,
+          rules: [
+            { whitespace: true, message: messages['Validation.requiredField'] },
+          ],
           value: record.name,
         },
       ],
@@ -55,7 +60,7 @@ const formData = ({ record = {}, closeModal }) => {
           label: 'Activa',
           options,
           key: 'active',
-          required: false,
+          required: true,
           value: record.active ? 'Si' : 'No',
         },
       ],
@@ -68,7 +73,10 @@ const formData = ({ record = {}, closeModal }) => {
           type: 'input',
           label: 'Asunto',
           key: 'subject',
-          required: false,
+          required: true,
+          rules: [
+            { whitespace: true, message: messages['Validation.requiredField'] },
+          ],
           value: record.subject,
         },
       ],
@@ -81,7 +89,10 @@ const formData = ({ record = {}, closeModal }) => {
           type: 'textarea',
           label: 'Mensaje',
           key: 'message',
-          required: false,
+          required: true,
+          rules: [
+            { whitespace: true, message: messages['Validation.requiredField'] },
+          ],
           value: record.message,
         },
       ],
@@ -94,7 +105,10 @@ const formData = ({ record = {}, closeModal }) => {
           type: 'inputNumber',
           label: 'Días para alarma',
           key: 'days',
-          required: false,
+          required: true,
+          rules: [
+            { whitespace: true, message: messages['Validation.requiredField'] },
+          ],
           value: record.days,
         },
       ],

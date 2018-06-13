@@ -1,3 +1,4 @@
+import messages from '../../translation/messagesES';
 
 const dataForm =
 ({
@@ -103,6 +104,9 @@ const dataForm =
             label: 'Traducción',
             key: 'value',
             required: true,
+            rules: [
+              { whitespace: true, message: messages['Validation.requiredField'] },
+            ],
             value: translate,
           },
         ],

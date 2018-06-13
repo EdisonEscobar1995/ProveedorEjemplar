@@ -185,7 +185,8 @@ class DinamicForm extends Component {
                             selectProps.filterOption = (input, option) => {
                               const word = option.props.children.props ?
                                 option.props.children.props.id : option.props.children;
-                              return word.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                              return word
+                                .toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
                             };
                           }
                           fieldContent = (

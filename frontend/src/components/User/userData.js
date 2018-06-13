@@ -1,3 +1,5 @@
+import messages from '../../translation/messagesES';
+
 const formData = ({
   record = {}, closeModal, masters, getUsersByKey, fetching,
 }) => [
@@ -36,6 +38,9 @@ const formData = ({
         key: 'name',
         value: record.name,
         required: true,
+        rules: [
+          { whitespace: true, message: messages['Validation.requiredField'] },
+        ],
         options: masters.Users,
         onSearch: getUsersByKey,
         fetching,
@@ -51,6 +56,9 @@ const formData = ({
         label: 'Correo',
         key: 'email',
         required: true,
+        rules: [
+          { whitespace: true, message: messages['Validation.requiredField'] },
+        ],
         value: record.email,
       },
     ],

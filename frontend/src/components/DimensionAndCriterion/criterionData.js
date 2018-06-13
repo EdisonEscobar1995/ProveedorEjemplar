@@ -1,3 +1,5 @@
+import messages from '../../translation/messagesES';
+
 const formData = ({ record = {}, parentId, closeModal }) => [
   {
     key: 1.0,
@@ -39,6 +41,9 @@ const formData = ({ record = {}, parentId, closeModal }) => [
         label: 'Nombre del criterio',
         key: 'name',
         required: true,
+        rules: [
+          { whitespace: true, message: messages['Validation.requiredField'] },
+        ],
         value: record.name,
       },
     ],

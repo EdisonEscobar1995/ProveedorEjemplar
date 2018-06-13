@@ -1,3 +1,5 @@
+import messages from '../../translation/messagesES';
+
 const generalInfo =
 ({
   editData,
@@ -114,6 +116,9 @@ const generalInfo =
           label: 'Pregunta',
           key: 'wording',
           required: true,
+          rules: [
+            { whitespace: true, message: messages['Validation.requiredField'] },
+          ],
           handleChange: changeQuestion,
           value: editData ? editData.wording : '',
         },
