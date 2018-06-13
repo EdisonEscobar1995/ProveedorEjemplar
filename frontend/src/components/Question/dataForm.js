@@ -18,6 +18,7 @@ const generalInfo =
   changeItems,
   switchRequired,
   switchRequiredAttachment,
+  history,
 }) => {
   const typeAnswer = [
     {
@@ -162,12 +163,21 @@ const generalInfo =
       justify: 'center',
       value: [
         {
-          span: 4,
+          span: 2,
           type: 'button',
           label: 'Guardar',
           key: 'save',
           buttonType: 'primary',
           htmlType: 'submit',
+        },
+        {
+          span: 2,
+          type: 'button',
+          label: 'Cerrar',
+          key: 'save',
+          buttonType: 'primary',
+          htmlType: 'button',
+          handleclick: () => history.goBack(),
         },
       ],
     },
