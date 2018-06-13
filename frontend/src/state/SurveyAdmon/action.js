@@ -439,7 +439,7 @@ const validaciones = (questionData, data, criterion) => {
   return validarCriterios(questionData, data, criterion, questionCriterion);
 };
 
-const questionSelected = (questionData, type = 'selected') => (dispatch, getState) => {
+const questionSelected = (questionData, type = 'selected', dependency) => (dispatch, getState) => {
   try {
     const dimensions = getState().surveyAdmon.allDimensions;
     const criterions = getState().surveyAdmon.allCriterions;
@@ -468,27 +468,39 @@ const questionSelected = (questionData, type = 'selected') => (dispatch, getStat
       copyData.find(x => x.id === questionData.idDimension).data
         .splice(indexQuestion, 1);
       dispatch(questionSelectedSuccess(dataQuestionSel, copyData));
-      dispatch(setMessage('¡Pregunta agregada exitosamente!', 'success'));
+      const dependingQuestion = copyData.find(x => x.id === questionData.idDimension).data
+        .find(x => x.id === questionData.dependOfQuestion);
+      if (questionData.dependOfQuestion !== '' && dependingQuestion) {
+        dispatch(questionSelected(dependingQuestion, 'selected', true));
+      } else {
+        dispatch(setMessage(`Pregunta agregada exitosamente${dependency ? ', junto con la pregunta de la que depende' : ''}`, 'success'));
+      }
     } else {
       // Buscar dimension de la pregunta
       copyData.find(x => x.id === questionData.idDimension).data
         .push(questionData);
       // eliminar la pregunta deseleccionada
-      let indexQuestion;
-      if (questionData.idCriterion !== '') {
-        indexQuestion = dataQuestionSel
-          .find(x => x.id === questionData.idDimension).data
-          .find(x => x.id === questionData.idCriterion).data
-          .findIndex(x => x.id === questionData.id);
-      } else {
-        indexQuestion = dataQuestionSel
-          .find(x => x.id === questionData.idDimension).data
-          .findIndex(x => x.id === questionData.id);
-      }
-      dataQuestionSel.find(x => x.id === questionData.idDimension).data
+      const siblingQuestions = dataQuestionSel
+        .find(x => x.id === questionData.idDimension).data
+        .find(x => x.id === (questionData.idCriterion !== '' ? questionData.idCriterion : 0)).data;
+      const indexQuestion = siblingQuestions.findIndex(x => x.id === questionData.id);
+
+      dataQuestionSel
+        .find(x => x.id === questionData.idDimension).data
+        .find(x => x.id === (questionData.idCriterion !== '' ? questionData.idCriterion : 0)).data
         .splice(indexQuestion, 1);
       dispatch(questionSelectedSuccess(dataQuestionSel, copyData));
-      dispatch(setMessage('Se ha regresado la pregunta al listado', 'success'));
+
+      const dependingQuestions = siblingQuestions
+        .filter(x => x.dependOfQuestion === questionData.id);
+      if (dependingQuestions.length > 0) {
+        dependingQuestions.forEach((x) => {
+          dispatch(questionSelected(x, 'deselected', true));
+        });
+        dispatch(setMessage('Se ha regresado la pregunta al listado, junto con las preguntas dependientes', 'success'));
+      } else if (!dependency) {
+        dispatch(setMessage('Se ha regresado la pregunta al listado', 'success'));
+      }
     }
   } catch (error) {
     dispatch(setMessage('Ha ocurrido un error!', 'error'));
