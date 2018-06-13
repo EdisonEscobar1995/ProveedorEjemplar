@@ -598,7 +598,6 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             supplierByCall.setIdSupplier(supplier.getId());
             supplierByCall.setIdCall(idCall);
             supplierByCall.setInvitedToCall(false);
-            supplierByCall.setParticipateInCall("false");
             supplierByCall.setIdState(state.getId());
         }
 
