@@ -71,7 +71,8 @@ class DinamicForm extends Component {
                     handleChange,
                     disabled,
                     format,
-                    rules = [],
+                    rules = current.whitespace ?
+                      [{ whitespace: true, message: DinamicForm.message }] : [],
                     hidden,
                     size,
                     style,

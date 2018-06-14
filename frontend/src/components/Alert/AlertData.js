@@ -1,5 +1,3 @@
-import messages from '../../translation/messagesES';
-
 const formData = ({ record = {}, closeModal }) => {
   const options = [
     {
@@ -44,9 +42,7 @@ const formData = ({ record = {}, closeModal }) => {
           label: 'Nombre',
           key: 'name',
           required: true,
-          rules: [
-            { whitespace: true, message: messages['Validation.requiredField'] },
-          ],
+          whitespace: true,
           value: record.name,
         },
       ],
@@ -74,9 +70,7 @@ const formData = ({ record = {}, closeModal }) => {
           label: 'Asunto',
           key: 'subject',
           required: true,
-          rules: [
-            { whitespace: true, message: messages['Validation.requiredField'] },
-          ],
+          whitespace: true,
           value: record.subject,
         },
       ],
@@ -90,9 +84,7 @@ const formData = ({ record = {}, closeModal }) => {
           label: 'Mensaje',
           key: 'message',
           required: true,
-          rules: [
-            { whitespace: true, message: messages['Validation.requiredField'] },
-          ],
+          whitespace: true,
           value: record.message,
         },
       ],
@@ -106,9 +98,7 @@ const formData = ({ record = {}, closeModal }) => {
           label: 'Días para alarma',
           key: 'days',
           required: true,
-          rules: [
-            { whitespace: true, message: messages['Validation.requiredField'] },
-          ],
+          whitespace: true,
           value: record.days,
         },
       ],

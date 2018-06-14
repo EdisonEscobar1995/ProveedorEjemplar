@@ -1,5 +1,3 @@
-import messages from '../../translation/messagesES';
-
 const dataForm =
 ({
   dataOption,
@@ -105,9 +103,7 @@ const dataForm =
             key: 'subject',
             value: dataOption.subject,
             required: true,
-            rules: [
-              { whitespace: true, message: messages['Validation.requiredField'] },
-            ],
+            whitespace: true,
           },
         ],
       },
@@ -121,9 +117,7 @@ const dataForm =
             key: 'message',
             value: dataOption.message,
             required: true,
-            rules: [
-              { whitespace: true, message: messages['Validation.requiredField'] },
-            ],
+            whitespace: true,
           },
         ],
       },

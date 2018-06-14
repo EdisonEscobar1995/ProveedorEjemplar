@@ -1,5 +1,3 @@
-import messages from '../../translation/messagesES';
-
 const formData = ({ record = {}, closeModal, masters }) => [
   {
     key: 1.0,
@@ -47,9 +45,7 @@ const formData = ({ record = {}, closeModal, masters }) => [
         label: 'Escala',
         key: 'name',
         required: true,
-        rules: [
-          { whitespace: true, message: messages['Validation.requiredField'] },
-        ],
+        whitespace: true,
         value: record.name,
       },
     ],
@@ -77,9 +73,7 @@ const formData = ({ record = {}, closeModal, masters }) => [
         label: 'Ayuda',
         key: 'helpText',
         required: true,
-        rules: [
-          { whitespace: true, message: messages['Validation.requiredField'] },
-        ],
+        whitespace: true,
         value: record.helpText,
       },
     ],

@@ -624,6 +624,7 @@ function generalInfo(fields) {
           key: 'fullNameContact',
           value: fullNameContact,
           required: true,
+          whitespace: true,
           disabled,
         },
         {
@@ -633,6 +634,7 @@ function generalInfo(fields) {
           key: 'jobPosition',
           value: jobPosition,
           required: true,
+          whitespace: true,
           disabled,
         },
         {
@@ -642,6 +644,7 @@ function generalInfo(fields) {
           key: 'phoneOfContact',
           value: phoneOfContact,
           required: true,
+          whitespace: true,
           disabled,
         },
         {
@@ -742,6 +745,7 @@ function generalInfo(fields) {
           value: nameContactPersonInGroupNutresa,
           disabled,
           required: true,
+          whitespace: true,
         },
         {
           span: 8,
