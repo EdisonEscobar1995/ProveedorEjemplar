@@ -33,9 +33,9 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         NotificationDTO notificationSaved = super.save(notification);
         AttachmentBLO attachmentBLO = new AttachmentBLO();
         AttachmentDTO attachmentBanner = attachmentBLO.get(notification.getIdBanner());
-        attachmentBLO.createAttachmentPublic(attachmentBanner.getId());
+        attachmentBLO.createAttachmentToPublicDataBase(attachmentBanner.getId());
         AttachmentDTO attachmentFooter = attachmentBLO.get(notification.getIdFooter());
-        attachmentBLO.createAttachmentPublic(attachmentFooter.getId());
+        attachmentBLO.createAttachmentToPublicDataBase(attachmentFooter.getId());
         return notificationSaved;
     }
 

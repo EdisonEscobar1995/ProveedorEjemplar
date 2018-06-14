@@ -52,9 +52,9 @@ public class AttachmentBLO {
      *            Documento público
      * @throws HandlerGenericException
      */
-    protected void createAttachmentPublic(String idResource) throws HandlerGenericException {
+    protected void createAttachmentToPublicDataBase(String idResource) throws HandlerGenericException {
         AttachmentDAO attachmentDAO = new AttachmentDAO();
-        attachmentDAO.createAttachmentPublic(idResource);
+        attachmentDAO.copyAttachmentToPublicDataBase(idResource);
     }
 
 }

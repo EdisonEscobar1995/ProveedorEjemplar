@@ -37,9 +37,6 @@ public class AttachmentDAO {
         for (FileItem item : items) {
             if (item.isFormField()) {
                 document.replaceItemValue(item.getFieldName(), item.getString());
-                if ("isNotification".equals(item.getFieldName()) && "YES".equals(item.getString())) {
-                    createPublicResouce(items);
-                }
             } else {
                 processUploadedFile(item, mime);
             }
@@ -47,33 +44,9 @@ public class AttachmentDAO {
 
         document.replaceItemValue("form", "frAttachment");
         document.replaceItemValue("id", document.getUniversalID());
-
         document.save();
 
         return castDocument(document);
-    }
-
-    private AttachmentDTO createPublicResouce(List<FileItem> items) throws HandlerGenericException {
-        View vwSystem = this.database.getView("vwSystems");
-        Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
-        Database publicDataBase = this.session.getDatabase(docSystem.getItemValueString("filespathapplication"));
-        Document publicDocument = publicDataBase.createDocument();
-
-        MIMEEntity mime = publicDocument.createMIMEEntity("files");
-
-        for (FileItem item : items) {
-            if (item.isFormField()) {
-                publicDocument.replaceItemValue(item.getFieldName(), item.getString());
-            } else {
-                processUploadedFile(item, mime);
-            }
-        }
-
-        publicDocument.replaceItemValue("form", "frAnexo");
-        publicDocument.replaceItemValue("id", publicDocument.getUniversalID());
-
-        publicDocument.save();
-        return castDocument(publicDocument);
     }
 
     public AttachmentDTO get(String id) {
@@ -103,7 +76,6 @@ public class AttachmentDAO {
     private String getAttachmentUrl(Document document) {
         String url = Common.buildPathResource();
         url += "/" + entityView + "/" + document.getUniversalID() + "/$FILE" + "/" + getUrlEncode(document);
-
         return url;
     }
 
@@ -118,7 +90,6 @@ public class AttachmentDAO {
     private void processUploadedFile(FileItem item, MIMEEntity mime) throws HandlerGenericException {
         try {
             MIMEEntity child = mime.createChildEntity();
-
             MIMEHeader header = child.createHeader("content-disposition");
             header.setHeaderVal("attachment;filename=\"" + item.getName() + "\"");
 
@@ -127,20 +98,19 @@ public class AttachmentDAO {
 
             child.setContentFromBytes(stream, item.getContentType(), MIMEEntity.ENC_IDENTITY_BINARY);
             child.decodeContent();
-
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
     }
 
     /**
-     * Crea un adjunto en la base de datos publica de anexos
+     * Copia un adjunto en la base de datos publica de anexos
      * 
      * @param publicAttachment
-     *            Documento público
+     *            identificador del documento a copiar
      * @throws HandlerGenericException
      */
-    public void createAttachmentPublic(String idResource) throws HandlerGenericException {
+    public void copyAttachmentToPublicDataBase(String idResource) throws HandlerGenericException {
         try {
             View vwSystem = database.getView("vwSystems");
             Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
@@ -151,17 +121,11 @@ public class AttachmentDAO {
             }
 
             Database publicDataBase = session.getDatabase(filesPathApplication);
-            Document document = publicDataBase.createDocument();
-            document = this.getDocument(idResource);
-
-            if (!document.save(true, false)) {
-                throw new HandlerGenericException("Cant create document");
-            }
-
+            Document document = this.getDocument(idResource);
+            document.copyToDatabase(publicDataBase);
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-
     }
 
 }

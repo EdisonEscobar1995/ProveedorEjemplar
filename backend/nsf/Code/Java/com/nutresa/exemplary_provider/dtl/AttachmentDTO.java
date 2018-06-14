@@ -10,8 +10,6 @@ public class AttachmentDTO {
     private String name;
     @Expose
     private String url;
-    @Expose
-    public String isNotification;
 
     public void setId(String id) {
         this.id = id;
