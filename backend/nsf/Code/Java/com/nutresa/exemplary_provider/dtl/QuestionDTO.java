@@ -24,7 +24,7 @@ public class QuestionDTO {
     @Expose
     private String helpText;
     @Expose
-    private List<String> idsSurvey;
+    private List<String> idSurvey;
     @Expose
     private String dependOfOptionId;
     @Expose
@@ -88,12 +88,12 @@ public class QuestionDTO {
         this.helpText = helpText;
     }
 
-    public List<String> getIdsSurvey() {
-        return idsSurvey;
+    public List<String> getIdSurvey() {
+        return idSurvey;
     }
 
-    public void setIdsSurvey(List<String> idsSurvey) {
-        this.idsSurvey = idsSurvey;
+    public void setIdSurvey(List<String> idsSurvey) {
+        this.idSurvey = idsSurvey;
     }
 
     public String getDependOfQuestion() {

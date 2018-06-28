@@ -22,12 +22,13 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
     @Override
     public SurveyDTO save(SurveyDTO survey) throws HandlerGenericException {
         SurveyDTO response = null;
-
+        QuestionBLO questionBLO = new QuestionBLO();
         if (null != survey.getIdSupply() && null != survey.getIdCompanySize()) {
             if (existSurvey(survey)) {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
             } else {
                 response = super.save(survey);
+                response.setQuestion(questionBLO.associateToSurvey(survey.getQuestion(), response.getId()));
             }
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());

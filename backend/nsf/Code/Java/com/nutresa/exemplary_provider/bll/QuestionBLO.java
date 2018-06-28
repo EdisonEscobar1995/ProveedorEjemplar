@@ -89,4 +89,17 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
         return entityWithFields;
     }
 
+    protected List<QuestionDTO> associateToSurvey(List<QuestionDTO> questions, String idSurvey)
+            throws HandlerGenericException {
+        List<QuestionDTO> response = new ArrayList<QuestionDTO>();
+        for (QuestionDTO question : questions) {
+            List<String> idSurveysInQuestion = question.getIdSurvey();
+            idSurveysInQuestion.add(idSurvey);
+            question.setIdSurvey(idSurveysInQuestion);
+            response.add(super.save(question));
+        }
+
+        return response;
+    }
+
 }
