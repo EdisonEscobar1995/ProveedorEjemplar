@@ -289,11 +289,6 @@ function saveQuestion(clientData, next) {
             dispatch(setMessage('Las opciones de respuesta son obligatorias.', 'warning'));
             return;
           }
-          if (emptyData.length === 0) {
-            dataOptions.forEach((element) => {
-              dispatch(saveOptionsQuestion(element));
-            });
-          }
         }
         if (next) {
           next();

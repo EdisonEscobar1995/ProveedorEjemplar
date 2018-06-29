@@ -47,4 +47,11 @@ public class OptionBLO extends GenericBLO<OptionDTO, OptionDAO> {
         OptionDAO optionDAO = new OptionDAO();
         return optionDAO.getOptionsByQuestion(idQuestion);
     }
+
+    public void createOptions(List<OptionDTO> options, String idQuestion) throws HandlerGenericException {
+        for(OptionDTO option: options){
+            option.setIdQuestion(idQuestion);
+            super.save(option);
+        }
+    }
 }

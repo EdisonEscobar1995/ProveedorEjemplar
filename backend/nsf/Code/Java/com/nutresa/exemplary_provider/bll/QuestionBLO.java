@@ -18,9 +18,11 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
     }
 
     @Override
-    public QuestionDTO save(QuestionDTO dto) throws HandlerGenericException {
-        QuestionDTO response = super.save(dto);
+    public QuestionDTO save(QuestionDTO question) throws HandlerGenericException {
+        QuestionDTO response = super.save(question);
         cleanOptions(response);
+        OptionBLO optionBLO = new OptionBLO();
+        optionBLO.createOptions(question.getOptions(), question.getId());
         return response;
     }
 
