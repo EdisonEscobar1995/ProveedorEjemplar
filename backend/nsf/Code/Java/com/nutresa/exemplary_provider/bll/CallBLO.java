@@ -656,6 +656,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
         if (null == supplier.nameCompanySizeToLoad || supplier.nameCompanySizeToLoad.isEmpty()) {
             allowLoad = true;
+            supplier.setIdCompanySize("");
         } else {
             CompanySizeDTO companySize = companySizeBLO.getBy("name", supplier.nameCompanySizeToLoad);
             String idCompanySize = companySize == null ? null : companySize.getId();

@@ -226,7 +226,7 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
     public boolean deleteAllReference(String idSupplierByCall) throws HandlerGenericException {
         boolean stateDeleted = false;
         View view = getDatabase().getView("vwUniverse");
-        if (view.FTSearch(idSupplierByCall) > 0) {
+        if (view.FTSearch(idSupplierByCall.concat(" AND NOT [form] = frSupplierByCall")) > 0) {
             view.getAllEntries().removeAll(true);
             stateDeleted = true;
         }
