@@ -276,7 +276,7 @@ function saveOptionsQuestion(element) {
 function saveQuestion(clientData, next) {
   return (dispatch, getState) => {
     clientData.idSurvey = getState().question.editData.idSurvey;
-    // clientData.idSurvey = [];
+    clientData.options = getState().question.options;
     requestApi(dispatch, getQuestionProgress, saveQuestionApi, clientData)
       .then((response) => {
         const { data } = response.data;
