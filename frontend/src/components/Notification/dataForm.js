@@ -57,7 +57,7 @@ const dataForm =
         key: 1.3,
         value: [
           {
-            label: 'Banner: (Adjuntar imágenes en formato PNG. JPG, JPEG)',
+            label: 'Banner (600 x 260): (Adjuntar imágenes en formato PNG. JPG, JPEG)',
             span: 12,
             type: 'upload',
             name: 'idBanner',
@@ -77,7 +77,7 @@ const dataForm =
         key: 1.4,
         value: [
           {
-            label: 'Pie de página: (Adjuntar imágenes en formato PNG. JPG, JPEG)',
+            label: 'Pie de página (600 x 260): (Adjuntar imágenes en formato PNG. JPG, JPEG)',
             span: 12,
             type: 'upload',
             name: 'idFooter',

@@ -133,7 +133,7 @@ const messages = {
   'Validation.undefinedSupplier': 'Se debe ingresar al menos un proveedor',
   'Title.percentageAdvance': 'Porcentaje de avance',
   'Title.imageGallery': 'Galería de imágenes',
-  'Title.pendings': 'Mis pendientes',
+  'Title.pendings': 'Encuestas pendientes',
   'Title.informationMessage': 'A continuación se presentan los proveedores que están pendientes por evaluar.',
   'Title.companySize': 'Por tamaño de empresa',
   'Title.supplyType': 'Por tipo de suministro',
