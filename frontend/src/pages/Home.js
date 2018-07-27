@@ -1,13 +1,9 @@
 import React from 'react';
+import HomeContainer from '../components/Home/HomeContainer';
 
 function Home() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <img
-        src="assets/images/LogoApp.png"
-        alt="assets/images/LogoApp.png"
-      />
-    </div>
+    <HomeContainer />
   );
 }
 

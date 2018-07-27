@@ -15,9 +15,13 @@ public class SupplierDTO {
     @Expose
     private String idCompanySize;
     @Expose
+    public String nameCompanySizeToLoad;
+    @Expose
     private CompanySizeDTO companySize;
     @Expose
     private String idSupply;
+    @Expose
+    public String nameSupplyToLoad;
     @Expose
     private SupplyDTO supply;
     @Expose
@@ -49,6 +53,8 @@ public class SupplierDTO {
     private String principalAdress;
     @Expose
     private String idCountry;
+    @Expose
+    public String nameCountryToLoad;
     @Expose
     private String idOriginCountry;
     @Expose
@@ -373,6 +379,10 @@ public class SupplierDTO {
 
     public String getId() {
         return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getIdCompanySize() {

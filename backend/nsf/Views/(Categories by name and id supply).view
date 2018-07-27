@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(Categories by name and id supply)' alias='Category|vwCategoriesByNameAndIdSupply'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
+ showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
+ unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
+ opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
+ extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
+ headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='a04be' unid='E84F24A72C4CD8B40525827B0064853D' sequence='6'>
+<created><datetime>20180426T131757,09-05</datetime></created>
+<modified><datetime>20180426T131936,56-05</datetime></modified>
+<revised><datetime>20180426T131936,55-05</datetime></revised>
+<lastaccessed><datetime>20180426T131936,56-05</datetime></lastaccessed>
+<addedtofile><datetime>20180426T131757,17-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frCategory"</formula></code>
+<column sort='ascending' hidedetailrows='false' itemname='idSupply' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idSupply'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='name' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
+ showaslinks='false'><columnheader title='name'><font size='9pt' style='bold'/></columnheader></column></view>
+

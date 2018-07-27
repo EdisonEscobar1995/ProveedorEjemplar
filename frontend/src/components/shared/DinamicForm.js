@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker, Spin,
+  Row, Col, Form, Input, InputNumber, Select, Radio, Button, DatePicker, Spin, Switch,
 } from 'antd';
 import styled from 'styled-components';
 import SubTitle from './SubTitle';
@@ -18,6 +18,12 @@ const { Group } = Radio;
 
 const ParagraphStyle = styled.p`
   margin-bottom: ${props => props.theme.spaces.main};
+`;
+
+const SelectStyle = styled(Select)`
+  & .ant-select-selection-selected-value {
+    position: absolute;
+  }
 `;
 
 const ItemStyle = styled(Item)`
@@ -65,8 +71,10 @@ class DinamicForm extends Component {
                     handleChange,
                     disabled,
                     format,
-                    rules = [],
+                    rules = current.whitespace ?
+                      [{ whitespace: true, message: DinamicForm.message }] : [],
                     hidden,
+                    size,
                     style,
                   } = current;
                   allowClear = allowClear === undefined ? true : allowClear;
@@ -78,11 +86,21 @@ class DinamicForm extends Component {
                     case 'inputNumber':
                     case 'textarea':
                     case 'radio':
+                    case 'switch':
                     case 'select': {
                       let fieldContent;
                       switch (type) {
                         case 'date': {
-                          fieldContent = <DatePicker disabled={disabled} style={{ width: '100%' }} format={format} />;
+                          fieldContent = (<DatePicker
+                            disabled={disabled}
+                            onChange={(date, dateString) => {
+                              if (handleChange) {
+                                handleChange(date, dateString);
+                              }
+                            }}
+                            style={{ width: '100%' }}
+                            format={format}
+                          />);
                           break;
                         }
                         case 'input':
@@ -123,12 +141,28 @@ class DinamicForm extends Component {
                           if (disabled) {
                             fieldContent = <TextStyle>{value}</TextStyle>;
                           } else {
-                            fieldContent = <TextArea rows="4" disabled={disabled} />;
+                            fieldContent =
+                              (<TextArea
+                                rows="4"
+                                disabled={disabled}
+                                onBlur={(inputValue) => {
+                                  if (handleChange) {
+                                    handleChange(inputValue.target.value);
+                                  }
+                                }}
+                              />);
                           }
                           break;
                         case 'select': {
                           const {
-                            valuesToClean, mode, noSearch, autoComplete, onSearch, fetching,
+                            valuesToClean,
+                            mode,
+                            noSearch,
+                            autoComplete,
+                            onSearch,
+                            fetching,
+                            handleSelect,
+                            keyPress,
                           } = current;
                           const selectProps = {};
                           if (noSearch) {
@@ -152,15 +186,21 @@ class DinamicForm extends Component {
                             selectProps.filterOption = (input, option) => {
                               const word = option.props.children.props ?
                                 option.props.children.props.id : option.props.children;
-                              return word.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                              return word
+                                .toString().toLowerCase().indexOf(input.toLowerCase()) >= 0;
                             };
                           }
                           fieldContent = (
-                            <Select
+                            <SelectStyle
                               showSearch
                               mode={mode}
                               disabled={disabled}
                               allowClear={allowClear}
+                              onInputKeyDown={(ev) => {
+                                if (keyPress) {
+                                  keyPress(ev);
+                                }
+                              }}
                               onChange={(selectValue) => {
                                 if (valuesToClean) {
                                   setFields(valuesToClean);
@@ -169,10 +209,18 @@ class DinamicForm extends Component {
                                   handleChange(selectValue);
                                 }
                               }}
+                              onSelect={(selectValue) => {
+                                if (valuesToClean) {
+                                  setFields(valuesToClean);
+                                }
+                                if (handleSelect) {
+                                  handleSelect(selectValue);
+                                }
+                              }}
                               {...selectProps}
                             >
                               {
-                                options.map(option => (
+                                options && options.length > 0 && options.map(option => (
                                   <Option
                                     key={option.id}
                                     value={option.id}
@@ -185,15 +233,19 @@ class DinamicForm extends Component {
                                   </Option>
                                 ))
                               }
-                            </Select>
+                            </SelectStyle>
                           );
                         }
                           break;
                         case 'radio':
-                          fieldContent = (<Group disabled={disabled}>
+                          fieldContent = (<Group disabled={disabled} onChange={handleChange}>
                             {
-                              options.map(option => (
-                                <Radio key={option.id} value={option.id}>
+                              options && options.map(option => (
+                                <Radio
+                                  key={option.id}
+                                  value={option.id}
+                                  size={size}
+                                >
                                   {
                                     dontFormatMessage ?
                                       option.name :
@@ -203,6 +255,21 @@ class DinamicForm extends Component {
                               ))
                             }
                           </Group>);
+                          break;
+                        case 'switch': {
+                          const {
+                            defaultChecked,
+                          } = current;
+                          fieldContent = (
+                            <Switch
+                              defaultChecked={defaultChecked}
+                              checked={value}
+                              size={size}
+                              disabled={disabled}
+                              onChange={handleChange}
+                            />
+                          );
+                        }
                           break;
                         default:
                           fieldContent = '';
@@ -247,6 +314,7 @@ class DinamicForm extends Component {
                       } = current;
                       rowValue = (
                         <SimpleTable
+                          key={key}
                           loading={loading}
                           data={value}
                           colummns={colummns}
@@ -265,17 +333,19 @@ class DinamicForm extends Component {
                         max,
                         onChange,
                         onRemove,
+                        unique,
                         uploadMaxFilesize,
                         uploadExtensions,
                       } = current;
                       rowValue = (
-                        <Field label={label}>
+                        <Field label={label} style={style}>
                           <Upload
                             datakey={key}
                             list={fileList}
                             disabled={disabled}
                             multiple
                             max={max}
+                            unique={unique}
                             uploadExtensions={uploadExtensions}
                             uploadMaxFilesize={uploadMaxFilesize}
                             sizeAllowed={sizeAllowed}

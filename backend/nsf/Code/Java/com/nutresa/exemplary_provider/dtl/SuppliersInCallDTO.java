@@ -9,7 +9,7 @@ public class SuppliersInCallDTO {
 
     @Expose
     List<DTO> suppliers;
-    
+
     @Expose
     private List<DTO> suppliersByCall;
 

@@ -24,7 +24,17 @@ import technicalTeamSurvey from './TechnicalTeamSurvey/reducer';
 import managerTeamSurvey from './ManagerTeamSurvey/reducer';
 import managerTeam from './ManagerTeam/reducer';
 import menu from './Menu/reducer';
-
+import generalAdministrator from './GeneralAdministrator/reducer';
+import home from './Home/reducer';
+import notification from './Notification/reducer';
+import companyType from './CompanyType/reducer';
+import societyType from './SocietyType/reducer';
+import dimensionAndCriterion from './DimensionAndCriterion/reducer';
+import question from './Question/reducer';
+import companySize from './CompanySize/reducer';
+import surveyAdmon from './SurveyAdmon/reducer';
+import alert from './Alert/reducer';
+import dictionary from './Dictionary/reducer';
 
 const app = combineReducers({
   main,
@@ -50,6 +60,17 @@ const app = combineReducers({
   managerTeamSurvey,
   managerTeam,
   menu,
+  generalAdministrator,
+  home,
+  notification,
+  companyType,
+  societyType,
+  dimensionAndCriterion,
+  question,
+  companySize,
+  surveyAdmon,
+  alert,
+  dictionary,
 });
 
 let middleware = {};

@@ -17,7 +17,8 @@ import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 
 public class ErrorAPI extends DesignerFacesServlet {
 
-    public void service(final ServletRequest servletRequest, final ServletResponse servletResponse) throws ServletException, IOException {
+    public void service(final ServletRequest servletRequest, final ServletResponse servletResponse)
+            throws ServletException, IOException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         response.setContentType("application/json");
@@ -27,7 +28,7 @@ public class ErrorAPI extends DesignerFacesServlet {
             Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
             ServletResponseDTO<Object> responseDTO = new ServletResponseDTO<Object>(false,
-                "What the fuck are you trying to do, break the server?");
+                    "What the fuck are you trying to do, break the server?");
 
             response.setStatus(500);
             output.print(gson.toJson(responseDTO));
@@ -36,6 +37,6 @@ public class ErrorAPI extends DesignerFacesServlet {
         } finally {
             output.close();
         }
-        
+
     }
 }

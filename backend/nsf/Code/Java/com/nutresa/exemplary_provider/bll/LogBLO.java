@@ -58,10 +58,12 @@ public class LogBLO extends GenericBLO<LogDTO, LogDAO> {
                 message = exceptionMessage;
             }
 
-            LogDTO log = new LogDTO(type, entity, message, exceptionLog);
-            LogDAO logDAO = new LogDAO();
+            // Este fragmento fue comentado porque se tomó la decisión de usar
+            // FTSearch
 
-            logDAO.save(log);
+            // LogDTO log = new LogDTO(type, entity, message, exceptionLog);
+            // LogDAO logDAO = new LogDAO();
+            // logDAO.save(log);
         } catch (Exception exception) {
             Common.logError("Error saving to log ", exception);
         }

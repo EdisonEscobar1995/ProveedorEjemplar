@@ -10,7 +10,7 @@ import {
 
 import getMasterApi from '../../api/master';
 import { getResultsApi } from '../../api/call';
-import getCriterionsByDimensionApi from '../../api/criterions';
+import { getAllCriterionsByDimensionApi } from '../../api/criterions';
 import getItemsByServiceApi from '../../api/items';
 import { requestApi, sortByField } from '../../utils/action';
 
@@ -68,7 +68,7 @@ const getMasters = () => (dispatch) => {
 
 const getCriterionsByDimension = idDimension => (
   (dispatch) => {
-    requestApi(dispatch, getMastersProgress, getCriterionsByDimensionApi, idDimension)
+    requestApi(dispatch, getMastersProgress, getAllCriterionsByDimensionApi, idDimension)
       .then((response) => {
         const criterions = sortByField(response.data.data, 'name');
         dispatch(getCriterionsByDimensionSuccess(criterions));

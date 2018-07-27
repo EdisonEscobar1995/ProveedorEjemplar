@@ -232,11 +232,146 @@ const routes = [
   },
   {
     index: increment(),
-    name: 'PRUEBA',
-    path: '/prueba',
+    name: 'GENERALADMINISTRATOR',
+    path: '/generalAdmon',
     exact: true,
     component: asyncComponent(() =>
-      import('./pages/prueba').then(module => module.default),
+     import('./pages/GeneralAdministrator').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'MANAGER_BY_ID',
+    path: '/managerTeamSurvey/:idSupplier',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ManagerTeamSurvey').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'TECHNICAL_BY_ID',
+    path: '/technicalTeamSurvey/:idSupplier',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/TechnicalTeamSurvey').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'NOTIFICATION',
+    path: '/notification',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Notification').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'COMPANY_TYPE',
+    path: '/companyType',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/CompanyType').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SOCIETY_TYPE',
+    path: '/societyType',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SocietyType').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'DIMENSION_CRITERION',
+    path: '/dimension',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/DimensionAndCriterion').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'QUESTION',
+    path: '/question',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Question').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'QUESTION_FORM',
+    path: '/question/form',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/QuestionForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'QUESTION_BY_ID',
+    path: '/question/form/:id',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/QuestionForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SURVEY_ADMON',
+    path: '/surveyAdmon',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SurveyAdmon').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SURVEY_ADMON_FORM',
+    path: '/surveyAdmon/form',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SurveyAdmonForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'SURVEY_ADMON_BY_ID',
+    path: '/surveyAdmon/form/:id',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/SurveyAdmonForm').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'COMPANY_SIZE',
+    path: '/companySize',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/CompanySize').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'ALERT',
+    path: '/alert',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Alert').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
+    name: 'DICTIONARY',
+    path: '/dictionary',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/Dictionary').then(module => module.default),
     ),
   },
 ];

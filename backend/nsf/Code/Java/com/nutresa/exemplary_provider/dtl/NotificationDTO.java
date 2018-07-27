@@ -2,13 +2,19 @@ package com.nutresa.exemplary_provider.dtl;
 
 import java.util.List;
 
+import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+
 import com.google.gson.annotations.Expose;
 
 public class NotificationDTO extends MasterDTO {
     @Expose
     private String idBanner;
     @Expose
+    private AttachmentDTO banner;
+    @Expose
     private String idFooter;
+    @Expose
+    private AttachmentDTO footer;
     @Expose
     private String subject;
     @Expose
@@ -61,5 +67,21 @@ public class NotificationDTO extends MasterDTO {
     public void setIdFooter(String idFooter) {
         this.idFooter = idFooter;
     }
-    
+
+    public void setBanner(AttachmentDTO banner) {
+        this.banner = banner;
+    }
+
+    public AttachmentDTO getBanner() {
+        return banner;
+    }
+
+    public void setFooter(AttachmentDTO footer) {
+        this.footer = footer;
+    }
+
+    public AttachmentDTO getFooter() {
+        return footer;
+    }
+
 }

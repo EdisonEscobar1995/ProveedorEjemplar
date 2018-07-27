@@ -25,7 +25,7 @@ class SupplyContainer extends Component {
         onSearchMethod: this.props.searchSupply,
       },
       {
-        title: 'Categorias',
+        title: 'Categorías',
         component: Category,
         columns: columnsData,
         deleteMethod: this.props.deleteCategory,
@@ -51,6 +51,7 @@ class SupplyContainer extends Component {
         componentList={componentList}
         expandable
         pagination
+        withDelete
       />
     );
   }

@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='AlertsExemplaryProvider' xmlns='http://www.lotus.com/dxl' version='9.0'
+ maintenanceversion='1.9' replicaid='052581DB006A5865' hide='v3' publicaccess='false'
+ designerversion='8.5.3' restrictions='unrestricted' activatable='false'>
+<noteinfo noteid='a1ea2' unid='42483B8C31B08C6805258288007AF517' sequence='21'>
+<created><datetime>20180509T172301,35-05</datetime></created>
+<modified><datetime>20180510T182027,03-05</datetime></modified>
+<revised><datetime>20180510T182027,02-05</datetime></revised>
+<lastaccessed><datetime>20180510T182027,03-05</datetime></lastaccessed>
+<addedtofile><datetime>20180509T172301,59-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby>
+<designchange><datetime>20180510T182027,00-05</datetime></designchange>
+<trigger type='scheduled'>
+<schedule type='daily' runlocation='any'>
+<starttime><datetime>T000500,00</datetime></starttime></schedule></trigger>
+<documentset type='modified'/><code event='action'><javaproject class='JavaAgent.class'
+ codepath='d:\IBM\Notes\Data'><java name='JavaAgent.java'>import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import lotus.domino.*;
+
+public class JavaAgent extends AgentBase {
+
+    public void NotesMain() {
+        HttpURLConnection con = null;
+
+        try {
+            Session session = getSession();
+            AgentContext agentContext = session.getAgentContext();
+
+            Database db = agentContext.getCurrentDatabase();
+            URL databaseUrl = new URL(db.getHttpURL());
+            
+            URL url = new URL(databaseUrl.getProtocol() + "://" + databaseUrl.getHost() + databaseUrl.getPath()
+                    + "/xsp/Alert?action=loadInformation");
+
+            con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Accept", "application/json");
+            con.setRequestProperty("cache-control", "no-cache");
+            con.setDoOutput(true);
+            con.connect();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            System.out.println(response.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
+        }
+    }
+}</java></javaproject></code>
+<rundata processeddocs='0' exitcode='0'>
+<agentmodified><datetime>20180510T182027,00-05</datetime></agentmodified></rundata>
+<item name='$JavaCompilerSource'><text>1.3</text></item>
+<item name='$JavaCompilerTarget'><text>1.2</text></item></agent>
+

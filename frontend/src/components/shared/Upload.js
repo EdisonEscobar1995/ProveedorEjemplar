@@ -40,15 +40,26 @@ class Upload extends Component {
   state = {
     listValue: mapValue(this.props.list, this.props.disabled),
   }
+
   onRemove = (file) => {
     const onRemove = this.props.onRemove;
     if (onRemove && !this.props.disabled) {
       onRemove(file.uid, this.props.datakey);
+      const unique = this.props.unique;
+      if (unique) {
+        this.setState({ listValue: [] });
+      }
     }
   }
   onChange = (info) => {
     if (info.file.status) {
-      let fileList = info.fileList;
+      let fileList;
+      const unique = this.props.unique;
+      if (unique) {
+        fileList = [info.file];
+      } else {
+        fileList = info.fileList;
+      }
       const messageConfig = { text: '', type: 'error' };
       if (info.file.status === 'done') {
         fileList = fileList.map((file) => {
@@ -76,7 +87,11 @@ class Upload extends Component {
         const { listValue } = this.state;
         const onChange = this.props.onChange;
         if (onChange) {
-          onChange(listValue.map(item => ({ id: item.uid })), this.props.datakey);
+          if (unique) {
+            onChange(fileList.map(item => ({ id: item.uid })), this.props.datakey, listValue);
+          } else {
+            onChange(listValue.map(item => ({ id: item.uid })), this.props.datakey, listValue);
+          }
         }
       } else if (info.file.status === 'error') {
         messageConfig.text = 'Validation.uploadFail';
@@ -143,4 +158,9 @@ class Upload extends Component {
     );
   }
 }
+
+Upload.defaultProps = {
+  unique: false,
+};
+
 export default Upload;

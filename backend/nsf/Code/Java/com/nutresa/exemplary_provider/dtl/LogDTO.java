@@ -32,7 +32,7 @@ public class LogDTO implements DTO {
             stackTrace = Common.getStackTrace(exception);
         }
     }
-    
+
     public String getId() {
         return this.id;
     }
@@ -56,15 +56,19 @@ public class LogDTO implements DTO {
     public void setType(ErrorType type) {
         this.type = type.get();
     }
+
     public String getMessage() {
         return this.message;
     }
+
     public void setMessage(String message) {
         this.message = message;
     }
+
     public String getStackTrace() {
         return this.stackTrace;
     }
+
     public void setStackTrace(String stackTrace) {
         this.stackTrace = stackTrace;
     }
@@ -72,7 +76,7 @@ public class LogDTO implements DTO {
     public void setStackTrace(Exception exception) {
         this.stackTrace = Common.getStackTrace(exception);
     }
-    
+
     public void setDate(Date date) {
         this.date = date;
     }

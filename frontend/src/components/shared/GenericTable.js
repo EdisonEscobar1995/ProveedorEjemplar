@@ -1,11 +1,18 @@
 import React from 'react';
 import { Table, Spin, Button, Tooltip, Input, Icon } from 'antd';
-// import Confirm from './Confirm';
+import styled from 'styled-components';
+import Confirm from './Confirm';
 import FormattedMessage from './FormattedMessage';
 import H1 from '../shared/H1';
+import SimpleSelect from '../shared/SimpleSelect';
 
 const { Column } = Table;
 const Search = Input.Search;
+
+const Text = styled.span`
+  margin-bottom: 4px;
+  margin-left: 5px;
+`;
 
 function GenericTable(props) {
   const {
@@ -19,6 +26,10 @@ function GenericTable(props) {
     expandable,
     pagination,
     searchValue,
+    withDelete = false,
+    withOutActions = false,
+    withOutAdd = false,
+    withOutAddOptions = false,
   } = props;
 
   return (
@@ -27,21 +38,41 @@ function GenericTable(props) {
       {
         data && data.length > 0 ? (
           <div>
-            {
-              componentList[level].onSearchMethod ? (
-                <Search
-                  size="large"
-                  placeholder="Buscar"
-                  style={{ width: 200 }}
-                  value={searchValue}
-                  prefix={<Icon type="close" style={{ cursor: 'pointer' }} onClick={() => (componentList[level].onSearchMethod('', parentId))} />}
-                  onChange={event => (
-                    componentList[level].onChangeSearchMethod(event.target.value, parentId))}
-                  onSearch={value => (
-                    componentList[level].onSearchMethod(value, parentId))}
-                />
-              ) : null
-            }
+            <span>
+              {
+                componentList[level].onSearchMethod && (
+                  <Search
+                    size="large"
+                    placeholder="Buscar"
+                    style={{ width: 200 }}
+                    value={searchValue}
+                    prefix={<Icon type="close" style={{ cursor: 'pointer' }} onClick={() => (componentList[level].onSearchMethod('', parentId))} />}
+                    onChange={event => (
+                      componentList[level].onChangeSearchMethod(event.target.value, parentId))}
+                    onSearch={value => (
+                      componentList[level].onSearchMethod(value, parentId))}
+                  />
+                )
+              }
+              {
+                componentList[level].filters &&
+                componentList[level].filters.map(filter => (
+                  <span>
+                    <Text>{filter.label ? filter.label : ''}</Text>
+                    <SimpleSelect
+                      options={filter.options}
+                      mode={filter.mode}
+                      handleChange={filter.handleChange}
+                      onSelect={filter.onSelect}
+                      onDeselect={filter.deselect}
+                      group={filter.group}
+                      style={{ width: 200 }}
+                      labelOptions={filter.labelOptions}
+                    />
+                  </span>
+                ))
+              }
+            </span>
             <Table
               pagination={pagination}
               rowKey={record => record.id}
@@ -70,6 +101,7 @@ function GenericTable(props) {
                       pagination={pagination}
                     />
                   ) : (
+                    !withOutAdd &&
                     <div>
                       <H1 text={componentList[level + 1].title} />
                       <Button
@@ -84,6 +116,10 @@ function GenericTable(props) {
                   )
                 ) : null
               }
+              style={componentList[level].style}
+              onRowClick={componentList[level].onRowClick ? (record) => {
+                componentList[level].onRowClick(record);
+              } : null}
             >
               {
                 componentList[level].columns.map(column => (
@@ -99,9 +135,7 @@ function GenericTable(props) {
                 ))
               }
               {
-                disabled ?
-                  null
-                  :
+                (disabled || !withOutActions) &&
                   <Column
                     title={<FormattedMessage id="Table.action" />}
                     key="action"
@@ -117,24 +151,34 @@ function GenericTable(props) {
                             }}
                           />
                         </Tooltip>
-                        {/* <Confirm method={() => componentList[level].deleteMethod(record)}>
-                          <Tooltip title={<FormattedMessage id="Button.delete" />}>
-                            <Button
-                              shape="circle"
-                              icon="delete"
-                            />
-                          </Tooltip>
-                        </Confirm> */}
-                        <Tooltip title={<FormattedMessage id="Button.add" />}>
-                          <Button
-                            shape="circle"
-                            icon="plus"
-                            onClick={() => {
-                              const Component = componentList[level].component;
-                              openModal(<Component {...props} remoteId={record.id} />);
-                            }}
-                          />
-                        </Tooltip>
+                        {
+                          withDelete &&
+                          (
+                            <Confirm method={() => componentList[level].deleteMethod(record)}>
+                              <Tooltip title={<FormattedMessage id="Button.delete" />}>
+                                <Button
+                                  type="danger"
+                                  shape="circle"
+                                  icon="delete"
+                                />
+                              </Tooltip>
+                            </Confirm>
+                          )
+                        }
+                        {
+                          !withOutAddOptions && (
+                            <Tooltip title={<FormattedMessage id="Button.add" />}>
+                              <Button
+                                shape="circle"
+                                icon="plus"
+                                onClick={() => {
+                                  const Component = componentList[level].component;
+                                  openModal(<Component {...props} remoteId={record.id} />);
+                                }}
+                              />
+                            </Tooltip>
+                          )
+                        }
                       </div>
                     )}
                   />
@@ -142,6 +186,7 @@ function GenericTable(props) {
             </Table>
           </div>
         ) : (
+          !withOutAdd &&
           <Button
             onClick={() => {
               const Component = componentList[level].component;

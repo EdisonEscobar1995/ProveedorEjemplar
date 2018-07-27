@@ -24,7 +24,7 @@ public class TechnicalTeamCommentDAO extends GenericDAO<TechnicalTeamCommentDTO>
         Document document = view.getFirstDocumentByKey(filter, true);
 
         if (null != document) {
-            technicalTeamComment = castDocument(document); 
+            technicalTeamComment = castDocument(document);
         }
 
         return technicalTeamComment.getComment();

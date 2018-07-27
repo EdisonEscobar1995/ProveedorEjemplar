@@ -40,7 +40,7 @@ public class GenericBLO<T, D> {
         filter.put(field, value);
         return getBy(filter);
     }
-    
+
     @SuppressWarnings("unchecked")
     public T getBy(Map<String, String> parameters) throws HandlerGenericException {
         D dao;
@@ -91,7 +91,7 @@ public class GenericBLO<T, D> {
         filter.put(field, value);
         return getAllBy(filter);
     }
-    
+
     @SuppressWarnings("unchecked")
     public T save(T dto) throws HandlerGenericException {
         try {
@@ -130,13 +130,13 @@ public class GenericBLO<T, D> {
         return dtoList;
     }
 
-    public boolean delete(Map<String, String> parameters) throws HandlerGenericException {
+    public boolean delete(Map<String, String> parameters, Boolean checkRelationship) throws HandlerGenericException {
         boolean response = false;
         D dao;
         try {
             dao = daoClass.newInstance();
-            Method method = dao.getClass().getMethod("delete", String.class);
-            response = (Boolean) method.invoke(dao, parameters.get("id"));
+            Method method = dao.getClass().getMethod("delete", String.class, Boolean.class);
+            response = (Boolean) method.invoke(dao, parameters.get("id"), checkRelationship);
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
@@ -147,7 +147,7 @@ public class GenericBLO<T, D> {
     public List<DTO> getAllByIds(List<Object> list) throws HandlerGenericException {
         return getAllByIds("id", list, false);
     }
-    
+
     public List<DTO> getAllByIds(List<Object> list, boolean uniqueIds) throws HandlerGenericException {
         return getAllByIds("id", list, uniqueIds);
     }
@@ -155,7 +155,7 @@ public class GenericBLO<T, D> {
     public List<DTO> getAllByIds(String field, List<Object> list) throws HandlerGenericException {
         return getAllByIds(field, list, false);
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<DTO> getAllByIds(String field, List<Object> list, boolean uniqueIds) throws HandlerGenericException {
         D dao;
@@ -163,24 +163,24 @@ public class GenericBLO<T, D> {
         try {
             dao = daoClass.newInstance();
             response = ((GenericDAO) dao).getAllByIds(field, list, uniqueIds);
+            return response;
         } catch (Exception e) {
             throw new HandlerGenericException(e);
         }
-
-        return response;
     }
-    
+
     public Map<String, List<DTO>> getMasters(String[] idFieldNames) throws HandlerGenericException {
         return getMasters(idFieldNames, new HashMap<String, List<Object>>(), false);
     }
 
-    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds) throws HandlerGenericException {
+    public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds)
+            throws HandlerGenericException {
         return getMasters(idFieldNames, joinIds, false);
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, List<DTO>> getMasters(String[] idFieldNames, Map<String, List<Object>> joinIds, boolean uniqueIds)
-        throws HandlerGenericException {
+            throws HandlerGenericException {
         Map<String, List<DTO>> masters = new HashMap<String, List<DTO>>();
 
         try {
@@ -196,12 +196,13 @@ public class GenericBLO<T, D> {
                     masters.put(idFieldName, blo.getAllByIds(joinIds.get(idFieldName), uniqueIds));
                 }
             }
+
+            return masters;
         } catch (HandlerGenericException e) {
             throw new HandlerGenericException(e);
         }
-        return masters;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<Object> getFieldAll(int column) throws HandlerGenericException {
         List<Object> response = new ArrayList<Object>();
@@ -227,7 +228,7 @@ public class GenericBLO<T, D> {
         }
         return response;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<DTO> getAllBy(Map<String, String> parameters, String defaultView) throws HandlerGenericException {
         D dao;
@@ -246,4 +247,20 @@ public class GenericBLO<T, D> {
         filter.put(field, value);
         return getAllBy(filter, defaultView);
     }
+
+    @SuppressWarnings("unchecked")
+    public List<T> searchMasterByField(String nameField, String valueField) throws HandlerGenericException {
+        List<T> response = new ArrayList<T>();
+        D dao;
+        try {
+            dao = daoClass.newInstance();
+            Method method = dao.getClass().getMethod("searchMasterByField", String.class, String.class);
+            response = (List<T>) method.invoke(dao, nameField, valueField);
+        } catch (Exception e) {
+            throw new HandlerGenericException(e);
+        }
+
+        return response;
+    }
+
 }

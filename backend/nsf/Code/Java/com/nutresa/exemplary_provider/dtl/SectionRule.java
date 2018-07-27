@@ -29,16 +29,20 @@ public class SectionRule {
     }
 
     /**
-     * @param section Sección para la que aplican las reglas
-     * @param rules Reglas para la sección
+     * @param section
+     *            Sección para la que aplican las reglas
+     * @param rules
+     *            Reglas para la sección
      */
     public void setRulesToSection(String section, Map<String, Object> rules) {
         this.getRules().put(section, rules);
     }
 
     /**
-     * @param show Propiedad para determinar si se muestra la sección
-     * @param readOnly Propiedad para deterinar si la sección es modo lectura o no
+     * @param show
+     *            Propiedad para determinar si se muestra la sección
+     * @param readOnly
+     *            Propiedad para deterinar si la sección es modo lectura o no
      * @return Colección de reglas.
      */
     public Map<String, Object> buildRules(boolean show, boolean readOnly) {

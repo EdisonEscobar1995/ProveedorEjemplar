@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,5 +28,14 @@ public class MenuBLO extends GenericBLO<MenuDTO, MenuDAO> {
             listMenusByRol = menuBLO.getAllBy("idsRol", Common.getIdsFromList(list.get("[id]")));
         }
         return listMenusByRol;
+    }
+
+    protected static Map<String, List<String>> getEntityWithFieldsToTranslate() {
+        Map<String, List<String>> entityWithFields = new HashMap<String, List<String>>();
+        List<String> fields = new ArrayList<String>();
+        fields.add("title");
+        fields.add("categoryName");
+        entityWithFields.put("Menu", fields);
+        return entityWithFields;
     }
 }

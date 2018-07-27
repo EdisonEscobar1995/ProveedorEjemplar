@@ -8,7 +8,6 @@ import com.nutresa.exemplary_provider.bll.MasterListBLO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 
-
 @SuppressWarnings("unchecked")
 public class MasterListAPI extends BaseAPI {
 
@@ -33,5 +32,5 @@ public class MasterListAPI extends BaseAPI {
 
         return response;
     }
- 
+
 }

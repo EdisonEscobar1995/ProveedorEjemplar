@@ -29,6 +29,7 @@ class ManagerTeamContainer extends Component {
         componentList={componentList}
         expandable={false}
         pagination
+        withDelete
       />
     );
   }

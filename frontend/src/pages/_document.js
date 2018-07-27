@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Layout, Icon, BackTop, Modal } from 'antd';
 import * as action from '../state/Main/action';
@@ -125,7 +125,9 @@ class Document extends Component {
       <Layout>
         <HeaderLogoStyle>
           <HeaderContentStyle>
-            <LogoStyle />
+            <Link to={'/'}>
+              <LogoStyle />
+            </Link>
             <LogStyle>
               <InfoStyle>
                 <UserStyle>

@@ -28,6 +28,18 @@ function getMessage(type) {
     case 'ROL_INVALID':
     case 'UNAUTHORIZED':
       return 'Validation.unauthorized';
+    case 'DOCUMENT_MULTI_CONNECTED':
+      return 'Validation.documentMultiConect';
+    case 'DONT_EXIST_IN_DIRECTORY':
+      return 'Validation.dontExistInDirectory';
+    case 'ALREADY_EXIST_CALL_ACTIVE':
+      return 'Validation.callExistsActive';
+    case 'ALREADY_EXIST_CALL':
+      return 'Validation.callExists';
+    case 'DATE_WITHOUT_FIXING':
+      return 'Validation.dateWithoutFixing';
+    case 'UNDEFINED_SUPPLIERS':
+      return 'Validation.undefinedSupplier';
     default:
       return 'Validation.wentWrong';
   }

@@ -13,7 +13,7 @@ public class MenuAPI extends GenericAPI<MenuDTO, MenuBLO> {
     public MenuAPI() {
         super(MenuDTO.class, MenuBLO.class);
     }
-    
+
     public ServletResponseDTO<List<DTO>> getMenusByRol() throws HandlerGenericException {
         MenuBLO menuBLO = new MenuBLO();
         return new ServletResponseDTO<List<DTO>>(menuBLO.getMenusByRol());

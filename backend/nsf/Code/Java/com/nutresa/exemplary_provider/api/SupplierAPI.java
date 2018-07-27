@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.api;
 
+import java.util.List;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.bll.SupplierBLO;
@@ -87,6 +88,19 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
                     .get("year")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<InformationFromSupplier>(exception);
+        }
+
+        return response;
+    }
+
+    public ServletResponseDTO<List<SupplierDTO>> searchSupplier(Map<String, String> parametersInReques) {
+        SupplierBLO supplierBLO = new SupplierBLO();
+        ServletResponseDTO<List<SupplierDTO>> response = null;
+        try {
+            response = new ServletResponseDTO<List<SupplierDTO>>(supplierBLO.searchSupplier(parametersInReques
+                    .get("text")));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<List<SupplierDTO>>(exception);
         }
 
         return response;

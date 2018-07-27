@@ -41,8 +41,8 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
         if (userBLO.isRol(Rol.TECHNICAL_TEAM.toString())) {
             if (supplierByCallBLO.isFromTechnicalTeam(answer.getIdSupplierByCall())) {
                 notice = supplierByCall.getWhoEvaluateOfTechnicalTeam();
-                throw new HandlerGenericException(
-                        HandlerGenericExceptionTypes.ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER.toString());
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.ALREADY_HAS_AN_TECHNICAL_TEAM_MEMBER
+                        .toString());
             }
 
             if (callBLO.get(supplierByCall.getIdCall()).isCaducedDeadLineToMakeSurveyTechnicalTeam()) {
@@ -100,8 +100,8 @@ public class TechnicalTeamAnswerBLO extends GenericBLO<TechnicalTeamAnswerDTO, T
                 itemRecord.name = item.getName();
 
                 TechnicalTeamAnswerBLO technicalTeamAnswerBLO = new TechnicalTeamAnswerBLO();
-                TechnicalTeamAnswerDTO technicalTeamAnswer = technicalTeamAnswerBLO
-                        .getTechnicalteamAnswer(idSupplierByCall, service.getId(), item.getId());
+                TechnicalTeamAnswerDTO technicalTeamAnswer = technicalTeamAnswerBLO.getTechnicalteamAnswer(
+                        idSupplierByCall, service.getId(), item.getId());
 
                 short scoreEvaluation = 0;
                 if (null != technicalTeamAnswer.getId()) {
