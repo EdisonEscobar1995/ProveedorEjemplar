@@ -25,6 +25,7 @@ import com.nutresa.exemplary_provider.bll.LogBLO;
 import com.nutresa.exemplary_provider.bll.TranslationBLO;
 import com.nutresa.exemplary_provider.bll.TranslationBLO.Translator;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.LogDTO.ErrorType;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -34,7 +35,7 @@ public abstract class GenericDAO<T> {
     private Session session;
     private Database database;
     private Class<T> dtoClass;
-    private String entityForm;
+    protected String entityForm;
     protected String entityView;
     protected String entity;
     protected Translator translator;
@@ -78,8 +79,8 @@ public abstract class GenericDAO<T> {
         View view = getIndexedView(parameters, defaultView);
         Document document = null;
         if (null == view) {
-            LogBLO.log(ErrorType.WARNING, entity,
-                    String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters.toString()));
+            LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, entityView, parameters
+                    .toString()));
             view = database.getView(entityView);
             String query = getQuerySearch(parameters);
             if (view.FTSearch(query, 1) > 0) {
@@ -138,14 +139,14 @@ public abstract class GenericDAO<T> {
         } else {
             view = database.getView(defaultView);
         }
-        
+
         List<T> list = new ArrayList<T>();
         if (null != view) {
             ViewEntryCollection vec = view.getAllEntries();
             Document document;
             for (ViewEntry viewEntry : vec) {
                 document = viewEntry.getDocument();
-                if(null != document){
+                if (null != document) {
                     list.add((T) this.castDocument(document));
                 }
             }
@@ -199,7 +200,7 @@ public abstract class GenericDAO<T> {
             DocumentCollection documents = view.getAllDocumentsByKey(indexedParameters, true);
 
             for (Document document : documents) {
-                if(null != document){
+                if (null != document) {
                     list.add((T) this.castDocument(document));
                 }
             }
@@ -212,8 +213,8 @@ public abstract class GenericDAO<T> {
         Document document;
         String query = getQuerySearch(parameters);
         List<T> list = new ArrayList<T>();
-        LogBLO.log(ErrorType.WARNING, entity,
-                String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters.toString()));
+        LogBLO.log(ErrorType.WARNING, entity, String.format(DEBUG_FTSEARCH_MESSAGE, view.getName(), parameters
+                .toString()));
 
         if (view.FTSearch(query) > 0) {
             ViewEntryCollection vec = view.getAllEntries();
@@ -224,6 +225,23 @@ public abstract class GenericDAO<T> {
         }
         view.clear();
         return list;
+    }
+
+    /**
+     * Determina si un documento está relacionado en otros documentos.
+     * 
+     * @param idDocument
+     * @throws HandlerGenericException
+     *             con código <code>DOCUMENT_MULTI_CONNECTED</code> si el
+     *             documento está relacionado con otros documentos.
+     */
+    protected void existIdInOthersDocuments(String idDocument) throws HandlerGenericException {
+        View view = database.getView("vwUniverse");
+        if (view.FTSearch(idDocument, 2) > 1) {
+            view.clear();
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());
+        }
+        view.clear();
     }
 
     @SuppressWarnings("unchecked")
@@ -330,20 +348,21 @@ public abstract class GenericDAO<T> {
         T newDto;
         try {
             newDto = (T) dto.getClass().newInstance();
+            Document document = vw.getFirstDocumentByKey(this.entityForm, true);
+            if (null == document) {
+                newDto = this.save(dto);
+            } else {
+                String documentId = document.getItemValueString("id");
+                String dtoId = (String) Common.getFieldValue(dto, "id");
+                if (documentId.equals(dtoId)) {
+                    newDto = this.saveDocument(document, dto, false);
+                }
+            }
+
+            return newDto;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-        Document document = vw.getFirstDocumentByKey(this.entityForm, true);
-        if (null == document) {
-            newDto = this.save(dto);
-        } else {
-            String documentId = document.getItemValueString("id");
-            String dtoId = (String) Common.getFieldValue(dto, "id");
-            if (documentId.equals(dtoId)) {
-                newDto = this.saveDocument(document, dto, false);
-            }
-        }
-        return newDto;
     }
 
     @SuppressWarnings("unchecked")
@@ -399,12 +418,15 @@ public abstract class GenericDAO<T> {
         return dto;
     }
 
-    public boolean delete(String id) throws HandlerGenericException {
+    public boolean delete(String id, Boolean checkRelationship) throws HandlerGenericException {
         boolean response = false;
         try {
             View view = database.getView(entityView);
             Document document = view.getFirstDocumentByKey(id, true);
             if (null != document) {
+                if (checkRelationship) {
+                    existIdInOthersDocuments(id);
+                }
                 response = document.remove(true);
             }
         } catch (Exception exception) {
@@ -583,5 +605,36 @@ public abstract class GenericDAO<T> {
         } else {
             translator = null;
         }
+    }
+
+    /**
+     * Busca en el respectivo maestro los documentos que coincidan con los
+     * parámetros de búsqueda.
+     * 
+     * @param nameField
+     *            Nombre del campo por que se va a realizar la búsqueda
+     * @param valueField
+     *            Valor a buscar en el campo especificado
+     * @return Colección de registros encontrados con los parámetros de
+     *         búsqueda.
+     * @throws HandlerGenericException
+     */
+    public List<T> searchMasterByField(String nameField, String valueField) throws HandlerGenericException {
+        if (nameField.trim().isEmpty() || valueField.trim().isEmpty()) {
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+        }
+        List<T> masters = new ArrayList<T>();
+        View view = database.getView(this.entityView);
+        String queryFTSearch = "(Field ".concat(nameField.concat(" = *".concat(valueField.concat("*)"))));
+        view.FTSearch(queryFTSearch, 20);
+
+        Document document = view.getFirstDocument();
+        while (document != null) {
+            masters.add((T) this.castDocument(document));
+            document = view.getNextDocument(document);
+        }
+        view.clear();
+
+        return masters;
     }
 }

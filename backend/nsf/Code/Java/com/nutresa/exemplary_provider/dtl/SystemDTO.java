@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dtl;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
+import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 
 public class SystemDTO {
     @Expose
@@ -16,21 +17,19 @@ public class SystemDTO {
     @Expose
     private List<String> images;
     @Expose
+    private List<AttachmentDTO> document;
+    @Expose
     private String informationProgram;
     @Expose
     private String messageByChangeSizeCompany;
     @Expose
     private String inputPoll;
     @Expose
-    private String uploadPathApplication;
-    @Expose
-    private String namesPathApplication;
-    @Expose
-    private String supplierPathApplication;
-    @Expose
-    private String filesPathApplication;
-    @Expose
     private short uploadMaxFilesize;
+    private String uploadPathApplication;
+    private String namesPathApplication;
+    private String supplierPathApplication;
+    private String filesPathApplication;
     @Expose
     private List<String> uploadExtensions;
     @Expose
@@ -160,6 +159,14 @@ public class SystemDTO {
 
     public String getPackagingMaterialCategoryId() {
         return packagingMaterialCategoryId;
+    }
+
+    public void setDocument(List<AttachmentDTO> document) {
+        this.document = document;
+    }
+
+    public List<AttachmentDTO> getDocument() {
+        return document;
     }
 
 }

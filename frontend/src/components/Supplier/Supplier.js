@@ -53,11 +53,12 @@ class Supplier extends Component {
         loadingDimensions,
         loading,
         error,
+        call,
+        getDimensionsBySurvey,
       } = this.props;
+      const { idSurvey, id } = call;
       if (dimensions.length === 0 &&
-        !loading && !loadingDimensions && !error && !loadedDimensions) {
-        const { call, getDimensionsBySurvey } = this.props;
-        const { idSurvey, id } = call;
+        !loading && !loadingDimensions && !error && !loadedDimensions && idSurvey !== '') {
         getDimensionsBySurvey(idSurvey, id);
       }
     }

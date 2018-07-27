@@ -4,8 +4,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.utils.Common;
+import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class GenericAPI<T, B> extends BaseAPI<T> {
     private Class<B> bloClass;
@@ -70,8 +72,7 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         }
         return response;
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     public ServletResponseDTO<T> save(T dto) {
         B blo;
@@ -93,12 +94,32 @@ public class GenericAPI<T, B> extends BaseAPI<T> {
         ServletResponseDTO<T> response = null;
         try {
             blo = this.bloClass.newInstance();
-            Method method = blo.getClass().getMethod("delete", Map.class);
-            response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters));
+            Method method = blo.getClass().getMethod("delete", Map.class, Boolean.class);
+            response = new ServletResponseDTO<T>((T) method.invoke(blo, parameters, Boolean.TRUE));
         } catch (Exception exception) {
             response = new ServletResponseDTO<T>(exception);
         }
 
+        return response;
+    }
+
+    @SuppressWarnings("unchecked")
+    public ServletResponseDTO<List<T>> searchMasterByField(Map<String, String> parameters) {
+        B blo;
+        ServletResponseDTO<List<T>> response = null;
+        Method method;
+        try {
+            blo = this.bloClass.newInstance();
+            method = blo.getClass().getMethod("searchMasterByField", String.class, String.class);
+            if (parameters.containsKey("nameField") && parameters.containsKey("valueField")) {
+                response = new ServletResponseDTO<List<T>>((List<T>) method.invoke(blo, parameters.get("nameField"),
+                        parameters.get("valueField")));
+            } else {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+            }
+        } catch (Exception exception) {
+            response = new ServletResponseDTO<List<T>>(exception);
+        }
         return response;
     }
 }

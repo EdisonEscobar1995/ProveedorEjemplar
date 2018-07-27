@@ -30,4 +30,17 @@ public class SubCategoryDAO extends GenericDAO<SubCategoryDTO> {
 
         return subCategories;
     }
+
+    public List<SubCategoryDTO> getByProperties(List<String> filter) throws HandlerGenericException {
+        List<SubCategoryDTO> subCategory = new ArrayList<SubCategoryDTO>();
+        View currentView = getDatabase().getView("vwSubcategoriesByNameAndIdCategory");
+        DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+        if (null != documents) {
+            for (Document document : documents) {
+                subCategory.add(castDocument(document));
+            }
+        }
+
+        return subCategory;
+    }
 }

@@ -21,8 +21,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         super(AnswerDTO.class);
     }
 
-    public List<AnswerDTO> getAnswerBySurvey(String idSupplierByCall, String idQuestion)
-            throws HandlerGenericException {
+    public List<AnswerDTO> getAnswerBySurvey(String idSupplierByCall, String idQuestion) throws HandlerGenericException {
         List<AnswerDTO> response = new ArrayList<AnswerDTO>();
         ArrayList<String> filterBySurveyAndQuestion;
         filterBySurveyAndQuestion = new ArrayList<String>();
@@ -46,9 +45,11 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     }
 
     /**
-     * Obtiene las respuesta en base a una convocatoria definitiva de un proveedor.
+     * Obtiene las respuesta en base a una convocatoria definitiva de un
+     * proveedor.
      * 
-     * @param idSupplierByCall Identificador de la convocatoria definitiva de un proveedor.
+     * @param idSupplierByCall
+     *            Identificador de la convocatoria definitiva de un proveedor.
      * @return Colección de respuestas
      * @throws HandlerGenericException
      */
@@ -133,8 +134,10 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     /**
      * Obtiene una respuesta en base a una convocatria definitiva y un pregunta
      * 
-     * @param idSupplierByCall Identificador de la convocatoria definitiva
-     * @param idQuestion Identificador de la pregunta
+     * @param idSupplierByCall
+     *            Identificador de la convocatoria definitiva
+     * @param idQuestion
+     *            Identificador de la pregunta
      * @return Respuesta
      * @throws HandlerGenericException
      */
@@ -158,9 +161,12 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     }
 
     /**
-     * Dada la información en <code>parameters</code> identifica por cuales campos se deben filtrar las preguntas.
+     * Dada la información en <code>parameters</code> identifica por cuales
+     * campos se deben filtrar las preguntas.
      * 
-     * @param parameters Mapa clave valor de los filtros por los que se van a optener los resultados
+     * @param parameters
+     *            Mapa clave valor de los filtros por los que se van a optener
+     *            los resultados
      * @return Mapa clave valor con los campos que se debe filtrar.
      * @throws HandlerGenericException
      */

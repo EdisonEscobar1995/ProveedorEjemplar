@@ -21,5 +21,5 @@ public class LogAPI extends GenericAPI<LogDTO, LogBLO> {
     public ServletResponseDTO<LogDTO> save(LogDTO dto) {
         return null;
     }
-    
+
 }

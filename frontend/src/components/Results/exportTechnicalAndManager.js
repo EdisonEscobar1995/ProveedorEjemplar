@@ -79,25 +79,6 @@ const ManagerReport = (dataReport) => {
     });
   });
 
-  // dataReport.forEach((supplier) => {
-  //   row = [
-  //     supplier.sapCode,
-  //     supplier.name,
-  //     supplier.supply,
-  //     supplier.category,
-  //     supplier.companySize,
-  //   ];
-  //   supplier.services.forEach((service) => {
-  //     service.items.forEach((item) => {
-  //       row.push(item.answer < 0 ? '' : item.answer);
-  //     });
-  //     row.push(service.comment);
-  //     row.push(service.total < 0 ? '' : service.total.toFixed(2));
-  //   });
-  //   row.push(supplier.totalScoreInService < 0 ? '' : supplier.totalScoreInService.toFixed(2));
-  //   report.push(row);
-  // });
-
   return {
     merge, report,
   };

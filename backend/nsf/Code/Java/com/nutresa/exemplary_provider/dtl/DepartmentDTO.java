@@ -2,7 +2,7 @@ package com.nutresa.exemplary_provider.dtl;
 
 import com.google.gson.annotations.Expose;
 
-public class DepartmentDTO extends MasterDTO{
+public class DepartmentDTO extends MasterDTO {
     @Expose
     private String idCountry;
 

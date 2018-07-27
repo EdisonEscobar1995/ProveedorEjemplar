@@ -45,4 +45,16 @@ public class AttachmentBLO {
         }
     }
 
+    /**
+     * Crea un adjunto en la base de datos publica de anexos
+     * 
+     * @param String
+     *            Documento público
+     * @throws HandlerGenericException
+     */
+    protected void createAttachmentToPublicDataBase(String idResource) throws HandlerGenericException {
+        AttachmentDAO attachmentDAO = new AttachmentDAO();
+        attachmentDAO.copyAttachmentToPublicDataBase(idResource);
+    }
+
 }

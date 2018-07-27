@@ -61,7 +61,7 @@ public class UserDAO extends GenericDAO<UserDTO> {
         Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
         Database namesDatabase = getSession().getDatabase(docSystem.getItemValueString("namesPathApplication"));
         View vwNames = namesDatabase.getView("($Users)");
-        String query = "(Field type = Person and ".concat(text.concat("*)"));
+        String query = "(Field type = Person and *".concat(text.concat("*)"));
         if (null != vwNames) {
             vwNames.FTSearch(query, MAX_RESULTS);
             Document document = vwNames.getFirstDocument();
@@ -80,6 +80,25 @@ public class UserDAO extends GenericDAO<UserDTO> {
         }
 
         return users;
+    }
+
+    /**
+     * Busca un usuario por su nombre
+     * 
+     * @param name
+     *            Nombre a buscar
+     * @return Usuario encontrado
+     * @throws HandlerGenericException
+     */
+    public UserDTO getUsersByName(String name) throws HandlerGenericException {
+        UserDTO user = new UserDTO();
+        View currentView = getDatabase().getView("vwUsersByName");
+        Document document = currentView.getFirstDocumentByKey(name, true);
+        if (null != document) {
+            user = castDocument(document);
+        }
+
+        return user;
     }
 
 }

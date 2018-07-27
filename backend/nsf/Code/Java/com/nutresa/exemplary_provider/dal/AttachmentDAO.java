@@ -44,7 +44,6 @@ public class AttachmentDAO {
 
         document.replaceItemValue("form", "frAttachment");
         document.replaceItemValue("id", document.getUniversalID());
-
         document.save();
 
         return castDocument(document);
@@ -77,7 +76,6 @@ public class AttachmentDAO {
     private String getAttachmentUrl(Document document) {
         String url = Common.buildPathResource();
         url += "/" + entityView + "/" + document.getUniversalID() + "/$FILE" + "/" + getUrlEncode(document);
-
         return url;
     }
 
@@ -87,12 +85,11 @@ public class AttachmentDAO {
 
     private String getFileName(Document document) {
         return (String) session.evaluate("@AttachmentNames", document).elementAt(0);
-    } 
-    
+    }
+
     private void processUploadedFile(FileItem item, MIMEEntity mime) throws HandlerGenericException {
         try {
             MIMEEntity child = mime.createChildEntity();
-
             MIMEHeader header = child.createHeader("content-disposition");
             header.setHeaderVal("attachment;filename=\"" + item.getName() + "\"");
 
@@ -101,7 +98,31 @@ public class AttachmentDAO {
 
             child.setContentFromBytes(stream, item.getContentType(), MIMEEntity.ENC_IDENTITY_BINARY);
             child.decodeContent();
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
 
+    /**
+     * Copia un adjunto en la base de datos publica de anexos
+     * 
+     * @param publicAttachment
+     *            identificador del documento a copiar
+     * @throws HandlerGenericException
+     */
+    public void copyAttachmentToPublicDataBase(String idResource) throws HandlerGenericException {
+        try {
+            View vwSystem = database.getView("vwSystems");
+            Document docSystem = vwSystem.getFirstDocumentByKey("frSystem", true);
+            String filesPathApplication = docSystem.getItemValueString("filesPathApplication");
+
+            if (null == filesPathApplication || filesPathApplication.isEmpty()) {
+                throw new HandlerGenericException("FILES_PATH_APPLICATION_NOT_FOUND");
+            }
+
+            Database publicDataBase = session.getDatabase(filesPathApplication);
+            Document document = this.getDocument(idResource);
+            document.copyToDatabase(publicDataBase);
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }

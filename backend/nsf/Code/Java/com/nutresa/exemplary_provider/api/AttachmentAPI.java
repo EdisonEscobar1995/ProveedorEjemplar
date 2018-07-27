@@ -37,10 +37,10 @@ public class AttachmentAPI extends BaseAPI<AttachmentDTO> {
             ServletContext servletContext = this.getServletConfig().getServletContext();
             File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
             factory.setRepository(repository);
-            
+
             ServletFileUpload upload = new ServletFileUpload(factory);
             List<FileItem> items = upload.parseRequest(request);
-            
+
             AttachmentBLO blo = new AttachmentBLO();
             response = new ServletResponseDTO<AttachmentDTO>(blo.save(items));
         } catch (Exception exception) {

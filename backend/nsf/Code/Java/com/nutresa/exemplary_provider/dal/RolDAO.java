@@ -20,7 +20,7 @@ public class RolDAO extends GenericDAO<RolDTO> {
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
-        
+
         return response;
     }
 }

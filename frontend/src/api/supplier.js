@@ -16,6 +16,10 @@ function saveDataCallBySupplierApi(data) {
   return instance.post('SupplierByCall?action=save', data);
 }
 
+function deleteDataCallBySupplierApi(id) {
+  return instance.get(`SupplierByCall?action=delete&id=${id}`);
+}
+
 function getDataQuestionsBySurveyApi(data) {
   const { idSurvey, idDimension, id } = data;
   return instance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=${idSurvey}&idDimension=${idDimension}&idSupplierByCall=${id}`);
@@ -23,6 +27,10 @@ function getDataQuestionsBySurveyApi(data) {
 
 function saveDataSuppliertApi(data) {
   return instance.post('Supplier?action=save', data);
+}
+
+function getSuppliersByKeyApi(text) {
+  return instance.get(`Supplier?action=searchSupplier&text=${text}`);
 }
 
 function getModifiedSuppliersApi(year) {
@@ -50,7 +58,8 @@ function sendRejectionsApi(data) {
 }
 
 function finishTechnicalTeamSurveyApi(data) {
-  return instance.post('SupplierToNextStage?action=finishTechnicalTeamSurvey', data);
+  return instance.post('SupplierToNextStage?action=finishSurveyMassive', data);
+  // return instance.post('SupplierToNextStage?action=finishTechnicalTeamSurvey', data);
 }
 
 function finishManagerTeamSurveyApi() {
@@ -63,12 +72,14 @@ export {
   getDataQuestionsBySurveyApi,
   saveDataCallBySupplierApi,
   saveDataSuppliertApi,
+  deleteDataCallBySupplierApi,
   getModifiedSuppliersApi,
   unlockSupplierApi,
   finishSurveyApi,
   getSurveysApi,
   getPendingsApi,
   sendApprovalsApi,
+  getSuppliersByKeyApi,
   sendRejectionsApi,
   finishTechnicalTeamSurveyApi,
   finishManagerTeamSurveyApi,

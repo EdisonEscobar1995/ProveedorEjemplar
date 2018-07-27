@@ -22,8 +22,6 @@ public class CallDTO {
     @Expose
     private Date deadlineToMakeSurveyManagerTeam;
     @Expose
-    private List<String> managementCommittee;
-    @Expose
     private List<SupplierDTO> supplier;
     @Expose
     private boolean active;
@@ -68,14 +66,6 @@ public class CallDTO {
         this.deadlineToMakeSurveyManagerTeam = deadlineToMakeSurveyManagerTeam;
     }
 
-    public List<String> getManagementCommittee() {
-        return managementCommittee;
-    }
-
-    public void setManagementCommittee(List<String> managementCommittee) {
-        this.managementCommittee = managementCommittee;
-    }
-
     public String getId() {
         return id;
     }
@@ -115,7 +105,7 @@ public class CallDTO {
     public boolean isCaducedDeadLineToMakeSurveyEvaluator() throws HandlerGenericException {
         return isCaducedDate(this.deadlineToMakeSurveyEvaluator, new Date());
     }
-    
+
     public boolean isCaducedDeadLineToMakeSurveyTechnicalTeam() throws HandlerGenericException {
         return isCaducedDate(this.deadlineToMakeSurveyTechnicalTeam, new Date());
     }

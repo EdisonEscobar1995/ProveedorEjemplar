@@ -27,6 +27,7 @@ import { getCategoryBySupplyApi, saveCategoryApi, deleteCategoryApi } from '../.
 import { getSubcategoryByCategoryApi, saveSubcategoryApi, deleteSubcategoryApi } from '../../api/subcategory';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
+import blankSpaces from '../../utils/blankSpaces';
 
 function getSupplyProgress() {
   return {
@@ -215,6 +216,10 @@ function getSubcategoryByCategory(id) {
 
 function saveSupply(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSupplyApi, clientData)
       .then((response) => {
@@ -232,6 +237,10 @@ function saveSupply(clientData, remoteId, next) {
 
 function saveCategory(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveCategoryApi, clientData)
       .then((response) => {
@@ -249,6 +258,10 @@ function saveCategory(clientData, remoteId, next) {
 
 function saveSubcategory(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getSupplyProgress, saveSubcategoryApi, clientData)
       .then((response) => {

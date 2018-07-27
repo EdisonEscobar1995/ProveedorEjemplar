@@ -2,14 +2,29 @@ import {
   GET_CALLED_SUPPLIERS_PROGRESS,
   GET_CALLED_SUPPLIERS_SUCCESS,
   SEND_INVITATION_PROGRESS,
+  GET_CALLED_SUPPLIERS_LOADING_PROGRESS,
   SEND_INVITATION_SUCCESS,
   FILTER_CALLED_SUPPLIERS,
+  CLEAR_DATA_CALLED_SUPPLIERS,
+  DELETE_SUPPLIER_BY_CALL,
+  GET_SUPPLIERS_BY_KEY_PROGRESS,
+  GET_SUPPLIERS_BY_KEY_SUCCESS,
+  EDIT_SUPPLIER,
+  ADD_SUPPLIER,
+  UPDATE_SUPPLIER,
+  AUTOCOMPLETE_SUPPLIER,
   REQUEST_FAILED,
+  GET_MASTER_SUCCESS,
 } from './const';
 
 const initialState = {
   data: {},
+  masters: [],
+  mastersToList: {},
+  fetching: false,
   loading: false,
+  autoCompleteData: {},
+  loadingSuppliers: false,
 };
 
 function calledSuppliersApp(state = initialState, action) {
@@ -21,15 +36,63 @@ function calledSuppliersApp(state = initialState, action) {
         loading: true,
       };
     }
+    case GET_CALLED_SUPPLIERS_LOADING_PROGRESS: {
+      return {
+        ...state,
+        loadingSuppliers: true,
+      };
+    }
+    case GET_MASTER_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        mastersToList: action.masters,
+      };
+    }
+    case CLEAR_DATA_CALLED_SUPPLIERS: {
+      return {
+        ...state,
+        data: {},
+      };
+    }
     case GET_CALLED_SUPPLIERS_SUCCESS: {
       return {
         ...state,
         data: action.data,
-        loading: false,
+        loadingSuppliers: false,
+      };
+    }
+    case GET_SUPPLIERS_BY_KEY_PROGRESS: {
+      return {
+        ...state,
+        fetching: true,
+      };
+    }
+    case AUTOCOMPLETE_SUPPLIER: {
+      return {
+        ...state,
+        autoCompleteData: action.data,
+      };
+    }
+    case EDIT_SUPPLIER: {
+      return {
+        ...state,
+        masters: [],
+        autoCompleteData: {},
+      };
+    }
+    case GET_SUPPLIERS_BY_KEY_SUCCESS: {
+      return {
+        ...state,
+        fetching: false,
+        masters: action.data,
       };
     }
     case SEND_INVITATION_SUCCESS:
     case REQUEST_FAILED:
+    case DELETE_SUPPLIER_BY_CALL:
+    case ADD_SUPPLIER:
+    case UPDATE_SUPPLIER:
       return {
         ...state,
         loading: false,

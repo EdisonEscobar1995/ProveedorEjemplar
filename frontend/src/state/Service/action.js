@@ -21,6 +21,7 @@ import {
 } from '../../api/service';
 import { openModal, closeModal } from '../Main/action';
 import { requestApi } from '../../utils/action';
+import blankSpaces from '../../utils/blankSpaces';
 
 function getServiceProgress() {
   return {
@@ -148,6 +149,10 @@ function getItemByService(id) {
 
 function saveService(clientData, remoteId, next) {
   return (dispatch) => {
+    if (!blankSpaces(dispatch, clientData.name)) {
+      return;
+    }
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveServiceApi, clientData)
       .then((response) => {
@@ -165,6 +170,7 @@ function saveService(clientData, remoteId, next) {
 
 function saveItem(clientData, remoteId, next) {
   return (dispatch) => {
+    clientData.name = clientData.name.trim();
     dispatch(closeModal());
     requestApi(dispatch, getServiceProgress, saveItemApi, clientData)
       .then((response) => {

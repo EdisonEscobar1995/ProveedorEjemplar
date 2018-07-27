@@ -31,6 +31,7 @@ const formData = ({ record = {}, closeModal }) => [
         label: 'Nombre',
         key: 'name',
         required: true,
+        whitespace: true,
         value: record.name,
       },
     ],

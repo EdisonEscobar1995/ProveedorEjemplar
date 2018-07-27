@@ -17,8 +17,8 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         ServletResponseDTO<SupplierByCallDTO> response = null;
         try {
-            response = new ServletResponseDTO<SupplierByCallDTO>(
-                    supplierByCallBLO.getCallOfSupplier(parametersInReques.get("idSupplierByCall")));
+            response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO.getCallOfSupplier(parametersInReques
+                    .get("idSupplierByCall")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<SupplierByCallDTO>(exception);
         }
@@ -43,6 +43,19 @@ public class SupplierByCallAPI extends GenericAPI<SupplierByCallDTO, SupplierByC
         ServletResponseDTO<SupplierByCallDTO> response = null;
         try {
             response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO.unlockSupplier(supplierByCall));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<SupplierByCallDTO>(exception);
+        }
+
+        return response;
+    }
+
+    @Override
+    public ServletResponseDTO<SupplierByCallDTO> delete(Map<String, String> parameters) {
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        ServletResponseDTO<SupplierByCallDTO> response = null;
+        try {
+            response = new ServletResponseDTO<SupplierByCallDTO>(supplierByCallBLO.delete(parameters.get("id")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<SupplierByCallDTO>(exception);
         }

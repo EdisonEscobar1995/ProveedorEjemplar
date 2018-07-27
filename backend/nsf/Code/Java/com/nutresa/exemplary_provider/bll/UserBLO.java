@@ -17,6 +17,7 @@ import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.RolDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.TechnicalTeamDTO;
 import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.utils.Common;
@@ -78,6 +79,18 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             Name dominoUser = userDAO.getDominoUser();
             Map<String, String> userInfo = new LinkedHashMap<String, String>();
             userInfo.put("name", dominoUser.getNamePart(NamePartKey.Common));
+
+            if (isRol(Rol.SUPPLIER.toString())) {
+                SupplierBLO supplierBLO = new SupplierBLO();
+                SupplierDTO supplier = supplierBLO.getSupplierInSession(null);
+                if (null != supplier && !supplier.getIdCompanySize().isEmpty() && !supplier.getIdSupply().isEmpty()) {
+                    CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+                    userInfo.put("company_size", companySizeBLO.get(supplier.getIdCompanySize()).getName());
+                    SupplyBLO supplyBLO = new SupplyBLO();
+                    userInfo.put("supply", supplyBLO.get(supplier.getIdSupply()).getName());
+                }
+            }
+
             userInfo.put("canonical", dominoUser.getNamePart(NamePartKey.Canonical));
             userContext.put("userInfo", userInfo);
             userContext.put("rols", rols);
@@ -87,6 +100,15 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         return userContext;
     }
 
+    /**
+     * Determina si el usuario en sesión tiene el rol específico
+     * <code>shortNameRol</code>
+     * 
+     * @param shortNameRol
+     * @return <code>false</code> en caso de no tener el rol, de lo contrario
+     *         <code>true</code>
+     * @throws HandlerGenericException
+     */
     protected boolean isRol(String shortNameRol) throws HandlerGenericException {
         List<DTO> rols = getRolsByUser();
         boolean response = false;
@@ -154,15 +176,15 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
         while (iterator.hasNext()) {
             UserDAO userDAO = new UserDAO();
             RolBLO rolBLO = new RolBLO();
-            TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
-            List<UserDTO> userWithTechnicalTeamRol = userDAO
-                    .getUsersByRol(rolBLO.getRolByShortName(Rol.TECHNICAL_TEAM.toString()).getId());
+            List<UserDTO> userWithTechnicalTeamRol = userDAO.getUsersByRol(rolBLO.getRolByShortName(
+                    Rol.TECHNICAL_TEAM.toString()).getId());
             NotificationBLO notificationBLO = new NotificationBLO();
             List<String> technicalTeamEmails = new ArrayList<String>();
 
             key = iterator.next();
             valueInFields = key.split(":");
 
+            TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
             for (UserDTO user : userWithTechnicalTeamRol) {
                 filter.put("USER", user.getId());
                 filter.put("SUPPLY", valueInFields[0]);
@@ -201,6 +223,19 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
     public List<UserDTO> searchUser(String text) throws HandlerGenericException {
         UserDAO userDAO = new UserDAO();
         return userDAO.searchUser(text);
+    }
+
+    /**
+     * Busca un usuario por su nombre
+     * 
+     * @param name
+     *            Nombre a buscar
+     * @return Usuario encontrado
+     * @throws HandlerGenericException
+     */
+    protected UserDTO getUsersByName(String name) throws HandlerGenericException {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.getUsersByName(name);
     }
 
 }

@@ -1,9 +1,19 @@
-import intance from './instance';
+import instance from './instance';
 
-function getDataQuestion() {
-  return intance.get('Question?action=getAll');
-}
+const getAllDataQuestionApi = () => instance.get('Question?action=getAll');
+
+const getQuestionByIdApi = id => instance.get(`Question?action=get&id=${id}`);
+
+const saveQuestionApi = data => instance.post('Question?action=save', data);
+
+const deleteQuestionApi = data => instance.get(`Question?action=delete&id=${data.id}`);
+
+const getQuestionsByIdDimensionApi = idDimension => instance.get(`Question?action=getAll&idDimension=${idDimension}`);
 
 export {
-  getDataQuestion as default,
+  getAllDataQuestionApi,
+  getQuestionByIdApi,
+  saveQuestionApi,
+  deleteQuestionApi,
+  getQuestionsByIdDimensionApi,
 };

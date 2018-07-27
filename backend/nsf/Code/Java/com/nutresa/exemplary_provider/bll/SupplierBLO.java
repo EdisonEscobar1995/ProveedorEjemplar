@@ -2,6 +2,7 @@ package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.nutresa.exemplary_provider.dal.StateDAO;
@@ -53,6 +54,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         currentSupplier = dao.update(supplier.getId(), supplier);
         currentSupplier.setPrincipalCustomer(customerBLO.getCustomersBySupplier(currentSupplier.getId()));
         return currentSupplier;
+    }
+
+    protected void createInitialSupplier(SupplierDTO supplier) throws HandlerGenericException {
+        super.save(supplier);
     }
 
     public SupplierDTO getSupplierInSession(String idSupplier) throws HandlerGenericException {
@@ -135,10 +140,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         try {
             listIdsSupplierByCall = Common.getDtoFields(callsFound, new String[] { "[idSupplier]", "[idState]" },
                     SupplierByCallDTO.class);
-            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id",
-                    Common.getIdsFromList(listIdsSupplierByCall.get("[idSupplier]")));
-            List<StateDTO> states = stateDAO.getAllBy("id",
-                    Common.getIdsFromList(listIdsSupplierByCall.get("[idState]"), true));
+            List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
+                    .get("[idSupplier]")));
+            List<StateDTO> states = stateDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall
+                    .get("[idState]"), true));
 
             String[] idFieldNames = { "Category", "Country", "Department", "City", "Supply", "SubCategory",
                     "CompanyType", "SocietyType", "Sector" };
@@ -201,10 +206,10 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Busca los proveedores por convocatoria o por la especificación de algún
+     * Busca los proveedores por convocatoria o por la especificaciÃ³n de algÃºn
      * filtro.
      * <p>
-     * Si y solo si no se especifica un filtro de búsqueda entonces busca por
+     * Si y solo si no se especifica un filtro de bÃºsqueda entonces busca por
      * convocatoria.
      * 
      * @param idCall
@@ -212,7 +217,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
      * @param parameters
      *            Mapa clave valor de los filtros por los que se van a optener
      *            los resultados
-     * @return Colección de proveedores.
+     * @return ColecciÃ³n de proveedores.
      * @throws HandlerGenericException
      */
     public List<SupplierDTO> getThemByIdCallOrFiltered(String idCall, Map<String, String> parameters)
@@ -232,12 +237,12 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
     }
 
     /**
-     * Obtiene los proveedores que ya terminaron la evaluación y los que han
+     * Obtiene los proveedores que ya terminaron la evaluaciÃ³n y los que han
      * sido evaluados parcialmente por el evaluador.
      * 
      * @param year
-     *            Año de la convocatoria
-     * @return Colección de datos encontrados
+     *            AÃ±o de la convocatoria
+     * @return ColecciÃ³n de datos encontrados
      * @throws HandlerGenericException
      */
     public InformationFromSupplier pendingToQualify(String year) throws HandlerGenericException {
@@ -272,6 +277,82 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+
+    protected SupplierDTO createByFirstTime(SupplierDTO supplier) throws HandlerGenericException {
+        SupplierDTO supplierExisting = null;
+        if(null != supplier.getId() && !supplier.getId().isEmpty()){
+            supplierExisting = this.get(supplier.getId());
+            supplierExisting.setSapCode(supplier.getSapCode());
+            supplierExisting.setNit(supplier.getNit());
+            supplierExisting.setBusinessName(supplier.getBusinessName());
+            supplierExisting.setFullName(supplier.getFullName());
+            supplierExisting.setEmails(supplier.getEmails());
+            supplierExisting.setIdCountry(supplier.getIdCountry());
+            supplierExisting.setIdCompanySize(supplier.getIdCompanySize());
+            supplierExisting.setIdSupply(supplier.getIdSupply());
+            return super.save(supplierExisting);
+        } else {
+            return super.save(supplier);
+        }
+        
+    }
+
+    /**
+     * @param nit
+     * @return <code>true</code> si el proveedor existe en el directorio
+     *         general, de lo contrario <code>false</code>
+     * @throws HandlerGenericException
+     */
+    protected boolean existInGeneralDirectoryByNit(String nit) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        return supplierDAO.existInGeneralDirectoryByNit(nit);
+    }
+
+    /**
+     * @param sapCode
+     * @param nit
+     * @return Proveedor existente
+     * @throws HandlerGenericException
+     */
+    protected SupplierDTO getBySAPCodeOrNIT(String sapCode, String nit) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        SupplierDTO supplier = supplierDAO.getBySAPCodeOrNIT(sapCode, nit);
+        return supplier;
+    }
+
+    /**
+     * Busca los proveedores que contengan <code>text</code> en el campo cÃ³digo
+     * sap
+     * 
+     * @param text
+     *            valor a buscar en los documentos
+     * @return ColecciÃ³n de proveedores que coinciden con el valor a buscar
+     * @throws HandlerGenericException
+     */
+    public List<SupplierDTO> searchSupplier(String text) throws HandlerGenericException {
+        SupplierDAO supplierDAO = new SupplierDAO();
+        return supplierDAO.searchSupplier(text);
+    }
+
+    /**
+     * Obtiene el usuario y contraseÃ±a de un proveedor desde el directorio
+     * general
+     * 
+     * @param supplier
+     *            Proveedor a buscar
+     * @return ColecciÃ³n clave valor de usuario y contraseÃ±a
+     * @throws HandlerGenericException
+     */
+    protected Map<String, String> getUserAndPassword(SupplierDTO supplier) throws HandlerGenericException {
+        Map<String, String> informationInOtherDataBase = getInformationInOtherDataBase(supplier);
+        Map<String, String> detail = new LinkedHashMap<String, String>();
+        if (!informationInOtherDataBase.isEmpty()) {
+            detail.put("Usuario", informationInOtherDataBase.get("userName"));
+            detail.put("Contraseña", informationInOtherDataBase.get("password"));
+        }
+
+        return detail;
     }
 
 }

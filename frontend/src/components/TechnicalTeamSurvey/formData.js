@@ -3,6 +3,7 @@ const formData = ({ data, getTechnicalTeamSurvey, filterTechnicalTeamSurvey, for
     years,
     suppliers,
     masters,
+    supplierId,
   } = data;
 
   const handleReset = () => {
@@ -76,13 +77,25 @@ const formData = ({ data, getTechnicalTeamSurvey, filterTechnicalTeamSurvey, for
           type: 'select',
           label: 'Proveedor',
           key: 'supplier',
-          value: '',
+          value: supplierId,
           options: suppliers ? suppliers.map((item) => {
             item.name = item.businessName;
             return item;
           }) : [],
           handleChange: (value) => {
             const values = { ...form.getFieldsValue(), supplier: value };
+            filterTechnicalTeamSurvey(values);
+          },
+        },
+        {
+          span: 8,
+          type: 'select',
+          label: 'Tamaño',
+          key: 'companySize',
+          value: '',
+          options: masters ? masters.CompanySize : [],
+          handleChange: (value) => {
+            const values = { ...form.getFieldsValue(), companySize: value };
             filterTechnicalTeamSurvey(values);
           },
         },

@@ -64,8 +64,8 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier,
                         NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM);
-                supplierByCall.setIdState(
-                        stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId());
+                supplierByCall.setIdState(stateBLO.getStateByShortName(
+                        SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId());
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
             }
@@ -89,8 +89,8 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier,
                         NotificationType.SUPPLIER_CALLED_BY_MANAGER_TEAM);
-                supplierByCall.setIdState(
-                        stateBLO.getStateByShortName(SurveyStates.NOT_STARTED_MANAGER_TEAM.toString()).getId());
+                supplierByCall.setIdState(stateBLO
+                        .getStateByShortName(SurveyStates.NOT_STARTED_MANAGER_TEAM.toString()).getId());
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
             }
@@ -120,13 +120,13 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
                 notificationBLO.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_DISCARDED);
 
                 if ("TechnicalTeam".equals(suppliersToNextStage.getStage())) {
-                    supplierByCall.setIdState(
-                            stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
+                    supplierByCall.setIdState(stateBLO.getStateByShortName(
+                            SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
                 }
 
                 if ("ManagerTeam".equals(suppliersToNextStage.getStage())) {
-                    supplierByCall.setIdState(
-                            stateBLO.getStateByShortName(SurveyStates.DONT_APPLY_MANAGER_TEAM.toString()).getId());
+                    supplierByCall.setIdState(stateBLO.getStateByShortName(
+                            SurveyStates.DONT_APPLY_MANAGER_TEAM.toString()).getId());
                 }
 
                 supplierByCallBLO.update(supplierByCall);
@@ -195,16 +195,16 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         List<TechnicalTeamDTO> members = technicalTeamBLO.getMemberInTeamByUserInSession();
         for (TechnicalTeamDTO member : members) {
             definitivesSupplierByCall.addAll(suppliersByCall);
-            String temporalIdTechnicalTeam = member.getIdSupply()
-                    .concat(member.getIdCategory().concat(member.getIdCountry()));
+            String temporalIdTechnicalTeam = member.getIdSupply().concat(
+                    member.getIdCategory().concat(member.getIdCountry()));
 
             short index = 0;
             while (index < suppliersByCall.size() && !definitivesSupplierByCall.isEmpty()) {
                 SupplierBLO supplierBLO = new SupplierBLO();
                 SupplierByCallDTO originalSupplierByCall = (SupplierByCallDTO) suppliersByCall.get(index);
                 SupplierDTO supplier = supplierBLO.get(originalSupplierByCall.getIdSupplier());
-                String temporalIdSupplier = supplier.getIdSupply()
-                        .concat(supplier.getIdCategory().concat(supplier.getIdCountry()));
+                String temporalIdSupplier = supplier.getIdSupply().concat(
+                        supplier.getIdCategory().concat(supplier.getIdCountry()));
                 if (!temporalIdTechnicalTeam.equals(temporalIdSupplier) && !definitivesSupplierByCall.isEmpty()) {
                     definitivesSupplierByCall.remove(suppliersByCall.get(index));
                 }

@@ -91,7 +91,7 @@ const setComment = (idSupplier, value, comment) => (dispatch, getState) => {
   }
 };
 
-const getTechnicalTeamSurvey = year => (dispatch) => {
+const getTechnicalTeamSurvey = (year = '', supplierId = '') => (dispatch) => {
   requestApi(dispatch, getDataTechnicalTeamSurveyProgress, getTechnicalTeamSurveyApi, year)
     .then((response) => {
       const { data } = response.data;
@@ -185,6 +185,7 @@ const getTechnicalTeamSurvey = year => (dispatch) => {
         });
       });
       data.masters.EvaluationScale = sortByField(data.masters.EvaluationScale, 'score');
+      data.supplierId = supplierId;
       dispatch(getDataTechnicalTeamSurveySuccess(data));
       dispatch(calculateTotal());
     }).catch(() => {

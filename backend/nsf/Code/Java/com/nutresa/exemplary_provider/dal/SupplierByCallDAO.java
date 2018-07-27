@@ -33,10 +33,10 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             for (Document document : documents) {
                 callsBySupplier.add(castDocument(document));
             }
+            return callsBySupplier;
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-        return callsBySupplier;
     }
 
     public List<SupplierDTO> getSuppliersByCallDontInvited(String idCall) throws HandlerGenericException {
@@ -190,5 +190,72 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         }
 
         return result;
+    }
+
+    public List<SupplierByCallDTO> getAllByStates(String idCall, List<SurveyStates> states)
+            throws HandlerGenericException {
+        List<SupplierByCallDTO> result = new ArrayList<SupplierByCallDTO>();
+        for (SurveyStates state : states) {
+            StateDAO stateDAO = new StateDAO();
+            String idState = stateDAO.getStateByShortName(state.toString()).getId();
+            List<String> filter = new ArrayList<String>();
+            filter.add(idState);
+            filter.add(idCall);
+
+            View currentView = getDatabase().getView("vwSuppliersByCallIdStateAndIdCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+            if (null != documents) {
+                for (Document document : documents) {
+                    result.add(castDocument(document));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Elimina todos los documentos donde se coincida con el
+     * <code>idSupplierByCall</code>
+     * 
+     * @param idSupplierByCall
+     * @return <code>true</code> en caso de eliminar exitosamente los
+     *         documentos, de lo contrario <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public boolean deleteAllReference(String idSupplierByCall) throws HandlerGenericException {
+        boolean stateDeleted = false;
+        View view = getDatabase().getView("vwUniverse");
+        if (view.FTSearch(idSupplierByCall.concat(" AND NOT [form] = frSupplierByCall")) > 0) {
+            view.getAllEntries().removeAll(true);
+            stateDeleted = true;
+        }
+        view.clear();
+        return stateDeleted;
+
+    }
+
+    /**
+     * Verifica si existen proveedores sin haber aceptado su cambio de tamaño de
+     * empresa
+     * 
+     * @param idCall
+     *            Identificador de la convocatoria a consultar
+     * @return <code>true</code> si existen proveedores, de lo contrario
+     *         <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public boolean existSuppliersInCompanySizeChanged(String idCall) throws HandlerGenericException {
+        try {
+            boolean exist = false;
+            View currentView = getDatabase().getView("vwSuppliersByCallModifiedIdCall");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(idCall, true);
+            if (documents.getCount() > 0) {
+                exist = true;
+            }
+            return exist;
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
     }
 }

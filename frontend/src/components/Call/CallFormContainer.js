@@ -6,7 +6,7 @@ import * as callAction from '../../state/Call/action';
 import * as calledSuppliersAction from '../../state/CalledSuppliers/action';
 import CallForm from './CallForm';
 import Filters from './Filters';
-import Suppliers from './Suppliers';
+import SuppliersContainer from './SuppliersContainer';
 
 const FormCallHoc = Form.create()(CallForm);
 const FormFiltersHoc = Form.create()(Filters);
@@ -19,7 +19,9 @@ class CallFormContainer extends Component {
       this.props.getCalledSuppliers(id);
     } else {
       this.props.clearDataEdit();
+      this.props.clearDataCalledSuppliers();
     }
+    this.props.getMasters();
   }
 
   render() {
@@ -29,11 +31,12 @@ class CallFormContainer extends Component {
           {...this.props}
           Form={Form}
         />
+        <hr />
         <FormFiltersHoc
           filterCalledSuppliers={this.props.filterCalledSuppliers}
           Form={Form}
         />
-        <Suppliers
+        <SuppliersContainer
           {...this.props}
         />
       </div>
@@ -43,9 +46,12 @@ class CallFormContainer extends Component {
 
 const mapStateToProps = state => ({
   editData: state.call.editData,
-  loading: state.call.loading,
+  loading: state.call.loading || state.calledSuppliers.loading,
+  disabled: state.call.disabled,
+  disabledByDate: state.call.disabledByDate,
   calledSuppliers: state.calledSuppliers.data,
-  loadingSuppliers: state.calledSuppliers.loading,
+  mastersToList: state.calledSuppliers.mastersToList,
+  loadingSuppliers: state.calledSuppliers.loadingSuppliers,
 });
 
 const mapDispatchToProps = {
