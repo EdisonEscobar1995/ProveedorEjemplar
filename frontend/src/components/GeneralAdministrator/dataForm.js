@@ -14,6 +14,7 @@ const dataForm = ({ data, updateAttachment, form, cleanFields, deleteAttachment 
     content,
     document,
     informationProgram,
+    dataPolicy,
     messageByChangeSizeCompany,
     inputPoll,
   } = data;
@@ -122,6 +123,19 @@ const dataForm = ({ data, updateAttachment, form, cleanFields, deleteAttachment 
           style: { marginTop: '20px' },
           key: 'informationProgram',
           value: informationProgram,
+          required: true,
+        },
+      ],
+    },
+    {
+      key: 1.6,
+      value: [
+        {
+          span: 24,
+          type: 'textarea',
+          label: 'Políticas de aceptación de manejo de datos y confidencialidad',
+          key: 'dataPolicy',
+          value: dataPolicy,
           required: true,
         },
       ],

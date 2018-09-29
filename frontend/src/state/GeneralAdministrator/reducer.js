@@ -49,6 +49,7 @@ function generalAdministratorApp(state = initialState, action) {
           title: '',
           content: '',
           informationProgram: '',
+          dataPolicy: '',
           inputPoll: '',
           uploadMaxFilesize: '',
         },

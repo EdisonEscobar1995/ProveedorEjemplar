@@ -21,6 +21,8 @@ public class SystemDTO {
     @Expose
     private String informationProgram;
     @Expose
+    private String dataPolicy;
+    @Expose
     private String messageByChangeSizeCompany;
     @Expose
     private String inputPoll;
@@ -168,5 +170,13 @@ public class SystemDTO {
     public List<AttachmentDTO> getDocument() {
         return document;
     }
+
+	public void setDataPolicy(String dataPolicy) {
+		this.dataPolicy = dataPolicy;
+	}
+
+	public String getDataPolicy() {
+		return dataPolicy;
+	}
 
 }

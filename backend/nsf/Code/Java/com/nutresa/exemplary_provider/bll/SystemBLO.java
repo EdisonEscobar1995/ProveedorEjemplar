@@ -26,6 +26,7 @@ public class SystemBLO extends GenericBLO<SystemDTO, SystemDAO> {
             configurationExisting.setContent(system.getContent());
             configurationExisting.setImages(system.getImages());
             configurationExisting.setInformationProgram(system.getInformationProgram());
+            configurationExisting.setDataPolicy(system.getDataPolicy());
             configurationExisting.setMessageByChangeSizeCompany(system.getMessageByChangeSizeCompany());
             configurationExisting.setInputPoll(system.getInputPoll());
             return systemDAO.saveProfile(configurationExisting);
