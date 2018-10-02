@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import FormattedMessage from '../shared/FormattedMessage';
 import Confirm from '../shared/Confirm';
 
-const ButtonStyle = styled(Button)`
+export const ButtonStyle = styled(Button)`
   background: ${props => props.theme.color[props.buttoncolor]};
   color: ${props => props.theme.color.normal};
   width: 100%;

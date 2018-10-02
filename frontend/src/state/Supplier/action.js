@@ -14,6 +14,7 @@ import {
   SAVE_DATA_ANSWER_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
+  CHANGE_ACCEPTED_POLICY,
   UPDATE_ATTACHMENT,
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
@@ -165,6 +166,12 @@ function changeParticipate(participateInCall) {
   return {
     type: CHANGE_PARTICIPATE,
     participateInCall,
+  };
+}
+function changeAcceptedPolicy(acceptedPolicy) {
+  return {
+    type: CHANGE_ACCEPTED_POLICY,
+    acceptedPolicy,
   };
 }
 function reloadDimensions(dimensions) {
@@ -762,6 +769,7 @@ export {
   saveDataCallSupplier,
   saveAnswer,
   changeParticipate,
+  changeAcceptedPolicy,
   updateAttachment,
   deleteAttachment,
   updateChangeIdCompanySize,

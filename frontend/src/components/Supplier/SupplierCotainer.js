@@ -12,6 +12,7 @@ import {
   saveDataCallBySupplier,
   saveDataCallSupplier,
   changeParticipate,
+  changeAcceptedPolicy,
   updateAttachment,
   deleteAttachment,
   updateChangeIdCompanySize,
@@ -51,6 +52,7 @@ const mapStateToProps = state => ({
   call: state.supplier.call,
   rules: state.supplier.rules,
   participateInCall: state.supplier.participateInCall,
+  acceptedPolicy: state.supplier.acceptedPolicy,
   supplies: state.supplier.supply,
   categories: state.supplier.categories,
   subcategories: state.supplier.subcategories,
@@ -107,6 +109,9 @@ const mapDispatchToProps = dispatch => ({
   },
   changeParticipate: (participateInCall) => {
     dispatch(changeParticipate(participateInCall));
+  },
+  changeAcceptedPolicy: (acceptedPolicy) => {
+    dispatch(changeAcceptedPolicy(acceptedPolicy));
   },
   updateChangeIdCompanySize: (idCompanySize) => {
     dispatch(updateChangeIdCompanySize(idCompanySize));

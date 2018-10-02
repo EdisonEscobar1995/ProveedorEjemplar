@@ -131,6 +131,7 @@ class Supplier extends Component {
       }
     } else if (this.props.participateInCall === 'false') {
       values.participateInCall = 'false';
+      values.acceptedPolicy = false;
       this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
     } else {
       const newSupplier = this.getSupplierValues(values);

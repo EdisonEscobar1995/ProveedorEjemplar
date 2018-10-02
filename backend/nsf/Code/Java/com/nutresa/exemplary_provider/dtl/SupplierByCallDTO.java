@@ -16,6 +16,8 @@ public class SupplierByCallDTO {
     @Expose
     private String participateInCall;
     @Expose
+    private boolean acceptedPolicy;
+    @Expose
     private String reasonForNotParticipation;
     @Expose
     private String nameWhoSayDontParticipate;
@@ -172,4 +174,11 @@ public class SupplierByCallDTO {
         return whoEvaluateOfTechnicalTeam;
     }
 
+	public void setAcceptedPolicy(boolean acceptedPolicy) {
+		this.acceptedPolicy = acceptedPolicy;
+	}
+
+	public boolean isAcceptedPolicy() {
+		return acceptedPolicy;
+	}
 }

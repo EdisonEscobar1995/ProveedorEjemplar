@@ -222,6 +222,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         SupplierByCallDTO supplierByCall = getCallOfSupplier(null);
         supplierByCall.setParticipateInCall("true");
+        supplierByCall.setAcceptedPolicy(true);
         supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
 
