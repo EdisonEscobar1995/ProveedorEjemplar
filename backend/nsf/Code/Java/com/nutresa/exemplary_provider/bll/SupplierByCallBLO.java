@@ -203,6 +203,24 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         return response;
     }
+    
+    private SupplierByCallDTO setSupplierToCall(String idSupplier) throws HandlerGenericException {
+        CallBLO callBLO = new CallBLO();
+        CallDTO call = null;
+        SupplierByCallDTO response = null;
+        call = callBLO.getCallActive();
+        if (null != call){
+        	if (call.isCaducedDeadLineToMakeSurvey()){
+        		throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
+        	} else if (!call.isCaducedDateToFinishCall()) {
+            	SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+            	response = supplierByCallDAO.getBySupplierAndCall(idSupplier, call.getId());
+                rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, false));
+            }
+        } 
+
+        return response;
+    }
 
     public void changedCompanySize(String oldIdCompanySize) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
@@ -591,7 +609,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
         }
 
-        supplierByCall = getCallActiveToParticipate(supplier.getId());
+        supplierByCall = setSupplierToCall(supplier.getId());
         if (!(supplierByCall instanceof SupplierByCallDTO)) {
             supplierByCall = new SupplierByCallDTO();
             StateBLO stateBLO = new StateBLO();
@@ -605,6 +623,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         supplierByCall.setIdSurvey(null == survey.getId() ? null : survey.getId());
         return super.save(supplierByCall);
     }
+    
+    
+    
 
     /**
      * Elimina todos los documentos donde se utilice el
