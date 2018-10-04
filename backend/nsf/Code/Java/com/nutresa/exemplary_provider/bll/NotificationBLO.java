@@ -185,7 +185,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
             if (notificationType.equals(NotificationType.SUPPLIER_DISCARDED)
                     || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM)
-                    || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_MANAGER_TEAM)) {
+                    || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_MANAGER_TEAM)
+                    || notificationType.equals(NotificationType.SURVEY_FINISHED_BY_SUPPLIER)) {
                 emails.add(supplier.getEmailOfContact());
             } else {
                 emails = supplier.getEmails();

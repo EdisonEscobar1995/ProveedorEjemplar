@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
@@ -318,6 +319,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 response = get(supplierByCall.getId());
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.SUPPLIER);
+                SupplierBLO supplierBLO = new SupplierBLO();
+                SupplierDTO supplierDTO = supplierBLO.get(supplierByCall.getIdSupplier());
+                notificationBLO.sendNotificationTypeToSupplier(supplierDTO, NotificationType.SURVEY_FINISHED_BY_SUPPLIER);
             } else {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
                         .toString());
