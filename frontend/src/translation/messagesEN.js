@@ -105,6 +105,7 @@ const messages = {
   'Table.evaluatorComment': 'Comment',
   'Table.noFound': "There aren't question for this dimension",
   'Table.action': 'Action',
+  'Table.criteriaScore': 'Score',
   'Header.welcome': 'Welcome',
   'Header.logOut': 'Logout',
   'Confirm.title': 'Are you sure?',

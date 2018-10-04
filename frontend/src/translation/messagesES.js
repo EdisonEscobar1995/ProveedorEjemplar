@@ -105,6 +105,7 @@ const messages = {
   'Table.evaluatorComment': 'Comentario',
   'Table.noFound': 'No hay preguntas para esta dimension',
   'Table.action': 'Acción',
+  'Table.criteriaScore': 'Resultado',
   'Header.welcome': 'Bienvenido',
   'Header.logOut': 'Cerrar sesión',
   'Confirm.title': '¿Confirma que desea realizar esta acción?',

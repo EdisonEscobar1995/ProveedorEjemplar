@@ -27,6 +27,8 @@ const SectionStyle = styled.div`
   opacity: 0.6;
   background: ${props => props.theme.color.primary};
   color: ${props => props.theme.color.normal};
+  display: flex;
+  justify-content: space-between;
 `;
 const RadioStyle = styled(Radio) `
   white-space: normal;
@@ -304,8 +306,14 @@ class Question extends Component {
             criterions.map(criteria => (
               <div key={criteria.id}>
                 <SectionStyle>
-                  <Icon type="tag-o" />
-                  <SubtitleStyle>{criteria.name}</SubtitleStyle>
+                  <div>
+                    <Icon type="tag-o" />
+                    <SubtitleStyle>{criteria.name}</SubtitleStyle>
+                  </div>
+                  <div>
+                    <FormattedMessage id="Table.criteriaScore" />
+                    {': '}{criteria.score}{'%'}
+                  </div>
                 </SectionStyle>
                 <TableStyle
                   key={criteria.key}

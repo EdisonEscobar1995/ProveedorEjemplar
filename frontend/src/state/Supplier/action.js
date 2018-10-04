@@ -490,6 +490,46 @@ const getDataCitiesByDepartment = clientData => (
   }
 );
 
+const calculateCriterionScore = (questions) => {
+  let score = '';
+  let max = 0;
+  let total = 0;
+  let found = false;
+  questions.forEach((question) => {
+    const answer = question.answer[0].idOptionSupplier;
+    if (answer) {
+      found = true;
+      const selectedOption = question.options.find(
+        option => option.id === answer && option.score >= 0);
+      if (selectedOption) {
+        max += Math.max(...question.options.map(option => option.score));
+        total += selectedOption.score;
+      }
+    }
+    return question;
+  });
+  if (found) {
+    score = ((total / max) * 100).toFixed(2);
+  }
+  return score;
+};
+
+const scoreCriterion = criteria => (
+  (dispatch, getActualState) => {
+    const state = getActualState().supplier;
+    const dimensions = state.dimensions.map(dimension => ({
+      ...dimension,
+      criterions: dimension.criterions.map((criterion) => {
+        if (criterion.id === criteria) {
+          criterion.score = calculateCriterionScore(criterion.questions);
+        }
+        return criterion;
+      }),
+    }));
+    dispatch(reloadDimensions(dimensions));
+  }
+);
+
 const formatData = (data) => {
   const { dimensions, criterions } = data;
   const formatedDimensions = dimensions.map((dimension, index) => {
@@ -501,6 +541,8 @@ const formatData = (data) => {
       result = criterion.map(criteria => (
         {
           ...criteria,
+          score: calculateCriterionScore(
+            questions.filter(question => question.idCriterion === criteria.id)),
           questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
         }
       ));
@@ -613,6 +655,7 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
           }
         }
         dispatch(saveAnswerSuccess(allDimensions, respone.data.rules));
+        dispatch(scoreCriterion(idCriterion));
         openNotificationWithIcon('success');
       }).catch((err) => {
         dispatch(getFailedRequest(err));
@@ -783,4 +826,5 @@ export {
   setExport,
   updateField,
   cleanStore,
+  scoreCriterion,
 };
