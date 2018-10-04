@@ -74,6 +74,8 @@ public class SupplierDTO {
     @Expose
     private String nameLegalAgent;
     @Expose
+    private String idLegalAgent;
+    @Expose
     private String fullNameContact;
     @Expose
     private String jobPosition;
@@ -610,5 +612,13 @@ public class SupplierDTO {
     public void setTypeOfCurrencyAnnualSales(String typeOfCurrencyAnnualSales) {
         this.typeOfCurrencyAnnualSales = typeOfCurrencyAnnualSales;
     }
+
+	public void setIdLegalAgent(String idLegalAgent) {
+		this.idLegalAgent = idLegalAgent;
+	}
+
+	public String getIdLegalAgent() {
+		return idLegalAgent;
+	}
 
 }
