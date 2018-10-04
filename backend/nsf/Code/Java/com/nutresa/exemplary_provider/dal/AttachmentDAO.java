@@ -127,5 +127,17 @@ public class AttachmentDAO {
             throw new HandlerGenericException(exception);
         }
     }
+    
+    public AttachmentDTO copyAttachment(String idAttachment) throws HandlerGenericException {
+        try {
+            Document document = this.getDocument(idAttachment);
+            Document copy = document.copyToDatabase(this.database);
+            copy.replaceItemValue("id", copy.getUniversalID());
+            copy.save(true, false);
+            return castDocument(copy);
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
 
 }

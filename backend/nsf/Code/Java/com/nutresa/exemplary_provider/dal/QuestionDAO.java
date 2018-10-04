@@ -12,6 +12,7 @@ import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewNavigator;
 
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class QuestionDAO extends GenericDAO<QuestionDTO> {
@@ -81,21 +82,23 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         return response;
     }
 
-    public List<QuestionDTO> getQuestionsBySurvey(String idSurvey, String idDimension, String idSupplierByCall)
+    public List<QuestionDTO> getQuestionsBySurvey(String idDimension, String idSupplierByCall)
             throws HandlerGenericException {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         OptionDAO optionDAO = new OptionDAO();
         AnswerDAO answerDAO = new AnswerDAO();
+        SupplierByCallDAO suppplierByCallDAO = new SupplierByCallDAO();
+        SupplierByCallDTO supplierByCallDTO = suppplierByCallDAO.get(idSupplierByCall);
         try {
             View currentView = getDatabase().getView("vwQuestionsBySurvey");
             ArrayList<String> fiterBySurveyAndDimension = new ArrayList<String>();
-            fiterBySurveyAndDimension.add(idSurvey);
+            fiterBySurveyAndDimension.add(supplierByCallDTO.getIdSurvey());
             fiterBySurveyAndDimension.add(idDimension);
             DocumentCollection documents = currentView.getAllDocumentsByKey(fiterBySurveyAndDimension, true);
             for (Document document : documents) {
                 QuestionDTO question = castDocument(document);
                 question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
-                question.setAnswer(answerDAO.getAnswerBySurvey(idSupplierByCall, question.getId()));
+                question.setAnswer(answerDAO.getAnswerBySurvey(supplierByCallDTO, question.getId(), supplierByCallDTO.getIdCall()));
                 response.add(question);
             }
         } catch (Exception exception) {

@@ -47,7 +47,7 @@ class Supplier extends Component {
         ),
       },
     ];
-    if (this.props.participateInCall === 'true') {
+    if (this.props.participateInCall === 'true' && this.props.acceptedPolicy) {
       const {
         loadedDimensions,
         loadingDimensions,
