@@ -192,6 +192,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
             summarySurvey.setCriterion(criterion.getName());
             summarySurvey.setDimension(dimension.getName());
+            summarySurvey.setAttachmentCount(answer.getIdAttachment().size());
 
             summariesSurvey.add(summarySurvey);
         }
