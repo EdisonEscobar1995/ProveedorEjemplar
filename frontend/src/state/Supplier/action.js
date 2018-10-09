@@ -496,14 +496,16 @@ const calculateCriterionScore = (questions) => {
   let total = 0;
   let found = false;
   questions.forEach((question) => {
-    const answer = question.answer[0].idOptionSupplier;
-    if (answer) {
-      found = true;
-      const selectedOption = question.options.find(
-        option => option.id === answer && option.score >= 0);
-      if (selectedOption) {
-        max += Math.max(...question.options.map(option => option.score));
-        total += selectedOption.score;
+    if (question.answer.length > 0) {
+      const answer = question.answer[0].idOptionSupplier;
+      if (answer) {
+        found = true;
+        const selectedOption = question.options.find(
+          option => option.id === answer && option.score >= 0);
+        if (selectedOption) {
+          max += Math.max(...question.options.map(option => option.score));
+          total += selectedOption.score;
+        }
       }
     }
     return question;
