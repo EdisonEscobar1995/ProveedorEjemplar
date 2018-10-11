@@ -271,4 +271,12 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             throw new HandlerGenericException(exception);
         }
     }
+    
+    public List<SupplierByCallDTO> getByCallAndSurvey(String idCall, String idSurvey) throws HandlerGenericException {
+    	ArrayList<String> key = new ArrayList<String>(2);
+        key.add(idCall);
+        key.add(idSurvey);
+        this.entityView = "vwSuppliersByCallSurvey";
+        return super.getAllBy(key);
+    }
 }

@@ -107,7 +107,38 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
 
         return response;
     }
+    
+    public List<QuestionDTO> getByDimensionAndCriterion(String idDimension, String idCriterion) throws HandlerGenericException {
+        List<QuestionDTO> response = new ArrayList<QuestionDTO>();
+        try {
+        	View view;
+        	ViewEntryCollection entries;
+        	
+            if (idDimension.equals("") && idCriterion.equals("")) {
+            	view = getDatabase().getView("vwQuestions");
+            	entries = view.getAllEntries();
+            }else{
+            	view = getDatabase().getView("vwQuestionsDimensionCriterion");
+            	List<String> keys = new ArrayList<String>();
+            	keys.add(idDimension);
+           		keys.add(idCriterion);
+            	entries = view.getAllEntriesByKey(keys, true);
+            }
+            
+            if (null != entries) {
+                for (ViewEntry entry : entries) {
+                    Document document = entry.getDocument();
+                    response.add(castDocument(document));
+                }
+                view.clear();
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
 
+        return response;
+    }
+    
     /**
      * Filtra las preguntas según los campos especificados en
      * <code>fieldsToFilter</code>

@@ -84,6 +84,18 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
 
         return questions;
     }
+    
+    public List<QuestionDTO> getByDimensionAndCriterion (String idDimension, String idCriterion) throws HandlerGenericException {
+    	 QuestionDAO questionDAO = new QuestionDAO();
+         List<QuestionDTO> questions = null;
+         try {
+             questions = questionDAO.getByDimensionAndCriterion(idDimension, idCriterion);
+         } catch (HandlerGenericException exception) {
+             throw new HandlerGenericException(exception);
+         }
+
+         return questions;
+    }
 
     /**
      * Filtra las preguntas según los campos especificados en

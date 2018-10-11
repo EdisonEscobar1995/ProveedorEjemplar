@@ -186,35 +186,6 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     }
 
     /**
-     * Obtiene una respuesta en base a una convocatria definitiva y un pregunta
-     * 
-     * @param idSupplierByCall
-     *            Identificador de la convocatoria definitiva
-     * @param idQuestion
-     *            Identificador de la pregunta
-     * @return Respuesta
-     * @throws HandlerGenericException
-     */
-    public AnswerDTO getByQuestionsAndSupplierByCall(String idSupplierByCall, String idQuestion)
-            throws HandlerGenericException {
-        AnswerDTO response = null;
-        List<String> filter = new ArrayList<String>();
-        filter.add(idQuestion);
-        filter.add(idSupplierByCall);
-        try {
-            View view = getDatabase().getView("vwAnswersByQuestionAndIdSupplierByCall");
-            Document document = view.getFirstDocumentByKey(filter, true);
-            if (null != document) {
-                response = castDocument(document);
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return response;
-    }
-
-    /**
      * Dada la información en <code>parameters</code> identifica por cuales
      * campos se deben filtrar las preguntas.
      * 
@@ -236,6 +207,14 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         }
 
         return fields;
+    }
+    
+    public AnswerDTO getByQuestionAndSupplierByCall(String idQuestion, String idSupplierByCall) throws HandlerGenericException {
+    	ArrayList<String> key = new ArrayList<String>(2);
+        key.add(idQuestion);
+        key.add(idSupplierByCall);
+        this.entityView = "vwAnswersByQuestionAndIdSupplierByCall";
+        return super.getBy(key);
     }
 
 }
