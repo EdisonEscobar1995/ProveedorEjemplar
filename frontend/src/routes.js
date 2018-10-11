@@ -88,6 +88,15 @@ const routes = [
   },
   {
     index: increment(),
+    name: 'MANAGERREPORT',
+    path: '/managerReport',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/ManagerReport').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
     name: 'RESULTS',
     path: '/results',
     exact: true,

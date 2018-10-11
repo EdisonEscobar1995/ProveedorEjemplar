@@ -5,6 +5,7 @@ import {
   GET_ITEMS_SUCCESS,
   CHANGE_TYPE,
   GET_RESULTS_SUCCESS,
+  GET_MANAGER_REPORT_SUCCESS,
   REQUEST_FAILED,
 } from './const';
 
@@ -53,6 +54,13 @@ function resultsApp(state = initialState, action) {
       return {
         ...state,
         loading: false,
+      };
+    }
+    case GET_MANAGER_REPORT_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        questions: action.questions,
       };
     }
     case CHANGE_TYPE: {
