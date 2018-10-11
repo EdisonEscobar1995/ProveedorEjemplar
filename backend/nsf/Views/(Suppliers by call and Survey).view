@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(Suppliers by call and Survey)' alias='SupplierByCall|vwSuppliersByCallSurvey'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='bec02' unid='7DA134EF1F8D3DDB05258322001517FA' sequence='4'>
+<created><datetime>20181009T225023,94-05</datetime></created>
+<modified><datetime>20181009T225613,93-05</datetime></modified>
+<revised><datetime>20181009T225613,92-05</datetime></revised>
+<lastaccessed><datetime>20181009T225613,93-05</datetime></lastaccessed>
+<addedtofile><datetime>20181009T225024,05-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frSupplierByCall"</formula></code>
+<column sort='ascending' hidedetailrows='false' itemname='idCall' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idCall'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idSurvey' width='10'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idSurvey'><font size='9pt' style='bold'/></columnheader></column></view>
+
