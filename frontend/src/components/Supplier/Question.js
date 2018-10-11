@@ -37,31 +37,29 @@ const RadioStyle = styled(Radio) `
 
 class Question extends Component {
   onChange = (value, record, fieldName, action) => {
-    if (value) {
-      const { id, answer, idCriterion } = record;
-      const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
-      let actualAnswer = {};
-      if (answer.length > 0) {
-        actualAnswer = answer.find(item => item.idQuestion === id);
-      }
-      let sendAnswer = {
-        idSupplierByCall: idCall,
-        idSurvey,
-        idQuestion: id,
-      };
-      const copy = { ...actualAnswer };
-      sendAnswer = Object.assign(copy, sendAnswer);
-      if (fieldName === 'attachment') {
-        if (action === 'delete') {
-          sendAnswer[fieldName] = sendAnswer[fieldName].filter(attach => attach.id !== value);
-        } else {
-          sendAnswer[fieldName] = value;
-        }
+    const { id, answer, idCriterion } = record;
+    const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
+    let actualAnswer = {};
+    if (answer.length > 0) {
+      actualAnswer = answer.find(item => item.idQuestion === id);
+    }
+    let sendAnswer = {
+      idSupplierByCall: idCall,
+      idSurvey,
+      idQuestion: id,
+    };
+    const copy = { ...actualAnswer };
+    sendAnswer = Object.assign(copy, sendAnswer);
+    if (fieldName === 'attachment') {
+      if (action === 'delete') {
+        sendAnswer[fieldName] = sendAnswer[fieldName].filter(attach => attach.id !== value);
       } else {
         sendAnswer[fieldName] = value;
       }
-      saveAnswer(sendAnswer, idDimension, idCriterion);
+    } else {
+      sendAnswer[fieldName] = value;
     }
+    saveAnswer(sendAnswer, idDimension, idCriterion);
   }
   getAnswer = (record, fieldName) => {
     const actualAnswer = record.answer[0];
