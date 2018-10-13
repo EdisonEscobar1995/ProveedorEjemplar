@@ -168,9 +168,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     
     public List<QuestionStatistic> getManagerReport(Map<String, String> parameters)
     	throws HandlerGenericException {
-		List<QuestionStatistic> response = new ArrayList<QuestionStatistic>();
-		
+    	
+    	List<QuestionStatistic> response = new ArrayList<QuestionStatistic>();
 		UserBLO userBLO = new UserBLO();
+		
 		if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
 		    String idCall = parameters.get("call");
 		    String idDimension = parameters.get("idDimension");
@@ -188,7 +189,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 		    QuestionStatistic questionStatistic;
 		    OptionStatistic optionStatistic;
 		    List<OptionStatistic> optionsStatistics;
-		    Map<String, OptionStatistic> mapOptionsStatictics;
+		    Map<String, OptionStatistic> optionsMap;
 		    
 		    QuestionBLO questionBLO = new QuestionBLO();
 		    List<QuestionDTO> questions = questionBLO.getByDimensionAndCriterion(idDimension, idCriterion);
@@ -197,32 +198,32 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 		    	options = optionBLO.getOptionsByQuestion(questionDTO.getId());
 		    	if (options.size() > 0){
 		    		questionStatistic = new QuestionStatistic();
-		    		mapOptionsStatictics = new HashMap<String, OptionStatistic>();
+		    		optionsMap = new HashMap<String, OptionStatistic>();
 		    		
-			    	for (OptionDTO optionDTO: options) {
+		    		for (OptionDTO optionDTO: options) {
 		    			optionStatistic = questionStatistic.new OptionStatistic();
 		    			optionStatistic.setId(optionDTO.getId());
 		    			optionStatistic.setName(optionDTO.getWording());
 		    			optionStatistic.setCount(0);
 		    			optionStatistic.setPercent(0);
-			    		mapOptionsStatictics.put(optionDTO.getId(), optionStatistic);
+			    		optionsMap.put(optionDTO.getId(), optionStatistic);
 				    }
-			    	
-			    	for (String idSurvey: questionDTO.getIdSurvey()) {
+		    		
+		        	for (String idSurvey: questionDTO.getIdSurvey()) {
 			    		suppliersByCall = supplierByCallBLO.getByCallAndSurvey(idCall, idSurvey);
 			    		for (SupplierByCallDTO supplierByCallDTO: suppliersByCall) {
 			    			questionStatistic.setSuppliersCount(questionStatistic.getSuppliersCount() + 1);
 			    			answerDTO = answerBLO.getByQuestionAndSupplierByCall(questionDTO.getId(), supplierByCallDTO.getId());
-			    			if (null != answerDTO){
+			    			if (null != answerDTO && optionsMap.containsKey(answerDTO.getIdOptionSupplier())){
+			    				optionStatistic = optionsMap.get(answerDTO.getIdOptionSupplier());
 			    				questionStatistic.setAnswersCount(questionStatistic.getAnswersCount() + 1);
-			    				optionStatistic = mapOptionsStatictics.get(answerDTO.getIdOptionSupplier());
 			    				optionStatistic.setCount(optionStatistic.getCount() + 1);
 			    			}
-			    		}
+		        		}
 			    	}
-			    	
+		        	
 			    	optionsStatistics = new ArrayList<OptionStatistic>();
-		    		for (Map.Entry<String, OptionStatistic> entry : mapOptionsStatictics.entrySet()) {
+		    		for (Map.Entry<String, OptionStatistic> entry : optionsMap.entrySet()) {
 			    		optionStatistic = entry.getValue();
 			    		optionStatistic.setPercent(Math.round(optionStatistic.getCount() / (questionStatistic.getAnswersCount() == 0.0 ? 1 : questionStatistic.getAnswersCount()) * 100));
 			    		optionsStatistics.add(optionStatistic);
