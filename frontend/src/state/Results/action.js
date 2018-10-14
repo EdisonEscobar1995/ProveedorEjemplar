@@ -6,6 +6,7 @@ import {
   CHANGE_TYPE,
   GET_RESULTS_SUCCESS,
   GET_MANAGER_REPORT_SUCCESS,
+  RESET_QUESTIONS,
   REQUEST_FAILED,
 } from './const';
 
@@ -41,6 +42,10 @@ const getResultsSuccess = () => ({
 const getManagerReportSuccess = questions => ({
   type: GET_MANAGER_REPORT_SUCCESS,
   questions,
+});
+
+const resetQuestions = () => ({
+  type: RESET_QUESTIONS,
 });
 
 const getFailedRequest = () => ({
@@ -126,5 +131,6 @@ export {
   changeType,
   getResults,
   getManagerReport,
+  resetQuestions,
   getFailedRequest,
 };

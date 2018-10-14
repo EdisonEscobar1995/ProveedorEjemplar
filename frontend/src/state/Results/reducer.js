@@ -6,6 +6,7 @@ import {
   CHANGE_TYPE,
   GET_RESULTS_SUCCESS,
   GET_MANAGER_REPORT_SUCCESS,
+  RESET_QUESTIONS,
   REQUEST_FAILED,
 } from './const';
 
@@ -61,6 +62,12 @@ function resultsApp(state = initialState, action) {
         ...state,
         loading: false,
         questions: action.questions,
+      };
+    }
+    case RESET_QUESTIONS: {
+      return {
+        ...state,
+        questions: [],
       };
     }
     case CHANGE_TYPE: {
