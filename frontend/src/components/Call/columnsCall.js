@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Tooltip, Button, Popconfirm as Confirm } from 'antd';
+import { Tooltip, Button } from 'antd';
 
 const columnsCall = (onAdd, deleteCall, onEdit) => [{
   title: 'Consecutivo',
@@ -38,15 +38,6 @@ const columnsCall = (onAdd, deleteCall, onEdit) => [{
           onClick={() => onEdit(record)}
         />
       </Tooltip>
-      <Confirm title="Está seguro de eliminar la convocatoría?" onConfirm={() => deleteCall(record.id)} okText="Si" cancelText="No">
-        <Tooltip placement="top" title="Eliminar">
-          <Button
-            type="danger"
-            shape="circle"
-            icon="delete"
-          />
-        </Tooltip>
-      </Confirm>
     </Fragment>
   ),
 }];

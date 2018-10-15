@@ -35,6 +35,7 @@ const mapStateToProps = state => ({
   data: state.surveyAdmon.data,
   companySize: state.surveyAdmon.companySize,
   supply: state.surveyAdmon.supply,
+  call: state.surveyAdmon.call,
   searchValue: state.surveyAdmon.searchValue,
 });
 

@@ -8,6 +8,7 @@ import {
   CLEAN_DATA,
   // ////////////////
   SEARCH_BY_DIMENSION,
+  CALL_VALUE,
   SUPPLY_VALUE,
   COMPANY_SIZE_VALUE,
   CHANGE_SEARCH_BY_DIMENSION,
@@ -29,6 +30,7 @@ import {
 import
 { getAllDataSurveyApi, saveSurveyApi }
   from '../../api/survey';
+import { getCallApi } from '../../api/call';
 import { getSuppliesApi } from '../../api/supply';
 import { getDataCompanySizeApi } from '../../api/companySize';
 import { getQuestionsByIdDimensionApi } from '../../api/question';
@@ -43,9 +45,10 @@ const getDataSurveyProgress = () => ({
   type: GET_DATA_SURVEY_ADMON_PROGRESS,
 });
 
-const getDataSurveySuccess = (data, supply, companySize) => ({
+const getDataSurveySuccess = (data, call, supply, companySize) => ({
   type: GET_DATA_SURVEY_ADMON_SUCCESS,
   data,
+  call,
   supply,
   companySize,
 });
@@ -55,25 +58,28 @@ const getFailedRequest = () => ({
 });
 
 const getAllSurveys = () => (dispatch) => {
-  requestApi(dispatch, getDataSurveyProgress, getSuppliesApi)
-    .then((supplyResponse) => {
-      const supply = supplyResponse.data.data;
-      requestApi(dispatch, getDataSurveyProgress, getDataCompanySizeApi)
-        .then((companySizeResponse) => {
-          const companySize = companySizeResponse.data.data;
-          requestApi(dispatch, getDataSurveyProgress, getAllDataSurveyApi)
-            .then((response) => {
-              const { data } = response.data;
-              const dataFilter = data.map(item => ({
-                ...item,
-                visible: true,
-                name: supply.find(x => x.id === item.idSupply).name,
-              }));
-              dispatch(getDataSurveySuccess(dataFilter, supply, companySize));
+  requestApi(dispatch, getDataSurveyProgress, getCallApi)
+    .then((callResponse) => {
+      const call = callResponse.data.data;
+      requestApi(dispatch, getDataSurveyProgress, getSuppliesApi)
+        .then((supplyResponse) => {
+          const supply = supplyResponse.data.data;
+          requestApi(dispatch, getDataSurveyProgress, getDataCompanySizeApi)
+            .then((companySizeResponse) => {
+              const companySize = companySizeResponse.data.data;
+              requestApi(dispatch, getDataSurveyProgress, getAllDataSurveyApi)
+                .then((response) => {
+                  const { data } = response.data;
+                  const dataFilter = data.map(item => ({
+                    ...item,
+                    visible: true,
+                  }));
+                  dispatch(getDataSurveySuccess(dataFilter, call, supply, companySize));
+                });
             });
+        }).catch(() => {
+          dispatch(getFailedRequest());
         });
-    }).catch(() => {
-      dispatch(getFailedRequest());
     });
 };
 
@@ -104,8 +110,10 @@ const getDimensionsProgress = () => ({
 });
 
 
-const getAllDataSurveyFormAdmonSuccess = (supply, companySize, allCriterions, allDimensions) => ({
+const getAllDataSurveyFormAdmonSuccess =
+(call, supply, companySize, allCriterions, allDimensions) => ({
   type: GET_SURVEY_ADMON_SUCCESS,
+  call,
   supply,
   companySize,
   allCriterions,
@@ -261,17 +269,24 @@ function deselectedByCriterion(id) {
 function getAllDataSurveyFormAdmon() {
   return (dispatch) => {
     const promises = [
+      getCallApi(),
       getSuppliesApi(),
       getDataCompanySizeApi(),
       getAllCriterionsApi(),
       getDataDimensionApi(),
     ];
     requestApi(dispatch, getDataSurveyProgress, axios.all, promises).then((arrayResponse) => {
-      const supply = arrayResponse[0].data.data;
-      const companySize = arrayResponse[1].data.data;
-      const allCriterions = arrayResponse[2].data.data;
-      const allDimensions = arrayResponse[3].data.data;
-      dispatch(getAllDataSurveyFormAdmonSuccess(supply, companySize, allCriterions, allDimensions));
+      let call = arrayResponse[0].data.data;
+      call = call.map(item => ({
+        ...item,
+        name: item.year.toString(),
+      }));
+      const supply = arrayResponse[1].data.data;
+      const companySize = arrayResponse[2].data.data;
+      const allCriterions = arrayResponse[3].data.data;
+      const allDimensions = arrayResponse[4].data.data;
+      dispatch(getAllDataSurveyFormAdmonSuccess(
+        call, supply, companySize, allCriterions, allDimensions));
     }).catch((err) => {
       dispatch(getFailedRequest(err));
     });
@@ -335,6 +350,11 @@ function collapseCriterion(data) {
   };
 }
 
+const callValue = value => ({
+  type: CALL_VALUE,
+  value,
+});
+
 const supplyValue = value => ({
   type: SUPPLY_VALUE,
   value,
@@ -354,6 +374,11 @@ function saveDataSurvey() {
 function saveSurvey(next, redirect) {
   return (dispatch, getState) => {
     const surveyAdmon = getState().surveyAdmon;
+    const idCall = surveyAdmon.callValue;
+    if (idCall === '') {
+      dispatch(setMessage('Debe seleccionar una convocatoria', 'warning'));
+      return;
+    }
     const idSupply = surveyAdmon.supplyValue;
     if (idSupply === '') {
       dispatch(setMessage('Debe seleccionar un tipo de suministro', 'warning'));
@@ -370,6 +395,7 @@ function saveSurvey(next, redirect) {
     }
     const data = {
       id: '',
+      idCall,
       idSupply,
       idCompanySize,
       question: [],
@@ -377,6 +403,7 @@ function saveSurvey(next, redirect) {
     surveyAdmon.questionSelected.forEach((dimension) => {
       dimension.data.forEach((criterion) => {
         criterion.data.forEach((question) => {
+          question.idCall = idCall;
           data.question.push(question);
         });
       });
@@ -527,6 +554,7 @@ export {
   questionSelected,
   filterByCriterion,
   deselectedByCriterion,
+  callValue,
   supplyValue,
   companySizeValue,
 };

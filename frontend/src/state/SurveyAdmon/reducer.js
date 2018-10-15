@@ -22,6 +22,7 @@ import {
   FILTER_BY_CRITERION_SURVEY,
   COMPANY_SIZE_VALUE,
   SUPPLY_VALUE,
+  CALL_VALUE,
   REQUEST_FAILED,
 } from './const';
 
@@ -38,6 +39,7 @@ const initialState = {
   searchValue: '',
   searchDimension: '',
   labelOptions: '',
+  callValue: '',
   supplyValue: '',
   companySizeValue: '',
   loading: false,
@@ -49,6 +51,12 @@ function surveyAdmonApp(state = initialState, action) {
       return {
         ...state,
         companySizeValue: action.value,
+      };
+    }
+    case CALL_VALUE: {
+      return {
+        ...state,
+        callValue: action.value,
       };
     }
     case SUPPLY_VALUE: {
@@ -74,6 +82,7 @@ function surveyAdmonApp(state = initialState, action) {
       return {
         ...state,
         data: action.data,
+        call: action.call,
         supply: action.supply,
         companySize: action.companySize,
         loading: false,
@@ -96,6 +105,7 @@ function surveyAdmonApp(state = initialState, action) {
     case GET_SURVEY_ADMON_SUCCESS: {
       return {
         ...state,
+        call: action.call,
         supply: action.supply,
         companySize: action.companySize,
         allCriterions: action.allCriterions,

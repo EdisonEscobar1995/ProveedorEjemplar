@@ -9,12 +9,16 @@ const Text = styled.div`
 `;
 
 const SurveyAdmonForm = (props) => {
-  const { loading, supply, companySize, supplyValue, companySizeValue } = props;
-  const design = { xs: 24, sm: 24, md: 12, lg: 12 };
+  const { loading, call, supply, companySize, callValue, supplyValue, companySizeValue } = props;
+  const design = { xs: 24, sm: 24, md: 8, lg: 8 };
   return (
     <Spin spinning={loading}>
       <SubTitle text="Información general" />
       <Row align="middle" type="flex" gutter={24}>
+        <Col {...design}>
+          <Text>Convocatoria</Text>
+          <SimpleSelect options={call} handleChange={callValue} />
+        </Col>
         <Col {...design}>
           <Text>Tipo de suministro</Text>
           <SimpleSelect options={supply} handleChange={supplyValue} />

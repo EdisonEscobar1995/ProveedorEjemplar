@@ -3,7 +3,7 @@ import {
   GET_DATA_GENERAL_ADMINISTRATOR_SUCCESS,
   REQUEST_FAILED,
   CLEAN_DATA,
-  UPDATE_ATTACHMENT,
+  UPDATE_GENERAL_ATTACHMENT,
   SAVE_DATA_PROGRESS,
   CLEAN_STORE,
 } from './const';
@@ -55,7 +55,7 @@ function generalAdministratorApp(state = initialState, action) {
         },
       };
     }
-    case UPDATE_ATTACHMENT: {
+    case UPDATE_GENERAL_ATTACHMENT: {
       return {
         ...state,
         loading: false,

@@ -2,6 +2,15 @@ import React from 'react';
 import { Tooltip, Button } from 'antd';
 
 const columnsData = (props, onAdd) => [{
+  title: 'Convocatoria',
+  key: 'idCall',
+  render: (text, record) => {
+    let call = props.call.find(x => x.id === record.idCall);
+    call = call ? call.year : '';
+    return call;
+  },
+  sorter: (a, b) => (a.year > b.year ? -1 : 1),
+}, {
   title: 'Tipo de suministro',
   key: 'idSupply',
   render: (text, record) => {
@@ -9,7 +18,6 @@ const columnsData = (props, onAdd) => [{
     supply = supply ? supply.name : '';
     return supply;
   },
-  sorter: (a, b) => (a.name > b.name ? -1 : 1),
 }, {
   title: 'Tamaño de la empresa',
   key: 'idCompanySize',

@@ -12,7 +12,7 @@ if (NODE_ENV !== 'development') {
 }
 
 const baseUrl = `${path}xsp`;
-const loginUrl = `${href}?login&redirectto=${pathname}${deployFolder}/index.html`;
+const loginUrl = `${href}?logout&redirectto=${pathname}`;
 
 export {
   baseUrl,

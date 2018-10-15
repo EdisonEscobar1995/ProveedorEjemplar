@@ -93,7 +93,11 @@ class Question extends Component {
         <RadioGroup
           disabled={disabled}
           value={value}
-          onChange={e => this.onChange(e.target.value, record, optionFieldName)}
+          onChange={(e) => {
+            if (e.target.value) {
+              this.onChange(e.target.value, record, optionFieldName);
+            }
+          }}
         >
           {
             options.map(option => (
@@ -247,8 +251,16 @@ class Question extends Component {
                 baseUrl={`${baseUrl}/Attachment?action=save`}
                 uploadMaxFilesize={this.props.system.uploadMaxFilesize}
                 uploadExtensions={this.props.system.uploadExtensions}
-                onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
-                onRemove={(value, rowValue) => this.onChange(value, rowValue, 'attachment', 'delete')}
+                onChange={(value, rowValue) => {
+                  if (value) {
+                    this.onChange(value, rowValue, 'attachment');
+                  }
+                }}
+                onRemove={(value, rowValue) => {
+                  if (value) {
+                    this.onChange(value, rowValue, 'attachment', 'delete');
+                  }
+                }}
               />
               <ErrorTable visible={errors.attachments} text="Survey.requiredAttachment" />
             </div>

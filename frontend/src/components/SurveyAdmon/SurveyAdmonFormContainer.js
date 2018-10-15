@@ -75,6 +75,7 @@ class SurveyAdmonFormContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  call: state.surveyAdmon.call,
   supply: state.surveyAdmon.supply,
   companySize: state.surveyAdmon.companySize,
   data: state.surveyAdmon.data,
@@ -94,6 +95,9 @@ const mapDispatchToProps = dispatch => ({
   },
   saveData: (next, redirect) => {
     dispatch(SurveyAdmonAction.saveData(next, redirect));
+  },
+  callValue: (value) => {
+    dispatch(SurveyAdmonAction.callValue(value));
   },
   supplyValue: (value) => {
     dispatch(SurveyAdmonAction.supplyValue(value));
