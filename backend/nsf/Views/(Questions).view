@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Questions)' alias='Question|vwQuestions' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='web'
  showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
  showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
@@ -9,15 +9,15 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='afda' unid='E51C52EA91D8AF5A052581E5008044A7' sequence='19'>
-<created><datetime>20171127T182101,83-05</datetime></created>
-<modified><datetime>20180115T173428,28-05</datetime></modified>
-<revised><datetime>20180115T173428,27-05</datetime></revised>
-<lastaccessed><datetime>20180115T173428,28-05</datetime></lastaccessed>
-<addedtofile><datetime>20171127T182101,85-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frQuestion"</formula></code><code
+<noteinfo noteid='6c676' unid='0187EA5DAA9C286305258210006CABF6' sequence='34'>
+<created><datetime>20180109T144659,10-05</datetime></created>
+<modified><datetime>20181015T005733,98-05</datetime></modified>
+<revised><datetime>20181015T005733,97-05</datetime></revised>
+<lastaccessed><datetime>20181015T005733,98-05</datetime></lastaccessed>
+<addedtofile><datetime>20180109T144659,11-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frQuestion" &amp; idCall = ""</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub

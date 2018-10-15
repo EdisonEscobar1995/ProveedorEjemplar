@@ -24,13 +24,16 @@ public class QuestionDTO {
     @Expose
     private String helpText;
     @Expose
-    private List<String> idSurvey;
-    @Expose
     private String dependOfOptionId;
     @Expose
     private String dependOfQuestion;
     @Expose
     private List<AnswerDTO> answer;
+
+    @Expose
+    private String idCall;
+    @Expose
+    private List<String> idSurvey;
 
     public String getIdDimension() {
         return idDimension;
@@ -131,5 +134,13 @@ public class QuestionDTO {
     public String getDependOfOptionId() {
         return dependOfOptionId;
     }
+
+	public void setIdCall(String idCall) {
+		this.idCall = idCall;
+	}
+
+	public String getIdCall() {
+		return idCall;
+	}
 
 }

@@ -14,9 +14,9 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
         super(SurveyDAO.class);
     }
 
-    public SurveyDTO getSurvey(String idSupply, String idCompanySize) throws HandlerGenericException {
+    public SurveyDTO getSurvey(String idCall, String idSupply, String idCompanySize) throws HandlerGenericException {
         SurveyDAO surveyDAO = new SurveyDAO();
-        return surveyDAO.getSurvey(idSupply, idCompanySize);
+        return surveyDAO.getSurvey(idCall, idSupply, idCompanySize);
     }
 
     @Override
@@ -41,11 +41,12 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
         boolean existItem = false;
 
         List<String> filter = new ArrayList<String>();
+        filter.add(survey.getIdCall());
         filter.add(survey.getIdSupply());
         filter.add(survey.getIdCompanySize());
 
         String idItem = survey.getId();
-        String temporalIdentifier = survey.getIdSupply().concat(survey.getIdCompanySize());
+        String temporalIdentifier = survey.getIdCall().concat(survey.getIdSupply().concat(survey.getIdCompanySize()));
 
         SurveyDAO surveyDAO = new SurveyDAO();
         List<SurveyDTO> existingSurvies = surveyDAO.getByProperties(filter);
@@ -54,7 +55,7 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
             SurveyDTO existingSurvey = existingSurvies.get(0);
 
             String idItemExisting = existingSurvey.getId();
-            String temporalIdentifierExisting = existingSurvey.getIdSupply().concat(existingSurvey.getIdCompanySize());
+            String temporalIdentifierExisting = existingSurvey.getIdCall().concat(existingSurvey.getIdSupply().concat(existingSurvey.getIdCompanySize()));
 
             if ((null == idItem || idItem.isEmpty())
                     && (null != temporalIdentifierExisting && temporalIdentifier

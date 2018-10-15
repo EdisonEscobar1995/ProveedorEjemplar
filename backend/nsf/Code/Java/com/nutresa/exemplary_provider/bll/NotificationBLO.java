@@ -5,9 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openntf.domino.email.DominoEmail;
-
-import org.openntf.domino.utils.Factory;
 import com.nutresa.exemplary_provider.dal.NotificationDAO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
@@ -20,7 +17,6 @@ import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
-import com.nutresa.exemplary_provider.utils.TemplateMail;
 
 public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO> {
 
@@ -66,7 +62,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
 
             String linkOfButton = buildLinkModifiedSupplier();
-            sendNotification(sendTo, notification, true, detailUserToSend, true, linkOfButton);
+            notificationDAO.sendNotification(sendTo, notification, true, detailUserToSend, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -111,7 +107,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             sendTo.addAll(notification.getWithCopy());
         }
 
-        sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), true, linkOfButton);
+        notificationDAO.sendNotification(sendTo, notification, true, buildDetailUserToSend(idSupplier), true, linkOfButton);
     }
 
     private Map<String, String> buildDetailUserToSend(String idSupplier) throws HandlerGenericException {
@@ -126,30 +122,6 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         detail.put("Suministro", supply.getName());
         detail.put("Tamaño de empresa", companySize.getName());
         return detail;
-    }
-
-    private void sendNotification(List<String> sendTo, NotificationDTO notification, boolean requireTableDetail,
-            Map<String, String> dataDetail, boolean requireButton, String linkButton) throws HandlerGenericException {
-        NotificationDAO notificationDAO = new NotificationDAO();
-        try {
-            StringBuilder body = new StringBuilder();
-            DominoEmail email = new DominoEmail(Factory.getNamedSession(NotificationDAO.SIGNER_EMAIL, true));
-            body.append(TemplateMail.buildMessage(notification.getMessage(), requireTableDetail, dataDetail,
-                    requireButton, linkButton, notificationDAO.getPublicResource(notification.getIdBanner()),
-                    notificationDAO.getPublicResource(notification.getIdFooter())));
-            email.setTo(sendTo);
-            List<String> withCopy = notification.getWithCopy();
-            if (withCopy != null && !withCopy.isEmpty()) {
-                email.setCC(withCopy);
-            }
-            email.setSubject(notification.getSubject());
-            email.addHTML(body);
-            email.setSenderEmail(NotificationDAO.SENDER_EMAIL);
-            email.setSenderName(NotificationDAO.SENDER_NAME);
-            email.send();
-        } catch (HandlerGenericException exception) {
-            throw new HandlerGenericException(exception);
-        }
     }
 
     public void notifyToSupplierForContinue(SupplierDTO supplier) throws HandlerGenericException {
@@ -169,7 +141,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
 
             String linkOfButton = buildLinkSupplier();
-            sendNotification(emails, notification, true, detail, true, linkOfButton);
+            notificationDAO.sendNotification(emails, notification, true, detail, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -203,7 +175,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
 
             String linkOfButton = buildLinkSupplier();
-            sendNotification(emails, notification, true, detail, true, linkOfButton);
+            notificationDAO.sendNotification(emails, notification, true, detail, true, linkOfButton);
         }
     }
 
@@ -218,7 +190,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
 
             String linkOfButton = buildLinkTechnicalTeam();
-            sendNotification(emails, notification, false, null, true, linkOfButton);
+            notificationDAO.sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -236,7 +208,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             }
 
             String linkOfButton = buildLinkManagerTeam();
-            sendNotification(emails, notification, false, null, true, linkOfButton);
+            notificationDAO.sendNotification(emails, notification, false, null, true, linkOfButton);
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }
@@ -259,11 +231,11 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
      */
     protected void sendAlarm(List<String> sendTo, NotificationDTO notification, String linkButton,
             Map<String, String> detail) throws HandlerGenericException {
-
+    	NotificationDAO notificationDAO = new NotificationDAO();
         if (detail.containsKey("Usuario")) {
-            sendNotification(sendTo, notification, true, detail, true, linkButton);
+        	notificationDAO.sendNotification(sendTo, notification, true, detail, true, linkButton);
         } else {
-            sendNotification(sendTo, notification, false, detail, true, linkButton);
+        	notificationDAO.sendNotification(sendTo, notification, false, detail, true, linkButton);
         }
     }
 
@@ -281,23 +253,27 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
     }
 
     protected String buildLinkModifiedSupplier() {
-        return Common.buildPathResource() + "/dist/index.html#/modifiedSuppliers";
+        return buildLink("modifiedSuppliers");
     }
 
     protected String buildLinkSupplier() {
-        return Common.buildPathResource() + "/dist/index.html#/supplier";
+        return buildLink("supplier");
     }
 
     protected String buildLinkSurvey() {
-        return Common.buildPathResource() + "/dist/index.html#/surveys";
-    }
-
-    protected String buildLinkManagerTeam() {
-        return Common.buildPathResource() + "/dist/index.html#/managerTeamSurvey";
+        return buildLink("surveys");
     }
 
     protected String buildLinkTechnicalTeam() {
-        return Common.buildPathResource() + "/dist/index.html#/technicalTeamSurvey";
+        return buildLink("technicalTeamSurvey");
+    }
+
+    protected String buildLinkManagerTeam() {
+        return buildLink("managerTeamSurvey");
+    }
+    
+    protected String buildLink(String page) {
+    	return Common.buildPathResource() + "/redirect?Open&url="+page+"/?login";
     }
 
 }

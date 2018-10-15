@@ -57,6 +57,7 @@ public class SystemBLO extends GenericBLO<SystemDTO, SystemDAO> {
         fields.add("informationProgram");
         fields.add("messageByChangeSizeCompany");
         fields.add("inputPoll");
+        fields.add("dataPolicy");
         entityWithFields.put("System", fields);
         return entityWithFields;
     }

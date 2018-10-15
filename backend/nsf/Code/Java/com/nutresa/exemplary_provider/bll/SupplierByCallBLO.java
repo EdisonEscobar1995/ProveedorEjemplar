@@ -392,7 +392,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
             supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
-            currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize())
+            currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(currentSupplierByCall.getIdCall(), supplier.getIdSupply(), supplier.getIdCompanySize())
                     .getId());
             notification.notifyToSupplierForContinue(supplier);
             supplierBLO.update(supplier);
@@ -616,7 +616,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO supplierByCall = new SupplierByCallDTO();
         SurveyDTO survey = new SurveyDTO();
         if (null != supplier.getIdCompanySize() && !supplier.getIdCompanySize().isEmpty()) {
-            survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
+            survey = surveyBLO.getSurvey(idCall, supplier.getIdSupply(), supplier.getIdCompanySize());
         }
 
         supplierByCall = setSupplierToCall(supplier.getId());

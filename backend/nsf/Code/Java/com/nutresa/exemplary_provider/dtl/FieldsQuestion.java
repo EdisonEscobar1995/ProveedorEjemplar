@@ -1,7 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
 public enum FieldsQuestion {
-    CRITERION("idCriterion"), DIMENSION("idDimension");
+    CALL("idCall"), CRITERION("idCriterion"), DIMENSION("idDimension");
 
     private final String fieldName;
 

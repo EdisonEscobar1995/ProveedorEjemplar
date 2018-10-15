@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.dal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
@@ -108,20 +109,23 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         return response;
     }
     
-    public List<QuestionDTO> getByDimensionAndCriterion(String idDimension, String idCriterion) throws HandlerGenericException {
+    public List<QuestionDTO> getByCallDimensionAndCriterion(String idCall, String idDimension, String idCriterion) throws HandlerGenericException {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         try {
         	View view;
         	ViewEntryCollection entries;
         	
             if (idDimension.equals("") && idCriterion.equals("")) {
-            	view = getDatabase().getView("vwQuestions");
-            	entries = view.getAllEntries();
+            	view = getDatabase().getView("vwQuestionsByCall");
+            	entries = view.getAllEntriesByKey(idCall, true);
             }else{
-            	view = getDatabase().getView("vwQuestionsDimensionCriterion");
+            	view = getDatabase().getView("vwQuestionsCallDimensionCriterion");
             	List<String> keys = new ArrayList<String>();
-            	keys.add(idDimension);
-           		keys.add(idCriterion);
+            	keys.add(idCall);
+           		keys.add(idDimension);
+           		if (!idCriterion.equals("")){
+           			keys.add(idCriterion);
+           		}
             	entries = view.getAllEntriesByKey(keys, true);
             }
             
@@ -152,7 +156,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
     public List<QuestionDTO> getThemWithFilter(Map<String, String> fieldsToFilter) throws HandlerGenericException {
         List<QuestionDTO> response = new ArrayList<QuestionDTO>();
         try {
-            View view = getDatabase().getView("vwQuestions");
+            View view = getDatabase().getView("vwQuestionsByCall");
             view.FTSearch(buildCharFTSearch(fieldsToFilter, QuestionDTO.class), 0);
 
             ViewEntryCollection entries = view.getAllEntries();
@@ -165,6 +169,37 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             }
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
+        }
+
+        return response;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public QuestionDTO associateToCall(String idQuestion, String idCall, String idSurvey) throws HandlerGenericException {
+    	QuestionDTO response = null;
+    	
+    	ArrayList<String> key = new ArrayList<String>(2);
+    	key.add(idCall);
+        key.add(idQuestion);
+        View view = getDatabase().getView("vwQuestionsByCall");
+        Document document = view.getFirstDocumentByKey(key, true);
+        if (null == document){
+        	view = getDatabase().getView("vwQuestions");
+    		Document question = view.getFirstDocumentByKey(idQuestion, true);
+    		if (null != question) {
+    			document = getDatabase().createDocument();
+    			question.copyAllItems(document, true);
+    			document.replaceItemValue("idCall", idCall);
+    		}
+        }
+        if (null != document) {
+        	List<String> idSurveysInQuestion = document.getItemValue("idSurvey", Vector.class);
+            if (!idSurveysInQuestion.contains(idSurvey)){
+            	idSurveysInQuestion.add(idSurvey);
+            	document.replaceItemValue("idSurvey", idSurveysInQuestion);
+            }
+            document.save(true, false);
+            response = super.castDocument(document);
         }
 
         return response;

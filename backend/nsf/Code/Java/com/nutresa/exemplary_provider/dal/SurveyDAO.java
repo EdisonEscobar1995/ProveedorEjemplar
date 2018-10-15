@@ -18,13 +18,14 @@ public class SurveyDAO extends GenericDAO<SurveyDTO> {
         super(SurveyDTO.class);
     }
 
-    public SurveyDTO getSurvey(String idSupply, String idCompanySize) throws HandlerGenericException {
+    public SurveyDTO getSurvey(String idCall, String idSupply, String idCompanySize) throws HandlerGenericException {
         SurveyDTO response = null;
         Map<String, String> parameters = new HashMap<String, String>();
         try {
+        	parameters.put("idCall", idCall);
             parameters.put("idSupply", idSupply);
             parameters.put("idCompanySize", idCompanySize);
-            response = getBy(parameters, "vwSurveysBySupplyAndCompanySize");
+            response = getBy(parameters, "vwSurveysByCallSupplyAndCompanySize");
             if (null == response) {
                 throw new HandlerGenericException("SURVEY_DOES_NOT_EXIST");
             }
@@ -37,7 +38,7 @@ public class SurveyDAO extends GenericDAO<SurveyDTO> {
 
     public List<SurveyDTO> getByProperties(List<String> filter) throws HandlerGenericException {
         List<SurveyDTO> survey = new ArrayList<SurveyDTO>();
-        View currentView = getDatabase().getView("vwSurveysBySupplyAndCompanySize");
+        View currentView = getDatabase().getView("vwSurveysByCallSupplyAndCompanySize");
         DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
         if (null != documents) {
             for (Document document : documents) {

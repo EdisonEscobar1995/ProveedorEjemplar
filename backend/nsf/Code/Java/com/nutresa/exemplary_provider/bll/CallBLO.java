@@ -8,13 +8,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import com.nutresa.exemplary_provider.dal.CallDAO;
-import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.ManagerTeamDTO;
-import com.nutresa.exemplary_provider.dtl.OptionDTO;
-import com.nutresa.exemplary_provider.dtl.QuestionDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
@@ -32,7 +29,6 @@ import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.SummaryToLoadSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.StatisticalProgress;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
-import com.nutresa.exemplary_provider.dtl.queries.QuestionStatistic.OptionStatistic;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -173,69 +169,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 		UserBLO userBLO = new UserBLO();
 		
 		if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
-		    String idCall = parameters.get("call");
-		    String idDimension = parameters.get("idDimension");
-		    String idCriterion = parameters.get("idCriterion");
-		    
-		    OptionBLO optionBLO = new OptionBLO();
-		    List<OptionDTO> options;
-		    
-		    SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
-		    List<SupplierByCallDTO> suppliersByCall;
-		    
-		    AnswerBLO answerBLO = new AnswerBLO();
-		    AnswerDTO answerDTO;
-		    
-		    QuestionStatistic questionStatistic;
-		    OptionStatistic optionStatistic;
-		    List<OptionStatistic> optionsStatistics;
-		    Map<String, OptionStatistic> optionsMap;
-		    
 		    QuestionBLO questionBLO = new QuestionBLO();
-		    List<QuestionDTO> questions = questionBLO.getByDimensionAndCriterion(idDimension, idCriterion);
-		   
-		    for (QuestionDTO questionDTO: questions) {
-		    	options = optionBLO.getOptionsByQuestion(questionDTO.getId());
-		    	if (options.size() > 0){
-		    		questionStatistic = new QuestionStatistic();
-		    		optionsMap = new HashMap<String, OptionStatistic>();
-		    		
-		    		for (OptionDTO optionDTO: options) {
-		    			optionStatistic = questionStatistic.new OptionStatistic();
-		    			optionStatistic.setId(optionDTO.getId());
-		    			optionStatistic.setName(optionDTO.getWording());
-		    			optionStatistic.setCount(0);
-		    			optionStatistic.setPercent(0);
-			    		optionsMap.put(optionDTO.getId(), optionStatistic);
-				    }
-		    		
-		        	for (String idSurvey: questionDTO.getIdSurvey()) {
-			    		suppliersByCall = supplierByCallBLO.getByCallAndSurvey(idCall, idSurvey);
-			    		for (SupplierByCallDTO supplierByCallDTO: suppliersByCall) {
-			    			questionStatistic.setSuppliersCount(questionStatistic.getSuppliersCount() + 1);
-			    			answerDTO = answerBLO.getByQuestionAndSupplierByCall(questionDTO.getId(), supplierByCallDTO.getId());
-			    			if (null != answerDTO && optionsMap.containsKey(answerDTO.getIdOptionSupplier())){
-			    				optionStatistic = optionsMap.get(answerDTO.getIdOptionSupplier());
-			    				questionStatistic.setAnswersCount(questionStatistic.getAnswersCount() + 1);
-			    				optionStatistic.setCount(optionStatistic.getCount() + 1);
-			    			}
-		        		}
-			    	}
-		        	
-			    	optionsStatistics = new ArrayList<OptionStatistic>();
-		    		for (Map.Entry<String, OptionStatistic> entry : optionsMap.entrySet()) {
-			    		optionStatistic = entry.getValue();
-			    		optionStatistic.setPercent(Math.round(optionStatistic.getCount() / (questionStatistic.getAnswersCount() == 0.0 ? 1 : questionStatistic.getAnswersCount()) * 100));
-			    		optionsStatistics.add(optionStatistic);
-			    	}
-		    		
-		    		questionStatistic.setId(questionDTO.getId());
-		    		questionStatistic.setWording(questionDTO.getWording());
-		    		questionStatistic.setOptions(optionsStatistics);
-		    		
-		    		response.add(questionStatistic);
-		    	}
-		    }
+			response = questionBLO.getManagerReport(parameters);
 		} else {
 		    throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
 		}
@@ -264,7 +199,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         UserBLO userBLO = new UserBLO();
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
                 || userBLO.isRol(Rol.EVALUATOR.toString())) {
-            String idCall = parameters.get("call");
+            String idCall = parameters.get("idCall");
             SupplierBLO supplierBLO = new SupplierBLO();
             List<SupplierDTO> suppliers = supplierBLO.getThemByIdCallOrFiltered(idCall, parameters);
             response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);
