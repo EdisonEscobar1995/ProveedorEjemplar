@@ -205,4 +205,9 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
         return response;
     }
 
+    public boolean questionInCall (String id) throws HandlerGenericException{
+    	View view = getDatabase().getView("vwQuestionsInCall");
+    	Document document = view.getFirstDocumentByKey(id, true);
+    	return document != null;
+    }
 }

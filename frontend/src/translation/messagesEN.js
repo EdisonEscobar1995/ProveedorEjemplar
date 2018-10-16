@@ -133,7 +133,7 @@ const messages = {
   'Validation.callExists': 'Existing call',
   'Validation.dateWithoutFixing': 'The closing date of the survey is not configured',
   'Validation.dontExistInDirectory': 'Supplier don´t exist in directory',
-  'Validation.documentMultiConect': 'Data is being used',
+  'Validation.documentMultiConect': 'Data is referenced, cannot be edited or deleted',
   'Validation.undefinedSupplier': 'At least one provider must be entered',
   'Validation.callExistsActive': 'Existing active call',
   'Title.imageGallery': 'Image Gallery',

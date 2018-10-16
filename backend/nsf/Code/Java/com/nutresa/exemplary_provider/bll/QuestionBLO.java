@@ -23,11 +23,25 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
 
     @Override
     public QuestionDTO save(QuestionDTO question) throws HandlerGenericException {
-        QuestionDTO response = super.save(question);
-        cleanOptions(response);
-        OptionBLO optionBLO = new OptionBLO();
-        optionBLO.createOptions(question.getOptions(), question.getId());
-        return response;
+    	QuestionDAO questionDAO = new QuestionDAO();
+        if (!questionDAO.questionInCall(question.getId())){
+        	QuestionDTO response = super.save(question);
+	        cleanOptions(response);
+	        OptionBLO optionBLO = new OptionBLO();
+	        optionBLO.createOptions(question.getOptions(), question.getId());
+	        return response;
+        }else{
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());
+        }
+    }
+    
+    public boolean delete(Map<String, String> parameters, Boolean checkRelationship) throws HandlerGenericException {
+        QuestionDAO questionDAO = new QuestionDAO();
+        if (!questionDAO.questionInCall(parameters.get("id"))){
+        	return super.delete(parameters, checkRelationship);
+        }else{
+            throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());
+        }
     }
 
     private void cleanOptions(QuestionDTO question) throws HandlerGenericException {

@@ -134,7 +134,7 @@ const messages = {
   'Validation.callExistsActive': 'Existe una convocatoría activa',
   'Validation.dateWithoutFixing': 'La fecha de cierre de la encuesta no se encuentra configurada',
   'Validation.dontExistInDirectory': 'El proveedor no existe en el directorio',
-  'Validation.documentMultiConect': 'No se pueden eliminar los datos porque están siendo utilizados.',
+  'Validation.documentMultiConect': 'Los datos están referenciados, no es posible su edición o eliminación.',
   'Validation.undefinedSupplier': 'Se debe ingresar al menos un proveedor',
   'Title.percentageAdvance': 'Porcentaje de avance',
   'Title.imageGallery': 'Galería de imágenes',
