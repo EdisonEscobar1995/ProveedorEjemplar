@@ -176,6 +176,7 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
     
     @SuppressWarnings("unchecked")
 	public QuestionDTO associateToCall(String idQuestion, String idCall, String idSurvey) throws HandlerGenericException {
+    	
     	QuestionDTO response = null;
     	
     	ArrayList<String> key = new ArrayList<String>(2);
@@ -193,7 +194,12 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
     		}
         }
         if (null != document) {
-        	List<String> idSurveysInQuestion = document.getItemValue("idSurvey", Vector.class);
+        	List<String> idSurveysInQuestion;
+            if (!document.hasItem("idSurvey")){
+            	idSurveysInQuestion = new ArrayList<String>();
+        	}else{
+        		idSurveysInQuestion = document.getItemValue("idSurvey", Vector.class);
+        	}
             if (!idSurveysInQuestion.contains(idSurvey)){
             	idSurveysInQuestion.add(idSurvey);
             	document.replaceItemValue("idSurvey", idSurveysInQuestion);
