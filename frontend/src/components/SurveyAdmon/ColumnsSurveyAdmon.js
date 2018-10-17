@@ -9,7 +9,11 @@ const columnsData = (props, onAdd) => [{
     call = call ? call.year : '';
     return call;
   },
-  sorter: (a, b) => (a.year > b.year ? -1 : 1),
+  sorter: (a, b) => {
+    const callA = props.call.find(x => x.id === a.idCall);
+    const callB = props.call.find(x => x.id === b.idCall);
+    return callA.year - callB.year;
+  },
 }, {
   title: 'Tipo de suministro',
   key: 'idSupply',
