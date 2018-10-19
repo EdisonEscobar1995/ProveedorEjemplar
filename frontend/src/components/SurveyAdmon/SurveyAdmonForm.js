@@ -9,7 +9,10 @@ const Text = styled.div`
 `;
 
 const SurveyAdmonForm = (props) => {
-  const { loading, call, supply, companySize, callValue, supplyValue, companySizeValue } = props;
+  const {
+    loading, call, supply, companySize, setCallValue, setSupplyValue, setCompanySizeValue,
+    callValue, supplyValue, companySizeValue,
+  } = props;
   const design = { xs: 24, sm: 24, md: 8, lg: 8 };
   return (
     <Spin spinning={loading}>
@@ -17,15 +20,19 @@ const SurveyAdmonForm = (props) => {
       <Row align="middle" type="flex" gutter={24}>
         <Col {...design}>
           <Text>Convocatoria</Text>
-          <SimpleSelect options={call} handleChange={callValue} />
+          <SimpleSelect options={call} handleChange={setCallValue} value={callValue} />
         </Col>
         <Col {...design}>
           <Text>Tipo de suministro</Text>
-          <SimpleSelect options={supply} handleChange={supplyValue} />
+          <SimpleSelect options={supply} handleChange={setSupplyValue} value={supplyValue} />
         </Col>
         <Col {...design}>
           <Text>Tamaño de la empresa</Text>
-          <SimpleSelect options={companySize} handleChange={companySizeValue} />
+          <SimpleSelect
+            options={companySize}
+            handleChange={setCompanySizeValue}
+            value={companySizeValue}
+          />
         </Col>
       </Row>
     </Spin>

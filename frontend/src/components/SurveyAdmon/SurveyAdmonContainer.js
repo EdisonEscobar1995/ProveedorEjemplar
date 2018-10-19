@@ -17,9 +17,14 @@ class SurveyAdmonContainer extends Component {
     history.push(`${pathSurveyAdmonForm}`);
   }
 
+  onEdit = (record) => {
+    const { history } = this.props;
+    history.push(`${pathSurveyAdmonForm}/${record.id}`);
+  }
+
   render() {
     const template =
-    ColumnsSurveyAdmon(this.props, this.onAdd);
+    ColumnsSurveyAdmon(this.props, this.onAdd, this.onEdit);
     return (
       <SurveyAdmon
         {...this.props}

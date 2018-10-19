@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Tooltip, Button } from 'antd';
 
-const columnsData = (props, onAdd) => [{
+const columnsData = (props, onAdd, onEdit) => [{
   title: 'Convocatoria',
   key: 'idCall',
   render: (text, record) => {
@@ -34,14 +34,23 @@ const columnsData = (props, onAdd) => [{
   title: 'Acción',
   dataIndex: 'Id',
   key: 'delete',
-  render: () => (
-    <Tooltip title="Agregar">
-      <Button
-        shape="circle"
-        icon="plus"
-        onClick={() => onAdd()}
-      />
-    </Tooltip>
+  render: (text, record) => (
+    <Fragment>
+      <Tooltip title="Editar">
+        <Button
+          shape="circle"
+          icon="edit"
+          onClick={() => onEdit(record)}
+        />
+      </Tooltip>
+      <Tooltip title="Agregar">
+        <Button
+          shape="circle"
+          icon="plus"
+          onClick={() => onAdd()}
+        />
+      </Tooltip>
+    </Fragment>
   ),
 }];
 

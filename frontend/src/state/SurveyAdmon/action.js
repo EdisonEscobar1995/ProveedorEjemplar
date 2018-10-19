@@ -8,16 +8,15 @@ import {
   CLEAN_DATA,
   // ////////////////
   SEARCH_BY_DIMENSION,
-  CALL_VALUE,
-  SUPPLY_VALUE,
-  COMPANY_SIZE_VALUE,
+  SET_CALL_VALUE,
+  SET_SUPPLY_VALUE,
+  SET_COMPANY_SIZE_VALUE,
   CHANGE_SEARCH_BY_DIMENSION,
   SEARCH_QUESTION_SURVEY,
   CHANGE_SEARCH_BY_QUESTION_SURVEY,
   GET_QUESTIONS_BY_DIMENSION,
   COLLAPSE_DIMENSION_SURVEY_FORM,
   COLLAPSE_CRITERION_SURVEY_FORM,
-  GET_DIMENSIONS_SURVEY_SUCCESS,
   GET_DIMENSIONS_SURVEY_PROGRESS,
   GET_CRITERION_SURVEY_SUCCESS,
   SAVE_QUESTION_SELECTED,
@@ -28,7 +27,7 @@ import {
 } from './const';
 
 import
-{ getAllDataSurveyApi, saveSurveyApi }
+{ getSurveyByIdApi, getAllDataSurveyApi, saveSurveyApi }
   from '../../api/survey';
 import { getCallApi } from '../../api/call';
 import { getSuppliesApi } from '../../api/supply';
@@ -36,7 +35,7 @@ import { getDataCompanySizeApi } from '../../api/companySize';
 import { getQuestionsByIdDimensionApi } from '../../api/question';
 import { getDataDimensionApi } from '../../api/dimension';
 import { getAllCriterionsByDimensionApi, getAllCriterionsApi } from '../../api/criterions';
-import { requestApi } from '../../utils/action';
+import { requestApi, requestApiNotLoading } from '../../utils/action';
 import setMessage from '../Generic/action';
 // import Notification from '../../components/shared/notification';
 
@@ -100,10 +99,6 @@ function changeSearchSurvey(value) {
 // Fin Encuesta listado
 
 // Form Survey
-const getDimensionsSuccess = data => ({
-  type: GET_DIMENSIONS_SURVEY_SUCCESS,
-  data,
-});
 
 const getDimensionsProgress = () => ({
   type: GET_DIMENSIONS_SURVEY_PROGRESS,
@@ -111,25 +106,21 @@ const getDimensionsProgress = () => ({
 
 
 const getAllDataSurveyFormAdmonSuccess =
-(call, supply, companySize, allCriterions, allDimensions) => ({
+(call, supply, companySize, allCriterions, allDimensions, data,
+  id, callValue, supplyValue, companySizeValue, questionSelected) => ({
   type: GET_SURVEY_ADMON_SUCCESS,
   call,
   supply,
   companySize,
   allCriterions,
   allDimensions,
+  data,
+  id,
+  callValue,
+  supplyValue,
+  companySizeValue,
+  questionSelected,
 });
-
-const getDimensions = () => (dispatch) => {
-  requestApi(dispatch, getDimensionsProgress, getDataDimensionApi)
-    .then((response) => {
-      const { data } = response.data;
-      const dataFilter = data.map(item => ({ ...item, visible: true }));
-      dispatch(getDimensionsSuccess(dataFilter));
-    }).catch(() => {
-      dispatch(getFailedRequest());
-    });
-};
 
 const getCriterionsSuccess = (criterions, labelOptions, id, dimensionSelected) => ({
   type: GET_CRITERION_SURVEY_SUCCESS,
@@ -266,15 +257,42 @@ function deselectedByCriterion(id) {
   };
 }
 
-function getAllDataSurveyFormAdmon() {
+function classifyQuestions(allDimensions, allCriterions, questions) {
+  questions.forEach((question) => {
+    const criterion = allCriterions.find(element => element.id === question.idCriterion);
+    if (criterion.data) {
+      criterion.data.push(question);
+    } else {
+      criterion.data = [question];
+    }
+    const dimension = allDimensions.find(element => element.id === question.idDimension);
+    if (dimension.data) {
+      const criteria = dimension.data.find(element => element.id === question.idCriterion);
+      if (criteria) {
+        criteria.data.push(question);
+      } else {
+        dimension.data.push(JSON.parse(JSON.stringify(criterion)));
+      }
+    } else {
+      dimension.data = [JSON.parse(JSON.stringify(criterion))];
+      dimension.expandable = true;
+    }
+  });
+  return JSON.parse(JSON.stringify(allDimensions));
+}
+
+function getAllDataSurveyFormAdmon(idSurvey = '') {
   return (dispatch) => {
-    const promises = [
+    let promises = [
       getCallApi(),
       getSuppliesApi(),
       getDataCompanySizeApi(),
       getAllCriterionsApi(),
       getDataDimensionApi(),
     ];
+    if (idSurvey) {
+      promises.push(getSurveyByIdApi(idSurvey));
+    }
     requestApi(dispatch, getDataSurveyProgress, axios.all, promises).then((arrayResponse) => {
       let call = arrayResponse[0].data.data;
       call = call.map(item => ({
@@ -285,8 +303,52 @@ function getAllDataSurveyFormAdmon() {
       const companySize = arrayResponse[2].data.data;
       const allCriterions = arrayResponse[3].data.data;
       const allDimensions = arrayResponse[4].data.data;
-      dispatch(getAllDataSurveyFormAdmonSuccess(
-        call, supply, companySize, allCriterions, allDimensions));
+
+      promises = [];
+      const dataFilter = allDimensions.map((item) => {
+        promises.push(getQuestionsByIdDimensionApi(item.id));
+        return ({ ...item, visible: true });
+      });
+
+      let id = '';
+      let callValue = '';
+      let supplyValue = '';
+      let companySizeValue = '';
+      let questionSelected = [];
+      let surveyData = {};
+      if (idSurvey) {
+        surveyData = arrayResponse[5].data.data;
+        id = surveyData.id;
+        callValue = surveyData.idCall;
+        supplyValue = surveyData.idSupply;
+        companySizeValue = surveyData.idCompanySize;
+        questionSelected = classifyQuestions(allDimensions, allCriterions, surveyData.question);
+      }
+
+      return requestApiNotLoading(dispatch, axios.all, promises).then((responses) => {
+        responses.forEach((response, index) => {
+          const { data } = response.data;
+          const questionsByDimension = [];
+          data.forEach((question) => {
+            if (!idSurvey || (
+              idSurvey && !surveyData.question.find(element => element.id === question.id))
+            ) {
+              questionsByDimension.push({
+                ...question,
+                visible: true,
+                expandable: false,
+              });
+            }
+          });
+          dataFilter[index].data = JSON.parse(JSON.stringify(questionsByDimension));
+        });
+
+        dispatch(getAllDataSurveyFormAdmonSuccess(
+          call, supply, companySize, allCriterions, allDimensions, dataFilter,
+          id, callValue, supplyValue, companySizeValue, questionSelected));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
     }).catch((err) => {
       dispatch(getFailedRequest(err));
     });
@@ -350,18 +412,18 @@ function collapseCriterion(data) {
   };
 }
 
-const callValue = value => ({
-  type: CALL_VALUE,
+const setCallValue = value => ({
+  type: SET_CALL_VALUE,
   value,
 });
 
-const supplyValue = value => ({
-  type: SUPPLY_VALUE,
+const setSupplyValue = value => ({
+  type: SET_SUPPLY_VALUE,
   value,
 });
 
-const companySizeValue = value => ({
-  type: COMPANY_SIZE_VALUE,
+const setCompanySizeValue = value => ({
+  type: SET_COMPANY_SIZE_VALUE,
   value,
 });
 
@@ -374,6 +436,7 @@ function saveDataSurvey() {
 function saveSurvey(next, redirect) {
   return (dispatch, getState) => {
     const surveyAdmon = getState().surveyAdmon;
+    const id = surveyAdmon.id;
     const idCall = surveyAdmon.callValue;
     if (idCall === '') {
       dispatch(setMessage('Debe seleccionar una convocatoria', 'warning'));
@@ -394,7 +457,7 @@ function saveSurvey(next, redirect) {
       return;
     }
     const data = {
-      id: '',
+      id,
       idCall,
       idSupply,
       idCompanySize,
@@ -548,13 +611,12 @@ export {
   getQuestionsByDimension,
   collapseDimension,
   collapseCriterion,
-  getDimensions,
   getCriterionByDimension,
   dropCriterionByDimension,
   questionSelected,
   filterByCriterion,
   deselectedByCriterion,
-  callValue,
-  supplyValue,
-  companySizeValue,
+  setCallValue,
+  setSupplyValue,
+  setCompanySizeValue,
 };
