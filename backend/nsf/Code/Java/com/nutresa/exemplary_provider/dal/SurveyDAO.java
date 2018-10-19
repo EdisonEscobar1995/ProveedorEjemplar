@@ -48,5 +48,11 @@ public class SurveyDAO extends GenericDAO<SurveyDTO> {
 
         return survey;
     }
+    
+    public boolean surveyStarted (String id) throws HandlerGenericException{
+    	View view = getDatabase().getView("vwAnswersBySurvey");
+    	Document document = view.getFirstDocumentByKey(id, true);
+    	return document != null;
+    }
 
 }

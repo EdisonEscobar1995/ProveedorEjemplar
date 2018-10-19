@@ -1,10 +1,10 @@
 package com.nutresa.exemplary_provider.bll;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.SurveyDAO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
+import com.nutresa.exemplary_provider.dtl.QuestionDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -14,6 +14,15 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
         super(SurveyDAO.class);
     }
 
+    public SurveyDTO get(String id) throws HandlerGenericException {
+    	SurveyDTO surveyDTO = new SurveyDTO();
+    	surveyDTO = super.get(id);
+    	QuestionBLO questionBLO = new QuestionBLO();
+    	List<QuestionDTO> questions = questionBLO.getQuestionsBySurvey(surveyDTO.getId());
+     	surveyDTO.setQuestion(questions);
+    	return surveyDTO;
+    }
+    
     public SurveyDTO getSurvey(String idCall, String idSupply, String idCompanySize) throws HandlerGenericException {
         SurveyDAO surveyDAO = new SurveyDAO();
         return surveyDAO.getSurvey(idCall, idSupply, idCompanySize);
@@ -23,9 +32,12 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
     public SurveyDTO save(SurveyDTO survey) throws HandlerGenericException {
         SurveyDTO response = null;
         QuestionBLO questionBLO = new QuestionBLO();
-        if (null != survey.getIdSupply() && null != survey.getIdCompanySize()) {
+        SurveyDAO surveyDAO = new SurveyDAO();
+        if (null != survey.getIdCall() && null != survey.getIdSupply() && null != survey.getIdCompanySize()) {
             if (existSurvey(survey)) {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
+            } else if (surveyDAO.surveyStarted(survey.getId())) {
+                throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());
             } else {
                 response = super.save(survey);
                 response.setQuestion(questionBLO.associateToSurvey(survey.getQuestion(), response.getId()));
@@ -38,38 +50,14 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
     }
 
     private boolean existSurvey(SurveyDTO survey) throws HandlerGenericException {
-        boolean existItem = false;
-
-        List<String> filter = new ArrayList<String>();
-        filter.add(survey.getIdCall());
-        filter.add(survey.getIdSupply());
-        filter.add(survey.getIdCompanySize());
-
-        String idItem = survey.getId();
-        String temporalIdentifier = survey.getIdCall().concat(survey.getIdSupply().concat(survey.getIdCompanySize()));
-
         SurveyDAO surveyDAO = new SurveyDAO();
-        List<SurveyDTO> existingSurvies = surveyDAO.getByProperties(filter);
-
-        if (!existingSurvies.isEmpty()) {
-            SurveyDTO existingSurvey = existingSurvies.get(0);
-
-            String idItemExisting = existingSurvey.getId();
-            String temporalIdentifierExisting = existingSurvey.getIdCall().concat(existingSurvey.getIdSupply().concat(existingSurvey.getIdCompanySize()));
-
-            if ((null == idItem || idItem.isEmpty())
-                    && (null != temporalIdentifierExisting && temporalIdentifier
-                            .equalsIgnoreCase(temporalIdentifierExisting))) {
-                existItem = true;
-            } else {
-                if (null != idItem && null != idItemExisting && !idItem.equals(idItemExisting)
-                        && temporalIdentifier.equalsIgnoreCase(temporalIdentifierExisting)) {
-                    existItem = true;
-                }
-            }
+        SurveyDTO surveyDTO = surveyDAO.getSurvey(survey.getIdCall(), survey.getIdSupply(), survey.getIdCompanySize());
+        
+        if (null != surveyDTO && !survey.getId().equals(surveyDTO.getId())) {
+        	return true;
         }
-
-        return existItem;
+        
+        return false;
     }
 
 }

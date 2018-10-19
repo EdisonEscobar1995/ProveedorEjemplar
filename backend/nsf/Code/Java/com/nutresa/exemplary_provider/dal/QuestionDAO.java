@@ -82,6 +82,23 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
 
         return response;
     }
+    
+    public List<QuestionDTO> getQuestionsBySurvey(String idSurvey)
+    throws HandlerGenericException {
+		List<QuestionDTO> response = new ArrayList<QuestionDTO>();
+		try {
+		    View currentView = getDatabase().getView("vwQuestionsBySurvey");
+		    DocumentCollection documents = currentView.getAllDocumentsByKey(idSurvey, true);
+		    for (Document document : documents) {
+		        QuestionDTO question = castDocument(document);
+		        response.add(question);
+		    }
+		} catch (Exception exception) {
+		    throw new HandlerGenericException(exception);
+		}
+		
+		return response;
+	}
 
     public List<QuestionDTO> getQuestionsBySurvey(String idDimension, String idSupplierByCall)
             throws HandlerGenericException {
