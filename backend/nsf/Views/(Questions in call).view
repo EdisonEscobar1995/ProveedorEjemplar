@@ -1,19 +1,18 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Questions in call)' alias='Question|vwQuestionsInCall' xmlns='http://www.lotus.com/dxl'
  version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' showinmenu='false'
- noreplace='true' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
- onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
- showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
- showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
- rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
- boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
- allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
- uniquekeys='false'>
-<noteinfo noteid='dd9f6' unid='3FB831FD51E2B3630525832800049A1B' sequence='4'>
+ publicaccess='false' designerversion='8.5.3' unreadmarks='none' onopengoto='lastopened'
+ onrefresh='displayindicator' headers='beveled' opencollapsed='false' showresponsehierarchy='true'
+ showmargin='true' shrinkrows='false' extendlastcolumn='false' showhierarchies='false'
+ unreadcolor='black' rowlinecount='1' headerlinecount='1' rowspacing='1' bgcolor='white'
+ totalscolor='black' headerbgcolor='white' boldunreadrows='false' evaluateactions='false'
+ allownewdocuments='false' allowcustomizations='true' hidemarginborder='false'
+ marginwidth='0px' marginbgcolor='white' uniquekeys='false'>
+<noteinfo noteid='dd9f6' unid='3FB831FD51E2B3630525832800049A1B' sequence='7'>
 <created><datetime>20181015T195015,95-05</datetime></created>
-<modified><datetime>20181015T195354,81-05</datetime></modified>
-<revised><datetime>20181015T195354,80-05</datetime></revised>
-<lastaccessed><datetime>20181015T195354,81-05</datetime></lastaccessed>
+<modified><datetime>20181019T072548,09-05</datetime></modified>
+<revised><datetime>20181019T072548,08-05</datetime></revised>
+<lastaccessed><datetime>20181019T072548,09-05</datetime></lastaccessed>
 <addedtofile><datetime>20181015T195015,97-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
