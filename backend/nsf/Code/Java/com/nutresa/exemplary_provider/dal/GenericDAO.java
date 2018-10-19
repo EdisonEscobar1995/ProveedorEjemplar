@@ -100,10 +100,22 @@ public abstract class GenericDAO<T> {
         return getBy(filter);
     }
     
+    public T getBy(String key) throws HandlerGenericException {
+    	View view = database.getView(this.entityView);
+        Document doc = view.getFirstDocumentByKey(key, true);
+        return this.castDocument(doc);
+    }
+    
     public T getBy(List<String> key) throws HandlerGenericException {
     	View view = database.getView(this.entityView);
         Document doc = view.getFirstDocumentByKey(key, true);
         return this.castDocument(doc);
+    }
+    
+    public List<T> getAllBy(String key) throws HandlerGenericException {
+    	View view = database.getView(this.entityView);
+        ViewEntryCollection vec = view.getAllEntriesByKey(key, true);
+        return this.mapDocuments(vec);
     }
     
     public List<T> getAllBy(List<String> key) throws HandlerGenericException {

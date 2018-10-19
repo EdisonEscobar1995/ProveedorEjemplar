@@ -275,7 +275,6 @@ function classifyQuestions(allDimensions, allCriterions, questions) {
       }
     } else {
       dimension.data = [JSON.parse(JSON.stringify(criterion))];
-      dimension.expandable = true;
     }
   });
   return JSON.parse(JSON.stringify(allDimensions));
@@ -302,12 +301,14 @@ function getAllDataSurveyFormAdmon(idSurvey = '') {
       const supply = arrayResponse[1].data.data;
       const companySize = arrayResponse[2].data.data;
       const allCriterions = arrayResponse[3].data.data;
-      const allDimensions = arrayResponse[4].data.data;
+      const allDimensions = arrayResponse[4].data.data.map(
+        dimension => ({ ...dimension, visible: true, expandable: true, data: [] }),
+      );
 
       promises = [];
       const dataFilter = allDimensions.map((item) => {
         promises.push(getQuestionsByIdDimensionApi(item.id));
-        return ({ ...item, visible: true });
+        return ({ ...item });
       });
 
       let id = '';
@@ -315,14 +316,19 @@ function getAllDataSurveyFormAdmon(idSurvey = '') {
       let supplyValue = '';
       let companySizeValue = '';
       let questionSelected = [];
-      let surveyData = {};
+      let surveyQuestions = [];
       if (idSurvey) {
-        surveyData = arrayResponse[5].data.data;
+        const surveyData = arrayResponse[5].data.data;
         id = surveyData.id;
         callValue = surveyData.idCall;
         supplyValue = surveyData.idSupply;
         companySizeValue = surveyData.idCompanySize;
-        questionSelected = classifyQuestions(allDimensions, allCriterions, surveyData.question);
+        surveyQuestions = surveyData.question.map(question => ({
+          ...question,
+          visible: true,
+          expandable: false,
+        }));
+        questionSelected = classifyQuestions(allDimensions, allCriterions, surveyQuestions);
       }
 
       return requestApiNotLoading(dispatch, axios.all, promises).then((responses) => {
@@ -330,9 +336,7 @@ function getAllDataSurveyFormAdmon(idSurvey = '') {
           const { data } = response.data;
           const questionsByDimension = [];
           data.forEach((question) => {
-            if (!idSurvey || (
-              idSurvey && !surveyData.question.find(element => element.id === question.id))
-            ) {
+            if (!surveyQuestions.find(element => element.id === question.id)) {
               questionsByDimension.push({
                 ...question,
                 visible: true,

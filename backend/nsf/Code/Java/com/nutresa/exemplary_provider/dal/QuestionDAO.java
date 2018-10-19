@@ -220,12 +220,37 @@ public class QuestionDAO extends GenericDAO<QuestionDTO> {
             if (!idSurveysInQuestion.contains(idSurvey)){
             	idSurveysInQuestion.add(idSurvey);
             	document.replaceItemValue("idSurvey", idSurveysInQuestion);
+            	document.save(true, false);
             }
-            document.save(true, false);
             response = super.castDocument(document);
         }
 
         return response;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void removeUnusedQuestions(String idSurvey, List<QuestionDTO> questions) throws HandlerGenericException {
+    	View view = getDatabase().getView("vwQuestionsBySurvey");
+    	DocumentCollection dc = view.getAllDocumentsByKey(idSurvey);
+    	boolean found;
+    	for (Document document: dc) {
+    		found = false;
+    		for (QuestionDTO question: questions) {
+    			if (question.getId().equals(document.getItemValueString("id"))){
+    				found = true;
+    			}
+    		}
+    		if (!found) {
+    			List<String> surveys = document.getItemValue("idSurvey", Vector.class);
+    			surveys.remove(idSurvey);
+    			document.replaceItemValue("idSurvey", surveys);
+    			if (surveys.size() > 0){
+    				document.save(true, false);
+    			} else {
+    				document.remove(true);
+    			}
+    		}
+    	}
     }
 
     public boolean questionInCall (String id) throws HandlerGenericException{

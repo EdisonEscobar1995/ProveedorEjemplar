@@ -174,7 +174,7 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
         		response.add(questionDTO);
         	}
         }
-
+        questionDAO.removeUnusedQuestions(idSurvey, questions);
         return response;
     }
     
