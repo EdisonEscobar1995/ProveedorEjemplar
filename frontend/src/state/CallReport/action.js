@@ -28,7 +28,7 @@ const filterCallReport = data => ({
 });
 
 const getParticipantsByYear = year => (dispatch) => {
-  requestApi(dispatch, getDataCallReportProgress, getMasterApi, ['Country'])
+  requestApi(dispatch, getDataCallReportProgress, getMasterApi, ['Country', 'Dimension'])
     .then((masterResponse) => {
       requestApi(dispatch, getDataCallReportProgress, getParticipantsByYearApi, year)
         .then((response) => {
@@ -43,6 +43,7 @@ const getParticipantsByYear = year => (dispatch) => {
             { id: 'empty', name: 'Sin respuesta' },
           ];
           data.masters.OriginCountry = masterResponse.data.data.Country;
+          data.masters.Dimension = masterResponse.data.data.Dimension;
           dispatch(getDataCallReportSuccess(data));
         }).catch(() => {
           dispatch(getFailedRequest());

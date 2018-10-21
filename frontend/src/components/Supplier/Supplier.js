@@ -4,7 +4,6 @@ import GeneralForm from './GeneralForm';
 import Question from './Question';
 import SurveyText from './SurveyText';
 import validateFields from './validateFields';
-import message from '../shared/message';
 import Title from '../shared/Title';
 import { ContentStyle, TabsStyle } from '../../utils/style';
 
@@ -63,7 +62,7 @@ class Supplier extends Component {
       }
     }
     const mapDimensions = dimensions.map((dimension) => {
-      const { call, saveAnswer, system, rules } = this.props;
+      const { call, validateQuestions, saveAnswer, system, rules } = this.props;
       const { id, idSurvey } = call;
       return {
         name: dimension.name,
@@ -76,16 +75,15 @@ class Supplier extends Component {
           criterions={dimension.criterions}
           saveAnswer={saveAnswer}
           rules={rules}
-          validateQuestions={this.validateQuestions}
+          validateQuestions={validateQuestions}
           next={this.next}
         />,
-        stepContent: this.getProgress(dimension.id, dimension.name),
+        stepContent: this.getProgress(dimension.percent, dimension.name),
       };
     });
     return steps.concat(mapDimensions);
   }
-  getProgress = (dimensionId, name) => {
-    const percent = this.calculatePercent(dimensionId);
+  getProgress = (percent, name) => {
     const status = 'success';
     return (
       <div>
@@ -138,109 +136,6 @@ class Supplier extends Component {
       this.props.saveDataCallSupplier(newSupplier);
     }
   }
-  validateQuestions = () => {
-    const dimesions = [...this.props.dimensions];
-    let send = true;
-    dimesions.forEach((dimension) => {
-      if (dimension.criterions.length === 0) {
-        send = send && false;
-      } else {
-        dimension.criterions.forEach((criteria) => {
-          criteria.questions.forEach((question) => {
-            let errors = {};
-            if (question.visible && question.required) {
-              if (this.isAnswered(question)) {
-                if (question.requireAttachment) {
-                  question.answer.forEach((answer) => {
-                    if (answer.attachment) {
-                      if (answer.attachment.length === 0) {
-                        send = send && false;
-                        errors = {
-                          attachments: true,
-                        };
-                      }
-                    } else {
-                      send = send && false;
-                      errors = {
-                        attachments: true,
-                      };
-                    }
-                  });
-                }
-              } else {
-                send = send && false;
-                errors = {
-                  answers: true,
-                };
-                if (question.requireAttachment) {
-                  errors.attachments = true;
-                }
-              }
-            }
-            question.errors = errors;
-          });
-        });
-      }
-    });
-
-    if (send) {
-      this.props.finishSurvey();
-    } else {
-      this.openNotification();
-    }
-
-    this.props.reloadDimensions(dimesions);
-  }
-  openNotification = () => {
-    message({ text: 'Validation.verifyDimensions', type: 'info' });
-  };
-
-  calculatePercent = (idDimension) => {
-    let totalQuestions = 0;
-    let responsedQuestion = 0;
-    let totalResponses = 0;
-    let total;
-    const actualDimension = this.props.dimensions.find(dimension => dimension.id === idDimension);
-    if (actualDimension.criterions.length > 0) {
-      actualDimension.criterions.forEach((criteria) => {
-        criteria.questions.forEach((question) => {
-          const isAnswered = this.isAnswered(question);
-          if (question.visible && question.required) {
-            totalQuestions += 1;
-            if (isAnswered) {
-              responsedQuestion += 1;
-            }
-          }
-          if (isAnswered) {
-            totalResponses += 1;
-          }
-        });
-      });
-      if (totalQuestions > 0) {
-        total = (responsedQuestion * 100) / totalQuestions;
-      } else if (totalResponses > 0) {
-        total = 100;
-      } else {
-        total = 0;
-      }
-    } else {
-      total = 0;
-    }
-    return Math.round(total);
-  }
-
-  isAnswered = (question) => {
-    const { stateData, rules } = this.props;
-    let optionFieldName = 'idOptionSupplier';
-    let responseFieldName = 'responseSupplier';
-    if ((stateData.shortName === 'NOT_STARTED_EVALUATOR' ||
-    stateData.shortName === 'EVALUATOR') && rules.evaluator.show) {
-      optionFieldName = 'idOptionEvaluator';
-      responseFieldName = 'responseEvaluator';
-    }
-    return question.answer.length > 0 &&
-    (question.answer[0][optionFieldName] || question.answer[0][responseFieldName]);
-  };
 
   next = () => {
     window.scrollTo(0, 0);

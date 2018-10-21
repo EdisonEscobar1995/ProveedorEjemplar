@@ -19,8 +19,7 @@ import {
   saveAnswer,
   addDataCustomer,
   deleteDataCustomer,
-  reloadDimensions,
-  finishSurvey,
+  validateQuestions,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,
@@ -122,11 +121,8 @@ const mapDispatchToProps = dispatch => ({
   deleteData: (data, index) => {
     dispatch(deleteDataCustomer(data, index));
   },
-  reloadDimensions: (dimensions) => {
-    dispatch(reloadDimensions(dimensions));
-  },
-  finishSurvey: () => {
-    dispatch(finishSurvey());
+  validateQuestions: (onFail) => {
+    dispatch(validateQuestions(onFail));
   },
   setNumberOfDirectEmployees: (value) => {
     dispatch(setNumberOfDirectEmployees(value));

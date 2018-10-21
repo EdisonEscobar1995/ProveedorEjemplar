@@ -7,6 +7,7 @@ import SubTitle from '../shared/SubTitle';
 import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
 import { baseUrl } from '../../utils/api';
+import message from '../shared/message';
 
 const { TextArea } = Input;
 const { Column } = Table;
@@ -286,6 +287,9 @@ class Question extends Component {
     }
     return columns;
   }
+  openNotification = () => {
+    message({ text: 'Validation.verifyDimensions', type: 'info' });
+  };
   render() {
     const { criterions, rules, next } = this.props;
     const disabled = rules.supplier.readOnly && rules.evaluator.readOnly;
@@ -303,7 +307,7 @@ class Question extends Component {
           key: 1,
           text: 'Button.send',
           buttoncolor: 'buttonThird',
-          onClick: this.props.validateQuestions,
+          onClick: () => this.props.validateQuestions(this.openNotification),
           showConfirm: true,
           messageConfirm: 'Survey.confirm',
         },

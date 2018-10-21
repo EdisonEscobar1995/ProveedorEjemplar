@@ -76,9 +76,14 @@ const formData = ({
       messages['Supplier.nameWhoSayDontParticipate'],
       messages['Supplier.emailWhoSayDontParticipate'],
     ];
+    if (masters.Dimension) {
+      masters.Dimension.forEach((dimension) => {
+        header.push(`Dimensión ${dimension.name}`);
+      });
+    }
     const body = suppliers ? suppliers.filter(item => item.visible).map((record) => {
       const enter = /\r\n|\r|\n|\t/g;
-      return [
+      const row = [
         years[0],
         record.businessName,
         record.idCompanySize ? masters.CompanySize.find(item => item.id === record.idCompanySize).name : '',
@@ -142,6 +147,15 @@ const formData = ({
         suppliersByCall.find(item => item.idSupplier === record.id).nameWhoSayDontParticipate,
         suppliersByCall.find(item => item.idSupplier === record.id).emailWhoSayDontParticipate,
       ];
+      masters.Dimension.forEach((dimension) => {
+        const idsDimension =
+          suppliersByCall.find(item => item.idSupplier === record.id).idsDimension || [];
+        const percentsDimension =
+          suppliersByCall.find(item => item.idSupplier === record.id).percentsDimension || [];
+        const index = idsDimension.indexOf(dimension.id);
+        row.push(index > -1 ? `${percentsDimension[index]}%` : 0);
+      });
+      return row;
     }) : [[]];
     exportData([{
       data: [header, ...body],
