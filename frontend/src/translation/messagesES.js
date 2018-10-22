@@ -98,6 +98,7 @@ const messages = {
   'Survey.error': 'Error',
   'Table.help': 'Ayuda',
   'Table.question': 'Pregunta',
+  'Table.previousAnswer': 'Respuesta de la encuesta anterior',
   'Table.providerAnswer': 'Respuesta del proveedor',
   'Table.providerComment': 'Comentario',
   'Table.support': 'Soporte',

@@ -10,10 +10,12 @@ import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
+import com.nutresa.exemplary_provider.bll.OptionBLO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.FieldsQuestion;
+import com.nutresa.exemplary_provider.dtl.OptionDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -66,18 +68,34 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
             View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");
             DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
             AnswerDAO answerDAO = new AnswerDAO();
+            AnswerDTO previousAnswer;
             AnswerDTO answerDTO;
+            OptionBLO optionBLO = new OptionBLO();
+            OptionDTO optionDTO;
             
             if (documents.getCount() > 0){
                 for (Document document : documents) {
-                	answerDTO = castDocument(document);
-                	answerDTO.setAttachment(copyPreviousAttachment(answerDTO));
-                    
-                    answerDTO.setId("");
+                	previousAnswer = castDocument(document);
+                	answerDTO = new AnswerDTO();
+                	
+                	answerDTO.setIdSupplierByCall(supplierByCallDTO.getId());
+                	answerDTO.setIdSurvey(supplierByCallDTO.getIdSurvey());
+                    answerDTO.setIdQuestion(previousAnswer.getIdQuestion());
+                    answerDTO.setCommentSupplier(previousAnswer.getCommentSupplier());
                     answerDTO.setDateResponseSupplier(new Date());
-                    answerDTO.setIdSupplierByCall(supplierByCallDTO.getId());
-                    answerDTO.setIdSurvey(supplierByCallDTO.getIdSurvey());
+                    
+                    if (!previousAnswer.getIdOptionSupplier().equals("")){
+                    	optionDTO = optionBLO.get(previousAnswer.getIdOptionSupplier());
+                    	if (null != optionDTO){
+                    		answerDTO.setPreviousAnswer(optionDTO.getWording());
+                    	}
+                    } else {
+                    	answerDTO.setPreviousAnswer(previousAnswer.getResponseSupplier());
+                    }
+                    
+                    answerDTO.setAttachment(copyPreviousAttachment(previousAnswer));
                     answerDTO.autoSetIdAttachment();
+                    
                 	answerDAO.save(answerDTO);
                 }
             }
@@ -86,10 +104,10 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         }
     }
     
-    private List<AttachmentDTO> copyPreviousAttachment (AnswerDTO answers)throws HandlerGenericException {
+    private List<AttachmentDTO> copyPreviousAttachment (AnswerDTO answer)throws HandlerGenericException {
     	List<AttachmentDTO> response = new ArrayList<AttachmentDTO>();
         AttachmentDAO attachmentDAO = new AttachmentDAO();
-        for (String idAttachment : answers.getIdAttachment()) {
+        for (String idAttachment : answer.getIdAttachment()) {
             AttachmentDTO attachmentDTO = attachmentDAO.copyAttachment(idAttachment);
             if (null != attachmentDTO) {
                 response.add(attachmentDTO);

@@ -36,8 +36,18 @@ public class AnswerDTO {
     private List<AttachmentDTO> attachment;
     @Expose
     private List<String> idsToDelete;
+    @Expose
+    private String previousAnswer; 
 
-    public String getIdSupplierByCall() {
+    public String getPreviousAnswer() {
+		return previousAnswer;
+	}
+
+	public void setPreviousAnswer(String previousAnswer) {
+		this.previousAnswer = previousAnswer;
+	}
+
+	public String getIdSupplierByCall() {
         return idSupplierByCall;
     }
 

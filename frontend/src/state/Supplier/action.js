@@ -803,7 +803,7 @@ const finishSurvey = () => (
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
       .then(() => {
         dispatch(setMessage('Supplier.surveySuccess', 'success'));
-        if (stateData.shorName === 'SUPPLIER') {
+        if (stateData.shortName === 'SUPPLIER') {
           dispatch(finishSurveySupplierSucess());
         } else {
           dispatch(finishSurveyEvaluatorSucess());

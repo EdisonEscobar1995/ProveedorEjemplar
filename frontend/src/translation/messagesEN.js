@@ -98,6 +98,7 @@ const messages = {
   'Survey.error': 'Error',
   'Table.help': 'Help',
   'Table.question': 'Question',
+  'Table.previousAnswer': 'Previous survey\'s answer',
   'Table.providerAnswer': 'Supplier response',
   'Table.providerComment': 'Comment',
   'Table.support': 'Support',

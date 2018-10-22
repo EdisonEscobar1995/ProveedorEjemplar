@@ -157,7 +157,7 @@ class Question extends Component {
     );
   }
   getColumns = () => {
-    const { rules } = this.props;
+    const { rules, stateData } = this.props;
     let columns = [
       {
         title: <FormattedMessage id="Table.help" />,
@@ -269,6 +269,20 @@ class Question extends Component {
         },
       },
     ];
+    if (stateData.shortName === 'NOT_STARTED' || stateData.shortName === 'SUPPLIER') {
+      columns.splice(2, 0, {
+        title: <FormattedMessage id="Table.previousAnswer" />,
+        width: '15%',
+        dataIndex: 'previousAnswer',
+        key: 'previousAnswer',
+        render: (options, record) => {
+          if (record.answer.length > 0) {
+            return record.answer[0].previousAnswer;
+          }
+          return null;
+        },
+      });
+    }
     if (rules.evaluator.show) {
       columns = columns.concat({
         title: <FormattedMessage id="Table.evaluatorAnswer" />,
