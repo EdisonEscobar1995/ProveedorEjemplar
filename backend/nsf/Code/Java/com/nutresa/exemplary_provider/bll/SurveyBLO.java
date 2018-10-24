@@ -25,7 +25,11 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
     
     public SurveyDTO getSurvey(String idCall, String idSupply, String idCompanySize) throws HandlerGenericException {
         SurveyDAO surveyDAO = new SurveyDAO();
-        return surveyDAO.getSurvey(idCall, idSupply, idCompanySize);
+        SurveyDTO surveyDTO = surveyDAO.getSurvey(idCall, idSupply, idCompanySize);
+        if (null == surveyDTO) {
+            throw new HandlerGenericException("SURVEY_DOES_NOT_EXIST");
+        }
+        return surveyDTO;
     }
 
     @Override

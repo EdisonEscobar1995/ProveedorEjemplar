@@ -19,18 +19,12 @@ public class SurveyDAO extends GenericDAO<SurveyDTO> {
     }
 
     public SurveyDTO getSurvey(String idCall, String idSupply, String idCompanySize) throws HandlerGenericException {
-        SurveyDTO response = null;
         Map<String, String> parameters = new HashMap<String, String>();
         try {
         	parameters.put("idCall", idCall);
             parameters.put("idSupply", idSupply);
             parameters.put("idCompanySize", idCompanySize);
-            response = getBy(parameters, "vwSurveysByCallSupplyAndCompanySize");
-            if (null == response) {
-                throw new HandlerGenericException("SURVEY_DOES_NOT_EXIST");
-            }
-
-            return response;
+            return getBy(parameters, "vwSurveysByCallSupplyAndCompanySize");
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }

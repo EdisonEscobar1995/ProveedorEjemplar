@@ -308,7 +308,7 @@ function getAllDataSurveyFormAdmon(idSurvey = '') {
       promises = [];
       const dataFilter = allDimensions.map((item) => {
         promises.push(getQuestionsByIdDimensionApi(item.id));
-        return ({ ...item });
+        return ({ ...item, expandable: false });
       });
 
       let id = '';
