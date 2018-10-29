@@ -61,7 +61,7 @@ class General extends Component {
         content = (
           <div>
             <SubTitle text="SupplierByCall.dataPolicy" />
-            <Paragraph text={system.dataPolicy} />
+            {system.dataPolicy.split('\r\n').map(item => <div>{item}<br /></div>)}
             <Row justify="center" align="middle" type="flex" gutter={24}>
               <Col>
                 <ButtonStyle
