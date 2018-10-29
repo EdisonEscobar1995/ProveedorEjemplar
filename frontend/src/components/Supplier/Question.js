@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Table, Tooltip, Button, Input, Radio, Icon } from 'antd';
 import styled from 'styled-components';
 import Upload from '../shared/Upload';
@@ -305,7 +305,7 @@ class Question extends Component {
     message({ text: 'Validation.verifyDimensions', type: 'info' });
   };
   render() {
-    const { criterions, rules, next } = this.props;
+    const { criterions, rules, stateData, next } = this.props;
     const disabled = rules.supplier.readOnly && rules.evaluator.readOnly;
     const columns = this.getColumns();
     let buttons = [];
@@ -339,8 +339,15 @@ class Question extends Component {
                     <SubtitleStyle>{criteria.name}</SubtitleStyle>
                   </div>
                   <div>
-                    <FormattedMessage id="Table.criteriaScore" />
-                    {': '}{criteria.score}{'%'}
+                    {
+                      stateData.shortName === 'ENDED_MANAGER_TEAM' &&
+                      <Fragment>
+                        <FormattedMessage id="Table.criteriaScore" />
+                        {
+                          criteria.score && `: ${criteria.score}%`
+                        }
+                      </Fragment>
+                    }
                   </div>
                 </SectionStyle>
                 <TableStyle

@@ -541,7 +541,7 @@ const calculateCriterionScore = (questions) => {
   let found = false;
   questions.forEach((question) => {
     if (question.answer.length > 0) {
-      const answer = question.answer[0].idOptionSupplier;
+      const answer = question.answer[0].idOptionEvaluator;
       if (answer) {
         found = true;
         const selectedOption = question.options.find(
@@ -554,7 +554,7 @@ const calculateCriterionScore = (questions) => {
     }
     return question;
   });
-  if (found) {
+  if (found && max > 0) {
     score = ((total / max) * 100).toFixed(2);
   }
   return score;
