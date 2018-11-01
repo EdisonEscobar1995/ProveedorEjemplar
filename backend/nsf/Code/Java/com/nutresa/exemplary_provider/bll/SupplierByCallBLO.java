@@ -646,10 +646,10 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      *         documentos, de lo contrario <code>false</code>
      * @throws HandlerGenericException
      */
-    public SupplierByCallDTO delete(String idSupplierByCall) throws HandlerGenericException {
+    public boolean delete(String idSupplierByCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         supplierByCallDAO.deleteAllReference(idSupplierByCall);
-        return new SupplierByCallDTO();
+        return supplierByCallDAO.delete(idSupplierByCall, false);
     }
 
     /**
