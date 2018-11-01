@@ -38,6 +38,19 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
             throw new HandlerGenericException(exception);
         }
     }
+    
+    public SupplierByCallDTO getBySupplierAndCall(String idSupplier, String idCall) throws HandlerGenericException {
+        try {
+            View currentView = getDatabase().getView("vwSuppliersByCallByIdSupplierAndIdCall");
+            List<String> filter = new ArrayList<String>();
+            filter.add(idSupplier);
+            filter.add(idCall);
+            Document document = currentView.getFirstDocumentByKey(filter, true);
+            return castDocument(document);
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
 
     public List<SupplierDTO> getSuppliersByCallDontInvited(String idCall) throws HandlerGenericException {
         List<SupplierDTO> suppliers = new ArrayList<SupplierDTO>();
@@ -257,5 +270,13 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
+    }
+    
+    public List<SupplierByCallDTO> getByCallAndSurvey(String idCall, String idSurvey) throws HandlerGenericException {
+    	ArrayList<String> key = new ArrayList<String>(2);
+        key.add(idCall);
+        key.add(idSurvey);
+        this.entityView = "vwSuppliersByCallSurvey";
+        return super.getAllBy(key);
     }
 }

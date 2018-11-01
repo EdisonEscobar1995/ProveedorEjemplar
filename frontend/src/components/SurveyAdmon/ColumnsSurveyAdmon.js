@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Tooltip, Button } from 'antd';
 
-const columnsData = (props, onAdd) => [{
+const columnsData = (props, onAdd, onEdit) => [{
+  title: 'Convocatoria',
+  key: 'idCall',
+  render: (text, record) => {
+    let call = props.call.find(x => x.id === record.idCall);
+    call = call ? call.year : '';
+    return call;
+  },
+  sorter: (a, b) => {
+    const callA = props.call.find(x => x.id === a.idCall);
+    const callB = props.call.find(x => x.id === b.idCall);
+    return callA.year - callB.year;
+  },
+}, {
   title: 'Tipo de suministro',
   key: 'idSupply',
   render: (text, record) => {
@@ -9,7 +22,6 @@ const columnsData = (props, onAdd) => [{
     supply = supply ? supply.name : '';
     return supply;
   },
-  sorter: (a, b) => (a.name > b.name ? -1 : 1),
 }, {
   title: 'Tamaño de la empresa',
   key: 'idCompanySize',
@@ -22,14 +34,23 @@ const columnsData = (props, onAdd) => [{
   title: 'Acción',
   dataIndex: 'Id',
   key: 'delete',
-  render: () => (
-    <Tooltip title="Agregar">
-      <Button
-        shape="circle"
-        icon="plus"
-        onClick={() => onAdd()}
-      />
-    </Tooltip>
+  render: (text, record) => (
+    <Fragment>
+      <Tooltip title="Editar">
+        <Button
+          shape="circle"
+          icon="edit"
+          onClick={() => onEdit(record)}
+        />
+      </Tooltip>
+      <Tooltip title="Agregar">
+        <Button
+          shape="circle"
+          icon="plus"
+          onClick={() => onAdd()}
+        />
+      </Tooltip>
+    </Fragment>
   ),
 }];
 

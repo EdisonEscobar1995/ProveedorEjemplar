@@ -24,6 +24,7 @@ import com.nutresa.exemplary_provider.dtl.StagesCall;
 import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
+import com.nutresa.exemplary_provider.dtl.queries.QuestionStatistic;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.SummaryToLoadSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.StatisticalProgress;
@@ -160,7 +161,23 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         return response;
     }
-
+    
+    public List<QuestionStatistic> getManagerReport(Map<String, String> parameters)
+    	throws HandlerGenericException {
+    	
+    	List<QuestionStatistic> response = new ArrayList<QuestionStatistic>();
+		UserBLO userBLO = new UserBLO();
+		
+		if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+		    QuestionBLO questionBLO = new QuestionBLO();
+			response = questionBLO.getManagerReport(parameters);
+		} else {
+		    throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
+		}
+		
+		return response;
+	}    
+    
     /**
      * @param parameters
      *            Mapa clave valor de los filtros por los que se van a optener
@@ -182,7 +199,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         UserBLO userBLO = new UserBLO();
         if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
                 || userBLO.isRol(Rol.EVALUATOR.toString())) {
-            String idCall = parameters.get("call");
+            String idCall = parameters.get("idCall");
             SupplierBLO supplierBLO = new SupplierBLO();
             List<SupplierDTO> suppliers = supplierBLO.getThemByIdCallOrFiltered(idCall, parameters);
             response = buildReportOfAverageGradeBySupplier(idCall, suppliers, parameters);

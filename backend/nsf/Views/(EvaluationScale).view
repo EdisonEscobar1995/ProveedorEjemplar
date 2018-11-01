@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(EvaluationScale)' alias='EvaluationScales|vwEvaluationScales'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
- unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
- opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
- extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
- headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='42f5a' unid='2AEB1AFA60CF7E850525824100582766' sequence='3'>
-<created><datetime>20180227T110252,54-05</datetime></created>
-<modified><datetime>20180305T153024,52-05</datetime></modified>
-<revised><datetime>20180305T153024,51-05</datetime></revised>
-<lastaccessed><datetime>20180305T153024,52-05</datetime></lastaccessed>
-<addedtofile><datetime>20180227T110252,90-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='8dca2' unid='44F2F7B8A6141E07052582520070848D' sequence='18'>
+<created><datetime>20180316T152859,65-05</datetime></created>
+<modified><datetime>20181019T072547,71-05</datetime></modified>
+<revised><datetime>20181019T072547,70-05</datetime></revised>
+<lastaccessed><datetime>20181019T072547,71-05</datetime></lastaccessed>
+<addedtofile><datetime>20180316T152859,73-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frEvaluationScale"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

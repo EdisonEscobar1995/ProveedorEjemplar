@@ -19,8 +19,8 @@ const ButtonStyle = styled(Button)`
 
 class SurveyAdmonFormContainer extends Component {
   componentDidMount() {
-    this.props.getAllDataSurveyFormAdmon();
-    this.props.getDimensions();
+    const { match: { params: { id = null } } } = this.props;
+    this.props.getAllDataSurveyFormAdmon(id);
   }
 
   redirectToList = () => {
@@ -75,19 +75,20 @@ class SurveyAdmonFormContainer extends Component {
 }
 
 const mapStateToProps = state => ({
+  call: state.surveyAdmon.call,
   supply: state.surveyAdmon.supply,
   companySize: state.surveyAdmon.companySize,
+  callValue: state.surveyAdmon.callValue,
+  supplyValue: state.surveyAdmon.supplyValue,
+  companySizeValue: state.surveyAdmon.companySizeValue,
   data: state.surveyAdmon.data,
   questionSelected: state.surveyAdmon.questionSelected,
   loading: state.surveyAdmon.loading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getAllDataSurveyFormAdmon: () => {
-    dispatch(SurveyAdmonAction.getAllDataSurveyFormAdmon());
-  },
-  getDimensions: () => {
-    dispatch(SurveyAdmonAction.getDimensions());
+  getAllDataSurveyFormAdmon: (id) => {
+    dispatch(SurveyAdmonAction.getAllDataSurveyFormAdmon(id));
   },
   getCriterionByDimension: (id) => {
     dispatch(SurveyAdmonAction.getCriterionByDimension(id));
@@ -95,11 +96,14 @@ const mapDispatchToProps = dispatch => ({
   saveData: (next, redirect) => {
     dispatch(SurveyAdmonAction.saveData(next, redirect));
   },
-  supplyValue: (value) => {
-    dispatch(SurveyAdmonAction.supplyValue(value));
+  setCallValue: (value) => {
+    dispatch(SurveyAdmonAction.setCallValue(value));
   },
-  companySizeValue: (value) => {
-    dispatch(SurveyAdmonAction.companySizeValue(value));
+  setSupplyValue: (value) => {
+    dispatch(SurveyAdmonAction.setSupplyValue(value));
+  },
+  setCompanySizeValue: (value) => {
+    dispatch(SurveyAdmonAction.setCompanySizeValue(value));
   },
 });
 

@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(TechnicalTeam by id user)' alias='TechnicalTeam|vwTechnicalTeamByIdUser'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
- unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
- opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
- extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
- headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='47f6e' unid='EF4DC51F965281DE0525824F0073A229' sequence='2'>
-<created><datetime>20180313T160301,53-05</datetime></created>
-<modified><datetime>20180313T160343,50-05</datetime></modified>
-<revised><datetime>20180313T160343,49-05</datetime></revised>
-<lastaccessed><datetime>20180313T160343,50-05</datetime></lastaccessed>
-<addedtofile><datetime>20180313T160301,54-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='8dc82' unid='CA20B956A1B85DB10525825200708413' sequence='18'>
+<created><datetime>20180316T152858,43-05</datetime></created>
+<modified><datetime>20181019T072548,79-05</datetime></modified>
+<revised><datetime>20181019T072548,78-05</datetime></revised>
+<lastaccessed><datetime>20181019T072548,79-05</datetime></lastaccessed>
+<addedtofile><datetime>20180316T152858,49-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frTechnicalTeam"</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

@@ -12,6 +12,7 @@ import {
   SAVE_DATA_ANSWER_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
+  CHANGE_ACCEPTED_POLICY,
   UPDATE_ATTACHMENT,
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
@@ -45,6 +46,7 @@ const initialState = {
   changeIdCompanySize: false,
   loadedDimensions: false,
   participateInCall: '',
+  acceptedPolicy: false,
   supply: [],
   categories: [],
   subcategories: [],
@@ -76,13 +78,14 @@ function supplierApp(state = initialState, action) {
         loadingDimensions: true,
       };
     case GET_DATA_SUPPLIER_SUCCESS: {
-      const { participateInCall } = action.call;
+      const { participateInCall, acceptedPolicy } = action.call;
       return {
         ...state,
         supplier: action.supplier,
         rules: action.rules,
         call: action.call,
         participateInCall,
+        acceptedPolicy,
         supply: action.supply,
         companySizes: action.companySizes,
         companyTypes: action.companyTypes,
@@ -187,6 +190,11 @@ function supplierApp(state = initialState, action) {
         ...state,
         participateInCall: action.participateInCall,
         dimensions: [],
+      };
+    case CHANGE_ACCEPTED_POLICY:
+      return {
+        ...state,
+        acceptedPolicy: action.acceptedPolicy,
       };
     case UPDATE_ATTACHMENT: {
       return {

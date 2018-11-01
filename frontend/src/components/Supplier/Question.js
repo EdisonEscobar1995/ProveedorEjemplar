@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Table, Tooltip, Button, Input, Radio, Icon } from 'antd';
 import styled from 'styled-components';
 import Upload from '../shared/Upload';
@@ -7,6 +7,7 @@ import SubTitle from '../shared/SubTitle';
 import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
 import { baseUrl } from '../../utils/api';
+import message from '../shared/message';
 
 const { TextArea } = Input;
 const { Column } = Table;
@@ -27,6 +28,8 @@ const SectionStyle = styled.div`
   opacity: 0.6;
   background: ${props => props.theme.color.primary};
   color: ${props => props.theme.color.normal};
+  display: flex;
+  justify-content: space-between;
 `;
 const RadioStyle = styled(Radio) `
   white-space: normal;
@@ -35,31 +38,29 @@ const RadioStyle = styled(Radio) `
 
 class Question extends Component {
   onChange = (value, record, fieldName, action) => {
-    if (value) {
-      const { id, answer, idCriterion } = record;
-      const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
-      let actualAnswer = {};
-      if (answer.length > 0) {
-        actualAnswer = answer.find(item => item.idQuestion === id);
-      }
-      let sendAnswer = {
-        idSupplierByCall: idCall,
-        idSurvey,
-        idQuestion: id,
-      };
-      const copy = { ...actualAnswer };
-      sendAnswer = Object.assign(copy, sendAnswer);
-      if (fieldName === 'attachment') {
-        if (action === 'delete') {
-          sendAnswer[fieldName] = sendAnswer[fieldName].filter(attach => attach.id !== value);
-        } else {
-          sendAnswer[fieldName] = value;
-        }
+    const { id, answer, idCriterion } = record;
+    const { idDimension, idSurvey, idCall, saveAnswer } = this.props;
+    let actualAnswer = {};
+    if (answer.length > 0) {
+      actualAnswer = answer.find(item => item.idQuestion === id);
+    }
+    let sendAnswer = {
+      idSupplierByCall: idCall,
+      idSurvey,
+      idQuestion: id,
+    };
+    const copy = { ...actualAnswer };
+    sendAnswer = Object.assign(copy, sendAnswer);
+    if (fieldName === 'attachment') {
+      if (action === 'delete') {
+        sendAnswer[fieldName] = sendAnswer[fieldName].filter(attach => attach.id !== value);
       } else {
         sendAnswer[fieldName] = value;
       }
-      saveAnswer(sendAnswer, idDimension, idCriterion);
+    } else {
+      sendAnswer[fieldName] = value;
     }
+    saveAnswer(sendAnswer, idDimension, idCriterion);
   }
   getAnswer = (record, fieldName) => {
     const actualAnswer = record.answer[0];
@@ -93,7 +94,11 @@ class Question extends Component {
         <RadioGroup
           disabled={disabled}
           value={value}
-          onChange={e => this.onChange(e.target.value, record, optionFieldName)}
+          onChange={(e) => {
+            if (e.target.value) {
+              this.onChange(e.target.value, record, optionFieldName);
+            }
+          }}
         >
           {
             options.map(option => (
@@ -152,7 +157,7 @@ class Question extends Component {
     );
   }
   getColumns = () => {
-    const { rules } = this.props;
+    const { rules, stateData } = this.props;
     let columns = [
       {
         title: <FormattedMessage id="Table.help" />,
@@ -247,8 +252,16 @@ class Question extends Component {
                 baseUrl={`${baseUrl}/Attachment?action=save`}
                 uploadMaxFilesize={this.props.system.uploadMaxFilesize}
                 uploadExtensions={this.props.system.uploadExtensions}
-                onChange={(value, rowValue) => this.onChange(value, rowValue, 'attachment')}
-                onRemove={(value, rowValue) => this.onChange(value, rowValue, 'attachment', 'delete')}
+                onChange={(value, rowValue) => {
+                  if (value) {
+                    this.onChange(value, rowValue, 'attachment');
+                  }
+                }}
+                onRemove={(value, rowValue) => {
+                  if (value) {
+                    this.onChange(value, rowValue, 'attachment', 'delete');
+                  }
+                }}
               />
               <ErrorTable visible={errors.attachments} text="Survey.requiredAttachment" />
             </div>
@@ -256,6 +269,20 @@ class Question extends Component {
         },
       },
     ];
+    if (stateData.shortName === 'NOT_STARTED' || stateData.shortName === 'SUPPLIER') {
+      columns.splice(2, 0, {
+        title: <FormattedMessage id="Table.previousAnswer" />,
+        width: '15%',
+        dataIndex: 'previousAnswer',
+        key: 'previousAnswer',
+        render: (options, record) => {
+          if (record.answer.length > 0) {
+            return record.answer[0].previousAnswer;
+          }
+          return null;
+        },
+      });
+    }
     if (rules.evaluator.show) {
       columns = columns.concat({
         title: <FormattedMessage id="Table.evaluatorAnswer" />,
@@ -274,8 +301,11 @@ class Question extends Component {
     }
     return columns;
   }
+  openNotification = () => {
+    message({ text: 'Validation.verifyDimensions', type: 'info' });
+  };
   render() {
-    const { criterions, rules, next } = this.props;
+    const { criterions, rules, stateData, next } = this.props;
     const disabled = rules.supplier.readOnly && rules.evaluator.readOnly;
     const columns = this.getColumns();
     let buttons = [];
@@ -291,7 +321,7 @@ class Question extends Component {
           key: 1,
           text: 'Button.send',
           buttoncolor: 'buttonThird',
-          onClick: this.props.validateQuestions,
+          onClick: () => this.props.validateQuestions(this.openNotification),
           showConfirm: true,
           messageConfirm: 'Survey.confirm',
         },
@@ -304,8 +334,21 @@ class Question extends Component {
             criterions.map(criteria => (
               <div key={criteria.id}>
                 <SectionStyle>
-                  <Icon type="tag-o" />
-                  <SubtitleStyle>{criteria.name}</SubtitleStyle>
+                  <div>
+                    <Icon type="tag-o" />
+                    <SubtitleStyle>{criteria.name}</SubtitleStyle>
+                  </div>
+                  <div>
+                    {
+                      stateData.shortName === 'ENDED_MANAGER_TEAM' &&
+                      <Fragment>
+                        <FormattedMessage id="Table.criteriaScore" />
+                        {
+                          criteria.score && `: ${criteria.score}%`
+                        }
+                      </Fragment>
+                    }
+                  </div>
                 </SectionStyle>
                 <TableStyle
                   key={criteria.key}

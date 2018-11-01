@@ -2,7 +2,7 @@ import {
   GET_DATA_GENERAL_ADMINISTRATOR_PROGRESS,
   GET_DATA_GENERAL_ADMINISTRATOR_SUCCESS,
   REQUEST_FAILED,
-  UPDATE_ATTACHMENT,
+  UPDATE_GENERAL_ATTACHMENT,
   CLEAN_DATA,
   SAVE_DATA_PROGRESS,
   CLEAN_STORE,
@@ -29,7 +29,7 @@ const cleanData = () => ({
 });
 
 const updateImages = images => ({
-  type: UPDATE_ATTACHMENT,
+  type: UPDATE_GENERAL_ATTACHMENT,
   images,
 });
 
@@ -82,6 +82,7 @@ const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getS
     content,
     id,
     informationProgram,
+    dataPolicy,
     inputPoll,
     rotationTime,
     title,
@@ -95,6 +96,7 @@ const saveGeneralAdministrator = (clientData, remoteId, next) => (dispatch, getS
     images: dataState.images.length > 0 &&
       dataState.images[0].id ? dataState.images.map(x => x.id) : dataState.images,
     informationProgram,
+    dataPolicy,
     inputPoll,
     rotationTime,
     title,

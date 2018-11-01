@@ -5,11 +5,13 @@ import {
   GET_ITEMS_SUCCESS,
   CHANGE_TYPE,
   GET_RESULTS_SUCCESS,
+  GET_MANAGER_REPORT_SUCCESS,
+  RESET_QUESTIONS,
   REQUEST_FAILED,
 } from './const';
 
 import getMasterApi from '../../api/master';
-import { getResultsApi } from '../../api/call';
+import { getResultsApi, getManagerReportApi } from '../../api/call';
 import { getAllCriterionsByDimensionApi } from '../../api/criterions';
 import getItemsByServiceApi from '../../api/items';
 import { requestApi, sortByField } from '../../utils/action';
@@ -35,6 +37,15 @@ const getItemsByServiceSuccess = items => ({
 
 const getResultsSuccess = () => ({
   type: GET_RESULTS_SUCCESS,
+});
+
+const getManagerReportSuccess = questions => ({
+  type: GET_MANAGER_REPORT_SUCCESS,
+  questions,
+});
+
+const resetQuestions = () => ({
+  type: RESET_QUESTIONS,
 });
 
 const getFailedRequest = () => ({
@@ -102,11 +113,24 @@ const getResults = (data, exportMethod = () => {}) => (
   }
 );
 
+const getManagerReport = data => (
+  (dispatch) => {
+    requestApi(dispatch, getMastersProgress, getManagerReportApi, data)
+      .then((response) => {
+        dispatch(getManagerReportSuccess(response.data.data));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  }
+);
+
 export {
   getMasters,
   getCriterionsByDimension,
   getItemsByService,
   changeType,
   getResults,
+  getManagerReport,
+  resetQuestions,
   getFailedRequest,
 };

@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.dtl;
 
 import java.util.Date;
+import java.util.List;
 
 import com.google.gson.annotations.Expose;
 
@@ -15,6 +16,8 @@ public class SupplierByCallDTO {
     private String idSupplier;
     @Expose
     private String participateInCall;
+    @Expose
+    private boolean acceptedPolicy;
     @Expose
     private String reasonForNotParticipation;
     @Expose
@@ -39,6 +42,27 @@ public class SupplierByCallDTO {
     private String whoEvaluate;
     @Expose
     private String whoEvaluateOfTechnicalTeam;
+    @Expose
+    private List<String> idsDimension;
+    
+    public List<String> getIdsDimension() {
+		return idsDimension;
+	}
+
+	public void setIdsDimension(List<String> idsDimension) {
+		this.idsDimension = idsDimension;
+	}
+
+	public List<String> getPercentsDimension() {
+		return percentsDimension;
+	}
+
+	public void setPercentsDimension(List<String> percentsDimension) {
+		this.percentsDimension = percentsDimension;
+	}
+
+	@Expose
+    private List<String> percentsDimension;    
 
     public String getIdCall() {
         return idCall;
@@ -172,4 +196,11 @@ public class SupplierByCallDTO {
         return whoEvaluateOfTechnicalTeam;
     }
 
+	public void setAcceptedPolicy(boolean acceptedPolicy) {
+		this.acceptedPolicy = acceptedPolicy;
+	}
+
+	public boolean isAcceptedPolicy() {
+		return acceptedPolicy;
+	}
 }

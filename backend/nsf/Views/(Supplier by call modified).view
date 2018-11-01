@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Supplier by call modified)' alias='SupplierByCall|vwSuppliersByCallModified'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- hide='web' showinmenu='false' publicaccess='false' designerversion='8.5.3'
- unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
- opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
- extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
- headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='afe2' unid='709493F2DCD67591052581E5008044CC' sequence='21'>
-<created><datetime>20171127T182102,20-05</datetime></created>
-<modified><datetime>20180115T173428,50-05</datetime></modified>
-<revised><datetime>20180115T173428,49-05</datetime></revised>
-<lastaccessed><datetime>20180115T173428,50-05</datetime></lastaccessed>
-<addedtofile><datetime>20171127T182102,23-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='2db4a' unid='C8EB3A512C258962052581E5007E0498' sequence='51'>
+<created><datetime>20171127T175627,12-05</datetime></created>
+<modified><datetime>20181019T072548,53-05</datetime></modified>
+<revised><datetime>20181019T072548,52-05</datetime></revised>
+<lastaccessed><datetime>20181019T072548,53-05</datetime></lastaccessed>
+<addedtofile><datetime>20180109T144659,82-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frSupplierByCall" &amp; participateInCall = "true" &amp; (@Text(dateLocked) != "" | @Text(dateUnLocked) != "")</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

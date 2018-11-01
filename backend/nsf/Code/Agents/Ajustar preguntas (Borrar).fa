@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='Ajustar preguntas (Borrar)' xmlns='http://www.lotus.com/dxl'
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' hide='v3'
+ publicaccess='false' designerversion='8.5.3'>
+<noteinfo noteid='bf052' unid='F4EE3C940FF3CA80052583270001E88A' sequence='5'>
+<created><datetime>20181014T192050,66-05</datetime></created>
+<modified><datetime>20181015T094750,18-05</datetime></modified>
+<revised><datetime>20181015T094750,17-05</datetime></revised>
+<lastaccessed><datetime>20181015T094750,18-05</datetime></lastaccessed>
+<addedtofile><datetime>20181014T192051,02-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby>
+<designchange><datetime>20181015T094750,15-05</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='action'><formula>FIELD idSurvey := "";
+SELECT @All</formula></code>
+<rundata processeddocs='134' exitcode='0'>
+<agentmodified><datetime>20181014T192207,86-05</datetime></agentmodified>
+<agentrun><datetime>20181014T192302,13-05</datetime></agentrun>
+<runlog>Started running agent 'Ajustar preguntas' on 14/10/2018 07:22:59 p. m.
+Running on selected documents: 134 total
+Found 134 document(s) that match search criteria
+134 document(s) were modified by formula
+Done running agent 'Ajustar preguntas' on 14/10/2018 07:23:02 p. m.
+</runlog></rundata></agent>
+

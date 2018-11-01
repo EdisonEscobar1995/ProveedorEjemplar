@@ -22,5 +22,18 @@ public class CallDAO extends GenericDAO<CallDTO> {
 
         return call;
     }
+    
+    public CallDTO getPrevious(String idCall) throws HandlerGenericException {
+    	try {
+   			View view = getDatabase().getView("vwCalls");
+   			Document document = view.getFirstDocumentByKey(idCall);
+    		view = getDatabase().getView("vwCallsByYear");
+    		document = view.getFirstDocumentByKey(String.valueOf(document.getItemValueInteger("year")));
+    		document = view.getNextSibling(document);
+    		return castDocument(document);
+    	} catch (Exception exception) {
+    		throw new HandlerGenericException(exception);
+    	}
+    }
 
 }

@@ -22,7 +22,7 @@ const massiveShipmentCallApi = call => instance.post('Call?action=massiveShipmen
 
 const getParticipantsByYearApi = year => instance.get(`Call?action=getParticipantsByYear&year=${year || ''}`);
 
-const getResultsApi = data => instance.get(`Call?action=getResults&call=${data.call || ''}` +
+const getResultsApi = data => instance.get(`Call?action=getResults&idCall=${data.call || ''}` +
   `&type=${data.type || ''}` +
   `&idSupply=${data.supply || ''}` +
   `&idCategory=${data.category || ''}` +
@@ -33,6 +33,11 @@ const getResultsApi = data => instance.get(`Call?action=getResults&call=${data.c
   `&service=${data.service || ''}` +
   `&item=${data.item || ''}` +
   `&idCountry=${data.country || ''}
+`);
+
+const getManagerReportApi = data => instance.get(`Call?action=getManagerReport&idCall=${data.call || ''}` +
+  `&idDimension=${data.dimension || ''}` +
+  `&idCriterion=${data.criterion || ''}
 `);
 
 const getSupplierSelectionApi = type => instance.get(`Call?action=getSuppliersForSelection&stage=${type}`);
@@ -56,6 +61,7 @@ export {
   massiveShipmentCallApi,
   getParticipantsByYearApi,
   getResultsApi,
+  getManagerReportApi,
   getSupplierSelectionApi,
   getTechnicalTeamSurveyApi,
   getManagerTeamSurveyApi,

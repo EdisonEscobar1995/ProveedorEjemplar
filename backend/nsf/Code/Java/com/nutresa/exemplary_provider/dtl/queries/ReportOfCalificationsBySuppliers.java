@@ -245,7 +245,9 @@ public class ReportOfCalificationsBySuppliers {
         private String commentSupplier;
         @Expose
         private String commentEvaluator;
-
+        @Expose
+        private int attachmentCount;
+        
         public String getDimension() {
             return dimension;
         }
@@ -341,6 +343,14 @@ public class ReportOfCalificationsBySuppliers {
         public String getCommentEvaluator() {
             return commentEvaluator;
         }
+
+		public void setAttachmentCount(int attachmentCount) {
+			this.attachmentCount = attachmentCount;
+		}
+
+		public int getAttachmentCount() {
+			return attachmentCount;
+		}
 
     }
 

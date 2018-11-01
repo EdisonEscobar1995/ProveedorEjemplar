@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.nutresa.exemplary_provider.dtl.NotificationType;
 import com.nutresa.exemplary_provider.dal.SupplierByCallDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
@@ -203,6 +204,24 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
 
         return response;
     }
+    
+    private SupplierByCallDTO setSupplierToCall(String idSupplier) throws HandlerGenericException {
+        CallBLO callBLO = new CallBLO();
+        CallDTO call = null;
+        SupplierByCallDTO response = null;
+        call = callBLO.getCallActive();
+        if (null != call){
+        	if (call.isCaducedDeadLineToMakeSurvey()){
+        		throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
+        	} else if (!call.isCaducedDateToFinishCall()) {
+            	SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+            	response = supplierByCallDAO.getBySupplierAndCall(idSupplier, call.getId());
+                rules.setRulesToSection(SurveySection.SUPPLIER.getNameSection(), rules.buildRules(true, false));
+            }
+        } 
+
+        return response;
+    }
 
     public void changedCompanySize(String oldIdCompanySize) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
@@ -222,6 +241,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         SupplierByCallDTO supplierByCall = getCallOfSupplier(null);
         supplierByCall.setParticipateInCall("true");
+        supplierByCall.setAcceptedPolicy(true);
         supplierByCallDAO.update(supplierByCall.getId(), supplierByCall);
     }
 
@@ -299,6 +319,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 response = get(supplierByCall.getId());
                 NotificationBLO notificationBLO = new NotificationBLO();
                 notificationBLO.notifySurveyCompleted(supplierByCall.getIdSupplier(), Rol.SUPPLIER);
+                SupplierBLO supplierBLO = new SupplierBLO();
+                SupplierDTO supplierDTO = supplierBLO.get(supplierByCall.getIdSupplier());
+                notificationBLO.sendNotificationTypeToSupplier(supplierDTO, NotificationType.SURVEY_FINISHED_BY_SUPPLIER);
             } else {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.THE_SURVEY_COULD_NOT_BE_COMPLETED
                         .toString());
@@ -369,7 +392,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             currentSupplierByCall.setDateUnLocked(new Date());
             supplier = supplierBLO.get(currentSupplierByCall.getIdSupplier());
             supplier.setIdCompanySize(supplierByCall.getOldIdCompanySize());
-            currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize())
+            currentSupplierByCall.setIdSurvey(surveyBLO.getSurvey(currentSupplierByCall.getIdCall(), supplier.getIdSupply(), supplier.getIdCompanySize())
                     .getId());
             notification.notifyToSupplierForContinue(supplier);
             supplierBLO.update(supplier);
@@ -432,6 +455,12 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         }
 
         return super.save(dto);
+    }
+    
+    public List<SupplierByCallDTO> getByCallAndSurvey(String idCall, String idSurvey)
+    	throws HandlerGenericException {
+    	SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+    	return supplierByCallDAO.getByCallAndSurvey(idCall, idSurvey);
     }
 
     protected List<SupplierByCallDTO> getCallsBySupplier(String idSupplier) throws HandlerGenericException {
@@ -587,10 +616,10 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         SupplierByCallDTO supplierByCall = new SupplierByCallDTO();
         SurveyDTO survey = new SurveyDTO();
         if (null != supplier.getIdCompanySize() && !supplier.getIdCompanySize().isEmpty()) {
-            survey = surveyBLO.getSurvey(supplier.getIdSupply(), supplier.getIdCompanySize());
+            survey = surveyBLO.getSurvey(idCall, supplier.getIdSupply(), supplier.getIdCompanySize());
         }
 
-        supplierByCall = getCallActiveToParticipate(supplier.getId());
+        supplierByCall = setSupplierToCall(supplier.getId());
         if (!(supplierByCall instanceof SupplierByCallDTO)) {
             supplierByCall = new SupplierByCallDTO();
             StateBLO stateBLO = new StateBLO();
@@ -604,6 +633,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         supplierByCall.setIdSurvey(null == survey.getId() ? null : survey.getId());
         return super.save(supplierByCall);
     }
+    
+    
+    
 
     /**
      * Elimina todos los documentos donde se utilice el
@@ -614,10 +646,10 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
      *         documentos, de lo contrario <code>false</code>
      * @throws HandlerGenericException
      */
-    public SupplierByCallDTO delete(String idSupplierByCall) throws HandlerGenericException {
+    public boolean delete(String idSupplierByCall) throws HandlerGenericException {
         SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
         supplierByCallDAO.deleteAllReference(idSupplierByCall);
-        return new SupplierByCallDTO();
+        return supplierByCallDAO.delete(idSupplierByCall, false);
     }
 
     /**

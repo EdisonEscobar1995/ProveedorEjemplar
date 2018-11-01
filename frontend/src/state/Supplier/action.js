@@ -14,6 +14,7 @@ import {
   SAVE_DATA_ANSWER_SUCCESS,
   GET_REQUEST_FAILED,
   CHANGE_PARTICIPATE,
+  CHANGE_ACCEPTED_POLICY,
   UPDATE_ATTACHMENT,
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
@@ -167,6 +168,12 @@ function changeParticipate(participateInCall) {
     participateInCall,
   };
 }
+function changeAcceptedPolicy(acceptedPolicy) {
+  return {
+    type: CHANGE_ACCEPTED_POLICY,
+    acceptedPolicy,
+  };
+}
 function reloadDimensions(dimensions) {
   return {
     type: RELOAD_DIMENSIONS,
@@ -300,10 +307,9 @@ function saveDataCallSuccess(call) {
     readOnlySupplier: isReadOnly(call),
   };
 }
-function saveAnswerSuccess(allDimensions, rules) {
+function saveAnswerSuccess(rules) {
   return {
     type: SAVE_DATA_ANSWER_SUCCESS,
-    dimensions: allDimensions,
     rules,
   };
 }
@@ -483,7 +489,97 @@ const getDataCitiesByDepartment = clientData => (
   }
 );
 
-const formatData = (data) => {
+const isQuestionAnswered = (question, stateData, rules) => {
+  let optionFieldName = 'idOptionSupplier';
+  let responseFieldName = 'responseSupplier';
+  if ((stateData.shortName === 'NOT_STARTED_EVALUATOR' ||
+  stateData.shortName === 'EVALUATOR') && rules.evaluator.show) {
+    optionFieldName = 'idOptionEvaluator';
+    responseFieldName = 'responseEvaluator';
+  }
+  return question.answer.length > 0 &&
+  (question.answer[0][optionFieldName] || question.answer[0][responseFieldName]);
+};
+
+const calculatePercent = (dimension, stateData, rules) => {
+  let totalQuestions = 0;
+  let responsedQuestion = 0;
+  let totalResponses = 0;
+  let total;
+  if (dimension.criterions.length > 0) {
+    dimension.criterions.forEach((criteria) => {
+      criteria.questions.forEach((question) => {
+        const isAnswered = isQuestionAnswered(question, stateData, rules);
+        if (question.visible && question.required) {
+          totalQuestions += 1;
+          if (isAnswered) {
+            responsedQuestion += 1;
+          }
+        }
+        if (isAnswered) {
+          totalResponses += 1;
+        }
+      });
+    });
+    if (totalQuestions > 0) {
+      total = (responsedQuestion * 100) / totalQuestions;
+    } else if (totalResponses > 0) {
+      total = 100;
+    } else {
+      total = 0;
+    }
+  } else {
+    total = 0;
+  }
+  return Math.round(total);
+};
+
+const calculateCriterionScore = (questions) => {
+  let score = '';
+  let max = 0;
+  let total = 0;
+  let found = false;
+  questions.forEach((question) => {
+    if (question.answer.length > 0) {
+      const answer = question.answer[0].idOptionEvaluator;
+      if (answer) {
+        found = true;
+        const selectedOption = question.options.find(
+          option => option.id === answer && option.score >= 0);
+        if (selectedOption) {
+          max += Math.max(...question.options.map(option => option.score));
+          total += selectedOption.score;
+        }
+      }
+    }
+    return question;
+  });
+  if (found && max > 0) {
+    score = ((total / max) * 100).toFixed(2);
+  }
+  return score;
+};
+
+const scoreDimensionAndCriterion = (idDimension, idCriterion) => (
+  (dispatch, getActualState) => {
+    const { dimensions, stateData, rules } = getActualState().supplier;
+    const dimensionsCopy = dimensions.map((dimension) => {
+      if (dimension.id === idDimension) {
+        dimension.percent = calculatePercent(dimension, stateData, rules);
+      }
+      dimension.criterions = dimension.criterions.map((criterion) => {
+        if (criterion.id === idCriterion) {
+          criterion.score = calculateCriterionScore(criterion.questions);
+        }
+        return criterion;
+      });
+      return dimension;
+    });
+    dispatch(reloadDimensions(dimensionsCopy));
+  }
+);
+
+const formatData = (data, stateData, rules) => {
   const { dimensions, criterions } = data;
   const formatedDimensions = dimensions.map((dimension, index) => {
     const actual = criterions[index];
@@ -494,6 +590,8 @@ const formatData = (data) => {
       result = criterion.map(criteria => (
         {
           ...criteria,
+          score: calculateCriterionScore(
+            questions.filter(question => question.idCriterion === criteria.id)),
           questions: showedQuestions.filter(question => question.idCriterion === criteria.id),
         }
       ));
@@ -507,6 +605,7 @@ const formatData = (data) => {
       });
     }
     dimension.criterions = result;
+    dimension.percent = calculatePercent(dimension, stateData, rules);
     return dimension;
   });
   return formatedDimensions;
@@ -514,8 +613,8 @@ const formatData = (data) => {
 
 const getDimensionsBySurvey = (idSurvey, id) => (
   (dispatch, getActualState) => {
-    const actualDimensions = getActualState().supplier.dimensions;
-    if (actualDimensions.length === 0) {
+    const { dimensions, stateData, rules } = getActualState().supplier;
+    if (dimensions.length === 0) {
       requestApi(dispatch, getDataDimensionsProgress, getDimensionsBySurveyApi, idSurvey)
         .then(response => response.data.data)
         .then((data) => {
@@ -534,9 +633,8 @@ const getDimensionsBySurvey = (idSurvey, id) => (
             })
             .then(criterions => ({ dimensions: data, criterions }));
         }).then((data) => {
-          let dimensions = data.dimensions;
-          dimensions = formatData(data);
-          dispatch(getDataDimensionsBySuplySuccess(dimensions));
+          const formatedDimensions = formatData(data, stateData, rules);
+          dispatch(getDataDimensionsBySuplySuccess(formatedDimensions));
         })
         .catch((err) => {
           dispatch(getFailedRequest(err));
@@ -571,7 +669,8 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
     requestApi(dispatch, getDataSupplierProgress, saveAnswerApi, clientAnswer)
       .then((respone) => {
         const answer = respone.data.data;
-        const dimensions = [...getActualState().supplier.dimensions];
+        const rules = respone.data.rules;
+        const { call, dimensions } = getActualState().supplier;
         const allDimensions = [...dimensions];
         const actualDimension = allDimensions.find(dimension => dimension.id === idDimension);
         const actualCriterion = actualDimension.criterions
@@ -605,8 +704,20 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
             }
           }
         }
-        dispatch(saveAnswerSuccess(allDimensions, respone.data.rules));
-        openNotificationWithIcon('success');
+        dispatch(saveAnswerSuccess(rules));
+        dispatch(scoreDimensionAndCriterion(idDimension, idCriterion));
+
+        const idsDimension = dimensions.map(dimension => dimension.id);
+        const percentsDimension = dimensions.map(dimension => dimension.percent);
+        const clientData = Object.assign(call, { idsDimension, percentsDimension });
+
+        return requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
+          .then(() => {
+            dispatch(saveAnswerSuccess(rules));
+            openNotificationWithIcon('success');
+          }).catch((err) => {
+            dispatch(getFailedRequest(err));
+          });
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -692,7 +803,7 @@ const finishSurvey = () => (
     requestApi(dispatch, getDataSupplierProgress, finishSurveyApi, call)
       .then(() => {
         dispatch(setMessage('Supplier.surveySuccess', 'success'));
-        if (stateData.shorName === 'SUPPLIER') {
+        if (stateData.shortName === 'SUPPLIER') {
           dispatch(finishSurveySupplierSucess());
         } else {
           dispatch(finishSurveyEvaluatorSucess());
@@ -751,6 +862,62 @@ const setExport = value => (
   }
 );
 
+const validateQuestions = onFail => (dispatch, getActualState) => {
+  const { dimensions, stateData, rules } = getActualState().supplier;
+  const dimesionsCopy = [...dimensions];
+  let send = true;
+  dimesionsCopy.forEach((dimension) => {
+    if (dimension.criterions.length === 0) {
+      send = send && false;
+    } else {
+      dimension.criterions.forEach((criteria) => {
+        criteria.questions.forEach((question) => {
+          let errors = {};
+          if (question.visible && question.required) {
+            if (isQuestionAnswered(question, stateData, rules)) {
+              if (question.requireAttachment) {
+                question.answer.forEach((answer) => {
+                  if (answer.attachment) {
+                    if (answer.attachment.length === 0) {
+                      send = send && false;
+                      errors = {
+                        attachments: true,
+                      };
+                    }
+                  } else {
+                    send = send && false;
+                    errors = {
+                      attachments: true,
+                    };
+                  }
+                });
+              }
+            } else {
+              send = send && false;
+              errors = {
+                answers: true,
+              };
+              if (question.requireAttachment) {
+                errors.attachments = true;
+              }
+            }
+          }
+          question.errors = errors;
+        });
+      });
+    }
+  });
+
+  if (send) {
+    dispatch(finishSurvey());
+  } else {
+    onFail();
+  }
+
+  dispatch(reloadDimensions(dimesionsCopy));
+};
+
+
 export {
   getDataSupplier,
   getDataCategoryBySuply,
@@ -762,13 +929,13 @@ export {
   saveDataCallSupplier,
   saveAnswer,
   changeParticipate,
+  changeAcceptedPolicy,
   updateAttachment,
   deleteAttachment,
   updateChangeIdCompanySize,
   deleteCustomer as deleteDataCustomer,
   addCustomer as addDataCustomer,
-  reloadDimensions,
-  finishSurvey,
+  validateQuestions,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,

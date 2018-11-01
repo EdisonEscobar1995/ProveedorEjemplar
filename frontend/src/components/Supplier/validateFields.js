@@ -6,5 +6,7 @@ const fieldsToValid = [
   'jobPosition',
   'phoneOfContact',
   'emailOfContact',
+  'nameLegalAgent',
+  'idLegalAgent',
 ];
 export default fieldsToValid;

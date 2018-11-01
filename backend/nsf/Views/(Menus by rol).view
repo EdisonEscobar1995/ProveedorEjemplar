@@ -1,22 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(Menus by rol)' alias='Menu|vwMenusByRol' xmlns='http://www.lotus.com/dxl'
- version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865' hide='web'
- showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
- onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
- showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
- showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
- rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
- boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
- allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
- uniquekeys='false'>
-<noteinfo noteid='b6b2' unid='2CA8C8C6E643DEEC052581F6004A518A' sequence='9'>
-<created><datetime>20171214T083145,38-05</datetime></created>
-<modified><datetime>20180115T173428,14-05</datetime></modified>
-<revised><datetime>20180115T173428,13-05</datetime></revised>
-<lastaccessed><datetime>20180115T173428,14-05</datetime></lastaccessed>
-<addedtofile><datetime>20171214T083145,46-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+ version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E' showinmenu='false'
+ publicaccess='false' designerversion='8.5.3' unreadmarks='none' onopengoto='lastopened'
+ onrefresh='displayindicator' headers='beveled' opencollapsed='false' showresponsehierarchy='true'
+ showmargin='true' shrinkrows='false' extendlastcolumn='false' showhierarchies='false'
+ unreadcolor='black' rowlinecount='1' headerlinecount='1' rowspacing='1' bgcolor='white'
+ totalscolor='black' headerbgcolor='white' boldunreadrows='false' evaluateactions='false'
+ allownewdocuments='false' allowcustomizations='true' hidemarginborder='false'
+ marginwidth='0px' marginbgcolor='white' uniquekeys='false'>
+<noteinfo noteid='6c65a' unid='AEF2DF460517A59505258210006CABB9' sequence='35'>
+<created><datetime>20180109T144658,49-05</datetime></created>
+<modified><datetime>20181019T072547,89-05</datetime></modified>
+<revised><datetime>20181019T072547,88-05</datetime></revised>
+<lastaccessed><datetime>20181019T072547,89-05</datetime></lastaccessed>
+<addedtofile><datetime>20180109T144658,50-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frMenu"</formula></code><code event='querypaste'><lotusscript
 >Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False

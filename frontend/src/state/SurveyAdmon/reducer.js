@@ -14,14 +14,14 @@ import {
   GET_QUESTIONS_BY_DIMENSION,
   COLLAPSE_DIMENSION_SURVEY_FORM,
   COLLAPSE_CRITERION_SURVEY_FORM,
-  GET_DIMENSIONS_SURVEY_SUCCESS,
   GET_DIMENSIONS_SURVEY_PROGRESS,
   GET_CRITERION_SURVEY_SUCCESS,
   SAVE_QUESTION_SELECTED,
   DIMENSION_DESELECTED,
   FILTER_BY_CRITERION_SURVEY,
-  COMPANY_SIZE_VALUE,
-  SUPPLY_VALUE,
+  SET_COMPANY_SIZE_VALUE,
+  SET_SUPPLY_VALUE,
+  SET_CALL_VALUE,
   REQUEST_FAILED,
 } from './const';
 
@@ -38,6 +38,8 @@ const initialState = {
   searchValue: '',
   searchDimension: '',
   labelOptions: '',
+  id: '',
+  callValue: '',
   supplyValue: '',
   companySizeValue: '',
   loading: false,
@@ -45,13 +47,19 @@ const initialState = {
 
 function surveyAdmonApp(state = initialState, action) {
   switch (action.type) {
-    case COMPANY_SIZE_VALUE: {
+    case SET_COMPANY_SIZE_VALUE: {
       return {
         ...state,
         companySizeValue: action.value,
       };
     }
-    case SUPPLY_VALUE: {
+    case SET_CALL_VALUE: {
+      return {
+        ...state,
+        callValue: action.value,
+      };
+    }
+    case SET_SUPPLY_VALUE: {
       return {
         ...state,
         supplyValue: action.value,
@@ -74,6 +82,7 @@ function surveyAdmonApp(state = initialState, action) {
       return {
         ...state,
         data: action.data,
+        call: action.call,
         supply: action.supply,
         companySize: action.companySize,
         loading: false,
@@ -96,10 +105,17 @@ function surveyAdmonApp(state = initialState, action) {
     case GET_SURVEY_ADMON_SUCCESS: {
       return {
         ...state,
+        call: action.call,
         supply: action.supply,
         companySize: action.companySize,
         allCriterions: action.allCriterions,
         allDimensions: action.allDimensions,
+        data: action.data,
+        id: action.id,
+        callValue: action.callValue,
+        supplyValue: action.supplyValue,
+        companySizeValue: action.companySizeValue,
+        questionSelected: action.questionSelected,
         loading: false,
       };
     }
@@ -108,13 +124,6 @@ function surveyAdmonApp(state = initialState, action) {
         ...state,
         data: action.data,
         criterionSelected: action.criterionSelected,
-      };
-    }
-    case GET_DIMENSIONS_SURVEY_SUCCESS: {
-      return {
-        ...state,
-        data: action.data,
-        loading: false,
       };
     }
     case GET_CRITERION_SURVEY_SUCCESS: {

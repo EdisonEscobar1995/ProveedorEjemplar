@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
 <view name='(TechnicalTeamAnswer by id supplier and service and item)' alias='TechnicalTeamAnswer|vwTechnicalTeamAnswerByIdSupplierByCallAndServiceAndItem'
- xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581DB006A5865'
- showinmenu='false' noreplace='true' publicaccess='false' designerversion='8.5.3'
- unreadmarks='none' onopengoto='lastopened' onrefresh='displayindicator' headers='beveled'
- opencollapsed='false' showresponsehierarchy='true' showmargin='true' shrinkrows='false'
- extendlastcolumn='false' showhierarchies='false' unreadcolor='black' rowlinecount='1'
- headerlinecount='1' rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='4820a' unid='1A828E84F11D80680525825C004AB9FD' sequence='8'>
-<created><datetime>20180326T083612,77-05</datetime></created>
-<modified><datetime>20180326T084011,78-05</datetime></modified>
-<revised><datetime>20180326T084011,77-05</datetime></revised>
-<lastaccessed><datetime>20180326T084011,78-05</datetime></lastaccessed>
-<addedtofile><datetime>20180326T083612,80-05</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></updatedby>
-<wassignedby><name>CN=Diego Alejandro Romero/O=desarrollo</name></wassignedby><code
+<noteinfo noteid='8e4ee' unid='8E87E4E012F536AF0525825C0058D547' sequence='15'>
+<created><datetime>20180326T111017,67-05</datetime></created>
+<modified><datetime>20181019T072548,83-05</datetime></modified>
+<revised><datetime>20181019T072548,82-05</datetime></revised>
+<lastaccessed><datetime>20181019T072548,83-05</datetime></lastaccessed>
+<addedtofile><datetime>20180326T111017,68-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
  event='selection'><formula>SELECT form = "frTechnicalTeamAnswer"</formula></code>
 <column sort='ascending' hidedetailrows='false' itemname='idSupplierByCall'
  width='10' resizable='true' separatemultiplevalues='false' sortnoaccent='true'

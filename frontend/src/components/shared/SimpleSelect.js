@@ -53,9 +53,11 @@ const SimpleSelect = (
     style,
     group = false,
     labelOptions,
+    value,
   }) =>
   (<SelectStyle
     showSearch
+    value={value}
     mode={mode}
     style={style}
     placeholder="Buscar"

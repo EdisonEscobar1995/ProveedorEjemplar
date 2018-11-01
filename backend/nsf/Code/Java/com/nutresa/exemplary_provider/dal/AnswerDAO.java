@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.dal;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,28 +10,40 @@ import org.openntf.domino.Document;
 import org.openntf.domino.DocumentCollection;
 import org.openntf.domino.View;
 
+import com.nutresa.exemplary_provider.bll.OptionBLO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.AttachmentDTO;
+import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.FieldsQuestion;
+import com.nutresa.exemplary_provider.dtl.OptionDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class AnswerDAO extends GenericDAO<AnswerDTO> {
-
+	
     public AnswerDAO() {
         super(AnswerDTO.class);
     }
 
-    public List<AnswerDTO> getAnswerBySurvey(String idSupplierByCall, String idQuestion) throws HandlerGenericException {
+    public List<AnswerDTO> getAnswerBySurvey(SupplierByCallDTO supplierByCallDTO, String idQuestion, String idCall) throws HandlerGenericException {
         List<AnswerDTO> response = new ArrayList<AnswerDTO>();
         ArrayList<String> filterBySurveyAndQuestion;
         filterBySurveyAndQuestion = new ArrayList<String>();
-        filterBySurveyAndQuestion.add(idSupplierByCall);
+        filterBySurveyAndQuestion.add(supplierByCallDTO.getId());
         filterBySurveyAndQuestion.add(idQuestion);
         try {
             View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");
             DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
-            if (documents != null) {
+            if (documents.getCount() == 0){
+            	CallDAO callDAO = new CallDAO();
+            	CallDTO callDTO = callDAO.getPrevious(idCall);
+            	if (null != callDTO){
+            		String previousIdCall = callDTO.getId();
+            		copyPreviousAnswer(supplierByCallDTO, idQuestion, previousIdCall);
+            		response = getAnswerBySurvey(supplierByCallDTO, idQuestion, previousIdCall);
+            	}
+            } else {
                 for (Document document : documents) {
                     AnswerDTO answer = castDocument(document);
                     answer.setAttachment(getAttachmentByAnswer(answer));
@@ -40,7 +53,66 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
-
+        return response;
+    }
+    
+    private void copyPreviousAnswer(SupplierByCallDTO supplierByCallDTO, String idQuestion, String idCall) throws HandlerGenericException {
+    	SupplierByCallDAO previousSupplierByCallDAO = new SupplierByCallDAO();
+    	SupplierByCallDTO previousSupplierByCallDTO = previousSupplierByCallDAO.getBySupplierAndCall(supplierByCallDTO.getIdSupplier(), idCall);
+    	
+    	ArrayList<String> filterBySurveyAndQuestion;
+        filterBySurveyAndQuestion = new ArrayList<String>();
+        filterBySurveyAndQuestion.add(previousSupplierByCallDTO.getId());
+        filterBySurveyAndQuestion.add(idQuestion);
+        try {
+            View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");
+            DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
+            AnswerDAO answerDAO = new AnswerDAO();
+            AnswerDTO previousAnswer;
+            AnswerDTO answerDTO;
+            OptionBLO optionBLO = new OptionBLO();
+            OptionDTO optionDTO;
+            
+            if (documents.getCount() > 0){
+                for (Document document : documents) {
+                	previousAnswer = castDocument(document);
+                	answerDTO = new AnswerDTO();
+                	
+                	answerDTO.setIdSupplierByCall(supplierByCallDTO.getId());
+                	answerDTO.setIdSurvey(supplierByCallDTO.getIdSurvey());
+                    answerDTO.setIdQuestion(previousAnswer.getIdQuestion());
+                    answerDTO.setCommentSupplier(previousAnswer.getCommentSupplier());
+                    answerDTO.setDateResponseSupplier(new Date());
+                    
+                    if (!previousAnswer.getIdOptionSupplier().equals("")){
+                    	optionDTO = optionBLO.get(previousAnswer.getIdOptionSupplier());
+                    	if (null != optionDTO){
+                    		answerDTO.setPreviousAnswer(optionDTO.getWording());
+                    	}
+                    } else {
+                    	answerDTO.setPreviousAnswer(previousAnswer.getResponseSupplier());
+                    }
+                    
+                    answerDTO.setAttachment(copyPreviousAttachment(previousAnswer));
+                    answerDTO.autoSetIdAttachment();
+                    
+                	answerDAO.save(answerDTO);
+                }
+            }
+        } catch (Exception exception) {
+            throw new HandlerGenericException(exception);
+        }
+    }
+    
+    private List<AttachmentDTO> copyPreviousAttachment (AnswerDTO answer)throws HandlerGenericException {
+    	List<AttachmentDTO> response = new ArrayList<AttachmentDTO>();
+        AttachmentDAO attachmentDAO = new AttachmentDAO();
+        for (String idAttachment : answer.getIdAttachment()) {
+            AttachmentDTO attachmentDTO = attachmentDAO.copyAttachment(idAttachment);
+            if (null != attachmentDTO) {
+                response.add(attachmentDTO);
+            }
+        }
         return response;
     }
 
@@ -132,35 +204,6 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     }
 
     /**
-     * Obtiene una respuesta en base a una convocatria definitiva y un pregunta
-     * 
-     * @param idSupplierByCall
-     *            Identificador de la convocatoria definitiva
-     * @param idQuestion
-     *            Identificador de la pregunta
-     * @return Respuesta
-     * @throws HandlerGenericException
-     */
-    public AnswerDTO getByQuestionsAndSupplierByCall(String idSupplierByCall, String idQuestion)
-            throws HandlerGenericException {
-        AnswerDTO response = null;
-        List<String> filter = new ArrayList<String>();
-        filter.add(idQuestion);
-        filter.add(idSupplierByCall);
-        try {
-            View view = getDatabase().getView("vwAnswersByQuestionAndIdSupplierByCall");
-            Document document = view.getFirstDocumentByKey(filter, true);
-            if (null != document) {
-                response = castDocument(document);
-            }
-        } catch (Exception exception) {
-            throw new HandlerGenericException(exception);
-        }
-
-        return response;
-    }
-
-    /**
      * Dada la información en <code>parameters</code> identifica por cuales
      * campos se deben filtrar las preguntas.
      * 
@@ -182,6 +225,14 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
         }
 
         return fields;
+    }
+    
+    public AnswerDTO getByQuestionAndSupplierByCall(String idQuestion, String idSupplierByCall) throws HandlerGenericException {
+    	ArrayList<String> key = new ArrayList<String>(2);
+        key.add(idQuestion);
+        key.add(idSupplierByCall);
+        this.entityView = "vwAnswersByQuestionAndIdSupplierByCall";
+        return super.getBy(key);
     }
 
 }

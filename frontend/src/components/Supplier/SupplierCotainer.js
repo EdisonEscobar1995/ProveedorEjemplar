@@ -12,14 +12,14 @@ import {
   saveDataCallBySupplier,
   saveDataCallSupplier,
   changeParticipate,
+  changeAcceptedPolicy,
   updateAttachment,
   deleteAttachment,
   updateChangeIdCompanySize,
   saveAnswer,
   addDataCustomer,
   deleteDataCustomer,
-  reloadDimensions,
-  finishSurvey,
+  validateQuestions,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,
@@ -51,6 +51,7 @@ const mapStateToProps = state => ({
   call: state.supplier.call,
   rules: state.supplier.rules,
   participateInCall: state.supplier.participateInCall,
+  acceptedPolicy: state.supplier.acceptedPolicy,
   supplies: state.supplier.supply,
   categories: state.supplier.categories,
   subcategories: state.supplier.subcategories,
@@ -108,6 +109,9 @@ const mapDispatchToProps = dispatch => ({
   changeParticipate: (participateInCall) => {
     dispatch(changeParticipate(participateInCall));
   },
+  changeAcceptedPolicy: (acceptedPolicy) => {
+    dispatch(changeAcceptedPolicy(acceptedPolicy));
+  },
   updateChangeIdCompanySize: (idCompanySize) => {
     dispatch(updateChangeIdCompanySize(idCompanySize));
   },
@@ -117,11 +121,8 @@ const mapDispatchToProps = dispatch => ({
   deleteData: (data, index) => {
     dispatch(deleteDataCustomer(data, index));
   },
-  reloadDimensions: (dimensions) => {
-    dispatch(reloadDimensions(dimensions));
-  },
-  finishSurvey: () => {
-    dispatch(finishSurvey());
+  validateQuestions: (onFail) => {
+    dispatch(validateQuestions(onFail));
   },
   setNumberOfDirectEmployees: (value) => {
     dispatch(setNumberOfDirectEmployees(value));

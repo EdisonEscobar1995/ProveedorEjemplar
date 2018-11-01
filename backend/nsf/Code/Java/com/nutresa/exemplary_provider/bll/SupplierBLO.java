@@ -92,7 +92,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         CriterionBLO criterionBLO = new CriterionBLO();
         QuestionBLO questionsBLO = new QuestionBLO();
         response.setCriterion(criterionBLO.getCriterionsBySurvey(idSurvey, idDimension));
-        response.setQuestions(questionsBLO.getQuestionsBySurvey(idSurvey, idDimension, idSupplierByCall));
+        response.setQuestions(questionsBLO.getQuestionsBySurvey(idDimension, idSupplierByCall));
         return response;
     }
 

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Form, Select } from 'antd';
+import { Form, Select, Row, Col } from 'antd';
 import DinamicForm from '../shared/DinamicForm';
 import { generalInfo, noParticipateInfo } from './dataPage';
 import Field from './Field';
-import FormButtons from './FormButtons';
+import FormButtons, { ButtonStyle } from './FormButtons';
 import SubTitle from '../shared/SubTitle';
 import Paragraph from '../shared/Paragraph';
 import FormattedMessage from '../shared/FormattedMessage';
@@ -47,6 +47,7 @@ class General extends Component {
   render() {
     const {
       participateInCall,
+      acceptedPolicy,
       changeIdCompanySize,
       system,
       rules: { supplier: { readOnly } },
@@ -56,43 +57,70 @@ class General extends Component {
     let content = '';
     let buttons = [];
     if (participateInCall === 'true') {
-      const fields = generalInfo(this.props);
-      buttons = [
-        {
-          key: 1,
-          text: 'Button.save',
-          buttoncolor: 'buttonFirst',
-          onClick: this.saveDraft,
-          disabled: readOnly,
-          showConfirm: changeIdCompanySize,
-          messageConfirm: messageByChangeSizeCompany,
-        },
-        {
-          key: 2,
-          text: 'Button.continue',
-          buttoncolor: 'buttonSecond',
-          onClick: this.continue,
-          showConfirm: changeIdCompanySize,
-          disabled: readOnly,
-          messageConfirm: messageByChangeSizeCompany,
-        },
-        {
-          key: 3,
-          text: 'Button.send',
-          buttoncolor: 'buttonThird',
-          onClick: this.handleSubmit,
-          disabled: readOnly,
-          showConfirm: changeIdCompanySize,
-          messageConfirm: messageByChangeSizeCompany,
-        },
-      ];
-      content = (
-        <DinamicForm
-          getFieldDecorator={getFieldDecorator}
-          setFields={setFields}
-          content={fields}
-        />
-      );
+      if (!acceptedPolicy) {
+        content = (
+          <div>
+            <SubTitle text="SupplierByCall.dataPolicy" />
+            {system.dataPolicy.split('\r\n').map(item => <div>{item}<br /></div>)}
+            <Row justify="center" align="middle" type="flex" gutter={24}>
+              <Col>
+                <ButtonStyle
+                  buttoncolor="buttonFirst"
+                  onClick={() => this.props.changeAcceptedPolicy(true)}
+                >
+                  <FormattedMessage id="Button.agree" />
+                </ButtonStyle>
+              </Col>
+              <Col>
+                <ButtonStyle
+                  buttoncolor="buttonSecond"
+                  onClick={() => { this.props.changeAcceptedPolicy(false); this.props.changeParticipate('false'); }}
+                >
+                  <FormattedMessage id="Button.refuse" />
+                </ButtonStyle>
+              </Col>
+            </Row>
+          </div>
+        );
+      } else {
+        const fields = generalInfo(this.props);
+        buttons = [
+          {
+            key: 1,
+            text: 'Button.save',
+            buttoncolor: 'buttonFirst',
+            onClick: this.saveDraft,
+            disabled: readOnly,
+            showConfirm: changeIdCompanySize,
+            messageConfirm: messageByChangeSizeCompany,
+          },
+          {
+            key: 2,
+            text: 'Button.continue',
+            buttoncolor: 'buttonSecond',
+            onClick: this.continue,
+            showConfirm: changeIdCompanySize,
+            disabled: readOnly,
+            messageConfirm: messageByChangeSizeCompany,
+          },
+          {
+            key: 3,
+            text: 'Button.send',
+            buttoncolor: 'buttonThird',
+            onClick: this.handleSubmit,
+            disabled: readOnly,
+            showConfirm: changeIdCompanySize,
+            messageConfirm: messageByChangeSizeCompany,
+          },
+        ];
+        content = (
+          <DinamicForm
+            getFieldDecorator={getFieldDecorator}
+            setFields={setFields}
+            content={fields}
+          />
+        );
+      }
     } else if (participateInCall === 'false') {
       const fields = noParticipateInfo(this.props);
       buttons = [
@@ -126,7 +154,7 @@ class General extends Component {
             <Option value="false"><FormattedMessage id="Supplier.no" /></Option>
           </Select>
         </Field>
-        {participateInCall === 'true' ? <SubTitle text="Supplier.companyInformation" /> : ''}
+        {participateInCall === 'true' && acceptedPolicy ? <SubTitle text="Supplier.companyInformation" /> : ''}
         <Paragraph text="Survey.required" translate />
         <Form onSubmit={this.handleSubmit}>
           {

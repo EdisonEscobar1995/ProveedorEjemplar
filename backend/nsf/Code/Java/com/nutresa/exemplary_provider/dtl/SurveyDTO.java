@@ -13,6 +13,8 @@ public class SurveyDTO {
     private String idCompanySize;
     @Expose
     private List<QuestionDTO> question;
+    @Expose
+    private String idCall;
 
     public List<QuestionDTO> getQuestion() {
         return question;
@@ -41,5 +43,13 @@ public class SurveyDTO {
     public void setIdSupply(String idSupply) {
         this.idSupply = idSupply;
     }
+
+	public void setIdCall(String idCall) {
+		this.idCall = idCall;
+	}
+
+	public String getIdCall() {
+		return idCall;
+	}
 
 }

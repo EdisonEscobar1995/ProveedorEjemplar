@@ -8,6 +8,7 @@ import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.StagesCall;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
+import com.nutresa.exemplary_provider.dtl.queries.QuestionStatistic;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
 import com.nutresa.exemplary_provider.dtl.queries.SummaryToLoadSupplier;
@@ -70,6 +71,19 @@ public class CallAPI extends GenericAPI<CallDTO, CallBLO> {
         return response;
     }
 
+    public ServletResponseDTO<List<QuestionStatistic>> getManagerReport(Map<String, String> parameters) {
+        ServletResponseDTO<List<QuestionStatistic>> response = null;
+        CallBLO callBLO = new CallBLO();
+        try {
+            response = new ServletResponseDTO<List<QuestionStatistic>>(callBLO
+                    .getManagerReport(parameters));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<List<QuestionStatistic>>(exception);
+        }
+
+        return response;
+    }
+    
     public ServletResponseDTO<List<ReportOfCalificationsBySuppliers>> getSuppliersForSelection(
             Map<String, String> parameters) {
         ServletResponseDTO<List<ReportOfCalificationsBySuppliers>> response = null;

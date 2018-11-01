@@ -93,8 +93,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         } else {
             supplierByCallBLO.changeState(SurveyStates.SUPPLIER.toString(), dto.getIdSupplierByCall());
             AnswerDAO answerDAO = new AnswerDAO();
-            AnswerDTO answerExisting = answerDAO.getByQuestionsAndSupplierByCall(dto.getIdSupplierByCall(), dto
-                    .getIdQuestion());
+            AnswerDTO answerExisting = answerDAO.getByQuestionAndSupplierByCall(dto.getIdQuestion(), dto.getIdSupplierByCall());
             dto.setDateResponseSupplier(new Date());
 
             if (null != answerExisting) {
@@ -192,6 +191,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
             summarySurvey.setCriterion(criterion.getName());
             summarySurvey.setDimension(dimension.getName());
+            summarySurvey.setAttachmentCount(answer.getIdAttachment().size());
 
             summariesSurvey.add(summarySurvey);
         }
@@ -258,7 +258,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         if (!fieldsToFilterQuestion.isEmpty()) {
             QuestionBLO questionBLO = new QuestionBLO();
             List<QuestionDTO> questions = questionBLO.getThemWithFilter(fieldsToFilterQuestion);
-            response = getByQuestionsAndSupplierByCall(idSupplierByCall, questions);
+            response = getByQuestionAndSupplierByCall(questions, idSupplierByCall);
         } else {
             response = answerDAO.getAsnwersByIdSupplierByCall(idSupplierByCall);
         }
@@ -278,13 +278,13 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
      * @return Colección de respuestas
      * @throws HandlerGenericException
      */
-    private List<AnswerDTO> getByQuestionsAndSupplierByCall(String idSupplierByCall, List<QuestionDTO> questions)
+    private List<AnswerDTO> getByQuestionAndSupplierByCall(List<QuestionDTO> questions, String idSupplierByCall)
             throws HandlerGenericException {
         List<AnswerDTO> response = new ArrayList<AnswerDTO>();
 
         for (QuestionDTO question : questions) {
             AnswerDAO answerDAO = new AnswerDAO();
-            AnswerDTO answer = answerDAO.getByQuestionsAndSupplierByCall(idSupplierByCall, question.getId());
+            AnswerDTO answer = answerDAO.getByQuestionAndSupplierByCall(question.getId(), idSupplierByCall);
             if (null != answer) {
                 response.add(answer);
             }
@@ -292,5 +292,12 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
         return response;
     }
+    
+    public AnswerDTO getByQuestionAndSupplierByCall(String idQuestion, String idSupplierByCall)
+	throws HandlerGenericException {
+	AnswerDAO answerDAO = new AnswerDAO();
+	return answerDAO.getByQuestionAndSupplierByCall(idQuestion, idSupplierByCall);
+}
+
 
 }
