@@ -118,8 +118,7 @@ const getTranslationBySpanishText = value => (dispatch, getState) => {
       id = translationObject.id;
       entityId = translationObject.entityId;
     } else {
-      const dataWithOutNameField = data.find(x => x.entityId === value);
-      entityId = dataWithOutNameField.entityId;
+      entityId = value;
     }
     dispatch(getTranslationBySpanishTextSuccess(translate, id, entityId));
   } catch (error) {
