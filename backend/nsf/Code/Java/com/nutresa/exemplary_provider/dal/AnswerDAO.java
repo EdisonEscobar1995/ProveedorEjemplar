@@ -57,48 +57,51 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
     }
     
     private void copyPreviousAnswer(SupplierByCallDTO supplierByCallDTO, String idQuestion, String idCall) throws HandlerGenericException {
-    	SupplierByCallDAO previousSupplierByCallDAO = new SupplierByCallDAO();
-    	SupplierByCallDTO previousSupplierByCallDTO = previousSupplierByCallDAO.getBySupplierAndCall(supplierByCallDTO.getIdSupplier(), idCall);
-    	
-    	ArrayList<String> filterBySurveyAndQuestion;
-        filterBySurveyAndQuestion = new ArrayList<String>();
-        filterBySurveyAndQuestion.add(previousSupplierByCallDTO.getId());
-        filterBySurveyAndQuestion.add(idQuestion);
-        try {
-            View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");
-            DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
-            AnswerDAO answerDAO = new AnswerDAO();
-            AnswerDTO previousAnswer;
-            AnswerDTO answerDTO;
-            OptionBLO optionBLO = new OptionBLO();
-            OptionDTO optionDTO;
-            
-            if (documents.getCount() > 0){
-                for (Document document : documents) {
-                	previousAnswer = castDocument(document);
-                	answerDTO = new AnswerDTO();
-                	
-                	answerDTO.setIdSupplierByCall(supplierByCallDTO.getId());
-                	answerDTO.setIdSurvey(supplierByCallDTO.getIdSurvey());
-                    answerDTO.setIdQuestion(previousAnswer.getIdQuestion());
-                    answerDTO.setCommentSupplier(previousAnswer.getCommentSupplier());
-                    answerDTO.setDateResponseSupplier(new Date());
-                    
-                    if (!previousAnswer.getIdOptionSupplier().equals("")){
-                    	optionDTO = optionBLO.get(previousAnswer.getIdOptionSupplier());
-                    	if (null != optionDTO){
-                    		answerDTO.setPreviousAnswer(optionDTO.getWording());
-                    	}
-                    } else {
-                    	answerDTO.setPreviousAnswer(previousAnswer.getResponseSupplier());
-                    }
-                    
-                    answerDTO.setAttachment(copyPreviousAttachment(previousAnswer));
-                    answerDTO.autoSetIdAttachment();
-                    
-                	answerDAO.save(answerDTO);
-                }
-            }
+    	try {
+            SupplierByCallDAO previousSupplierByCallDAO = new SupplierByCallDAO();
+	    	SupplierByCallDTO previousSupplierByCallDTO = previousSupplierByCallDAO.getBySupplierAndCall(supplierByCallDTO.getIdSupplier(), idCall);
+	    	
+	    	if (null != previousSupplierByCallDTO){
+		    	ArrayList<String> filterBySurveyAndQuestion;
+		        filterBySurveyAndQuestion = new ArrayList<String>();
+		        filterBySurveyAndQuestion.add(previousSupplierByCallDTO.getId());
+		        filterBySurveyAndQuestion.add(idQuestion);
+		        
+	            View currentView = getDatabase().getView("vwAnswerBySurveyAndQuestion");
+	            DocumentCollection documents = currentView.getAllDocumentsByKey(filterBySurveyAndQuestion, true);
+	            AnswerDAO answerDAO = new AnswerDAO();
+	            AnswerDTO previousAnswer;
+	            AnswerDTO answerDTO;
+	            OptionBLO optionBLO = new OptionBLO();
+	            OptionDTO optionDTO;
+	            
+	            if (documents.getCount() > 0){
+	                for (Document document : documents) {
+	                	previousAnswer = castDocument(document);
+	                	answerDTO = new AnswerDTO();
+	                	
+	                	answerDTO.setIdSupplierByCall(supplierByCallDTO.getId());
+	                	answerDTO.setIdSurvey(supplierByCallDTO.getIdSurvey());
+	                    answerDTO.setIdQuestion(previousAnswer.getIdQuestion());
+	                    answerDTO.setCommentSupplier(previousAnswer.getCommentSupplier());
+	                    answerDTO.setDateResponseSupplier(new Date());
+	                    
+	                    if (!previousAnswer.getIdOptionSupplier().equals("")){
+	                    	optionDTO = optionBLO.get(previousAnswer.getIdOptionSupplier());
+	                    	if (null != optionDTO){
+	                    		answerDTO.setPreviousAnswer(optionDTO.getWording());
+	                    	}
+	                    } else {
+	                    	answerDTO.setPreviousAnswer(previousAnswer.getResponseSupplier());
+	                    }
+	                    
+	                    answerDTO.setAttachment(copyPreviousAttachment(previousAnswer));
+	                    answerDTO.autoSetIdAttachment();
+	                    
+	                	answerDAO.save(answerDTO);
+	                }
+	            }
+	    	}
         } catch (Exception exception) {
             throw new HandlerGenericException(exception);
         }
