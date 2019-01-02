@@ -305,9 +305,19 @@ class Question extends Component {
     message({ text: 'Validation.verifyDimensions', type: 'info' });
   };
   render() {
-    const { criterions, rules, stateData, next } = this.props;
+    const { criterions, rules, callData, next } = this.props;
     const disabled = rules.supplier.readOnly && rules.evaluator.readOnly;
     const columns = this.getColumns();
+
+    const date = new Date();
+    let month = `0${date.getMonth() + 1}`;
+    month = month.substring(month.length - 2, month.length);
+    let day = `0${date.getDate()}`;
+    day = day.substring(day.length - 2, day.length);
+    const today = parseFloat(`${date.getFullYear()}${month}${day}`, 10);
+    let { deadlineToMakeSurveyManagerTeam } = callData;
+    deadlineToMakeSurveyManagerTeam = parseFloat(deadlineToMakeSurveyManagerTeam.replace(/\//g, ''), 10);
+
     let buttons = [];
     if (!disabled) {
       buttons = [
@@ -340,7 +350,7 @@ class Question extends Component {
                   </div>
                   <div>
                     {
-                      stateData.shortName === 'ENDED_MANAGER_TEAM' &&
+                      today >= deadlineToMakeSurveyManagerTeam &&
                       <Fragment>
                         <FormattedMessage id="Table.criteriaScore" />
                         {

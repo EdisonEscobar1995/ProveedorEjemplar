@@ -45,6 +45,7 @@ import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { saveAnswerApi, deleteMassiveAnswersApi, clearMassiveAnswersApi } from '../../api/answer';
+import { getCallByIdApi } from '../../api/call';
 import getDataStateApi from '../../api/state';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
@@ -111,6 +112,7 @@ const getDataSupplierSuccess = (data) => {
     rules,
     supply,
     system,
+    callData,
     stateData,
   } = data;
 
@@ -140,6 +142,7 @@ const getDataSupplierSuccess = (data) => {
     subcategories,
     departments,
     cities,
+    callData,
     stateData,
     sectors,
     system,
@@ -355,6 +358,20 @@ function finishSurveyEvaluatorSucess() {
   };
 }
 
+function loadCallData(dispatch, api, data) {
+  const allData = {
+    ...data,
+  };
+  return requestApiNotLoading(dispatch, api, data.call.idCall)
+    .then((respone) => {
+      allData.callData = respone.data.data;
+      return allData;
+    }).catch(() => {
+      allData.callData = { deadlineToMakeSurveyManagerTeam: '0' };
+      return allData;
+    });
+}
+
 function loadStateData(dispatch, api, data) {
   const allData = {
     ...data,
@@ -429,7 +446,8 @@ function getDataSupplier(idSupplier, idSupplierByCall) {
         sectors,
         system,
       };
-    }).then(data => loadStateData(dispatch, getDataStateApi, data))
+    }).then(data => loadCallData(dispatch, getCallByIdApi, data))
+      .then(data => loadStateData(dispatch, getDataStateApi, data))
       .then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
       .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))
       .then(data => loadDependingOptions(dispatch, getDataDepartmentsByCountryApi, data, 'idOriginCountry', 'departments'))

@@ -62,7 +62,9 @@ class Supplier extends Component {
       }
     }
     const mapDimensions = dimensions.map((dimension) => {
-      const { call, validateQuestions, saveAnswer, system, rules, stateData } = this.props;
+      const {
+        call, validateQuestions, saveAnswer, system, rules, callData, stateData,
+      } = this.props;
       const { id, idSurvey } = call;
       return {
         name: dimension.name,
@@ -77,6 +79,7 @@ class Supplier extends Component {
           rules={rules}
           validateQuestions={validateQuestions}
           next={this.next}
+          callData={callData}
           stateData={stateData}
         />,
         stepContent: this.getProgress(dimension.percent, dimension.name),

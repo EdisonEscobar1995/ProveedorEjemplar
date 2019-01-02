@@ -95,6 +95,7 @@ function supplierApp(state = initialState, action) {
         subcategories: action.subcategories,
         departments: action.departments,
         cities: action.cities,
+        callData: action.callData,
         stateData: action.stateData,
         sectors: action.sectors,
         system: action.system,

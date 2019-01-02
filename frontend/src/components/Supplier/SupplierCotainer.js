@@ -61,6 +61,7 @@ const mapStateToProps = state => ({
   countries: state.supplier.countries,
   departments: state.supplier.departments,
   cities: state.supplier.cities,
+  callData: state.supplier.callData,
   stateData: state.supplier.stateData,
   dimensions: state.supplier.dimensions,
   loading: state.supplier.loading,
