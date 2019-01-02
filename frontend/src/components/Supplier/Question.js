@@ -8,6 +8,7 @@ import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
 import { baseUrl } from '../../utils/api';
 import message from '../shared/message';
+import { getMomentDate } from '../../utils/date';
 
 const { TextArea } = Input;
 const { Column } = Table;
@@ -310,13 +311,8 @@ class Question extends Component {
     const columns = this.getColumns();
 
     const date = new Date();
-    let month = `0${date.getMonth() + 1}`;
-    month = month.substring(month.length - 2, month.length);
-    let day = `0${date.getDate()}`;
-    day = day.substring(day.length - 2, day.length);
-    const today = parseFloat(`${date.getFullYear()}${month}${day}`, 10);
-    let { deadlineToMakeSurveyManagerTeam } = callData;
-    deadlineToMakeSurveyManagerTeam = parseFloat(deadlineToMakeSurveyManagerTeam.replace(/\//g, ''), 10);
+    const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const deadlineToMakeSurveyManagerTeam = getMomentDate(callData.deadlineToMakeSurveyManagerTeam);
 
     let buttons = [];
     if (!disabled) {
@@ -350,7 +346,7 @@ class Question extends Component {
                   </div>
                   <div>
                     {
-                      today >= deadlineToMakeSurveyManagerTeam &&
+                      today.getTime() >= parseInt(deadlineToMakeSurveyManagerTeam.format('x'), 10) &&
                       <Fragment>
                         <FormattedMessage id="Table.criteriaScore" />
                         {
