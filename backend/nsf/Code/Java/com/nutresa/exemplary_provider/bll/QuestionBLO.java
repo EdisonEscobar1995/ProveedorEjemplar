@@ -10,7 +10,9 @@ import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.OptionDTO;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
+import com.nutresa.exemplary_provider.dtl.StateDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.QuestionStatistic;
 import com.nutresa.exemplary_provider.dtl.queries.QuestionStatistic.OptionStatistic;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
@@ -186,7 +188,14 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
 	    String idDimension = parameters.get("idDimension");
 	    String idCriterion = parameters.get("idCriterion");
 	    
-	    OptionBLO optionBLO = new OptionBLO();
+	    List<String> states = new ArrayList<String>();
+        states.add(SurveyStates.DONT_PARTICIPATE.toString());
+        states.add(SurveyStates.NOT_STARTED.toString());
+        states.add(SurveyStates.SUPPLIER.toString());
+    	StateBLO stateBLO = new StateBLO();
+    	StateDTO stateDTO;
+		
+        OptionBLO optionBLO = new OptionBLO();
 	    List<OptionDTO> options;
 	    
 	    SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
@@ -222,11 +231,14 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
 		    		suppliersByCall = supplierByCallBLO.getByCallAndSurvey(idCall, idSurvey);
 		    		for (SupplierByCallDTO supplierByCallDTO: suppliersByCall) {
 		    			questionStatistic.setSuppliersCount(questionStatistic.getSuppliersCount() + 1);
-		    			answerDTO = answerBLO.getByQuestionAndSupplierByCall(questionDTO.getId(), supplierByCallDTO.getId());
-		    			if (null != answerDTO && optionsMap.containsKey(answerDTO.getIdOptionSupplier())){
-		    				optionStatistic = optionsMap.get(answerDTO.getIdOptionSupplier());
-		    				questionStatistic.setAnswersCount(questionStatistic.getAnswersCount() + 1);
-		    				optionStatistic.setCount(optionStatistic.getCount() + 1);
+			    		stateDTO = stateBLO.get(supplierByCallDTO.getIdState());
+			    		if (null != stateDTO && !states.contains(stateDTO.getShortName())){
+			    			answerDTO = answerBLO.getByQuestionAndSupplierByCall(questionDTO.getId(), supplierByCallDTO.getId());
+			    			if (null != answerDTO && optionsMap.containsKey(answerDTO.getIdOptionSupplier())){
+			    				optionStatistic = optionsMap.get(answerDTO.getIdOptionSupplier());
+			    				questionStatistic.setAnswersCount(questionStatistic.getAnswersCount() + 1);
+			    				optionStatistic.setCount(optionStatistic.getCount() + 1);
+			    			}		    				
 		    			}
 	        		}
 		    	}
