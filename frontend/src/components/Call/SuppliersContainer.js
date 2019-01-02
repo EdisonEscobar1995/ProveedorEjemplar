@@ -146,7 +146,7 @@ class SuppliersContainer extends Component {
       key: 'state',
       render(text, record) {
         const invitedToCall = suppliersByCall.find(x => x.idSupplier === record.id).invitedToCall;
-        return invitedToCall ? 'Enviada' : 'Borrador';
+        return invitedToCall ? 'Enviado' : 'Sin enviar';
       },
     }, {
       title: 'Acción',
