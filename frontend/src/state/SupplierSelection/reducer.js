@@ -4,6 +4,7 @@ import {
   CHECK_SUPPLIER,
   UPDATE_SUPPLIER_SELECTION,
   REQUEST_FAILED,
+  RESET_DATA,
 } from './const';
 
 const initialState = {
@@ -48,6 +49,12 @@ function resultsApp(state = initialState, action) {
       return {
         ...state,
         loading: false,
+      };
+    }
+    case RESET_DATA: {
+      return {
+        ...state,
+        data: [],
       };
     }
     default: {

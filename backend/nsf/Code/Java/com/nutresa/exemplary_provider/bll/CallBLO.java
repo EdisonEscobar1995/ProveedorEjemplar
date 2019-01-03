@@ -299,10 +299,14 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         }
 
         List<SupplierByCallDTO> evaluatedSuppliers = new ArrayList<SupplierByCallDTO>();
+        if ("Evaluator".equals(nameNextStage)) {
+            evaluatedSuppliers = supplierByCallBLO.getFinishedByStage(SurveyStates.ENDED_SUPPLIER);
+        }
+
         if ("TechnicalTeam".equals(nameNextStage)) {
             evaluatedSuppliers = supplierByCallBLO.getFinishedByStage(SurveyStates.ENDED_EVALUATOR);
         }
-
+        
         if ("ManagerTeam".equals(nameNextStage)) {
             evaluatedSuppliers = supplierByCallBLO.getFinishedByStage(SurveyStates.ENDED_TECHNICAL_TEAM);
         }
@@ -312,7 +316,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         for (SupplierByCallDTO supplierByCall : evaluatedSuppliers) {
             parametersToGenerateReport.put("type", "SUPPLIER_EVALUATOR");
             ReportOfCalificationsBySuppliers reportBySupplier = new ReportOfCalificationsBySuppliers();
-            if ("TechnicalTeam".equals(nameNextStage)) {
+            if ("Evaluator".equals(nameNextStage) || "TechnicalTeam".equals(nameNextStage)) {
                 reportBySupplier = getRecordOfReport(supplierByCall, supplierBLO.get(supplierByCall.getIdSupplier()),
                         parametersToGenerateReport);
             }
