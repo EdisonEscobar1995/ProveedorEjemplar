@@ -5,6 +5,7 @@ import {
   SEARCH_SURVEY_ADMON,
   CHANGE_SEARCH_SURVEY_ADMON,
   SAVE_SURVEY_ADMON,
+  UPDATE_DATA_SURVEY_ADMON,
   DELETE_SURVEY_ADMON,
   CLEAN_DATA,
   SEARCH_BY_DIMENSION,
@@ -43,6 +44,7 @@ const initialState = {
   supplyValue: '',
   companySizeValue: '',
   loading: false,
+  masters: {},
 };
 
 function surveyAdmonApp(state = initialState, action) {
@@ -85,6 +87,14 @@ function surveyAdmonApp(state = initialState, action) {
         call: action.call,
         supply: action.supply,
         companySize: action.companySize,
+        masters: action.masters,
+        loading: false,
+      };
+    }
+    case UPDATE_DATA_SURVEY_ADMON: {
+      return {
+        ...state,
+        data: action.data,
         loading: false,
       };
     }

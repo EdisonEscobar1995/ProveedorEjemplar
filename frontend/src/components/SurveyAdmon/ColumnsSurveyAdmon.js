@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Tooltip, Button } from 'antd';
 
-const columnsData = (props, onAdd, onEdit) => [{
+const columnsData = (props, onAdd, onEdit, onCopy) => [{
   title: 'Convocatoria',
   key: 'idCall',
   render: (text, record) => {
@@ -48,6 +48,13 @@ const columnsData = (props, onAdd, onEdit) => [{
           shape="circle"
           icon="plus"
           onClick={() => onAdd()}
+        />
+      </Tooltip>
+      <Tooltip title="Copiar">
+        <Button
+          shape="circle"
+          icon="copy"
+          onClick={() => onCopy(record)}
         />
       </Tooltip>
     </Fragment>

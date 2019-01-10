@@ -24,10 +24,11 @@ import {
   FILTER_BY_CRITERION_SURVEY,
   REQUEST_FAILED,
   SAVE_SURVEY_ADMON,
+  UPDATE_DATA_SURVEY_ADMON,
 } from './const';
 
 import
-{ getSurveyByIdApi, getAllDataSurveyApi, saveSurveyApi }
+{ getSurveyByIdApi, getAllDataSurveyApi, saveSurveyApi, copySurveyApi }
   from '../../api/survey';
 import { getCallApi } from '../../api/call';
 import { getSuppliesApi } from '../../api/supply';
@@ -36,7 +37,10 @@ import { getQuestionsByIdDimensionApi } from '../../api/question';
 import { getDataDimensionApi } from '../../api/dimension';
 import { getAllCriterionsByDimensionApi, getAllCriterionsApi } from '../../api/criterions';
 import { requestApi, requestApiNotLoading } from '../../utils/action';
+import getMasterApi from '../../api/master';
 import setMessage from '../Generic/action';
+import { openModal, closeModal } from '../Main/action';
+
 // import Notification from '../../components/shared/notification';
 
 // Encuesta listado
@@ -44,12 +48,18 @@ const getDataSurveyProgress = () => ({
   type: GET_DATA_SURVEY_ADMON_PROGRESS,
 });
 
-const getDataSurveySuccess = (data, call, supply, companySize) => ({
+const getDataSurveySuccess = (data, call, supply, companySize, masters) => ({
   type: GET_DATA_SURVEY_ADMON_SUCCESS,
   data,
   call,
   supply,
   companySize,
+  masters,
+});
+
+const updateDataSurvey = data => ({
+  type: UPDATE_DATA_SURVEY_ADMON,
+  data,
 });
 
 const getFailedRequest = () => ({
@@ -57,28 +67,39 @@ const getFailedRequest = () => ({
 });
 
 const getAllSurveys = () => (dispatch) => {
-  requestApi(dispatch, getDataSurveyProgress, getCallApi)
-    .then((callResponse) => {
-      const call = callResponse.data.data;
-      requestApi(dispatch, getDataSurveyProgress, getSuppliesApi)
-        .then((supplyResponse) => {
-          const supply = supplyResponse.data.data;
-          requestApi(dispatch, getDataSurveyProgress, getDataCompanySizeApi)
-            .then((companySizeResponse) => {
-              const companySize = companySizeResponse.data.data;
-              requestApi(dispatch, getDataSurveyProgress, getAllDataSurveyApi)
-                .then((response) => {
-                  const { data } = response.data;
-                  const dataFilter = data.map(item => ({
-                    ...item,
-                    visible: true,
-                  }));
-                  dispatch(getDataSurveySuccess(dataFilter, call, supply, companySize));
+  requestApi(dispatch, getDataSurveyProgress, getMasterApi, ['Call'])
+    .then((masterResponse) => {
+      requestApi(dispatch, getDataSurveyProgress, getCallApi)
+        .then((callResponse) => {
+          const call = callResponse.data.data;
+          requestApi(dispatch, getDataSurveyProgress, getSuppliesApi)
+            .then((supplyResponse) => {
+              const supply = supplyResponse.data.data;
+              requestApi(dispatch, getDataSurveyProgress, getDataCompanySizeApi)
+                .then((companySizeResponse) => {
+                  const companySize = companySizeResponse.data.data;
+                  requestApi(dispatch, getDataSurveyProgress, getAllDataSurveyApi)
+                    .then((response) => {
+                      const { data } = response.data;
+                      const dataFilter = data.map(item => ({
+                        ...item,
+                        visible: true,
+                      }));
+                      const masters = masterResponse.data.data;
+                      masters.Call = masters.Call.map(item => ({
+                        ...item,
+                        name: item.year.toString(),
+                      }));
+                      dispatch(
+                        getDataSurveySuccess(dataFilter, call, supply, companySize, masters));
+                    });
                 });
+            }).catch(() => {
+              dispatch(getFailedRequest());
             });
-        }).catch(() => {
-          dispatch(getFailedRequest());
         });
+    }).catch(() => {
+      dispatch(getFailedRequest());
     });
 };
 
@@ -601,6 +622,26 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
   }
 };
 
+const copySurvey = data => (dispatch) => {
+  dispatch(closeModal());
+  requestApi(dispatch, getDataSurveyProgress, copySurveyApi, data)
+    .then(() => {
+      requestApi(dispatch, getDataSurveyProgress, getAllDataSurveyApi)
+        .then((response) => {
+          const dataFilter = response.data.data.map(item => ({
+            ...item,
+            visible: true,
+          }));
+          dispatch(updateDataSurvey(dataFilter));
+          dispatch(setMessage('La encuesta ha sido copiada', 'success'));
+        }).catch(() => {
+          dispatch(getFailedRequest());
+        });
+    }).catch(() => {
+      dispatch(getFailedRequest());
+    });
+};
+
 export {
   getAllSurveys,
   getAllDataSurveyFormAdmon,
@@ -623,4 +664,7 @@ export {
   setCallValue,
   setSupplyValue,
   setCompanySizeValue,
+  copySurvey,
+  openModal,
+  closeModal,
 };

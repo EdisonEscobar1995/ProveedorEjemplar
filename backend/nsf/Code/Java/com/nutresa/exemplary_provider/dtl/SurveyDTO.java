@@ -23,6 +23,10 @@ public class SurveyDTO {
     public void setQuestion(List<QuestionDTO> question) {
         this.question = question;
     }
+    
+    public void setId(String id) {
+    	this.id = id;
+    }
 
     public String getId() {
         return id;
