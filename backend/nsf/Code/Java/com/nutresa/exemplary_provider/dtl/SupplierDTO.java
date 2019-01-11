@@ -109,13 +109,9 @@ public class SupplierDTO {
     @Expose
     private List<CustomerDTO> principalCustomer;
     @Expose
+    private List<ContactDTO> contactNutresaGroup;
+    @Expose
     private short participationInSalesWithGroupNutresa;
-    @Expose
-    private String nameContactPersonInGroupNutresa;
-    @Expose
-    private String emailContactPersonInGroupNutresa;
-    @Expose
-    private String phoneContactPersonInGroupNutresa;
     @Expose
     private String geograficDescriptionOfPrincipalMaterials;
     @Expose
@@ -306,31 +302,7 @@ public class SupplierDTO {
     public void setParticipationInSalesWithGroupNutresa(short participationInSalesWithGroupNutresa) {
         this.participationInSalesWithGroupNutresa = participationInSalesWithGroupNutresa;
     }
-
-    public String getNameContactPersonInGroupNutresa() {
-        return nameContactPersonInGroupNutresa;
-    }
-
-    public void setNameContactPersonInGroupNutresa(String nameContactPersonInGroupNutresa) {
-        this.nameContactPersonInGroupNutresa = nameContactPersonInGroupNutresa;
-    }
-
-    public String getEmailContactPersonInGroupNutresa() {
-        return emailContactPersonInGroupNutresa;
-    }
-
-    public void setEmailContactPersonInGroupNutresa(String emailContactPersonInGroupNutresa) {
-        this.emailContactPersonInGroupNutresa = emailContactPersonInGroupNutresa;
-    }
-
-    public String getPhoneContactPersonInGroupNutresa() {
-        return phoneContactPersonInGroupNutresa;
-    }
-
-    public void setPhoneContactPersonInGroupNutresa(String phoneContactPersonInGroupNutresa) {
-        this.phoneContactPersonInGroupNutresa = phoneContactPersonInGroupNutresa;
-    }
-
+    
     public String getGeograficDescriptionOfPrincipalMaterials() {
         return geograficDescriptionOfPrincipalMaterials;
     }
@@ -619,6 +591,14 @@ public class SupplierDTO {
 
 	public String getIdLegalAgent() {
 		return idLegalAgent;
+	}
+
+	public void setContactNutresaGroup(List<ContactDTO> contactNutresaGroup) {
+		this.contactNutresaGroup = contactNutresaGroup;
+	}
+
+	public List<ContactDTO> getContactNutresaGroup() {
+		return contactNutresaGroup;
 	}
 
 }

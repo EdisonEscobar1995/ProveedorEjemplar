@@ -1,6 +1,6 @@
 import { intValidation, mailValitation, mailValitationMultiple } from '../../utils/rules';
 
-const mainCustomers = [
+const principalCustomerColumns = [
   {
     title: 'Supplier.principalCustomer.name',
     key: 'name',
@@ -9,6 +9,22 @@ const mainCustomers = [
     title: 'Supplier.principalCustomer.percentageOfParticipationInSales',
     key: 'percentageOfParticipationInSales',
     type: 'number',
+  },
+];
+
+const contactNutresaGroupColumns = [
+  {
+    title: 'Supplier.contactNutresaGroup.name',
+    key: 'name',
+  },
+  {
+    title: 'Supplier.contactNutresaGroup.email',
+    key: 'email',
+    type: 'email',
+  },
+  {
+    title: 'Supplier.contactNutresaGroup.phone',
+    key: 'phone',
   },
 ];
 
@@ -88,9 +104,12 @@ function generalInfo(fields) {
     sectors,
     setSector,
     setExport,
-    addData,
-    deleteData,
-    updateField,
+    addCustomer,
+    updateCustomer,
+    deleteCustomer,
+    addContact,
+    deleteContact,
+    updateContact,
   } = fields;
 
   const {
@@ -133,9 +152,6 @@ function generalInfo(fields) {
     otherSector,
     webSite,
     packagingProvided,
-    nameContactPersonInGroupNutresa,
-    emailContactPersonInGroupNutresa,
-    phoneContactPersonInGroupNutresa,
     geograficDescriptionOfPrincipalMaterials,
     currentlyExport,
     nameCertification,
@@ -145,6 +161,7 @@ function generalInfo(fields) {
     actualSector,
     actuallyExport,
     principalCustomer,
+    contactNutresaGroup,
   } = supplier;
   const {
     uploadMaxFilesize,
@@ -426,20 +443,32 @@ function generalInfo(fields) {
       key: 3.0,
       value: [
         {
-          type: 'table',
-          key: 'principalCustomer',
-          value: principalCustomer,
+          span: 12,
+          type: 'title',
+          value: 'Supplier.principalCustomers',
+          key: 'principalCustomers',
           disabled,
-          colummns: mainCustomers,
-          loading,
-          addData,
-          deleteData,
-          updateField,
         },
       ],
     },
     {
       key: 3.1,
+      value: [
+        {
+          type: 'table',
+          key: 'principalCustomer',
+          value: principalCustomer,
+          disabled,
+          colummns: principalCustomerColumns,
+          loading,
+          addData: addCustomer,
+          deleteData: deleteCustomer,
+          updateField: updateCustomer,
+        },
+      ],
+    },
+    {
+      key: 3.2,
       value:
       [
         {
@@ -451,7 +480,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.2,
+      key: 3.3,
       value: [
         {
           span: 6,
@@ -510,7 +539,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.3,
+      key: 3.4,
       value: [
         {
           type: 'textarea',
@@ -522,7 +551,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.4,
+      key: 3.5,
       value: [
         {
           span: 12,
@@ -534,7 +563,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.5,
+      key: 3.6,
       value: [
         {
           span: 6,
@@ -580,7 +609,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.6,
+      key: 3.7,
       value: [
         {
           span: 12,
@@ -592,7 +621,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.7,
+      key: 3.8,
       value: [
         {
           span: 6,
@@ -617,7 +646,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.8,
+      key: 3.9,
       value: [
         {
           span: 12,
@@ -628,7 +657,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 3.9,
+      key: 4.0,
       value: [
         {
           span: 6,
@@ -675,7 +704,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.0,
+      key: 4.1,
       value: [
         {
           span: 8,
@@ -708,7 +737,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.1,
+      key: 4.2,
       value: [
         {
           type: 'radio',
@@ -736,7 +765,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.2,
+      key: 4.3,
       value: [
         {
           span: 12,
@@ -748,43 +777,23 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.3,
+      key: 4.4,
       value: [
         {
-          span: 8,
-          type: 'input',
-          label: 'Supplier.nameContactPersonInGroupNutresa',
-          key: 'nameContactPersonInGroupNutresa',
-          value: nameContactPersonInGroupNutresa,
+          type: 'table',
+          key: 'contactNutresaGroup',
+          value: contactNutresaGroup,
           disabled,
-          required: true,
-          whitespace: true,
-        },
-        {
-          span: 8,
-          type: 'input',
-          inputType: 'mail',
-          label: 'Supplier.emailContactPersonInGroupNutresa',
-          key: 'emailContactPersonInGroupNutresa',
-          value: emailContactPersonInGroupNutresa,
-          disabled,
-          rules: [
-            { ...mailValitation },
-          ],
-        },
-        {
-          span: 8,
-          type: 'input',
-          inputType: 'mail',
-          label: 'Supplier.phoneContactPersonInGroupNutresa',
-          key: 'phoneContactPersonInGroupNutresa',
-          value: phoneContactPersonInGroupNutresa,
-          disabled,
+          colummns: contactNutresaGroupColumns,
+          loading,
+          addData: addContact,
+          deleteData: deleteContact,
+          updateField: updateContact,
         },
       ],
     },
     {
-      key: 4.4,
+      key: 4.5,
       value: [
         {
           type: 'title',
@@ -794,7 +803,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.5,
+      key: 4.6,
       value: [
         {
           type: 'textarea',
@@ -806,7 +815,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.6,
+      key: 4.7,
       value: [
         {
           type: 'title',
@@ -816,7 +825,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.7,
+      key: 4.8,
       value: [
         {
           span: 6,
@@ -841,7 +850,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.8,
+      key: 4.9,
       value: [
         {
           type: 'title',
@@ -851,7 +860,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 4.9,
+      key: 5.0,
       value: [
         {
           type: 'textarea',
@@ -863,7 +872,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 5.0,
+      key: 5.1,
       value: [
         {
           type: 'title',
@@ -873,7 +882,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 5.1,
+      key: 5.2,
       value: [
         {
           span: 12,
@@ -888,7 +897,7 @@ function generalInfo(fields) {
       ],
     },
     {
-      key: 5.2,
+      key: 5.3,
       value: [
         {
           span: 12,

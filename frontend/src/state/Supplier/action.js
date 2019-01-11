@@ -19,7 +19,11 @@ import {
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
   SAVE_CUSTOMER,
+  UPDATE_CUSTOMER,
   DELETE_CUSTOMER,
+  SAVE_CONTACT,
+  UPDATE_CONTACT,
+  DELETE_CONTACT,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY_SUPPLIER,
   FINISH_SURVEY_EVALUATOR,
@@ -27,7 +31,6 @@ import {
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
   SET_EXPORT,
-  UPDATE_CUSTOMER,
   CLEAN_STORE,
 } from './const';
 import {
@@ -340,6 +343,19 @@ function saveDataCustomer(data) {
 function deleteDataCustomer(data) {
   return {
     type: DELETE_CUSTOMER,
+    data,
+  };
+}
+
+function saveDataContact(data) {
+  return {
+    type: SAVE_CONTACT,
+    data,
+  };
+}
+function deleteDataContact(data) {
+  return {
+    type: DELETE_CONTACT,
     data,
   };
 }
@@ -759,7 +775,7 @@ const saveDataCallSupplier = clientSupplier => (
           })
       )).then(({ call, supplier = {} }) => {
         dispatch(setMessage('Supplier.savedInfo', 'success'));
-        const { principalCustomer } = supplier;
+        const { principalCustomer, contactNutresaGroup } = supplier;
         const clientCustomers = clientSupplier.principalCustomer;
         const newCustomers = principalCustomer.map((customer) => {
           const oldCustomer = clientCustomers.find(item =>
@@ -774,6 +790,22 @@ const saveDataCallSupplier = clientSupplier => (
           };
         });
         supplier.principalCustomer = newCustomers;
+
+        const clientContacts = clientSupplier.contactNutresaGroup;
+        const newContacts = contactNutresaGroup.map((contact) => {
+          const oldContact = clientContacts.find(item =>
+            (
+              contact.name === item.name &&
+              contact.email === item.email &&
+              contact.phone === item.phone
+            ),
+          );
+          return {
+            ...contact,
+            key: oldContact.key,
+          };
+        });
+        supplier.contactNutresaGroup = newContacts;
         dispatch(saveDataCallAndSupplerSuccess(call, sumTotalSupplier(supplier)));
       })
       .catch((err) => {
@@ -799,6 +831,21 @@ const addCustomer = clientData => (
     dispatch(saveDataCustomer(supplier));
   }
 );
+const updateCustomer = (value, index, fielName) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    let rowValue = supplier.principalCustomer[index];
+    rowValue = rowValue || {};
+    const assignObject = {};
+    assignObject[fielName] = value;
+    rowValue = Object.assign(rowValue, assignObject);
+    supplier.principalCustomer[index] = rowValue;
+    dispatch({
+      type: UPDATE_CUSTOMER,
+      data: supplier,
+    });
+  }
+);
 const deleteCustomer = (clientData, index) => (
   (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
@@ -814,6 +861,48 @@ const deleteCustomer = (clientData, index) => (
     dispatch(deleteDataCustomer(supplier));
   }
 );
+
+const addContact = clientData => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const contactNutresaGroup = supplier.contactNutresaGroup;
+    const newData = [...contactNutresaGroup];
+    newData.push(clientData);
+    supplier.contactNutresaGroup = newData;
+    dispatch(saveDataContact(supplier));
+  }
+);
+const updateContact = (value, index, fielName) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    let rowValue = supplier.contactNutresaGroup[index];
+    rowValue = rowValue || {};
+    const assignObject = {};
+    assignObject[fielName] = value;
+    rowValue = Object.assign(rowValue, assignObject);
+    supplier.contactNutresaGroup[index] = rowValue;
+    dispatch({
+      type: UPDATE_CONTACT,
+      data: supplier,
+    });
+  }
+);
+const deleteContact = (clientData, index) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const contactNutresaGroup = supplier.contactNutresaGroup;
+    const newData = [...contactNutresaGroup];
+    newData.splice(index, 1);
+    if (newData && newData.length === 0) {
+      newData.push({
+        key: 0,
+      });
+    }
+    supplier.contactNutresaGroup = newData;
+    dispatch(deleteDataContact(supplier));
+  }
+);
+
 const finishSurvey = () => (
   (dispatch, getActualState) => {
     const { supplier, stateData } = { ...getActualState() };
@@ -831,21 +920,7 @@ const finishSurvey = () => (
       });
   }
 );
-const updateField = (value, index, fielName) => (
-  (dispatch, getActualState) => {
-    const supplier = { ...getActualState().supplier.supplier };
-    let rowValue = supplier.principalCustomer[index];
-    rowValue = rowValue || {};
-    const assignObject = {};
-    assignObject[fielName] = value;
-    rowValue = Object.assign(rowValue, assignObject);
-    supplier.principalCustomer[index] = rowValue;
-    dispatch({
-      type: UPDATE_CUSTOMER,
-      data: supplier,
-    });
-  }
-);
+
 const validateNumber = (value) => {
   let result = 0;
   if (value) {
@@ -951,13 +1026,16 @@ export {
   updateAttachment,
   deleteAttachment,
   updateChangeIdCompanySize,
-  deleteCustomer as deleteDataCustomer,
-  addCustomer as addDataCustomer,
+  addCustomer,
+  updateCustomer,
+  deleteCustomer,
+  addContact,
+  updateContact,
+  deleteContact,
   validateQuestions,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,
   setExport,
-  updateField,
   cleanStore,
 };

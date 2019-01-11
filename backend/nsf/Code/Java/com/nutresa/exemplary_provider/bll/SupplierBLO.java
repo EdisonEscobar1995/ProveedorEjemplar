@@ -8,6 +8,7 @@ import java.util.Map;
 import com.nutresa.exemplary_provider.dal.StateDAO;
 import com.nutresa.exemplary_provider.dal.SupplierDAO;
 import com.nutresa.exemplary_provider.dtl.CustomerDTO;
+import com.nutresa.exemplary_provider.dtl.ContactDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
 import com.nutresa.exemplary_provider.dtl.StateDTO;
@@ -36,11 +37,15 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
         CustomerBLO customerBLO = new CustomerBLO();
         customerBLO.deleteCustomers(customerBLO.getCustomersBySupplier(currentSupplier.getId()));
+        ContactBLO contactBLO = new ContactBLO();
+        contactBLO.deleteContacts(contactBLO.getContactsBySupplier(currentSupplier.getId()));
+        
         AttachmentBLO attachmentBLO = new AttachmentBLO();
         attachmentBLO.deleteDocuments(currentSupplier.getDocument());
         attachmentBLO.deleteDocuments(currentSupplier.getAttachedFinancialReport());
 
         savePrincipalCustomers(supplier.getPrincipalCustomer(), supplier.getId());
+        saveContactNutresaGroup(supplier.getContactNutresaGroup(), supplier.getId());
 
         SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
         supplierByCallBLO.participateInCall();
@@ -53,6 +58,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
 
         currentSupplier = dao.update(supplier.getId(), supplier);
         currentSupplier.setPrincipalCustomer(customerBLO.getCustomersBySupplier(currentSupplier.getId()));
+        currentSupplier.setContactNutresaGroup(contactBLO.getContactsBySupplier(currentSupplier.getId()));
         return currentSupplier;
     }
 
@@ -78,9 +84,11 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         if (null != response) {
             AttachmentBLO attachmentBLO = new AttachmentBLO();
             CustomerBLO customerBLO = new CustomerBLO();
+            ContactBLO contactBLO = new ContactBLO();
             response.setDocument(attachmentBLO.getDocuments(response.getIdDocuments()));
             response.setAttachedFinancialReport(attachmentBLO.getDocuments(response.getIdAttachedFinancialReport()));
             response.setPrincipalCustomer(customerBLO.getCustomersBySupplier(response.getId()));
+            response.setContactNutresaGroup(contactBLO.getContactsBySupplier(response.getId()));
         }
 
         return response;
@@ -204,6 +212,23 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             }
         }
     }
+    
+    private void saveContactNutresaGroup(List<ContactDTO> contacts, String idSupplier)
+    throws HandlerGenericException {
+		if (null != contacts && !contacts.isEmpty()) {
+		    ContactBLO contactBLO = new ContactBLO();
+		    for (ContactDTO contact : contacts) {
+		        if (null != contact.getName() && !contact.getName().trim().isEmpty()
+		        	&& null != contact.getEmail() && !contact.getEmail().trim().isEmpty()
+		        	&& null != contact.getPhone() && !contact.getPhone().trim().isEmpty()
+		            ) {
+		        	contact.setIdSupplier(idSupplier);
+		        	contact.setId(null);
+		        	contactBLO.save(contact);
+		        }
+		    }
+		}
+	}
 
     /**
      * Busca los proveedores por convocatoria o por la especificaciÃ³n de algÃºn
