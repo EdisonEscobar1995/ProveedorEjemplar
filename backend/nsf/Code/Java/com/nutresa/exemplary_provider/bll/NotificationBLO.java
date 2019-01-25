@@ -156,6 +156,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             List<String> emails = new ArrayList<String>();
 
             if (notificationType.equals(NotificationType.SUPPLIER_DISCARDED)
+            		|| notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_EVALUATOR)
                     || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM)
                     || notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_MANAGER_TEAM)
                     || notificationType.equals(NotificationType.SURVEY_FINISHED_BY_SUPPLIER)) {
@@ -173,9 +174,14 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
                 emails.addAll(notification.getWithCopy());
             }
+            
+            boolean requireButton = true;
+            /*if (notificationType.equals(NotificationType.SUPPLIER_CALLED_BY_EVALUATOR)) {
+            	requireButton = false;
+            }*/
 
             String linkOfButton = buildLinkSupplier();
-            notificationDAO.sendNotification(emails, notification, true, detail, true, linkOfButton);
+            notificationDAO.sendNotification(emails, notification, true, detail, requireButton, linkOfButton);
         }
     }
 

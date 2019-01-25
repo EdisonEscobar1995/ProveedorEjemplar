@@ -4,6 +4,7 @@ import {
   CHECK_SUPPLIER,
   UPDATE_SUPPLIER_SELECTION,
   REQUEST_FAILED,
+  RESET_DATA,
 } from './const';
 
 import { getSupplierSelectionApi } from '../../api/call';
@@ -27,6 +28,10 @@ const updateSupplierSelection = data => ({
 
 const getFailedRequest = () => ({
   type: REQUEST_FAILED,
+});
+
+const resetData = () => ({
+  type: RESET_DATA,
 });
 
 const getSupplierSelection = type => (
@@ -86,4 +91,5 @@ export {
   checkSupplier,
   sendApprovals,
   sendRejections,
+  resetData,
 };

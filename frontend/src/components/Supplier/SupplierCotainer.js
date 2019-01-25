@@ -17,14 +17,17 @@ import {
   deleteAttachment,
   updateChangeIdCompanySize,
   saveAnswer,
-  addDataCustomer,
-  deleteDataCustomer,
+  addCustomer,
+  updateCustomer,
+  deleteCustomer,
+  addContact,
+  updateContact,
+  deleteContact,
   validateQuestions,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,
   setExport,
-  updateField,
   cleanStore,
 } from '../../state/Supplier/action';
 
@@ -61,12 +64,14 @@ const mapStateToProps = state => ({
   countries: state.supplier.countries,
   departments: state.supplier.departments,
   cities: state.supplier.cities,
+  callData: state.supplier.callData,
   stateData: state.supplier.stateData,
   dimensions: state.supplier.dimensions,
   loading: state.supplier.loading,
   loadingDimensions: state.supplier.loadingDimensions,
   loadedDimensions: state.supplier.loadedDimensions,
   principalCustomer: state.supplier.principalCustomer,
+  contactNutresaGroup: state.supplier.contactNutresaGroup,
   sectors: state.supplier.sectors,
   system: state.supplier.system,
   error: state.supplier.error,
@@ -115,11 +120,23 @@ const mapDispatchToProps = dispatch => ({
   updateChangeIdCompanySize: (idCompanySize) => {
     dispatch(updateChangeIdCompanySize(idCompanySize));
   },
-  addData: (data, index) => {
-    dispatch(addDataCustomer(data, index));
+  addCustomer: (data, index) => {
+    dispatch(addCustomer(data, index));
   },
-  deleteData: (data, index) => {
-    dispatch(deleteDataCustomer(data, index));
+  updateCustomer: (value, record, fielName) => {
+    dispatch(updateCustomer(value, record, fielName));
+  },
+  deleteCustomer: (data, index) => {
+    dispatch(deleteCustomer(data, index));
+  },
+  addContact: (data, index) => {
+    dispatch(addContact(data, index));
+  },
+  updateContact: (value, record, fielName) => {
+    dispatch(updateContact(value, record, fielName));
+  },
+  deleteContact: (data, index) => {
+    dispatch(deleteContact(data, index));
   },
   validateQuestions: (onFail) => {
     dispatch(validateQuestions(onFail));
@@ -135,9 +152,6 @@ const mapDispatchToProps = dispatch => ({
   },
   setExport: (value) => {
     dispatch(setExport(value));
-  },
-  updateField: (value, record, fielName) => {
-    dispatch(updateField(value, record, fielName));
   },
   cleanStore: () => {
     dispatch(cleanStore());

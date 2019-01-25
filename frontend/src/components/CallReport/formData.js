@@ -61,9 +61,6 @@ const formData = ({
       messages['Supplier.annualSalesValue'],
       messages['Supplier.typeOfCurrencyAnnualSales'],
       messages['Supplier.participationInSalesWithGroupNutresa'],
-      messages['Supplier.nameContactPersonInGroupNutresa'],
-      messages['Supplier.emailContactPersonInGroupNutresa'],
-      messages['Supplier.phoneContactPersonInGroupNutresa'],
       messages['Supplier.geograficDescriptionOfPrincipalMaterials'],
       messages['Supplier.currentlyExport'],
       messages['Supplier.exportDestination'],
@@ -71,6 +68,7 @@ const formData = ({
       messages['Supplier.globalAgreement'],
       messages['Supplier.chemicalSubstance'],
       messages['Supplier.principalCustomers'],
+      messages['Supplier.contactNutresaGroup'],
       messages['SupplierByCall.participateInCall'],
       messages['Supplier.reasonForNotParticipation'],
       messages['Supplier.nameWhoSayDontParticipate'],
@@ -124,9 +122,6 @@ const formData = ({
         record.annualSalesValue.toString(),
         record.typeOfCurrencyAnnualSales,
         record.participationInSalesWithGroupNutresa,
-        record.nameContactPersonInGroupNutresa,
-        record.emailContactPersonInGroupNutresa,
-        record.phoneContactPersonInGroupNutresa,
         record.geograficDescriptionOfPrincipalMaterials.replace(enter, ' '),
         record.currentlyExport ? 'Si' : 'No',
         record.exportDestination,
@@ -135,6 +130,9 @@ const formData = ({
         record.chemicalSubstance ? 'Si' : 'No',
         record.principalCustomer
           .map(customer => `${customer.name} ${customer.percentageOfParticipationInSales}`)
+          .join(', '),
+        record.contactNutresaGroup
+          .map(contact => `${contact.name} ${contact.email} ${contact.phone}`)
           .join(', '),
         masters.Participated
           .find(option => option.id === (suppliersByCall

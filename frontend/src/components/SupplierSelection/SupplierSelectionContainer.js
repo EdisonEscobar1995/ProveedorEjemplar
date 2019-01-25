@@ -10,6 +10,10 @@ class SupplierSelectionContainer extends Component {
     this.props.getSupplierSelection(this.props.type);
   }
 
+  componentWillUnmount() {
+    this.props.resetData();
+  }
+
   render() {
     return (
       <Spin spinning={this.props.loading}>

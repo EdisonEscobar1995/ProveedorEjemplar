@@ -8,6 +8,7 @@ import FormButtons from './FormButtons';
 import ErrorTable from './ErrorTable';
 import { baseUrl } from '../../utils/api';
 import message from '../shared/message';
+import { getMomentDate } from '../../utils/date';
 
 const { TextArea } = Input;
 const { Column } = Table;
@@ -305,9 +306,14 @@ class Question extends Component {
     message({ text: 'Validation.verifyDimensions', type: 'info' });
   };
   render() {
-    const { criterions, rules, stateData, next } = this.props;
+    const { criterions, rules, callData, next } = this.props;
     const disabled = rules.supplier.readOnly && rules.evaluator.readOnly;
     const columns = this.getColumns();
+
+    const date = new Date();
+    const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const deadlineToMakeSurveyManagerTeam = getMomentDate(callData.deadlineToMakeSurveyManagerTeam);
+
     let buttons = [];
     if (!disabled) {
       buttons = [
@@ -340,7 +346,7 @@ class Question extends Component {
                   </div>
                   <div>
                     {
-                      stateData.shortName === 'ENDED_MANAGER_TEAM' &&
+                      today.getTime() >= parseInt(deadlineToMakeSurveyManagerTeam.format('x'), 10) &&
                       <Fragment>
                         <FormattedMessage id="Table.criteriaScore" />
                         {

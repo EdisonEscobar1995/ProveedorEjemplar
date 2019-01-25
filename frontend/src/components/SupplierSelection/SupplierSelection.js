@@ -3,7 +3,7 @@ import { Table, Checkbox, Button, Row, Col, notification } from 'antd';
 import { Link } from 'react-router-dom';
 import message from '../../components/shared/message';
 import Confirm from '../shared/Confirm';
-import { MANAGER_TEAM } from '../../utils/const';
+import { TECHNICAL_TEAM, MANAGER_TEAM } from '../../utils/const';
 
 function SupplierSelection(props) {
   const { data, checkSupplier, sendApprovals, sendRejections } = props;
@@ -60,13 +60,6 @@ function SupplierSelection(props) {
       return value.toFixed(2);
     },
   }, {
-    title: 'Calificación evaluador',
-    dataIndex: 'totalScoreOfEvaluator',
-    key: 'totalScoreOfEvaluator',
-    render(value) {
-      return value.toFixed(2);
-    },
-  }, {
     title: 'Ver encuesta',
     dataIndex: 'link',
     key: 'link',
@@ -87,6 +80,17 @@ function SupplierSelection(props) {
       );
     },
   }];
+
+  if (props.type === TECHNICAL_TEAM || props.type === MANAGER_TEAM) {
+    columns.splice(7, 0, {
+      title: 'Calificación evaluador',
+      dataIndex: 'totalScoreOfEvaluator',
+      key: 'totalScoreOfEvaluator',
+      render(value) {
+        return value.toFixed(2);
+      },
+    });
+  }
 
   if (props.type === MANAGER_TEAM) {
     columns.splice(8, 0, {

@@ -17,7 +17,11 @@ import {
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
   SAVE_CUSTOMER,
+  UPDATE_CUSTOMER,
   DELETE_CUSTOMER,
+  SAVE_CONTACT,
+  UPDATE_CONTACT,
+  DELETE_CONTACT,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY_SUPPLIER,
   FINISH_SURVEY_EVALUATOR,
@@ -25,7 +29,6 @@ import {
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
   SET_EXPORT,
-  UPDATE_CUSTOMER,
   CLEAN_STORE,
 } from './const';
 
@@ -95,6 +98,7 @@ function supplierApp(state = initialState, action) {
         subcategories: action.subcategories,
         departments: action.departments,
         cities: action.cities,
+        callData: action.callData,
         stateData: action.stateData,
         sectors: action.sectors,
         system: action.system,
@@ -214,9 +218,12 @@ function supplierApp(state = initialState, action) {
         supplier: action.supplier,
         loading: false,
       };
-    case DELETE_CUSTOMER:
     case SAVE_CUSTOMER:
     case UPDATE_CUSTOMER:
+    case DELETE_CUSTOMER:
+    case SAVE_CONTACT:
+    case UPDATE_CONTACT:
+    case DELETE_CONTACT:
       return {
         ...state,
         supplier: action.data,

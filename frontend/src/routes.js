@@ -124,6 +124,15 @@ const routes = [
   },
   {
     index: increment(),
+    name: 'ENDEDSUPPLIER',
+    path: '/endedSupplier',
+    exact: true,
+    component: asyncComponent(() =>
+      import('./pages/EndedSupplier').then(module => module.default),
+    ),
+  },
+  {
+    index: increment(),
     name: 'ENDEDEVALUATOR',
     path: '/endedEvaluator',
     exact: true,

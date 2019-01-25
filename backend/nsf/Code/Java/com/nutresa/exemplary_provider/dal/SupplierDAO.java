@@ -70,9 +70,11 @@ public class SupplierDAO extends GenericDAO<SupplierDTO> {
     public List<SupplierDTO> getAllBy(String field, String value) throws HandlerGenericException {
         List<SupplierDTO> suppliers = super.getAllBy(field, value);
         CustomerDAO customerDAO = new CustomerDAO();
+        ContactDAO contactDAO = new ContactDAO();
         int index = 0;
         for (SupplierDTO supplier : suppliers) {
             supplier.setPrincipalCustomer(customerDAO.getCustomersBySupplier(supplier.getId()));
+            supplier.setContactNutresaGroup(contactDAO.getContactsBySupplier(supplier.getId()));
             suppliers.set(index, supplier);
             index = index + 1;
         }

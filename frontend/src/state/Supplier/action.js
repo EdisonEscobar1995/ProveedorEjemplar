@@ -19,7 +19,11 @@ import {
   DELETE_ATTACHMENT,
   UPDATE_CHANGEIDCOMPANYSIZE,
   SAVE_CUSTOMER,
+  UPDATE_CUSTOMER,
   DELETE_CUSTOMER,
+  SAVE_CONTACT,
+  UPDATE_CONTACT,
+  DELETE_CONTACT,
   RELOAD_DIMENSIONS,
   FINISH_SURVEY_SUPPLIER,
   FINISH_SURVEY_EVALUATOR,
@@ -27,7 +31,6 @@ import {
   ADD_SUB_EMPLOYEES,
   SET_SECTOR,
   SET_EXPORT,
-  UPDATE_CUSTOMER,
   CLEAN_STORE,
 } from './const';
 import {
@@ -45,6 +48,7 @@ import getDataDepartmentsByCountryApi from '../../api/departments';
 import getDataCitiesByDepartmentApi from '../../api/cities';
 import { getDimensionsBySurveyApi } from '../../api/dimension';
 import { saveAnswerApi, deleteMassiveAnswersApi, clearMassiveAnswersApi } from '../../api/answer';
+import { getCallByIdApi } from '../../api/call';
 import getDataStateApi from '../../api/state';
 import { requestApi, requestApiNotLoading, sortByField } from '../../utils/action';
 import setMessage from '../Generic/action';
@@ -111,6 +115,7 @@ const getDataSupplierSuccess = (data) => {
     rules,
     supply,
     system,
+    callData,
     stateData,
   } = data;
 
@@ -140,6 +145,7 @@ const getDataSupplierSuccess = (data) => {
     subcategories,
     departments,
     cities,
+    callData,
     stateData,
     sectors,
     system,
@@ -341,6 +347,19 @@ function deleteDataCustomer(data) {
   };
 }
 
+function saveDataContact(data) {
+  return {
+    type: SAVE_CONTACT,
+    data,
+  };
+}
+function deleteDataContact(data) {
+  return {
+    type: DELETE_CONTACT,
+    data,
+  };
+}
+
 function finishSurveySupplierSucess() {
   return {
     type: FINISH_SURVEY_SUPPLIER,
@@ -353,6 +372,20 @@ function finishSurveyEvaluatorSucess() {
     type: FINISH_SURVEY_EVALUATOR,
     readOnlyEvaluator: true,
   };
+}
+
+function loadCallData(dispatch, api, data) {
+  const allData = {
+    ...data,
+  };
+  return requestApiNotLoading(dispatch, api, data.call.idCall)
+    .then((respone) => {
+      allData.callData = respone.data.data;
+      return allData;
+    }).catch(() => {
+      allData.callData = { deadlineToMakeSurveyManagerTeam: '0' };
+      return allData;
+    });
 }
 
 function loadStateData(dispatch, api, data) {
@@ -429,7 +462,8 @@ function getDataSupplier(idSupplier, idSupplierByCall) {
         sectors,
         system,
       };
-    }).then(data => loadStateData(dispatch, getDataStateApi, data))
+    }).then(data => loadCallData(dispatch, getCallByIdApi, data))
+      .then(data => loadStateData(dispatch, getDataStateApi, data))
       .then(data => loadDependingOptions(dispatch, getDataCategoryBySuplyApi, data, 'idSupply', 'categories'))
       .then(data => loadDependingOptions(dispatch, getDataSubCategoryByCategoryApi, data, 'idCategory', 'subcategories'))
       .then(data => loadDependingOptions(dispatch, getDataDepartmentsByCountryApi, data, 'idOriginCountry', 'departments'))
@@ -670,7 +704,7 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
       .then((respone) => {
         const answer = respone.data.data;
         const rules = respone.data.rules;
-        const { call, dimensions } = getActualState().supplier;
+        const { call, dimensions, stateData } = getActualState().supplier;
         const allDimensions = [...dimensions];
         const actualDimension = allDimensions.find(dimension => dimension.id === idDimension);
         const actualCriterion = actualDimension.criterions
@@ -707,17 +741,22 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
         dispatch(saveAnswerSuccess(rules));
         dispatch(scoreDimensionAndCriterion(idDimension, idCriterion));
 
-        const idsDimension = dimensions.map(dimension => dimension.id);
-        const percentsDimension = dimensions.map(dimension => dimension.percent);
-        const clientData = Object.assign(call, { idsDimension, percentsDimension });
+        if (stateData.shortName === 'NOT_STARTED' || stateData.shortName === 'SUPPLIER') {
+          const idsDimension = dimensions.map(dimension => dimension.id);
+          const percentsDimension = dimensions.map(dimension => dimension.percent);
+          const clientData = Object.assign(call, { idsDimension, percentsDimension });
 
-        return requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
-          .then(() => {
-            dispatch(saveAnswerSuccess(rules));
-            openNotificationWithIcon('success');
-          }).catch((err) => {
-            dispatch(getFailedRequest(err));
-          });
+          return requestApi(
+            dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
+            .then(() => {
+              dispatch(saveAnswerSuccess(rules));
+              openNotificationWithIcon('success');
+            }).catch((err) => {
+              dispatch(getFailedRequest(err));
+            });
+        }
+        openNotificationWithIcon('success');
+        return null;
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -741,7 +780,7 @@ const saveDataCallSupplier = clientSupplier => (
           })
       )).then(({ call, supplier = {} }) => {
         dispatch(setMessage('Supplier.savedInfo', 'success'));
-        const { principalCustomer } = supplier;
+        const { principalCustomer, contactNutresaGroup } = supplier;
         const clientCustomers = clientSupplier.principalCustomer;
         const newCustomers = principalCustomer.map((customer) => {
           const oldCustomer = clientCustomers.find(item =>
@@ -756,6 +795,22 @@ const saveDataCallSupplier = clientSupplier => (
           };
         });
         supplier.principalCustomer = newCustomers;
+
+        const clientContacts = clientSupplier.contactNutresaGroup;
+        const newContacts = contactNutresaGroup.map((contact) => {
+          const oldContact = clientContacts.find(item =>
+            (
+              contact.name === item.name &&
+              contact.email === item.email &&
+              contact.phone === item.phone
+            ),
+          );
+          return {
+            ...contact,
+            key: oldContact.key,
+          };
+        });
+        supplier.contactNutresaGroup = newContacts;
         dispatch(saveDataCallAndSupplerSuccess(call, sumTotalSupplier(supplier)));
       })
       .catch((err) => {
@@ -781,6 +836,21 @@ const addCustomer = clientData => (
     dispatch(saveDataCustomer(supplier));
   }
 );
+const updateCustomer = (value, index, fielName) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    let rowValue = supplier.principalCustomer[index];
+    rowValue = rowValue || {};
+    const assignObject = {};
+    assignObject[fielName] = value;
+    rowValue = Object.assign(rowValue, assignObject);
+    supplier.principalCustomer[index] = rowValue;
+    dispatch({
+      type: UPDATE_CUSTOMER,
+      data: supplier,
+    });
+  }
+);
 const deleteCustomer = (clientData, index) => (
   (dispatch, getActualState) => {
     const supplier = { ...getActualState().supplier.supplier };
@@ -796,6 +866,48 @@ const deleteCustomer = (clientData, index) => (
     dispatch(deleteDataCustomer(supplier));
   }
 );
+
+const addContact = clientData => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const contactNutresaGroup = supplier.contactNutresaGroup;
+    const newData = [...contactNutresaGroup];
+    newData.push(clientData);
+    supplier.contactNutresaGroup = newData;
+    dispatch(saveDataContact(supplier));
+  }
+);
+const updateContact = (value, index, fielName) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    let rowValue = supplier.contactNutresaGroup[index];
+    rowValue = rowValue || {};
+    const assignObject = {};
+    assignObject[fielName] = value;
+    rowValue = Object.assign(rowValue, assignObject);
+    supplier.contactNutresaGroup[index] = rowValue;
+    dispatch({
+      type: UPDATE_CONTACT,
+      data: supplier,
+    });
+  }
+);
+const deleteContact = (clientData, index) => (
+  (dispatch, getActualState) => {
+    const supplier = { ...getActualState().supplier.supplier };
+    const contactNutresaGroup = supplier.contactNutresaGroup;
+    const newData = [...contactNutresaGroup];
+    newData.splice(index, 1);
+    if (newData && newData.length === 0) {
+      newData.push({
+        key: 0,
+      });
+    }
+    supplier.contactNutresaGroup = newData;
+    dispatch(deleteDataContact(supplier));
+  }
+);
+
 const finishSurvey = () => (
   (dispatch, getActualState) => {
     const { supplier, stateData } = { ...getActualState() };
@@ -813,21 +925,7 @@ const finishSurvey = () => (
       });
   }
 );
-const updateField = (value, index, fielName) => (
-  (dispatch, getActualState) => {
-    const supplier = { ...getActualState().supplier.supplier };
-    let rowValue = supplier.principalCustomer[index];
-    rowValue = rowValue || {};
-    const assignObject = {};
-    assignObject[fielName] = value;
-    rowValue = Object.assign(rowValue, assignObject);
-    supplier.principalCustomer[index] = rowValue;
-    dispatch({
-      type: UPDATE_CUSTOMER,
-      data: supplier,
-    });
-  }
-);
+
 const validateNumber = (value) => {
   let result = 0;
   if (value) {
@@ -933,13 +1031,16 @@ export {
   updateAttachment,
   deleteAttachment,
   updateChangeIdCompanySize,
-  deleteCustomer as deleteDataCustomer,
-  addCustomer as addDataCustomer,
+  addCustomer,
+  updateCustomer,
+  deleteCustomer,
+  addContact,
+  updateContact,
+  deleteContact,
   validateQuestions,
   setNumberOfDirectEmployees,
   setNumberOfSubContratedEmployees,
   setSector,
   setExport,
-  updateField,
   cleanStore,
 };

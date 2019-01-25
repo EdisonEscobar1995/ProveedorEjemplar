@@ -63,5 +63,27 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
         
         return false;
     }
+    
+    public void copy(String idSurvey, String idCall) throws HandlerGenericException {
+    	SurveyDAO surveyDAO = new SurveyDAO();
+    	SurveyDTO surveyDTO = surveyDAO.get(idSurvey);
+    	SurveyDTO survey = surveyDAO.getSurvey(idCall, surveyDTO.getIdSupply(), surveyDTO.getIdCompanySize());
+    	if (null != survey){
+    		throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
+    	}
+    	QuestionBLO questionBLO = new QuestionBLO();
+    	List<QuestionDTO> questions = questionBLO.getQuestionsBySurvey(idSurvey);
+    	List<String> surveys;
+    	for (QuestionDTO question : questions) {
+    		surveys = question.getIdSurvey();
+    		surveys.remove(idSurvey);
+    		question.setIdSurvey(surveys);
+        	question.setIdCall(idCall);
+        }
+       	surveyDTO.setId("");
+    	surveyDTO.setIdCall(idCall);
+    	surveyDTO.setQuestion(questions);
+    	surveyDTO = save(surveyDTO);
+    }
 
 }

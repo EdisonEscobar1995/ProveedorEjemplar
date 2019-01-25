@@ -1,6 +1,7 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,10 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
+        if ("Evaluator".equals(suppliersToNextStage.getStage())) {
+            notified = approveToEvaluator(suppliersToNextStage.getIdSuppliersByCall());
+        }
+
         if ("TechnicalTeam".equals(suppliersToNextStage.getStage())) {
             notified = approveToTechnicalTeam(suppliersToNextStage.getIdSuppliersByCall());
         }
@@ -45,6 +50,28 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
             notified = approveToManagerTeam(suppliersToNextStage.getIdSuppliersByCall());
         }
 
+        return notified;
+    }
+    
+    private String approveToEvaluator(List<String> idSuppliersToApprove) throws HandlerGenericException {
+        String notified = STATE_FAILED;
+        NotificationBLO notificationBLO = new NotificationBLO();
+        for (String idSupplierByCall : idSuppliersToApprove) {
+            SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+            SupplierBLO supplierBLO = new SupplierBLO();
+            SupplierByCallDTO supplierByCall = supplierByCallBLO.get(idSupplierByCall);
+            SupplierDTO supplier = supplierBLO.get(supplierByCall.getIdSupplier());
+            if (supplier instanceof SupplierDTO) {
+                StateBLO stateBLO = new StateBLO();
+                notificationBLO.sendNotificationTypeToSupplier(supplier,
+                        NotificationType.SUPPLIER_CALLED_BY_EVALUATOR);
+                supplierByCall.setIdState(stateBLO.getStateByShortName(
+                        SurveyStates.NOT_STARTED_EVALUATOR.toString()).getId());
+                supplierByCall.setDateAssignedToEvaluator(new Date());
+                supplierByCallBLO.update(supplierByCall);
+                notified = STATE_SUCCESS;
+            }
+        }
         return notified;
     }
 
@@ -119,6 +146,11 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
                 StateBLO stateBLO = new StateBLO();
                 notificationBLO.sendNotificationTypeToSupplier(supplier, NotificationType.SUPPLIER_DISCARDED);
 
+                if ("Evaluator".equals(suppliersToNextStage.getStage())) {
+                    supplierByCall.setIdState(stateBLO.getStateByShortName(
+                            SurveyStates.DONT_APPLY_EVALUATOR.toString()).getId());
+                }
+                
                 if ("TechnicalTeam".equals(suppliersToNextStage.getStage())) {
                     supplierByCall.setIdState(stateBLO.getStateByShortName(
                             SurveyStates.DONT_APPLY_TECHNICAL_TEAM.toString()).getId());
