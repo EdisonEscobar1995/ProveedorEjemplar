@@ -704,7 +704,7 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
       .then((respone) => {
         const answer = respone.data.data;
         const rules = respone.data.rules;
-        const { call, dimensions } = getActualState().supplier;
+        const { call, dimensions, stateData } = getActualState().supplier;
         const allDimensions = [...dimensions];
         const actualDimension = allDimensions.find(dimension => dimension.id === idDimension);
         const actualCriterion = actualDimension.criterions
@@ -741,17 +741,22 @@ const saveAnswer = (clientAnswer, idDimension, idCriterion) => (
         dispatch(saveAnswerSuccess(rules));
         dispatch(scoreDimensionAndCriterion(idDimension, idCriterion));
 
-        const idsDimension = dimensions.map(dimension => dimension.id);
-        const percentsDimension = dimensions.map(dimension => dimension.percent);
-        const clientData = Object.assign(call, { idsDimension, percentsDimension });
+        if (stateData.shortName === 'NOT_STARTED' || stateData.shortName === 'SUPPLIER') {
+          const idsDimension = dimensions.map(dimension => dimension.id);
+          const percentsDimension = dimensions.map(dimension => dimension.percent);
+          const clientData = Object.assign(call, { idsDimension, percentsDimension });
 
-        return requestApi(dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
-          .then(() => {
-            dispatch(saveAnswerSuccess(rules));
-            openNotificationWithIcon('success');
-          }).catch((err) => {
-            dispatch(getFailedRequest(err));
-          });
+          return requestApi(
+            dispatch, getDataSupplierProgress, saveDataCallBySupplierApi, clientData)
+            .then(() => {
+              dispatch(saveAnswerSuccess(rules));
+              openNotificationWithIcon('success');
+            }).catch((err) => {
+              dispatch(getFailedRequest(err));
+            });
+        }
+        openNotificationWithIcon('success');
+        return null;
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
