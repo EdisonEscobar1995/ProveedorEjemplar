@@ -50,8 +50,8 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
                 oldCampanySize = companySizeBLO.get(supplierByCall.getOldIdCompanySize()).getName();
             }
 
-            detailUserToSend.put("Nuevo tamaÃ±o", detailUserToSend.remove("TamaÃ±o de empresa"));
-            detailUserToSend.put("TamaÃ±o anterior", oldCampanySize);
+            detailUserToSend.put("Nuevo tamaño", detailUserToSend.remove("Tamaño de empresa"));
+            detailUserToSend.put("Tamaño anterior", oldCampanySize);
 
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias(NotificationType.CHANGE_COMPANY_SIZE
@@ -120,7 +120,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
         Map<String, String> detail = new LinkedHashMap<String, String>();
         detail.put("Proveedor", supplier.getBusinessName());
         detail.put("Suministro", supply.getName());
-        detail.put("TamaÃ±o de empresa", companySize.getName());
+        detail.put("Tamaño de empresa", companySize.getName());
         return detail;
     }
 
@@ -167,7 +167,7 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
 
             Map<String, String> detail = new LinkedHashMap<String, String>();
             detail.put("Usuario", informationInOtherDataBase.get("userName"));
-            detail.put("ContraseÃ±a", informationInOtherDataBase.get("password"));
+            detail.put("Contraseña", informationInOtherDataBase.get("password"));
             NotificationDAO notificationDAO = new NotificationDAO();
             NotificationDTO notification = notificationDAO.getNotificationByAlias(notificationType.toString());
 
