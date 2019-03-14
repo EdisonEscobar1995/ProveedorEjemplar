@@ -11,6 +11,8 @@ public class OptionDTO {
     private short score;
     @Expose
     private String idQuestion;
+    @Expose
+    private boolean requireAttachment;
 
     public String getId() {
         return id;
@@ -39,5 +41,13 @@ public class OptionDTO {
     public void setIdQuestion(String idQuestion) {
         this.idQuestion = idQuestion;
     }
+
+	public void setRequireAttachment(boolean requireAttachment) {
+		this.requireAttachment = requireAttachment;
+	}
+
+	public boolean isRequireAttachment() {
+		return requireAttachment;
+	}
 
 }
