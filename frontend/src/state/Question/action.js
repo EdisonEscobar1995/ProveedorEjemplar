@@ -351,11 +351,12 @@ const addDataOptions = value => (dispatch, getstate) => {
 };
 
 const updateDataOptions = (value, index, key) => (dispatch, getstate) => {
-  const { options, editData } = getstate().question;
+  const { options, editData } = { ...getstate().question };
   if (index >= options.length) {
     const valueOption = {
       wording: key === 'wording' ? value : '',
       score: key === 'score' ? value : '',
+      requireAttachment: key === 'requireAttachment' ? value : false,
       key: index,
       id: '',
       idQuestion: editData.id,

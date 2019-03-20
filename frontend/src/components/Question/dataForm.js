@@ -37,6 +37,10 @@ const generalInfo =
   }, {
     title: 'Peso',
     key: 'score',
+  }, {
+    title: '¿Requiere soporte?',
+    key: 'requireAttachment',
+    type: 'switch',
   }];
 
   const onChangeAnswerType = (value) => {
@@ -46,6 +50,28 @@ const generalInfo =
   const onChangeDependingQuestion = (value) => {
     changeDependingQuestion(value);
   };
+
+  const switches = [{
+    span: 12,
+    type: 'switch',
+    label: '¿Es requerido?',
+    key: 'required',
+    required: true,
+    handleChange: switchRequired,
+    value: editData && editData.required,
+  }];
+
+  if (editData.type !== 'Cerrada') {
+    switches.splice(0, 0, {
+      span: 12,
+      type: 'switch',
+      label: '¿Requiere soporte?',
+      key: 'requireAttachment',
+      required: true,
+      handleChange: switchRequiredAttachment,
+      value: editData && editData.requireAttachment,
+    });
+  }
 
   const formData = [
     {
@@ -122,26 +148,7 @@ const generalInfo =
     },
     {
       key: 1.4,
-      value: [
-        {
-          span: 12,
-          type: 'switch',
-          label: '¿Requiere soporte?',
-          key: 'requireAttachment',
-          required: true,
-          handleChange: switchRequiredAttachment,
-          value: editData && editData.requireAttachment,
-        },
-        {
-          span: 12,
-          type: 'switch',
-          label: '¿Es requerido?',
-          key: 'required',
-          required: true,
-          handleChange: switchRequired,
-          value: editData && editData.required,
-        },
-      ],
+      value: switches,
     },
     {
       key: 1.5,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Input, InputNumber, Button, Tooltip } from 'antd';
+import { Table, Input, InputNumber, Button, Tooltip, Switch } from 'antd';
 import styled from 'styled-components';
 import FormattedMessage from '../shared/FormattedMessage';
 import Confirm from '../shared/Confirm';
@@ -62,6 +62,15 @@ class SimpleTable extends Component {
       this.props.deleteData(copyData, record, index);
     });
   }
+
+  updateData = (value, index, key) => {
+    const { copyData } = this.state;
+    copyData[index][key] = value;
+    this.setState({ copyData }, () => {
+      this.props.updateField(value, index, key);
+    });
+  }
+
   render() {
     const {
       colummns,
@@ -89,16 +98,35 @@ class SimpleTable extends Component {
                     onBlur: (e) => {
                       const value = e.target.value;
                       if (updateField && value) {
-                        updateField(value, index, column.key);
+                        this.updateData(value, index, column.key);
                       }
                     },
                   };
-                  return (
-                    column.type === 'number' ?
-                      <InputNumberStyle min={0} max={100} {...inputProps} />
-                      :
-                      <Input {...inputProps} type={column.type} />
-                  );
+                  let fieldContent = null;
+                  switch (column.type) {
+                    case 'number':
+                      fieldContent = <InputNumberStyle min={0} max={100} {...inputProps} />;
+                      break;
+                    case 'switch':
+                      fieldContent = (
+                        <Switch
+                          defaultChecked={false}
+                          checked={record[column.key]}
+                          disabled={disabled}
+                          onChange={(value) => {
+                            if (updateField) {
+                              this.updateData(value, index, column.key);
+                            }
+                          }
+                          }
+                        />
+                      );
+                      break;
+                    default:
+                      fieldContent = <Input {...inputProps} type={column.type} />;
+                      break;
+                  }
+                  return fieldContent;
                 }
                 }
               />

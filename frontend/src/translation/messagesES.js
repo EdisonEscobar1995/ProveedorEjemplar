@@ -89,6 +89,7 @@ const messages = {
   'Button.agree': 'Acepto',
   'Button.refuse': 'No acepto',
   'Survey.title': 'Encuesta',
+  'Survey.deadline': 'La fecha límite para diligenciar la encuesta es: ',
   'Survey.requiredQuestion': 'Esta pregunta es obligatoria',
   'Survey.requiredAttachment': 'Debe anexar un archivo',
   'Survey.generalInfo': 'Información General',

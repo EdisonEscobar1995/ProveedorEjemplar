@@ -9,19 +9,35 @@ const TitleStyle = styled.h1`
   margin-left: 30px;
   font-size: 40px;
 `;
+const DeadlineStyle = styled.h6`  
+  display: inline-block;
+  font-size: 20px;
+`;
 const ContainerStyle = styled.div`  
   display: flex;
-  align-items:center;
+  align-items: center;
   margin-bottom: 30px;
+  justify-content: space-between;
 `;
 
-function SurveyText() {
+function SurveyText(props) {
   return (
     <ContainerStyle>
-      <img src="assets/images/SurveyIcon.png" alt="survey" />
-      <TitleStyle>
-        <FormattedMessage id="Survey.title" />
-      </TitleStyle>
+      <div>
+        <img src="assets/images/SurveyIcon.png" alt="survey" />
+        <TitleStyle>
+          <FormattedMessage id="Survey.title" />
+        </TitleStyle>
+      </div>
+      <div>
+        {
+          props.deadline && (
+            <DeadlineStyle>
+              <FormattedMessage id="Survey.deadline" /><span>{props.deadline}</span>
+            </DeadlineStyle>
+          )
+        }
+      </div>
     </ContainerStyle>
   );
 }
