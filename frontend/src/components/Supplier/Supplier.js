@@ -157,12 +157,12 @@ class Supplier extends Component {
   }
 
   render() {
-    const { loading, loadingDimensions } = this.props;
+    const { loading, loadingDimensions, stateData, callData } = this.props;
     const { current } = this.state;
     const steps = this.getSteps();
     return (
       <Spin spinning={loading}>
-        <SurveyText />
+        <SurveyText deadline={(stateData.shortName === 'NOT_STARTED' || stateData.shortName === 'SUPPLIER') && callData && callData.deadlineToMakeSurvey} />
         <TabsStyle
           tabBarExtraContent={<Spin spinning={loadingDimensions} />}
           activeKey={current.toString()}

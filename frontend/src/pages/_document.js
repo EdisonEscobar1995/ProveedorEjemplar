@@ -3,19 +3,23 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Layout, Icon, BackTop, Modal } from 'antd';
+import { Layout, Icon, BackTop, Modal, Button } from 'antd';
 import * as action from '../state/Main/action';
 import FormattedMessage from '../components/shared/FormattedMessage';
 import Menu from '../components/shared/Menu';
 import ManagerTeamSurveyMobile from '../pages/ManagerTeamSurveyMobile';
 import Router from '../components/shared/Router';
-import { loginUrl } from '../utils/api';
+import { webDbName } from '../utils/api';
 import { changeLanguage } from '../translation/functions';
 import LangIntl from '../utils/translate';
 import setLanguageApi from '../api/language';
 import isMobile from '../utils/isMobile';
 
 const { Header, Footer, Content } = Layout;
+
+const logout = () => {
+  window.CerrarSesionSSO(webDbName);
+};
 
 const HeaderStyle = styled(Header)`
   background: ${props => props.theme.color.primary};
@@ -142,9 +146,9 @@ class Document extends Component {
                     {userInfo && userInfo.name}
                   </NameStyle>
                   <CloseStyle>
-                    <a href={loginUrl}>
+                    <Button onClick={logout}>
                       <FormattedMessage id="Header.logOut" />
-                    </a>
+                    </Button>
                   </CloseStyle>
                 </div>
               </InfoStyle>

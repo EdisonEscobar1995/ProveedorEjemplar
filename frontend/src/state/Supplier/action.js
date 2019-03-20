@@ -523,16 +523,53 @@ const getDataCitiesByDepartment = clientData => (
   }
 );
 
-const isQuestionAnswered = (question, stateData, rules) => {
-  let optionFieldName = 'idOptionSupplier';
-  let responseFieldName = 'responseSupplier';
-  if ((stateData.shortName === 'NOT_STARTED_EVALUATOR' ||
-  stateData.shortName === 'EVALUATOR') && rules.evaluator.show) {
-    optionFieldName = 'idOptionEvaluator';
-    responseFieldName = 'responseEvaluator';
+const validateQuestion = (question, stateData, rules) => {
+  const errors = {};
+  let questionAnswered = false;
+  let requireAttachment = false;
+
+  if (question.visible) {
+    let optionFieldName = 'idOptionSupplier';
+    let responseFieldName = 'responseSupplier';
+    if ((stateData.shortName === 'NOT_STARTED_EVALUATOR' ||
+    stateData.shortName === 'EVALUATOR') && rules.evaluator.show) {
+      optionFieldName = 'idOptionEvaluator';
+      responseFieldName = 'responseEvaluator';
+    }
+
+    if (question.answer.length > 0 &&
+      (question.answer[0][optionFieldName] || question.answer[0][responseFieldName])) {
+      questionAnswered = true;
+    }
+
+    errors.answers = question.required && !questionAnswered;
+
+    if (question.type === 'Cerrada') {
+      if (question.answer.length > 0) {
+        const answer = question.answer[0][optionFieldName];
+        const selectedOption = question.options.find(
+          option => option.id === answer);
+        if (selectedOption) {
+          requireAttachment = selectedOption.requireAttachment;
+        }
+      }
+    } else {
+      requireAttachment = question.requireAttachment;
+    }
+
+    if (requireAttachment) {
+      question.answer.forEach((answer) => {
+        if (!answer.attachment || answer.attachment.length === 0) {
+          errors.attachments = true;
+        }
+      });
+    }
   }
-  return question.answer.length > 0 &&
-  (question.answer[0][optionFieldName] || question.answer[0][responseFieldName]);
+  return {
+    errors,
+    questionAnswered,
+    requireAttachment,
+  };
 };
 
 const calculatePercent = (dimension, stateData, rules) => {
@@ -543,15 +580,18 @@ const calculatePercent = (dimension, stateData, rules) => {
   if (dimension.criterions.length > 0) {
     dimension.criterions.forEach((criteria) => {
       criteria.questions.forEach((question) => {
-        const isAnswered = isQuestionAnswered(question, stateData, rules);
-        if (question.visible && question.required) {
-          totalQuestions += 1;
-          if (isAnswered) {
-            responsedQuestion += 1;
+        const {
+          errors, questionAnswered, requireAttachment,
+        } = validateQuestion(question, stateData, rules);
+        if (question.visible) {
+          if (question.required || requireAttachment) {
+            totalQuestions += 1;
+            if (!errors.answers && !errors.attachments) {
+              responsedQuestion += 1;
+            }
+          } else if (questionAnswered) {
+            totalResponses += 1;
           }
-        }
-        if (isAnswered) {
-          totalResponses += 1;
         }
       });
     });
@@ -966,39 +1006,13 @@ const validateQuestions = onFail => (dispatch, getActualState) => {
   let send = true;
   dimesionsCopy.forEach((dimension) => {
     if (dimension.criterions.length === 0) {
-      send = send && false;
+      send = false;
     } else {
       dimension.criterions.forEach((criteria) => {
         criteria.questions.forEach((question) => {
-          let errors = {};
-          if (question.visible && question.required) {
-            if (isQuestionAnswered(question, stateData, rules)) {
-              if (question.requireAttachment) {
-                question.answer.forEach((answer) => {
-                  if (answer.attachment) {
-                    if (answer.attachment.length === 0) {
-                      send = send && false;
-                      errors = {
-                        attachments: true,
-                      };
-                    }
-                  } else {
-                    send = send && false;
-                    errors = {
-                      attachments: true,
-                    };
-                  }
-                });
-              }
-            } else {
-              send = send && false;
-              errors = {
-                answers: true,
-              };
-              if (question.requireAttachment) {
-                errors.attachments = true;
-              }
-            }
+          const { errors } = validateQuestion(question, stateData, rules);
+          if (errors.answers || errors.attachments) {
+            send = false;
           }
           question.errors = errors;
         });

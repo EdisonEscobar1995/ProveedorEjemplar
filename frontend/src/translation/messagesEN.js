@@ -89,6 +89,7 @@ const messages = {
   'Button.agree': 'I agree',
   'Button.refuse': 'I don\'t agree',
   'Survey.title': 'Assessment',
+  'Survey.deadline': 'The deadline to send the survey is: ',
   'Survey.requiredQuestion': 'This question is required',
   'Survey.requiredAttachment': 'Must attach at least one file',
   'Survey.generalInfo': 'General Information',
