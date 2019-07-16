@@ -138,11 +138,9 @@ function deleteTechnicalTeam(clientData) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getTechnicalTeamProgress, deleteTechnicalTeamApi, clientData)
-      .then((response) => {
-        console.log('response.data = ', response.data);
+      .then(() => {
         dispatch(deleteDataTechnicalTeam(clientData));
       }).catch(() => {
-        console.log('por aca == ');
         dispatch(getFailedRequest());
       });
   };
