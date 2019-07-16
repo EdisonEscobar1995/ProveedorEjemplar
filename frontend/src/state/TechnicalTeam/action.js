@@ -138,9 +138,22 @@ function deleteTechnicalTeam(clientData) {
   return (dispatch) => {
     dispatch(closeModal());
     requestApi(dispatch, getTechnicalTeamProgress, deleteTechnicalTeamApi, clientData)
-      .then(() => {
+      .then((response) => {
+        console.log('response.data = ', response.data);
         dispatch(deleteDataTechnicalTeam(clientData));
       }).catch(() => {
+        console.log('por aca == ');
+        dispatch(getFailedRequest());
+      });
+  };
+}
+
+function editTechnicalTeam(clientData) {
+  return (dispatch) => {
+    requestApi(dispatch, getTechnicalTeamProgress, editTechnicalTeam, clientData)
+      .then(() => {
+      }).catch(() => {
+        dispatch(closeModal());
         dispatch(getFailedRequest());
       });
   };
@@ -151,6 +164,7 @@ export {
   saveTechnicalTeam,
   deleteTechnicalTeam,
   searchTechnicalTeam,
+  editTechnicalTeam,
   changeSearchTechnicalTeam,
   getCategoryBySupply,
   openModal,

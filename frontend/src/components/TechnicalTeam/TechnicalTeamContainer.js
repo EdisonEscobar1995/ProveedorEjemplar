@@ -29,6 +29,7 @@ class TechnicalTeamContainer extends Component {
         componentList={componentList}
         expandable={false}
         pagination
+        withDelete
       />
     );
   }

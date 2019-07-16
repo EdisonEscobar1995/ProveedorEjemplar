@@ -15,6 +15,7 @@ const messages = {
   'Supplier.nit': 'Tax Identification Number / NIT (Without Verification Digit)',
   'Supplier.sapCode': 'SAP code',
   'Supplier.idCompanyType': 'Type of Company',
+  'Supplier.companyLogo': 'Company logo: Only PNG, JPG, JPEG formats.',
   'Supplier.producerLivestok': 'Are you a livestock producer?',
   'Supplier.idSocietyType': 'Type of Company',
   'Supplier.yearOfEstablishment': 'Year of establishment of the company ',

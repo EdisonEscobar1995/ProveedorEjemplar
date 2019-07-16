@@ -338,7 +338,7 @@ class DinamicForm extends Component {
                         uploadExtensions,
                       } = current;
                       rowValue = (
-                        <Field label={label} style={style}>
+                        <Field label={label} required={required} style={style}>
                           <Upload
                             datakey={key}
                             list={fileList}

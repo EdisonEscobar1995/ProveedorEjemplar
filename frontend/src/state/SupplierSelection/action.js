@@ -11,6 +11,7 @@ import { getSupplierSelectionApi } from '../../api/call';
 import { sendApprovalsApi, sendRejectionsApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
 import { MANAGER_TEAM } from '../../utils/const';
+import { openModal, closeModal } from '../Main/action';
 
 const getSupplierSelectionProgress = () => ({
   type: GET_SUPPLIER_SELECTION_PROGRESS,
@@ -57,11 +58,12 @@ const checkSupplier = (idSupplier, checked) => ({
   checked,
 });
 
-const sendApprovals = (list, type, next) => (
+const sendApprovals = (list, type, negociator, next) => (
   (dispatch) => {
+    dispatch(closeModal());
     requestApi(
       dispatch, getSupplierSelectionProgress, sendApprovalsApi,
-      { idSuppliersByCall: list, stage: type })
+      { idSuppliersByCall: list, stage: type, negociator })
       .then(() => {
         dispatch(updateSupplierSelection(list));
         next(list);
@@ -92,4 +94,6 @@ export {
   sendApprovals,
   sendRejections,
   resetData,
+  openModal,
+  closeModal,
 };

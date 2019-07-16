@@ -111,6 +111,13 @@ const exportTechnicalAndManager = (excelData) => {
       range.e = { r: 0, c: column };
       merge.push(range);
     });
+    row.push('Evaluador por');
+    column += 1;
+    range = {
+      s: { r: 0, c: column },
+      e: { r: 1, c: column },
+    };
+    merge.push(range);
     row.push('TOTAL GENERAL');
     column += 1;
     range = {
@@ -135,6 +142,7 @@ const exportTechnicalAndManager = (excelData) => {
       row.push('Total');
     });
     row.push('');
+    row.push('');
     report.push(row);
 
     excelData.forEach((supplier) => {
@@ -152,6 +160,7 @@ const exportTechnicalAndManager = (excelData) => {
         row.push(service.comment);
         row.push(service.total < 0 ? '' : service.total.toFixed(2));
       });
+      row.push(supplier.whoEvaluateOfTechnicalTeam);
       row.push(supplier.totalScoreInService < 0 ? '' : supplier.totalScoreInService.toFixed(2));
       report.push(row);
     });

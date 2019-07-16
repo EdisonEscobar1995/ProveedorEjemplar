@@ -15,6 +15,7 @@ const messages = {
   'Supplier.nit': 'Número Identificación Tributaria/NIT( Sin dígito Verificación)',
   'Supplier.sapCode': 'Código SAP',
   'Supplier.idCompanyType': 'Tipo de compañía',
+  'Supplier.companyLogo': 'Logo compañia: Solo formatos PNG, JPG, JPEG',
   'Supplier.producerLivestok': '¿Es productor pecuario?',
   'Supplier.idSocietyType': 'Tipo de sociedad',
   'Supplier.yearOfEstablishment': 'Año de establecimiento',
