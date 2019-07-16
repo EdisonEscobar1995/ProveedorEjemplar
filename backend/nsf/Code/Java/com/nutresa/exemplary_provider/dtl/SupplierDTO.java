@@ -39,6 +39,9 @@ public class SupplierDTO {
     private String nit;
     @Expose
     private String idCompanyType;
+    @Expose    
+    private List<AttachmentDTO> companyLogo;
+    private List<String> idCompanyLogo;
     @Expose
     private CompanyTypeDTO companyType;
     @Expose
@@ -91,7 +94,7 @@ public class SupplierDTO {
     private String packagingProvided;
     @Expose
     private String typeOfCurrencyValueAssets;
-    @Expose
+	@Expose
     private double valueAssets;
     private List<String> idAttachedFinancialReport;
     @Expose
@@ -105,7 +108,7 @@ public class SupplierDTO {
     @Expose
     private String typeOfCurrencyAnnualSales;
     @Expose
-    private double annualSalesValue;
+    private double annualSalesValue;    
     @Expose
     private List<CustomerDTO> principalCustomer;
     @Expose
@@ -286,6 +289,27 @@ public class SupplierDTO {
     public void setAnnualSalesValue(double annualSalesValue) {
         this.annualSalesValue = annualSalesValue;
     }
+    
+    public List<String> getIdCompanyLogo() {
+        return idCompanyLogo;
+    }
+
+    public void autoSetIdCompanyLogo() {
+        this.idCompanyLogo = new ArrayList<String>();
+        if (null != this.idCompanyLogo) {
+            for (AttachmentDTO attachment : this.companyLogo) {
+                this.idCompanyLogo.add(attachment.getId());
+            }
+        }
+    }
+    
+    public List<AttachmentDTO> getCompanyLogo() {
+		return companyLogo;
+	}
+
+	public void setCompanyLogo(List<AttachmentDTO> companyLogo) {
+		this.companyLogo = companyLogo;
+	}
 
     public List<CustomerDTO> getPrincipalCustomer() {
         return principalCustomer;

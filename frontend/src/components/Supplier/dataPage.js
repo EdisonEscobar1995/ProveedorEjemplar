@@ -304,6 +304,7 @@ function generalInfo(fields) {
           uploadExtensions: ['.jpg', '.png', '.jpeg'],
           required: true,
           disabled,
+          multiple: false,
         },
       ],
     },

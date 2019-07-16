@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(Supplier by call id state and id call)' alias='SupplierByCall|vwSuppliersByCallIdStateAndIdCall'
+<view name='(Supplier by call and id state)' alias='SupplierByCall|vwSuppliersByCallIdState'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052581C60067468E'
  showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,15 +9,15 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='dec0a' unid='7678C868A9B2DF0E05258438005BBA2F' sequence='1'>
-<created><datetime>20190715T114154,39-05</datetime></created>
-<modified><datetime>20190715T114154,41-05</datetime></modified>
-<revised><datetime>20190715T114154,40-05</datetime></revised>
-<lastaccessed><datetime>20190715T114539,92-05</datetime></lastaccessed>
-<addedtofile><datetime>20190715T114154,41-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='deb8a' unid='C48D4308782587E50525843800436966' sequence='10'>
+<created><datetime>20190715T071618,94-05</datetime></created>
+<modified><datetime>20190715T084722,72-05</datetime></modified>
+<revised><datetime>20190715T084722,71-05</datetime></revised>
+<lastaccessed><datetime>20190715T084722,72-05</datetime></lastaccessed>
+<addedtofile><datetime>20190715T071619,01-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frSupplierByCall"</formula></code><code
+ event='selection'><formula>SELECT form = "frSupplierByCall" &amp;  whoEvaluateOfTechnicalTeam != ""</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
@@ -25,7 +25,8 @@ End Sub
 <column sort='ascending' hidedetailrows='false' itemname='idState' width='17.2500'
  resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
  showaslinks='false'><columnheader title='idState'><font size='9pt' style='bold'/></columnheader></column>
-<column sort='ascending' hidedetailrows='false' itemname='idCall' width='10'
- resizable='true' separatemultiplevalues='false' sortnoaccent='false' sortnocase='true'
- showaslinks='false'><columnheader title='idCall'><font size='9pt' style='bold'/></columnheader></column></view>
+<column sort='ascending' hidedetailrows='false' itemname='whoEvaluateOfTechnicalTeam'
+ width='20.5000' resizable='true' separatemultiplevalues='false' sortnoaccent='true'
+ sortnocase='true' showaslinks='false'><columnheader title='whoEvaluateOfTechnicalTeam'><font
+ size='9pt' style='bold'/></columnheader></column></view>
 

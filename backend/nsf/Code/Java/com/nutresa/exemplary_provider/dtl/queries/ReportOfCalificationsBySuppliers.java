@@ -46,8 +46,18 @@ public class ReportOfCalificationsBySuppliers {
     private double totalScoreInService;
     @Expose
     private List<SummaryManagerSurvey> managerAnswers;
+    @Expose
+    private String whoEvaluateOfTechnicalTeam;
 
-    public String getSapCode() {
+    public String getWhoEvaluateOfTechnicalTeam() {
+		return whoEvaluateOfTechnicalTeam;
+	}
+
+	public void setWhoEvaluateOfTechnicalTeam(String whoEvaluateOfTechnicalTeam) {
+		this.whoEvaluateOfTechnicalTeam = whoEvaluateOfTechnicalTeam;
+	}
+
+	public String getSapCode() {
         return sapCode;
     }
 

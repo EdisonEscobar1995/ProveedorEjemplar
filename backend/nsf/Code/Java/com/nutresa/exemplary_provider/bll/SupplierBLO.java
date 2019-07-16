@@ -34,6 +34,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierDTO currentSupplier = dao.get(supplier.getId());
         supplier.autoSetIdDocuments();
         supplier.autoSetIdAttachedFinancialReport();
+        supplier.autoSetIdCompanyLogo();
 
         CustomerBLO customerBLO = new CustomerBLO();
         customerBLO.deleteCustomers(customerBLO.getCustomersBySupplier(currentSupplier.getId()));
@@ -43,6 +44,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         AttachmentBLO attachmentBLO = new AttachmentBLO();
         attachmentBLO.deleteDocuments(currentSupplier.getDocument());
         attachmentBLO.deleteDocuments(currentSupplier.getAttachedFinancialReport());
+        attachmentBLO.deleteDocuments(currentSupplier.getCompanyLogo());
 
         savePrincipalCustomers(supplier.getPrincipalCustomer(), supplier.getId());
         saveContactNutresaGroup(supplier.getContactNutresaGroup(), supplier.getId());
@@ -87,6 +89,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
             ContactBLO contactBLO = new ContactBLO();
             response.setDocument(attachmentBLO.getDocuments(response.getIdDocuments()));
             response.setAttachedFinancialReport(attachmentBLO.getDocuments(response.getIdAttachedFinancialReport()));
+            response.setCompanyLogo(attachmentBLO.getDocuments(response.getIdCompanyLogo()));
             response.setPrincipalCustomer(customerBLO.getCustomersBySupplier(response.getId()));
             response.setContactNutresaGroup(contactBLO.getContactsBySupplier(response.getId()));
         }
@@ -145,7 +148,7 @@ public class SupplierBLO extends GenericBLO<SupplierDTO, SupplierDAO> {
         SupplierDAO supplierDAO = new SupplierDAO();
         StateDAO stateDAO = new StateDAO();
 
-        try {
+        try {        	
             listIdsSupplierByCall = Common.getDtoFields(callsFound, new String[] { "[idSupplier]", "[idState]" },
                     SupplierByCallDTO.class);
             List<SupplierDTO> suppliers = supplierDAO.getAllBy("id", Common.getIdsFromList(listIdsSupplierByCall

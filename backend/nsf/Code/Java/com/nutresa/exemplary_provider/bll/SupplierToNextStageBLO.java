@@ -43,7 +43,7 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         }
 
         if ("TechnicalTeam".equals(suppliersToNextStage.getStage())) {
-            notified = approveToTechnicalTeam(suppliersToNextStage.getIdSuppliersByCall());
+            notified = approveToTechnicalTeam(suppliersToNextStage.getIdSuppliersByCall(), suppliersToNextStage.getNegociator());
         }
 
         if ("ManagerTeam".equals(suppliersToNextStage.getStage())) {
@@ -75,7 +75,7 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         return notified;
     }
 
-    private String approveToTechnicalTeam(List<String> idSuppliersToApprove) throws HandlerGenericException {
+    private String approveToTechnicalTeam(List<String> idSuppliersToApprove, String negociator) throws HandlerGenericException {
         String notified = STATE_FAILED;
         NotificationBLO notificationBLO = new NotificationBLO();
         Map<String, String> filter = new LinkedHashMap<String, String>();
@@ -92,7 +92,8 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
                 notificationBLO.sendNotificationTypeToSupplier(supplier,
                         NotificationType.SUPPLIER_CALLED_BY_TECHNICAL_TEAM);
                 supplierByCall.setIdState(stateBLO.getStateByShortName(
-                        SurveyStates.NOT_STARTED_TECHNICAL_TEAM.toString()).getId());
+                        SurveyStates.TECHNICAL_TEAM.toString()).getId());
+                supplierByCall.setWhoEvaluateOfTechnicalTeam(negociator);
                 supplierByCallBLO.update(supplierByCall);
                 notified = STATE_SUCCESS;
             }
@@ -225,6 +226,7 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
         List<DTO> definitivesSupplierByCall = new ArrayList<DTO>();
         List<TechnicalTeamDTO> members = technicalTeamBLO.getMemberInTeamByUserInSession();
+                
         for (TechnicalTeamDTO member : members) {
             definitivesSupplierByCall.addAll(suppliersByCall);
             String temporalIdTechnicalTeam = member.getIdSupply().concat(

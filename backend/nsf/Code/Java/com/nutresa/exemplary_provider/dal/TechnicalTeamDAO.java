@@ -44,4 +44,24 @@ public class TechnicalTeamDAO extends GenericDAO<TechnicalTeamDTO> {
 
         return membersInTeam;
     }
+    
+    /**
+     * Busca un registro del comite tecnico por el id
+     * 
+     * @param id
+     *            Id a buscar
+     * @return Registro encontrado
+     * @throws HandlerGenericException
+     */
+    public TechnicalTeamDTO getTechnicalTeamById(String id) throws HandlerGenericException {
+    	TechnicalTeamDTO technicalTeam = new TechnicalTeamDTO();
+        View currentView = getDatabase().getView("vwTechnicalTeams");
+        Document document = currentView.getFirstDocumentByKey(id, true);
+        if (null != document) {
+        	technicalTeam = castDocument(document);
+        }
+
+        return technicalTeam;
+    }
+    
 }

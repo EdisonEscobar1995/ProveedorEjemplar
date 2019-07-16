@@ -76,6 +76,7 @@ class DinamicForm extends Component {
                     hidden,
                     size,
                     style,
+                    multiple = true,
                   } = current;
                   allowClear = allowClear === undefined ? true : allowClear;
                   options = options || [];
@@ -343,7 +344,7 @@ class DinamicForm extends Component {
                             datakey={key}
                             list={fileList}
                             disabled={disabled}
-                            multiple
+                            multiple={multiple}
                             max={max}
                             unique={unique}
                             uploadExtensions={uploadExtensions}

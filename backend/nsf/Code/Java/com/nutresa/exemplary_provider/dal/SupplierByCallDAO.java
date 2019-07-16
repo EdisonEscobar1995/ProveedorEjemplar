@@ -279,4 +279,29 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
         this.entityView = "vwSuppliersByCallSurvey";
         return super.getAllBy(key);
     }
+    
+    /**
+     * Obtine todos los proveedores que tengan el campo "whoEvaluateOfTechnicalTeam"
+     * en el estado especificado
+     * 
+     * @param filter
+     *            Lista de filtros del Estado de la convocatoria y
+     *            Evaluador del comite tecnico
+     *          
+     * @return <code>true</code> si existen proveedores, de lo contrario
+     *         <code>false</code>
+     * @throws HandlerGenericException
+     */
+    public List<SupplierByCallDTO> getByProperties(List<String> filter) throws HandlerGenericException {
+        List<SupplierByCallDTO> supplierByCall = new ArrayList<SupplierByCallDTO>();
+        View currentView = getDatabase().getView("vwSuppliersByCallIdState");
+        DocumentCollection documents = currentView.getAllDocumentsByKey(filter, true);
+        if (null != documents) {
+            for (Document document : documents) {
+            	supplierByCall.add(castDocument(document));
+            }
+        }
+
+        return supplierByCall;
+    }
 }

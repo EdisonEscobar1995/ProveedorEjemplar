@@ -9,12 +9,22 @@ public class SupplierToNextStageDTO {
     private List<String> idSuppliersByCall;
     @Expose
     private String stage;
+    @Expose
+    private String negociator;
 
     public void setIdSuppliersByCall(List<String> idSupplierByCall) {
         this.idSuppliersByCall = idSupplierByCall;
     }
 
-    public List<String> getIdSuppliersByCall() {
+    public String getNegociator() {
+		return negociator;
+	}
+
+	public void setNegociator(String negociator) {
+		this.negociator = negociator;
+	}
+
+	public List<String> getIdSuppliersByCall() {
         return idSuppliersByCall;
     }
 

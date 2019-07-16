@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import com.nutresa.exemplary_provider.dal.CallDAO;
+import com.nutresa.exemplary_provider.dal.UserDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
@@ -265,6 +266,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setIdSupplierByCall(supplierByCall.getId());
         recordOfReport.setIdState(supplierByCall.getIdState());
         recordOfReport.setStates(stateBLO.getAll());
+        recordOfReport.setWhoEvaluateOfTechnicalTeam(supplierByCall.getWhoEvaluateOfTechnicalTeam());
 
         String typeReport = parameters.get("type");
 
@@ -349,10 +351,11 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         statesIncludInTechnicalTeamStage.add(SurveyStates.ENDED_TECHNICAL_TEAM);
 
         SupplierBLO supplierBLO = new SupplierBLO();
-        List<DTO> callsBySupplier = identifyParticpantsByCallYearAndStageStates(year, statesIncludInTechnicalTeamStage);
-
+        // List<DTO> callsBySupplier = identifyParticpantsByCallYearAndStageStates(year, statesIncludInTechnicalTeamStage);
+        List<DTO> callsBySupplier = identifySuppliersByCallYearAndStageStatesWhoEvaluateOfTechnichalTeam(year, statesIncludInTechnicalTeamStage);        
+                
         SupplierToNextStageBLO supplierToTechnicalTeamBLO = new SupplierToNextStageBLO();
-        callsBySupplier = supplierToTechnicalTeamBLO.getParticipantsByTechnicalTeamMember(callsBySupplier);
+        callsBySupplier = supplierToTechnicalTeamBLO.getParticipantsByTechnicalTeamMember(callsBySupplier);        
 
         InformationFromSupplier participantsToTechnicalTeam = supplierBLO.getInformationFromSuppliers(listYears,
                 callsBySupplier);
@@ -492,6 +495,26 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         return callsBySupplier;
     }
+    
+    protected List<DTO> identifySuppliersByCallYearAndStageStatesWhoEvaluateOfTechnichalTeam(String year, List<SurveyStates> statesOfStage)
+	    throws HandlerGenericException {
+		// String viewName = "vwSuppliersByCallIdStateAndIdCall";
+    	String viewName = "vwSuppliersByCallIdStateAndIdCallAndUser";
+		StateBLO stateBLO = new StateBLO();
+		UserDAO userDAO = new UserDAO();
+		SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+		Map<String, String> filter = new HashMap<String, String>();
+		filter.put(FieldToFilter.FIELD_CALL, getIdCallByYear(year));
+		List<DTO> callsBySupplier = new ArrayList<DTO>();
+		for (SurveyStates state : statesOfStage) {
+		    String idState = stateBLO.getStateByShortName(state.toString()).getId();
+		    filter.put(FieldToFilter.FIELD_STATE, idState);
+		    filter.put("whoEvaluateOfTechnicalTeam", userDAO.getUserInSession().getName());		    
+		    callsBySupplier.addAll(supplierByCallBLO.getAllBy(filter, viewName));
+		}
+		
+		return callsBySupplier;
+	}
 
     /**
      * De todas las convocatorias creadas optiene la Ãºltima que fue creada.
