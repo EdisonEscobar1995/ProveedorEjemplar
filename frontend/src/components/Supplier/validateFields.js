@@ -8,5 +8,7 @@ const fieldsToValid = [
   'emailOfContact',
   'nameLegalAgent',
   'idLegalAgent',
+  'companyLogo',
+  'attachedFinancialReport',
 ];
 export default fieldsToValid;

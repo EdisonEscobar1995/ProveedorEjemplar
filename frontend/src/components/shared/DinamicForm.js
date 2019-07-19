@@ -340,20 +340,30 @@ class DinamicForm extends Component {
                       } = current;
                       rowValue = (
                         <Field label={label} required={required} style={style}>
-                          <Upload
-                            datakey={key}
-                            list={fileList}
-                            disabled={disabled}
-                            multiple={multiple}
-                            max={max}
-                            unique={unique}
-                            uploadExtensions={uploadExtensions}
-                            uploadMaxFilesize={uploadMaxFilesize}
-                            sizeAllowed={sizeAllowed}
-                            onChange={onChange}
-                            onRemove={onRemove}
-                            baseUrl={`${baseUrl}/Attachment?action=save`}
-                          />
+                          <ItemStyle>
+                            {getFieldDecorator(key, {
+                              rules: [
+                                { required, message: DinamicForm.message },
+                                ...rules,
+                              ],
+                              initialValue: value,
+                            })(
+                              <Upload
+                                datakey={key}
+                                list={fileList}
+                                disabled={disabled}
+                                multiple={multiple}
+                                max={max}
+                                unique={unique}
+                                uploadExtensions={uploadExtensions}
+                                uploadMaxFilesize={uploadMaxFilesize}
+                                sizeAllowed={sizeAllowed}
+                                onChange={onChange}
+                                onRemove={onRemove}
+                                baseUrl={`${baseUrl}/Attachment?action=save`}
+                              />,
+                            )}
+                          </ItemStyle>
                         </Field>
                       );
                     }
