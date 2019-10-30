@@ -119,10 +119,10 @@ const formData = ({
         {
           span: 8,
           type: 'select',
-          label: 'Tipo de suministro',
-          key: 'supply',
+          label: 'Categoría',
+          key: 'category',
           value: '',
-          options: Supply,
+          options: Category,
         },
       ],
     },
@@ -132,10 +132,11 @@ const formData = ({
         {
           span: 8,
           type: 'select',
-          label: 'Categoría',
-          key: 'category',
+          label: 'Tipo de suministro',
+          key: 'supply',
           value: '',
-          options: Category,
+          required: type === SUPPLIER_EVALUATOR,
+          options: Supply,
         },
         {
           span: 8,
@@ -143,6 +144,7 @@ const formData = ({
           label: 'Tamaño',
           key: 'companySize',
           value: '',
+          required: type === SUPPLIER_EVALUATOR,
           options: CompanySize,
         },
         {
