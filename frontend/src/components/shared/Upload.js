@@ -39,6 +39,7 @@ const mapValue = (list, disabled) => {
 class Upload extends Component {
   state = {
     listValue: mapValue(this.props.list, this.props.disabled),
+    key: this.props.datakey,
   }
 
   onRemove = (file) => {
@@ -51,7 +52,7 @@ class Upload extends Component {
       }
     }
   }
-  onChange = (info) => {
+  onChange = (info, setFields = null) => {
     if (info.file.status) {
       let fileList;
       const unique = this.props.unique;
@@ -97,6 +98,13 @@ class Upload extends Component {
         messageConfig.text = 'Validation.uploadFail';
         message(messageConfig);
       }
+      if (setFields && info.file.status === 'removed') {
+        setFields({
+          [this.state.key]: {
+            value: fileList,
+          },
+        });
+      }
       this.setState({ listValue: fileList });
     }
   }
@@ -133,6 +141,7 @@ class Upload extends Component {
       disabled,
       multiple,
       baseUrl,
+      setFields = null,
     } = this.props;
     const content = children || <UploadButton />;
     let { uploadExtensions } = this.props;
@@ -147,9 +156,10 @@ class Upload extends Component {
         multiple={multiple}
         showUploadList={{ showRemoveIcon: !disabled }}
         beforeUpload={this.beforeUpload}
-        onChange={this.onChange}
+        onChange={info => this.onChange(info, setFields)}
         onRemove={this.onRemove}
         fileList={this.state.listValue}
+        defaultFileList={this.state.listValue}
       >
         {
           !disabled && content

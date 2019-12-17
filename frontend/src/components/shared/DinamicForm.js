@@ -46,6 +46,21 @@ class DinamicForm extends Component {
   componentWillMount() {
     DinamicForm.message = LangIntl.getIntl().formatMessage({ id: 'Validation.requiredField' });
   }
+  componentDidMount() {
+    const { content } = this.props;
+    content.forEach((item) => {
+      item.value.forEach((current) => {
+        if (current.type === 'upload') {
+          const { key, fileList } = current;
+          this.props.setFields({
+            [key]: {
+              value: fileList,
+            },
+          });
+        }
+      });
+    });
+  }
 
   render() {
     const {
@@ -361,6 +376,7 @@ class DinamicForm extends Component {
                                 onChange={onChange}
                                 onRemove={onRemove}
                                 baseUrl={`${baseUrl}/Attachment?action=save`}
+                                setFields={required ? setFields : null}
                               />,
                             )}
                           </ItemStyle>
