@@ -1057,4 +1057,5 @@ export {
   setSector,
   setExport,
   cleanStore,
+  formatData,
 };

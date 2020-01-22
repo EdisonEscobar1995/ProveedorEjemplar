@@ -9,6 +9,7 @@ import calledSuppliers from './CalledSuppliers/reducer';
 import modifiedSuppliers from './ModifiedSuppliers/reducer';
 import surveys from './Surveys/reducer';
 import callReport from './CallReport/reducer';
+import supplierReport from './SupplierReport/reducer';
 import results from './Results/reducer';
 import pendings from './Pendings/reducer';
 import supplierSelection from './SupplierSelection/reducer';
@@ -45,6 +46,7 @@ const app = combineReducers({
   modifiedSuppliers,
   surveys,
   callReport,
+  supplierReport,
   results,
   pendings,
   supplierSelection,

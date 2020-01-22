@@ -25,6 +25,11 @@ function getDataQuestionsBySurveyApi(data) {
   return instance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=${idSurvey}&idDimension=${idDimension}&idSupplierByCall=${id}`);
 }
 
+function getReportBySupplierApi(data) {
+  const { idSurvey, idSupplierByCall } = data;
+  return instance.get(`Supplier?action=getReportBySupplier&idSurvey=${idSurvey}&idSupplierByCall=${idSupplierByCall}`);
+}
+
 function saveDataSuppliertApi(data) {
   return instance.post('Supplier?action=save', data);
 }
@@ -70,6 +75,7 @@ export {
   getDataSuppliertApi,
   getDataCallSuppliertApi,
   getDataQuestionsBySurveyApi,
+  getReportBySupplierApi,
   saveDataCallBySupplierApi,
   saveDataSuppliertApi,
   deleteDataCallBySupplierApi,
