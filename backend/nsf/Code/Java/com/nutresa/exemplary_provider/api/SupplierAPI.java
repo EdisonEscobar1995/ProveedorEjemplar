@@ -3,11 +3,13 @@ package com.nutresa.exemplary_provider.api;
 import java.util.List;
 import java.util.Map;
 
+import com.nutresa.exemplary_provider.bll.CallBLO;
 import com.nutresa.exemplary_provider.bll.SupplierBLO;
 import com.nutresa.exemplary_provider.dtl.QuestionsBySurveyDTO;
 import com.nutresa.exemplary_provider.dtl.ServletResponseDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
+import com.nutresa.exemplary_provider.dtl.queries.ReportCalificationBySupplier;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
@@ -101,6 +103,19 @@ public class SupplierAPI extends GenericAPI<SupplierDTO, SupplierBLO> {
                     .get("text")));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<List<SupplierDTO>>(exception);
+        }
+
+        return response;
+    }
+    
+    public ServletResponseDTO<ReportCalificationBySupplier> getReportBySupplier(Map<String, String> parameters) {
+        ServletResponseDTO<ReportCalificationBySupplier> response = null;
+        CallBLO callBLO = new CallBLO();
+        try {
+            response = new ServletResponseDTO<ReportCalificationBySupplier>(callBLO
+                    .getReportBySupplier(parameters));
+        } catch (HandlerGenericException exception) {
+            response = new ServletResponseDTO<ReportCalificationBySupplier>(exception);
         }
 
         return response;

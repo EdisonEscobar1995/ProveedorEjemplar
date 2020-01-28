@@ -8,9 +8,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import com.nutresa.exemplary_provider.dal.CallDAO;
+import com.nutresa.exemplary_provider.dal.CriterionDAO;
 import com.nutresa.exemplary_provider.dal.UserDAO;
 import com.nutresa.exemplary_provider.dtl.CallDTO;
+import com.nutresa.exemplary_provider.dtl.CriterionDTO;
 import com.nutresa.exemplary_provider.dtl.DTO;
+import com.nutresa.exemplary_provider.dtl.DimensionDTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.ManagerTeamDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
@@ -27,9 +30,13 @@ import com.nutresa.exemplary_provider.dtl.SuppliersInCallDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyStates;
 import com.nutresa.exemplary_provider.dtl.queries.QuestionStatistic;
 import com.nutresa.exemplary_provider.dtl.queries.InformationFromSupplier;
+import com.nutresa.exemplary_provider.dtl.queries.ReportCalificationBySupplier;
 import com.nutresa.exemplary_provider.dtl.queries.SummaryToLoadSupplier;
 import com.nutresa.exemplary_provider.dtl.queries.StatisticalProgress;
 import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers;
+import com.nutresa.exemplary_provider.dtl.queries.ReportCalificationBySupplier.TotalScoreEvaluatorCriterion;
+import com.nutresa.exemplary_provider.dtl.queries.ReportCalificationBySupplier.TotalScoreEvaluatorDimension;
+import com.nutresa.exemplary_provider.dtl.queries.ReportOfCalificationsBySuppliers.SummarySurvey;
 import com.nutresa.exemplary_provider.utils.Common;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
@@ -214,7 +221,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         return response;
     }
-
+    
     /**
      * @param idCall
      *            Identificador de la convocatoria que se va consultar.
@@ -248,7 +255,156 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
         return response;
     }
-
+        
+    public ReportCalificationBySupplier getReportBySupplier(Map<String, String> parameters)
+	    throws HandlerGenericException {
+		ReportCalificationBySupplier response = null;
+		
+		UserBLO userBLO = new UserBLO();
+		if (userBLO.isRol(Rol.LIBERATOR.toString()) || userBLO.isRol(Rol.ADMINISTRATOR.toString())
+		        || userBLO.isRol(Rol.EVALUATOR.toString())) {
+		    String idCall = parameters.get("idCall");
+		    String idSupplier = parameters.get("idSupplier");
+		    SupplierBLO supplierBLO = new SupplierBLO();
+		    SupplierDTO supplier = supplierBLO.get(idSupplier);
+		    response = buildReportOfBySupplier(idCall, supplier, parameters);
+		} else {
+		    throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
+		}
+		
+		if (response == null) {
+		    throw new HandlerGenericException(HandlerGenericExceptionTypes.INFORMATION_NOT_FOUND.toString());
+		}
+		
+		return response;
+	}
+    
+    private ReportCalificationBySupplier buildReportOfBySupplier(String idCall,
+            SupplierDTO supplier, Map<String, String> parameters) throws HandlerGenericException {
+        ReportCalificationBySupplier response = new ReportCalificationBySupplier();
+        StateBLO stateBLO = new StateBLO();
+        String typeReport = "SUPPLIER_EVALUATOR";
+        List<SurveyStates> surveyStatesAllowed = stateBLO.getStatesByTypeReport(typeReport);
+        DimensionBLO dimensionBLO = new DimensionBLO();
+        List<DimensionDTO> dimensions = new ArrayList<DimensionDTO>();
+        SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
+        SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
+                .getId(), surveyStatesAllowed);
+        
+        ReportCalificationBySupplier dataOfReport = new ReportCalificationBySupplier();
+    	List<TotalScoreEvaluatorDimension> totalScoresEvaluatorD  = new ArrayList<TotalScoreEvaluatorDimension>();
+    	List<TotalScoreEvaluatorCriterion> totalScoresEvaluatorC  = new ArrayList<TotalScoreEvaluatorCriterion>();
+    	    	    	
+        SupplyBLO supplyBLO = new SupplyBLO();
+        CategoryBLO categoryBLO = new CategoryBLO();
+        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+        dataOfReport.setNit(supplier.getNit());
+        dataOfReport.setSapCode(supplier.getSapCode());
+        dataOfReport.setName(supplier.getBusinessName());
+        dataOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
+        dataOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
+        dataOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
+        dataOfReport.setIdSupplier(supplierByCall.getIdSupplier());
+        dataOfReport.setIdSupplierByCall(supplierByCall.getId());
+        dataOfReport.setIdState(supplierByCall.getIdState());
+        dataOfReport.setWhoEvaluateOfTechnicalTeam(supplierByCall.getWhoEvaluateOfTechnicalTeam());
+        
+        if (supplierByCall instanceof SupplierByCallDTO) {
+        	dimensions = dimensionBLO.getDimensionsBySurvey(parameters.get("idSurvey"));
+        	totalScoresEvaluatorD = getTotalEvaluateByDimension(dimensions, supplierByCall, supplier, parameters);
+        	dataOfReport.setTotalScoreEvaluatorDimension(totalScoresEvaluatorD);
+        	totalScoresEvaluatorC = getTotalEvaluateByCriterio(dimensions, supplierByCall, supplier, parameters);
+        	dataOfReport.setTotalScoreEvaluatorCriterion(totalScoresEvaluatorC);
+        	response = dataOfReport;
+        }
+        
+        return response;
+    }
+    
+    private List<TotalScoreEvaluatorDimension> getTotalEvaluateByDimension(List<DimensionDTO> dimensions, SupplierByCallDTO supplierByCall, 
+    		SupplierDTO supplier, Map<String, String> parameters) throws HandlerGenericException {
+    	ReportOfCalificationsBySuppliers dataOfReportAux = new ReportOfCalificationsBySuppliers();
+    	List<String> comments = new ArrayList<String>();
+    	ReportCalificationBySupplier dataOfReport = new ReportCalificationBySupplier();
+    	ReportCalificationBySupplier.TotalScoreEvaluatorDimension totalScoreEvaluatorDimension = dataOfReport.new TotalScoreEvaluatorDimension();
+    	List<TotalScoreEvaluatorDimension> totalScoresEvaluatorD = new ArrayList<TotalScoreEvaluatorDimension>();
+    	
+    	if (dimensions.isEmpty()) {
+    		throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+    	}
+    	
+    	for (DimensionDTO dimension : dimensions) {
+        	parameters.put("idDimension", dimension.getId());
+        	
+        	dataOfReportAux = getRecordOfReportBySupplier(supplierByCall, supplier, dataOfReportAux, parameters);
+        	
+        	for (SummarySurvey dataAux : dataOfReportAux.getSummarySurvey()) {
+        		comments.add(dataAux.getCommentEvaluator());
+        	}
+        	
+        	totalScoreEvaluatorDimension.setDimension(dimension.getName());
+        	totalScoreEvaluatorDimension.setIdDimension(dimension.getId());
+        	totalScoreEvaluatorDimension.setScoreTotal(dataOfReportAux.getTotalScoreOfEvaluator());
+        	totalScoreEvaluatorDimension.setCommentsEvaluators(comments);
+        	totalScoresEvaluatorD.add(totalScoreEvaluatorDimension);
+        	dataOfReportAux = new ReportOfCalificationsBySuppliers();
+        	totalScoreEvaluatorDimension = dataOfReport.new TotalScoreEvaluatorDimension();
+        }
+    	
+    	return totalScoresEvaluatorD;
+    }
+    
+    private List<TotalScoreEvaluatorCriterion> getTotalEvaluateByCriterio(List<DimensionDTO> dimensions, SupplierByCallDTO supplierByCall, 
+    		SupplierDTO supplier, Map<String, String> parameters) throws HandlerGenericException {
+    	
+    	CriterionDAO criterionDAO = new CriterionDAO();
+    	ReportOfCalificationsBySuppliers dataOfReportAux = new ReportOfCalificationsBySuppliers();
+    	ReportCalificationBySupplier dataOfReport = new ReportCalificationBySupplier();
+    	ReportCalificationBySupplier.TotalScoreEvaluatorCriterion totalScoreEvaluatorCriterio = dataOfReport.new TotalScoreEvaluatorCriterion();
+    	List<TotalScoreEvaluatorCriterion> totalScoresEvaluatorC = new ArrayList<TotalScoreEvaluatorCriterion>();
+    	List<String> filter = new ArrayList<String>();
+    	List<CriterionDTO> criterions = new ArrayList<CriterionDTO>();
+    	
+    	if (dimensions.isEmpty()) {
+    		throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
+    	}
+    	
+    	for (DimensionDTO dimension : dimensions) {
+            filter.add(dimension.getId());            
+            criterions = criterionDAO.getByProperties(filter);
+            if (!criterions.isEmpty()) {
+            	for (CriterionDTO criterio : criterions) {
+            		parameters.put("idDimension", dimension.getId());
+            		parameters.put("idCriterion", criterio.getId());
+            		
+            		dataOfReportAux = getRecordOfReportBySupplier(supplierByCall, supplier, dataOfReportAux, parameters);
+            		
+            		totalScoreEvaluatorCriterio.setDimension(dimension.getName());
+            		totalScoreEvaluatorCriterio.setIdDimension(dimension.getId());
+            		totalScoreEvaluatorCriterio.setCriterio(criterio.getName());
+            		totalScoreEvaluatorCriterio.setIdCriterio(criterio.getId());
+            		totalScoreEvaluatorCriterio.setScoreTotal(dataOfReportAux.getTotalScoreOfEvaluator());
+                	totalScoresEvaluatorC.add(totalScoreEvaluatorCriterio);
+                	dataOfReportAux = new ReportOfCalificationsBySuppliers();
+                	totalScoreEvaluatorCriterio = dataOfReport.new TotalScoreEvaluatorCriterion();
+            	}
+            }
+            criterions = new ArrayList<CriterionDTO>();
+        }
+    	
+    	return totalScoresEvaluatorC;
+    }
+    
+    private ReportOfCalificationsBySuppliers getRecordOfReportBySupplier(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
+    		ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters) throws HandlerGenericException {
+    	                
+        AnswerBLO answerBLO = new AnswerBLO();    	
+        recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
+                parameters);
+        
+        return recordOfReport;
+    }
+        
     private ReportOfCalificationsBySuppliers getRecordOfReport(SupplierByCallDTO supplierByCall, SupplierDTO supplier,
             Map<String, String> parameters) throws HandlerGenericException {
         ReportOfCalificationsBySuppliers recordOfReport = new ReportOfCalificationsBySuppliers();

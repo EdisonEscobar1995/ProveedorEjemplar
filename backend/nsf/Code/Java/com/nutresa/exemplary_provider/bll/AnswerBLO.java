@@ -219,7 +219,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
         return recordOfReport;
     }
-
+    
     private void setSummarySurveyBySupplier(OptionDTO optionAnswer, SummarySurvey summary) {
         summary.setAnswerSupplier(optionAnswer.getWording());
         summary.setScoreOfSupplier(optionAnswer.getScore());
@@ -235,7 +235,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summary.setScoreOfEvaluator((short) SCORE_OF_NA);
         }
     }
-
+    
     /**
      * Obtiene las respuestas que se van a tener en cuenta para el reporte de
      * Nota promedio.
