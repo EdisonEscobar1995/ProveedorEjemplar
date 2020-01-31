@@ -294,7 +294,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         ReportCalificationBySupplier dataOfReport = new ReportCalificationBySupplier();
     	List<TotalScoreEvaluatorDimension> totalScoresEvaluatorD  = new ArrayList<TotalScoreEvaluatorDimension>();
     	List<TotalScoreEvaluatorCriterion> totalScoresEvaluatorC  = new ArrayList<TotalScoreEvaluatorCriterion>();
-    	    	    	
+    	double totalScoreEvaluator = 0;
+    	
         SupplyBLO supplyBLO = new SupplyBLO();
         CategoryBLO categoryBLO = new CategoryBLO();
         CompanySizeBLO companySizeBLO = new CompanySizeBLO();
@@ -311,14 +312,26 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         
         if (supplierByCall instanceof SupplierByCallDTO) {
         	dimensions = dimensionBLO.getDimensionsBySurvey(parameters.get("idSurvey"));
+        	totalScoreEvaluator = getTotalScoreEvaluetor(supplierByCall, supplier, parameters);
+        	dataOfReport.setTotalScoreOfEvaluator(totalScoreEvaluator);
         	totalScoresEvaluatorD = getTotalEvaluateByDimension(dimensions, supplierByCall, supplier, parameters);
         	dataOfReport.setTotalScoreEvaluatorDimension(totalScoresEvaluatorD);
         	totalScoresEvaluatorC = getTotalEvaluateByCriterio(dimensions, supplierByCall, supplier, parameters);
-        	dataOfReport.setTotalScoreEvaluatorCriterion(totalScoresEvaluatorC);
+        	dataOfReport.setTotalScoreEvaluatorCriterion(totalScoresEvaluatorC);        	
         	response = dataOfReport;
         }
         
         return response;
+    }
+    
+    private double getTotalScoreEvaluetor(SupplierByCallDTO supplierByCall, 
+    		SupplierDTO supplier, Map<String, String> parameters) throws HandlerGenericException{
+    	
+    	double totalScoreEvaluator = 0;
+    	ReportOfCalificationsBySuppliers dataOfReportAux = new ReportOfCalificationsBySuppliers();
+    	dataOfReportAux = getRecordOfReportBySupplier(supplierByCall, supplier, dataOfReportAux, parameters);
+    	totalScoreEvaluator = dataOfReportAux.getTotalScoreOfEvaluator(); 
+    	return totalScoreEvaluator; 
     }
     
     private List<TotalScoreEvaluatorDimension> getTotalEvaluateByDimension(List<DimensionDTO> dimensions, SupplierByCallDTO supplierByCall, 
@@ -390,6 +403,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             	}
             }
             criterions = new ArrayList<CriterionDTO>();
+            filter = new ArrayList<String>();
         }
     	
     	return totalScoresEvaluatorC;

@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.dtl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -119,8 +120,20 @@ public class CallDTO {
         if (null == dateToCompare) {
             throw new HandlerGenericException("DATE_WITHOUT_FIXING");
         }
-
-        if (today.compareTo(dateToCompare) > 0) {
+        
+        Calendar dateToCompareCalendar = Calendar.getInstance();
+        dateToCompareCalendar.setTime(dateToCompare);
+        
+        Calendar actualDate = Calendar.getInstance();
+        actualDate.setTime(today);
+        
+        dateToCompareCalendar.set(Calendar.YEAR, dateToCompareCalendar.get(Calendar.YEAR));
+        dateToCompareCalendar.set(Calendar.MONTH, dateToCompareCalendar.get(Calendar.MONTH));
+        dateToCompareCalendar.set(Calendar.DATE, dateToCompareCalendar.get(Calendar.DATE));
+        dateToCompareCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        dateToCompareCalendar.set(Calendar.MINUTE, 58);
+        
+        if (actualDate.compareTo(dateToCompareCalendar) > 0) {
             response = true;
         }
 

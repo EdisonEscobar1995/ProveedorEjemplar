@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Spin, Row, Col } from 'antd';
@@ -19,7 +18,7 @@ const Table = styled.table`
   width: 100%;
 
   td.name {
-    width: 8%;
+    width: 20%;
     text-align: right;
     padding: 4px;
     color: #006159;
@@ -27,25 +26,31 @@ const Table = styled.table`
   }
 
   .percent {
-    margin-left: 10px;
+    margin-left: 5px;
+    width: 85%;
+    opacity: 1;
     height: 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
   }
 
   .percent > div {
     background: #006159;
     height: inherit;
   }
+`;
 
-  .percent > span {
-    display: inline-block;
-    padding: 0 10px;
+const TrTable = styled.tr`
+  .percent > div {
+    &:after {
+      content: ${props => `'${props.widthTr}'` || ' '};
+      color: #000;
+      position: relative;
+      left: 100%;
+      margin-left: 8px;
+    }
   }
 `;
 
-/* const PuntajeBox = styled.div`
+const PuntajeBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,7 +60,7 @@ const Table = styled.table`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 87px;
+    height: 100px;
     background: #006159;
     color: #ffffff;
     padding: 10px;
@@ -69,7 +74,7 @@ const Table = styled.table`
   .sPuntaje {
     font-size: 25px;
   }
-`; */
+`;
 
 class SupplierReportContainer extends Component {
   componentDidMount() {
@@ -78,23 +83,18 @@ class SupplierReportContainer extends Component {
 
   handleResults = (values) => {
     const { supplier } = values;
-    const { suppliersByCall, states } = this.props.data;
+    const { suppliersByCall } = this.props.data;
     const supplierByCall = suppliersByCall.filter(item => item.idSupplier === supplier)[0];
-    const stateData = states.filter(item => item.id === supplierByCall.idState)[0];
-    console.log(supplierByCall);
-    console.log('states = ', this.props.data.states);
-    this.props.getReportBySupplier(supplierByCall.idSurvey, supplierByCall.id,
-      stateData);
+    const data = {};
+    data.idCall = supplierByCall.idCall;
+    data.idSupplier = supplierByCall.idSupplier;
+    data.idSurvey = supplierByCall.idSurvey;
+    this.props.getReportBySupplier(data);
   };
 
   render() {
-    const { dimensions } = this.props;
-    const dataDimension = [];
-    if (dimensions && dimensions.length > 0) {
-      dimensions.forEach((dimension) => {
-        dataDimension.push([`${dimension.name}`, dimension.percent]);
-      });
-    }
+    const { totalScoreSupplier } = this.props;
+
     return (
       <Spin spinning={this.props.loading}>
         <GenericForm
@@ -103,7 +103,7 @@ class SupplierReportContainer extends Component {
           submitMethod={this.handleResults}
           validate
         />
-        {/* dimensions && dimensions.length > 0 &&
+        {console.log('totalScoreSupplier == ', totalScoreSupplier) /* totalScoreSupplier && totalScoreSupplier.totalScoreEvaluatorDimension && totalScoreSupplier.totalScoreEvaluatorDimension.length > 0 &&
           <Card>
             {dimensions.map(dimension => (
               <div style={{ padding: 20 }} key={dimension.id}>
@@ -120,58 +120,64 @@ class SupplierReportContainer extends Component {
               </div>
             ))}
             </Card> */}
-        {/* <div id="content-export" style={{ marginTop: 20 }}>
-          {dimensions && dimensions.length > 0 &&
+        {<div id="content-export" style={{ marginTop: 20 }}>
+          {totalScoreSupplier && totalScoreSupplier.totalScoreEvaluatorDimension &&
+          totalScoreSupplier.totalScoreEvaluatorDimension.length > 0 &&
             <div>
               <Title className="title">Evaluación general</Title>
-              <Row>
-                <Col span={12}>
+              <Row id="content-general">
+                <Col span={16}>
                   <Table>
                     <tbody>
-                      {dimensions.map(dimension => (
-                        <tr key={dimension.id}>
-                          <td className="name">{dimension.name}</td>
+                      <TrTable widthTr={`${totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%`} >
+                        <td className="name">Total</td>
+                        <td>
+                          <div className="percent">
+                            <div style={{ width: `${totalScoreSupplier.totalScoreOfEvaluator === 0 ? 0.2 : totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%` }} />
+                          </div>
+                        </td>
+                      </TrTable>
+                      {totalScoreSupplier.totalScoreEvaluatorDimension.map(dimension => (
+                        <TrTable key={dimension.idDimension} widthTr={`${dimension.scoreTotal.toFixed(2)}%`} >
+                          <td className="name">{dimension.dimension}</td>
                           <td>
                             <div className="percent">
-                              <div style={{ width: `${dimension.percent === 0 ? 1 : dimension.percent}%`, opacity: `${dimension.percent === 0 ? 0.05 : 1}` }} />
-                              <span>{dimension.percent}%</span>
+                              <div style={{ width: `${dimension.scoreTotal === 0 ? 0.2 : dimension.scoreTotal.toFixed(2)}%` }} />
                             </div>
                           </td>
-                        </tr>
+                        </TrTable>
                       ))}
                     </tbody>
                   </Table>
                 </Col>
-                <Col span={12}>
+                <Col span={5}>
                   <PuntajeBox>
                     <div className="dBox">
                       <span className="sText">PUNTAJE CONSOLIDADO</span>
-                      <span className="sPuntaje">46.3%</span>
+                      <span className="sPuntaje">{totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%</span>
                     </div>
                   </PuntajeBox>
                 </Col>
                 <div id="data-canvas-general" />
               </Row>
-              {dimensions.map((dimension, index) => (
-                <Row style={{ marginTop: '25px' }} key={`id_${dimension.id}`}>
+              {totalScoreSupplier.totalScoreEvaluatorDimension.map((dimension, index) => (
+                <Row style={{ marginTop: '25px' }} key={`id_${dimension.idDimension}`} id={`dimension_${index}`}>
                   <Col span={24}>
-                    <Title className="title">{`${dimension.name} (${dimension.percent}%)`}</Title>
-                    <Table>
+                    <Title className="title">{`${dimension.dimension} (${dimension.scoreTotal.toFixed(2)}%)`}</Title>
+                    <Table style={{ width: '75%', margin: '0 auto' }}>
                       <tbody>
-                        {dimension.criterions.map(criterio => (
-                          <tr key={criterio.id} >
-                            <td className="name">{criterio.name}</td>
-                            <td>
-                              <div className="percent">
-                                <div style={{
-                                  width: `${criterio.score === '' || criterio.score === 0 ? 1 : criterio.score}%`,
-                                  opacity: `${criterio.score === '' || criterio.score === 0 ? 0.05 : 1}` }}
-                                />
-                                <span>{criterio.score || 0}%</span>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
+                        {totalScoreSupplier.totalScoreEvaluatorCriterion.map(criterio =>
+                          criterio.idDimension === dimension.idDimension && (
+                            <TrTable key={criterio.idCriterio} widthTr={`${criterio.scoreTotal.toFixed(2)}%`} >
+                              <td className="name">{criterio.criterio}</td>
+                              <td>
+                                <div className="percent" id={`percent-criterio_${criterio.idCriterio}`}>
+                                  <div style={{ width: `${criterio.scoreTotal === '' || criterio.scoreTotal === 0 ? 0.2 : criterio.scoreTotal.toFixed(2)}%` }} />
+                                  <section id={`data-percent-criterio_${criterio.idCriterio}`} />
+                                </div>
+                              </td>
+                            </TrTable>
+                          ))}
                       </tbody>
                     </Table>
                   </Col>
@@ -179,9 +185,12 @@ class SupplierReportContainer extends Component {
                 </Row>
               ))}
             </div> }
-        </div> */ }
-        <div id="content-export" style={{ marginTop: 20 }}>
-          {dimensions && dimensions.length > 0 &&
+        </div> }
+
+
+        {/* <div id="content-export" style={{ marginTop: 20 }}>
+          {totalScoreSupplier && totalScoreSupplier.totalScoreEvaluatorDimension && 
+           totalScoreSupplier.totalScoreEvaluatorDimension.length > 0 &&
             <div>
               <Title className="title">Evaluación general</Title>
               <Table>
@@ -190,15 +199,19 @@ class SupplierReportContainer extends Component {
                     <td className="trRow" style={{ width: '50%' }}>
                       <Table>
                         <tbody>
-                          {dimensions.map(dimension => (
-                            <tr key={dimension.id}>
-                              <td className="name">{dimension.name}</td>
+                          {totalScoreSupplier.totalScoreEvaluatorDimension.map(dimension => (
+                            <tr key={dimension.idDimension}>
+                              <td className="name">{dimension.dimension}</td>
                               <td>
                                 <div className="percent">
-                                  <div style={{ width: `${dimension.percent === 0 ? 1 : dimension.percent}%`, opacity: `${dimension.percent === 0 ? 0.05 : 1}` }}>_</div>
+                                  <div style={{ width: `${dimension.scoreTotal === 0 
+                                  ? 1 : dimension.scoreTotal.toFixed(2)}%`, 
+                                  opacity: `${dimension.scoreTotal === 0 ? 0.05 : 1}` }}>_</div>
                                 </div>
                               </td>
-                              <td style={{ width: '10%' }}><span>{dimension.percent}%</span></td>
+                              <td style={{ width: '10%' }}>
+                                <span>{dimension.scoreTotal.toFixed(2)}%</span>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -209,9 +222,13 @@ class SupplierReportContainer extends Component {
                         <tbody>
                           <tr>
                             <td style={{ width: '35%' }} />
-                            <td style={{ paddingTop: '18px', textAlign: 'center', background: '#006159', paddingBottom: '18px', color: '#fff', borderRadius: '10px' }}>
+                            <td style={{ paddingTop: '18px', textAlign: 'center', 
+                              background: '#006159', paddingBottom: '18px', 
+                              color: '#fff', borderRadius: '10px' }}>
                               <div className="sText">PUNTAJE CONSOLIDADO</div>
-                              <div className="sPuntaje">46.3%</div>
+                              <div className="sPuntaje">
+                                {totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%
+                              </div>
                             </td>
                             <td style={{ width: '35%' }} />
                           </tr>
@@ -221,10 +238,13 @@ class SupplierReportContainer extends Component {
                   </tr>
                 </tbody>
               </Table>
-              {dimensions.map((dimension, index) => (
-                <Row style={{ marginTop: '25px' }} key={`id_${dimension.id}`}>
+              <div id="data-canvas-general" />
+              {totalScoreSupplier.totalScoreEvaluatorDimension.map((dimension, index) => (
+                <Row style={{ marginTop: '25px' }} key={`id_${dimension.idDimension}`}>
                   <Col span={24}>
-                    <Title className="title">{`${dimension.name} (${dimension.percent}%)`}</Title>
+                    <Title className="title">
+                      {`${dimension.dimension} (${dimension.scoreTotal.toFixed(2)}%)`}
+                    </Title>
                     <Table>
                       <tbody>
                         <tr>
@@ -232,16 +252,20 @@ class SupplierReportContainer extends Component {
                           <td>
                             <Table>
                               <tbody>
-                                {dimension.criterions.map(criterio => (
-                                  <tr key={criterio.id} >
-                                    <td className="name">{criterio.name}</td>
+                                {totalScoreSupplier.totalScoreEvaluatorCriterion.map(criterio => 
+                                  criterio.idDimension === dimension.idDimension && (
+                                  <tr key={criterio.idCriterio} >
+                                    <td className="name">{criterio.criterio}</td>
                                     <td>
                                       <div className="percent">
                                         <div style={{
-                                          width: `${criterio.score === '' || criterio.score === 0 ? 1 : criterio.score}%`,
-                                          opacity: `${criterio.score === '' || criterio.score === 0 ? 0.05 : 1}` }}
+                                          width: `${criterio.scoreTotal === '' || 
+                                          criterio.scoreTotal === 0 ? 1 :
+                                          criterio.scoreTotal.toFixed(2)}%`,
+                                          opacity: `${criterio.scoreTotal === '' ||
+                                          criterio.scoreTotal === 0 ? 0.05 : 1}` }}
                                         />
-                                        <span>{criterio.score || 0}%</span>
+                                        <span>{criterio.scoreTotal.toFixed(2) || 0}%</span>
                                       </div>
                                     </td>
                                   </tr>
@@ -258,7 +282,7 @@ class SupplierReportContainer extends Component {
                 </Row>
               ))}
             </div> }
-        </div>
+                                        </div> */}
       </Spin>
     );
   }
@@ -266,7 +290,7 @@ class SupplierReportContainer extends Component {
 
 const mapStateToProps = state => ({
   data: state.supplierReport.data,
-  dimensions: state.supplierReport.dimensions,
+  totalScoreSupplier: state.supplierReport.totalScoreSupplier,
   loading: state.supplierReport.loading,
 });
 

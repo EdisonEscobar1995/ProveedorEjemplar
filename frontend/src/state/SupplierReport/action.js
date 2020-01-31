@@ -1,25 +1,24 @@
-import axios from 'axios';
 import {
   GET_DATA_SUPPLIER_REPORT_PROGRESS,
   GET_DATA_SUPPLIER_REPORT_SUCCESS,
   FILTER_SUPPLIER_REPORT,
-  GET_DATA_DIMENSIONS,
+  GET_TOTAL_SCORE_SUPPLIER,
   REQUEST_FAILED,
 } from './const';
 
 import { getParticipantsByYearApi } from '../../api/call';
-// import { getReportBySupplierApi } from '../../api/supplier';
-import { getDimensionsBySurveyApi } from '../../api/dimension';
-import { formatData } from '../Supplier/action';
-import { getDataQuestionsBySurveyApi } from '../../api/supplier';
+import { getReportBySupplierApi } from '../../api/supplier';
+// import { getDimensionsBySurveyApi } from '../../api/dimension';
+// import { formatData } from '../Supplier/action';
+// import { getDataQuestionsBySurveyApi } from '../../api/supplier';
 // import getDataStateApi from '../../api/state';
-import { requestApi, sortByField, requestApiNotLoading } from '../../utils/action';
+import { requestApi, sortByField } from '../../utils/action';
 import getMasterApi from '../../api/master';
 
-function getDataDimensionsSuccess(dimensions) {
+function getTotalScoreSupplier(data) {
   return {
-    type: GET_DATA_DIMENSIONS,
-    dimensions,
+    type: GET_TOTAL_SCORE_SUPPLIER,
+    data,
   };
 }
 
@@ -58,9 +57,9 @@ const getParticipantsByYear = year => (dispatch) => {
           ];
           data.masters.OriginCountry = masterResponse.data.data.Country;
           data.masters.Dimension = masterResponse.data.data.Dimension;
-          const dimensions = [];
+          const totalScoreSupplier = null;
           dispatch(getDataSupplierReportSuccess(data));
-          dispatch(getDataDimensionsSuccess(dimensions));
+          dispatch(getTotalScoreSupplier(totalScoreSupplier));
         }).catch(() => {
           dispatch(getFailedRequest());
         });
@@ -69,61 +68,16 @@ const getParticipantsByYear = year => (dispatch) => {
     });
 };
 
-/* requestApi(dispatch, getDataSupplierReportProgress, getReportBySupplierApi,
-    { idSurvey, idSupplierByCall: id })
-    .then(response => response.data.data)
-    .then((data) => {
-      console.log(data);
-    }).catch((err) => {
-      dispatch(getFailedRequest(err));
-    }); */
 
-/* const loadStateData = async (dispatch, api, callIdState) => {
-  const allData = {};
-  return requestApiNotLoading(dispatch, api, callIdState)
-    .then((respone) => {
-      allData.stateData = respone.data.data;
-      return allData;
+const getReportBySupplier = data => (dispatch) => {
+  requestApi(dispatch, getDataSupplierReportProgress, getReportBySupplierApi, data)
+    .then((response) => {
+      dispatch(getTotalScoreSupplier(response.data.data));
     }).catch(() => {
-      allData.stateData = { shortName: '' };
-      return allData;
+      dispatch(getFailedRequest());
     });
-}; */
+};
 
-
-const getReportBySupplier = (idSurvey, id, stateData) => (
-  (dispatch, getActualState) => {
-    // const { stateData } = await loadStateData(dispatch, getDataStateApi, callIdState);
-    const { rules } = getActualState().supplier;
-    const { dimensions } = getActualState().supplierReport;
-    if (dimensions.length === 0) {
-      requestApi(dispatch, getDataSupplierReportProgress, getDimensionsBySurveyApi, idSurvey)
-        .then(response => response.data.data)
-        .then((data) => {
-          const promises = [];
-          data.forEach((dimesion) => {
-            const dataSend = { idSurvey, idDimension: dimesion.id, id };
-            promises.push(getDataQuestionsBySurveyApi({ ...dataSend }));
-          });
-          return requestApiNotLoading(dispatch, axios.all, promises)
-            .then((criterionsResponse) => {
-              const criterions = [];
-              criterionsResponse.forEach((element) => {
-                criterions.push(element.data.data);
-              });
-              return criterions;
-            })
-            .then(criterions => ({ dimensions: data, criterions }));
-        }).then((data) => {
-          const formatedDimensions = formatData(data, stateData, rules);
-          dispatch(getDataDimensionsSuccess(formatedDimensions));
-        })
-        .catch((err) => {
-          dispatch(getFailedRequest(err));
-        });
-    }
-  }
-);
 export {
   getParticipantsByYear,
   getFailedRequest,

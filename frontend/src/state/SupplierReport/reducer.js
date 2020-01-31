@@ -1,7 +1,7 @@
 import {
   GET_DATA_SUPPLIER_REPORT_PROGRESS,
   GET_DATA_SUPPLIER_REPORT_SUCCESS,
-  GET_DATA_DIMENSIONS,
+  GET_TOTAL_SCORE_SUPPLIER,
   FILTER_SUPPLIER_REPORT,
   REQUEST_FAILED,
 } from './const';
@@ -26,10 +26,10 @@ function supplierReportApp(state = initialState, action) {
         loading: false,
       };
     }
-    case GET_DATA_DIMENSIONS: {
+    case GET_TOTAL_SCORE_SUPPLIER: {
       return {
         ...state,
-        dimensions: action.dimensions,
+        totalScoreSupplier: action.data,
         loading: false,
       };
     }

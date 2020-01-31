@@ -26,8 +26,8 @@ function getDataQuestionsBySurveyApi(data) {
 }
 
 function getReportBySupplierApi(data) {
-  const { idSurvey, idSupplierByCall } = data;
-  return instance.get(`Supplier?action=getReportBySupplier&idSurvey=${idSurvey}&idSupplierByCall=${idSupplierByCall}`);
+  const { idCall, idSupplier, idSurvey } = data;
+  return instance.get(`Supplier?action=getReportBySupplier&idCall=${idCall}&idSupplier=${idSupplier}&idSurvey=${idSurvey}`);
 }
 
 function saveDataSuppliertApi(data) {

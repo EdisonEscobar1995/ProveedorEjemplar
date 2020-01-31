@@ -29,8 +29,18 @@ public class ReportCalificationBySupplier {
     private String idState;
     @Expose
     private String whoEvaluateOfTechnicalTeam;
+    @Expose
+    private double totalScoreOfEvaluator;
+    
+    public double getTotalScoreOfEvaluator() {
+		return totalScoreOfEvaluator;
+	}
 
-    public String getWhoEvaluateOfTechnicalTeam() {
+	public void setTotalScoreOfEvaluator(double totalScoreOfEvaluator) {
+		this.totalScoreOfEvaluator = totalScoreOfEvaluator;
+	}
+
+	public String getWhoEvaluateOfTechnicalTeam() {
 		return whoEvaluateOfTechnicalTeam;
 	}
 
