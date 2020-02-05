@@ -8,12 +8,10 @@ import {
 
 import { getParticipantsByYearApi } from '../../api/call';
 import { getReportBySupplierApi } from '../../api/supplier';
-// import { getDimensionsBySurveyApi } from '../../api/dimension';
-// import { formatData } from '../Supplier/action';
-// import { getDataQuestionsBySurveyApi } from '../../api/supplier';
-// import getDataStateApi from '../../api/state';
 import { requestApi, sortByField } from '../../utils/action';
 import getMasterApi from '../../api/master';
+import setMessage from '../Generic/action';
+// import messages from '../../translation/messagesES';
 
 function getTotalScoreSupplier(data) {
   return {
@@ -22,8 +20,9 @@ function getTotalScoreSupplier(data) {
   };
 }
 
-const getDataSupplierReportProgress = () => ({
+const getDataSupplierReportProgress = data => ({
   type: GET_DATA_SUPPLIER_REPORT_PROGRESS,
+  data,
 });
 
 const getDataSupplierReportSuccess = data => ({
@@ -72,7 +71,12 @@ const getParticipantsByYear = year => (dispatch) => {
 const getReportBySupplier = data => (dispatch) => {
   requestApi(dispatch, getDataSupplierReportProgress, getReportBySupplierApi, data)
     .then((response) => {
-      dispatch(getTotalScoreSupplier(response.data.data));
+      if (response.data.data.idSupplier) {
+        dispatch(getTotalScoreSupplier(response.data.data));
+      } else {
+        dispatch(getDataSupplierReportProgress({ loading: false }));
+        setMessage('Validation.informationNotFound', 'info');
+      }
     }).catch(() => {
       dispatch(getFailedRequest());
     });
@@ -82,5 +86,7 @@ export {
   getParticipantsByYear,
   getFailedRequest,
   getReportBySupplier,
+  getDataSupplierReportProgress,
+  getTotalScoreSupplier,
   filterSupplierReport,
 };

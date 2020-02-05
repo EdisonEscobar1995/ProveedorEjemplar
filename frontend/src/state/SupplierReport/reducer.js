@@ -16,7 +16,7 @@ function supplierReportApp(state = initialState, action) {
     case GET_DATA_SUPPLIER_REPORT_PROGRESS: {
       return {
         ...state,
-        loading: true,
+        loading: action.data ? action.data.loading : true,
       };
     }
     case GET_DATA_SUPPLIER_REPORT_SUCCESS: {

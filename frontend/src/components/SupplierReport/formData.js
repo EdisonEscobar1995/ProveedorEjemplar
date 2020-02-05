@@ -1,31 +1,23 @@
-/* eslint-disable max-len */
-// import messages from '../../translation/messagesES';
-// import exportData from '../../utils/excel';
-
 import html2canvas from 'html2canvas';
-// import { saveAs } from 'file-saver';
-// import { htmlDocx } from 'html-docx-js';
+import setMessage from '../../state/Generic/action';
 
 const formData = ({
   data,
   totalScoreSupplier,
   getParticipantsByYear,
+  getDataSupplierReportProgress,
+  getTotalScoreSupplier,
   filterSupplierReport,
   form,
 }) => {
-  /* const {
-    years,
-    suppliers,
-    suppliersByCall,
-    masters,
-  } = data; */
-
   const {
     years,
     suppliers,
+    masters,
   } = data;
 
-  const totalScoreEvaluatorDimension = totalScoreSupplier && totalScoreSupplier.totalScoreEvaluatorDimension;
+  const totalScoreEvaluatorDimension = totalScoreSupplier &&
+    totalScoreSupplier.totalScoreEvaluatorDimension;
 
   const handleReset = () => {
     form.resetFields();
@@ -33,116 +25,114 @@ const formData = ({
   };
 
   const exportWord = async () => {
-    /* const styles = '<style>.title{font-family: Arial; font-size: 22px; font-weight: bold; color: #006159; text-align: center;}</style>';
-    const header = `${"<!DOCTYPE html><html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-           "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-           "xmlns='http://www.w3.org/TR/REC-html40'>"}
-           <head>
-           <title>Export HTML to Word Document</title>
-           <meta charset='utf-8'>
-           ${styles}
-           </head><body>`;
-    const footer = '</body></html>';
-    const sourceHTML = header + document.getElementById('content-export').innerHTML + footer;
-    const source = `data:application/vnd.ms-word;charset=utf-8,${encodeURIComponent(sourceHTML)}`;
-    const fileDownload = document.createElement('a');
-    document.body.appendChild(fileDownload);
-    fileDownload.href = source;
-    fileDownload.download = 'document.doc';
-    fileDownload.click();
-    document.body.removeChild(fileDownload); */
+    if (totalScoreSupplier) {
+      getDataSupplierReportProgress({ loading: true });
+      const options = {
+        maxWidth: 720,
+      };
 
-    /* await Promise.all(totalScoreEvaluatorDimension.map(async (element, index) => {
-      const can = await html2canvas(document.getElementById(`dimension_${index}`));
-      const image = document.createElement('img');
-      image.src = can.toDataURL();
-      document.getElementById(`data-canvas-dimension_${index}`).appendChild(image);
-    })); */
-    const options = {
-      maxWidth: 700,
-    };
-    /* totalScoreSupplier.totalScoreEvaluatorCriterion.forEach((criterio) => {
-      html2canvas(document.getElementById(`percent-criterio_${criterio.idCriterio}`)).then((canvas) => {
-        const image = document.createElement('img');
-        image.src = canvas.toDataURL();
-        // const w = Math.min(image.width, options.maxWidth);
-        image.width = `${criterio.scoreTotal === '' || criterio.scoreTotal === 0 ? 0.2 : criterio.scoreTotal.toFixed(2)}%`;
-        document.getElementById(`data-percent-criterio_${criterio.idCriterio}`).appendChild(image);
-      });
-    }); */
-    totalScoreEvaluatorDimension.forEach((element, index) => {
-      html2canvas(document.getElementById(`dimension_${index}`)).then((canvas) => {
-        const image = document.createElement('img');
-        image.src = canvas.toDataURL();
-        const w = Math.min(image.width, options.maxWidth);
-        image.width = w;
-        document.getElementById(`data-canvas-dimension_${index}`).appendChild(image);
-      });
-    });
-
-    // html2canvas(document.getElementById('content-export')).then((canvas) => {
-    html2canvas(document.getElementById('content-general')).then((canvas) => {
-      // document.getElementById('data-canvas-general').appendChild(canvas);
-      const dataURL = canvas.toDataURL();
-      console.log('dataURL = ', dataURL);
-      // const image = "<div id='export'><img class='hide' src='" + dataURL +"'/></div>";
-      const image = document.createElement('img');
-      image.src = dataURL;
-      document.getElementById('data-canvas-general').appendChild(image);
-
-      setTimeout(() => {
-        const img = document.querySelector('#data-canvas-general img');
-        const w = Math.min(img.width, options.maxWidth);
-        // const h = img.height * (w / img.width);
-        img.width = w;
-        // img.height = h;
-        /* const header = `${"<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-            "xmlns='http://www.w3.org/TR/REC-html40'>"}
-            <head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>`;
-        const body = `<h2 style=${styles.title}>Evaluación general</h2>`;
-        const footer = '</body></html>';
-        const sourceHTML = header + body + document.getElementById('data-canvas-general').innerHTML + footer;
-        const source = `data:application/vnd.ms-word;charset=utf-8,${encodeURIComponent(sourceHTML)}`;
-        const fileDownload = document.createElement('a');
-        document.body.appendChild(fileDownload);
-        fileDownload.href = source;
-        fileDownload.download = 'document.doc';
-        fileDownload.click();
-        document.body.removeChild(fileDownload); */
-
-        const styles2 = '<style>.title{font-family: Arial; font-size: 22px; font-weight: bold; color: #006159; text-align: center;}' +
-        '.percent{margin-left: 5px; width: 85%; opacity: 1; height: 20px;}' +
-        '.percent > div{background: #006159; height: inherit;}' +
-        '</style>';
-        const header = `${"<!DOCTYPE html><html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-            "xmlns='http://www.w3.org/TR/REC-html40'>"}
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <head>
-            <title>Export HTML to Word Document</title>
-            <meta charset='utf-8'>
-            ${styles2}
-            </head><body>`;
-        const body = '<h2 class="title">Evaluación general</h2>';
-        const footer = '</body></html>';
-        let dimensiones = '';
-        totalScoreEvaluatorDimension.forEach((element, index) => {
-          dimensiones += document.getElementById(`dimension_${index}`).innerHTML;
+      totalScoreEvaluatorDimension.forEach((element, index) => {
+        html2canvas(document.getElementById(`dimension_${index}`)).then((canvas) => {
+          if (document.querySelector(`#data-canvas-dimension_${index} img`)) {
+            document.querySelector(`#data-canvas-dimension_${index} img`).remove();
+          }
+          const image = document.createElement('img');
+          image.src = canvas.toDataURL();
+          const w = Math.min(image.width, options.maxWidth);
+          image.width = w;
+          document.getElementById(`data-canvas-dimension_${index}`).appendChild(image);
         });
-        const sourceHTML = header + body + document.getElementById('data-canvas-general').innerHTML + dimensiones + footer;
-        const converted = window.htmlDocx.asBlob(sourceHTML, { orientation: 'portrait' });
-        // const blob = new Blob([sourceHTML], { type: 'application/msword;charset=utf-8' });
-        window.saveAs(converted, 'prueba.doc');
-        /*  const source = `data:application/vnd.ms-word;charset=utf-8,${encodeURIComponent(sourceHTML)}`;
-        const fileDownload = document.createElement('a');
-        document.body.appendChild(fileDownload);
-        fileDownload.href = source;
-        fileDownload.download = 'document.doc';
-        fileDownload.click();
-        document.body.removeChild(fileDownload); */
-      }, 1500);
-    });
+      });
+
+      html2canvas(document.getElementById('content-general')).then((canvas) => {
+        document.getElementById('data-canvas-general').innerHTML = '';
+        const dataURL = canvas.toDataURL();
+        const image = document.createElement('img');
+        image.src = dataURL;
+        document.getElementById('data-canvas-general').appendChild(image);
+
+        setTimeout(() => {
+          const img = document.querySelector('#data-canvas-general img');
+          const w = Math.min(img.width, options.maxWidth);
+          img.width = w;
+
+          const supplier = suppliers.filter(sup => totalScoreSupplier.idSupplier === sup.id)[0];
+
+          const country = masters.Country.filter(c => supplier.idCountry === c.id)[0];
+
+          const sector = masters.Sector.filter(s => supplier.idSector === s.id)[0];
+
+          const formatter = new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            minimumFractionDigits: 2,
+          });
+
+          const styles2 = '<style>.title{font-family: Arial; font-size: 22px; font-weight: bold; color: #006159; text-align: center;}' +
+          '.title2{font-family: Arial; font-size: 18px; font-weight: bold; color: #006159; text-align: left;}' +
+          '.percent{margin-left: 5px; width: 85%; opacity: 1; height: 20px;}' +
+          '.dimension table{display:none;}' +
+          '.percent > div{background: #006159; height: inherit;}' +
+          'p{font-family: Arial}' +
+          '.resultados{margin-top:10px; line-height: 1.2}' +
+          '</style>';
+          const header = `${"<!DOCTYPE html><html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+              "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+              "xmlns='http://www.w3.org/TR/REC-html40'>"}
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+              <head>
+              <title>Export HTML to Word Document</title>
+              <meta charset='utf-8'>
+              ${styles2}
+              </head><body>`;
+          const body = '<h2 class="title">Evaluación general</h2>';
+          const footer = '</body></html>';
+          let dimensiones = '';
+          let comments = '';
+          let commentsDimensions = '';
+          totalScoreEvaluatorDimension.forEach((element, index) => {
+            const imgAux = document.querySelector(`#data-canvas-dimension_${index} img`);
+            const wAux = Math.min(img.width, options.maxWidth);
+            imgAux.width = wAux;
+            dimensiones += `<br /><br /><br /> ${document.getElementById(`data-canvas-dimension_${index}`).innerHTML}`;
+            commentsDimensions += `<br /><br /><br /><h2 class="title2">Dimensión ${element.dimension}</h2>`;
+            element.commentsEvaluators.forEach((comment) => {
+              if (comment !== '') {
+                comments += `<p>${comment}</p>`;
+              }
+            });
+            commentsDimensions += comments;
+            comments = '';
+          });
+          document.getElementById('logoP').innerHTML = '';
+          const element = document.querySelector('.imgLogo');
+          const elementStyle = window.getComputedStyle(element);
+          const elementUrl = elementStyle.getPropertyValue('background-image');
+          const src = elementUrl.split('url("')[1].split('")')[0];
+          const logo = document.createElement('img');
+          logo.src = src;
+          document.getElementById('logoP').appendChild(logo);
+
+          const resultados = `
+            <p style="width: 100%; text-align: right;">${document.getElementById('logoP').innerHTML}</p>
+            <h2 class='title2'>RESULTADOS</h2>
+            <div class='resultados'><p><b>Nombre de la empresa:</b> ${supplier.fullName}</p>
+            <p><b>País:</b> ${country.name}</p>
+            <p><b>Sector:</b> ${sector.name}</p>
+            <p><b>Cuestionario:</b> ${totalScoreSupplier.supply} ${totalScoreSupplier.companySize}</p>
+            <p><b>Certificaciones:</b> ${supplier.nameCertification}</p>
+            <p><b>Activos:</b> ${supplier.typeOfCurrencyValueAssets} - ${formatter.format(supplier.valueAssets)}</p>
+            <p><b>Ventas en el último año:</b> ${supplier.typeOfCurrencyAnnualSales} - ${formatter.format(supplier.annualSalesValue)}</p>
+            <p><b>Participación en ventas al Grupo Nutresa:</b> ${supplier.participationInSalesWithGroupNutresa}</p></div>`;
+          const sourceHTML = header + resultados + body + document.getElementById('data-canvas-general').innerHTML + dimensiones + commentsDimensions + footer;
+          const converted = window.htmlDocx.asBlob(sourceHTML, { orientation: 'portrait' });
+          window.saveAs(converted, `Proveedor_${supplier.fullName}.doc`);
+          getDataSupplierReportProgress({ loading: false });
+        }, 1500);
+      });
+    } else {
+      setMessage('Validation.noDataReport', 'info');
+    }
   };
 
   return [
@@ -150,7 +140,7 @@ const formData = ({
       key: 1.1,
       value: [
         {
-          span: 8,
+          span: 10,
           type: 'select',
           label: 'Año',
           key: 'year',
@@ -167,7 +157,7 @@ const formData = ({
           },
         },
         {
-          span: 8,
+          span: 10,
           type: 'select',
           label: 'Proveedor',
           key: 'supplier',
@@ -178,6 +168,7 @@ const formData = ({
             return item;
           }) : [],
           handleChange: (value) => {
+            getTotalScoreSupplier(null);
             const values = { ...form.getFieldsValue(), supplier: value };
             filterSupplierReport(values);
           },

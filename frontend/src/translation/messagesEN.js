@@ -139,6 +139,7 @@ const messages = {
   'Validation.documentMultiConect': 'Data is referenced, cannot be edited or deleted',
   'Validation.undefinedSupplier': 'At least one provider must be entered',
   'Validation.callExistsActive': 'Existing active call',
+  'Validation.noDataReport': 'You must first perform a search',
   'Title.imageGallery': 'Image Gallery',
   'Title.percentageAdvance': 'Percentage of Advance',
   'Title.pendings': 'My pendings',

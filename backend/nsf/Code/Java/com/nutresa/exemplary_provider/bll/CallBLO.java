@@ -296,21 +296,22 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     	List<TotalScoreEvaluatorCriterion> totalScoresEvaluatorC  = new ArrayList<TotalScoreEvaluatorCriterion>();
     	double totalScoreEvaluator = 0;
     	
-        SupplyBLO supplyBLO = new SupplyBLO();
-        CategoryBLO categoryBLO = new CategoryBLO();
-        CompanySizeBLO companySizeBLO = new CompanySizeBLO();
-        dataOfReport.setNit(supplier.getNit());
-        dataOfReport.setSapCode(supplier.getSapCode());
-        dataOfReport.setName(supplier.getBusinessName());
-        dataOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
-        dataOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
-        dataOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
-        dataOfReport.setIdSupplier(supplierByCall.getIdSupplier());
-        dataOfReport.setIdSupplierByCall(supplierByCall.getId());
-        dataOfReport.setIdState(supplierByCall.getIdState());
-        dataOfReport.setWhoEvaluateOfTechnicalTeam(supplierByCall.getWhoEvaluateOfTechnicalTeam());
-        
         if (supplierByCall instanceof SupplierByCallDTO) {
+        	
+        	SupplyBLO supplyBLO = new SupplyBLO();
+            CategoryBLO categoryBLO = new CategoryBLO();
+            CompanySizeBLO companySizeBLO = new CompanySizeBLO();
+            dataOfReport.setNit(supplier.getNit());
+            dataOfReport.setSapCode(supplier.getSapCode());
+            dataOfReport.setName(supplier.getBusinessName());
+            dataOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
+            dataOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
+            dataOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
+            dataOfReport.setIdSupplier(supplierByCall.getIdSupplier());
+            dataOfReport.setIdSupplierByCall(supplierByCall.getId());
+            dataOfReport.setIdState(supplierByCall.getIdState());
+            dataOfReport.setWhoEvaluateOfTechnicalTeam(supplierByCall.getWhoEvaluateOfTechnicalTeam());
+        	
         	dimensions = dimensionBLO.getDimensionsBySurvey(parameters.get("idSurvey"));
         	totalScoreEvaluator = getTotalScoreEvaluetor(supplierByCall, supplier, parameters);
         	dataOfReport.setTotalScoreOfEvaluator(totalScoreEvaluator);

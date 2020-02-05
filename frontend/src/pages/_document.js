@@ -68,7 +68,6 @@ const FooterStyle = styled(Footer)`
 const HeaderContentStyle = styled.div`  
   display: flex;
   justify-content: space-between;
-  align-items: center;
 `;
 const LogStyle = styled.div`  
   display: flex;
@@ -130,7 +129,7 @@ class Document extends Component {
         <HeaderLogoStyle>
           <HeaderContentStyle>
             <Link to={'/'}>
-              <LogoStyle />
+              <LogoStyle className="imgLogo" />
             </Link>
             <LogStyle>
               <InfoStyle>
