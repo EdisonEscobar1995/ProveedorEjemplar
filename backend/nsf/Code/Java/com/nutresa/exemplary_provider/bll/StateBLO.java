@@ -47,16 +47,21 @@ public class StateBLO extends GenericBLO<StateDTO, StateDAO> {
             statesByTypeReport.add(SurveyStates.NOT_STARTED_MANAGER_TEAM);
             statesByTypeReport.add(SurveyStates.MANAGER_TEAM);
             statesByTypeReport.add(SurveyStates.ENDED_MANAGER_TEAM);
-        } else {
-            if ("TECHNICAL_MANAGER".equals(typeReport)) {
-                statesByTypeReport.add(SurveyStates.NOT_STARTED_TECHNICAL_TEAM);
-                statesByTypeReport.add(SurveyStates.TECHNICAL_TEAM);
-                statesByTypeReport.add(SurveyStates.ENDED_TECHNICAL_TEAM);
-                statesByTypeReport.add(SurveyStates.DONT_APPLY_MANAGER_TEAM);
-                statesByTypeReport.add(SurveyStates.NOT_STARTED_MANAGER_TEAM);
-                statesByTypeReport.add(SurveyStates.MANAGER_TEAM);
-                statesByTypeReport.add(SurveyStates.ENDED_MANAGER_TEAM);
-            }
+        } else if ("TECHNICAL_MANAGER".equals(typeReport)) {
+            statesByTypeReport.add(SurveyStates.NOT_STARTED_TECHNICAL_TEAM);
+            statesByTypeReport.add(SurveyStates.TECHNICAL_TEAM);
+            statesByTypeReport.add(SurveyStates.ENDED_TECHNICAL_TEAM);
+            statesByTypeReport.add(SurveyStates.DONT_APPLY_MANAGER_TEAM);
+            statesByTypeReport.add(SurveyStates.NOT_STARTED_MANAGER_TEAM);
+            statesByTypeReport.add(SurveyStates.MANAGER_TEAM);
+            statesByTypeReport.add(SurveyStates.ENDED_MANAGER_TEAM);
+        } else if ("SUPPLIER_GRAPHIC".equals(typeReport)){
+        	statesByTypeReport.add(SurveyStates.ENDED_EVALUATOR);
+        	statesByTypeReport.add(SurveyStates.ENDED_TECHNICAL_TEAM);
+        	statesByTypeReport.add(SurveyStates.ENDED_MANAGER_TEAM);
+        	statesByTypeReport.add(SurveyStates.MANAGER_TEAM);
+        	statesByTypeReport.add(SurveyStates.EVALUATOR);
+        	statesByTypeReport.add(SurveyStates.TECHNICAL_TEAM);
         }
 
         return statesByTypeReport;

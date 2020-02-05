@@ -117,7 +117,7 @@ class SupplierReportContainer extends Component {
                         <td className="name">Total</td>
                         <td>
                           <div className="percent">
-                            <div style={{ width: `${totalScoreSupplier.totalScoreOfEvaluator === 0 ? 0.2 : totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%` }} />
+                            <div style={{ width: `${totalScoreSupplier.totalScoreOfEvaluator <= 0 ? 0.2 : totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%` }} />
                           </div>
                         </td>
                       </TrTable>
@@ -126,7 +126,7 @@ class SupplierReportContainer extends Component {
                           <td className="name">{dimension.dimension}</td>
                           <td>
                             <div className="percent">
-                              <div style={{ width: `${dimension.scoreTotal === 0 ? 0.2 : dimension.scoreTotal.toFixed(2)}%` }} />
+                              <div style={{ width: `${dimension.scoreTotal <= 0 ? 0.2 : dimension.scoreTotal.toFixed(2)}%` }} />
                             </div>
                           </td>
                         </TrTable>
@@ -152,17 +152,24 @@ class SupplierReportContainer extends Component {
                     </Title>
                     <Table style={{ width: '75%', margin: '0 auto' }} id={`dimension_${index}`}>
                       <tbody>
-                        {totalScoreSupplier.totalScoreEvaluatorCriterion.map(criterio =>
-                          criterio.idDimension === dimension.idDimension && (
-                            <TrTable key={criterio.idCriterio} widthTr={`${criterio.scoreTotal.toFixed(2)}%`} >
-                              <td className="name">{criterio.criterio}</td>
-                              <td>
-                                <div className="percent" id={`percent-criterio_${criterio.idCriterio}`}>
-                                  <div style={{ width: `${criterio.scoreTotal === '' || criterio.scoreTotal === 0 ? 0.2 : criterio.scoreTotal.toFixed(2)}%` }} />
-                                </div>
-                              </td>
-                            </TrTable>
-                          ))}
+                        {totalScoreSupplier.totalScoreEvaluatorCriterion.map((criterio) => {
+                          const scoreTotal = criterio.scoreTotal === '' || criterio.scoreTotal <= 0 ? 0 : criterio.scoreTotal;
+                          let tr = '';
+                          if (criterio.idDimension === dimension.idDimension) {
+                            tr = (
+                              <TrTable key={criterio.idCriterio} widthTr={`${scoreTotal.toFixed(2)}%`} >
+                                <td className="name">{criterio.criterio}</td>
+                                <td>
+                                  <div className="percent" id={`percent-criterio_${criterio.idCriterio}`}>
+                                    <div style={{ width: `${scoreTotal <= 0 ? 0.2 : scoreTotal.toFixed(2)}%` }} />
+                                  </div>
+                                </td>
+                              </TrTable>
+                            );
+                          }
+                          return tr;
+                        },
+                        )}
                       </tbody>
                     </Table>
                   </Col>

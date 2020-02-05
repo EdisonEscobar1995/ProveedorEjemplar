@@ -281,9 +281,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     
     private ReportCalificationBySupplier buildReportOfBySupplier(String idCall,
             SupplierDTO supplier, Map<String, String> parameters) throws HandlerGenericException {
-        ReportCalificationBySupplier response = new ReportCalificationBySupplier();
+    	ReportCalificationBySupplier response = null;
         StateBLO stateBLO = new StateBLO();
-        String typeReport = "SUPPLIER_EVALUATOR";
+        String typeReport = "SUPPLIER_GRAPHIC";
         List<SurveyStates> surveyStatesAllowed = stateBLO.getStatesByTypeReport(typeReport);
         DimensionBLO dimensionBLO = new DimensionBLO();
         List<DimensionDTO> dimensions = new ArrayList<DimensionDTO>();
@@ -321,7 +321,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         	dataOfReport.setTotalScoreEvaluatorCriterion(totalScoresEvaluatorC);        	
         	response = dataOfReport;
         }
-        
+                
         return response;
     }
     
