@@ -4,11 +4,11 @@ import { Table, Checkbox, Button, Row, Col, notification } from 'antd';
 import { Link } from 'react-router-dom';
 import message from '../../components/shared/message';
 import Confirm from '../shared/Confirm';
-import { TECHNICAL_TEAM, MANAGER_TEAM } from '../../utils/const';
+import { TECHNICAL_TEAM, MANAGER_TEAM, EVALUATOR } from '../../utils/const';
 import SelectionPerson from './SelectionPerson';
 
 function SupplierSelection(props) {
-  const { data, checkSupplier, sendApprovals, sendRejections, openModal } = props;
+  const { data, checkSupplier, sendApprovals, sendRejections, openModal, type } = props;
   const onChange = (event, record) => {
     checkSupplier(record.idSupplier, event.target.checked);
   };
@@ -23,15 +23,20 @@ function SupplierSelection(props) {
 
   const validateChecked = (sendMethod) => {
     const checked = data.filter(item => item.checked).map(item => item.idSupplierByCall);
+
     if (checked.length > 0) {
-      openModal(
-        <SelectionPerson
-          sendMethod={sendMethod}
-          openNotification={openNotification}
-          checked={checked}
-          {...props}
-        />,
-      );
+      if (EVALUATOR === type) {
+        sendMethod(checked, props.type, '', openNotification);
+      } else {
+        openModal(
+          <SelectionPerson
+            sendMethod={sendMethod}
+            openNotification={openNotification}
+            checked={checked}
+            {...props}
+          />,
+        );
+      }
     } else {
       message({ text: 'Debe seleccionar al menos un proveedor', type: 'info' });
     }
