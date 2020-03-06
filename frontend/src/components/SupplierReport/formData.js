@@ -31,6 +31,12 @@ const formData = ({
         maxWidth: 720,
       };
 
+      const logo = document.createElement('img');
+      html2canvas(document.querySelector('.imgLogo')).then((canvasAux) => {
+        logo.src = canvasAux.toDataURL();
+        document.getElementById('logoP').appendChild(logo);
+      });
+
       totalScoreEvaluatorDimension.forEach((element, index) => {
         html2canvas(document.getElementById(`dimension_${index}`)).then((canvas) => {
           if (document.querySelector(`#data-canvas-dimension_${index} img`)) {
@@ -98,21 +104,14 @@ const formData = ({
             commentsDimensions += `<br /><br /><br /><h2 class="title2">Dimensión ${element.dimension}</h2>`;
             element.commentsEvaluators.forEach((comment) => {
               if (comment !== '') {
-                comments += `<p>${comment}</p>`;
+                comments += `<p>&#8226 &#32&#32${comment}</p>`;
               }
             });
             commentsDimensions += comments;
             comments = '';
           });
           document.getElementById('logoP').innerHTML = '';
-          const element = document.querySelector('.imgLogo');
-          const elementStyle = window.getComputedStyle(element);
-          const elementUrl = elementStyle.getPropertyValue('background-image');
-          const src = elementUrl.split('url("')[1].split('")')[0];
-          const logo = document.createElement('img');
-          logo.src = src;
           document.getElementById('logoP').appendChild(logo);
-
           const resultados = `
             <p style="width: 100%; text-align: right;">${document.getElementById('logoP').innerHTML}</p>
             <h2 class='title2'>RESULTADOS</h2>
@@ -196,7 +195,7 @@ const formData = ({
         }, {
           span: 2,
           type: 'button',
-          label: 'Exportar a word',
+          label: 'Generar Informe',
           key: 'export',
           buttonType: 'primary',
           handleclick: exportWord,
