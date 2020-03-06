@@ -116,8 +116,8 @@ const formData = ({
             <p style="width: 100%; text-align: right;">${document.getElementById('logoP').innerHTML}</p>
             <h2 class='title2'>RESULTADOS</h2>
             <div class='resultados'><p><b>Nombre de la empresa:</b> ${supplier.fullName}</p>
-            <p><b>País:</b> ${country.name}</p>
-            <p><b>Sector:</b> ${sector.name}</p>
+            <p><b>País:</b> ${country ? country.name : ''}</p>
+            <p><b>Sector:</b> ${sector ? sector.name : ''}</p>
             <p><b>Cuestionario:</b> ${totalScoreSupplier.supply} ${totalScoreSupplier.companySize}</p>
             <p><b>Certificaciones:</b> ${supplier.nameCertification}</p>
             <p><b>Activos:</b> ${supplier.typeOfCurrencyValueAssets} - ${formatter.format(supplier.valueAssets)}</p>
