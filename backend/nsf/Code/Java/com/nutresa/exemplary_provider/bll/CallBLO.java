@@ -338,7 +338,6 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     private List<TotalScoreEvaluatorDimension> getTotalEvaluateByDimension(List<DimensionDTO> dimensions, SupplierByCallDTO supplierByCall, 
     		SupplierDTO supplier, Map<String, String> parameters) throws HandlerGenericException {
     	ReportOfCalificationsBySuppliers dataOfReportAux = new ReportOfCalificationsBySuppliers();
-    	List<String> comments = new ArrayList<String>();
     	ReportCalificationBySupplier dataOfReport = new ReportCalificationBySupplier();
     	ReportCalificationBySupplier.TotalScoreEvaluatorDimension totalScoreEvaluatorDimension = dataOfReport.new TotalScoreEvaluatorDimension();
     	List<TotalScoreEvaluatorDimension> totalScoresEvaluatorD = new ArrayList<TotalScoreEvaluatorDimension>();
@@ -352,14 +351,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         	
         	dataOfReportAux = getRecordOfReportBySupplier(supplierByCall, supplier, dataOfReportAux, parameters);
         	
-        	for (SummarySurvey dataAux : dataOfReportAux.getSummarySurvey()) {
-        		comments.add(dataAux.getCommentEvaluator());
-        	}
-        	
         	totalScoreEvaluatorDimension.setDimension(dimension.getName());
         	totalScoreEvaluatorDimension.setIdDimension(dimension.getId());
         	totalScoreEvaluatorDimension.setScoreTotal(dataOfReportAux.getTotalScoreOfEvaluator());
-        	totalScoreEvaluatorDimension.setCommentsEvaluators(comments);
         	totalScoresEvaluatorD.add(totalScoreEvaluatorDimension);
         	dataOfReportAux = new ReportOfCalificationsBySuppliers();
         	totalScoreEvaluatorDimension = dataOfReport.new TotalScoreEvaluatorDimension();
@@ -378,6 +372,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     	List<TotalScoreEvaluatorCriterion> totalScoresEvaluatorC = new ArrayList<TotalScoreEvaluatorCriterion>();
     	List<String> filter = new ArrayList<String>();
     	List<CriterionDTO> criterions = new ArrayList<CriterionDTO>();
+    	List<String> comments = new ArrayList<String>();
     	
     	if (dimensions.isEmpty()) {
     		throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
@@ -393,14 +388,22 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             		
             		dataOfReportAux = getRecordOfReportBySupplier(supplierByCall, supplier, dataOfReportAux, parameters);
             		
+            		for (SummarySurvey dataAux : dataOfReportAux.getSummarySurvey()) {
+            			if (dataAux.getCriterion().equals(criterio.getName()) && !dataAux.getCommentEvaluator().isEmpty()) {
+            				comments.add(dataAux.getCommentEvaluator());
+            			}
+                	}
+            		
             		totalScoreEvaluatorCriterio.setDimension(dimension.getName());
             		totalScoreEvaluatorCriterio.setIdDimension(dimension.getId());
             		totalScoreEvaluatorCriterio.setCriterio(criterio.getName());
             		totalScoreEvaluatorCriterio.setIdCriterio(criterio.getId());
             		totalScoreEvaluatorCriterio.setScoreTotal(dataOfReportAux.getTotalScoreOfEvaluator());
+            		totalScoreEvaluatorCriterio.setCommentsEvaluators(comments);
                 	totalScoresEvaluatorC.add(totalScoreEvaluatorCriterio);
                 	dataOfReportAux = new ReportOfCalificationsBySuppliers();
                 	totalScoreEvaluatorCriterio = dataOfReport.new TotalScoreEvaluatorCriterion();
+                	comments = new ArrayList<String>();
             	}
             }
             criterions = new ArrayList<CriterionDTO>();

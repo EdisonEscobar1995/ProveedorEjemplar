@@ -148,7 +148,15 @@ public class ReportCalificationBySupplier {
         private String criterio;
         @Expose
         private double scoreTotal;
-       
+        @Expose
+        private List<String> commentsEvaluators;
+        
+		public List<String> getCommentsEvaluators() {
+			return commentsEvaluators;
+		}
+		public void setCommentsEvaluators(List<String> commentsEvaluators) {
+			this.commentsEvaluators = commentsEvaluators;
+		}
 		public String getDimension() {
 			return dimension;
 		}
@@ -188,15 +196,7 @@ public class ReportCalificationBySupplier {
         private String idDimension;
         @Expose
         private double scoreTotal;
-        @Expose
-        private List<String> commentsEvaluators;
         
-		public List<String> getCommentsEvaluators() {
-			return commentsEvaluators;
-		}
-		public void setCommentsEvaluators(List<String> commentsEvaluators) {
-			this.commentsEvaluators = commentsEvaluators;
-		}
 		public String getDimension() {
 			return dimension;
 		}

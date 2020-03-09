@@ -19,6 +19,9 @@ const formData = ({
   const totalScoreEvaluatorDimension = totalScoreSupplier &&
     totalScoreSupplier.totalScoreEvaluatorDimension;
 
+  const totalScoreEvaluatorCriterion = totalScoreSupplier &&
+  totalScoreSupplier.totalScoreEvaluatorCriterion;
+
   const handleReset = () => {
     form.resetFields();
     getParticipantsByYear();
@@ -76,6 +79,7 @@ const formData = ({
 
           const styles2 = '<style>.title{font-family: Arial; font-size: 22px; font-weight: bold; color: #006159; text-align: center;}' +
           '.title2{font-family: Arial; font-size: 18px; font-weight: bold; color: #006159; text-align: left;}' +
+          '.title3{font-family: Arial; font-size: 15px; font-weight: bold; color: #006159; text-align: left;margin-left: 20px}' +
           '.percent{margin-left: 5px; width: 85%; opacity: 1; height: 20px;}' +
           '.dimension table{display:none;}' +
           '.percent > div{background: #006159; height: inherit;}' +
@@ -96,18 +100,26 @@ const formData = ({
           let dimensiones = '';
           let comments = '';
           let commentsDimensions = '';
+          let criterios = [];
           totalScoreEvaluatorDimension.forEach((element, index) => {
             const imgAux = document.querySelector(`#data-canvas-dimension_${index} img`);
             const wAux = Math.min(img.width, options.maxWidth);
             imgAux.width = wAux;
             dimensiones += `<br /><br /><br /> ${document.getElementById(`data-canvas-dimension_${index}`).innerHTML}`;
             commentsDimensions += `<br /><br /><br /><h2 class="title2">Dimensión ${element.dimension}</h2>`;
-            element.commentsEvaluators.forEach((comment) => {
-              if (comment !== '') {
-                comments += `<p>&#8226 &#32&#32${comment}</p>`;
+            criterios =
+            totalScoreEvaluatorCriterion.filter(c => c.idDimension === element.idDimension);
+            criterios.forEach((e) => {
+              if (e.commentsEvaluators.length > 0) {
+                commentsDimensions += `<br /><br /><br /><h3 class="title3">${e.criterio}</h3>`;
+                e.commentsEvaluators.forEach((comment) => {
+                  if (comment !== '') {
+                    comments += `<p>&#8226 &#32&#32${comment}</p>`;
+                  }
+                });
+                commentsDimensions += comments;
               }
             });
-            commentsDimensions += comments;
             comments = '';
           });
           document.getElementById('logoP').innerHTML = '';
