@@ -1,4 +1,4 @@
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 import setMessage from '../../state/Generic/action';
 
 const formData = ({
@@ -35,27 +35,29 @@ const formData = ({
       };
 
       const logo = document.createElement('img');
-      html2canvas(document.querySelector('.imgLogo')).then((canvasAux) => {
-        logo.src = canvasAux.toDataURL();
+      domtoimage.toPng(document.querySelector('.imgLogo')).then((urlImgAux) => {
+        logo.src = urlImgAux;
         document.getElementById('logoP').appendChild(logo);
       });
 
       totalScoreEvaluatorDimension.forEach((element, index) => {
-        html2canvas(document.getElementById(`dimension_${index}`)).then((canvas) => {
+        const node = document.getElementById('dimension_0').parentNode;
+        // domtoimage.toPng(document.getElementById(`dimension_${index}`)).then((urlImg) => {
+        domtoimage.toPng(node).then((urlImg) => {
           if (document.querySelector(`#data-canvas-dimension_${index} img`)) {
             document.querySelector(`#data-canvas-dimension_${index} img`).remove();
           }
           const image = document.createElement('img');
-          image.src = canvas.toDataURL();
+          image.src = urlImg;
           const w = Math.min(image.width, options.maxWidth);
           image.width = w;
           document.getElementById(`data-canvas-dimension_${index}`).appendChild(image);
         });
       });
 
-      html2canvas(document.getElementById('content-general')).then((canvas) => {
+      domtoimage.toPng(document.getElementById('content-general')).then((urlImg) => {
         document.getElementById('data-canvas-general').innerHTML = '';
-        const dataURL = canvas.toDataURL();
+        const dataURL = urlImg;
         const image = document.createElement('img');
         image.src = dataURL;
         document.getElementById('data-canvas-general').appendChild(image);

@@ -146,10 +146,10 @@ class SupplierReportContainer extends Component {
               </Row>
               {totalScoreSupplier.totalScoreEvaluatorDimension.map((dimension, index) => (
                 <Row style={{ marginTop: '25px' }} key={`id_${dimension.idDimension}`} className="dimension">
+                  <Title className="title">
+                    {`Dimensión ${dimension.dimension} (${dimension.scoreTotal.toFixed(2)}%)`}
+                  </Title>
                   <Col span={24}>
-                    <Title className="title">
-                      {`Dimensión ${dimension.dimension} (${dimension.scoreTotal.toFixed(2)}%)`}
-                    </Title>
                     <Table style={{ width: '75%', margin: '0 auto' }} id={`dimension_${index}`}>
                       <tbody>
                         {totalScoreSupplier.totalScoreEvaluatorCriterion.map((criterio) => {
