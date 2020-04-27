@@ -120,6 +120,7 @@ const formData = ({
                   }
                 });
                 commentsDimensions += comments;
+                comments = '';
               }
             });
             comments = '';
