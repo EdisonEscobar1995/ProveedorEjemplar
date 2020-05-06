@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Table, Checkbox, Button, Row, Col, notification } from 'antd';
 import { Link } from 'react-router-dom';
 import message from '../../components/shared/message';
 import Confirm from '../shared/Confirm';
-import { TECHNICAL_TEAM, MANAGER_TEAM, EVALUATOR } from '../../utils/const';
+import { TECHNICAL_TEAM, MANAGER_TEAM } from '../../utils/const';
 import SelectionPerson from './SelectionPerson';
 
 function SupplierSelection(props) {
@@ -25,9 +24,7 @@ function SupplierSelection(props) {
     const checked = data.filter(item => item.checked).map(item => item.idSupplierByCall);
 
     if (checked.length > 0) {
-      if (EVALUATOR === type) {
-        sendMethod(checked, props.type, '', openNotification);
-      } else {
+      if (TECHNICAL_TEAM === type) {
         openModal(
           <SelectionPerson
             sendMethod={sendMethod}
@@ -36,6 +33,8 @@ function SupplierSelection(props) {
             {...props}
           />,
         );
+      } else {
+        sendMethod(checked, props.type, '', openNotification);
       }
     } else {
       message({ text: 'Debe seleccionar al menos un proveedor', type: 'info' });
