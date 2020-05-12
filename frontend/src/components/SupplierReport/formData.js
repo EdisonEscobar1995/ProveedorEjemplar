@@ -41,8 +41,7 @@ const formData = ({
       });
 
       totalScoreEvaluatorDimension.forEach((element, index) => {
-        const node = document.getElementById('dimension_0').parentNode;
-        // domtoimage.toPng(document.getElementById(`dimension_${index}`)).then((urlImg) => {
+        const node = document.getElementById(`dimension_${index}`).parentNode;
         domtoimage.toPng(node).then((urlImg) => {
           if (document.querySelector(`#data-canvas-dimension_${index} img`)) {
             document.querySelector(`#data-canvas-dimension_${index} img`).remove();
