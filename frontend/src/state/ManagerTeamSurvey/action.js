@@ -6,6 +6,7 @@ import {
   FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
   FILTER_MANAGER_TEAM_SURVEY,
   CHANGE_COMMENT_MANAGER,
+  CHANGE_COMMENT_MANAGER_AUX,
   CHANGE_SCORE_MANAGER,
   REQUEST_FAILED,
 } from './const';
@@ -59,6 +60,14 @@ const changeComment = (idSupplier, id, comment, value) => ({
   new: !id,
 });
 
+const changeCommentAux = (idSupplier, id, comment, value) => ({
+  type: CHANGE_COMMENT_MANAGER_AUX,
+  idSupplier,
+  comment,
+  value,
+  new: !id,
+});
+
 const openNotificationWithIcon = (type) => {
   let messageToShow = '';
   let descriptionToShow = '';
@@ -95,16 +104,26 @@ const setScore = (idSupplier, value, answer) => (dispatch) => {
 
 const setComment = (idSupplier, value, answer) => (dispatch, getState) => {
   const storedComment = getState()
-    .managerTeamSurvey.data.suppliers.find(element => element.id === idSupplier).comment.value;
+    .managerTeamSurvey.data.suppliersAux.find(element => element.id === idSupplier).comment.value;
   if (storedComment !== value) {
     requestApi(dispatch, getDataManagerTeamSurveyProgress, saveManagerTeamAnswerApi, answer)
       .then((response) => {
         dispatch(changeComment(idSupplier, answer.id, response.data.data, value));
+        dispatch(changeCommentAux(idSupplier, answer.id, response.data.data, value));
         openNotificationWithIcon('success');
       }).catch(() => {
         dispatch(changeComment(idSupplier, answer.id, answer, null));
+        dispatch(changeCommentAux(idSupplier, answer.id, answer, null));
         dispatch(getFailedRequest());
       });
+  }
+};
+
+const setCommentState = (idSupplier, value, answer) => (dispatch, getState) => {
+  const storedComment = getState()
+    .managerTeamSurvey.data.suppliers.find(element => element.id === idSupplier).comment.value;
+  if (storedComment !== value) {
+    dispatch(changeComment(idSupplier, answer.id, answer, value));
   }
 };
 
@@ -195,6 +214,7 @@ const getManagerTeamSurvey = (year = '', supplierId = '') => (dispatch) => {
         supplierAux.push(supplier);
       });
       data.suppliers = supplierAux;
+      data.suppliersAux = supplierAux;
       data.finishVisible = rol === 'LIBERATOR' || rol === 'ADMINISTRATOR';
       data.yearCall = year !== undefined ? year : data.years[0];
       data.masters.EvaluationScale = sortByField(data.masters.EvaluationScale, 'score');
@@ -223,6 +243,7 @@ export {
   getManagerTeamSurvey,
   setScore,
   setComment,
+  setCommentState,
   filterManagerTeamSurvey,
   finishManagerTeamSurvey,
 };

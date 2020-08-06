@@ -5,6 +5,7 @@ import {
   FINISH_MANAGER_TEAM_SURVEY_SUCCESS,
   FILTER_MANAGER_TEAM_SURVEY,
   CHANGE_COMMENT_MANAGER,
+  CHANGE_COMMENT_MANAGER_AUX,
   CHANGE_SCORE_MANAGER,
   REQUEST_FAILED,
 } from './const';
@@ -83,6 +84,35 @@ function managerTeamSurveyApp(state = initialState, action) {
             ManagerTeamAnswer: answers,
           },
           suppliers: state.data.suppliers.map(supplier => (
+            supplier.id === action.idSupplier ? {
+              ...supplier,
+              readOnly: action.value === null,
+              comment: {
+                ...supplier.comment,
+                value: action.value,
+              },
+              idState: state.data.masters.State.find(
+                element => element.shortName === 'MANAGER_TEAM').id,
+            } : supplier
+          )),
+        },
+        loading: false,
+      };
+    }
+    case CHANGE_COMMENT_MANAGER_AUX: {
+      const answers = [...state.data.masters.ManagerTeamAnswer];
+      if (action.new) {
+        answers.push(action.comment);
+      }
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          masters: {
+            ...state.data.masters,
+            ManagerTeamAnswer: answers,
+          },
+          suppliersAux: state.data.suppliers.map(supplier => (
             supplier.id === action.idSupplier ? {
               ...supplier,
               readOnly: action.value === null,

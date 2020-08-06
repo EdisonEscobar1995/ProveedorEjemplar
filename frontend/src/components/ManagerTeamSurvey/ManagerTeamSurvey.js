@@ -33,6 +33,8 @@ class ManagerTeamSurvey extends Component {
       <TextArea
         rows={4}
         defaultValue={defaultValue}
+        value={record.comment.value}
+        onChange={e => this.changeComment(e, record)}
         onBlur={e => this.changeAnswer(record, e.target.value, COMMENT)}
       />
     ) : defaultValue;
@@ -132,6 +134,26 @@ class ManagerTeamSurvey extends Component {
     ));
   }
 
+  setAnswerCommentState = (record, value) => {
+    const { data, setCommentState } = this.props;
+    const { suppliersByCall, masters } = data;
+    const idSupplier = record.id;
+    const idSupplierByCall = suppliersByCall.find(element =>
+      element.idSupplier === idSupplier).id;
+    let answer = masters.ManagerTeamAnswer.find(element =>
+      element.idSupplierByCall === idSupplierByCall);
+    if (!answer) {
+      answer = {
+        idSupplierByCall,
+      };
+    }
+    setCommentState(idSupplier, value, answer);
+  }
+
+  changeComment = (e, record) => {
+    this.setAnswerCommentState(record, e.target.value);
+  }
+
   changeAnswer = (record, value, type) => {
     const { data, setComment, setScore } = this.props;
     const { suppliersByCall, masters } = data;
@@ -159,7 +181,6 @@ class ManagerTeamSurvey extends Component {
   render() {
     const { data, finishManagerTeamSurvey } = this.props;
     const { suppliers, masters } = data;
-
     return suppliers ? (
       <div>
         <span>
