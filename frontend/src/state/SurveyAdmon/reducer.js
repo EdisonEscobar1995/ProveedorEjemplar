@@ -17,6 +17,7 @@ import {
   COLLAPSE_CRITERION_SURVEY_FORM,
   GET_DIMENSIONS_SURVEY_PROGRESS,
   GET_CRITERION_SURVEY_SUCCESS,
+  SAVE_CRITERION_PERCENT_SELECTED,
   SAVE_QUESTION_SELECTED,
   DIMENSION_DESELECTED,
   FILTER_BY_CRITERION_SURVEY,
@@ -29,6 +30,8 @@ import {
 const initialState = {
   data: [],
   questionSelected: [],
+  criterionsSelected: [],
+  percents: {},
   supply: [],
   companySize: [],
   criterions: [],
@@ -65,6 +68,13 @@ function surveyAdmonApp(state = initialState, action) {
       return {
         ...state,
         supplyValue: action.value,
+      };
+    }
+    case SAVE_CRITERION_PERCENT_SELECTED: {
+      return {
+        ...state,
+        criterionsSelected: action.criterionPercentSel,
+        percents: action.percents,
       };
     }
     case SAVE_QUESTION_SELECTED: {
@@ -127,6 +137,8 @@ function surveyAdmonApp(state = initialState, action) {
         companySizeValue: action.companySizeValue,
         questionSelected: action.questionSelected,
         loading: false,
+        criterionsSelected: action.criterionsSelected,
+        percents: action.percents,
       };
     }
     case FILTER_BY_CRITERION_SURVEY: {

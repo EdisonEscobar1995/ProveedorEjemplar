@@ -3,6 +3,7 @@ package com.nutresa.exemplary_provider.bll;
 import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.SurveyDAO;
+import com.nutresa.exemplary_provider.dtl.CriterionPercentDTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.QuestionDTO;
 import com.nutresa.exemplary_provider.dtl.SurveyDTO;
@@ -18,8 +19,11 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
     	SurveyDTO surveyDTO = new SurveyDTO();
     	surveyDTO = super.get(id);
     	QuestionBLO questionBLO = new QuestionBLO();
+    	CriterionPercentBLO criterionPercentBLO = new CriterionPercentBLO();
     	List<QuestionDTO> questions = questionBLO.getQuestionsBySurvey(surveyDTO.getId());
+    	List<CriterionPercentDTO> criterionsPercent = criterionPercentBLO.getCriterionsPercentBySurvey(surveyDTO.getId());
      	surveyDTO.setQuestion(questions);
+     	surveyDTO.setCriterionPercent(criterionsPercent);
     	return surveyDTO;
     }
     
@@ -36,6 +40,7 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
     public SurveyDTO save(SurveyDTO survey) throws HandlerGenericException {
         SurveyDTO response = null;
         QuestionBLO questionBLO = new QuestionBLO();
+        CriterionPercentBLO criterionPercetBLO = new CriterionPercentBLO();
         SurveyDAO surveyDAO = new SurveyDAO();
         if (null != survey.getIdCall() && null != survey.getIdSupply() && null != survey.getIdCompanySize()) {
             if (existSurvey(survey)) {
@@ -45,6 +50,7 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
             } else {
                 response = super.save(survey);
                 response.setQuestion(questionBLO.associateToSurvey(survey.getQuestion(), response.getId()));
+                response.setCriterionPercent(criterionPercetBLO.associateToSurvey(survey.getCriterionPercent(), response.getId()));
             }
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());

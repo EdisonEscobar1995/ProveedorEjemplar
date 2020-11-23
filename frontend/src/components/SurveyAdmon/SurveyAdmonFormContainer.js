@@ -7,7 +7,7 @@ import * as SurveyAdmonAction from '../../state/SurveyAdmon/action';
 import H1 from '../shared/H1';
 import SubTitle from '../shared/SubTitle';
 import Tab from '../shared/Tabs';
-import { SurveyAdmonForm, ListQuestion, QuestionSelected } from './';
+import { SurveyAdmonForm, ListQuestion, QuestionSelected, PercentSelected } from './';
 
 const Space = styled.div`
   margin-bottom: 20px;
@@ -41,7 +41,7 @@ class SurveyAdmonFormContainer extends Component {
   };
 
   render() {
-    const { loading, questionSelected } = this.props;
+    const { loading, questionSelected, criterionsSelected } = this.props;
 
     const dataTabs = [
       {
@@ -53,6 +53,11 @@ class SurveyAdmonFormContainer extends Component {
         index: 2,
         text: 'Preguntas seleccionadas',
         component: <QuestionSelected data={questionSelected} />,
+      },
+      {
+        index: 3,
+        text: 'Porcentajes dimensiones y criterios',
+        component: <PercentSelected data={criterionsSelected} />,
       },
     ];
 
@@ -83,6 +88,7 @@ const mapStateToProps = state => ({
   companySizeValue: state.surveyAdmon.companySizeValue,
   data: state.surveyAdmon.data,
   questionSelected: state.surveyAdmon.questionSelected,
+  criterionsSelected: state.surveyAdmon.criterionsSelected,
   loading: state.surveyAdmon.loading,
 });
 

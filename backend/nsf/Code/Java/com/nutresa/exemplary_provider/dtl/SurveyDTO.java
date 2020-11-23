@@ -14,6 +14,8 @@ public class SurveyDTO {
     @Expose
     private List<QuestionDTO> question;
     @Expose
+    private List<CriterionPercentDTO> criterionPercent;
+    @Expose
     private String idCall;
 
     public List<QuestionDTO> getQuestion() {
@@ -24,7 +26,15 @@ public class SurveyDTO {
         this.question = question;
     }
     
-    public void setId(String id) {
+    public List<CriterionPercentDTO> getCriterionPercent() {
+		return criterionPercent;
+	}
+
+	public void setCriterionPercent(List<CriterionPercentDTO> criterionPercent) {
+		this.criterionPercent = criterionPercent;
+	}
+
+	public void setId(String id) {
     	this.id = id;
     }
 

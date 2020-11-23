@@ -19,6 +19,7 @@ import {
   COLLAPSE_CRITERION_SURVEY_FORM,
   GET_DIMENSIONS_SURVEY_PROGRESS,
   GET_CRITERION_SURVEY_SUCCESS,
+  SAVE_CRITERION_PERCENT_SELECTED,
   SAVE_QUESTION_SELECTED,
   DIMENSION_DESELECTED,
   FILTER_BY_CRITERION_SURVEY,
@@ -128,7 +129,8 @@ const getDimensionsProgress = () => ({
 
 const getAllDataSurveyFormAdmonSuccess =
 (call, supply, companySize, allCriterions, allDimensions, data,
-  id, callValue, supplyValue, companySizeValue, questionSelected) => ({
+  id, callValue, supplyValue, companySizeValue, questionSelected,
+  criterionsSelected, percents) => ({
   type: GET_SURVEY_ADMON_SUCCESS,
   call,
   supply,
@@ -141,6 +143,8 @@ const getAllDataSurveyFormAdmonSuccess =
   supplyValue,
   companySizeValue,
   questionSelected,
+  criterionsSelected,
+  percents,
 });
 
 const getCriterionsSuccess = (criterions, labelOptions, id, dimensionSelected) => ({
@@ -301,6 +305,41 @@ function classifyQuestions(allDimensions, allCriterions, questions) {
   return JSON.parse(JSON.stringify(allDimensions));
 }
 
+function classifyDimensionAndCriterion(allDimensions, allCriterions, criterionsPercent) {
+  if (criterionsPercent.length > 0) {
+    let dDimension = [];
+    criterionsPercent.forEach((percentCriterion) => {
+      dDimension = [];
+      if (percentCriterion.idDimension) {
+        dDimension = allDimensions.find(element => element.id === percentCriterion.idDimension);
+        if (dDimension.data) {
+          dDimension.data.forEach((criterion) => {
+            const c = criterionsPercent.find(element => element.idCriterion === criterion.id);
+            delete criterion.data;
+            criterion.percent = c ? c.percent : 0;
+          });
+        }
+        dDimension.expandable = false;
+        dDimension.percent = percentCriterion.percent;
+      }
+    });
+    return JSON.parse(JSON.stringify(allDimensions));
+  }
+
+  allDimensions.forEach((dimension) => {
+    if (dimension.data) {
+      dimension.data.forEach((criterion) => {
+        delete criterion.data;
+        criterion.visible = true;
+        criterion.percent = 0;
+      });
+      dimension.expandable = false;
+      dimension.percent = 0;
+    }
+  });
+  return JSON.parse(JSON.stringify(allDimensions));
+}
+
 function getAllDataSurveyFormAdmon(idSurvey = '') {
   return (dispatch) => {
     let promises = [
@@ -337,7 +376,10 @@ function getAllDataSurveyFormAdmon(idSurvey = '') {
       let supplyValue = '';
       let companySizeValue = '';
       let questionSelected = [];
+      let criterionsSelected = [];
       let surveyQuestions = [];
+      let surveyCriterionsPercent = [];
+      const percents = {};
       if (idSurvey) {
         const surveyData = arrayResponse[5].data.data;
         id = surveyData.id;
@@ -349,7 +391,25 @@ function getAllDataSurveyFormAdmon(idSurvey = '') {
           visible: true,
           expandable: false,
         }));
+        surveyCriterionsPercent = surveyData.criterionPercent.map(percent => ({
+          ...percent,
+          visible: true,
+          expandable: false,
+        }));
         questionSelected = classifyQuestions(allDimensions, allCriterions, surveyQuestions);
+        const allDimensionsB = [...allDimensions];
+        // criterionsSelected = classifyDimensionAndCriterion(allDimensionsB);
+        criterionsSelected =
+          classifyDimensionAndCriterion(allDimensionsB, allCriterions, surveyCriterionsPercent);
+
+        surveyCriterionsPercent.forEach((d) => {
+          if (d.idDimension) {
+            percents[d.idDimension] = d.percent;
+          }
+          if (d.idCriterion) {
+            percents[d.idCriterion] = d.percent;
+          }
+        });
       }
 
       return requestApiNotLoading(dispatch, axios.all, promises).then((responses) => {
@@ -370,7 +430,8 @@ function getAllDataSurveyFormAdmon(idSurvey = '') {
 
         dispatch(getAllDataSurveyFormAdmonSuccess(
           call, supply, companySize, allCriterions, allDimensions, dataFilter,
-          id, callValue, supplyValue, companySizeValue, questionSelected));
+          id, callValue, supplyValue, companySizeValue, questionSelected,
+          criterionsSelected, percents));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
       });
@@ -458,6 +519,18 @@ function saveDataSurvey() {
   };
 }
 
+function getObjectCriterionPercent(data, idSurvey, idCall, type) {
+  const criterionData = {
+    idCall,
+    idSurvey,
+    idDimension: type === 'D' ? data.id : '',
+    idCriterion: type === 'C' ? data.id : '',
+    percent: data.percent,
+  };
+
+  return criterionData;
+}
+
 function saveSurvey(next, redirect) {
   return (dispatch, getState) => {
     const surveyAdmon = getState().surveyAdmon;
@@ -487,6 +560,7 @@ function saveSurvey(next, redirect) {
       idSupply,
       idCompanySize,
       question: [],
+      criterionPercent: [],
     };
     surveyAdmon.questionSelected.forEach((dimension) => {
       dimension.data.forEach((criterion) => {
@@ -496,6 +570,14 @@ function saveSurvey(next, redirect) {
         });
       });
     });
+
+    surveyAdmon.criterionsSelected.forEach((dimension) => {
+      data.criterionPercent.push(getObjectCriterionPercent(dimension, id, idCall, 'D'));
+      dimension.data.forEach((criterion) => {
+        data.criterionPercent.push(getObjectCriterionPercent(criterion, id, idCall, 'C'));
+      });
+    });
+
     requestApi(dispatch, getDataSurveyProgress, saveSurveyApi, data)
       .then(() => {
         dispatch(saveDataSurvey());
@@ -518,6 +600,37 @@ const questionSelectedSuccess = (questionSel, data) => ({
   questionSel,
   data,
 });
+
+const criterionsPercentSelectedSuccess = (criterionPercentSel, percents) => ({
+  type: SAVE_CRITERION_PERCENT_SELECTED,
+  criterionPercentSel,
+  percents,
+});
+
+function savePercentDimensionCriterion(clientData) {
+  return (dispatch, getState) => {
+    clientData.name = clientData.name.trim();
+    const rCriterionSelected = getState().surveyAdmon.criterionsSelected;
+    const criterionSelected = Object.assign([], rCriterionSelected);
+    const rPercents = getState().surveyAdmon.percents;
+    const percents = Object.assign({}, rPercents);
+    criterionSelected.forEach((d) => {
+      if (d.id === clientData.id) {
+        d.percent = clientData.percent;
+        percents[clientData.id] = clientData.percent;
+      } else {
+        d.data.forEach((element) => {
+          if (element.id === clientData.id) {
+            element.percent = clientData.percent;
+            percents[clientData.id] = clientData.percent;
+          }
+        });
+      }
+    });
+    dispatch(closeModal());
+    dispatch(criterionsPercentSelectedSuccess(criterionSelected, percents));
+  };
+}
 
 const crearPreguntas = (questionData, data, preguntaCriterio) => {
   if (preguntaCriterio) {
@@ -554,14 +667,36 @@ const validaciones = (questionData, data, criterion) => {
   return validarCriterios(questionData, data, criterion, questionCriterion);
 };
 
+const setDataCriterionPercent = (dQuestionSel, percents) => {
+  const copyDataQ = JSON.parse(dQuestionSel);
+  copyDataQ.forEach((qu) => {
+    if (qu.data.length > 0) {
+      qu.data.forEach((elemento) => {
+        delete elemento.data;
+        elemento.percent =
+          Object.prototype.hasOwnProperty.call(percents, elemento.id) ? percents[elemento.id] : 0;
+      });
+    }
+    qu.expandable = false;
+    qu.percent =
+      Object.prototype.hasOwnProperty.call(percents, qu.id) ? percents[qu.id] : 0;
+  });
+
+  return JSON.parse(JSON.stringify(copyDataQ));
+};
+
 const questionSelected = (questionData, type = 'selected', dependency) => (dispatch, getState) => {
   try {
     const dimensions = getState().surveyAdmon.allDimensions;
     const criterions = getState().surveyAdmon.allCriterions;
     const questionSel = getState().surveyAdmon.questionSelected;
+    const criterionsSel = getState().surveyAdmon.criterionsSelected;
     const data = getState().surveyAdmon.data;
+    const rPercents = getState().surveyAdmon.percents;
+    const percents = Object.assign({}, rPercents);
     const copyData = Object.assign([], data);
     let dataQuestionSel = Object.assign([], questionSel);
+    let dataCriterionsSel = Object.assign([], criterionsSel);
     const dimension = dimensions.find(d => d.id === questionData.idDimension);
     const criterion = criterions.find(c => c.id === questionData.idCriterion);
 
@@ -577,12 +712,17 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
       } else {
         dataQuestionSel = validaciones(questionData, dataQuestionSel, criterion);
       }
+
       // eliminar la pregunta seleccionada
       const indexQuestion = copyData.find(x => x.id === questionData.idDimension).data
         .findIndex(x => x.id === questionData.id);
       copyData.find(x => x.id === questionData.idDimension).data
         .splice(indexQuestion, 1);
+
       dispatch(questionSelectedSuccess(dataQuestionSel, copyData));
+      dataCriterionsSel = setDataCriterionPercent(JSON.stringify(dataQuestionSel), percents);
+      dispatch(criterionsPercentSelectedSuccess(dataCriterionsSel));
+
       const dependingQuestion = copyData.find(x => x.id === questionData.idDimension).data
         .find(x => x.id === questionData.dependOfQuestion);
       if (questionData.dependOfQuestion !== '' && dependingQuestion) {
@@ -604,7 +744,10 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
         .find(x => x.id === questionData.idDimension).data
         .find(x => x.id === (questionData.idCriterion !== '' ? questionData.idCriterion : 0)).data
         .splice(indexQuestion, 1);
+
       dispatch(questionSelectedSuccess(dataQuestionSel, copyData));
+      dataCriterionsSel = setDataCriterionPercent(JSON.stringify(dataQuestionSel), percents);
+      dispatch(criterionsPercentSelectedSuccess(dataCriterionsSel));
 
       const dependingQuestions = siblingQuestions
         .filter(x => x.dependOfQuestion === questionData.id);
@@ -618,7 +761,7 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
       }
     }
   } catch (error) {
-    dispatch(setMessage('Ha ocurrido un error!', 'error'));
+    dispatch(setMessage('Ha ocurrido un error!', 'error', error));
   }
 };
 
@@ -648,6 +791,7 @@ export {
   changeSearchSurvey,
   searchSurvey,
   saveSurvey as saveData,
+  savePercentDimensionCriterion,
   cleanData,
   changeSearchByDimension,
   changeSearchByQuestion,
