@@ -32,6 +32,52 @@ public class CriterionPercentBLO extends GenericBLO<CriterionPercentDTO, Criteri
 		return criterionsPercent;
 	}
     
+    public CriterionPercentDTO getCriterionPercentById(String idSurvey, String id, String from)
+	    throws HandlerGenericException {
+		CriterionPercentDAO CriterionPercentDAO = new CriterionPercentDAO();
+		CriterionPercentDTO criterionsPercent = null;
+		try {
+			String vista = "vwCriterionPercentByIdCriterion";
+			if (from.equals("D")) {
+				vista = "vwCriterionPercentByIdDimension";
+			}
+			criterionsPercent = CriterionPercentDAO.getCriterionPercentById(idSurvey, id, vista);
+		} catch (HandlerGenericException exception) {
+		    throw new HandlerGenericException(exception);
+		}
+		
+		return criterionsPercent;
+	}
+    
+    public boolean hasPercentSurvey(String idSurvey, List<CriterionPercentDTO> criterions)
+    	throws HandlerGenericException {
+    	boolean response = true;
+    	CriterionPercentDAO criterionPercentDAO = new CriterionPercentDAO();
+    	String vista = "";
+    	String id = "";
+    	int cont = 0;
+    	for (CriterionPercentDTO percent : criterions) {
+    		id = "";
+    		vista = "";
+			if (!percent.getIdCriterion().equals("")){
+				vista = "vwCriterionPercentByIdCriterion";
+				id = percent.getIdCriterion();
+			} else if (!percent.getIdDimension().equals("")) {
+				vista = "vwCriterionPercentByIdDimension";
+				id = percent.getIdDimension();
+			}
+			if (id != "" && vista != "" && !criterionPercentDAO.hasPercentSurvey(idSurvey, id, vista)) {
+				cont += 1;
+			}
+		}
+    	
+    	if (cont > 0) {
+    		response = false;
+    	}
+    	
+    	return response;
+    }
+    
     protected List<CriterionPercentDTO> associateToSurvey(List<CriterionPercentDTO> criterions, String idSurvey)
     	throws HandlerGenericException {
 		List<CriterionPercentDTO> response = new ArrayList<CriterionPercentDTO>();

@@ -46,7 +46,12 @@ public class SurveyBLO extends GenericBLO<SurveyDTO, SurveyDAO> {
             if (existSurvey(survey)) {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_EXISTS.toString());
             } else if (surveyDAO.surveyStarted(survey.getId())) {
-                throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());
+            	if (!criterionPercetBLO.hasPercentSurvey(survey.getId(), survey.getCriterionPercent())) {
+            		response = super.save(survey);
+            		response.setCriterionPercent(criterionPercetBLO.associateToSurvey(survey.getCriterionPercent(), response.getId()));
+            	} else {
+            		throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());	
+            	}
             } else {
                 response = super.save(survey);
                 response.setQuestion(questionBLO.associateToSurvey(survey.getQuestion(), response.getId()));

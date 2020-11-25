@@ -27,6 +27,8 @@ public class ReportOfCalificationsBySuppliers {
     @Expose
     private double totalScoreOfSupplier;
     @Expose
+    private double totalPercentScoreOfSupplier;
+    @Expose
     private double expectedScoreSupplier;
     @Expose
     private double expectedScoreEvaluator;
@@ -34,6 +36,8 @@ public class ReportOfCalificationsBySuppliers {
     private double scoreOfEvaluator;
     @Expose
     private double totalScoreOfEvaluator;
+    @Expose
+    private double totalPercentScoreOfEvaluator;
     @Expose
     private String idState;
     @Expose
@@ -112,8 +116,24 @@ public class ReportOfCalificationsBySuppliers {
     public double getTotalScoreOfEvaluator() {
         return totalScoreOfEvaluator;
     }
+    
+    public double getTotalPercentScoreOfEvaluator() {
+		return totalPercentScoreOfEvaluator;
+	}
 
-    private double calculateTotalScore(short totalScore, short totalExpectedScore) {
+	public void setTotalPercentScoreOfEvaluator(double totalPercentScoreOfEvaluator) {
+		this.totalPercentScoreOfEvaluator = totalPercentScoreOfEvaluator;
+	}
+
+	public double getTotalPercentScoreOfSupplier() {
+		return totalPercentScoreOfSupplier;
+	}
+
+	public void setTotalPercentScoreOfSupplier(double totalPercentScoreOfSupplier) {
+		this.totalPercentScoreOfSupplier = totalPercentScoreOfSupplier;
+	}
+
+	private double calculateTotalScore(short totalScore, short totalExpectedScore) {
         double scoreCalculated = 0D;
         if (totalScore < 0) {
             scoreCalculated = -1D;
@@ -256,6 +276,10 @@ public class ReportOfCalificationsBySuppliers {
         @Expose
         private String commentEvaluator;
         @Expose
+        private int percentDimension;
+        @Expose
+        private int percentCriterion;
+        @Expose
         private int attachmentCount;
         
         public String getDimension() {
@@ -353,6 +377,22 @@ public class ReportOfCalificationsBySuppliers {
         public String getCommentEvaluator() {
             return commentEvaluator;
         }
+		
+		public int getPercentDimension() {
+			return percentDimension;
+		}
+
+		public void setPercentDimension(int percentDimension) {
+			this.percentDimension = percentDimension;
+		}
+
+		public int getPercentCriterion() {
+			return percentCriterion;
+		}
+
+		public void setPercentCriterion(int percentCriterion) {
+			this.percentCriterion = percentCriterion;
+		}
 
 		public void setAttachmentCount(int attachmentCount) {
 			this.attachmentCount = attachmentCount;

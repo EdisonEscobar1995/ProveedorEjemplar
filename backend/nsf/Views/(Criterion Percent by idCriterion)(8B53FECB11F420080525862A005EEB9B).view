@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(Criterion Percent by idCriterion)' alias='Criterion Percent|vwCriterionPercentByIdCriterion'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052584B20081E119'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='2137e' unid='8B53FECB11F420080525862A005EEB9B' sequence='4'>
+<created><datetime>20201124T121646,99-05</datetime></created>
+<modified><datetime>20201124T140849,31-05</datetime></modified>
+<revised><datetime>20201124T140849,30-05</datetime></revised>
+<lastaccessed><datetime>20201124T140849,31-05</datetime></lastaccessed>
+<addedtofile><datetime>20201124T121647,07-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frCriterionPercent" &amp; idCall != "" &amp; idCriterion != ""</formula></code><code
+ event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+	Continue = False
+End Sub
+</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='idCriterion' width='17.2500'
+ resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idCriterion'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='idSurvey' width='17.2500'
+ resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idSurvey'><font size='9pt' style='bold'/></columnheader></column>
+<column sort='ascending' hidedetailrows='false' itemname='id' width='10' resizable='true'
+ separatemultiplevalues='false' sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
+ title='id'><font size='9pt' style='bold'/></columnheader></column></view>
+

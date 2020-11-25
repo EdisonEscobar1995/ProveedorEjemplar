@@ -1,13 +1,16 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
+import com.nutresa.exemplary_provider.dtl.CriterionPercentDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
@@ -132,6 +135,13 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         short sumScoreAnsweredBySupplier = 0;
         short sumScoreAnsweredByEvaluator = 0;
         List<SummarySurvey> summariesSurvey = new ArrayList<SummarySurvey>();
+        CriterionPercentBLO criterionPercentBLO = new CriterionPercentBLO();
+        CriterionPercentDTO criterionPercentDTO = new CriterionPercentDTO();
+        CriterionPercentDTO dimensionPercentDTO = new CriterionPercentDTO();
+        Map<String, Integer> percents = new HashMap<String, Integer>();
+        Map<String, Integer> counterQuestionsByCriterion = new HashMap<String, Integer>();
+        Map<String, List<String>> scoresOfEvaluators = new HashMap<String, List<String>>();
+        Map<String, List<String>> scoresOfSupplier = new HashMap<String, List<String>>();
         for (AnswerDTO answer : answers) {
             QuestionBLO questionBLO = new QuestionBLO();
             QuestionDTO question = questionBLO.get(answer.getIdQuestion());
@@ -141,6 +151,24 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             CriterionDTO criterion = criterionBLO.get(question.getIdCriterion());
             DimensionBLO dimensionBLO = new DimensionBLO();
             DimensionDTO dimension = dimensionBLO.get(question.getIdDimension());
+            
+            if (percents.get(question.getIdCriterion()) == null) {
+            	criterionPercentDTO =  criterionPercentBLO.getCriterionPercentById(answer.getIdSurvey(), question.getIdCriterion(), "C");
+            	percents.put(criterionPercentDTO.getIdCriterion(), criterionPercentDTO.getPercent());
+            }
+            
+            if (percents.get(question.getIdDimension()) == null) {
+            	dimensionPercentDTO =  criterionPercentBLO.getCriterionPercentById(answer.getIdSurvey(), question.getIdDimension(), "D");
+                percents.put(dimensionPercentDTO.getIdDimension(), dimensionPercentDTO.getPercent());
+            }
+            
+            if (counterQuestionsByCriterion.get(question.getIdCriterion()) == null) {
+            	counterQuestionsByCriterion.put(question.getIdCriterion(), 1);
+            } else {
+            	Integer contC = counterQuestionsByCriterion.get(question.getIdCriterion());
+            	counterQuestionsByCriterion.put(question.getIdCriterion(), contC + 1);
+            }
+            
             ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
             ReportOfCalificationsBySuppliers.SummarySurvey summarySurvey = report.new SummarySurvey();
 
@@ -151,6 +179,16 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                 if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
                     sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier + summarySurvey
                             .getScoreOfSupplier());
+                    
+                    if (scoresOfSupplier.get(question.getIdCriterion()) == null) {
+                    	List<String> scoreS = new ArrayList<String>();
+                    	scoreS.add(String.valueOf(summarySurvey.getScoreOfSupplier()));
+                    	scoresOfSupplier.put(question.getIdCriterion(), scoreS);
+                    } else {
+                    	List<String> scoreAuxS = scoresOfSupplier.get(question.getIdCriterion());
+                    	scoreAuxS.add(String.valueOf(summarySurvey.getScoreOfSupplier()));
+                    	scoresOfSupplier.put(question.getIdCriterion(), scoreAuxS);
+                    }
                     expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId(), option);
                     sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
                 } else {
@@ -164,6 +202,16 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                     OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
                     sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator + summarySurvey
                             .getScoreOfEvaluator());
+                    
+                    if (scoresOfEvaluators.get(question.getIdCriterion()) == null) {
+                    	List<String> score = new ArrayList<String>();
+                    	score.add(String.valueOf(summarySurvey.getScoreOfEvaluator()));
+                    	scoresOfEvaluators.put(question.getIdCriterion(), score);
+                    } else {
+                    	List<String> scoreAux = scoresOfEvaluators.get(question.getIdCriterion());
+                    	scoreAux.add(String.valueOf(summarySurvey.getScoreOfEvaluator()));
+                    	scoresOfEvaluators.put(question.getIdCriterion(), scoreAux);
+                    }
                     expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId(), optionEvaluator);
                     sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
                 } else {
@@ -191,13 +239,42 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
             summarySurvey.setCriterion(criterion.getName());
             summarySurvey.setDimension(dimension.getName());
+            summarySurvey.setPercentCriterion(percents.get(criterion.getId()));
+            summarySurvey.setPercentDimension(percents.get(dimension.getId()));
             summarySurvey.setAttachmentCount(answer.getIdAttachment().size());
 
             summariesSurvey.add(summarySurvey);
         }
-
+        
         counterQuestions = (short) (counterQuestions * SCORE_OF_NA);
-
+        
+        double percentScoreOfEvaluator = 0;
+        double percentScoreOfSupplier = 0;
+        if (percents.size() >= counterQuestionsByCriterion.size()) {
+        	List<String> scoresQEvaluators = new ArrayList<String>();
+        	List<String> scoresQSuppliers = new ArrayList<String>();
+        	for (Entry<String, Integer> counterQuestionCriterion : counterQuestionsByCriterion.entrySet()) {
+                int counterQ = counterQuestionCriterion.getValue();
+                String idCriterion = counterQuestionCriterion.getKey();
+                double percentCri = ((double) percents.get(idCriterion) / 100) / counterQ;
+                scoresQEvaluators = scoresOfEvaluators.get(idCriterion);
+                if (null != scoresQEvaluators && scoresQEvaluators.size() > 0) {
+                	for (int i = 0; i < scoresQEvaluators.size(); i++) {
+                    	percentScoreOfEvaluator = percentScoreOfEvaluator + (Double.parseDouble(scoresQEvaluators.get(i)) * percentCri);
+                    }
+                	scoresQEvaluators.clear();
+                }
+                scoresQSuppliers = scoresOfSupplier.get(idCriterion);
+                if (null != scoresQSuppliers && scoresQSuppliers.size() > 0) {
+                	for (int i = 0; i < scoresQSuppliers.size(); i++) {
+                		percentScoreOfSupplier = percentScoreOfSupplier + (Double.parseDouble(scoresQSuppliers.get(i)) * percentCri);
+                    }
+                	scoresQSuppliers.clear();
+                }
+                // percentScoreOfEvaluator = (short) (percentScoreOfEvaluator + (percentCri / counterQ));
+            }
+        }
+        
         recordOfReport.setExpectedScoreSupplier(sumExpectedScoreSupplier);
         recordOfReport.setExpectedScoreEvaluator(sumExpectedScoreEvaluator);
 
@@ -206,13 +283,15 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             recordOfReport.setExpectedScoreSupplier(SCORE_OF_NA);
         }
         recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
+        recordOfReport.setTotalPercentScoreOfSupplier(percentScoreOfSupplier);
 
         if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
             sumScoreAnsweredByEvaluator = SCORE_OF_NA;
             recordOfReport.setExpectedScoreEvaluator(SCORE_OF_NA);
         }
         recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
-
+        recordOfReport.setTotalPercentScoreOfEvaluator(percentScoreOfEvaluator);
+        
         recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);
         recordOfReport.setScoreOfEvaluator(sumScoreAnsweredByEvaluator);
         recordOfReport.setSummarySurvey(summariesSurvey);

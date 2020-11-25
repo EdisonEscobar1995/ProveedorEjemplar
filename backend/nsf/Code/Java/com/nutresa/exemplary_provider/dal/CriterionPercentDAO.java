@@ -34,6 +34,25 @@ public class CriterionPercentDAO extends GenericDAO<CriterionPercentDTO> {
 		return response;
 	}
     
+    public CriterionPercentDTO getCriterionPercentById(String idSurvey, String id, String vista)
+    	throws HandlerGenericException {
+		CriterionPercentDTO response = new CriterionPercentDTO();
+		try {
+			ArrayList<String> filter = new ArrayList<String>(2);
+	        filter.add(id);
+	        filter.add(idSurvey);
+	    	View view = getDatabase().getView(vista);
+	    	Document document = view.getFirstDocumentByKey(filter, true);
+	    	if (null != document) {
+		        response = castDocument(document);
+		    }
+		} catch (Exception exception) {
+		    throw new HandlerGenericException(exception);
+		}
+		
+		return response;
+	}
+    
     public void removePercentsBySurvey(String idSurvey) throws HandlerGenericException {
     	View view = getDatabase().getView("vwCriterionPercentBySurvey");
     	DocumentCollection dc = view.getAllDocumentsByKey(idSurvey);
@@ -41,4 +60,20 @@ public class CriterionPercentDAO extends GenericDAO<CriterionPercentDTO> {
     		dc.removeAll(true);
     	}
     }
+    
+    public boolean hasPercentSurvey(String idSurvey, String id, String vista)
+    	throws HandlerGenericException {
+    	boolean response = false;
+    	ArrayList<String> filter = new ArrayList<String>(2);
+        filter.add(id);
+        filter.add(idSurvey);
+    	View view = getDatabase().getView(vista);
+    	DocumentCollection dc = view.getAllDocumentsByKey(filter, true);
+    	if (dc.getCount() > 0) {
+    		response = true;
+    	}
+    	
+    	return response;
+    }
+    
 }
