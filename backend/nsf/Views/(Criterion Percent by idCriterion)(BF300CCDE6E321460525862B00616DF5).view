@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<view name='(Criterion Percent by survey)' alias='Criterion Percent|vwCriterionPercentBySurvey'
+<view name='(Criterion Percent by idCriterion)' alias='Criterion Percent|vwCriterionPercentByIdCriterion'
  xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052584B20081E119'
  showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
  onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
@@ -9,25 +9,25 @@
  boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
  allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
  uniquekeys='false'>
-<noteinfo noteid='2135a' unid='4E1675F8A9DEE7C005258624006CC843' sequence='6'>
-<created><datetime>20201118T144811,55-05</datetime></created>
-<modified><datetime>20201125T124416,83-05</datetime></modified>
-<revised><datetime>20201125T124416,82-05</datetime></revised>
-<lastaccessed><datetime>20201125T124416,83-05</datetime></lastaccessed>
-<addedtofile><datetime>20201118T144811,57-05</datetime></addedtofile></noteinfo>
+<noteinfo noteid='2139a' unid='BF300CCDE6E321460525862B00616DF5' sequence='2'>
+<created><datetime>20201125T124411,41-05</datetime></created>
+<modified><datetime>20201125T124411,73-05</datetime></modified>
+<revised><datetime>20201125T124411,72-05</datetime></revised>
+<lastaccessed><datetime>20201125T124411,73-05</datetime></lastaccessed>
+<addedtofile><datetime>20201125T124411,53-05</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
 <wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
- event='selection'><formula>SELECT form = "frCriterionPercent" &amp; idCall != ""</formula></code><code
+ event='selection'><formula>SELECT form = "frCriterionPercent" &amp; idCall != "" &amp; idCriterion != ""</formula></code><code
  event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
 	Continue = False
 End Sub
 </lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='idCriterion' width='17.2500'
+ resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='idCriterion'><font size='9pt' style='bold'/></columnheader></column>
 <column sort='ascending' hidedetailrows='false' itemname='idSurvey' width='17.2500'
  resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
  showaslinks='false'><columnheader title='idSurvey'><font size='9pt' style='bold'/></columnheader></column>
-<column sort='ascending' hidedetailrows='false' itemname='idDimension' width='17.2500'
- resizable='true' separatemultiplevalues='true' sortnoaccent='true' sortnocase='true'
- showaslinks='false'><columnheader title='idDimension'><font size='9pt' style='bold'/></columnheader></column>
 <column sort='ascending' hidedetailrows='false' itemname='id' width='10' resizable='true'
  separatemultiplevalues='false' sortnoaccent='false' sortnocase='true' showaslinks='false'><columnheader
  title='id'><font size='9pt' style='bold'/></columnheader></column></view>
