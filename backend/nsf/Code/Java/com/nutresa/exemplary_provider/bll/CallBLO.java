@@ -295,6 +295,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     	List<TotalScoreEvaluatorDimension> totalScoresEvaluatorD  = new ArrayList<TotalScoreEvaluatorDimension>();
     	List<TotalScoreEvaluatorCriterion> totalScoresEvaluatorC  = new ArrayList<TotalScoreEvaluatorCriterion>();
     	double totalScoreEvaluator = 0;
+    	double totalScorePercentOfEvaluator = 0;
     	
         if (supplierByCall instanceof SupplierByCallDTO) {
         	
@@ -314,7 +315,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         	
         	dimensions = dimensionBLO.getDimensionsBySurvey(parameters.get("idSurvey"));
         	totalScoreEvaluator = getTotalScoreEvaluetor(supplierByCall, supplier, parameters);
+        	totalScorePercentOfEvaluator = getTotalScorePercentEvaluator(supplierByCall, supplier, parameters);
         	dataOfReport.setTotalScoreOfEvaluator(totalScoreEvaluator);
+        	dataOfReport.setTotalScorePercentOfEvaluator(totalScorePercentOfEvaluator);
         	totalScoresEvaluatorD = getTotalEvaluateByDimension(dimensions, supplierByCall, supplier, parameters);
         	dataOfReport.setTotalScoreEvaluatorDimension(totalScoresEvaluatorD);
         	totalScoresEvaluatorC = getTotalEvaluateByCriterio(dimensions, supplierByCall, supplier, parameters);
@@ -333,6 +336,16 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     	dataOfReportAux = getRecordOfReportBySupplier(supplierByCall, supplier, dataOfReportAux, parameters);
     	totalScoreEvaluator = dataOfReportAux.getTotalScoreOfEvaluator(); 
     	return totalScoreEvaluator; 
+    }
+    
+    private double getTotalScorePercentEvaluator(SupplierByCallDTO supplierByCall, 
+    		SupplierDTO supplier, Map<String, String> parameters) throws HandlerGenericException{
+    	
+    	double totalScorePecentEvaluator = 0;
+    	ReportOfCalificationsBySuppliers dataOfReportAux = new ReportOfCalificationsBySuppliers();
+    	dataOfReportAux = getRecordOfReportBySupplier(supplierByCall, supplier, dataOfReportAux, parameters);
+    	totalScorePecentEvaluator = dataOfReportAux.getTotalPercentScoreOfEvaluator(); 
+    	return totalScorePecentEvaluator;
     }
     
     private List<TotalScoreEvaluatorDimension> getTotalEvaluateByDimension(List<DimensionDTO> dimensions, SupplierByCallDTO supplierByCall, 
@@ -354,6 +367,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         	totalScoreEvaluatorDimension.setDimension(dimension.getName());
         	totalScoreEvaluatorDimension.setIdDimension(dimension.getId());
         	totalScoreEvaluatorDimension.setScoreTotal(dataOfReportAux.getTotalScoreOfEvaluator());
+        	totalScoreEvaluatorDimension.setScorePercentTotal(dataOfReportAux.getTotalPercentScoreOfEvaluator());
         	totalScoresEvaluatorD.add(totalScoreEvaluatorDimension);
         	dataOfReportAux = new ReportOfCalificationsBySuppliers();
         	totalScoreEvaluatorDimension = dataOfReport.new TotalScoreEvaluatorDimension();
@@ -399,6 +413,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             		totalScoreEvaluatorCriterio.setCriterio(criterio.getName());
             		totalScoreEvaluatorCriterio.setIdCriterio(criterio.getId());
             		totalScoreEvaluatorCriterio.setScoreTotal(dataOfReportAux.getTotalScoreOfEvaluator());
+            		totalScoreEvaluatorCriterio.setScorePercentTotal(dataOfReportAux.getTotalPercentScoreOfEvaluator());
             		totalScoreEvaluatorCriterio.setCommentsEvaluators(comments);
                 	totalScoresEvaluatorC.add(totalScoreEvaluatorCriterio);
                 	dataOfReportAux = new ReportOfCalificationsBySuppliers();

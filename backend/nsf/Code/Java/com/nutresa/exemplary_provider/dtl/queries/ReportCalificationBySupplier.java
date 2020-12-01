@@ -31,6 +31,8 @@ public class ReportCalificationBySupplier {
     private String whoEvaluateOfTechnicalTeam;
     @Expose
     private double totalScoreOfEvaluator;
+    @Expose
+    private double totalScorePercentOfEvaluator;
     
     public double getTotalScoreOfEvaluator() {
 		return totalScoreOfEvaluator;
@@ -38,6 +40,14 @@ public class ReportCalificationBySupplier {
 
 	public void setTotalScoreOfEvaluator(double totalScoreOfEvaluator) {
 		this.totalScoreOfEvaluator = totalScoreOfEvaluator;
+	}
+	
+	public double getTotalScorePercentOfEvaluator() {
+		return totalScorePercentOfEvaluator;
+	}
+
+	public void setTotalScorePercentOfEvaluator(double totalScorePercentOfEvaluator) {
+		this.totalScorePercentOfEvaluator = totalScorePercentOfEvaluator;
 	}
 
 	public String getWhoEvaluateOfTechnicalTeam() {
@@ -149,6 +159,8 @@ public class ReportCalificationBySupplier {
         @Expose
         private double scoreTotal;
         @Expose
+        private double scorePercentTotal;
+        @Expose
         private List<String> commentsEvaluators;
         
 		public List<String> getCommentsEvaluators() {
@@ -187,6 +199,12 @@ public class ReportCalificationBySupplier {
 		public void setScoreTotal(double scoreTotal) {
 			this.scoreTotal = scoreTotal;
 		}
+		public double getScorePercentTotal() {
+			return scorePercentTotal;
+		}
+		public void setScorePercentTotal(double scorePercentTotal) {
+			this.scorePercentTotal = scorePercentTotal;
+		}
     }
     
     public class TotalScoreEvaluatorDimension {
@@ -196,6 +214,8 @@ public class ReportCalificationBySupplier {
         private String idDimension;
         @Expose
         private double scoreTotal;
+        @Expose
+        private double scorePercentTotal;
         
 		public String getDimension() {
 			return dimension;
@@ -214,6 +234,12 @@ public class ReportCalificationBySupplier {
 		}
 		public void setScoreTotal(double scoreTotal) {
 			this.scoreTotal = scoreTotal;
+		}
+		public double getScorePercentTotal() {
+			return scorePercentTotal;
+		}
+		public void setScorePercentTotal(double scorePercentTotal) {
+			this.scorePercentTotal = scorePercentTotal;
 		}
     }
        

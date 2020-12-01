@@ -113,7 +113,12 @@ class SupplierReportContainer extends Component {
                 <Col span={16}>
                   <Table>
                     <tbody>
-                      <TrTable widthTr={`${totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%`} >
+                      <TrTable widthTr={`${
+                        (totalScoreSupplier.totalScorePercentOfEvaluator
+                          && totalScoreSupplier.totalScorePercentOfEvaluator > 0) ?
+                          totalScoreSupplier.totalScorePercentOfEvaluator.toFixed(2) :
+                          totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%`}
+                      >
                         <td className="name">Total</td>
                         <td>
                           <div className="percent">
@@ -122,11 +127,25 @@ class SupplierReportContainer extends Component {
                         </td>
                       </TrTable>
                       {totalScoreSupplier.totalScoreEvaluatorDimension.map(dimension => (
-                        <TrTable key={dimension.idDimension} widthTr={`${dimension.scoreTotal.toFixed(2)}%`} >
+                        <TrTable
+                          key={dimension.idDimension}
+                          widthTr={`${
+                            (dimension.scorePercentTotal.toFixed(2)
+                            && dimension.scorePercentTotal.toFixed(2) > 0) ?
+                              dimension.scorePercentTotal.toFixed(2) :
+                              dimension.scoreTotal.toFixed(2)}%`}
+                        >
                           <td className="name">{dimension.dimension}</td>
                           <td>
                             <div className="percent">
-                              <div style={{ width: `${dimension.scoreTotal <= 0 ? 0.2 : dimension.scoreTotal.toFixed(2)}%` }} />
+                              {/* 
+                                <div style={{ 
+                                  width: `${
+                                  dimension.scoreTotal <= 0 ? 0.2 : dimension.scoreTotal.toFixed(2)
+                                  }%`
+                                }} /> 
+                              */}
+                              <div style={{ width: `${dimension.scorePercentTotal <= 0 ? 0.2 : dimension.scorePercentTotal.toFixed(2)}%` }} />
                             </div>
                           </td>
                         </TrTable>
@@ -138,7 +157,11 @@ class SupplierReportContainer extends Component {
                   <PuntajeBox>
                     <div className="dBox">
                       <span className="sText">PUNTAJE CONSOLIDADO</span>
-                      <span className="sPuntaje">{totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%</span>
+                      <span className="sPuntaje">{
+                        (totalScoreSupplier.totalScorePercentOfEvaluator
+                          && totalScoreSupplier.totalScorePercentOfEvaluator > 0) ?
+                          totalScoreSupplier.totalScorePercentOfEvaluator.toFixed(2) :
+                          totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%</span>
                     </div>
                   </PuntajeBox>
                 </Col>
@@ -147,21 +170,30 @@ class SupplierReportContainer extends Component {
               {totalScoreSupplier.totalScoreEvaluatorDimension.map((dimension, index) => (
                 <Row style={{ marginTop: '25px' }} key={`id_${dimension.idDimension}`} className="dimension">
                   <Title className="title">
-                    {`Dimensión ${dimension.dimension} (${dimension.scoreTotal.toFixed(2)}%)`}
+                    {`Dimensión ${dimension.dimension} (${(dimension.scorePercentTotal.toFixed(2)
+                            && dimension.scorePercentTotal.toFixed(2) > 0) ?
+                      dimension.scorePercentTotal.toFixed(2) :
+                      dimension.scoreTotal.toFixed(2)}%)`}
                   </Title>
                   <Col span={24}>
                     <Table style={{ width: '75%', margin: '0 auto' }} id={`dimension_${index}`}>
                       <tbody>
                         {totalScoreSupplier.totalScoreEvaluatorCriterion.map((criterio) => {
-                          const scoreTotal = criterio.scoreTotal === '' || criterio.scoreTotal <= 0 ? 0 : criterio.scoreTotal;
+                          /* const scoreTotal = 
+                            criterio.scoreTotal === '' || 
+                            criterio.scoreTotal <= 0 ? 0 : criterio.scoreTotal */
+                          const scoreTotal = criterio.scorePercentTotal === '' || criterio.scorePercentTotal <= 0 ? 0 : criterio.scorePercentTotal;
+                          const percentWidth = (scoreTotal * 100) / dimension.scorePercentTotal;
                           let tr = '';
                           if (criterio.idDimension === dimension.idDimension) {
                             tr = (
-                              <TrTable key={criterio.idCriterio} widthTr={`${scoreTotal.toFixed(2)}%`} >
+                              <TrTable key={criterio.idCriterio} widthTr={`${scoreTotal.toFixed(2)}%`}>
                                 <td className="name">{criterio.criterio}</td>
                                 <td>
                                   <div className="percent" id={`percent-criterio_${criterio.idCriterio}`}>
-                                    <div style={{ width: `${scoreTotal <= 0 ? 0.2 : scoreTotal.toFixed(2)}%` }} />
+                                    {/* <div style={{ width: 
+                                      `${scoreTotal <= 0 ? 0.2 : scoreTotal.toFixed(2)}%` }} /> */}
+                                    <div style={{ width: `${percentWidth <= 0 ? 0.2 : percentWidth.toFixed(2)}%` }} />
                                   </div>
                                 </td>
                               </TrTable>
@@ -175,7 +207,7 @@ class SupplierReportContainer extends Component {
                   </Col>
                   <div style={{ display: 'none' }} id={`data-canvas-dimension_${index}`}>
                     <Title className="title">
-                      {`Dimensión ${dimension.dimension} (${dimension.scoreTotal.toFixed(2)}%)`}
+                      {`Dimensión ${dimension.dimension} (${dimension.scorePercentTotal.toFixed(2)}%)`}
                     </Title>
                   </div>
                 </Row>
