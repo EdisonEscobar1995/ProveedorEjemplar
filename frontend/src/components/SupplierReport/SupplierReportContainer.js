@@ -179,11 +179,12 @@ class SupplierReportContainer extends Component {
                     <Table style={{ width: '75%', margin: '0 auto' }} id={`dimension_${index}`}>
                       <tbody>
                         {totalScoreSupplier.totalScoreEvaluatorCriterion.map((criterio) => {
-                          /* const scoreTotal = 
-                            criterio.scoreTotal === '' || 
-                            criterio.scoreTotal <= 0 ? 0 : criterio.scoreTotal */
-                          const scoreTotal = criterio.scorePercentTotal === '' || criterio.scorePercentTotal <= 0 ? 0 : criterio.scorePercentTotal;
-                          const percentWidth = (scoreTotal * 100) / dimension.scorePercentTotal;
+                          let scoreTotal = criterio.scoreTotal === '' || criterio.scoreTotal <= 0 ? 0 : criterio.scoreTotal;
+                          let percentWidth = scoreTotal;
+                          if (criterio.scorePercentTotal > 0) {
+                            scoreTotal = criterio.scorePercentTotal === '' || criterio.scorePercentTotal <= 0 ? 0 : criterio.scorePercentTotal;
+                            percentWidth = (scoreTotal * 100) / dimension.scorePercentTotal;
+                          }
                           let tr = '';
                           if (criterio.idDimension === dimension.idDimension) {
                             tr = (
