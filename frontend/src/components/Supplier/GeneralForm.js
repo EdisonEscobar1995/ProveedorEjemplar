@@ -98,12 +98,12 @@ class General extends Component {
             key: 2,
             text: 'Button.continue',
             buttoncolor: 'buttonSecond',
-            onClick: this.continue,
+            onClick: this.handleSubmit,
             showConfirm: changeIdCompanySize,
             disabled: readOnly,
             messageConfirm: messageByChangeSizeCompany,
           },
-          {
+          /* {
             key: 3,
             text: 'Button.send',
             buttoncolor: 'buttonThird',
@@ -111,7 +111,7 @@ class General extends Component {
             disabled: readOnly,
             showConfirm: changeIdCompanySize,
             messageConfirm: messageByChangeSizeCompany,
-          },
+          }, */
         ];
         content = (
           <DinamicForm
