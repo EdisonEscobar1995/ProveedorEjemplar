@@ -123,6 +123,7 @@ const messages = {
   'Validation.unauthorized': 'Usted no está autorizado para acceder a este sitio',
   'Validation.wentWrong': 'Ha ocurrido un error al mostrar la información haga clic en el botón aceptar y actualice la página para continuar el proceso',
   'Validation.validExtension': 'Extensión no válida',
+  'Validation.validNameFile': 'El nombre del archivo no puede contener caracteres especiales (tildes, &, %, $)',
   'Validation.uploadFail': 'Ocurrió un error en la carga del archivo',
   'Validation.successUpload': 'Archivo cargado exitosamente',
   'Validation.maxFilesNumber': 'El máximo número de archivos es',

@@ -123,6 +123,7 @@ const messages = {
   'Validation.unauthorized': 'You are not authorized to access this site',
   'Validation.wentWrong': 'Something went wrong',
   'Validation.validExtension': 'Invalid extension',
+  'Validation.validNameFile': 'The file name cannot contain special characters (Accent Mark, &,%,$)',
   'Validation.uploadFail': 'Something went wrong uploading the file',
   'Validation.successUpload': 'File successfully uploaded',
   'Validation.maxFilesNumber': 'The maximum number of files is',

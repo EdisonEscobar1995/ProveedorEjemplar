@@ -21,6 +21,24 @@ const UploadStyle = styled(UploadAnt)`
     white-space: normal;
   }
 `;
+
+const validateSpecialCharacter = (str) => {
+  const from = 'ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛ%&$';
+  const to = 'AAAAAEEEEIIIIOOOOUUUU%&$';
+  const mapping = {};
+
+  for (let i = 0, j = from.length; i < j; i += 1) {
+    mapping[from.charAt(i)] = to.charAt(i);
+  }
+  let validate = false;
+  for (let i = 0, j = str.length; i < j; i += 1) {
+    if (Object.prototype.hasOwnProperty.call(mapping, str.charAt(i))) {
+      validate = true;
+    }
+  }
+  return validate;
+};
+
 const mapValue = (list, disabled) => {
   let value = [];
   if (list) {
@@ -119,6 +137,10 @@ class Upload extends Component {
     const nameFile = file.name.split('.');
     const nameExtension = nameFile[nameFile.length - 1];
     const extension = `.${nameExtension}`;
+    if (validateSpecialCharacter(file.name)) {
+      message({ text: 'Validation.validNameFile', type: 'error' });
+      return false;
+    }
     if (this.props.uploadExtensions.indexOf(extension) < 0
       && this.props.uploadExtensions.indexOf(extension.toLowerCase()) < 0) {
       message({ text: 'Validation.validExtension', type: 'error' });
