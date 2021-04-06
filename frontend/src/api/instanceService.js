@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { baseUrl } from '../utils/api';
+import { baseUrlService } from '../utils/api';
 
-const instance = axios.create({
-  baseURL: baseUrl,
+const instanceService = axios.create({
+  baseURL: baseUrlService,
   headers: {
     'Content-type': 'application/json',
     'Cache-Control': 'no-cache',
@@ -17,5 +17,5 @@ const instance = axios.create({
 });
 
 export {
-  instance as default,
+  instanceService as default,
 };

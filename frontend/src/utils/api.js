@@ -12,11 +12,13 @@ if (NODE_ENV !== 'development') {
 }
 
 const baseUrl = `${path}xsp`;
+const baseUrlService = `${path}`;
 const loginUrl = `${href}?logout&redirectto=${pathname}`;
 const webDbName = pathname;
 
 export {
   baseUrl,
+  baseUrlService,
   loginUrl,
   webDbName,
 };

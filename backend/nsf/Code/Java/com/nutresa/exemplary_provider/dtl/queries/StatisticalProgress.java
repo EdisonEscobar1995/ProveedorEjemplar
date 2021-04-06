@@ -20,7 +20,7 @@ public class StatisticalProgress {
     }
 
     /**
-     * Si el <code>axisName</code> aún no existe, entonces se crea, de lo
+     * Si el <code>axisName</code> aun no existe, entonces se crea, de lo
      * contrario aumenta el contador del <code>axisName</code>
      * 
      * @param axisName
