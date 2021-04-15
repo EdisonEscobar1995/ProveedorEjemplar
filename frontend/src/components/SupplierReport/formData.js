@@ -83,7 +83,7 @@ const formData = ({
           '.title3{font-family: Arial; font-size: 15px; font-weight: bold; color: #006159; text-align: left;margin-left: 20px}' +
           '.percent{margin-left: 5px; width: 85%; opacity: 1; height: 20px;}' +
           '.dimension table{display:none;}' +
-          '.percent > div{background: #006159; height: inherit;}' +
+          '.percent > div{background: #006159; height: inherit; max-width: 100%;}' +
           'p{font-family: Arial}' +
           '.resultados{margin-top:10px; line-height: 1.2}' +
           '</style>';

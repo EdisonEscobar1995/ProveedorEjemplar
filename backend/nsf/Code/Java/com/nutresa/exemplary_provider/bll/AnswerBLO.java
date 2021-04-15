@@ -123,7 +123,9 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
      * @return Registro del reporte
      * @throws HandlerGenericException
      */
-    public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
+    
+    // TODO: Se debe descomnetar esta función cuando se pase a producción el desarrollo de porcentajes por criterio
+    /* public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
             ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
@@ -292,6 +294,106 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
         recordOfReport.setTotalPercentScoreOfEvaluator(percentScoreOfEvaluator);
         
+        recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);
+        recordOfReport.setScoreOfEvaluator(sumScoreAnsweredByEvaluator);
+        recordOfReport.setSummarySurvey(summariesSurvey);
+
+        return recordOfReport;
+    } */
+    
+    public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
+            ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters)
+            throws HandlerGenericException {
+        List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
+        short sumScoreAnsweredBySupplierNA = 0;
+        short sumScoreAnsweredByEvaluatorNA = 0;
+        short counterQuestions = (short) answers.size();
+        short sumExpectedScoreSupplier = 0;
+        short sumExpectedScoreEvaluator = 0;
+        short sumScoreAnsweredBySupplier = 0;
+        short sumScoreAnsweredByEvaluator = 0;
+        List<SummarySurvey> summariesSurvey = new ArrayList<SummarySurvey>();
+        for (AnswerDTO answer : answers) {
+            QuestionBLO questionBLO = new QuestionBLO();
+            QuestionDTO question = questionBLO.get(answer.getIdQuestion());
+            OptionBLO optionBLO = new OptionBLO();
+            OptionDTO option = optionBLO.get(answer.getIdOptionSupplier());
+            CriterionBLO criterionBLO = new CriterionBLO();
+            CriterionDTO criterion = criterionBLO.get(question.getIdCriterion());
+            DimensionBLO dimensionBLO = new DimensionBLO();
+            DimensionDTO dimension = dimensionBLO.get(question.getIdDimension());
+            ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
+            ReportOfCalificationsBySuppliers.SummarySurvey summarySurvey = report.new SummarySurvey();
+
+            short expectedScoreSupplier = 0;
+            short expectedScoreEvaluator = 0;
+            if (null != option) {
+                setSummarySurveyBySupplier(option, summarySurvey);
+                if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
+                    sumScoreAnsweredBySupplier = (short) (sumScoreAnsweredBySupplier + summarySurvey
+                            .getScoreOfSupplier());
+                    expectedScoreSupplier = optionBLO.getMaxScoreInQuestion(question.getId(), option);
+                    sumExpectedScoreSupplier = (short) (sumExpectedScoreSupplier + expectedScoreSupplier);
+                } else {
+                    summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
+                    expectedScoreSupplier = SCORE_OF_NA;
+                    sumScoreAnsweredBySupplierNA = (short) (sumScoreAnsweredBySupplierNA + SCORE_OF_NA);
+                }
+
+                setSummarySurveyByEvaluator(answer, summarySurvey);
+                if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
+                    OptionDTO optionEvaluator = optionBLO.get(answer.getIdOptionEvaluator());
+                    sumScoreAnsweredByEvaluator = (short) (sumScoreAnsweredByEvaluator + summarySurvey
+                            .getScoreOfEvaluator());
+                    expectedScoreEvaluator = optionBLO.getMaxScoreInQuestion(question.getId(), optionEvaluator);
+                    sumExpectedScoreEvaluator = (short) (sumExpectedScoreEvaluator + expectedScoreEvaluator);
+                } else {
+                    summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                    sumScoreAnsweredByEvaluatorNA = (short) (sumScoreAnsweredByEvaluatorNA + SCORE_OF_NA);
+                }
+
+            } else {
+                summarySurvey.setAnswerSupplier(answer.getResponseSupplier());
+
+                if (!answer.getResponseEvaluator().isEmpty()) {
+                    summarySurvey.setAnswerEvaluator(answer.getResponseEvaluator());
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                }
+
+                expectedScoreSupplier = SCORE_OF_NA;
+            }
+
+            summarySurvey.setExpectedScoreSupplier(expectedScoreSupplier);
+            summarySurvey.setExpectedScoreEvaluator(expectedScoreEvaluator);
+            summarySurvey.setQuestion(question.getWording());
+            summarySurvey.setQuestionType(question.getType());
+            summarySurvey.setCommentSupplier(answer.getCommentSupplier());
+            summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
+            summarySurvey.setCriterion(criterion.getName());
+            summarySurvey.setDimension(dimension.getName());
+            summarySurvey.setAttachmentCount(answer.getIdAttachment().size());
+
+            summariesSurvey.add(summarySurvey);
+        }
+
+        counterQuestions = (short) (counterQuestions * SCORE_OF_NA);
+
+        recordOfReport.setExpectedScoreSupplier(sumExpectedScoreSupplier);
+        recordOfReport.setExpectedScoreEvaluator(sumExpectedScoreEvaluator);
+
+        if (counterQuestions == sumScoreAnsweredBySupplierNA) {
+            sumScoreAnsweredBySupplier = SCORE_OF_NA;
+            recordOfReport.setExpectedScoreSupplier(SCORE_OF_NA);
+        }
+        recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
+
+        if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
+            sumScoreAnsweredByEvaluator = SCORE_OF_NA;
+            recordOfReport.setExpectedScoreEvaluator(SCORE_OF_NA);
+        }
+        recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
+
         recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);
         recordOfReport.setScoreOfEvaluator(sumScoreAnsweredByEvaluator);
         recordOfReport.setSummarySurvey(summariesSurvey);

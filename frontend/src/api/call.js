@@ -11,9 +11,10 @@ const saveCallApi = data => instance.post('Call?action=save', data);
 
 const deleteCallApi = id => instance.get(`Call?action=delete&id=${id}`);
 
-const getCalledSuppliersApi = id => instance.get('Call?action=getSuppliersInCall', {
+/* const getCalledSuppliersApi = id => instance.get('Call?action=getSuppliersInCall', {
   params: { idCall: id },
-});
+}); */
+const getCalledSuppliersApi = id => instanceService.get(`xaServicios.xsp?Open&action=getSuppliersInCall&idCall=${id}`);
 
 const saveSuppliersToCallApi = data => instance.post('Call?action=loadSupplierToCall', data);
 
