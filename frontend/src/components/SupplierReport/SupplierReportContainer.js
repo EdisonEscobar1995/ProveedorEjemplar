@@ -208,7 +208,10 @@ class SupplierReportContainer extends Component {
                   </Col>
                   <div style={{ display: 'none' }} id={`data-canvas-dimension_${index}`}>
                     <Title className="title">
-                      {`Dimensión ${dimension.dimension} (${dimension.scorePercentTotal.toFixed(2)}%)`}
+                      {`Dimensión ${dimension.dimension} (${(dimension.scorePercentTotal.toFixed(2)
+                            && dimension.scorePercentTotal.toFixed(2) > 0) ?
+                        dimension.scorePercentTotal.toFixed(2) :
+                        dimension.scoreTotal.toFixed(2)}%)`}
                     </Title>
                   </div>
                 </Row>
