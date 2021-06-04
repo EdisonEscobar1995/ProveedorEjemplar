@@ -138,14 +138,21 @@ class SupplierReportContainer extends Component {
                           <td className="name">{dimension.dimension}</td>
                           <td>
                             <div className="percent">
-                              {/* 
-                                <div style={{ 
-                                  width: `${
+                              <div style={{
+                                width: `${
                                   dimension.scoreTotal <= 0 ? 0.2 : dimension.scoreTotal.toFixed(2)
-                                  }%`
-                                }} /> 
+                                }%`,
+                              }}
+                              />
+                              {/*
+                              TODO: Se debe descomentar para cuando se tenga
+                              los porcentajes configurados
+                              <div
+                                style={{ width: 
+                                `${dimension.scorePercentTotal <= 0 ? 0.2 :
+                                  dimension.scorePercentTotal.toFixed(2)}%` }}
+                              />
                               */}
-                              <div style={{ width: `${dimension.scorePercentTotal <= 0 ? 0.2 : dimension.scorePercentTotal.toFixed(2)}%` }} />
                             </div>
                           </td>
                         </TrTable>

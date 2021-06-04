@@ -201,6 +201,10 @@ function getAllBenefitsByRolOld() {
 	}
 }
 
+function getNameUserInSession() {
+    return session.getEffectiveUserName();
+}
+
 function getUserInSession() {
 	var vwUserByName:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwUsersByName");
 	var name:NotesName = session.createName(session.getEffectiveUserName());
@@ -439,6 +443,68 @@ function getSuppliersInCall() {
 	}
 }
 
+function getParticipantsByYear() {
+	var error = "";
+	var errorSend = "";
+	var year = param.get("year") ? param.get("year") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var vwUserByName:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwUsersByName");
+		var ndUserCfg:NotesDocument;
+		var ndRol:NotesDocument;
+		var ndAux:NotesDocument;
+		var vec:NotesViewEntryCollection;
+		var ve:NotesViewEntry;
+		var veAux:NotesViewEntry;
+		var objCompanies = {};
+		var data = {};
+		
+		var listYears = vectorToArray(getFieldAll(0, "vwCallsByYear"));
+        if (year == "") {
+            year = listYears[0];
+        }
+        
+		var resSupplier = getSupplierInSession(null);
+		if (resSupplier.errorSend != "") {
+			errorSend = resSupplier.errorSend;
+			return;
+		}
+		var supplier = resSupplier.supplier;
+        if (null == supplier) {
+        	if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR") || getIsRol("EVALUATOR")) {
+        		response = getSummaryWithSurvey(year);
+            } else {
+            	errorSend = "ROL_INVALID";
+            }
+        } else {
+            var filter:java.util.Vector = new java.util.Vector(2);
+            filter.add(0, supplier.id);
+            filter.add(1, getIdCallByYear(year));
+            var callsBySupplier = getAllBy(filter, "vwSuppliersByCallInIdSupplierAndIdCall", "SupplierByCallDTO");
+            response = getInformationFromSuppliers(listYears, callsBySupplier);
+        }
+        		
+	}catch(e){
+		error = e.message;
+		println("Error en getParticipantsByYear: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener suppliers by year: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
 function getFormula(filtros) {
 	var campo, operador, operadorAux, valor, fechaInicio, fechaFin, valorAux;
 	var formula = "";
@@ -556,4 +622,37 @@ function getFilters(vista, keyField){
 	datos = @Trim(@Unique(datos)).sort();
 	
 	return datos;
+}
+
+function prueba() {
+	var error = "";
+	var response;
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var obj1 = {id: "", name: ""};
+		var obj2 = {};
+		var idFieldNames = {"Category":'categoria', "Country":'', "Department":'', "City":'', "Supply":'', "SubCategory":'',
+		        "CompanyType":'', "SocietyType":'', "Sector":''};
+		for (var prop in idFieldNames) {
+			println("prop == ", prop, " --- value == ", idFieldNames[prop]);
+		}
+		response = isObjectEmpty(obj2);
+		
+		
+	}catch(e){
+		error = e.message;
+		println("Error en getParticipantsByYear: " + e.message);
+	}finally {
+		if (error != ""){
+			error = "Error al obtener suppliers by year: " + error
+		}
+		var respuesta = {
+			data: response,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
 }

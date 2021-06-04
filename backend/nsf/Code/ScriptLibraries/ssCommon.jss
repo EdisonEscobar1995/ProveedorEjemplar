@@ -37,6 +37,16 @@ function footerResponse(writer){
 	
 }
 
+function isObjectEmpty(obj) {
+	var response = true;
+	for(var prop in obj) {
+    	if(obj.hasOwnProperty(prop)) {
+    		return false;
+    	}
+  	}
+	return response;
+}
+
 function getWebDbName(){
 	return database.getFilePath().replace("\\","/")
 }
@@ -516,19 +526,41 @@ function getStatesByStageCall(stage) {
  * Metodo de la clase Master.
  * 
  */
-function getFieldsMaster(nd) {
+function getFieldsMaster(nd, keyAdd) {
 	var masterDTO = {};
 	try {
 		masterDTO = {
 			id: nd.getItemValueString("id"),
 			name: nd.getItemValueString("name")
 		}
+		
+		switch (keyAdd){
+			case "Category":
+				masterDTO.idSupply = nd.getItemValueString("idSupply");
+				masterDTO.subCategories = [];
+			break;
+			case "City":
+				masterDTO.idDepartment = nd.getItemValueString("idDepartment");
+				break;
+			case "Department":
+				masterDTO.idCountry = nd.getItemValueString("idCountry");
+				break;
+			case "SubCategory":
+				masterDTO.idCategory = nd.getItemValueString("idCategory");
+				break;
+			case "Supply":
+				masterDTO.idCountry = nd.getItemValueString("idCountry");
+				masterDTO.negotiators = [];
+				break;
+		}
+		
 	} catch(e){
 		println("Error en getFieldsMaster: " + e.message);
 		throw new HandlerGenericException(e.message);
 	}
 	return masterDTO;
 }
+
 /**
  * Fin de la clase Master.
  * 
@@ -560,11 +592,143 @@ function getFieldsSupply(ndSupply) {
  */
 
 
+/**
+ * Metodo de la clase Attachment.
+ * 
+ */
+function getFieldsAttachment(ndAttachment) {
+	var attachmentDTO = {};
+	try {
+		attachmentDTO = {
+			id: ndAttachment.getItemValueString("id"),
+			name: getAttachmentUrl(ndAttachment),
+			url: getFileName(ndAttachment)
+	    }
+	} catch(e){
+		println("Error en getFieldsAttachment: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return attachmentDTO;
+}
+
+function getDocuments(idsAttachments) {
+    var attachments = [];
+    if (idsAttachments.length > 0) {
+    	for (var i = 0; i < idsAttachments.length; i++){
+        	attachment = get(idsAttachments[i], "AttachmentDTO");
+            if (null != attachment && attachment.id) {
+            	attachments.push(attachment);
+            }
+    	}	
+    }
+    
+    return attachments;
+}
+/**
+ * Fin de la clase Attachment.
+ * 
+ */
+
+
+/**
+ * Metodo de la clase Customer and Contact.
+ * 
+ */
+function getFieldsCustomer(ndCustomer) {
+	var customerDTO = {};
+	try {
+		customerDTO = {
+			idSupplier: ndCustomer.getItemValueString("idSupplier"),
+			percentageOfParticipationInSales: ndCustomer.getItemValueInteger("percentageOfParticipationInSales")
+	    }
+	} catch(e){
+		println("Error en getFieldsCustomer: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return customerDTO;
+}
+
+function getFieldsContact(ndContact) {
+	var contactDTO = {};
+	try {
+		contactDTO = {
+			idSupplier: ndCustomer.getItemValueString("idSupplier"),
+		    email: ndCustomer.getItemValueString("email"),
+		    phone: ndCustomer.getItemValueString("phone")
+	    }
+	} catch(e){
+		println("Error en getFieldsCustomer: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return customerDTO;
+}
+
+function getCustomersBySupplier(idSupplier) {
+	var customers = [];
+    try {
+        var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwCustomersBySupplier");
+        var documents:NotesDocumentCollection = currentView.getAllDocumentsByKey(idSupplier, true);
+    	if (documents.getCount() > 0) {
+    		var ndAux:NotesDocument;
+    		var document:NotesDocument = documents.getFirstDocument();
+    		var customer = {};
+    		while (document != null) {
+    			isObjectEmpty(obj2);
+    			customer = getFieldsCustomer(document);
+    			if (!isObjectEmpty(customer)) {
+    				customers.push(customer);	
+    			}
+    			    			
+    			ndAux = documents.getNextDocument(document);
+    			document.recycle();
+    			document = ndAux;
+    			ndAux.recycle();
+    			customer = {};
+    		}
+    	}
+    } catch (e) {
+    	println("Error en getCustomersBySupplier: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+    return customers;
+}
+
+function getContactsBySupplier(idSupplier) {
+    var contacts = [];
+    try {
+       	var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwContactsBySupplier");
+        var documents:NotesDocumentCollection = currentView.getAllDocumentsByKey(idSupplier, true);
+    	var ndAux:NotesDocument;
+	    if (documents.getCount() > 0) {
+			var document:NotesDocument = documents.getFirstDocument();
+			while (document != null) {
+				
+				contacts.push(getFieldsContact(document));
+								    			
+				ndAux = documents.getNextDocument(document);
+				document.recycle();
+				document = ndAux;
+				ndAux.recycle();
+			}
+		}
+    } catch (e) {
+    	println("Error en getContactsBySupplier: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+    return contacts;
+}
+/**
+ * Fin de la clase Customer and Contact.
+ * 
+ */
+
+
 
 /**
  * Metodo de la clase Supplier.
  * 
  */
+
 function getFieldsSupplier(ndSupplier) {
 	var supplierDTO = {};
 	try {
@@ -639,6 +803,140 @@ function getFieldsSupplier(ndSupplier) {
 	}
 	return supplierDTO;
 }
+
+function getSupplierInSession(idSupplier) {
+	try {
+		var response = {
+			supplier: null,
+			errorSend: ""
+		};
+        response.supplier = getSupplierByFullName(null);
+
+        if (null == response.supplier) {
+            if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR") || getIsRol("EVALUATOR")) {
+                response = getSupplierByFullName(idSupplier);
+            } else {
+            	response.errorSend = "ROL_INVALID";
+            }
+        }
+
+        if (null != response.supplier) {
+            response.supplier["document"] = getDocuments(response.supplier.idDocuments);
+            response.supplier["attachedFinancialReport"] = getDocuments(response.supplier.idAttachedFinancialReport);
+            response.supplier["companyLogo"] = getDocuments(response.supplier.idCompanyLogo);
+            response.supplier["principalCustomer"] = getCustomersBySupplier(response.supplier.id);
+            response.supplier["contactNutresaGroup"] = getContactsBySupplier(response.supplier.id);
+        }
+
+        return response;
+	} catch(e){
+		println("Error en getSupplierInSession: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+function getSupplierByFullName(idSupplier) {
+    var supplier = null;
+    var fullName = "";
+    try {
+        if (null != idSupplier) {
+            fullName = get(idSupplier, "SupplierDTO").fullName;
+        } else {
+            fullName = getNameUserInSession();
+        }
+
+        var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByFullName");
+        var document:NotesDocument = vista.getDocumentByKey(fullName, true);
+        if (null != document) {
+            supplier = getFieldsSupplier(document);
+        }
+    } catch(e){
+		println("Error en getSupplierByFullName: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+
+    return supplier;
+}
+
+function getInformationFromSuppliers(listYears, callsFound) {
+	try {
+		var response = {
+			masters:{
+				"Category": [], "Country": [],
+				"Department": [], "City": [],
+				"Supply": [], "SubCategory": [],
+	        	"CompanyType": [], "SocietyType": [], "Sector": []
+	        },
+			states:[],
+			suppliers:[],
+			suppliersByCall:[],
+			years:[]
+		};
+		
+		var idFieldNames = {
+			"Category": 'idCategory', "Country": 'idCountry',
+			"Department": 'idDepartment', "City": 'idCity',
+			"Supply": 'idSupply', "SubCategory": 'idSubCategory', "CompanyType": 'idCompanyType',
+			"SocietyType": 'idSocietyType', "Sector": 'idSector'
+		};
+		var numCallsFound = callsFound.length;
+		var obj = {};
+		for (var i=0; i<numCallsFound; i++) {
+			if (callsFound[i].idSupplier != "") {
+				ndSupplier = vwSuppliers.getDocumentByKey(callsFound[i].idSupplier, true);
+				if (ndSupplier != null) {
+					response['suppliers'].push(getFieldsSupplier(ndSupplier));
+					if (callsFound[i].idState != "" && !obj.hasOwnProperty(callsFound[i].idState)) {
+						obj[callsFound[i].idState] = '';
+						response['states'].push(get(callsFound[i].idState,"StateDTO"));
+					}
+					
+					for (var prop in idFieldNames) {
+						if (ndSupplier.getItemValueString(idFieldNames[prop]) != "" && !obj.hasOwnProperty(ndSupplier.getItemValueString(idFieldNames[prop]))) {
+							obj[ndSupplier.getItemValueString(idFieldNames[prop])] = '';
+							response['masters'][prop].push(get(idFieldNames[prop], null, prop));
+						}	
+					}
+				}
+			}
+		}
+		
+		response['masters'].CompanySize = getAll("vwCompanySizes");
+		response.suppliersByCall = callsFound;
+		response.years = listYears;
+		
+	} catch (e) {
+		println("Error en getInformationFromSuppliers: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	
+	return response;
+}
+
+function getInformationByYearInView(year, viewName) {
+	var response = null;
+	try {
+		var listYears = vectorToArray(getFieldAll(0, "vwCallsByYear"));
+        if (null == year || year == "") {
+            year = listYears[0];
+        }
+		
+		var callsByYear = getAllBy(getIdCallByYear(year), viewName, "SupplierDTO");
+		response = getInformationFromSuppliers(listYears, callsByYear);
+		
+	} catch (e) {
+		println("Error en getInformationByYearInView: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+
+	return response;
+}
+
+function getSummaryWithSurvey(year) {
+    var viewName = "vwSuppliersByCallIdCall";
+    return getInformationByYearInView(year, viewName);
+}
+
 /**
  * Fin de la clase Supplier.
  * 
@@ -749,6 +1047,35 @@ function calculatePercentageInAxes(summaryProgress) {
  * 
  */
 
+function getAll(currentView) {
+	var response = [];
+    try {
+	  	var vista = sessionAsSigner.getCurrentDatabase().getView(currentView);
+      	var vec:NotesViewEntryCollection = currentView.getAllEntries();
+	  	var ve:NotesViewEntry;
+	  	var veAux:NotesViewEntry;
+	  	var nd:NotesDocument;
+		if (vec.getCount() > 0) {
+			var fields = {};
+			ve = vec.getFirstEntry();
+			while (ve != null) {
+				nd = ve.getDocument();
+				response.push(getFieldsMaster(nd));
+				
+				veAux = vec.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+				veAux.recycle();
+			}
+		}
+
+    } catch (e) {
+    	println("Error en getAll = " + e.message);
+		throw new HandlerGenericException();
+    }
+
+    return response;
+}
 
 function getFieldAll(column, defaultView) {
 	var list:java.util.vector;
@@ -875,13 +1202,16 @@ function getAllSuppliersInCall(key) {
 	return response;
 }
 
-function get(id, classDto) {
+function get(id, classDto, keyAdd) {
 	var fields = {};
 	try {
 		var vwIds = sessionAsSigner.getCurrentDatabase().getView("vwProgIds");
 		var nd:NotesDocument = vwIds.getDocumentByKey(id);
 		if (nd != null) {
 			switch (classDto){
+				case "AttachmentDTO":
+					fields = getFieldsAttachment(nd);
+				break;
 				case "CallDTO":
 					fields = getFieldsCall(nd);
 					break;
@@ -891,8 +1221,11 @@ function get(id, classDto) {
 				case "SupplierDTO":
 					fields = getFieldsSupplier(nd);
 					break;
+				case "StateDTO":
+					fields = getFieldState(nd);
+					break;
 				default:
-					fields = getFieldsMaster(nd);
+					fields = getFieldsMaster(nd, keyAdd);
 					break;
 			}
 		}
