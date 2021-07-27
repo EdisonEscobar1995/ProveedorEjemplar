@@ -21,6 +21,12 @@
 			case "getSuppliersInCall":
 				getSuppliersInCall();
 			break;
+			case "getParticipantsByYear":
+				getParticipantsByYear();
+			break;
+			case "prueba":
+				prueba();
+			break;
 		}
 }]]></xp:this.afterRenderResponse>	
 

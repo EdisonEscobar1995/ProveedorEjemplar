@@ -470,9 +470,10 @@ function getParticipantsByYear() {
 			return;
 		}
 		var supplier = resSupplier.supplier;
+		// println("supplier = ", supplier)
         if (null == supplier) {
         	if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR") || getIsRol("EVALUATOR")) {
-        		response = getSummaryWithSurvey(year);
+        		data = getSummaryWithSurvey(year);
             } else {
             	errorSend = "ROL_INVALID";
             }
@@ -481,7 +482,7 @@ function getParticipantsByYear() {
             filter.add(0, supplier.id);
             filter.add(1, getIdCallByYear(year));
             var callsBySupplier = getAllBy(filter, "vwSuppliersByCallInIdSupplierAndIdCall", "SupplierByCallDTO");
-            response = getInformationFromSuppliers(listYears, callsBySupplier);
+            data = getInformationFromSuppliers(listYears, callsBySupplier);
         }
         		
 	}catch(e){

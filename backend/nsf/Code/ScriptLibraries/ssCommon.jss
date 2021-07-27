@@ -682,7 +682,6 @@ function getCustomersBySupplier(idSupplier) {
     			ndAux = documents.getNextDocument(document);
     			document.recycle();
     			document = ndAux;
-    			ndAux.recycle();
     			customer = {};
     		}
     	}
@@ -708,7 +707,6 @@ function getContactsBySupplier(idSupplier) {
 				ndAux = documents.getNextDocument(document);
 				document.recycle();
 				document = ndAux;
-				ndAux.recycle();
 			}
 		}
     } catch (e) {
@@ -805,21 +803,23 @@ function getFieldsSupplier(ndSupplier) {
 }
 
 function getSupplierInSession(idSupplier) {
+	var response = {
+		supplier: null,
+		errorSend: ""
+	};
 	try {
-		var response = {
-			supplier: null,
-			errorSend: ""
-		};
         response.supplier = getSupplierByFullName(null);
 
         if (null == response.supplier) {
             if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR") || getIsRol("EVALUATOR")) {
-                response = getSupplierByFullName(idSupplier);
+                response.supplier = getSupplierByFullName(idSupplier);
             } else {
             	response.errorSend = "ROL_INVALID";
             }
         }
-
+		
+        // println("response = ", response)
+        
         if (null != response.supplier) {
             response.supplier["document"] = getDocuments(response.supplier.idDocuments);
             response.supplier["attachedFinancialReport"] = getDocuments(response.supplier.idAttachedFinancialReport);
@@ -881,8 +881,10 @@ function getInformationFromSuppliers(listYears, callsFound) {
 		};
 		var numCallsFound = callsFound.length;
 		var obj = {};
+		println("numCallsFound == ", numCallsFound)
+		var vwSuppliers = sessionAsSigner.getCurrentDatabase().getView("vwSuppliers");
 		for (var i=0; i<numCallsFound; i++) {
-			if (callsFound[i].idSupplier != "") {
+			if (callsFound[i].idSupplier && callsFound[i].idSupplier != "") {
 				ndSupplier = vwSuppliers.getDocumentByKey(callsFound[i].idSupplier, true);
 				if (ndSupplier != null) {
 					response['suppliers'].push(getFieldsSupplier(ndSupplier));
@@ -894,7 +896,7 @@ function getInformationFromSuppliers(listYears, callsFound) {
 					for (var prop in idFieldNames) {
 						if (ndSupplier.getItemValueString(idFieldNames[prop]) != "" && !obj.hasOwnProperty(ndSupplier.getItemValueString(idFieldNames[prop]))) {
 							obj[ndSupplier.getItemValueString(idFieldNames[prop])] = '';
-							response['masters'][prop].push(get(idFieldNames[prop], null, prop));
+							response['masters'][prop].push(get(ndSupplier.getItemValueString(idFieldNames[prop]), "", prop));
 						}	
 					}
 				}
@@ -921,7 +923,7 @@ function getInformationByYearInView(year, viewName) {
             year = listYears[0];
         }
 		
-		var callsByYear = getAllBy(getIdCallByYear(year), viewName, "SupplierDTO");
+		var callsByYear = getAllBy(getIdCallByYear(year), viewName, "SupplierByCallDTO");
 		response = getInformationFromSuppliers(listYears, callsByYear);
 		
 	} catch (e) {
@@ -1051,7 +1053,7 @@ function getAll(currentView) {
 	var response = [];
     try {
 	  	var vista = sessionAsSigner.getCurrentDatabase().getView(currentView);
-      	var vec:NotesViewEntryCollection = currentView.getAllEntries();
+      	var vec:NotesViewEntryCollection = vista.getAllEntries();
 	  	var ve:NotesViewEntry;
 	  	var veAux:NotesViewEntry;
 	  	var nd:NotesDocument;
@@ -1065,7 +1067,6 @@ function getAll(currentView) {
 				veAux = vec.getNextEntry(ve); 
 				ve.recycle();
 				ve = veAux;
-				veAux.recycle();
 			}
 		}
 
