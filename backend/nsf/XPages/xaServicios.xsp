@@ -24,6 +24,18 @@
 			case "getParticipantsByYear":
 				getParticipantsByYear();
 			break;
+			case "getModifiedSuppliers":
+				getModifiedSuppliers();
+			break;
+			case "getSurveys":
+				getSurveys();
+			break;
+			case "getSuppliersForSelection":
+				getSuppliersForSelection();
+			break;
+			case "getParticipantsToManagerTeam":
+				getParticipantsToManagerTeam();
+			break;
 			case "prueba":
 				prueba();
 			break;

@@ -1,4 +1,5 @@
 import instance from './instance';
+import instanceService from './instanceService';
 
 function getDataSuppliertApi(id = '') {
   return instance.get(`Supplier?action=loadInformation&idSupplier=${id !== null ? id : ''}`);
@@ -39,7 +40,8 @@ function getSuppliersByKeyApi(text) {
 }
 
 function getModifiedSuppliersApi(year) {
-  return instance.get(`Supplier?action=getModifiedSuppliers&year=${year || ''}`);
+  // return instance.get(`Supplier?action=getModifiedSuppliers&year=${year || ''}`);
+  return instanceService.get(`xaServicios.xsp?Open&action=getModifiedSuppliers&year=${year || ''}`);
 }
 
 function unlockSupplierApi(supplierByCall) {
@@ -47,7 +49,8 @@ function unlockSupplierApi(supplierByCall) {
 }
 
 function getSurveysApi(year) {
-  return instance.get(`Supplier?action=getSurveys&year=${year || ''}`);
+  // return instance.get(`Supplier?action=getSurveys&year=${year || ''}`);
+  return instanceService.get(`xaServicios.xsp?Open&action=getSurveys&year=${year || ''}`);
 }
 
 function getPendingsApi(year) {

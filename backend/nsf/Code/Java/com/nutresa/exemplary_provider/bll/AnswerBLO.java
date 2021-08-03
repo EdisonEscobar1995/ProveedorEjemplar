@@ -1,16 +1,13 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
-import com.nutresa.exemplary_provider.dtl.CriterionPercentDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
@@ -313,6 +310,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         short sumScoreAnsweredBySupplier = 0;
         short sumScoreAnsweredByEvaluator = 0;
         List<SummarySurvey> summariesSurvey = new ArrayList<SummarySurvey>();
+        
         for (AnswerDTO answer : answers) {
             QuestionBLO questionBLO = new QuestionBLO();
             QuestionDTO question = questionBLO.get(answer.getIdQuestion());
@@ -376,22 +374,22 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
             summariesSurvey.add(summarySurvey);
         }
-
+        
         counterQuestions = (short) (counterQuestions * SCORE_OF_NA);
 
         recordOfReport.setExpectedScoreSupplier(sumExpectedScoreSupplier);
         recordOfReport.setExpectedScoreEvaluator(sumExpectedScoreEvaluator);
-
+        
         if (counterQuestions == sumScoreAnsweredBySupplierNA) {
             sumScoreAnsweredBySupplier = SCORE_OF_NA;
             recordOfReport.setExpectedScoreSupplier(SCORE_OF_NA);
         }
         recordOfReport.setTotalScoreOfSupplier(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
-
         if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
             sumScoreAnsweredByEvaluator = SCORE_OF_NA;
             recordOfReport.setExpectedScoreEvaluator(SCORE_OF_NA);
         }
+        
         recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
 
         recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);

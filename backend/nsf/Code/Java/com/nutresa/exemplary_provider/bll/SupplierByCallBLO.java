@@ -532,7 +532,7 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
         CallBLO callBLO = new CallBLO();
         List<Object> listYears = getFieldAll(0, "vwCallsByYear");
         String year = (String) listYears.get(0);
-
+        
         List<SupplierByCallDTO> evaluated = supplierByCallDAO.getByStateInCall(stateBLO.getStateByShortName(
                 stageState.toString()).getId(), callBLO.getIdCallByYear(year));
 

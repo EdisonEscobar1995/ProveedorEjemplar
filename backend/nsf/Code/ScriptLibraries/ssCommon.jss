@@ -5,16 +5,16 @@ $.each = function(obj, callback){ /*Método estático*/
 	if (null === obj){
 		return false;
 	}
-	for (var x in obj) {	    
+	for (var x in obj) {
 		if (obj.hasOwnProperty(x)) {
 			callback.call(obj, x, obj[x]);
 		}
-	}   
+	}
 }
    
 function headerResponse(contentType, oHeaders){
 	// The external context gives access to the servlet environment
-	var exCon = facesContext.getExternalContext(); 
+	var exCon = facesContext.getExternalContext();
 
 	// The writer is the closest you get to a PRINT statement
 	// If you need to output binary data, use the stream instead
@@ -25,8 +25,8 @@ function headerResponse(contentType, oHeaders){
 
 	response.setContentType(contentType);
 	$.each(oHeaders, function(key, value){
-		response.setHeader(key, value);	 
-	})	 
+		response.setHeader(key, value);
+	})
 	return writer
 }
 	 
@@ -52,7 +52,7 @@ function getWebDbName(){
 }
 
 function getNombreDia(dia){
-var nombreDia = ""; 
+	var nombreDia = ""; 
 	switch (dia){
 		case 1:
 			nombreDia = "Domingo"
@@ -382,21 +382,1217 @@ function buildPathResource() {
     return host + "/" + path;
 }
 
+function calculateTotalScore(totalScore, totalExpectedScore) {
+    var scoreCalculated = 0.0;
+    if (totalScore < 0) {
+        scoreCalculated = -1.0;
+    } else {
+        if (totalExpectedScore > 0) {
+            scoreCalculated = (totalScore / totalExpectedScore) * 100;
+        }
+    }
+
+    return scoreCalculated;
+}
+
+function getIsRol(shortNameRol) {
+	var isRol = false;
+	var ndUserCfg:NotesDocument;
+	var vwUserByName:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwUsersByName");
+	var vwRols:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwRols");
+	var usuario = getUserInSession();
+	
+	ndUserCfg = vwUserByName.getDocumentByKey(usuario, true);
+	
+	if (ndUserCfg) {
+		ndRol = vwRols.getDocumentByKey(ndUserCfg.getItemValueString("idRols"), true)
+		if (ndRol && shortNameRol == ndRol.getItemValueString("shortName")) {
+			isRol = true;
+		}
+	}
+	
+	return isRol;
+}
+
+//////// 
+
+var SectionRule = function() {
+	var rule = {
+		show: false,
+		readOnly: true
+	}
+	var specifictRule = {
+		supplier: rule,
+		evaluator: rule,
+		liberator: rule
+	};
+	
+	this.rules = specifictRule;
+	
+	this.getObject = function() {
+		return this.rules;
+	}
+	this.buildRules = function(show, readOnly) {
+		return {
+			show: show,
+			readOnly: readOnly
+		}
+	}
+	this.setRulesToSection = function(section, rule) {
+		this.rules[section] = rule; 
+	}
+}
+
+var Service = function() {
+	this.name = "";
+	this.comment = "";
+	this.total = 0;
+	this.items = [];
+	this.getObject = function() {
+		return {
+	      name: this.name,
+	      comment: this.comment,
+	      total: this.total,
+	      items: this.items
+		}
+	}
+}
+
+var Item = function() {
+	this.name = "";
+	this.answer = 0;
+	this.getObject = function() {
+    	return {
+			name: this.name,
+	      	answer: this.answer
+    	}
+	}
+}
+
+var SummaryManagerSurvey = function() {
+    this.whoEvaluate = "";
+    this.score = 0;
+    this.comment = "";
+    this.getObject = function() {
+    	return {
+    		whoEvaluate: this.whoEvaluate,
+    		score: this.score
+    	}
+	}
+}
+
+var SummarySurvey = function() {
+  this.dimension = "";
+  this.criterion = "";
+  this.question = "";
+  this.questionType = "";
+  this.answerSupplier = "";
+  this.answerEvaluator = "";
+  this.scoreOfSupplier = 0;
+  this.scoreOfEvaluator = 0;
+  this.expectedScoreSupplier = 0;
+  this.expectedScoreEvaluator = 0;
+  this.commentSupplier = "";
+  this.commentEvaluator = "";
+  this.percentDimension = 0;
+  this.percentCriterion = 0;
+  this.attachmentCount = 0;
+  
+  //Get object
+  this.getObject = function() {
+    return {
+      dimension: this.dimension,
+      criterion: this.criterion,
+      question: this.question,
+      questionType: this.questionType,
+      answerSupplier: this.answerSupplier,
+      answerEvaluator: this.answerEvaluator,
+      scoreOfSupplier: this.scoreOfSupplier,
+      scoreOfEvaluator: this.scoreOfEvaluator,
+      expectedScoreSupplier: this.expectedScoreSupplier,
+      expectedScoreEvaluator: this.expectedScoreEvaluator,
+      commentSupplier: this.commentSupplier,
+      commentEvaluator: this.commentEvaluator,
+      percentDimension: this.percentDimension,
+      percentCriterion: this.percentCriterion,
+      attachmentCount: this.attachmentCount
+    }
+  }
+
+  // Getter and Setter
+  this.getDimension = function() {
+    return this.dimension;
+  }
+
+  this.setDimension = function(dimenssion) {
+    this.dimension = dimenssion;
+  }
+
+  this.getCriterion = function() {
+    return this.criterion;
+  }
+
+  this.setCriterion = function(criterion) {
+    this.criterion = criterion;
+  }
+
+  this.getQuestion = function() {
+    return this.question;
+  }
+
+  this.setQuestion = function(question) {
+    this.question = question;
+  }
+
+  this.getQuestionType = function() {
+    return this.questionType;
+  }
+
+  this.setQuestionType = function(questionType) {
+    this.questionType = questionType;
+  }
+
+  this.getAnswerSupplier = function() {
+    return this.answerSupplier;
+  }
+
+  this.setAnswerSupplier = function(answer) {
+    this.answerSupplier = answer;
+  }
+
+  this.getScoreOfSupplier = function() {
+    return this.scoreOfSupplier;
+  }
+
+  this.setScoreOfSupplier = function(scoreOfSupplier) {
+    this.scoreOfSupplier = scoreOfSupplier;
+  }
+
+  this.getExpectedScoreSupplier = function() {
+    return this.expectedScoreSupplier;
+  }
+
+  this.setExpectedScoreSupplier = function(expectedScore) {
+    this.expectedScoreSupplier = expectedScore;
+  }
+
+  this.getExpectedScoreEvaluator = function() {
+    return this.expectedScoreEvaluator;
+  }
+
+  this.setExpectedScoreEvaluator = function(expectedScore) {
+    this.expectedScoreEvaluator = expectedScore;
+  }
+
+  this.setCommentSupplier = function(commentSupplier) {
+    this.commentSupplier = commentSupplier;
+  }
+
+  this.getCommentSupplier = function() {
+    return this.commentSupplier;
+  }
+
+  this.setAnswerEvaluator = function(answerEvaluator) {
+    this.answerEvaluator = answerEvaluator;
+  }
+
+  this.getAnswerEvaluator = function() {
+    return this.answerEvaluator;
+  }
+
+  this.setScoreOfEvaluator = function(scoreOfEvaluator) {
+    this.scoreOfEvaluator = scoreOfEvaluator;
+  }
+
+  this.getScoreOfEvaluator = function() {
+    return this.scoreOfEvaluator;
+  }
+
+  this.setCommentEvaluator = function(commentEvaluator) {
+    this.commentEvaluator = commentEvaluator;
+  }
+
+  this.getCommentEvaluator = function() {
+    return this.commentEvaluator;
+  }
+
+  this.getPercentDimension = function() {
+    return this.percentDimension;
+  }
+
+  this.setPercentDimension = function(percentDimension) {
+    this.percentDimension = percentDimension;
+  }
+
+  this.getPercentCriterion = function() {
+    return this.percentCriterion;
+  }
+
+  this.setPercentCriterion = function(percentCriterion) {
+    this.percentCriterion = percentCriterion;
+  }
+
+  this.setAttachmentCount = function(attachmentCount) {
+    this.attachmentCount = attachmentCount;
+  }
+
+  this.getAttachmentCount = function() {
+    return this.attachmentCount;
+  }
+}
+
+////
+
+
+
 /**
- * Meotodos de la clase Call (Convocatoria).
+ * Metodo de la clase Option (Opcion).
  * 
  */
 
-function isCaducedDate(dateToCompare, today) {
-	var response = false;
-	var actualDate:NotesDateTime = session.createDateTime(today);
-	var dateCompare:NotesDateTime = dateToCompare;
-	
-	if (actualDate.timeDifference(dateCompare) > 0) {
-		response = true;
+function getFieldsOption(ndOption) {
+	var optionDTO = {};
+	try {
+		optionDTO = {                                                                                         
+	        id: ndOption.getItemValueString("id"),
+	        wording: ndOption.getItemValueString("wording"),
+	        score: ndOption.getItemValueDouble("score"),
+	        idQuestion: ndOption.getItemValueString("idQuestion"),
+	        requireAttachment: false
+	    }
+	} catch(e){
+		println("Error en getFieldsOption: " + e.message);
+		throw new HandlerGenericException(e.message);
 	}
-	return response;
+	return optionDTO;
 }
+
+function generateDependenceInQuestion(option) {
+    var generateDependence = false;
+    try {
+        var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestionWithDependence");
+        var document:NotesDocument = vista.getDocumentByKey(option.id, true);
+        if (null != document) {
+            generateDependence = true;
+        }
+    } catch (e) {
+    	println("Error en generateDependenceInQuestion: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+
+    return generateDependence;
+}
+
+function getMaxScoreInQuestion(idQuestion, option) {
+    var score = 0;
+    var optionWithMaxValue = null;
+    
+    var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwOptionsByQuestion");
+    var document:NotesDocument = currentView.getDocumentByKey(idQuestion, true);
+    if (null != document) {
+    	optionWithMaxValue =  getFieldsOption(document);
+    }
+
+    if (generateDependenceInQuestion(option)) {
+        score = option.score;
+    } else {
+        if (null != optionWithMaxValue) {
+            score = optionWithMaxValue.score;
+        }
+    }
+
+    return score;
+}
+
+/**
+ * Fin de la clase Option (Opcion).
+ * 
+ */
+
+
+/**
+ * Metodo de la clase EvaluationScale (Escala Evaluacion).
+ * 
+ */
+
+function getFieldsEvaluationScale(ndEval) {
+	var evaluationScaleDTO = {};
+	try {
+		evaluationScaleDTO = {                                                                                         
+	        id: ndEval.getItemValueString("id"),
+	        name: ndEval.getItemValueString("name"),
+	        applyTo: ndEval.getItemValueString("applyTo"),
+	    	score: ndEval.getItemValueDouble("score"),
+	    	helpText: ndEval.getItemValueString("helpText")
+	    }
+	} catch(e){
+		println("Error en getFieldsEvaluationScale: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return evaluationScaleDTO;
+}
+
+/**
+ * Fin de la clase EvaluationScale (Escala Evaluacion).
+ * 
+ */
+
+/**
+ * Metodo de la clase Dimension (Dimension).
+ * 
+ */
+
+function getFieldsDimension(ndDimension) {
+	var dimensionDTO = {};
+	try {
+		/**
+		 * TO-DO:
+		 * 		Realizar la consulta para el arreglo de criterions List<CriterionDTO> criterions;
+		 */
+		dimensionDTO = {                                                                                         
+	        id: ndDimension.getItemValueString("id"),
+	        name: ndDimension.getItemValueString("name"),
+	        criterions: []
+	    }
+	} catch(e){
+		println("Error en getFieldsDimension: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return dimensionDTO;
+}
+
+/**
+ * Fin de la clase Dimension (Dimension).
+ * 
+ */
+
+
+/**
+ * Metodo de la clase Criterion (Criterio).
+ * 
+ */
+
+function getFieldsCriterion(ndCriterion) {
+	var criterionDTO = {};
+	try {
+		criterionDTO = {                                                                                         
+	        id: ndCriterion.getItemValueString("id"),
+	        name: ndCriterion.getItemValueString("name"),
+	        idDimension: ndCriterion.getItemValueDouble("idDimension")
+	    }
+	} catch(e){
+		println("Error en getFieldsCriterion: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return criterionDTO;
+}
+
+/**
+ * Fin de la clase Criterion (Criterio).
+ * 
+ */
+
+
+/**
+ * Metodo de la clase Service (Servicio).
+ * 
+ */
+
+function getFieldsService(ndService) {
+	var serviceDTO = {};
+	try {
+		serviceDTO = {                                                                                         
+	        id: ndService.getItemValueString("id"),
+	        name: ndService.getItemValueString("name"),
+	        helpText: ndService.getItemValueDouble("helpText")
+	    }
+	} catch(e){
+		println("Error en getFieldsService: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return serviceDTO;
+}
+
+/**
+ * Fin de la clase Service (Servicio).
+ * 
+ */
+
+/**
+ * Metodo de la clase Item (Item).
+ * 
+ */
+
+function getFieldsItem(ndItem) {
+	var itemDTO = {};
+	try {
+		itemDTO = {                                                                                         
+	        id: ndItem.getItemValueString("id"),
+	        name: ndItem.getItemValueString("name"),
+	        idService: ndItem.getItemValueDouble("helpText"),
+	        helpText: ndItem.getItemValueDouble("helpText")
+	    }
+	} catch(e){
+		println("Error en getFieldsItem: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return itemDTO;
+}
+
+function getByIdService(parameters) {
+    var response = {
+    	items: [],
+    	errorSend: ""
+    };
+    try {
+    	var idService = parameters.idService? parameters.idService : "";
+	    if (idService != "") {
+	        // response = itemDAO.getByIdService(idService);
+	        var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwItemsByIdService");
+	        var documents:NotesDocumentCollection = vista.getAllDocumentsByKey(idService, true);
+	
+	        if (null != documents && documents.getCount() > 0) {
+	            var ndDocument:NotesDocument = documents.getFirstDocument();
+	            var ndTemp:NotesDocument;
+				while (ndDocument != null){
+					response.items.push(getFieldsItem(ndDocument));
+					
+					ndTemp= documents.getNextDocument(ndDocument);
+					ndDocument.recycle();
+					ndDocument = ndTemp;
+				}
+	        }
+	
+	    } else {
+	    	response.errorSend = "UNEXPECTED_VALUE";
+	    	throw new HandlerGenericException(e.message);
+	    }
+    } catch(e){
+		println("Error en getByIdService: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+
+    return response;
+}
+
+function getItemsByIdItemOrIdService(idItem, idService) {
+    var response = {
+    	items: [],
+    	errorSend: ""
+    }
+    if (null != idItem && idItem.trim() != "") {
+    	response.items.push(get(idItem, "ItemDTO"));
+    } else {
+        var parameterToService = {};
+        parameterToService.idService = idService;
+        var reqItem = getByIdService(parameterToService);
+        if (reqItem.errorSend != "") {
+        	response.errorSend = reqItem.errorSend;
+        	return response;
+        }
+        response.items = reqItem.items;
+    }
+
+    return response;
+}
+
+/**
+ * Fin de la clase Item (Item).
+ * 
+ */
+
+
+/**
+ * Metodo de la clase Question (Pregunta).
+ * 
+ */
+
+function getFieldsQuestion(ndQuestion) {
+	var questionDTO = {};
+	try {
+		/**
+		 * TO-DO:
+		 * 		Realizar la consulta para el arreglo de option List<OptionDTO> options;
+		 * 		Realizar la consulta para el arreglo de answer List<AnswerDTO> answer;
+		 */
+		questionDTO = {
+			id: ndQuestion.getItemValueString("id"),
+		    idDimension: ndQuestion.getItemValueString("idDimension"),
+		    idCriterion: ndQuestion.getItemValueString("idCriterion"),
+		    wording: ndQuestion.getItemValueString("wording"),
+		    type: ndQuestion.getItemValueString("type"),
+		    required: ndQuestion.getItemValueString("required") == "1" ? true : false,
+		    requireAttachment: ndQuestion.getItemValueString("requireAttachment") == "1" ? true : false,
+		    options: [],
+		    helpText: ndQuestion.getItemValueString("helpText"),
+		    dependOfOptionId: ndQuestion.getItemValueString("dependOfOptionId"),
+		    dependOfQuestion: ndQuestion.getItemValueString("dependOfQuestion"),
+		    answer: [],
+		    idCall: ndQuestion.getItemValueString("idCall"),
+		    idSurvey: ndQuestion.getItemValue("idSurvey").size() > 0 ? vectorToArray(ndQuestion.getItemValue("idSurvey")) : []
+	    }
+	} catch(e){
+		println("Error en getFieldsQuestion: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return questionDTO;
+}
+
+function buildCharFTSearch(fields) {
+    var separatorToFTSearch = " AND ";
+    var stringImploded = "";
+    var fieldsToFTSearch = [];
+    try {
+    	for (var key in fields) {
+    		var valueInField = fields[key];
+    		fieldsToFTSearch.push("[" + key + "] = " + valueInField);
+		}
+    	var first = true;
+        for (var i in fieldsToFTSearch) {
+            if (!first) {
+            	stringImploded += separatorToFTSearch;
+            }
+            stringImploded += fieldsToFTSearch[i];
+            first = false;
+        }
+        
+        return stringImploded;
+    }catch(e) {
+    	println("Error en buildCharFTSearch: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+}
+
+/**
+ * Filtra las preguntas segÃºn los campos especificados en
+ * <code>fieldsToFilter</code>
+ * 
+ * @param fieldsToFilter
+ *            Mapa clave valor de los campos por los cuales se filtrarÃ¡n las
+ *            preguntas
+ * @return ColecciÃ³n de preguntas
+ * @throws HandlerGenericException
+ */
+function getThemWithFilter(fieldsToFilter) {
+    var response = [];
+    try {
+        var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestionsByCall");
+        currentView.FTSearch(buildCharFTSearch(fieldsToFilter), 0);
+
+        var entries:NotesViewEntryCollection = currentView.getAllEntries();
+        var ve:NotesViewEntry;
+        var veAux:NotesViewEntry;
+        if (null != entries && entries.getCount() > 0) {
+        	var nd:NotesDocument;
+        	var question = {}; 
+            ve = entries.getFirstEntry();
+            while (ve != null) {
+				nd = ve.getDocument();
+				
+				question = getFieldsQuestion(nd);
+    			if (!isObjectEmpty(question)) {
+    				response.push(question);
+    			}
+				
+				veAux = entries.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+            currentView.clear();
+        }
+        
+        return response;
+    }catch(e) {
+    	println("Error en getThemWithFilter: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+} 
+
+/**
+ * Fin de la clase Question (Pregunta).
+ * 
+ */
+
+
+/**
+ * Metodo de la clase Answer (Respuesta).
+ * 
+ */
+
+function getFieldsAnswer(ndAnswer) {
+	var answerDTO = {};
+	try {
+		/**
+		 * TO-DO:
+		 * 		Realizar la consulta para el arreglo de option List<OptionDTO> options;
+		 * 		Realizar la consulta para el arreglo de answer List<AnswerDTO> answer;
+		 */
+		answerDTO = {
+			id: ndAnswer.getItemValueString("id"),
+		    idSupplierByCall: ndAnswer.getItemValueString("idSupplierByCall"),
+		    idSurvey: ndAnswer.getItemValueString("idSurvey"),
+		    idQuestion: ndAnswer.getItemValueString("idQuestion"),
+		    idOptionSupplier: ndAnswer.getItemValueString("idOptionSupplier"),
+		    responseSupplier: ndAnswer.getItemValueString("responseSupplier"),
+		    commentSupplier: ndAnswer.getItemValueString("commentSupplier"),
+		    dateResponseSupplier: getValueDate(ndAnswer, "dateResponseSupplier", "yyyy/MM/dd"),
+		    idOptionEvaluator: ndAnswer.getItemValueString("idOptionEvaluator"),
+		    responseEvaluator: ndAnswer.getItemValueString("responseEvaluator"),
+		    commentEvaluator: ndAnswer.getItemValueString("commentEvaluator"),
+		    dateResponseEvaluator: getValueDate(ndAnswer, "dateResponseEvaluator", "yyyy/MM/dd"),
+		    idAttachment: ndAnswer.getItemValue("idAttachment").size() > 0 ? vectorToArray(ndAnswer.getItemValue("idAttachment")) : [],
+		    attachment: [],
+		    idsToDelete: [],
+		    previousAnswer: ""
+	    }
+	} catch(e){
+		println("Error en getFieldsAnswer: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return answerDTO;
+}
+
+function getFieldsTechnicalTeamComment(ndTechnical) {
+	var technicalTeamCommentDTO = {};
+	try {
+		technicalTeamCommentDTO  = {
+			id: ndTechnical.getItemValueString("id"),
+		    idSupplierByCall: ndTechnical.getItemValueString("idSupplierByCall"),
+		    idService: ndTechnical.getItemValueString("idService"),
+		    dateResponse: getValueDate(ndTechnical, "dateResponse", "yyyy/MM/dd"),
+		    comment: ndTechnical.getItemValueString("comment")
+	    }
+	} catch(e){
+		println("Error en getFieldsTechnicalTeamComment: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return technicalTeamCommentDTO ;
+}
+
+function getFieldsTechnicalTeamAnswer(ndTechnical) {
+	var technicalTeamAnswerDTO = {};
+	try {
+		technicalTeamAnswerDTO  = {
+			id: ndTechnical.getItemValueString("id"),
+		    idSupplierByCall: ndTechnical.getItemValueString("idSupplierByCall"),
+		    idService: ndTechnical.getItemValueString("idService"),
+		    dateResponse: getValueDate(ndTechnical, "dateResponse", "yyyy/MM/dd"),
+		    idItem: ndTechnical.getItemValueString("idItem"),
+		    idEvaluationScale: ndTechnical.getItemValueString("idEvaluationScale")
+	    }
+	} catch(e){
+		println("Error en getFieldsTechnicalTeamAnswer: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return technicalTeamAnswerDTO;
+}
+
+function getFieldsManagerTeamAnswer(ndManTeam) {
+	var managerTeamAnswerDTO = {};
+	try {
+		managerTeamAnswerDTO = {
+			id: ndManTeam.getItemValueString("id"),
+			idSupplierByCall: ndManTeam.getItemValueString("idSupplierByCall"),
+			whoEvaluate: ndManTeam.getItemValueString("whoEvaluate"),
+		    idEvaluationScale: ndManTeam.getItemValueString("idEvaluationScale"),
+		    comment: ndManTeam.getItemValueString("comment"),
+		    dateResponse: getValueDate(ndManTeam, "dateResponse", "yyyy/MM/dd")
+	    }
+	} catch(e){
+		println("Error en getFieldsManagerTeamAnswer: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return managerTeamAnswerDTO;
+}
+
+function getFieldsManagerTeam(ndManTeam) {
+	var managerTeamDTO = {};
+	try {
+		managerTeamDTO = {
+			id: ndManTeam.getItemValueString("id"),
+			idUser: ndManTeam.getItemValueString("idUser"),
+			idCall: ndManTeam.getItemValueString("idCall")
+	    }
+	} catch(e){
+		println("Error en getFieldsManagerTeam: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return managerTeamDTO;
+}
+
+function getIdOfManagerTeamMembersInCall(idCall) {
+    var idMembers = [];
+    try {
+    	var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwManagerTeamByIdCall");
+	    var documents:NotesDocumentCollection = currentView.getAllDocumentsByKey(idCall, true);
+	    if (documents != null && documents.getCount() > 0) {
+	    	var ndManTeam:NotesDocument = documents.getFirstDocument();
+	    	var ndTemp:NotesDocument;
+	    	var managerTeamMember = null;
+			while (ndManTeam != null){
+				
+				idMembers.push(ndManTeam.getItemValueString("idUser"));
+				
+				ndTemp= documents.getNextDocument(ndManTeam);
+				ndManTeam.recycle();
+				ndManTeam = ndTemp;
+			}
+	    }
+	    
+	    return idMembers;
+    } catch (e) {
+    	println("Error en getIdOfManagerTeamMembersInCall: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+}
+
+function setSummarySurveyBySupplier(optionAnswer, summary) {
+    summary.setAnswerSupplier(optionAnswer.wording);
+    summary.setScoreOfSupplier(optionAnswer.score);
+}
+
+function setSummarySurveyByEvaluator(answer, summary) {
+	var SCORE_OF_NA = -1;
+    if (null != answer.idOptionEvaluator && answer.idOptionEvaluator != "") {
+        var optionEvaluator = get(answer.idOptionEvaluator, "OptionDTO");
+        summary.setAnswerEvaluator(optionEvaluator.wording);
+        summary.setScoreOfEvaluator(optionEvaluator.score);
+    } else {
+        summary.setScoreOfEvaluator(SCORE_OF_NA);
+    }
+}
+
+/**
+ * Dada la informaciÃ³n en <code>parameters</code> identifica por cuales
+ * campos se deben filtrar las preguntas.
+ * 
+ * @param parameters
+ *            Mapa clave valor de los filtros por los que se van a optener
+ *            los resultados
+ * @return Mapa clave valor con los campos que se debe filtrar.
+ * @throws HandlerGenericException
+ */
+function identifyFieldsToFTSearch(parameters) {
+    var fields = {};
+    var FieldsQuestion = ["idCall", "idCriterion", "idDimension"];
+    var field;
+    for (var i in FieldsQuestion) {
+    	field = FieldsQuestion[i];
+        if (parameters.hasOwnProperty(field)) {
+            var valueInField = parameters[field];
+            if (null != valueInField && valueInField.trim() != "") {
+                fields[field] = valueInField;
+            }
+        }
+    }
+    
+    return fields;
+}
+
+/**
+ * Obtiene las respuesta en base a una convocatoria definitiva de un
+ * proveedor.
+ * 
+ * @param idSupplierByCall
+ *            Identificador de la convocatoria definitiva de un proveedor.
+ * @return ColecciÃ³n de respuestas
+ * @throws HandlerGenericException
+ */
+function getAsnwersByIdSupplierByCall(idSupplierByCall) {
+    var response = [];
+    try {
+        var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwAnswersBySupplierByCall");
+        var documents:NotesDocumentCollection = currentView.getAllDocumentsByKey(idSupplierByCall, true);
+        if (documents != null && documents.getCount() > 0) {
+        	var ndAnswer:NotesDocument = documents.getFirstDocument();
+        	var ndTemp:NotesDocument;
+        	var answer = null;
+			while (ndAnswer != null){
+				
+				answer = getFieldsAnswer(ndAnswer);
+				response.push(answer);
+				
+				ndTemp= documents.getNextDocument(ndAnswer);
+				ndAnswer.recycle();
+				ndAnswer = ndTemp;
+			}
+        }
+    } catch (e) {
+    	println("Error en getAsnwersByIdSupplierByCall: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+
+    return response;
+}
+
+/**
+ * Obtiene las respuestas por pregunta y convocatoria definitiva de un
+ * proveedor.
+ * 
+ * @param idSupplierByCall
+ *            Identificador de la convocatoria definitiva de un proveedor.
+ * @param questions
+ *            CollecciÃ³n de preguntas a las que se desea obtener la
+ *            respuesta.
+ * @return ColecciÃ³n de respuestas
+ * @throws HandlerGenericException
+ */
+function getByQuestionAndSupplierByCall(questions, idSupplierByCall) {
+    var response = [];
+
+    var key:java.util.Vector = new java.util.Vector(2);
+    var entityView = "";
+    var answer = null;
+    for (var i in questions) {
+        key.add(0,questions[i].id);
+        key.add(1,idSupplierByCall);
+        entityView = "vwAnswersByQuestionAndIdSupplierByCall";
+        answer = getBy(key, entityView, "AnswerDTO");
+        if (null != answer) {
+        	response.push(answer);
+        }
+        key.clear();
+    }
+
+    return response;
+}
+
+
+/**
+ * Obtiene las respuestas que se van a tener en cuenta para el reporte de
+ * Nota promedio.
+ * 
+ * @param idSupplierByCall
+ *            Identificador de la convocaria definitiva y finalizada de un
+ *            proveedor.
+ * @param parameters
+ *            Mapa clave valor de los filtros por los que se van a optener
+ *            los resultados
+ * @return CollecciÃ³n de respuestas
+ * @throws HandlerGenericException
+ */
+function getAnswersForReportOfAverageGrade(idSupplierByCall, parameters) {
+    var response = {
+    	answers: [],	
+    	errorSend: ""	
+    };
+    
+    try {
+	    var fieldsToFilterQuestion = identifyFieldsToFTSearch(parameters);
+	    if (!isObjectEmpty(fieldsToFilterQuestion)) {
+	        var questions = getThemWithFilter(fieldsToFilterQuestion);
+	        if (questions.length == 0) {
+	        	response.errorSend = "INFORMATION_NOT_FOUND"	
+	        } else {
+	        	response.answers = getByQuestionAndSupplierByCall(questions, idSupplierByCall);	
+	        }        
+	    } else {
+	        response.answers = getAsnwersByIdSupplierByCall(idSupplierByCall);
+	    }
+
+    	return response;
+    	
+    } catch(e){
+		println("Error en getAnswersForReportOfAverageGrade: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+function getCommentBySupplierByCallAndIdService(idSupplierByCall, idService) {
+    var technicalTeamComment = {};
+    var filter:java.util.Vector = new java.util.Vector(2);
+    filter.add(0,idSupplierByCall);
+    filter.add(1,idService);
+    var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwTechnicalTeamCommentByIdSupplierByCallAndIdService");
+    var document:NotesDocument = vista.getDocumentByKey(filter, true);
+
+    if (null != document) {
+        technicalTeamComment = getFieldsTechnicalTeamComment(document);
+    }
+
+    return technicalTeamComment.comment ? technicalTeamComment.comment : "";
+}
+
+function getTechnicalteamAnswer(idSupplierByCall, idService, idItem) {
+	var filter:java.util.Vector = new java.util.Vector(3);
+	filter.add(0,idSupplierByCall);
+	filter.add(1,idService);
+	filter.add(2,idItem);
+	
+	var evaluationScale = {};
+	var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwTechnicalTeamAnswerByIdSupplierByCallAndServiceAndItem");
+	// var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwTechnicalTeamAnswerByIdSupplierByCallAndServiceAndI");
+	var document:NotesDocument = currentView.getDocumentByKey(filter, true);
+	
+	if (null != document) {
+		evaluationScale = getFieldsTechnicalTeamAnswer(document);
+	}
+	
+	return evaluationScale;
+}
+
+function getAnswersOfSupplier(idSupplierByCall) {
+    var answersOfSupplier = [];
+    var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate");
+    var documents = vista.getAllDocumentsByKey(idSupplierByCall, true);
+       
+    if (documents != null && documents.getCount() > 0) {
+    	var ndDoc:NotesDocument = documents.getFirstDocument();
+    	var ndTemp:NotesDocument;
+		while (ndDoc != null){
+			answersOfSupplier.push(getFieldsManagerTeamAnswer(ndDoc));
+			
+			ndTemp= documents.getNextDocument(ndDoc);
+			ndDoc.recycle();
+			ndDoc = ndTemp;
+		}
+    }
+
+    return answersOfSupplier;
+}
+
+function buildReportOfAverageGradeBySupplier(idSupplierByCall, recordOfReport, parameters) {
+	var response = {
+		recordOfReport: {},
+		errorSend: ""
+	};
+	try {
+		var SCORE_OF_NA = -1;
+	    var MINIMUM_SCORE = 0;
+		var reqAnswers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
+		
+		if (reqAnswers.errorSend != "") {
+			response.errorSend = reqAnswers.errorSend;
+			return response;
+		}
+		var answers = reqAnswers.answers;
+		
+        var sumScoreAnsweredBySupplierNA = 0;
+        var sumScoreAnsweredByEvaluatorNA = 0;
+        var counterQuestions = answers.length;
+        var sumExpectedScoreSupplier = 0;
+        var sumExpectedScoreEvaluator = 0;
+        var sumScoreAnsweredBySupplier = 0;
+        var sumScoreAnsweredByEvaluator = 0;
+        var summariesSurvey = [];
+        
+        var contador = 0;
+        for (var i in answers) {
+        	var answer = answers[i];
+        	var question = get(answer.idQuestion, "QuestionDTO");
+            var option = get(answer.idOptionSupplier, "OptionDTO");
+            var criterion = get(question.idCriterion, "CriterionDTO");
+            var dimension = get(question.idDimension, "DimensionDTO");
+            // var report = new ReportOfCalificationsBySuppliers();
+            var summarySurvey = new SummarySurvey();
+            
+            var expectedScoreSupplier = 0;
+            var expectedScoreEvaluator = 0;
+            
+            if (null != option && !isObjectEmpty(option)) {
+                setSummarySurveyBySupplier(option, summarySurvey);
+                if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
+                    sumScoreAnsweredBySupplier = sumScoreAnsweredBySupplier + summarySurvey.getScoreOfSupplier();
+                    expectedScoreSupplier = getMaxScoreInQuestion(question.id, option);
+                    sumExpectedScoreSupplier = sumExpectedScoreSupplier + expectedScoreSupplier;
+                } else {
+                    summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
+                    expectedScoreSupplier = SCORE_OF_NA;
+                    sumScoreAnsweredBySupplierNA = sumScoreAnsweredBySupplierNA + SCORE_OF_NA;
+                }
+
+                setSummarySurveyByEvaluator(answer, summarySurvey);
+                if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
+                    var optionEvaluator = get(answer.idOptionEvaluator, "OptionDTO");
+                    sumScoreAnsweredByEvaluator = sumScoreAnsweredByEvaluator + summarySurvey.getScoreOfEvaluator();
+                    expectedScoreEvaluator = getMaxScoreInQuestion(question.id, optionEvaluator);
+                    sumExpectedScoreEvaluator = sumExpectedScoreEvaluator + expectedScoreEvaluator;
+                } else {
+                	contador++;
+                    summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                    sumScoreAnsweredByEvaluatorNA = sumScoreAnsweredByEvaluatorNA + SCORE_OF_NA;
+                }
+
+            } else {
+                summarySurvey.setAnswerSupplier(answer.responseSupplier);
+
+                if (answer.responseSupplier != "") {
+                    summarySurvey.setAnswerEvaluator(answer.responseSupplier);
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                }
+
+                expectedScoreSupplier = SCORE_OF_NA;
+            }
+            
+            summarySurvey.setExpectedScoreSupplier(expectedScoreSupplier);
+            summarySurvey.setExpectedScoreEvaluator(expectedScoreEvaluator);
+            summarySurvey.setQuestion(question.wording);
+            summarySurvey.setQuestionType(question.type);
+            summarySurvey.setCommentSupplier(answer.commentSupplier);
+            summarySurvey.setCommentEvaluator(answer.commentEvaluator);
+            summarySurvey.setCriterion(criterion.name);
+            summarySurvey.setDimension(dimension.name);
+            summarySurvey.setAttachmentCount(answer.idAttachment.length);
+
+            summariesSurvey.push(summarySurvey.getObject());
+        }
+        
+        counterQuestions = counterQuestions * SCORE_OF_NA;
+
+        recordOfReport.expectedScoreSupplier = sumExpectedScoreSupplier;
+        recordOfReport.expectedScoreEvaluator = sumExpectedScoreEvaluator;
+
+        if (counterQuestions == sumScoreAnsweredBySupplierNA) {
+            sumScoreAnsweredBySupplier = SCORE_OF_NA;
+            recordOfReport.expectedScoreSupplier = SCORE_OF_NA;
+        }
+        recordOfReport.totalScoreOfSupplier = calculateTotalScore(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
+
+        if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
+            sumScoreAnsweredByEvaluator = SCORE_OF_NA;
+            recordOfReport.expectedScoreEvaluator = SCORE_OF_NA;
+        }
+        recordOfReport.totalScoreOfEvaluator = calculateTotalScore(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
+
+        recordOfReport.scoreOfSupplier = sumScoreAnsweredBySupplier;
+        recordOfReport.scoreOfEvaluator = sumScoreAnsweredByEvaluator;
+        recordOfReport.summarySurvey = summariesSurvey;
+        
+        response.recordOfReport = recordOfReport;
+        
+        return response;
+	} catch(e){
+		println("Error en buildReportOfAverageGradeBySupplier: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+function buildReportOfTechnicalTeam(idSupplierByCall, recordOfReport, parameters) {
+	var response = {
+		recordOfReport: {},
+		errorSend: ""
+	};
+	try {
+		var SCORE_OF_NA = -1;
+	    var MINIMUM_SCORE = 0;
+	    var idService = parameters.service ? parameters.service : "";
+	    var idItem = parameters.item ? parameters.item : "";
+	    var services = [];
+	    var items = [];
+	    if (null != idService && idService.trim() != "") {
+	        services.push(get(idService, "ServiceDTO"));
+	    } else {
+	        var temporalServices = getAll("vwServices", "ServiceDTO");
+	        for (var i in temporalServices) {
+	            services.push(temporalServices[i]);
+	        }
+	    }
+	    
+	    var serviceToReport = [];
+	    var counterAllItems = 0;
+	    var sumScoreAllItems = 0;
+	    var counterAllItemsWithoutAnswer = 0;
+	    var reqItems;
+	    var service
+	    for (var i = 0; i<services.length; i++) {
+	    	service = services[i];
+	        sumScoreByItemsInService = 0;
+	        var serviceRecord = new Service();
+	        serviceRecord.name = service.name;
+	        reqItems = getItemsByIdItemOrIdService(idItem, service.id);
+	        if (reqItems.errorSend != "") {
+	        	response.errorSend = reqItems.errorSend;
+    			i = services.length;
+	        }
+	        items = reqItems.items ? reqItems.items : [];
+	        serviceRecord.comment = getCommentBySupplierByCallAndIdService(idSupplierByCall, service.id);
+	
+	        var itemToReport = [];
+	        var counterItems = items.length;
+	        var counterItemsWithoutAnswer = 0;
+	        counterAllItems = (counterAllItems + items.length);
+	        for (var j in items) {
+	        	var item = items[j];
+	            var itemRecord = new Item();
+	            itemRecord.name = item.name;
+	
+	            var technicalTeamAnswer = getTechnicalteamAnswer(idSupplierByCall, service.id, item.id);
+	
+	            var scoreEvaluation = 0;
+	            if (technicalTeamAnswer.id && null != technicalTeamAnswer.id) {
+	                scoreEvaluation = get(technicalTeamAnswer.idEvaluationScale, "EvaluationScaleDTO").score;
+	                sumScoreByItemsInService = (sumScoreByItemsInService + scoreEvaluation);
+	                sumScoreAllItems = (sumScoreAllItems + scoreEvaluation);
+	                itemRecord.answer = scoreEvaluation;
+	            } else {
+	                itemRecord.answer = SCORE_OF_NA;
+	                counterItemsWithoutAnswer = (counterItemsWithoutAnswer + 1);
+	                counterAllItemsWithoutAnswer = (counterAllItemsWithoutAnswer + 1);
+	            }
+	
+	            itemToReport.push(itemRecord.getObject());
+	        }
+	
+	        serviceRecord.items = itemToReport;
+	        if (counterItems == counterItemsWithoutAnswer) {
+	            serviceRecord.total = SCORE_OF_NA;
+	        } else {
+	            serviceRecord.total = sumScoreByItemsInService / counterItems;
+	        }
+	
+	        serviceToReport.push(serviceRecord.getObject());
+	    }
+	    
+	    if (response.errorSend != "") {
+        	return response;
+        }
+	
+	    if (counterAllItems == counterAllItemsWithoutAnswer) {
+	        recordOfReport.totalScoreInService = SCORE_OF_NA;
+	    } else {
+	        var totalScoreInService = sumScoreAllItems / counterAllItems;
+	        recordOfReport.totalScoreInService = totalScoreInService;
+	    }
+	
+	    recordOfReport.services = serviceToReport;
+	    
+		response.recordOfReport = recordOfReport;
+        
+        return response;
+	} catch(e){
+		println("Error en buildReportOfTechnicalTeam: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+function buildReportOfManagerTeam(idSupplierByCall, recordOfReport) {
+    var answerToReport = [];
+    var managerAnswers = getAnswersOfSupplier(idSupplierByCall);
+    var answer;
+    for (var i in managerAnswers) {
+    	answer = managerAnswers[i];
+        var answerRecord = new SummaryManagerSurvey();
+        answerRecord.comment = answer.comment;
+        answerRecord.whoEvaluate = answer.whoEvaluate;
+        answerRecord.score = get(answer.idEvaluationScale, "EvaluationScaleDTO").score;
+        answerToReport.push(answerRecord.getObject());
+    }
+    recordOfReport.managerAnswers = answerToReport;
+
+    return recordOfReport;
+}
+
+/**
+ * Fin de la clase Answer (Respuesta).
+ * 
+ */
+
+
+/**
+ * Metodo de la clase Call (Convocatoria).
+ * 
+ */
 
 function getFieldsCall(ndCall) {
 	var callDTO = {
@@ -429,6 +1625,165 @@ function getFieldsCall(ndCall) {
 	return callDTO;
 }
 
+function getFieldsReportOfCalificationsBySuppliers(nd) {
+	var reportOfCalificationsBySuppliersDTO = {
+		fields: {},
+		methods: {}
+	};
+	try {
+		reportOfCalificationsBySuppliersDTO.fields = {
+			id: ndCall.getItemValueString("id"),
+		    year: ndCall.getItemValueDouble("year"),
+		    dateToFinishCall: getValueDate(nd, "dateToFinishCall", "yyyy/MM/dd"),
+		    deadlineToMakeSurvey: getValueDate(nd, "deadlineToMakeSurvey", "yyyy/MM/dd"),
+		    deadlineToMakeSurveyEvaluator: getValueDate(nd, "deadlineToMakeSurveyEvaluator", "yyyy/MM/dd"),
+		    deadlineToMakeSurveyTechnicalTeam: getValueDate(nd, "deadlineToMakeSurveyTechnicalTeam", "yyyy/MM/dd"),
+		    deadlineToMakeSurveyManagerTeam: getValueDate(nd, "deadlineToMakeSurveyManagerTeam", "yyyy/MM/dd"),
+		    supplier: [],
+		    active: ndCall.getItemValueString("active") == "1" ? true : false
+		}
+		reportOfCalificationsBySuppliersDTO.methods = {
+			isCaducedDateToFinishCall: isCaducedDate(nd.getItemValue("dateToFinishCall").elementAt(0), new Date()),
+			isCaducedDeadLineToMakeSurvey: isCaducedDate(nd.getItemValue("deadlineToMakeSurvey").elementAt(0), new Date()), 
+			isCaducedDeadLineToMakeSurveyEvaluator: isCaducedDate(nd.getItemValue("deadlineToMakeSurveyEvaluator").elementAt(0), new Date()),
+			isCaducedDeadLineToMakeSurveyTechnicalTeam: isCaducedDate(nd.getItemValue("deadlineToMakeSurveyTechnicalTeam").elementAt(0), new Date()),
+			isCaducedDeadLineToMakeSurveyManagerTeam: isCaducedDate(nd.getItemValue("deadlineToMakeSurveyManagerTeam").elementAt(0), new Date())
+		}
+	} catch(e){
+		println("Error en getFieldsReportOfCalificationsBySuppliers: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return reportOfCalificationsBySuppliersDTO;
+}
+
+function isCaducedDate(dateToCompare, today) {
+	var response = false;
+	var actualDate:NotesDateTime = session.createDateTime(today);
+	var dateCompare:NotesDateTime = dateToCompare;
+	
+	if (actualDate.timeDifference(dateCompare) > 0) {
+		response = true;
+	}
+	return response;
+}
+
+function identifyParticpantsByCallYearAndStageStates(year, statesOfStage) {
+	var callsBySupplier = [];
+	try {
+		var viewName:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallIdStateAndIdCall");
+		var separatorToFTSearch = " AND ";
+		var sep = "";
+		var query = "[idCall] = " + getIdCallByYear(year);
+		var idState = "";
+		
+		if (statesOfStage.length > 0) {
+			for (var i in statesOfStage) {
+				if (i == 0) {
+					query += " AND (";
+				}
+				idState = getStateByShortName(statesOfStage[i]).id;
+				if (idState != "") {
+					query += sep + "[idState] = " + idState;
+					sep = " OR ";
+				}
+			}
+			query += ")";
+		}
+		
+	    // callsBySupplier.addAll(getAllBy(getIdCallByYear(year), viewName, "SupplierByCallDTO"));
+	    viewName.FTSearch(query, 0);
+
+        var entries:NotesViewEntryCollection = viewName.getAllEntries();
+        var ve:NotesViewEntry;
+        var veAux:NotesViewEntry;
+        if (null != entries && entries.getCount() > 0) {
+        	var nd:NotesDocument;
+        	var supplierByCall = {}; 
+            ve = entries.getFirstEntry();
+            while (ve != null) {
+				nd = ve.getDocument();
+				
+				supplierByCall = getFieldsSupplierByCall(nd);
+    			if (!isObjectEmpty(supplierByCall)) {
+    				callsBySupplier.push(supplierByCall);
+    			}
+				
+				veAux = entries.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+            viewName.clear();
+        }
+	    
+		return callsBySupplier;
+    }catch(e) {
+    	println("Error en identifyParticpantsByCallYearAndStageStates: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+}
+
+function getRecordOfReport(supplierByCall, supplier, parameters) {
+	var response = {
+		recordOfReport: {
+			totalPercentScoreOfSupplier: 0,
+			totalPercentScoreOfEvaluator: 0,
+			services: null,
+			totalScoreInService: 0,
+			managerAnswers: null
+		},
+		errorSend: ""
+	};
+	try {
+		var supply = get(supplier.idSupply, "SupplyDTO");
+		var category = get(supplier.idCategory);
+		var companySize = get(supplier.idCompanySize);
+		
+		response.recordOfReport.nit = supplier.nit;
+		response.recordOfReport.sapCode = supplier.sapCode;
+		response.recordOfReport.name = supplier.businessName;
+		response.recordOfReport.supply = supply.name;
+		response.recordOfReport.category = category.name;
+		response.recordOfReport.companySize = companySize.name;
+		response.recordOfReport.idSupplier = supplierByCall.idSupplier;
+		response.recordOfReport.idSupplierByCall = supplierByCall.id;
+		response.recordOfReport.idState = supplierByCall.idState;
+		response.recordOfReport.states = getAll("vwStates", "StateDTO");
+		response.recordOfReport.whoEvaluateOfTechnicalTeam= supplierByCall.whoEvaluateOfTechnicalTeam;
+
+	    var typeReport = parameters.type;
+		
+	    if (undefined == typeReport) {
+	        response.errorSend = "UNEXPECTED_VALUE";
+	        return response;
+	    }
+
+	    if (typeReport == "SUPPLIER_EVALUATOR") {
+	    	 var reqRecord = buildReportOfAverageGradeBySupplier(supplierByCall.id, response.recordOfReport,
+	                parameters);
+	    	 if (reqRecord.errorSend != "") {
+	    		 response.errorSend = reqRecord.errorSend;
+	    		 return response;
+	    	 }
+	    	 response.recordOfReport = reqRecord.recordOfReport;
+	    } else {
+	        if (typeReport == "TECHNICAL_MANAGER") {
+	        	var reqRecord = buildReportOfTechnicalTeam(supplierByCall.id, response.recordOfReport, parameters);
+	        	if (reqRecord.errorSend != "") {
+    		 		response.errorSend = reqRecord.errorSend;
+    		 		return response;
+		    	}
+	        	response.recordOfReport = reqRecord.recordOfReport;
+	            response.recordOfReport = buildReportOfManagerTeam(supplierByCall.id, response.recordOfReport);
+	        }
+	    }
+        
+        return response;
+	} catch(e){
+		println("Error en getRecordOfReport: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
 /**
  * Fin de la clase Call (Convocatoria).
  * 
@@ -453,6 +1808,37 @@ function getFieldState(ndState) {
 		throw new HandlerGenericException(e.message);
 	}
 	return stateDTO;
+}
+
+function getFieldsRol(ndRol) {
+	var rolDTO = {};
+	try {
+		rolDTO = {
+	    	id: ndRol.getItemValueString("id"),
+	    	name: ndRol.getItemValueString("name"),
+	   		shortName: ndRol.getItemValueString("shortName")
+	    }
+	} catch(e){
+		println("Error en getFieldsRol: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return rolDTO;
+}
+
+function getFieldsUser(ndUser) {
+	var userDTO = {};
+	try {
+		userDTO = {
+	    	id: ndUser.getItemValueString("id"),
+	    	name: ndUser.getItemValueString("name"),
+	    	idRols: ndUser.getItemValue("idRols").size() > 0 ? vectorToArray(ndUser.getItemValue("idRols")) : [],
+	    	email: ndUser.getItemValueString("email")
+	    }
+	} catch(e){
+		println("Error en getFieldsUser: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return userDTO;
 }
 
 function getFinalStateByStageCall(stage) {
@@ -881,7 +2267,6 @@ function getInformationFromSuppliers(listYears, callsFound) {
 		};
 		var numCallsFound = callsFound.length;
 		var obj = {};
-		println("numCallsFound == ", numCallsFound)
 		var vwSuppliers = sessionAsSigner.getCurrentDatabase().getView("vwSuppliers");
 		for (var i=0; i<numCallsFound; i++) {
 			if (callsFound[i].idSupplier && callsFound[i].idSupplier != "") {
@@ -972,7 +2357,7 @@ function getFieldsSupplierByCall(ndSupplierByCall) {
 	    	invitedToCall: ndSupplierByCall.getItemValueString("invitedToCall") == "1" ? true : false,
 	    	dateAssignedToEvaluator: getValueDate(ndSupplierByCall, "dateAssignedToEvaluator", "yyyy/MM/dd"),
 	    	whoEvaluate: ndSupplierByCall.getItemValueString("whoEvaluate"),
-	    	whoEvaluate: ndSupplierByCall.getItemValueString("whoEvaluateOfTechnicalTeam"),
+	    	whoEvaluateOfTechnicalTeam: ndSupplierByCall.getItemValueString("whoEvaluateOfTechnicalTeam"),
 	   	    idsDimension: []
 	    }
 	} catch(e){
@@ -1008,6 +2393,54 @@ function getAllByStates(idCall, states) {
 
     return result;
 }
+
+function getByStateInCall(idState, idCall) {
+	var result = [];
+	
+	var filter:java.util.Vector = new java.util.Vector(2);
+    filter.add(0,idState);
+    filter.add(1,idCall);
+
+    var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallIdStateAndIdCall");
+    var documents:NotesDocumentCollection = currentView.getAllDocumentsByKey(filter, true);
+    if (null != documents && documents.getCount() > 0) {
+    	var nd:NotesDocument = documents.getFirstDocument();
+    	var ndAux:NotesDocument;
+    	while (nd != null){
+    		result.push(getFieldsSupplierByCall(nd));
+    		
+    		ndAux = documents.getNextDocument(nd);
+    		nd.recycle();
+    		nd = ndAux;
+    	}
+    }
+
+    return result;
+}
+
+function getFinishedByStage(stageState) {
+	var response = {
+		evaluated: [],
+		errorSend: ""
+	};
+	try {
+		var listYears = vectorToArray(getFieldAll(0, "vwCallsByYear"));
+        var year = year = listYears[0];
+        var stateId = getStateByShortName(stageState).id;
+        
+        response.evaluated = getByStateInCall(stateId, getIdCallByYear(year));
+        
+        if (response.evaluated.length == 0) {
+        	response.errorSend = "INFORMATION_NOT_FOUND";
+        }
+
+        return response;
+	} catch(e){
+		println("Error en getFinishedByStage: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
 /**
  * Fin de la clase SupplierByCall.
  * 
@@ -1049,95 +2482,6 @@ function calculatePercentageInAxes(summaryProgress) {
  * 
  */
 
-function getAll(currentView) {
-	var response = [];
-    try {
-	  	var vista = sessionAsSigner.getCurrentDatabase().getView(currentView);
-      	var vec:NotesViewEntryCollection = vista.getAllEntries();
-	  	var ve:NotesViewEntry;
-	  	var veAux:NotesViewEntry;
-	  	var nd:NotesDocument;
-		if (vec.getCount() > 0) {
-			var fields = {};
-			ve = vec.getFirstEntry();
-			while (ve != null) {
-				nd = ve.getDocument();
-				response.push(getFieldsMaster(nd));
-				
-				veAux = vec.getNextEntry(ve); 
-				ve.recycle();
-				ve = veAux;
-			}
-		}
-
-    } catch (e) {
-    	println("Error en getAll = " + e.message);
-		throw new HandlerGenericException();
-    }
-
-    return response;
-}
-
-function getFieldAll(column, defaultView) {
-	var list:java.util.vector;
-    var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView(defaultView);
-    if (null != vista) {
-        list = vista.getColumnValues(column);
-    }
-    return list;
-}
-
-function getAllBy(key, vista, classDto) {
-	var response = [];
-	try {
-		var vwVista = sessionAsSigner.getCurrentDatabase().getView(vista);
-		if (vwVista !== null) {
-			var vec:NotesViewEntryCollection = null;
-			var ve:NotesViewEntry = null;
-			var veAux:NotesViewEntry;
-			var nd:NotesDocument;
-			vec = vwVista.getAllEntriesByKey(key, true);
-			if (vec.getCount() > 0) {
-				var fields = {};
-				ve = vec.getFirstEntry();
-				while (ve != null) {
-					nd = ve.getDocument();
-					fields = {};
-					switch (classDto){
-						case "CallDTO":
-							fields = getFieldsCall(nd);
-							break;
-						case "SupplyDTO":
-							fields = getFieldsSupply(nd);
-							break;
-						case "SupplierDTO":
-							fields = getFieldsSupplier(nd);
-							break;
-						case "SupplierByCallDTO":
-							fields = getFieldsSupplierByCall(nd);
-							break;
-						default:
-							fields = getFieldsMaster(nd);
-							break;
-					}
-					
-					response.push(fields);
-					
-					veAux = vec.getNextEntry(ve); 
-					ve.recycle();
-					ve = veAux;
-				}
-			}
-		} else {
-			println("Error en getAllBy, vista = [" + vista + "] no definida.");
-			throw new HandlerGenericException();
-		}
-	} catch(e){
-		println("Error en getAllBy: " + e.message);
-	}
-	return response;
-}
-
 function getAllSuppliersInCall(key) {
 	var response = {
 		masters:{"CompanySize":[], "Country":[], "Supply":[]},
@@ -1147,7 +2491,7 @@ function getAllSuppliersInCall(key) {
 	try {
 		var vwVista = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallIdCall");
 		var vwSuppliers = sessionAsSigner.getCurrentDatabase().getView("vwSuppliers");
-		if (vwVista !== null) {
+		if (vwVista != null) {
 			var vec:NotesViewEntryCollection = null;
 			var ve:NotesViewEntry = null;
 			var veAux:NotesViewEntry;
@@ -1187,7 +2531,7 @@ function getAllSuppliersInCall(key) {
 							}
 						}
 					}
-										
+					
 					veAux = vec.getNextEntry(ve); 
 					ve.recycle();
 					ve = veAux;
@@ -1203,35 +2547,181 @@ function getAllSuppliersInCall(key) {
 	return response;
 }
 
+function getAll(currentView, classDto) {
+	var response = [];
+    try {
+	  	var vista = sessionAsSigner.getCurrentDatabase().getView(currentView);
+      	var vec:NotesViewEntryCollection = vista.getAllEntries();
+	  	var ve:NotesViewEntry;
+	  	var veAux:NotesViewEntry;
+	  	var nd:NotesDocument;
+		if (vec.getCount() > 0) {
+			var fields = {};
+			ve = vec.getFirstEntry();
+			while (ve != null) {
+				nd = ve.getDocument();
+				
+				fields = resolveDTO(classDto, nd);
+				response.push(fields);
+				
+				veAux = vec.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+		}
+
+    } catch (e) {
+    	println("Error en getAll = " + e.message);
+		throw new HandlerGenericException();
+    }
+
+    return response;
+}
+
+function getAllBy(key, vista, classDto) {
+	var response = [];
+	try {
+		var vwVista = sessionAsSigner.getCurrentDatabase().getView(vista);
+		if (vwVista != null) {
+			var vec:NotesViewEntryCollection = null;
+			var ve:NotesViewEntry = null;
+			var veAux:NotesViewEntry;
+			var nd:NotesDocument;
+			vec = vwVista.getAllEntriesByKey(key, true);
+			if (vec.getCount() > 0) {
+				var fields = {};
+				ve = vec.getFirstEntry();
+				while (ve != null) {
+					nd = ve.getDocument();
+					fields = resolveDTO(classDto, nd);
+					
+					response.push(fields);
+					
+					veAux = vec.getNextEntry(ve); 
+					ve.recycle();
+					ve = veAux;
+				}
+			}
+		} else {
+			println("Error en getAllBy, vista = [" + vista + "] no definida.");
+			throw new HandlerGenericException();
+		}
+	} catch(e){
+		println("Error en getAllBy: " + e.message);
+	}
+	return response;
+}
+
+function getFieldAll(column, defaultView) {
+	var list:java.util.vector;
+    var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView(defaultView);
+    if (null != vista) {
+        list = vista.getColumnValues(column);
+    }
+    return list;
+}
+
 function get(id, classDto, keyAdd) {
 	var fields = {};
 	try {
 		var vwIds = sessionAsSigner.getCurrentDatabase().getView("vwProgIds");
-		var nd:NotesDocument = vwIds.getDocumentByKey(id);
+		var nd:NotesDocument = vwIds.getDocumentByKey(id, true);
 		if (nd != null) {
-			switch (classDto){
-				case "AttachmentDTO":
-					fields = getFieldsAttachment(nd);
-				break;
-				case "CallDTO":
-					fields = getFieldsCall(nd);
-					break;
-				case "SupplyDTO":
-					fields = getFieldsSupply(nd);
-					break;
-				case "SupplierDTO":
-					fields = getFieldsSupplier(nd);
-					break;
-				case "StateDTO":
-					fields = getFieldState(nd);
-					break;
-				default:
-					fields = getFieldsMaster(nd, keyAdd);
-					break;
-			}
+			fields = resolveDTO(classDto, nd);
 		}
 	} catch(e){
 		println("Error en get: " + e.message);
 	}
+	return fields;
+}
+
+function getBy(key, vista, classDto) {
+	var response = null;
+	try {
+		var vwVista = sessionAsSigner.getCurrentDatabase().getView(vista);
+		if (vwVista != null) {
+			var nd:NotesDocument = vwVista.getDocumentByKey(key, true);
+			if (nd) {
+				var fields = resolveDTO(classDto, nd);
+			}
+		} else {
+			println("Error en getBy, vista = [" + vista + "] no definida.");
+			throw new HandlerGenericException();
+		}
+	} catch(e){
+		println("Error en getBy: " + e.message);
+	}
+	return response;
+}
+
+function resolveDTO(classDto, nd) {
+	var fields = {};
+	
+	switch (classDto){
+		case "AnswerDTO":
+			fields = getFieldsAnswer(nd);
+			break;
+		case "AttachmentDTO":
+			fields = getFieldsAttachment(nd);
+			break;
+		case "CallDTO":
+			fields = getFieldsCall(nd);
+			break;
+		case "CriterionDTO":
+			fields = getFieldsCriterion(nd);
+			break;
+		case "DimensionDTO":
+			fields = getFieldsDimension(nd);
+			break;
+		case "EvaluationScaleDTO":
+			fields = getFieldsEvaluationScale(nd);
+			break;
+		case "ItemDTO":
+			fields = getFieldsItem(nd);
+			break;
+		case "ManagerTeamAnswerDTO":
+			fields = getFieldsManagerTeamAnswer(nd);
+			break;
+		case "ManagerTeamDTO":
+			fields = getFieldsManagerTeam(nd);
+			break;
+		case "OptionDTO":
+			fields = getFieldsOption(nd);
+			break;
+		case "QuestionDTO":
+			fields = getFieldsQuestion(nd);
+			break;
+		case "RolDTO":
+			fields = getFieldsRol(nd);
+			break;
+		case "ServiceDTO":
+			fields = getFieldsService(nd);
+			break;
+		case "StateDTO":
+			fields = getFieldState(nd);
+			break;
+		case "SupplyDTO":
+			fields = getFieldsSupply(nd);
+			break;
+		case "SupplierDTO":
+			fields = getFieldsSupplier(nd);
+			break;
+		case "SupplierByCallDTO":
+			fields = getFieldsSupplierByCall(nd);
+			break;
+		case "TechnicalTeamCommentDTO":
+			fields = getFieldsTechnicalTeamComment(nd);
+			break;
+		case "TechnicalTeamAnswerDTO":
+			fields = getFieldsTechnicalTeamAnswer(nd);
+			break;
+		case "UserDTO":
+			fields = getFieldsUser(nd);
+			break;
+		default:
+			fields = getFieldsMaster(nd);
+			break;
+	}
+	
 	return fields;
 }

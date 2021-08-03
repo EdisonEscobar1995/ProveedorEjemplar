@@ -1,4 +1,5 @@
 import ssCommon;
+// importPackage(com.nutresa.exemplary_provider.dtl.queries);
 
 function getAllPendings(){
 	var error = "";
@@ -213,25 +214,6 @@ function getUserInSession() {
 	return usuario;
 }
 
-function getIsRol(shortNameRol) {
-	var isRol = false;
-	var ndUserCfg:NotesDocument;
-	var vwUserByName:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwUsersByName");
-	var vwRols:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwRols");
-	var usuario = getUserInSession();
-	
-	ndUserCfg = vwUserByName.getDocumentByKey(usuario, true);
-	
-	if (ndUserCfg) {
-		ndRol = vwRols.getDocumentByKey(ndUserCfg.getItemValueString("idRols"), true)
-		if (ndRol && shortNameRol == ndRol.getItemValueString("shortName")) {
-			isRol = true;
-		}
-	}
-	
-	return isRol;
-}
-
 function getIdCallByYear(year) {
 	var idCall = "";
     var vwCallsByYear:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwCallsByYear");
@@ -320,7 +302,7 @@ function getStatisticalProgress() {
 		filterName = filterName.trim();
 		
 		var currentStage = currentStageByRol();
-		if (currentStage !== null) {
+		if (currentStage != null) {
 			
 			var statesOfStage = getStatesByStageCall(currentStage);
 			if (statesOfStage == null) {
@@ -506,6 +488,357 @@ function getParticipantsByYear() {
 	}
 }
 
+function getModifiedSuppliers() {
+	var error = "";
+	var errorSend = "";
+	var year = param.get("year") ? param.get("year") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var ndUserCfg:NotesDocument;
+		var ndRol:NotesDocument;
+		var ndAux:NotesDocument;
+		var vec:NotesViewEntryCollection;
+		var ve:NotesViewEntry;
+		var veAux:NotesViewEntry;
+		var objCompanies = {};
+		var data = {};
+		
+		var listYears = vectorToArray(getFieldAll(0, "vwCallsByYear"));
+        if (year == "") {
+            year = listYears[0];
+        }
+        
+	    var filter:java.util.Vector = new java.util.Vector(1);
+        filter.add(0, getIdCallByYear(year));
+        var callsBySupplier = getAllBy(filter, "vwSuppliersByCallModifiedIdCall", "SupplierByCallDTO");
+        data = getInformationFromSuppliers(listYears, callsBySupplier);
+        		
+	}catch(e){
+		error = e.message;
+		println("Error en getModifiedSuppliers: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener proveedor con cambio en el tamaño de empresa: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getSurveys() {
+	var error = "";
+	var errorSend = "";
+	var year = param.get("year") ? param.get("year") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var ndUserCfg:NotesDocument;
+		var ndRol:NotesDocument;
+		var ndAux:NotesDocument;
+		var vec:NotesViewEntryCollection;
+		var ve:NotesViewEntry;
+		var veAux:NotesViewEntry;
+		var objCompanies = {};
+		var data = {};
+		
+		var listYears = vectorToArray(getFieldAll(0, "vwCallsByYear"));
+        if (year == "") {
+            year = listYears[0];
+        }
+        
+	    var filter:java.util.Vector = new java.util.Vector(1);
+        filter.add(0, getIdCallByYear(year));
+        var callsBySupplier = getAllBy(filter, "vwSuppliersByCallIdCall", "SupplierByCallDTO");
+        data = getInformationFromSuppliers(listYears, callsBySupplier);
+        		
+	}catch(e){
+		error = e.message;
+		println("Error en getSurveys: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener consulta de encuestas: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getSuppliersForSelection() {
+	var error = "";
+	var errorSend = "";
+	var nameNextStage = param.get("stage") ? param.get("stage") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var ndUserCfg:NotesDocument;
+		var ndRol:NotesDocument;
+		var ndAux:NotesDocument;
+		var vec:NotesViewEntryCollection;
+		var ve:NotesViewEntry;
+		var veAux:NotesViewEntry;
+		var objCompanies = {};
+		var data = [];
+		var resEvaluated;
+		// evaluatedSuppliers
+		if (nameNextStage == "Evaluator") {
+			resEvaluated = getFinishedByStage("ENDED_SUPPLIER");
+        }
+
+        if (nameNextStage == "TechnicalTeam") {
+        	resEvaluated = getFinishedByStage("ENDED_EVALUATOR");
+        }
+        
+        if (nameNextStage == "ManagerTeam") {
+        	resEvaluated = getFinishedByStage("ENDED_TECHNICAL_TEAM");
+        }
+        
+        if (resEvaluated.errorSend != "") {
+			errorSend = resEvaluated.errorSend;
+			return;
+		}
+        
+        var evaluatedSuppliers = resEvaluated.evaluated;
+        
+        var parametersToGenerateReport = {};
+        var responseBySupplier;
+        for (var i=0; i<evaluatedSuppliers.length; i++) {
+        	var reportBySupplier = {};
+        	parametersToGenerateReport.type = "SUPPLIER_EVALUATOR";
+        	if (nameNextStage == "Evaluator" || nameNextStage == "TechnicalTeam") {
+        		responseBySupplier = getRecordOfReport(evaluatedSuppliers[i], get(evaluatedSuppliers[i].idSupplier, "SupplierDTO"),
+                        parametersToGenerateReport);
+        		if (responseBySupplier.errorSend != "") {
+        			errorSend = responseBySupplier.errorSend;
+        			i = evaluatedSuppliers.length;
+    				return;
+        		}
+                reportBySupplier = responseBySupplier.recordOfReport;
+            }
+
+            if ("ManagerTeam".equals(nameNextStage)) {
+            	responseBySupplier = getRecordOfReport(evaluatedSuppliers[i], get(evaluatedSuppliers[i].idSupplier, "SupplierDTO"), parametersToGenerateReport);
+            	if (responseBySupplier.errorSend != "") {
+        			errorSend = responseBySupplier.errorSend;
+        			i = evaluatedSuppliers.length;
+    				return;
+        		}
+                reportBySupplier = responseBySupplier.recordOfReport;
+                
+                parametersToGenerateReport.type = "TECHNICAL_MANAGER";                
+                resReportUntilTechnicalTeam = getRecordOfReport(evaluatedSuppliers[i], get(evaluatedSuppliers[i].idSupplier, "SupplierDTO"), parametersToGenerateReport);
+            	if (resReportUntilTechnicalTeam.errorSend != "") {
+        			errorSend = resReportUntilTechnicalTeam.errorSend;
+        			i = evaluatedSuppliers.length;
+    				return;
+        		}
+            	reportUntilTechnicalTeam = resReportUntilTechnicalTeam.recordOfReport;
+            	
+                reportBySupplier.totalScoreInService = reportUntilTechnicalTeam.totalScoreInService;
+                reportBySupplier.services = reportUntilTechnicalTeam.services;
+            }
+            
+            data.push(reportBySupplier);
+        }
+        		
+	}catch(e){
+		error = e.message;
+		println("Error en getSuppliersForSelection: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener proveedores que pasan evaluación comité técnico: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getParticipantsToManagerTeam() {
+	var error = "";
+	var errorSend = "";
+	var year = param.get("year") ? param.get("year") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var vwUserByName:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwUsersByName");
+		var ndUserCfg:NotesDocument;
+		var objCompanies = {};
+		var data = {};
+		var rulesObj = {};
+		
+		var listYears = vectorToArray(getFieldAll(0, "vwCallsByYear"));
+        if (year == "") {
+            year = listYears[0];
+        }
+        
+        var rules = new SectionRule();
+        var idCall = getIdCallByYear(year);
+        var managerTeamInCall = getIdOfManagerTeamMembersInCall(idCall);
+               
+    	var usuario = getUserInSession();    	
+    	ndUserCfg = vwUserByName.getDocumentByKey(usuario, true);
+    	
+        if (getIsRol("MANAGER_TEAM") && isMember(ndUserCfg.getItemValueString("id"), managerTeamInCall)) {
+        	errorSend = "INFORMATION_NOT_FOUND";
+        	return;
+        }
+
+        var statesIncludInManagerTeamStage = [];
+        statesIncludInManagerTeamStage.push("NOT_STARTED_MANAGER_TEAM");
+        statesIncludInManagerTeamStage.push("MANAGER_TEAM");
+        statesIncludInManagerTeamStage.push("ENDED_MANAGER_TEAM");
+        
+        var callsBySupplier = identifyParticpantsByCallYearAndStageStates(year, statesIncludInManagerTeamStage);
+
+        var participantsToManagerTeam = getInformationFromSuppliers(listYears, callsBySupplier);
+
+        var currentMasters = participantsToManagerTeam.masters;
+        currentMasters.EvaluationScale = getAllBy("MANAGER_TEAM", "vwEvaluationScalesByApplyTo", "EvaluationScaleDTO");
+        currentMasters.State = getAll("vwStates", "StateDTO");
+        currentMasters.Rol = getAll("vwRols", "RolDTO");
+        currentMasters.User = getAllBy(getNameUserInSession(), "vwUsersByName", "UserDTO");
+
+        if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR")) {
+            rules.setRulesToSection("liberator", rules.buildRules(true, true));
+        }
+        rulesObj = rules.getObject();
+        
+        var nameUserInSession = getNameUserInSession();
+        // for (var idSupplierByCall : idsSupplierByCall) {
+        var num = 1;
+        var auxiliarAnswer;
+        var answers = [];
+        for (var i in callsBySupplier) {
+        	num = 1;
+            if (!getIsRol("LIBERATOR") && !getIsRol("ADMINISTRATOR")) {
+            	num += 1;
+            }
+            var filter:java.util.Vector = new java.util.Vector(num);
+            filter.add(0, callsBySupplier[i].id);
+            if (num == 2) {
+            	filter.add(1, nameUserInSession);
+            }
+            auxiliarAnswer = getAllBy(filter, "vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate", "ManagerTeamAnswerDTO");
+
+            if (auxiliarAnswer.length > 0) {
+            	answers = answers.concat(auxiliarAnswer);
+            }
+            filter.clear();
+        }
+        
+        var managersInCall = getAllBy(idCall, "vwManagerTeam", "ManagerTeamDTO");
+        var managers = [];
+        if (managersInCall.length > 0) {
+        	var user = null;
+        	for (var i in managersInCall) {
+        		user = getBy(managersInCall[i].idUser, "vwUsers", "UserDTO");
+                if (null != user) {
+                	managers.push(user);
+                }	
+        	}
+        }
+        currentMasters.Managers = managers;
+        currentMasters.ManagerTeamAnswer = answers;
+        participantsToManagerTeam.masters = currentMasters;
+        
+        data = participantsToManagerTeam;
+	}catch(e){
+		error = e.message;
+		println("Error en getParticipantsToManagerTeam: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener Calificación comité gerencial: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: rulesObj,
+			notice: "",
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getMasterList() {
+	var error = "";
+	var errorSend = "";
+	var year = param.get("year") ? param.get("year") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var data = {};
+		var allowedEntities = {
+		  Call: "vwCalls",
+		  Country: "vwCountries",
+		  City: "",
+		  Department: "",
+		  CompanySize: "",
+		  CompanyType: "",
+		  Sector: "",
+		  Category: "",
+		  Subcategory: "",
+		  Supply: "",
+		  System: "",
+		  Dimension: "",
+		  Criterion: "",
+		  SocietyType: "",
+		  Supplier: "",
+		  User: "",
+		  Rol: "",
+		  Service: "",
+		  Item: "",
+		  Access: ""
+		};
+
+	}catch(e){
+		error = e.message;
+		println("Error en getMasterList: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener lsta maestra: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: rulesObj,
+			notice: "",
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
 function getFormula(filtros) {
 	var campo, operador, operadorAux, valor, fechaInicio, fechaFin, valorAux;
 	var formula = "";
@@ -627,7 +960,7 @@ function getFilters(vista, keyField){
 
 function prueba() {
 	var error = "";
-	var response;
+	var response = "";
 	try{
 		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
 		var obj1 = {id: "", name: ""};
@@ -635,14 +968,33 @@ function prueba() {
 		var idFieldNames = {"Category":'categoria', "Country":'', "Department":'', "City":'', "Supply":'', "SubCategory":'',
 		        "CompanyType":'', "SocietyType":'', "Sector":''};
 		for (var prop in idFieldNames) {
-			println("prop == ", prop, " --- value == ", idFieldNames[prop]);
+			// println("prop == ", prop, " --- value == ", idFieldNames[prop]);
 		}
-		response = isObjectEmpty(obj2);
 		
+		var obj = {};
+				
+		println("Por aca.......")
+		var service = new Service();
+		service.total = 23;
+		println("service.total = ", service.total);
+		
+		var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate");
+		if (vista) {
+			println("visat encontrada")
+		} else {
+			println("No esta")
+		}
+		
+		/* var summarySurvey = new SummarySurvey();
+		println("==== summarySurvey.getScoreOfSupplier = ", summarySurvey.getScoreOfSupplier())
+		setSummarySurveyBySupplier({wording: "wording pueba", score: 987}, summarySurvey);
+		println("==== summarySurvey.getScoreOfSupplier = ", summarySurvey.getScoreOfSupplier())
+		response = summarySurvey.getObject(); */
+		println("param == ", param);
 		
 	}catch(e){
 		error = e.message;
-		println("Error en getParticipantsByYear: " + e.message);
+		println("Error en prueba: " + e.message);
 	}finally {
 		if (error != ""){
 			error = "Error al obtener suppliers by year: " + error

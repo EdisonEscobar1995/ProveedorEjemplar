@@ -226,7 +226,7 @@ public class AnswerDAO extends GenericDAO<AnswerDTO> {
                 }
             }
         }
-
+        
         return fields;
     }
     

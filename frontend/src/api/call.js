@@ -45,11 +45,15 @@ const getManagerReportApi = data => instance.get(`Call?action=getManagerReport&i
   `&idCriterion=${data.criterion || ''}
 `);
 
-const getSupplierSelectionApi = type => instance.get(`Call?action=getSuppliersForSelection&stage=${type}`);
+// const getSupplierSelectionApi = type =>
+// instance.get(`Call?action=getSuppliersForSelection&stage=${type}`);
+const getSupplierSelectionApi = type => instanceService.get(`xaServicios.xsp?Open&action=getSuppliersForSelection&stage=${type}`);
 
 const getTechnicalTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToTechnicalTeam&year=${year || ''}`);
 
-const getManagerTeamSurveyApi = year => instance.get(`Call?action=getParticipantsToManagerTeam&year=${year || ''}`);
+// const getManagerTeamSurveyApi = year =>
+// instance.get(`Call?action=getParticipantsToManagerTeam&year=${year || ''}`);
+const getManagerTeamSurveyApi = year => instanceService.get(`xaServicios.xsp?Open&action=getParticipantsToManagerTeam&year=${year || ''}`);
 
 // const getStatisticalProgressApi = filter => 
 // instance.get(`Call?action=getStatisticalProgress&filterName=${filter || 'SUPPLY_FILTER'}`);

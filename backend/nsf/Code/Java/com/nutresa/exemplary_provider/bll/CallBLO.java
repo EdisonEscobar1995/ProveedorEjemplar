@@ -458,11 +458,10 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setWhoEvaluateOfTechnicalTeam(supplierByCall.getWhoEvaluateOfTechnicalTeam());
 
         String typeReport = parameters.get("type");
-
         if (null == typeReport) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
-
+        
         if ("SUPPLIER_EVALUATOR".equals(typeReport)) {
             AnswerBLO answerBLO = new AnswerBLO();
             recordOfReport = answerBLO.buildReportOfAverageGradeBySupplier(supplierByCall.getId(), recordOfReport,
