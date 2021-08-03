@@ -1912,29 +1912,29 @@ function getStatesByStageCall(stage) {
  * Metodo de la clase Master.
  * 
  */
-function getFieldsMaster(nd, keyAdd) {
+function getFieldsMaster(nd) {
 	var masterDTO = {};
 	try {
 		masterDTO = {
 			id: nd.getItemValueString("id"),
 			name: nd.getItemValueString("name")
 		}
-		
-		switch (keyAdd){
-			case "Category":
+		var keyForm = nd.getItemValueString("form");
+		switch (keyForm){
+			case "frCategory":
 				masterDTO.idSupply = nd.getItemValueString("idSupply");
 				masterDTO.subCategories = [];
-			break;
-			case "City":
+				break;
+			case "frCity":
 				masterDTO.idDepartment = nd.getItemValueString("idDepartment");
 				break;
-			case "Department":
+			case "frDepartment":
 				masterDTO.idCountry = nd.getItemValueString("idCountry");
 				break;
-			case "SubCategory":
+			case "frSubCategory":
 				masterDTO.idCategory = nd.getItemValueString("idCategory");
 				break;
-			case "Supply":
+			case "frSupply":
 				masterDTO.idCountry = nd.getItemValueString("idCountry");
 				masterDTO.negotiators = [];
 				break;
@@ -1945,6 +1945,53 @@ function getFieldsMaster(nd, keyAdd) {
 		throw new HandlerGenericException(e.message);
 	}
 	return masterDTO;
+}
+
+function getFieldsSystem(nd) {
+	var systemDTO = {};
+	try {
+		systemDTO = {
+			id: nd.getItemValueString("id"),
+		    rotationTime: nd.getItemValueDouble("rotationTime"),
+		    title: nd.getItemValueString("title"),
+		    content: nd.getItemValueString("content"),
+		    images: nd.getItemValue("images").size() > 0 ? vectorToArray(nd.getItemValue("images")) : [],
+		    document: [],
+		    informationProgram: nd.getItemValueString("informationProgram"),
+		    dataPolicy: nd.getItemValueString("dataPolicy"),
+		    messageByChangeSizeCompany: nd.getItemValueString("messageByChangeSizeCompany"),
+		    inputPoll: nd.getItemValueString("inputPoll"),
+		    uploadMaxFilesize: nd.getItemValueDouble("uploadMaxFilesize"),
+		    uploadPathApplication: nd.getItemValueString("uploadPathApplication"),
+		    namesPathApplication: nd.getItemValueString("namesPathApplication"),
+		    supplierPathApplication: nd.getItemValueString("supplierPathApplication"),
+		    filesPathApplication: nd.getItemValueString("filesPathApplication"),
+		    uploadExtensions: nd.getItemValue("uploadExtensions").size() > 0 ? vectorToArray(nd.getItemValue("uploadExtensions")) : [],
+		    otherSectorId: nd.getItemValueString("otherSectorId"),
+		    packagingMaterialCategoryId: nd.getItemValueString("packagingMaterialCategoryId")
+		}
+		
+	} catch(e){
+		println("Error en getFieldsSystem: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return systemDTO;
+}
+
+function getFieldsAccess(nd) {
+	var accessDTO = {};
+	try {
+		accessDTO = {
+			id: nd.getItemValueString("id"),
+		    api: nd.getItemValueString("api"),
+		    action: nd.getItemValueString("action")
+		}
+		
+	} catch(e){
+		println("Error en getFieldsAccess: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return accessDTO;
 }
 
 /**
@@ -2562,7 +2609,11 @@ function getAll(currentView, classDto) {
 				nd = ve.getDocument();
 				
 				fields = resolveDTO(classDto, nd);
-				response.push(fields);
+				if (classDto == "CallDTO") {
+					response.push(fields.fields);
+				} else {
+					response.push(fields);	
+				}
 				
 				veAux = vec.getNextEntry(ve); 
 				ve.recycle();
@@ -2658,6 +2709,9 @@ function resolveDTO(classDto, nd) {
 	var fields = {};
 	
 	switch (classDto){
+		case "AccessDTO":
+			fields = getFieldsAccess(nd);
+			break;
 		case "AnswerDTO":
 			fields = getFieldsAnswer(nd);
 			break;
@@ -2708,6 +2762,9 @@ function resolveDTO(classDto, nd) {
 			break;
 		case "SupplierByCallDTO":
 			fields = getFieldsSupplierByCall(nd);
+			break;
+		case "SystemDTO":
+			fields = getFieldsSystem(nd);
 			break;
 		case "TechnicalTeamCommentDTO":
 			fields = getFieldsTechnicalTeamComment(nd);

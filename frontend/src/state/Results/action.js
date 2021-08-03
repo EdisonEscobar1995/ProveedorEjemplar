@@ -57,17 +57,20 @@ const changeType = value => ({
   value,
 });
 
-const getMasters = () => (dispatch) => {
-  requestApi(dispatch, getMastersProgress, getMasterApi, [
+const getMasters = (from = '') => (dispatch) => {
+  const masters = [
     'Call',
     'Supply',
     'Category',
     'CompanySize',
-    'Supplier',
     'Dimension',
     'Service',
     'Country',
-  ])
+  ];
+  if (from === '') {
+    masters.push('Supplier');
+  }
+  requestApi(dispatch, getMastersProgress, getMasterApi, masters)
     .then((response) => {
       const { data } = response.data;
       data.Call = sortByField(response.data.data.Call, 'year', true);

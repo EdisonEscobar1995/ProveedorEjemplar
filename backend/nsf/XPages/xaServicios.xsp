@@ -36,6 +36,9 @@
 			case "getParticipantsToManagerTeam":
 				getParticipantsToManagerTeam();
 			break;
+			case "getMasterList":
+				getMasterList();
+			break;
 			case "prueba":
 				prueba();
 			break;

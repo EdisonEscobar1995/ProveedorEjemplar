@@ -60,7 +60,7 @@ const ProgressBar = styled.div`
 
 class ResultsContainer extends Component {
   componentDidMount() {
-    this.props.getMasters();
+    this.props.getMasters('managerReport');
   }
 
   handleResults = (values) => {

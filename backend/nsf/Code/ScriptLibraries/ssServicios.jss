@@ -790,32 +790,59 @@ function getParticipantsToManagerTeam() {
 function getMasterList() {
 	var error = "";
 	var errorSend = "";
-	var year = param.get("year") ? param.get("year") : "";
+	var params = param;
 	try{
 		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
 		var data = {};
-		var allowedEntities = {
-		  Call: "vwCalls",
-		  Country: "vwCountries",
-		  City: "",
-		  Department: "",
-		  CompanySize: "",
-		  CompanyType: "",
-		  Sector: "",
-		  Category: "",
-		  Subcategory: "",
-		  Supply: "",
-		  System: "",
-		  Dimension: "",
-		  Criterion: "",
-		  SocietyType: "",
-		  Supplier: "",
-		  User: "",
-		  Rol: "",
-		  Service: "",
-		  Item: "",
-		  Access: ""
+		var notFound = {
+			cont: 0,
+			message: ""
 		};
+		var sep = "";
+		
+		var allowedEntities = {
+		  Call: {vista: "vwCalls", dto: "CallDTO"},
+		  Country: {vista: "vwCountries", dto: ""},
+		  City: {vista: "vwCities", dto: ""},
+		  Department: {vista: "vwDepartments", dto: ""},
+		  CompanySize: {vista: "vwCompanySizes", dto: ""},
+		  CompanyType: {vista: "vwCompanyTypes", dto: ""},
+		  Sector: {vista: "vwSectors", dto: ""},
+		  Category: {vista: "vwCategories", dto: ""},
+		  // Subcategory: {vista: "vwSubCategories", dto: ""},
+		  Supply: {vista: "vwSupplies", dto: ""},
+		  System: {vista: "vwSystems", dto: "SystemDTO"},
+		  Dimension: {vista: "vwDimensions", dto: "DimensionDTO"},
+		  Criterion: {vista: "vwCriterions", dto: "CriterionDTO"},
+		  SocietyType: {vista: "vwSocietyTypes", dto: ""},
+		  Supplier: {vista: "vwSuppliers", dto: "SupplierDTO"},
+		  User: {vista: "vwUsers", dto: "UserDTO"},
+		  Rol: {vista: "vwRols", dto: "RolDTO"},
+		  Service: {vista: "vwServices", dto: "ServiceDTO"},
+		  Item: {vista: "vwItems", dto: "ItemDTO"},
+		  Access: {vista: "vwAccess", dto: "AccessDTO"}
+		};
+		
+		var entry = null;
+		for (var i in params) {
+			entry = allowedEntities[i];
+			if (entry) {
+				if (entry.dto != "") {
+					data[i] = getAll(entry.vista, entry.dto);
+				} else {
+					data[i] = getAll(entry.vista);
+				}
+			} else if (i != "Open" && i != "action") {
+				notFound.cont += 1;
+				notFound.message += sep + i;
+				sep = " ,";
+			}
+		}
+		
+		if (notFound.cont > 0) {
+			errorSend = "Class '" + notFound.message + "' not found";
+			return;
+		}
 
 	}catch(e){
 		error = e.message;
@@ -829,7 +856,7 @@ function getMasterList() {
 		}
 		var respuesta = {
 			data: error ? null : data,
-			rules: rulesObj,
+			rules: {},
 			notice: "",
 			message: error ? error : "success",
 			status: error ? false : true
@@ -991,6 +1018,9 @@ function prueba() {
 		println("==== summarySurvey.getScoreOfSupplier = ", summarySurvey.getScoreOfSupplier())
 		response = summarySurvey.getObject(); */
 		println("param == ", param);
+		for (var i in param) {
+			println("i = ", i);
+		}
 		
 	}catch(e){
 		error = e.message;
