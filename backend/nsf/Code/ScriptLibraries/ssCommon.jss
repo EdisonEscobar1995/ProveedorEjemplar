@@ -1,6 +1,16 @@
 var $ = function()	{
 }
 
+$.keys = function (obj)
+{
+    var keys = [];
+    for(var prop in obj)
+    {
+    	keys.push(String(prop))
+    }
+    return keys;
+}
+
 $.each = function(obj, callback){ /*Método estático*/
 	if (null === obj){
 		return false;
@@ -778,13 +788,56 @@ function getFieldsCriterion(ndCriterion) {
 		criterionDTO = {                                                                                         
 	        id: ndCriterion.getItemValueString("id"),
 	        name: ndCriterion.getItemValueString("name"),
-	        idDimension: ndCriterion.getItemValueDouble("idDimension")
+	        idDimension: ndCriterion.getItemValueString("idDimension")
 	    }
 	} catch(e){
 		println("Error en getFieldsCriterion: " + e.message);
 		throw new HandlerGenericException(e.message);
 	}
 	return criterionDTO;
+}
+
+function getFieldsCriterionPercent(ndCriterion) {
+	var criterionPercentDTO = {};
+	try {
+		criterionPercentDTO = {                                                                                         
+	        id: ndCriterion.getItemValueString("id"),
+	        idCall: ndCriterion.getItemValueString("idCall"),
+	        idSurvey: ndCriterion.getItemValueString("idSurvey"),
+	        idDimension: ndCriterion.getItemValueString("idDimension"),
+	        idCriterion: ndCriterion.getItemValueString("idCriterion"),
+	        percent: ndCriterion.getItemValueDouble("percent")
+	    }
+	} catch(e){
+		println("Error en getFieldsCriterionPercent: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return criterionPercentDTO;
+}
+
+function getCriterionPercentById(idSurvey, id, from) {
+	var response = {};
+    try {
+    	var db = sessionAsSigner.getCurrentDatabase();
+        var vista:NotesView = db.getView("vwCriterionPercentByIdCriterion");
+		if (from.equals("D")) {
+			vista = db.getView("vwCriterionPercentByIdDimension");
+		}
+		
+        var filter:java.util.Vector = new java.util.Vector(2);
+        filter.add(0,id);
+        filter.add(1,idSurvey);
+        
+    	var document:NotesDocument = vista.getDocumentByKey(filter, true);
+    	if (null != document) {
+	        response = getFieldsCriterionPercent(document);
+	    }
+    } catch (e) {
+    	println("Error en getCriterionPercentById: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+
+    return response;
 }
 
 /**
@@ -1351,7 +1404,210 @@ function getAnswersOfSupplier(idSupplierByCall) {
     return answersOfSupplier;
 }
 
+//TODO: Se debe descomnetar esta función cuando se pase a producción el desarrollo de porcentajes por criterio
 function buildReportOfAverageGradeBySupplier(idSupplierByCall, recordOfReport, parameters) {
+	var response = {
+		recordOfReport: {},
+		errorSend: ""
+	};
+	try {
+		var SCORE_OF_NA = -1;
+	    var MINIMUM_SCORE = 0;
+		var reqAnswers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
+		
+		if (reqAnswers.errorSend != "") {
+			response.errorSend = reqAnswers.errorSend;
+			return response;
+		}
+		var answers = reqAnswers.answers;
+		
+        var sumScoreAnsweredBySupplierNA = 0;
+        var sumScoreAnsweredByEvaluatorNA = 0;
+        var counterQuestions = answers.length;
+        var sumExpectedScoreSupplier = 0;
+        var sumExpectedScoreEvaluator = 0;
+        var sumScoreAnsweredBySupplier = 0;
+        var sumScoreAnsweredByEvaluator = 0;
+        var summariesSurvey = [];
+        
+        var criterionPercentDTO = {};
+        var dimensionPercentDTO = {};
+        var percents = {};
+        var counterQuestionsByCriterion = {};
+        var scoresOfEvaluators = {};
+        var scoresOfSupplier = {};
+        
+        var contador = 0;
+        var contC = 0;
+        var scoreS = [];
+        var scoreAuxS = []; 
+        for (var i in answers) {
+        	var answer = answers[i];
+        	var question = get(answer.idQuestion, "QuestionDTO");
+            var option = get(answer.idOptionSupplier, "OptionDTO");
+            var criterion = get(question.idCriterion, "CriterionDTO");
+            var dimension = get(question.idDimension, "DimensionDTO");
+            // var report = new ReportOfCalificationsBySuppliers();
+            
+            if (!percents.hasOwnProperty(question.idCriterion)) {
+				criterionPercentDTO = getCriterionPercentById(answer.idSurvey, question.idCriterion, "C");
+				percents[criterionPercentDTO.idCriterion] = criterionPercentDTO.percent;
+			}
+	          
+			if (!percents.hasOwnProperty(question.idDimension)) {
+			    dimensionPercentDTO = getCriterionPercentById(answer.idSurvey, question.idDimension, "D");
+			    percents[dimensionPercentDTO.idDimension] = dimensionPercentDTO.percent;
+			}
+			  
+			if (!counterQuestionsByCriterion.hasOwnProperty(question.idCriterion)) {
+			    counterQuestionsByCriterion[question.idCriterion] = 1;
+			} else {
+			    contC = counterQuestionsByCriterion[question.idCriterion];
+			    counterQuestionsByCriterion[question.idCriterion] = contC + 1;
+			}
+            
+            var summarySurvey = new SummarySurvey();
+            
+            var expectedScoreSupplier = 0;
+            var expectedScoreEvaluator = 0;
+            
+            if (null != option && !isObjectEmpty(option)) {
+                setSummarySurveyBySupplier(option, summarySurvey);
+                if (summarySurvey.getScoreOfSupplier() >= MINIMUM_SCORE) {
+                    sumScoreAnsweredBySupplier = sumScoreAnsweredBySupplier + summarySurvey.getScoreOfSupplier();
+                    
+                    if (!scoresOfSupplier.hasOwnProperty(question.idCriterion)) {
+                        scoreS = [];
+                        scoreS.push(summarySurvey.getScoreOfSupplier().toString());
+                        scoresOfSupplier[question.idCriterion] = scoreS;
+					} else {
+	                    scoreAuxS = scoresOfSupplier[question.idCriterion];
+	                    scoreAuxS.push(summarySurvey.getScoreOfSupplier().toString());
+	                    scoresOfSupplier[question.idCriterion] = scoreAuxS;
+					}
+                    
+                    expectedScoreSupplier = getMaxScoreInQuestion(question.id, option);
+                    sumExpectedScoreSupplier = sumExpectedScoreSupplier + expectedScoreSupplier;
+                } else {
+                    summarySurvey.setExpectedScoreSupplier(SCORE_OF_NA);
+                    expectedScoreSupplier = SCORE_OF_NA;
+                    sumScoreAnsweredBySupplierNA = sumScoreAnsweredBySupplierNA + SCORE_OF_NA;
+                }
+
+                setSummarySurveyByEvaluator(answer, summarySurvey);
+                if (summarySurvey.getScoreOfEvaluator() >= MINIMUM_SCORE) {
+                    var optionEvaluator = get(answer.idOptionEvaluator, "OptionDTO");
+                    sumScoreAnsweredByEvaluator = sumScoreAnsweredByEvaluator + summarySurvey.getScoreOfEvaluator();
+                    
+                    if (!scoresOfEvaluators.hasOwnProperty(question.idCriterion)) {
+                        score = [];
+                        score.push(summarySurvey.getScoreOfEvaluator().toString());
+                        scoresOfEvaluators[question.idCriterion] = score;
+					} else {
+                        scoreAux = scoresOfEvaluators[question.idCriterion];
+                        scoreAux.push(summarySurvey.getScoreOfEvaluator().toString());
+                        scoresOfEvaluators[question.idCriterion] = scoreAux;
+                    }
+                    
+                    expectedScoreEvaluator = getMaxScoreInQuestion(question.id, optionEvaluator);
+                    sumExpectedScoreEvaluator = sumExpectedScoreEvaluator + expectedScoreEvaluator;
+                } else {
+                	contador++;
+                    summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                    sumScoreAnsweredByEvaluatorNA = sumScoreAnsweredByEvaluatorNA + SCORE_OF_NA;
+                }
+
+            } else {
+                summarySurvey.setAnswerSupplier(answer.responseSupplier);
+
+                if (answer.responseSupplier != "") {
+                    summarySurvey.setAnswerEvaluator(answer.responseSupplier);
+                    expectedScoreEvaluator = SCORE_OF_NA;
+                }
+
+                expectedScoreSupplier = SCORE_OF_NA;
+            }
+            
+            summarySurvey.setExpectedScoreSupplier(expectedScoreSupplier);
+            summarySurvey.setExpectedScoreEvaluator(expectedScoreEvaluator);
+            summarySurvey.setQuestion(question.wording);
+            summarySurvey.setQuestionType(question.type);
+            summarySurvey.setCommentSupplier(answer.commentSupplier);
+            summarySurvey.setCommentEvaluator(answer.commentEvaluator);
+            summarySurvey.setCriterion(criterion.name);
+            summarySurvey.setDimension(dimension.name);
+            summarySurvey.setPercentCriterion(percents[criterion.id]);
+            summarySurvey.setPercentDimension(percents[dimension.id]);
+            summarySurvey.setAttachmentCount(answer.idAttachment.length);
+
+            summariesSurvey.push(summarySurvey.getObject());
+        }
+        
+        counterQuestions = counterQuestions * SCORE_OF_NA;
+        
+        var percentScoreOfEvaluator = 0;
+        var percentScoreOfSupplier = 0;
+        
+        var itemsPercents = $.keys(percents);
+        var itemsCounterQuestionsByCriterion = $.keys(counterQuestionsByCriterion);
+        if (itemsPercents.length >= itemsCounterQuestionsByCriterion.length) {
+          var scoresQEvaluators = null;
+          var scoresQSuppliers = null;
+          var counterQ;
+          for (var key in counterQuestionsByCriterion) {
+                counterQ = counterQuestionsByCriterion[key];
+                var idCriterion = key;
+                var percentCri = (percents[idCriterion] / 100) / counterQ;
+                scoresQEvaluators = scoresOfEvaluators[idCriterion];
+                if (null != scoresQEvaluators && scoresQEvaluators.length > 0) {
+                  	for (var i = 0; i < scoresQEvaluators.length; i++) {
+                    	percentScoreOfEvaluator = percentScoreOfEvaluator + (parseFloat(scoresQEvaluators[i]) * percentCri);
+					}
+                  	scoresQEvaluators = null;
+                }
+                scoresQSuppliers = scoresOfSupplier[idCriterion];
+                if (null != scoresQSuppliers && scoresQSuppliers.length > 0) {
+                  	for (var i = 0; i < scoresQSuppliers.length; i++) {
+                    	percentScoreOfSupplier = percentScoreOfSupplier + (parseFloat(scoresQSuppliers[i]) * percentCri);
+                  	}
+                  	scoresQSuppliers = null;
+                }
+                // percentScoreOfEvaluator = (short) (percentScoreOfEvaluator + (percentCri / counterQ));
+            }
+        }
+
+        recordOfReport.expectedScoreSupplier = sumExpectedScoreSupplier;
+        recordOfReport.expectedScoreEvaluator = sumExpectedScoreEvaluator;
+
+        if (counterQuestions == sumScoreAnsweredBySupplierNA) {
+            sumScoreAnsweredBySupplier = SCORE_OF_NA;
+            recordOfReport.expectedScoreSupplier = SCORE_OF_NA;
+        }
+        recordOfReport.totalScoreOfSupplier = calculateTotalScore(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
+        recordOfReport.totalPercentScoreOfSupplier = percentScoreOfSupplier;
+
+        if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
+            sumScoreAnsweredByEvaluator = SCORE_OF_NA;
+            recordOfReport.expectedScoreEvaluator = SCORE_OF_NA;
+        }
+        recordOfReport.totalScoreOfEvaluator = calculateTotalScore(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
+        recordOfReport.totalPercentScoreOfEvaluator = percentScoreOfEvaluator;
+
+        recordOfReport.scoreOfSupplier = sumScoreAnsweredBySupplier;
+        recordOfReport.scoreOfEvaluator = sumScoreAnsweredByEvaluator;
+        recordOfReport.summarySurvey = summariesSurvey;
+        
+        response.recordOfReport = recordOfReport;
+        
+        return response;
+	} catch(e){
+		println("Error en buildReportOfAverageGradeBySupplier: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+/* function buildReportOfAverageGradeBySupplier(idSupplierByCall, recordOfReport, parameters) {
 	var response = {
 		recordOfReport: {},
 		errorSend: ""
@@ -1466,7 +1722,7 @@ function buildReportOfAverageGradeBySupplier(idSupplierByCall, recordOfReport, p
 		println("Error en buildReportOfAverageGradeBySupplier: " + e.message);
 		throw new HandlerGenericException(e.message);
 	}
-}
+} */
 
 function buildReportOfTechnicalTeam(idSupplierByCall, recordOfReport, parameters) {
 	var response = {
@@ -2723,6 +2979,9 @@ function resolveDTO(classDto, nd) {
 			break;
 		case "CriterionDTO":
 			fields = getFieldsCriterion(nd);
+			break;
+		case "CriterionPercentDTO":
+			fields = getFieldsCriterionPercent(nd);
 			break;
 		case "DimensionDTO":
 			fields = getFieldsDimension(nd);

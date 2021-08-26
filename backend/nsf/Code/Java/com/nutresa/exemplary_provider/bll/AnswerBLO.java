@@ -1,13 +1,16 @@
 package com.nutresa.exemplary_provider.bll;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.nutresa.exemplary_provider.dal.AnswerDAO;
 import com.nutresa.exemplary_provider.dtl.AnswerDTO;
 import com.nutresa.exemplary_provider.dtl.CriterionDTO;
+import com.nutresa.exemplary_provider.dtl.CriterionPercentDTO;
 import com.nutresa.exemplary_provider.dtl.DimensionDTO;
 import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
@@ -122,7 +125,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
      */
     
     // TODO: Se debe descomnetar esta función cuando se pase a producción el desarrollo de porcentajes por criterio
-    /* public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
+    public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
             ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
@@ -296,9 +299,9 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         recordOfReport.setSummarySurvey(summariesSurvey);
 
         return recordOfReport;
-    } */
+    }
     
-    public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
+    /* public ReportOfCalificationsBySuppliers buildReportOfAverageGradeBySupplier(String idSupplierByCall,
             ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
@@ -397,7 +400,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         recordOfReport.setSummarySurvey(summariesSurvey);
 
         return recordOfReport;
-    }
+    } */
     
     private void setSummarySurveyBySupplier(OptionDTO optionAnswer, SummarySurvey summary) {
         summary.setAnswerSupplier(optionAnswer.getWording());
