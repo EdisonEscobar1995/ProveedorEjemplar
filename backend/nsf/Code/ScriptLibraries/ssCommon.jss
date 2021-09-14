@@ -2341,15 +2341,15 @@ function getFieldsContact(ndContact) {
 	var contactDTO = {};
 	try {
 		contactDTO = {
-			idSupplier: ndCustomer.getItemValueString("idSupplier"),
-		    email: ndCustomer.getItemValueString("email"),
-		    phone: ndCustomer.getItemValueString("phone")
+			idSupplier: ndContact.getItemValueString("idSupplier"),
+		    email: ndContact.getItemValueString("email"),
+		    phone: ndContact.getItemValueString("phone")
 	    }
 	} catch(e){
-		println("Error en getFieldsCustomer: " + e.message);
+		println("Error en getFieldsContact: " + e.message);
 		throw new HandlerGenericException(e.message);
 	}
-	return customerDTO;
+	return contactDTO;
 }
 
 function getCustomersBySupplier(idSupplier) {
@@ -2362,12 +2362,12 @@ function getCustomersBySupplier(idSupplier) {
     		var document:NotesDocument = documents.getFirstDocument();
     		var customer = {};
     		while (document != null) {
-    			isObjectEmpty(obj2);
+    			// isObjectEmpty(obj2);
     			customer = getFieldsCustomer(document);
     			if (!isObjectEmpty(customer)) {
     				customers.push(customer);	
     			}
-    			    			
+    			
     			ndAux = documents.getNextDocument(document);
     			document.recycle();
     			document = ndAux;
