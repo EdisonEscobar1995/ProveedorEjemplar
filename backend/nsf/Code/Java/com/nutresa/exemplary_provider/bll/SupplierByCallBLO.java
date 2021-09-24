@@ -73,6 +73,9 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
                 if (userBLO.isRol(Rol.EVALUATOR.toString())) {
                     permissionForEvaluator(response);
                 }
+                if (userBLO.isRol(Rol.ADMINISTRATOR.toString())) {
+                	rules.setRulesToSection("administrator", rules.buildRules(true, false));
+                }
             } else {
                 throw new HandlerGenericException(HandlerGenericExceptionTypes.ROL_INVALID.toString());
             }

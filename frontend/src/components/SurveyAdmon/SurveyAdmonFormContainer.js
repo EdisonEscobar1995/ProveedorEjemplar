@@ -88,6 +88,7 @@ const mapStateToProps = state => ({
   companySizeValue: state.surveyAdmon.companySizeValue,
   data: state.surveyAdmon.data,
   questionSelected: state.surveyAdmon.questionSelected,
+  deleteQuestionSurveyAdmon: state.surveyAdmon.deleteQuestionSurveyAdmon,
   criterionsSelected: state.surveyAdmon.criterionsSelected,
   loading: state.surveyAdmon.loading,
 });

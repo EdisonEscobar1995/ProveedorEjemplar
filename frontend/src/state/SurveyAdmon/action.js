@@ -23,6 +23,7 @@ import {
   SAVE_QUESTION_SELECTED,
   DIMENSION_DESELECTED,
   FILTER_BY_CRITERION_SURVEY,
+  SET_DELETE_QUESTION_SURVEY,
   REQUEST_FAILED,
   SAVE_SURVEY_ADMON,
   UPDATE_DATA_SURVEY_ADMON,
@@ -34,7 +35,8 @@ import
 import { getCallApi } from '../../api/call';
 import { getSuppliesApi } from '../../api/supply';
 import { getDataCompanySizeApi } from '../../api/companySize';
-import { getQuestionsByIdDimensionApi } from '../../api/question';
+// eslint-disable-next-line no-unused-vars
+import { getQuestionsByIdDimensionApi, deleteQuestionApi } from '../../api/question';
 import { getDataDimensionApi } from '../../api/dimension';
 import { getAllCriterionsByDimensionApi, getAllCriterionsApi } from '../../api/criterions';
 import { requestApi, requestApiNotLoading } from '../../utils/action';
@@ -126,6 +128,9 @@ const getDimensionsProgress = () => ({
   type: GET_DIMENSIONS_SURVEY_PROGRESS,
 });
 
+const setDeleteQuestionSurvey = () => ({
+  type: SET_DELETE_QUESTION_SURVEY,
+});
 
 const getAllDataSurveyFormAdmonSuccess =
 (call, supply, companySize, allCriterions, allDimensions, data,
@@ -700,7 +705,7 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
     const dimension = dimensions.find(d => d.id === questionData.idDimension);
     const criterion = criterions.find(c => c.id === questionData.idCriterion);
 
-    if (type === 'selected') {
+    if (type === 'selected' || type === 'deleteQuestion') {
       const dimensionExist = dataQuestionSel.filter(element => element.id === dimension.id);
       // Si la dimension no existe
       if (dimensionExist.length === 0) {
@@ -728,7 +733,12 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
       if (questionData.dependOfQuestion !== '' && dependingQuestion) {
         dispatch(questionSelected(dependingQuestion, 'selected', true));
       } else {
-        dispatch(setMessage(`Pregunta agregada exitosamente${dependency ? ', junto con la pregunta de la que depende' : ''}`, 'success'));
+        let message = `Pregunta agregada exitosamente${dependency ? ', junto con la pregunta de la que depende' : ''}`;
+        if (type === 'deleteQuestion') {
+          message = 'La pregunta ha sido eliminada';
+        }
+        dispatch(setMessage(message, 'success'));
+        dispatch(setDeleteQuestionSurvey());
       }
     } else {
       // Buscar dimension de la pregunta
@@ -763,6 +773,18 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
   } catch (error) {
     dispatch(setMessage('Ha ocurrido un error!', 'error', error));
   }
+};
+
+// eslint-disable-next-line no-unused-vars
+const deleteQuestionSurveyAdmon = question => (dispatch) => {
+  // eslint-disable-next-line no-debugger
+  debugger;
+  requestApi(dispatch, getDimensionsProgress, deleteQuestionApi, question)
+    .then(() => {
+      dispatch(questionSelected(question, 'deleteQuestion'));
+    }).catch((err) => {
+      dispatch(getFailedRequest(err));
+    });
 };
 
 const copySurvey = data => (dispatch) => {
@@ -811,4 +833,5 @@ export {
   copySurvey,
   openModal,
   closeModal,
+  deleteQuestionSurveyAdmon,
 };

@@ -81,6 +81,7 @@ const messages = {
   'Supplier.no': 'No',
   'Button.save': 'Save',
   'Button.add': 'Add',
+  'Button.addQuetion': 'Add question',
   'Button.continue': 'Continue',
   'Button.send': 'Send',
   'Button.edit': 'Edit',

@@ -51,6 +51,7 @@ class General extends Component {
       changeIdCompanySize,
       system,
       rules: { supplier: { readOnly } },
+      rules,
     } = this.props;
     const { messageByChangeSizeCompany, informationProgram } = system;
     const { getFieldDecorator, setFields } = this.props.form;
@@ -90,7 +91,7 @@ class General extends Component {
             text: 'Button.save',
             buttoncolor: 'buttonFirst',
             onClick: this.saveDraft,
-            disabled: readOnly,
+            disabled: (rules && rules.administrator) ? rules.administrator.readOnly : readOnly,
             showConfirm: changeIdCompanySize,
             messageConfirm: messageByChangeSizeCompany,
           },
@@ -145,7 +146,7 @@ class General extends Component {
         <Paragraph text={informationProgram} />
         <Field label="SupplierByCall.participateInCall">
           <Select
-            disabled={readOnly}
+            disabled={(rules && rules.administrator) ? rules.administrator.readOnly : readOnly}
             style={{ width: '100%' }}
             value={participateInCall}
             onChange={this.handleChange}

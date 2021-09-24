@@ -22,6 +22,7 @@ import {
   DIMENSION_DESELECTED,
   FILTER_BY_CRITERION_SURVEY,
   SET_COMPANY_SIZE_VALUE,
+  SET_DELETE_QUESTION_SURVEY,
   SET_SUPPLY_VALUE,
   SET_CALL_VALUE,
   REQUEST_FAILED,
@@ -90,6 +91,12 @@ function surveyAdmonApp(state = initialState, action) {
         ...state,
         loading: true,
       };
+    case SET_DELETE_QUESTION_SURVEY: {
+      return {
+        ...state,
+        loading: false,
+      };
+    }
     case GET_DATA_SURVEY_ADMON_SUCCESS: {
       return {
         ...state,

@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../state/SurveyAdmon/action';
-import GenericTable from '../shared/GenericTable';
+// import GenericTable from '../shared/GenericTable';
+import TableListQuestions from './TableListQuestions';
 import columnsDimension from './columnsDimension';
 import columnsQuestion from './columnsQuestion';
 
@@ -18,12 +20,17 @@ function ListQuestion(props) {
     dropCriterionByDimension,
     searchQuestion,
     questionSelected,
+    deleteQuestionSurveyAdmon,
     filterByCriterion,
     deselectedByCriterion,
   } = props;
+
   const questionSelectedMethod = (questionData) => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     questionSelected(questionData, 'selected');
   };
+
   const componentList = [
     {
       title: 'Dimensiones de preguntas',
@@ -47,23 +54,23 @@ function ListQuestion(props) {
       }],
     },
     {
-      title: 'Preguntas',
+      title: 'Preguntas ññ',
       columns: columnsQuestion,
+      deleteMethod: record => deleteQuestionSurveyAdmon(record),
       onChangeSearchMethod: changeSearchByQuestion,
       onSearchMethod: searchQuestion,
       onRowClick: questionSelectedMethod,
-      style: { cursor: 'pointer' },
+      // style: { cursor: 'pointer' },
     },
   ];
   return (
-    <GenericTable
+    <TableListQuestions
       {...props}
       level={0}
       componentList={componentList}
       expandable
-      withOutActions
+      withOutAddOptions
       pagination
-      withOutAdd
     />
   );
 }
