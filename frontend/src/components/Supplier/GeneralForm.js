@@ -20,8 +20,12 @@ class General extends Component {
       }
     });
   }
-  validateContactInfo = () => {
+  validateContactInfo = (rules) => {
     let response = true;
+    // No se valida la información si es el usuario administrador
+    if (rules.administrator && !(rules.administrator.readOnly)) {
+      return response;
+    }
     this.props.form.validateFieldsAndScroll(validateFields, (err) => {
       if (err) {
         response = false;
@@ -29,9 +33,11 @@ class General extends Component {
     });
     return response;
   }
-  saveDraft = () => {
-    if (this.validateContactInfo() === true) {
-      this.props.save(this.props.form.getFieldsValue());
+  saveDraft = (rules) => {
+    if (this.validateContactInfo(rules) === true) {
+      const isAdmin = rules.administrator && !(rules.administrator.readOnly);
+      const dataValues = this.props.form.getFieldsValue();
+      this.props.save(dataValues, '', isAdmin);
     }
   }
   continue = () => {
@@ -90,7 +96,7 @@ class General extends Component {
             key: 1,
             text: 'Button.save',
             buttoncolor: 'buttonFirst',
-            onClick: this.saveDraft,
+            onClick: () => this.saveDraft(rules),
             disabled: (rules && rules.administrator) ? rules.administrator.readOnly : readOnly,
             showConfirm: changeIdCompanySize,
             messageConfirm: messageByChangeSizeCompany,
@@ -133,6 +139,17 @@ class General extends Component {
           onClick: this.handleSubmit,
         },
       ];
+      if ((rules && rules.administrator) && !(rules.administrator.readOnly)) {
+        buttons.push({
+          key: 2,
+          text: 'Button.save',
+          buttoncolor: 'buttonFirst',
+          onClick: () => this.saveDraft(rules),
+          disabled: (rules && rules.administrator) ? rules.administrator.readOnly : readOnly,
+          showConfirm: changeIdCompanySize,
+          messageConfirm: messageByChangeSizeCompany,
+        });
+      }
       content = (
         <DinamicForm
           getFieldDecorator={getFieldDecorator}

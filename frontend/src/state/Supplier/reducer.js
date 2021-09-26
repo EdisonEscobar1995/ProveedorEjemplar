@@ -30,6 +30,7 @@ import {
   SET_SECTOR,
   SET_EXPORT,
   CLEAN_STORE,
+  SET_LOADING_FALSE,
 } from './const';
 
 
@@ -294,6 +295,11 @@ function supplierApp(state = initialState, action) {
     case CLEAN_STORE:
       return {
         ...initialState,
+      };
+    case SET_LOADING_FALSE:
+      return {
+        ...state,
+        loading: false,
       };
     default: {
       return state;

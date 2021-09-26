@@ -124,12 +124,18 @@ class Supplier extends Component {
       this.setState({ current });
     }
   }
-  save = (values, action) => {
+  save = (values, action, isAdmin = false) => {
     if (!this.props.changeIdCompanySize && this.props.participateInCall === 'true') {
-      const newSupplier = this.getSupplierValues(values);
-      this.props.saveDataCallSupplier(newSupplier);
-      if (action === 'send') {
-        this.next();
+      if (isAdmin) {
+        values.participateInCall = 'true';
+        values.acceptedPolicy = true;
+        this.props.saveDataCallBySupplier(Object.assign(this.props.call, values));
+      } else {
+        const newSupplier = this.getSupplierValues(values);
+        this.props.saveDataCallSupplier(newSupplier);
+        if (action === 'send') {
+          this.next();
+        }
       }
     } else if (this.props.participateInCall === 'false') {
       values.participateInCall = 'false';
