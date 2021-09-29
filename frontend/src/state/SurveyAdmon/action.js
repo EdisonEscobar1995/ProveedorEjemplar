@@ -777,8 +777,6 @@ const questionSelected = (questionData, type = 'selected', dependency) => (dispa
 
 // eslint-disable-next-line no-unused-vars
 const deleteQuestionSurveyAdmon = question => (dispatch) => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   requestApi(dispatch, getDimensionsProgress, deleteQuestionApi, question)
     .then(() => {
       dispatch(questionSelected(question, 'deleteQuestion'));

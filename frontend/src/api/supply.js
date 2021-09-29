@@ -1,8 +1,11 @@
 import instance from './instance';
+import instanceService from './instanceService';
 
 function getSuppliesApi() {
   return instance.get('Supply?action=getAll');
 }
+
+const getSuppliesSpecialsApi = () => instanceService.get('xaServicios.xsp?Open&action=getAllSuppliesSpecial');
 
 function saveSupplyApi(data) {
   return instance.post('Supply?action=save', data);
@@ -17,4 +20,5 @@ export {
   getSuppliesApi,
   saveSupplyApi,
   deleteSupplyApi,
+  getSuppliesSpecialsApi,
 };

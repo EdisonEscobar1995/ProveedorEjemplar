@@ -5,10 +5,12 @@ import {
   UPDATE_SUPPLIER_SELECTION,
   REQUEST_FAILED,
   RESET_DATA,
+  GET_SUPPLIES_SPECIAL,
 } from './const';
 
 import { getSupplierSelectionApi } from '../../api/call';
-import { sendApprovalsApi, sendRejectionsApi } from '../../api/supplier';
+import { getSuppliesSpecialsApi } from '../../api/supply';
+import { sendApprovalsApi, sendRejectionsApi, createCopyOfSupplieyByCallSpecialApi } from '../../api/supplier';
 import { requestApi, sortByField } from '../../utils/action';
 import { MANAGER_TEAM } from '../../utils/const';
 import { openModal, closeModal } from '../Main/action';
@@ -19,6 +21,11 @@ const getSupplierSelectionProgress = () => ({
 
 const getSupplierSelectionSuccess = data => ({
   type: GET_SUPPLIER_SELECTION_SUCCESS,
+  data,
+});
+
+const getSuppliesSpecialsSuccess = data => ({
+  type: GET_SUPPLIES_SPECIAL,
   data,
 });
 
@@ -52,24 +59,54 @@ const getSupplierSelection = type => (
   }
 );
 
+const getSuppliesSpecials = () => (
+  (dispatch) => {
+    requestApi(dispatch, getSupplierSelectionProgress, getSuppliesSpecialsApi)
+      .then((response) => {
+        const data = sortByField(response.data.data, 'name', true);
+        dispatch(getSuppliesSpecialsSuccess(data));
+      }).catch((err) => {
+        dispatch(getFailedRequest(err));
+      });
+  }
+);
+
 const checkSupplier = (idSupplier, checked) => ({
   type: CHECK_SUPPLIER,
   idSupplier,
   checked,
 });
 
-const sendApprovals = (list, type, negociator, next) => (
+const sendApprovals = (list, type, negociator, next, suppliesSpecials = []) => (
   (dispatch) => {
     dispatch(closeModal());
-    requestApi(
-      dispatch, getSupplierSelectionProgress, sendApprovalsApi,
-      { idSuppliersByCall: list, stage: type, negociator })
-      .then(() => {
-        dispatch(updateSupplierSelection(list));
-        next(list);
-      }).catch((err) => {
-        dispatch(getFailedRequest(err));
-      });
+    if (suppliesSpecials.length > 0) {
+      requestApi(
+        dispatch, getSupplierSelectionProgress, sendApprovalsApi,
+        { idSuppliersByCall: list, stage: type, negociator })
+        .then(() => {
+          requestApi(dispatch, getSupplierSelectionProgress, createCopyOfSupplieyByCallSpecialApi,
+            { suppliesSpecials, idSuppliersByCall: list })
+            .then(() => {
+              dispatch(updateSupplierSelection(list));
+              next(list);
+            }).catch(() => {
+              dispatch(getFailedRequest());
+            });
+        }).catch((err) => {
+          dispatch(getFailedRequest(err));
+        });
+    } else {
+      requestApi(
+        dispatch, getSupplierSelectionProgress, sendApprovalsApi,
+        { idSuppliersByCall: list, stage: type, negociator })
+        .then(() => {
+          dispatch(updateSupplierSelection(list));
+          next(list);
+        }).catch((err) => {
+          dispatch(getFailedRequest(err));
+        });
+    }
   }
 );
 
@@ -90,6 +127,7 @@ const sendRejections = (list, type, next) => (
 export {
   getSupplierSelection,
   getFailedRequest,
+  getSuppliesSpecials,
   checkSupplier,
   sendApprovals,
   sendRejections,

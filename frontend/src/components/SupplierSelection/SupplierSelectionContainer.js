@@ -7,6 +7,7 @@ import H1 from '../shared/H1';
 
 class SupplierSelectionContainer extends Component {
   componentDidMount() {
+    this.props.getSuppliesSpecials();
     this.props.getSupplierSelection(this.props.type);
   }
 
@@ -30,6 +31,7 @@ class SupplierSelectionContainer extends Component {
 
 const mapStateToProps = state => ({
   data: state.supplierSelection.data,
+  suppliesSpecialsdata: state.supplierSelection.suppliesSpecials,
   loading: state.supplierSelection.loading,
 });
 

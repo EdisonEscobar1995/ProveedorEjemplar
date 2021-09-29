@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view name='(Supplier by call special)' alias='SupplierByCallSpecial|vwSuppliersByCallSpecial'
+ xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.9' replicaid='052584B20081E119'
+ showinmenu='false' publicaccess='false' designerversion='8.5.3' unreadmarks='none'
+ onopengoto='lastopened' onrefresh='displayindicator' headers='beveled' opencollapsed='false'
+ showresponsehierarchy='true' showmargin='true' shrinkrows='false' extendlastcolumn='false'
+ showhierarchies='false' unreadcolor='black' rowlinecount='1' headerlinecount='1'
+ rowspacing='1' bgcolor='white' totalscolor='black' headerbgcolor='white'
+ boldunreadrows='false' evaluateactions='false' allownewdocuments='false'
+ allowcustomizations='true' hidemarginborder='false' marginwidth='0px' marginbgcolor='white'
+ uniquekeys='false'>
+<noteinfo noteid='22476' unid='C8EF873972B299A60525875E00187113' sequence='4'>
+<created><datetime>20210927T232658,11-05</datetime></created>
+<modified><datetime>20210927T232728,88-05</datetime></modified>
+<revised><datetime>20210927T232728,87-05</datetime></revised>
+<lastaccessed><datetime>20210927T232728,88-05</datetime></lastaccessed>
+<addedtofile><datetime>20210927T232658,23-05</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></updatedby>
+<wassignedby><name>CN=Juan Carlos Gonzalez Arroyave/O=desarrollo</name></wassignedby><code
+ event='selection'><formula>SELECT form = "frSupplierByCallSpecial"</formula></code><code
+ event='querypaste'><lotusscript>Sub Querypaste(Source As Notesuiview, Continue As Variant)
+	Continue = False
+End Sub
+</lotusscript></code>
+<column sort='ascending' hidedetailrows='false' itemname='id' width='17.2500'
+ resizable='true' separatemultiplevalues='false' sortnoaccent='true' sortnocase='true'
+ showaslinks='false'><columnheader title='id'><font size='9pt' style='bold'/></columnheader></column></view>
+

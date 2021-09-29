@@ -26,8 +26,6 @@ function ListQuestion(props) {
   } = props;
 
   const questionSelectedMethod = (questionData) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     questionSelected(questionData, 'selected');
   };
 

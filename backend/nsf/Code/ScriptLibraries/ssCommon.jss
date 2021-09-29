@@ -2730,13 +2730,11 @@ function getFinishedByStage(stageState) {
 		var listYears = vectorToArray(getFieldAll(0, "vwCallsByYear"));
         var year = year = listYears[0];
         var stateId = getStateByShortName(stageState).id;
-        
         response.evaluated = getByStateInCall(stateId, getIdCallByYear(year));
         
         if (response.evaluated.length == 0) {
         	response.errorSend = "INFORMATION_NOT_FOUND";
         }
-
         return response;
 	} catch(e){
 		println("Error en getFinishedByStage: " + e.message);
@@ -3014,6 +3012,7 @@ function resolveDTO(classDto, nd) {
 			fields = getFieldState(nd);
 			break;
 		case "SupplyDTO":
+		case "SupplySpecialDTO":
 			fields = getFieldsSupply(nd);
 			break;
 		case "SupplierDTO":

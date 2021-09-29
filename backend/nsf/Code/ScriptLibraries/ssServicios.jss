@@ -652,8 +652,9 @@ function getSuppliersForSelection() {
                 reportBySupplier.totalScoreInService = reportUntilTechnicalTeam.totalScoreInService;
                 reportBySupplier.services = reportUntilTechnicalTeam.services;
             }
-            
-            data.push(reportBySupplier);
+            if (!isObjectEmpty(reportBySupplier)) {
+            	data.push(reportBySupplier);	
+            }
         }
         		
 	}catch(e){
@@ -983,6 +984,91 @@ function getFilters(vista, keyField){
 	datos = @Trim(@Unique(datos)).sort();
 	
 	return datos;
+}
+
+function getAllSuppliesSpecial() {
+	var error = "";
+	var errorSend = "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var data = [];
+		
+		data = getAll("vwSuppliesSpecial", "SupplySpecialDTO");
+
+	}catch(e){
+		error = e.message;
+		println("Error en getAllSuppliesSpecial: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener los suministros especiales: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function createCopyOfSupplieyByCallSpecial() {
+	var error = "";
+	var errorSend = "";
+	var parameters = fromJson(param.get("data"));
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var data = "";
+		var vwSuppliersByCall: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCall");
+		var vwSuppliesSpecial: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliesSpecial");
+		var ndSupplySpecial: NotesDocument;
+		var ndSupplierByCall: NotesDocument;
+		var ndSupplierByCallSpecial: NotesDocument;
+		println("parameters == ", parameters.suppliesSpecials);
+		if (parameters.suppliesSpecials.length > 0 && parameters.idSuppliersByCall.length > 0) {
+			for (var i in parameters.idSuppliersByCall) {
+				ndSupplierByCall = vwSuppliersByCall.getDocumentByKey(parameters.idSuppliersByCall[i], true);
+				if (ndSupplierByCall) {
+					for (var j in parameters.suppliesSpecials) {
+						ndSupplierByCallSpecial = sessionAsSigner.getCurrentDatabase().createDocument();
+						ndSupplierByCall.copyAllItems(ndSupplierByCallSpecial, true);
+						ndSupplierByCallSpecial.replaceItemValue("id", ndSupplierByCallSpecial.getUniversalID());
+						ndSupplierByCallSpecial.replaceItemValue("form", "frSupplierByCallSpecial");
+						ndSupplierByCallSpecial.replaceItemValue("idSupplySpecial", parameters.suppliesSpecials[j]);
+						ndSupplySpecial = vwSuppliesSpecial.getDocumentByKey(parameters.suppliesSpecials[j], true);
+						ndSupplierByCallSpecial.replaceItemValue("supply", ndSupplySpecial.getItemValueString("name"));
+						
+						ndSupplierByCallSpecial.save(true, false);			           	
+						ndSupplierByCallSpecial.recycle();
+					}	
+				}
+				
+			}
+		}
+
+	}catch(e){
+		error = e.message;
+		println("Error en createCopyOfSupplieyByCallSpecial: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error creando copia de los proveedores por convocatoria (SupplierByCallSpecial): " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
 }
 
 function prueba() {

@@ -5,10 +5,12 @@ import {
   UPDATE_SUPPLIER_SELECTION,
   REQUEST_FAILED,
   RESET_DATA,
+  GET_SUPPLIES_SPECIAL,
 } from './const';
 
 const initialState = {
   data: [],
+  suppliesSpecials: [],
   loading: false,
 };
 
@@ -42,6 +44,13 @@ function resultsApp(state = initialState, action) {
       return {
         ...state,
         data: state.data.filter(item => action.data.indexOf(item.idSupplierByCall) < 0),
+        loading: false,
+      };
+    }
+    case GET_SUPPLIES_SPECIAL: {
+      return {
+        ...state,
+        suppliesSpecials: action.data,
         loading: false,
       };
     }

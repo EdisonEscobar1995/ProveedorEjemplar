@@ -61,6 +61,14 @@ function sendApprovalsApi(data) {
   return instance.post('SupplierToNextStage?action=approveToNextStage', data);
 }
 
+function createCopyOfSupplieyByCallSpecialApi(data) {
+  const datos = new FormData();
+  datos.append('data', JSON.stringify({
+    ...data,
+  }));
+  return instanceService.post('xaServicios.xsp?Open&action=createCopyOfSupplieyByCallSpecial', datos);
+}
+
 function sendRejectionsApi(data) {
   return instance.post('SupplierToNextStage?action=dontApproveToNextStage', data);
 }
@@ -88,6 +96,7 @@ export {
   getSurveysApi,
   getPendingsApi,
   sendApprovalsApi,
+  createCopyOfSupplieyByCallSpecialApi,
   getSuppliersByKeyApi,
   sendRejectionsApi,
   finishTechnicalTeamSurveyApi,
