@@ -1022,13 +1022,12 @@ function createCopyOfSupplieyByCallSpecial() {
 	var parameters = fromJson(param.get("data"));
 	try{
 		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
-		var data = "";
+		var data = "OK";
 		var vwSuppliersByCall: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCall");
 		var vwSuppliesSpecial: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliesSpecial");
 		var ndSupplySpecial: NotesDocument;
 		var ndSupplierByCall: NotesDocument;
 		var ndSupplierByCallSpecial: NotesDocument;
-		println("parameters == ", parameters.suppliesSpecials);
 		if (parameters.suppliesSpecials.length > 0 && parameters.idSuppliersByCall.length > 0) {
 			for (var i in parameters.idSuppliersByCall) {
 				ndSupplierByCall = vwSuppliersByCall.getDocumentByKey(parameters.idSuppliersByCall[i], true);

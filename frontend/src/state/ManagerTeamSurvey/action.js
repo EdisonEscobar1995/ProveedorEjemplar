@@ -90,7 +90,6 @@ const openNotificationWithIcon = (type) => {
   });
 };
 
-
 const setScore = (idSupplier, value, answer) => (dispatch) => {
   requestApi(dispatch, getDataManagerTeamSurveyProgress, saveManagerTeamAnswerApi, answer)
     .then((response) => {
@@ -134,8 +133,15 @@ const getManagerTeamSurvey = (year = '', supplierId = '') => (dispatch) => {
       let rol;
       let supplierAux = [...data.suppliers];
       supplierAux = supplierAux.map((supplier) => {
-        const idState = data.suppliersByCall.find(
-          element => element.idSupplier === supplier.id).idState;
+        let idState;
+        if (supplier.isEspecial) {
+          const auxIdSupplier = supplier.id.split('_')[0];
+          idState = data.suppliersByCall.find(
+            element => element.idSupplier === auxIdSupplier).idState;
+        } else {
+          idState = data.suppliersByCall.find(
+            element => element.idSupplier === supplier.id).idState;
+        }
         const state = data.masters.State.find(element => element.id === idState).shortName;
         let readOnly =
           (state !== 'NOT_STARTED_MANAGER_TEAM' && state !== 'MANAGER_TEAM');
@@ -166,7 +172,10 @@ const getManagerTeamSurvey = (year = '', supplierId = '') => (dispatch) => {
       data.masters.ManagerTeamAnswer.forEach((managerAnswer) => {
         const supplierByCall = data.suppliersByCall
           .find(call => call.id === managerAnswer.idSupplierByCall);
-        const idSupplier = supplierByCall.idSupplier;
+        let idSupplier = supplierByCall.idSupplier;
+        if (supplierByCall.idSupplySpecial) {
+          idSupplier = `${supplierByCall.idSupplier}_${supplierByCall.id}`;
+        }
         const idSupplierByCall = supplierByCall.id;
         const idState = supplierByCall.idState;
 

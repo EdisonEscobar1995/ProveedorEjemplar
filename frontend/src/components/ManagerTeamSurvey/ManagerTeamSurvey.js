@@ -97,6 +97,9 @@ class ManagerTeamSurvey extends Component {
       title: 'Tipo de suministro',
       key: 'idSupply',
       render(text, record) {
+        if (record.isEspecial) {
+          return record.supply;
+        }
         return masters.Supply.find(supply => supply.id === record.idSupply).name;
       },
     }, {
@@ -138,8 +141,17 @@ class ManagerTeamSurvey extends Component {
     const { data, setCommentState } = this.props;
     const { suppliersByCall, masters } = data;
     const idSupplier = record.id;
-    const idSupplierByCall = suppliersByCall.find(element =>
-      element.idSupplier === idSupplier).id;
+    let idSupplierByCall;
+    if (record.isEspecial) {
+      const auxIdSupplier = record.id.split('_')[0];
+      idSupplierByCall = suppliersByCall.find(element =>
+        (element.idSupplier === auxIdSupplier
+          && element.idSupplySpecial === record.idSupplySpecial)).id;
+    } else {
+      idSupplierByCall = suppliersByCall.find(element =>
+        element.idSupplier === idSupplier).id;
+    }
+
     let answer = masters.ManagerTeamAnswer.find(element =>
       element.idSupplierByCall === idSupplierByCall);
     if (!answer) {
@@ -158,8 +170,16 @@ class ManagerTeamSurvey extends Component {
     const { data, setComment, setScore } = this.props;
     const { suppliersByCall, masters } = data;
     const idSupplier = record.id;
-    const idSupplierByCall = suppliersByCall.find(element =>
-      element.idSupplier === idSupplier).id;
+    let idSupplierByCall;
+    if (record.isEspecial) {
+      const auxIdSupplier = record.id.split('_')[0];
+      idSupplierByCall = suppliersByCall.find(element =>
+        (element.idSupplier === auxIdSupplier
+          && element.idSupplySpecial === record.idSupplySpecial)).id;
+    } else {
+      idSupplierByCall = suppliersByCall.find(element =>
+        element.idSupplier === idSupplier).id;
+    }
     let answer = masters.ManagerTeamAnswer.find(element =>
       element.idSupplierByCall === idSupplierByCall);
     if (!answer) {
@@ -170,10 +190,12 @@ class ManagerTeamSurvey extends Component {
     if (type === SCORE) {
       answer.idEvaluationScale = value.key;
       answer.comment = record.comment.value;
+      answer.isEspecial = record.isEspecial ? 'true' : '';
       setScore(idSupplier, value, answer);
     } else {
       answer.idEvaluationScale = record.score.defaultValue.key;
       answer.comment = value;
+      answer.isEspecial = record.isEspecial ? 'true' : '';
       setComment(idSupplier, value, answer);
     }
   }

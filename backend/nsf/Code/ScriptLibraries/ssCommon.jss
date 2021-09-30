@@ -1927,6 +1927,7 @@ function identifyParticpantsByCallYearAndStageStates(year, statesOfStage) {
 	var callsBySupplier = [];
 	try {
 		var viewName:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallIdStateAndIdCall");
+		var vwSupplierSpecial:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallSpecial");
 		var separatorToFTSearch = " AND ";
 		var sep = "";
 		var query = "[idCall] = " + getIdCallByYear(year);
@@ -1947,6 +1948,7 @@ function identifyParticpantsByCallYearAndStageStates(year, statesOfStage) {
 		}
 		
 	    // callsBySupplier.addAll(getAllBy(getIdCallByYear(year), viewName, "SupplierByCallDTO"));
+		viewName.refresh();
 	    viewName.FTSearch(query, 0);
 
         var entries:NotesViewEntryCollection = viewName.getAllEntries();
@@ -1969,6 +1971,32 @@ function identifyParticpantsByCallYearAndStageStates(year, statesOfStage) {
 				ve = veAux;
 			}
             viewName.clear();
+        }
+        
+        // Buscar supplier by call special
+        vwSupplierSpecial.refresh();
+        vwSupplierSpecial.FTSearch(query, 0);
+        
+        var entries:NotesViewEntryCollection = vwSupplierSpecial.getAllEntries();
+        var ve:NotesViewEntry;
+        var veAux:NotesViewEntry;
+        if (null != entries && entries.getCount() > 0) {
+        	var nd:NotesDocument;
+        	var supplierByCall = {}; 
+            ve = entries.getFirstEntry();
+            while (ve != null) {
+				nd = ve.getDocument();
+				
+				supplierByCall = getFieldsSupplierByCallSpecial(nd);
+    			if (!isObjectEmpty(supplierByCall)) {
+    				callsBySupplier.push(supplierByCall);
+    			}
+				
+				veAux = entries.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+            vwSupplierSpecial.clear();
         }
 	    
 		return callsBySupplier;
@@ -2576,6 +2604,12 @@ function getInformationFromSuppliers(listYears, callsFound) {
 				ndSupplier = vwSuppliers.getDocumentByKey(callsFound[i].idSupplier, true);
 				if (ndSupplier != null) {
 					response['suppliers'].push(getFieldsSupplier(ndSupplier));
+					if (callsFound[i].idSupplySpecial) {
+						response['suppliers'][response['suppliers'].length - 1].idSupplySpecial = callsFound[i].idSupplySpecial;
+						response['suppliers'][response['suppliers'].length - 1].id = ndSupplier.getItemValueString("id") + "_" + callsFound[i].id;
+						response['suppliers'][response['suppliers'].length - 1].supply = callsFound[i].supply;
+						response['suppliers'][response['suppliers'].length - 1].isEspecial = true;
+					}
 					if (callsFound[i].idState != "" && !obj.hasOwnProperty(callsFound[i].idState)) {
 						obj[callsFound[i].idState] = '';
 						response['states'].push(get(callsFound[i].idState,"StateDTO"));
@@ -2668,6 +2702,39 @@ function getFieldsSupplierByCall(ndSupplierByCall) {
 		throw new HandlerGenericException(e.message);
 	}
 	return supplierByCallDTO;
+}
+
+function getFieldsSupplierByCallSpecial(ndSupplierByCallSpecial) {
+	var supplierByCallDTOSpecial = {};
+	try {
+		supplierByCallDTOSpecial = {
+	    	id: ndSupplierByCallSpecial.getItemValueString("id"),
+	   	  	idCall: ndSupplierByCallSpecial.getItemValueString("idCall"),
+	    	idSurvey: ndSupplierByCallSpecial.getItemValueString("idCall"),
+	    	idSupplier: ndSupplierByCallSpecial.getItemValueString("idSupplier"),
+        	idSupplySpecial: ndSupplierByCallSpecial.getItemValueString("idSupplySpecial"),
+       		supply: ndSupplierByCallSpecial.getItemValueString("supply"),
+	    	participateInCall: ndSupplierByCallSpecial.getItemValueString("participateInCall"),
+	    	acceptedPolicy: ndSupplierByCallSpecial.getItemValueString("acceptedPolicy") == "1" ? true : false,
+	    	reasonForNotParticipation: ndSupplierByCallSpecial.getItemValueString("reasonForNotParticipation"),
+	    	nameWhoSayDontParticipate: ndSupplierByCallSpecial.getItemValueString("nameWhoSayDontParticipate"),
+	    	emailWhoSayDontParticipate: ndSupplierByCallSpecial.getItemValueString("emailWhoSayDontParticipate"),
+	    	lockedByModification: ndSupplierByCallSpecial.getItemValueString("lockedByModification") == "1" ? true : false,
+	    	dateLocked: getValueDate(ndSupplierByCallSpecial, "dateLocked", "yyyy/MM/dd"),
+	    	dateUnLocked: getValueDate(ndSupplierByCallSpecial, "dateUnLocked", "yyyy/MM/dd"),
+	    	oldIdCompanySize: ndSupplierByCallSpecial.getItemValueString("oldIdCompanySize"),
+	    	idState: ndSupplierByCallSpecial.getItemValueString("idState"),
+	    	invitedToCall: ndSupplierByCallSpecial.getItemValueString("invitedToCall") == "1" ? true : false,
+	    	dateAssignedToEvaluator: getValueDate(ndSupplierByCallSpecial, "dateAssignedToEvaluator", "yyyy/MM/dd"),
+	    	whoEvaluate: ndSupplierByCallSpecial.getItemValueString("whoEvaluate"),
+	    	whoEvaluateOfTechnicalTeam: ndSupplierByCallSpecial.getItemValueString("whoEvaluateOfTechnicalTeam"),
+	   	  	idsDimension: []
+	    }
+	} catch(e){
+		println("Error en getFieldsSupplierByCallSpecial: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return supplierByCallDTOSpecial;
 }
 
 function getAllByStates(idCall, states) {

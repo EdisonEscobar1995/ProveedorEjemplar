@@ -11,6 +11,8 @@ public class SupplierToNextStageDTO {
     private String stage;
     @Expose
     private String negociator;
+    @Expose
+    private List<String> suppliesSpecials;
 
     public void setIdSuppliersByCall(List<String> idSupplierByCall) {
         this.idSuppliersByCall = idSupplierByCall;
@@ -36,4 +38,12 @@ public class SupplierToNextStageDTO {
         return stage;
     }
 
+	public List<String> getSuppliesSpecials() {
+		return suppliesSpecials;
+	}
+
+	public void setSuppliesSpecials(List<String> suppliesSpecials) {
+		this.suppliesSpecials = suppliesSpecials;
+	}
+    
 }

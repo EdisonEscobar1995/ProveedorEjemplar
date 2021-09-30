@@ -16,6 +16,8 @@ public class ManagerTeamAnswerDTO {
     @Expose
     private String comment;
     @Expose
+    private String isEspecial;
+    @Expose
     private Date dateResponse;
 
     public void setWhoEvaluate(String whoEvaluate) {
@@ -65,4 +67,12 @@ public class ManagerTeamAnswerDTO {
     public void setIdSupplierByCall(String idSupplierByCall) {
         this.idSupplierByCall = idSupplierByCall;
     }
+
+	public String getIsEspecial() {
+		return isEspecial;
+	}
+
+	public void setIsEspecial(String isEspecial) {
+		this.isEspecial = isEspecial;
+	}    
 }

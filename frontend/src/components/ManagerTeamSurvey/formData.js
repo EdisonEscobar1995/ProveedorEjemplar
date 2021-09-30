@@ -19,6 +19,9 @@ const formData = ({ data, getManagerTeamSurvey, filterManagerTeamSurvey, form })
         const idSupplier = item.id;
         if (idSuppliers.indexOf(idSupplier) === -1) {
           item.name = item.businessName;
+          if (item.isEspecial) {
+            item.name = `${item.businessName} - ${item.supply}`;
+          }
           idSuppliers.push(idSupplier);
           suppliersAux.push(item);
         }

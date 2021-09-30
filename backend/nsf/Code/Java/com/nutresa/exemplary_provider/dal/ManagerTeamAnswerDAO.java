@@ -15,6 +15,19 @@ public class ManagerTeamAnswerDAO extends GenericDAO<ManagerTeamAnswerDTO> {
         super(ManagerTeamAnswerDTO.class);
     }
 
+    public List<ManagerTeamAnswerDTO> getAnswersOfSupplierWhoEvaluate(List<String> filter) throws HandlerGenericException {
+        List<ManagerTeamAnswerDTO> answersOfSupplier = new ArrayList<ManagerTeamAnswerDTO>();
+        View view = getDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate");
+        DocumentCollection documents = view.getAllDocumentsByKey(filter, true);
+        if (null != documents) {
+            for (Document document : documents) {
+                answersOfSupplier.add(castDocument(document));
+            }
+        }
+
+        return answersOfSupplier;
+    }
+    
     public List<ManagerTeamAnswerDTO> getAnswersOfSupplier(String idSupplierByCall) throws HandlerGenericException {
         List<ManagerTeamAnswerDTO> answersOfSupplier = new ArrayList<ManagerTeamAnswerDTO>();
         View view = getDatabase().getView("vwManagerTeamAnswersByIdSupplierByCallAndWhoEvaluate");
