@@ -47,7 +47,7 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         }
 
         if ("ManagerTeam".equals(suppliersToNextStage.getStage())) {
-            notified = approveToManagerTeam(suppliersToNextStage.getIdSuppliersByCall());
+        	notified = approveToManagerTeam(suppliersToNextStage.getIdSuppliersByCall());
         }
 
         return notified;

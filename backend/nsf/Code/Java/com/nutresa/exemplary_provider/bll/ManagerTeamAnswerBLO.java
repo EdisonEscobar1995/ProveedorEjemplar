@@ -77,12 +77,46 @@ public class ManagerTeamAnswerBLO extends GenericBLO<ManagerTeamAnswerDTO, Manag
         ManagerTeamAnswerDAO managerTeamAnswerDAO = new ManagerTeamAnswerDAO();
         return managerTeamAnswerDAO.getAnswersOfSupplier(idSupplierByCall);
     }
-
+    
     public ReportOfCalificationsBySuppliers buildReportOfManagerTeam(String idSupplierByCall,
             ReportOfCalificationsBySuppliers recordOfReport) throws HandlerGenericException {
         List<SummaryManagerSurvey> answerToReport = new ArrayList<SummaryManagerSurvey>();
         ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
         List<ManagerTeamAnswerDTO> managerAnswers = getAnswersOfSupplier(idSupplierByCall);
+        for (ManagerTeamAnswerDTO answer : managerAnswers) {
+            EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
+            ReportOfCalificationsBySuppliers.SummaryManagerSurvey answerRecord = report.new SummaryManagerSurvey();
+            answerRecord.comment = answer.getComment();
+            answerRecord.whoEvaluate = answer.getWhoEvaluate();
+            answerRecord.score = evaluationScaleBLO.get(answer.getIdEvaluationScale()).getScore();
+            answerToReport.add(answerRecord);
+        }
+        recordOfReport.setManagerAnswers(answerToReport);
+
+        return recordOfReport;
+    }
+    
+    /**
+     * Metodo que tiene sobre carga de parametros para cuando es supplier special
+     * 
+     * @param isEspecial
+     *            Bandera para identificar que es supplier special
+     * @param idSupplierByCall
+     *            Identificador del supplier by call
+     * @param recordOfReport
+     * 			  Identificador del record actual
+     * @throws HandlerGenericException
+     */
+    public ReportOfCalificationsBySuppliers buildReportOfManagerTeam(String isEspecial, String idSupplierByCallSpecial, String idSupplierByCall,
+            ReportOfCalificationsBySuppliers recordOfReport) throws HandlerGenericException {
+        List<SummaryManagerSurvey> answerToReport = new ArrayList<SummaryManagerSurvey>();
+        ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
+        List<ManagerTeamAnswerDTO> managerAnswers = null;
+        if (isEspecial.equals("true")) {
+        	managerAnswers = getAnswersOfSupplier(idSupplierByCallSpecial);
+        } else {
+        	managerAnswers = getAnswersOfSupplier(idSupplierByCall);
+        }
         for (ManagerTeamAnswerDTO answer : managerAnswers) {
             EvaluationScaleBLO evaluationScaleBLO = new EvaluationScaleBLO();
             ReportOfCalificationsBySuppliers.SummaryManagerSurvey answerRecord = report.new SummaryManagerSurvey();

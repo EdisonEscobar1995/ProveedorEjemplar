@@ -17,7 +17,7 @@ public class SupplierToNextStageAPI extends GenericAPI<SupplierToNextStageDTO, S
         SupplierToNextStageBLO supplierToTechnicalTeamBLO = new SupplierToNextStageBLO();
         ServletResponseDTO<String> response = null;
         try {
-            response = new ServletResponseDTO<String>(supplierToTechnicalTeamBLO.approveToNextStage(parameters));
+           	response = new ServletResponseDTO<String>(supplierToTechnicalTeamBLO.approveToNextStage(parameters));
         } catch (HandlerGenericException exception) {
             response = new ServletResponseDTO<String>(exception);
         }

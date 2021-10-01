@@ -44,6 +44,12 @@ public class SupplierByCallDTO {
     private String whoEvaluateOfTechnicalTeam;
     @Expose
     private List<String> idsDimension;
+    @Expose
+    private String isEspecial;
+    @Expose
+    private String supplySpecial;
+    @Expose
+    private String idSupplierByCallSpecial;
     
     public List<String> getIdsDimension() {
 		return idsDimension;
@@ -120,6 +126,10 @@ public class SupplierByCallDTO {
         this.idState = idState;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+    
     public String getId() {
         return id;
     }
@@ -202,5 +212,29 @@ public class SupplierByCallDTO {
 
 	public boolean isAcceptedPolicy() {
 		return acceptedPolicy;
+	}
+
+	public void setIsEspecial(String isEspecial) {
+		this.isEspecial = isEspecial;
+	}
+
+	public String getIsEspecial() {
+		return isEspecial;
+	}
+
+	public void setSupplySpecial(String supplySpecial) {
+		this.supplySpecial = supplySpecial;
+	}
+
+	public String getSupplySpecial() {
+		return supplySpecial;
+	}
+
+	public void setIdSupplierByCallSpecial(String idSupplierByCallSpecial) {
+		this.idSupplierByCallSpecial = idSupplierByCallSpecial;
+	}
+
+	public String getIdSupplierByCallSpecial() {
+		return idSupplierByCallSpecial;
 	}
 }

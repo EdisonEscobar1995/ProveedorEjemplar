@@ -1,5 +1,6 @@
 package com.nutresa.exemplary_provider.bll;
 
+import java.util.List;
 
 import com.nutresa.exemplary_provider.dal.SupplierByCallSpecialDAO;
 import com.nutresa.exemplary_provider.dtl.SectionRule;
@@ -34,6 +35,11 @@ public class SupplierByCallSpecialBLO extends GenericBLO<SupplierByCallSpecialDT
         }
 
         return response;
+    }
+    
+    public List<SupplierByCallSpecialDTO> getSupplierByCallSpecialIdSupplier(String idSupplier) throws HandlerGenericException {
+        SupplierByCallSpecialDAO supplierByCallDAO = new SupplierByCallSpecialDAO();
+        return supplierByCallDAO.getSupplierByCallSpecialIdSupplier(idSupplier);
     }
 
     @Override

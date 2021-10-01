@@ -18,6 +18,7 @@ import com.nutresa.exemplary_provider.dtl.HandlerGenericExceptionTypes;
 import com.nutresa.exemplary_provider.dtl.ManagerTeamDTO;
 import com.nutresa.exemplary_provider.dtl.Rol;
 import com.nutresa.exemplary_provider.dtl.SupplierByCallDTO;
+import com.nutresa.exemplary_provider.dtl.SupplierByCallSpecialDTO;
 import com.nutresa.exemplary_provider.dtl.SupplierDTO;
 import com.nutresa.exemplary_provider.dtl.SupplyDTO;
 import com.nutresa.exemplary_provider.dtl.CompanySizeDTO;
@@ -240,6 +241,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         String typeReport = parameters.get("type");
         if (null != typeReport) {
             List<SurveyStates> surveyStatesAllowed = stateBLO.getStatesByTypeReport(typeReport);
+            SupplierByCallSpecialBLO supplierByCallSpecialBLO = new SupplierByCallSpecialBLO();
             for (SupplierDTO supplier : suppliers) {
                 SupplierByCallBLO supplierByCallBLO = new SupplierByCallBLO();
                 SupplierByCallDTO supplierByCall = supplierByCallBLO.getByIdCallAndIdSupplierFinished(idCall, supplier
@@ -247,13 +249,58 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
 
                 if (supplierByCall instanceof SupplierByCallDTO) {
                     response.add(getRecordOfReport(supplierByCall, supplier, parameters));
+                    
+                    List<SupplierByCallSpecialDTO> suppliersByCallSpecial = supplierByCallSpecialBLO.getSupplierByCallSpecialIdSupplier(supplier.getId()); 
+                    if (suppliersByCallSpecial.size() > 0) {
+                    	for (SupplierByCallSpecialDTO supplySpecial : suppliersByCallSpecial) {
+                    		if (supplySpecial instanceof SupplierByCallSpecialDTO) {
+                            	String idSupplierByCall = supplierByCall.getId();
+                            	supplierByCall = converSupplierSpecialDtoToNormalSupplierByCall(supplySpecial, idSupplierByCall);
+                            	if (supplierByCall instanceof SupplierByCallDTO) {
+                                    response.add(getRecordOfReport(supplierByCall, supplier, parameters));
+                            	}
+                            }
+                    	}
+                    }
                 }
+                
             }
         } else {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
         }
 
         return response;
+    }
+    
+    public void createRecordForSupplierByCallSpecial() throws HandlerGenericException {
+    	
+    }
+    
+    public SupplierByCallDTO converSupplierSpecialDtoToNormalSupplierByCall(SupplierByCallSpecialDTO supplierByCallSpecial, String idSupplierByCall)
+    	throws HandlerGenericException {
+    	SupplierByCallDTO supplierByCall = new SupplierByCallDTO();
+    	
+    	supplierByCall.setId(idSupplierByCall);
+    	supplierByCall.setIdCall(supplierByCallSpecial.getIdCall());
+    	supplierByCall.setIdSurvey(supplierByCallSpecial.getIdSurvey());
+    	supplierByCall.setIdSupplier(supplierByCallSpecial.getIdSupplier());
+    	supplierByCall.setParticipateInCall(supplierByCallSpecial.getParticipateInCall());
+    	supplierByCall.setAcceptedPolicy(true);
+    	supplierByCall.setReasonForNotParticipation(supplierByCallSpecial.getReasonForNotParticipation());
+    	supplierByCall.setNameWhoSayDontParticipate(supplierByCallSpecial.getNameWhoSayDontParticipate());
+    	supplierByCall.setEmailWhoSayDontParticipate(supplierByCallSpecial.getEmailWhoSayDontParticipate());
+    	supplierByCall.setOldIdCompanySize(supplierByCallSpecial.getOldIdCompanySize());
+    	supplierByCall.setIdState(supplierByCallSpecial.getIdState());
+    	supplierByCall.setInvitedToCall(true);
+    	supplierByCall.setDateAssignedToEvaluator(supplierByCallSpecial.getDateAssignedToEvaluator());
+    	supplierByCall.setWhoEvaluate(supplierByCallSpecial.getWhoEvaluate());
+    	supplierByCall.setWhoEvaluateOfTechnicalTeam(supplierByCallSpecial.getWhoEvaluateOfTechnicalTeam());
+    	supplierByCall.setIdsDimension(supplierByCallSpecial.getIdsDimension());
+    	supplierByCall.setIsEspecial("true");
+    	supplierByCall.setSupplySpecial(supplierByCallSpecial.getSupply());
+    	supplierByCall.setIdSupplierByCallSpecial(supplierByCallSpecial.getId());
+    	
+    	return supplierByCall;
     }
         
     public ReportCalificationBySupplier getReportBySupplier(Map<String, String> parameters)
@@ -449,6 +496,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         recordOfReport.setSapCode(supplier.getSapCode());
         recordOfReport.setName(supplier.getBusinessName());
         recordOfReport.setSupply(supplyBLO.get(supplier.getIdSupply()).getName());
+        if (supplierByCall.getIsEspecial() != null && supplierByCall.getIsEspecial().equals("true")) {
+        	recordOfReport.setSupply(supplierByCall.getSupplySpecial());
+        }
         recordOfReport.setCategory(categoryBLO.get(supplier.getIdCategory()).getName());
         recordOfReport.setCompanySize(companySizeBLO.get(supplier.getIdCompanySize()).getName());
         recordOfReport.setIdSupplier(supplierByCall.getIdSupplier());
@@ -472,7 +522,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
                 recordOfReport = technicalTeamAnswerBLO.buildReportOfTechnicalTeam(supplierByCall.getId(),
                         recordOfReport, parameters);
                 ManagerTeamAnswerBLO managerTeamAnswerBLO = new ManagerTeamAnswerBLO();
-                recordOfReport = managerTeamAnswerBLO.buildReportOfManagerTeam(supplierByCall.getId(), recordOfReport);
+                recordOfReport = managerTeamAnswerBLO.buildReportOfManagerTeam(
+                		supplierByCall.getIsEspecial(), supplierByCall.getIdSupplierByCallSpecial(), supplierByCall.getId(), recordOfReport);
             }
         }
 
