@@ -2599,6 +2599,7 @@ function getInformationFromSuppliers(listYears, callsFound) {
 		var numCallsFound = callsFound.length;
 		var obj = {};
 		var vwSuppliers = sessionAsSigner.getCurrentDatabase().getView("vwSuppliers");
+		var state = {};
 		for (var i=0; i<numCallsFound; i++) {
 			if (callsFound[i].idSupplier && callsFound[i].idSupplier != "") {
 				ndSupplier = vwSuppliers.getDocumentByKey(callsFound[i].idSupplier, true);
@@ -2612,7 +2613,10 @@ function getInformationFromSuppliers(listYears, callsFound) {
 					}
 					if (callsFound[i].idState != "" && !obj.hasOwnProperty(callsFound[i].idState)) {
 						obj[callsFound[i].idState] = '';
-						response['states'].push(get(callsFound[i].idState,"StateDTO"));
+						state = get(callsFound[i].idState,"StateDTO");
+						if (!isObjectEmpty(state)) {
+							response['states'].push(get(callsFound[i].idState,"StateDTO"));	
+						}
 					}
 					
 					for (var prop in idFieldNames) {
@@ -2622,6 +2626,7 @@ function getInformationFromSuppliers(listYears, callsFound) {
 						}	
 					}
 				}
+				state = {};
 			}
 		}
 		

@@ -665,7 +665,7 @@ function getSuppliersForSelection() {
 			error = errorSend;
 		}
 		if (error != ""){
-			error = "Error al obtener proveedores que pasan evaluación comité técnico: " + error
+			error = "Error al obtener proveedores que pasan evaluación comité gerencial: " + error
 		}
 		var respuesta = {
 			data: error ? null : data,
