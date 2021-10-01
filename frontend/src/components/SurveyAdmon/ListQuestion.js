@@ -52,7 +52,7 @@ function ListQuestion(props) {
       }],
     },
     {
-      title: 'Preguntas ññ',
+      title: 'Preguntas',
       columns: columnsQuestion,
       deleteMethod: record => deleteQuestionSurveyAdmon(record),
       onChangeSearchMethod: changeSearchByQuestion,
