@@ -40,7 +40,7 @@ public class QuestionBLO extends GenericBLO<QuestionDTO, QuestionDAO> {
     public boolean delete(Map<String, String> parameters, Boolean checkRelationship) throws HandlerGenericException {
         QuestionDAO questionDAO = new QuestionDAO();
         if (!questionDAO.questionInCall(parameters.get("id"))){
-        	return super.delete(parameters, checkRelationship);
+        	return super.delete(parameters, false);
         }else{
             throw new HandlerGenericException(HandlerGenericExceptionTypes.DOCUMENT_MULTI_CONNECTED.toString());
         }
