@@ -702,7 +702,7 @@ function getParticipantsToManagerTeam() {
     	var usuario = getUserInSession();    	
     	ndUserCfg = vwUserByName.getDocumentByKey(usuario, true);
     	
-        if (getIsRol("MANAGER_TEAM") && isMember(ndUserCfg.getItemValueString("id"), managerTeamInCall)) {
+    	if (getIsRol("MANAGER_TEAM") && !isMember(ndUserCfg.getItemValueString("id"), managerTeamInCall)) {
         	errorSend = "INFORMATION_NOT_FOUND";
         	return;
         }

@@ -2700,7 +2700,8 @@ function getFieldsSupplierByCall(ndSupplierByCall) {
 	    	dateAssignedToEvaluator: getValueDate(ndSupplierByCall, "dateAssignedToEvaluator", "yyyy/MM/dd"),
 	    	whoEvaluate: ndSupplierByCall.getItemValueString("whoEvaluate"),
 	    	whoEvaluateOfTechnicalTeam: ndSupplierByCall.getItemValueString("whoEvaluateOfTechnicalTeam"),
-	   	    idsDimension: []
+	    	idsDimension: ndSupplierByCall.getItemValue("idsDimension").size() > 0 ? vectorToArray(ndSupplierByCall.getItemValue("idsDimension")) : [],
+	    	percentsDimension: ndSupplierByCall.getItemValue("percentsDimension").size() > 0 ? vectorToArray(ndSupplierByCall.getItemValue("percentsDimension")) : []
 	    }
 	} catch(e){
 		println("Error en getFieldSupplierByCall: " + e.message);
@@ -2733,7 +2734,8 @@ function getFieldsSupplierByCallSpecial(ndSupplierByCallSpecial) {
 	    	dateAssignedToEvaluator: getValueDate(ndSupplierByCallSpecial, "dateAssignedToEvaluator", "yyyy/MM/dd"),
 	    	whoEvaluate: ndSupplierByCallSpecial.getItemValueString("whoEvaluate"),
 	    	whoEvaluateOfTechnicalTeam: ndSupplierByCallSpecial.getItemValueString("whoEvaluateOfTechnicalTeam"),
-	   	  	idsDimension: []
+	    	idsDimension: ndSupplierByCallSpecial.getItemValue("idsDimension").size() > 0 ? vectorToArray(ndSupplierByCallSpecial.getItemValue("idsDimension")) : [],
+	    	percentsDimension: ndSupplierByCallSpecial.getItemValue("percentsDimension").size() > 0 ? vectorToArray(ndSupplierByCallSpecial.getItemValue("percentsDimension")) : []
 	    }
 	} catch(e){
 		println("Error en getFieldsSupplierByCallSpecial: " + e.message);
