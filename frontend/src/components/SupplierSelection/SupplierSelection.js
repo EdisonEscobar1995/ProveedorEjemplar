@@ -47,7 +47,7 @@ function SupplierSelection(props) {
           />,
         );
       } else {
-        // sendMethod(checked, props.type, '', openNotification);
+        sendMethod(checked, props.type, '', openNotification);
       }
     } else {
       message({ text: 'Debe seleccionar al menos un proveedor', type: 'info' });

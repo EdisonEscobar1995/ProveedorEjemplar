@@ -135,7 +135,8 @@ public class Common {
     public static String getHostName() {
         ExternalContext externalContext = getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        return "http" + (request.isSecure() ? "s" : "") + "://" + request.getServerName();
+        // return "http" + (request.isSecure() ? "s" : "") + "://" + request.getServerName();
+        return request.isSecure() ? "https://" + request.getServerName() : "";
     }
 
     public static String getIdsFromList(List<Object> list) {
