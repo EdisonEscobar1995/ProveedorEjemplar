@@ -196,7 +196,6 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
                     technicalTeamEmails.add(user.getEmail());
                 }
             }
-
             notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
         }
     }

@@ -304,4 +304,17 @@ public class SupplierByCallDAO extends GenericDAO<SupplierByCallDTO> {
 
         return supplierByCall;
     }
+    
+    public List<DTO> getAllByDocumentsByKey(ArrayList<String> filters, String viewName) throws HandlerGenericException {
+    	List<DTO> response = new ArrayList<DTO>();
+        View currentView = getDatabase().getView(viewName);
+        DocumentCollection documents = currentView.getAllDocumentsByKey(filters, true);
+        if (null != documents) {
+            for (Document document : documents) {
+            	response.add((DTO) castDocument(document));
+            }
+        }
+
+        return response;
+    }
 }

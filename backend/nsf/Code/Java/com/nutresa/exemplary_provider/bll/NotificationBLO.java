@@ -191,12 +191,14 @@ public class NotificationBLO extends GenericBLO<NotificationDTO, NotificationDAO
             NotificationDTO notification = notificationDAO
                     .getNotificationByAlias(NotificationType.TECHNICAL_TEAM_CALLED_BY_LIBERATOR.toString());
 
-            if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
-                emails.addAll(notification.getWithCopy());
-            }
+            if (null != notification) {
+            	if (null != notification.getWithCopy() && !notification.getWithCopy().isEmpty()) {
+                    emails.addAll(notification.getWithCopy());
+                }
 
-            String linkOfButton = buildLinkTechnicalTeam();
-            notificationDAO.sendNotification(emails, notification, false, null, true, linkOfButton);
+                String linkOfButton = buildLinkTechnicalTeam();
+                notificationDAO.sendNotification(emails, notification, false, null, true, linkOfButton);
+            }
         } catch (HandlerGenericException exception) {
             throw new HandlerGenericException(exception);
         }

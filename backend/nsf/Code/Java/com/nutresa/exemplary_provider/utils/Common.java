@@ -136,7 +136,7 @@ public class Common {
         ExternalContext externalContext = getExternalContext();
         HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
         // return "http" + (request.isSecure() ? "s" : "") + "://" + request.getServerName();
-        return request.isSecure() ? "https://" + request.getServerName() : "";
+        return "https://" + request.getServerName();
     }
 
     public static String getIdsFromList(List<Object> list) {

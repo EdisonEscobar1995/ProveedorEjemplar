@@ -776,5 +776,14 @@ public class SupplierByCallBLO extends GenericBLO<SupplierByCallDTO, SupplierByC
             super.save(supplierByCall);
         }
     }
+    
+    public List<DTO> getAllByDocumentsByKey(ArrayList<String> filters, String viewName) throws HandlerGenericException {
+    	List<DTO> response = new ArrayList<DTO>();
+        if (filters.size() > 0) {
+        	SupplierByCallDAO supplierByCallDAO = new SupplierByCallDAO();
+        	response = supplierByCallDAO.getAllByDocumentsByKey(filters, viewName);
+        }
+        return response;
+    }
 
 }

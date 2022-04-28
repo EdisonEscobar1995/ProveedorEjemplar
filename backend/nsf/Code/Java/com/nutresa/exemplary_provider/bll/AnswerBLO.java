@@ -144,6 +144,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         Map<String, Integer> counterQuestionsByCriterion = new HashMap<String, Integer>();
         Map<String, List<String>> scoresOfEvaluators = new HashMap<String, List<String>>();
         Map<String, List<String>> scoresOfSupplier = new HashMap<String, List<String>>();
+        int pecentCriterionAux = 0;
+        int pecentDimensionAux = 0;
         for (AnswerDTO answer : answers) {
             QuestionBLO questionBLO = new QuestionBLO();
             QuestionDTO question = questionBLO.get(answer.getIdQuestion());
@@ -154,16 +156,19 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             DimensionBLO dimensionBLO = new DimensionBLO();
             DimensionDTO dimension = dimensionBLO.get(question.getIdDimension());
             
+            // System.out.println("0 ================================ ");
             if (percents.get(question.getIdCriterion()) == null) {
             	criterionPercentDTO =  criterionPercentBLO.getCriterionPercentById(answer.getIdSurvey(), question.getIdCriterion(), "C");
             	percents.put(criterionPercentDTO.getIdCriterion(), criterionPercentDTO.getPercent());
             }
             
+            // System.out.println("1 ================================ ");
             if (percents.get(question.getIdDimension()) == null) {
             	dimensionPercentDTO =  criterionPercentBLO.getCriterionPercentById(answer.getIdSurvey(), question.getIdDimension(), "D");
                 percents.put(dimensionPercentDTO.getIdDimension(), dimensionPercentDTO.getPercent());
             }
             
+            // System.out.println("2 ================================ ");
             if (counterQuestionsByCriterion.get(question.getIdCriterion()) == null) {
             	counterQuestionsByCriterion.put(question.getIdCriterion(), 1);
             } else {
@@ -171,6 +176,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             	counterQuestionsByCriterion.put(question.getIdCriterion(), contC + 1);
             }
             
+            // System.out.println("3 ================================ ");
             ReportOfCalificationsBySuppliers report = new ReportOfCalificationsBySuppliers();
             ReportOfCalificationsBySuppliers.SummarySurvey summarySurvey = report.new SummarySurvey();
 
@@ -232,7 +238,14 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
 
                 expectedScoreSupplier = SCORE_OF_NA;
             }
+            // System.out.println("4 ================================ " + percents.size() + percents.get(criterion.getId()));
 
+            if (percents.get(criterion.getId()) != null) {
+            	pecentCriterionAux = percents.get(criterion.getId()); 
+            }
+            if (percents.get(dimension.getId()) != null) {
+            	pecentDimensionAux = percents.get(dimension.getId()); 
+            }
             summarySurvey.setExpectedScoreSupplier(expectedScoreSupplier);
             summarySurvey.setExpectedScoreEvaluator(expectedScoreEvaluator);
             summarySurvey.setQuestion(question.getWording());
@@ -241,9 +254,11 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             summarySurvey.setCommentEvaluator(answer.getCommentEvaluator());
             summarySurvey.setCriterion(criterion.getName());
             summarySurvey.setDimension(dimension.getName());
-            summarySurvey.setPercentCriterion(percents.get(criterion.getId()));
-            summarySurvey.setPercentDimension(percents.get(dimension.getId()));
+            summarySurvey.setPercentCriterion(pecentCriterionAux);
+            summarySurvey.setPercentDimension(pecentDimensionAux);
             summarySurvey.setAttachmentCount(answer.getIdAttachment().size());
+            
+            // System.out.println("5 ================================ ");
 
             summariesSurvey.add(summarySurvey);
         }
@@ -258,20 +273,24 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         	for (Entry<String, Integer> counterQuestionCriterion : counterQuestionsByCriterion.entrySet()) {
                 int counterQ = counterQuestionCriterion.getValue();
                 String idCriterion = counterQuestionCriterion.getKey();
-                double percentCri = ((double) percents.get(idCriterion) / 100) / counterQ;
-                scoresQEvaluators = scoresOfEvaluators.get(idCriterion);
-                if (null != scoresQEvaluators && scoresQEvaluators.size() > 0) {
-                	for (int i = 0; i < scoresQEvaluators.size(); i++) {
-                    	percentScoreOfEvaluator = percentScoreOfEvaluator + (Double.parseDouble(scoresQEvaluators.get(i)) * percentCri);
-                    }
-                	scoresQEvaluators.clear();
-                }
-                scoresQSuppliers = scoresOfSupplier.get(idCriterion);
-                if (null != scoresQSuppliers && scoresQSuppliers.size() > 0) {
-                	for (int i = 0; i < scoresQSuppliers.size(); i++) {
-                		percentScoreOfSupplier = percentScoreOfSupplier + (Double.parseDouble(scoresQSuppliers.get(i)) * percentCri);
-                    }
-                	scoresQSuppliers.clear();
+                
+                if (percents.get(idCriterion) != null) {
+	                double percentCri = ((double) percents.get(idCriterion) / 100) / counterQ;
+	                scoresQEvaluators = scoresOfEvaluators.get(idCriterion);
+	                if (null != scoresQEvaluators && scoresQEvaluators.size() > 0) {
+	                	for (int i = 0; i < scoresQEvaluators.size(); i++) {
+	                    	percentScoreOfEvaluator = percentScoreOfEvaluator + (Double.parseDouble(scoresQEvaluators.get(i)) * percentCri);
+	                    }
+	                	scoresQEvaluators.clear();
+	                }
+	                
+	                scoresQSuppliers = scoresOfSupplier.get(idCriterion);
+	                if (null != scoresQSuppliers && scoresQSuppliers.size() > 0) {
+	                	for (int i = 0; i < scoresQSuppliers.size(); i++) {
+	                		percentScoreOfSupplier = percentScoreOfSupplier + (Double.parseDouble(scoresQSuppliers.get(i)) * percentCri);
+	                    }
+	                	scoresQSuppliers.clear();
+	                }
                 }
                 // percentScoreOfEvaluator = (short) (percentScoreOfEvaluator + (percentCri / counterQ));
             }

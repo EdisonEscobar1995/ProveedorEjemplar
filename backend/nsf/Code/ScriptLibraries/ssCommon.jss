@@ -2605,6 +2605,8 @@ function getInformationFromSuppliers(listYears, callsFound) {
 				ndSupplier = vwSuppliers.getDocumentByKey(callsFound[i].idSupplier, true);
 				if (ndSupplier != null) {
 					response['suppliers'].push(getFieldsSupplier(ndSupplier));
+					response.suppliers[response.suppliers.length - 1].principalCustomer = getCustomersBySupplier(ndSupplier.getItemValueString("id"));
+		            response.suppliers[response.suppliers.length - 1].contactNutresaGroup = getContactsBySupplier(ndSupplier.getItemValueString("id"));
 					if (callsFound[i].idSupplySpecial) {
 						response['suppliers'][response['suppliers'].length - 1].idSupplySpecial = callsFound[i].idSupplySpecial;
 						response['suppliers'][response['suppliers'].length - 1].id = ndSupplier.getItemValueString("id") + "_" + callsFound[i].id;
@@ -2684,7 +2686,7 @@ function getFieldsSupplierByCall(ndSupplierByCall) {
 		supplierByCallDTO = {
 	    	id: ndSupplierByCall.getItemValueString("id"),
 	   	    idCall: ndSupplierByCall.getItemValueString("idCall"),
-	    	idSurvey: ndSupplierByCall.getItemValueString("idCall"),
+	    	idSurvey: ndSupplierByCall.getItemValueString("idSurvey"),
 	    	idSupplier: ndSupplierByCall.getItemValueString("idSupplier"),
 	    	participateInCall: ndSupplierByCall.getItemValueString("participateInCall"),
 	    	acceptedPolicy: ndSupplierByCall.getItemValueString("acceptedPolicy") == "1" ? true : false,

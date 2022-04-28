@@ -15,7 +15,7 @@ import com.nutresa.exemplary_provider.dtl.UserDTO;
 import com.nutresa.exemplary_provider.utils.HandlerGenericException;
 
 public class UserDAO extends GenericDAO<UserDTO> {
-    private static final short MAX_RESULTS = 20;
+    private static final short MAX_RESULTS = 0;
 
     public UserDAO() {
         super(UserDTO.class);

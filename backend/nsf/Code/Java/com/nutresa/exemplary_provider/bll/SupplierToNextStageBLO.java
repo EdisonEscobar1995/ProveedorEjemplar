@@ -226,7 +226,7 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
         TechnicalTeamBLO technicalTeamBLO = new TechnicalTeamBLO();
         List<DTO> definitivesSupplierByCall = new ArrayList<DTO>();
         List<TechnicalTeamDTO> members = technicalTeamBLO.getMemberInTeamByUserInSession();
-                
+               
         for (TechnicalTeamDTO member : members) {
             definitivesSupplierByCall.addAll(suppliersByCall);
             String temporalIdTechnicalTeam = member.getIdSupply().concat(
