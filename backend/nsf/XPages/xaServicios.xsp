@@ -45,6 +45,9 @@
 			case "createCopyOfSupplieyByCallSpecial":
 				createCopyOfSupplieyByCallSpecial();
 			break;
+			case "getLogoCompanySupplier":
+				getLogoCompanySupplier();
+			break;
 			case "prueba":
 				prueba();
 			break;

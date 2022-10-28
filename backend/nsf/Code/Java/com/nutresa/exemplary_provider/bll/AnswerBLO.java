@@ -129,6 +129,7 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             ReportOfCalificationsBySuppliers recordOfReport, Map<String, String> parameters)
             throws HandlerGenericException {
         List<AnswerDTO> answers = getAnswersForReportOfAverageGrade(idSupplierByCall, parameters);
+        int numQuestions = getNumQuestions(idSupplierByCall, parameters);
         short sumScoreAnsweredBySupplierNA = 0;
         short sumScoreAnsweredByEvaluatorNA = 0;
         short counterQuestions = (short) answers.size();
@@ -226,6 +227,8 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
                     summarySurvey.setExpectedScoreEvaluator(SCORE_OF_NA);
                     expectedScoreEvaluator = SCORE_OF_NA;
                     sumScoreAnsweredByEvaluatorNA = (short) (sumScoreAnsweredByEvaluatorNA + SCORE_OF_NA);
+                    Integer contC = counterQuestionsByCriterion.get(question.getIdCriterion());
+                	counterQuestionsByCriterion.put(question.getIdCriterion(), contC - 1);
                 }
 
             } else {
@@ -310,7 +313,12 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
             sumScoreAnsweredByEvaluator = SCORE_OF_NA;
             recordOfReport.setExpectedScoreEvaluator(SCORE_OF_NA);
         }
-        recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
+        if (numQuestions <= 0) {
+        	short n1 = -2;
+        	recordOfReport.setTotalScoreOfEvaluator(n1);      	
+        } else {
+        	recordOfReport.setTotalScoreOfEvaluator(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
+        }
         recordOfReport.setTotalPercentScoreOfEvaluator(percentScoreOfEvaluator);
         
         recordOfReport.setScoreOfSupplier(sumScoreAnsweredBySupplier);
@@ -465,6 +473,19 @@ public class AnswerBLO extends GenericBLO<AnswerDTO, AnswerDAO> {
         }
 
         return response;
+    }
+    
+    private int getNumQuestions(String idSupplierByCall, Map<String, String> parameters)
+    		throws HandlerGenericException {
+    	int response = 0;
+    	AnswerDAO answerDAO = new AnswerDAO();
+        Map<String, String> fieldsToFilterQuestion = answerDAO.identifyFieldsToFTSearch(parameters);
+        if (!fieldsToFilterQuestion.isEmpty()) {
+            QuestionBLO questionBLO = new QuestionBLO();
+            List<QuestionDTO> questions = questionBLO.getThemWithFilter(fieldsToFilterQuestion);
+            response = questions.size();
+        }
+    	return response;
     }
 
     /**

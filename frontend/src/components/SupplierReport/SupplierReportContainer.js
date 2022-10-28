@@ -80,6 +80,26 @@ class SupplierReportContainer extends Component {
     this.props.getParticipantsByYear();
   }
 
+  getWidthTd = (dimension) => {
+    if (dimension.scorePercentTotal.toFixed(2) && dimension.scorePercentTotal.toFixed(2) > 0) {
+      return dimension.scorePercentTotal.toFixed(2);
+    }
+    return dimension.scoreTotal <= 0 ? 0.2 : dimension.scoreTotal.toFixed(2);
+  };
+
+  getWidthTdScoreOfEvaluator = (totalScoreSupplier) => {
+    if (totalScoreSupplier.totalScorePercentOfEvaluator &&
+      totalScoreSupplier.totalScorePercentOfEvaluator > 0) {
+      return totalScoreSupplier.totalScorePercentOfEvaluator.toFixed(2);
+    } else if (totalScoreSupplier.totalScoreOfEvaluator &&
+      totalScoreSupplier.totalScoreOfEvaluator > 0) {
+      return totalScoreSupplier.totalScoreOfEvaluator.toFixed(2);
+    }
+    return 0.2;
+    // totalScoreSupplier.totalScoreOfEvaluator <= 0 ? 0.2 :
+    // totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)
+  };
+
   handleResults = (values) => {
     const { supplier } = values;
     const { suppliersByCall } = this.props.data;
@@ -121,8 +141,14 @@ class SupplierReportContainer extends Component {
                       >
                         <td className="name">Total</td>
                         <td>
-                          <div className="percent">
-                            <div style={{ width: `${totalScoreSupplier.totalScoreOfEvaluator <= 0 ? 0.2 : totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)}%` }} />
+                          <div className="percent percent-total">
+                            <div style={{ width: `${
+                              // totalScoreSupplier.totalScoreOfEvaluator <= 0 ? 0.2 :
+                              // totalScoreSupplier.totalScoreOfEvaluator.toFixed(2)
+                              this.getWidthTdScoreOfEvaluator(totalScoreSupplier) > 100 ? 100 :
+                                this.getWidthTdScoreOfEvaluator(totalScoreSupplier)}%`,
+                            }}
+                            />
                           </div>
                         </td>
                       </TrTable>
@@ -137,22 +163,11 @@ class SupplierReportContainer extends Component {
                         >
                           <td className="name">{dimension.dimension}</td>
                           <td>
-                            <div className="percent">
+                            <div className="percent percent-dimension">
                               <div style={{
-                                width: `${
-                                  dimension.scoreTotal <= 0 ? 0.2 : dimension.scoreTotal.toFixed(2)
-                                }%`,
+                                width: `${this.getWidthTd(dimension) > 100 ? 100 : this.getWidthTd(dimension)}%`,
                               }}
                               />
-                              {/*
-                              TODO: Se debe descomentar para cuando se tenga
-                              los porcentajes configurados
-                              <div
-                                style={{ width: 
-                                `${dimension.scorePercentTotal <= 0 ? 0.2 :
-                                  dimension.scorePercentTotal.toFixed(2)}%` }}
-                              />
-                              */}
                             </div>
                           </td>
                         </TrTable>
@@ -198,7 +213,7 @@ class SupplierReportContainer extends Component {
                               <TrTable key={criterio.idCriterio} widthTr={`${scoreTotal.toFixed(2)}%`}>
                                 <td className="name">{criterio.criterio}</td>
                                 <td>
-                                  <div className="percent" id={`percent-criterio_${criterio.idCriterio}`}>
+                                  <div className="percent percent-criterion" id={`percent-criterio_${criterio.idCriterio}`}>
                                     {/* <div style={{ width: 
                                       `${scoreTotal <= 0 ? 0.2 : scoreTotal.toFixed(2)}%` }} /> */}
                                     <div style={{ width: `${percentWidth <= 0 ? 0.2 : percentWidth.toFixed(2)}%` }} />

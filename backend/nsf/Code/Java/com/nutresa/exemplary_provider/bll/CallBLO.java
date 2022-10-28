@@ -368,7 +368,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
         	totalScoresEvaluatorD = getTotalEvaluateByDimension(dimensions, supplierByCall, supplier, parameters);
         	dataOfReport.setTotalScoreEvaluatorDimension(totalScoresEvaluatorD);
         	totalScoresEvaluatorC = getTotalEvaluateByCriterio(dimensions, supplierByCall, supplier, parameters);
-        	dataOfReport.setTotalScoreEvaluatorCriterion(totalScoresEvaluatorC);        	
+        	dataOfReport.setTotalScoreEvaluatorCriterion(totalScoresEvaluatorC);   	
         	response = dataOfReport;
         }
                 
@@ -438,9 +438,8 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
     	if (dimensions.isEmpty()) {
     		throw new HandlerGenericException(HandlerGenericExceptionTypes.UNEXPECTED_VALUE.toString());
     	}
-    	
     	for (DimensionDTO dimension : dimensions) {
-            filter.add(dimension.getId());            
+            filter.add(dimension.getId());
             criterions = criterionDAO.getByProperties(filter);
             if (!criterions.isEmpty()) {
             	for (CriterionDTO criterio : criterions) {
@@ -462,7 +461,9 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
             		totalScoreEvaluatorCriterio.setScoreTotal(dataOfReportAux.getTotalScoreOfEvaluator());
             		totalScoreEvaluatorCriterio.setScorePercentTotal(dataOfReportAux.getTotalPercentScoreOfEvaluator());
             		totalScoreEvaluatorCriterio.setCommentsEvaluators(comments);
-                	totalScoresEvaluatorC.add(totalScoreEvaluatorCriterio);
+            		if (dataOfReportAux.getTotalScoreOfEvaluator() != -2) {
+            			totalScoresEvaluatorC.add(totalScoreEvaluatorCriterio);            			
+            		}
                 	dataOfReportAux = new ReportOfCalificationsBySuppliers();
                 	totalScoreEvaluatorCriterio = dataOfReport.new TotalScoreEvaluatorCriterion();
                 	comments = new ArrayList<String>();
@@ -921,7 +922,7 @@ public class CallBLO extends GenericBLO<CallDTO, CallDAO> {
      * 
      * @throws HandlerGenericException
      */
-    private void checkRulesToLoadSuppliers(CallDTO call) throws HandlerGenericException {
+	private void checkRulesToLoadSuppliers(CallDTO call) throws HandlerGenericException {
         if (call.isCaducedDeadLineToMakeSurvey()) {
             throw new HandlerGenericException(HandlerGenericExceptionTypes.DATE_TO_MAKE_SURVEY_EXCEEDED.toString());
         } else {

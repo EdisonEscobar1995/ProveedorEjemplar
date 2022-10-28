@@ -1124,3 +1124,60 @@ function prueba() {
 		footerResponse(writer)
 	}
 }
+
+function getLogoCompanySupplier() {
+	var error = "";
+	var response = [];
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		
+		var vista:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByFullName");
+		var vwProgAttachments = sessionAsSigner.getCurrentDatabase().getView("vwAttachments");
+		var vec:NotesViewEntryCollection = vista.getAllEntries();
+		var ve:NotesViewEntry = vec.getFirstEntry();
+		var veAux:NotesViewEntry;
+		var nd:NotesDocument;
+		var ndAnexo:NotesDocument;
+		var macro;
+		var idsCompanyLogo;
+		var webDbName = "/" + getWebDbName();	
+		
+		while (ve != null) {
+			nd = ve.getDocument();
+			
+			if (nd.hasItem("idCompanyLogo") && nd.getItemValue("idCompanyLogo").size() > 0) {
+				idsCompanyLogo = nd.getItemValue("idCompanyLogo");
+				for(i in idsCompanyLogo){
+					ndAnexo = vwProgAttachments.getDocumentByKey(i, true);
+					if (ndAnexo != null) {
+						macro = session.evaluate("@URLEncode('Domino';@AttachmentNames)", ndAnexo);
+						response.push({
+							url: webDbName + "/vwAttachments/" + ndAnexo.getUniversalID() + "/$FILE/" + macro.elementAt(0)
+						});
+						ndAnexo.recycle();
+					}
+				}
+			}
+			
+			veAux = vec.getNextEntry(ve);
+			ve.recycle();
+			ve = veAux;
+		}
+						
+	}catch(e){
+		error = e.message;
+		println("Error en getLogoCompanySupplier: " + e.message);
+	}finally {
+		if (error != ""){
+			error = "Error al obtener el logo por supplier: " + error
+		}
+		var respuesta = {
+			data: response,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}

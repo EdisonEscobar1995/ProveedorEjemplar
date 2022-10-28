@@ -112,6 +112,10 @@ public class ReportOfCalificationsBySuppliers {
     public void setTotalScoreOfEvaluator(short totalScore, short totalExpectedScore) {
         this.totalScoreOfEvaluator = calculateTotalScore(totalScore, totalExpectedScore);
     }
+    
+    public void setTotalScoreOfEvaluator(short totalScore) {
+        this.totalScoreOfEvaluator = totalScore;
+    }
 
     public double getTotalScoreOfEvaluator() {
         return totalScoreOfEvaluator;
