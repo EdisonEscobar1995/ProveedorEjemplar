@@ -199,6 +199,12 @@ public class UserBLO extends GenericBLO<UserDTO, UserDAO> {
             notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
         }
     }
+    
+    protected void notifyToNeogciatorTechnicalTeam(List<String> technicalTeamEmails)
+	    throws HandlerGenericException {
+		NotificationBLO notificationBLO = new NotificationBLO();
+	    notificationBLO.notifyToTechnicalTeam(technicalTeamEmails);
+    }
 
     protected void notifyToManagerTeam(String idCall) throws HandlerGenericException {
         ManagerTeamBLO managerTeamByCallBLO = new ManagerTeamBLO();

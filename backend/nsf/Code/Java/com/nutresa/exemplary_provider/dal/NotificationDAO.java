@@ -100,7 +100,7 @@ public class NotificationDAO extends GenericDAO<NotificationDTO> {
 			doc.send(false, vector);
 			session.setConvertMime(true);
     	} catch (Exception exception) {
-            System.out.println(exception.toString());
+            System.out.println("Error al enviar notificacion proveedor ejemplar = " + exception.toString());
         }
    	}
 

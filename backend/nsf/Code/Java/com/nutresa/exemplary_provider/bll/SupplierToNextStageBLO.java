@@ -99,7 +99,9 @@ public class SupplierToNextStageBLO extends GenericBLO<SupplierToNextStageDTO, S
             }
         }
         UserBLO userBLO = new UserBLO();
-        userBLO.notifyToTechnicalTeam(filter);
+        List<String> technicalTeamEmails = new ArrayList<String>();
+        technicalTeamEmails.add(negociator);
+        userBLO.notifyToNeogciatorTechnicalTeam(technicalTeamEmails);
         return notified;
     }
 
