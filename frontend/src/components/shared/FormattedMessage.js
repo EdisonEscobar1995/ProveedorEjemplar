@@ -1,9 +1,9 @@
 import React from 'react';
-import { FormattedMessage as FormattedMessageIntl } from 'react-intl';
+import { FormattedHTMLMessage } from 'react-intl';
 
 function FormattedMessage({ id }) {
   return (
-    <FormattedMessageIntl id={id} defaultMessage={id} />
+    <FormattedHTMLMessage id={id} defaultMessage={id} />
   );
 }
 export default FormattedMessage;

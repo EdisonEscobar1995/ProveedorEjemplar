@@ -104,7 +104,7 @@ const messages = {
   'Table.previousAnswer': 'Previous survey\'s answer',
   'Table.providerAnswer': 'Supplier response',
   'Table.providerComment': 'Comment',
-  'Table.support': 'Support',
+  'Table.support': 'Support </br><b style="color: #df2a2a;">(You must enter attachments where the attachment icon is displayed.)</b>',
   'Table.evaluatorAnswer': 'Evaluation team response',
   'Table.evaluatorComment': 'Comment',
   'Table.noFound': "There aren't question for this dimension",
