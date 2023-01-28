@@ -23,7 +23,9 @@ function deleteDataCallBySupplierApi(id) {
 
 function getDataQuestionsBySurveyApi(data) {
   const { idSurvey, idDimension, id } = data;
-  return instance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=${idSurvey}&idDimension=${idDimension}&idSupplierByCall=${id}`);
+  // return instance.get(`Supplier?action=getQuestionsBySurvey&idSurvey=
+  // ${idSurvey}&idDimension=${idDimension}&idSupplierByCall=${id}`);
+  return instanceService.get(`xaServicios.xsp?Open&action=getQuestionsBySurvey&idSurvey=${idSurvey || ''}&idDimension=${idDimension || ''}&idSupplierByCall=${id || ''}`);
 }
 
 function getReportBySupplierApi(data) {

@@ -1070,6 +1070,55 @@ function createCopyOfSupplieyByCallSpecial() {
 	}
 }
 
+function getQuestionsBySurvey() {
+	var error = "";
+	var errorSend = "";
+	var idSurvey = param.get("idSurvey") ? param.get("idSurvey") : "";
+	var idDimension = param.get("idSurvey") ? param.get("idDimension") : "";
+	var idSupplierByCall = param.get("idSupplierByCall") ? param.get("idSupplierByCall") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"})
+		var data = {};
+		if (idSurvey != "" && idDimension != "" && idSupplierByCall  != "") {
+			var ndUserCfg:NotesDocument;
+			var ndRol:NotesDocument;
+			var ndAux:NotesDocument;
+			var vec:NotesViewEntryCollection;
+			var ve:NotesViewEntry;
+			var veAux:NotesViewEntry;
+			var objCompanies = {};
+			
+			var criterions = getCriterionsBySurvey(idSurvey, idDimension);
+			var questions = getAllQuestionsBySurvey(idDimension, idSupplierByCall);
+				        
+		    // var filter:java.util.Vector = new java.util.Vector(1);
+	        // filter.add(0, getIdCallByYear(year));
+	        // var callsBySupplier = getAllBy(filter, "vwSuppliersByCallIdCall", "SupplierByCallDTO");
+	        // data = getInformationFromSuppliers(listYears, callsBySupplier);
+			data.criterion = criterions;
+			data.questions = questions;
+		}        		
+	}catch(e){
+		error = e.message;
+		println("Error en getQuestionsBySurvey: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al obtener preguntas por encuesta: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
 function prueba() {
 	var error = "";
 	var response = "";

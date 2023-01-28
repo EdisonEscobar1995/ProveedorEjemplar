@@ -1072,7 +1072,7 @@ function getThemWithFilter(fieldsToFilter) {
  * 
  */
 
-function getFieldsAnswer(ndAnswer) {
+function getFieldsAnswer(ndAnswer, withAttachment) {
 	var answerDTO = {};
 	try {
 		/**
@@ -1094,7 +1094,7 @@ function getFieldsAnswer(ndAnswer) {
 		    commentEvaluator: ndAnswer.getItemValueString("commentEvaluator"),
 		    dateResponseEvaluator: getValueDate(ndAnswer, "dateResponseEvaluator", "yyyy/MM/dd"),
 		    idAttachment: ndAnswer.getItemValue("idAttachment").size() > 0 ? vectorToArray(ndAnswer.getItemValue("idAttachment")) : [],
-		    attachment: [],
+		    attachment: withAttachment ? getAttachmentByAnswer(ndAnswer) : [],
 		    idsToDelete: [],
 		    previousAnswer: ""
 	    }
@@ -1103,6 +1103,30 @@ function getFieldsAnswer(ndAnswer) {
 		throw new HandlerGenericException(e.message);
 	}
 	return answerDTO;
+}
+
+function getAttachmentByAnswer(ndAnswer) {
+	var response = [];
+	try {
+		var idsAttachment = vectorToArray(ndAnswer.getItemValue("idAttachment"));
+		if (idsAttachment.length > 0) {
+			for(var i=0; i < idsAttachment.length; i++){
+				var vwAttachments:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwAttachments");
+				var ndAttachment:NotesDocument = vwAttachments.getDocumentByKey(idsAttachment[i], true);
+				if (ndAttachment) {
+					response.push({
+						id: ndAttachment.getItemValueString("id"),
+						name: getAttachmentUrl(ndAttachment),
+						url: getFileName(ndAttachment)
+					});
+				}		
+			}	
+		}
+	} catch(e){
+		println("Error en getAttachmentByAnswer: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
 }
 
 function getFieldsTechnicalTeamComment(ndTechnical) {
@@ -1262,7 +1286,7 @@ function getAsnwersByIdSupplierByCall(idSupplierByCall) {
         	var answer = null;
 			while (ndAnswer != null){
 				
-				answer = getFieldsAnswer(ndAnswer);
+				answer = getFieldsAnswer(ndAnswer, false);
 				response.push(answer);
 				
 				ndTemp= documents.getNextDocument(ndAnswer);
@@ -2859,6 +2883,335 @@ function calculatePercentageInAxes(summaryProgress) {
  * 
  */
 
+
+function getCriterionsBySurvey(idSurvey, idDimension) {
+	try {
+		var response = [];
+		var responseAux = [];
+		var vwDimensionsAndCriterionsBySurveyFlat: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwDimensionsAndCriterionsBySurveyFlat");
+		var vwCriterions: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwCriterions");
+		var ndQuestionDoc:NotesDocument;
+		var ndCriterion:NotesDocument;
+		
+		var filter:java.util.Vector = new java.util.Vector(2);
+        filter.add(0, idSurvey);
+        filter.add(1, idDimension);
+        
+        var vec:NotesViewEntryCollection = null;
+		var ve:NotesViewEntry = null;
+		var veAux:NotesViewEntry;
+		vec = vwDimensionsAndCriterionsBySurveyFlat.getAllEntriesByKey(filter, true);
+		var objAux = {};
+		if (vec.getCount() > 0) {
+			ve = vec.getFirstEntry();
+			while (ve != null) {
+				ndQuestionDoc = ve.getDocument();
+				
+				if (!objAux.hasOwnProperty(ndQuestionDoc.getItemValueString("idCriterion"))) {
+					objAux[ndQuestionDoc.getItemValueString("idCriterion")] = ndQuestionDoc.getItemValueString("idCriterion");
+					responseAux.push({
+						id: ndQuestionDoc.getItemValueString("idCriterion"),
+						idDimension: ndQuestionDoc.getItemValueString("idDimension") 
+					});
+				}
+				
+				veAux = vec.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+			if (responseAux.length > 0) {
+				for(i in responseAux){
+					ndCriterion = vwCriterions.getDocumentByKey(responseAux[i].id, true);
+					if (ndCriterion) {
+						response.push({
+							id: responseAux[i].id,
+							idDimension: responseAux[i].idDimension,
+							name: ndCriterion.getItemValueString("name")
+						});
+					}
+				}
+			}
+		}
+		
+	} catch (e) {
+		println("Error en getCriterionsBySurvey: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	
+	return response;
+}
+
+function getAllQuestionsBySurvey(idDimension, idSupplierByCall) {
+	var response = [];
+	try {
+		var responseAux = [];
+		var vwQuestionsBySurvey:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwQuestionsBySurvey");
+		var vwSuppliersByCall:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCall");
+		var ndQuestion:NotesDocument;
+		var ndSupplierByCall:NotesDocument;
+		
+		println("Por aca 000")
+		if (idSupplierByCall && idSupplierByCall != "") {
+			println("Por aca 11111")
+			ndSupplierByCall = vwSuppliersByCall.getDocumentByKey(idSupplierByCall, true);
+			if (ndSupplierByCall) {
+				println("Por aca 222")
+				var filter:java.util.Vector = new java.util.Vector(2);
+		        filter.add(0, ndSupplierByCall.getItemValueString("idSurvey"));
+		        filter.add(1, idDimension);
+		        
+		        var vec:NotesViewEntryCollection = null;
+				var ve:NotesViewEntry = null;
+				var veAux:NotesViewEntry;
+				vec = vwQuestionsBySurvey.getAllEntriesByKey(filter, true);
+				var objAux = {};
+				var options = [];
+				var answers = [];
+				println("vec.getCount() == ", vec.getCount())
+				if (vec.getCount() > 0) {
+					ve = vec.getFirstEntry();
+					while (ve != null) {
+						ndQuestion = ve.getDocument();
+						objAux = {};
+						options = []
+						
+						objAux = resolveDTO("QuestionDTO", ndQuestion);
+						options = getOptionsByQuestion(ndQuestion.getItemValueString("id"));
+						if (options.length > 0) {
+							objAux.options = options;
+						}
+						answers = getAnswerBySurvey(ndSupplierByCall, ndQuestion.getItemValueString("id"), ndSupplierByCall.getItemValueString("idCall"));
+						if (answers.length > 0) {
+							objAux.answer = answers;
+						}
+						
+						response.push(objAux);
+
+						veAux = vec.getNextEntry(ve); 
+						ve.recycle();
+						ndQuestion.recycle();
+						ve = veAux;
+					}
+				}	
+			}	
+		}
+		/* for (Document document : documents) {
+		    QuestionDTO question = castDocument(document);
+		    question.setOptions(optionDAO.getOptionsByQuestion(question.getId()));
+		    question.setAnswer(answerDAO.getAnswerBySurvey(supplierByCallDTO, question.getId(), supplierByCallDTO.getIdCall()));
+		    response.add(question);
+		} */
+		
+	} catch (e) {
+		println("Error en getQuestionsBySurvey: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	
+	return response;
+}
+
+function getOptionsByQuestion(idQuestion) {
+	var response = [];
+	try {
+		var vwOptionsByQuestion:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwOptionsByQuestion");
+		var ndOption:NotesDocument;
+		var vec:NotesViewEntryCollection = null;
+		var ve:NotesViewEntry = null;
+		var veAux:NotesViewEntry;
+		vec = vwOptionsByQuestion.getAllEntriesByKey(idQuestion, true);
+		if (vec.getCount() > 0) {
+			ve = vec.getFirstEntry();
+			while (ve != null) {
+				ndOption = ve.getDocument();
+				
+				response.push(resolveDTO("OptionDTO", ndOption));
+				
+				veAux = vec.getNextEntry(ve); 
+				ve.recycle();
+				ndOption.recycle();
+				ve = veAux;
+			}
+		}
+	} catch (e) {
+		println("Error en getOptionsByQuestion: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	
+	return response;
+}
+
+function getAnswerBySurvey(ndSupplierByCall, idQuestion, idCall) {
+	var response = [];
+	try {
+		var vwAnswerBySurveyAndQuestion:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwAnswerBySurveyAndQuestion");
+		var ndAnswer:NotesDocument;
+		
+		var filter:java.util.Vector = new java.util.Vector(2);
+	    filter.add(0, ndSupplierByCall.getItemValueString("id"));
+	    filter.add(1, idQuestion);
+	
+		var vec:NotesViewEntryCollection = null;
+		var ve:NotesViewEntry = null;
+		var veAux:NotesViewEntry;
+		vec = vwAnswerBySurveyAndQuestion.getAllEntriesByKey(filter, true);
+		if (vec.getCount() > 0) {
+			ve = vec.getFirstEntry();
+			while (ve != null) {
+				ndAnswer = ve.getDocument();
+				
+				response.push(getFieldsAnswer(ndAnswer, true));
+				
+				veAux = vec.getNextEntry(ve); 
+				ve.recycle();
+				ndAnswer.recycle();
+				ve = veAux;
+			}
+		} else {
+			var previousIdCall = getCallPrevious(idCall);
+			if (previousIdCall != "") {
+				copyPreviousAnswer(ndSupplierByCall, idQuestion, previousIdCall);
+				response = getAnswerBySurvey(ndSupplierByCall, idQuestion);
+			}
+		}
+	} catch (e) {
+		println("Error en getAnswerBySurvey: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	
+	return response;
+}
+
+function copyPreviousAnswer(ndSupplierByCall, idQuestion, previousIdCall) {
+	try {
+		var vwSuppliersByCallByIdSupplierAndIdCall = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallByIdSupplierAndIdCall");
+		
+		var filter:java.util.Vector = new java.util.Vector(2);
+	    filter.add(0, ndSupplierByCall.getItemValueString("id"));
+	    filter.add(1, previousIdCall);
+		
+		var ndPreviousSupplierByCall:NotesDocument = vwSuppliersByCallByIdSupplierAndIdCall.getDocumentByKey(filter, true);
+	    if (ndPreviousSupplierByCall) {
+	    	var vwAnswerBySurveyAndQuestion:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwAnswerBySurveyAndQuestion");
+	    	var vwOptions:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwOptions");
+			var ndPreviousAnswer:NotesDocument;
+	    	var ndPreviousOption:NotesDocument;
+			
+			filter.clear();
+		    filter.add(0, ndPreviousSupplierByCall.getItemValueString("id"));
+		    filter.add(1, idQuestion);
+		
+			var vec:NotesViewEntryCollection = null;
+			var ve:NotesViewEntry = null;
+			var veAux:NotesViewEntry;
+			vec = vwAnswerBySurveyAndQuestion.getAllEntriesByKey(filter, true);
+			if (vec.getCount() > 0) {
+				ve = vec.getFirstEntry();
+				var fecha:NotesDateTime = session.createDateTime(new Date());
+				var idsNewAttachments = [];
+				while (ve != null) {
+					ndPreviousAnswer = ve.getDocument();
+					
+					var ndNewAnswer:NotesDocument = sessionAsSigner.getCurrentDatabase().createDocument();		
+					ndPreviousAnswer.copyAllItems(ndNewAnswer, true);
+					
+					ndNewAnswer.replaceItemValue("id", ndNewAnswer.getUniversalID());
+					ndNewAnswer.replaceItemValue("idSupplierByCall", ndSupplierByCall.getItemValueString("id"));
+					ndNewAnswer.replaceItemValue("idSurvey", ndSupplierByCall.getItemValueString("idSurvey"));
+					ndNewAnswer.replaceItemValue("idQuestion", ndPreviousAnswer.getItemValueString("idQuestion"));
+					ndNewAnswer.replaceItemValue("commentSupplier", ndPreviousAnswer.getItemValueString("commentSupplier"));
+					ndNewAnswer.replaceItemValue("dateResponseSupplier", fecha);
+					
+					if (ndPreviousAnswer.getItemValueString("idOptionSupplier") != "") {
+						ndPreviousOption = vwOptions.getDocumentByKey(ndPreviousAnswer.getItemValueString("idOptionSupplier"), true);
+                    	if (null != ndPreviousOption){
+                    		ndNewAnswer.replaceItemValue("previousAnswer", ndPreviousOption.getItemValueString("wording"));
+                    	}
+					} else {
+						ndNewAnswer.replaceItemValue("previousAnswer", ndPreviousAnswer.getItemValueString("responseSupplier"));
+					}
+					
+					idsNewAttachments = copyPreviousAttachment(ndPreviousAnswer);
+					if (idsNewAttachments.length > 0) {
+						ndNewAnswer.replaceItemValue("idAttachment", idsNewAttachments);
+					}
+					
+					ndNewAnswer.save(true, false);
+					
+					veAux = vec.getNextEntry(ve); 
+					ve.recycle();
+					ve = veAux;
+				}
+			}
+	    }
+		
+	} catch (e) {
+		println("Error en copyPreviousAnswer: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+function copyPreviousAttachment(ndAnswer) {
+	var response = [];
+	try {
+		var idsAttachment = vectorToArray(ndAnswer.getItemValue("idAttachment"));
+		if (idsAttachment.length > 0) {
+			var idNewAttachment = null;
+			for(var i=0; i < idsAttachment.length; i++){
+				idNewAttachment = copyAttachment(idsAttachment[i]);
+				if (idNewAttachment != null) {
+					response.push(idNewAttachment);
+				}
+				idNewAttachment = null;
+			}	
+		}
+	} catch (e) {
+		println("Error en copyPreviousAttachment: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
+}
+
+function copyAttachment(idAttachment) {
+	var response = null;
+	try {
+		var vwAttachments:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwAttachments");
+		var ndAttachment:NotesDocument = vwAttachments.getDocumentByKey(idAttachment, true);
+		if (ndAttachment) {
+			var ndNewAttachment:NotesDocument = sessionAsSigner.getCurrentDatabase().createDocument();		
+			ndAttachment.copyAllItems(ndNewAttachment, true);
+			
+			ndNewAttachment.replaceItemValue("id", ndNewAttachment.getUniversalID());
+			ndNewAttachment.save(true, false);
+			response = ndNewAttachment.getItemValueString("id");
+		}
+	} catch (e) {
+		println("Error en copyAttachment: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
+}
+
+function getCallPrevious(idCall) {
+	var response = "";
+	try {
+		var vwCalls:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwCalls");
+		var ndCall:NotesDocument = vwCalls.getDocumentByKey(idCall, true);
+		var vwCallsByYear:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwCallsByYear");
+		if (ndCall) {
+			var previousYear = ndCall.getItemValueInteger("year") ? ndCall.getItemValueInteger("year") - 1 : 0;  
+			var ndPreviousCall:NotesDocument = vwCallsByYear.getDocumentByKey(previousYear, true);
+			if (ndPreviousCall) {
+				response = ndPreviousCall.getItemValueString("id");
+			}
+		}
+	} catch (e) {
+		println("Error en getCallPrevious: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	
+	return response;
+}
+
 function getAllSuppliersInCall(key) {
 	var response = {
 		masters:{"CompanySize":[], "Country":[], "Supply":[]},
@@ -3043,7 +3396,7 @@ function resolveDTO(classDto, nd) {
 			fields = getFieldsAccess(nd);
 			break;
 		case "AnswerDTO":
-			fields = getFieldsAnswer(nd);
+			fields = getFieldsAnswer(nd, false);
 			break;
 		case "AttachmentDTO":
 			fields = getFieldsAttachment(nd);

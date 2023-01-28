@@ -48,6 +48,9 @@
 			case "getLogoCompanySupplier":
 				getLogoCompanySupplier();
 			break;
+			case "getQuestionsBySurvey":
+				getQuestionsBySurvey();
+			break;
 			case "prueba":
 				prueba();
 			break;
