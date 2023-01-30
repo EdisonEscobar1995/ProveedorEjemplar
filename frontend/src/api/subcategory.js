@@ -1,7 +1,9 @@
 import instance from './instance';
+import instanceService from './instanceService';
 
 function getDataSubCategoryByCategoryApi(idCategory) {
-  return instance.get(`SubCategory?action=getAll&idCategory=${idCategory}`);
+  // return instance.get(`SubCategory?action=getAll&idCategory=${idCategory}`);
+  return instanceService.get(`xaServicios.xsp?Open&action=getAllSubCategory&idCategory=${idCategory}`);
 }
 
 function getSubcategoryByCategoryApi(id) {

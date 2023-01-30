@@ -2,11 +2,14 @@ import instance from './instance';
 import instanceService from './instanceService';
 
 function getDataSuppliertApi(id = '') {
-  return instance.get(`Supplier?action=loadInformation&idSupplier=${id !== null ? id : ''}`);
+  // return instance.get(`Supplier?action=loadInformation&idSupplier=${id !== null ? id : ''}`);
+  return instanceService.get(`xaServicios.xsp?Open&action=loadInformation&idSupplier=${id !== null ? id : ''}`);
 }
 
 function getDataCallSuppliertApi(id = '') {
-  return instance.get(`SupplierByCall?action=loadCallOfSupplier&idSupplierByCall=${id !== null ? id : ''}`);
+  // return instance.get(`SupplierByCall?action=
+  // loadCallOfSupplier&idSupplierByCall=${id !== null ? id : ''}`);
+  return instanceService.get(`xaServicios.xsp?Open&action=loadCallOfSupplier&idSupplierByCall=${id !== null ? id : ''}`);
 }
 
 function finishSurveyApi(call) {

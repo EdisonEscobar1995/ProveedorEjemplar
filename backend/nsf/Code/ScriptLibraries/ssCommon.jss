@@ -432,6 +432,7 @@ var SectionRule = function() {
 		readOnly: true
 	}
 	var specifictRule = {
+		administrator: rule,
 		supplier: rule,
 		evaluator: rule,
 		liberator: rule
@@ -2097,6 +2098,66 @@ function getRecordOfReport(supplierByCall, supplier, parameters) {
  * 
  */
 
+function getFieldsCategory(ndCategory) {
+	var categoryDTO = {};
+	try {
+		categoryDTO = {
+	    	id: ndCategory.getItemValueString("id"),
+	    	name: ndCategory.getItemValueString("name"),
+	    	idSupply: ndCategory.getItemValueString("idSupply"),
+	    	subCategories: []
+	    }
+	} catch(e){
+		println("Error en getFieldsCategory: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return categoryDTO;
+}
+
+function getFieldSubCategory(nd) {
+	var subCategoryDTO = {};
+	try {
+		subCategoryDTO = {
+	    	id: nd.getItemValueString("id"),
+	    	name: nd.getItemValueString("name"),
+	    	idCategory: nd.getItemValueString("idCategory")
+	    }
+	} catch(e){
+		println("Error en getFieldSubCategory: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return subCategoryDTO;
+}
+
+function getFieldsDepartment(nd) {
+	var departmentDTO = {};
+	try {
+		departmentDTO = {
+	    	id: nd.getItemValueString("id"),
+	    	name: nd.getItemValueString("name"),
+	    	idCountry: nd.getItemValueString("idCountry")
+	    }
+	} catch(e){
+		println("Error en getFieldsDepartment: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return departmentDTO;
+}
+
+function getFieldsCity(nd) {
+	var cityDTO = {};
+	try {
+		cityDTO = {
+	    	id: nd.getItemValueString("id"),
+	    	name: nd.getItemValueString("name"),
+	    	idDepartment: nd.getItemValueString("idDepartment")
+	    }
+	} catch(e){
+		println("Error en getFieldsCity: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return cityDTO;
+}
 
 /**
  * Metodo de la clase State (Estado).
@@ -2342,8 +2403,8 @@ function getFieldsAttachment(ndAttachment) {
 	try {
 		attachmentDTO = {
 			id: ndAttachment.getItemValueString("id"),
-			name: getAttachmentUrl(ndAttachment),
-			url: getFileName(ndAttachment)
+			name: getFileName(ndAttachment),
+			url: getAttachmentUrl(ndAttachment)
 	    }
 	} catch(e){
 		println("Error en getFieldsAttachment: " + e.message);
@@ -2712,6 +2773,9 @@ function getFieldsSupplierByCall(ndSupplierByCall) {
 	   	    idCall: ndSupplierByCall.getItemValueString("idCall"),
 	    	idSurvey: ndSupplierByCall.getItemValueString("idSurvey"),
 	    	idSupplier: ndSupplierByCall.getItemValueString("idSupplier"),
+	    	idSupplierByCallSpecial: ndSupplierByCall.getItemValueString("idSupplierByCallSpecial"),
+	    	isEspecial: ndSupplierByCall.getItemValueString("isEspecial"),
+	    	supplySpecial: ndSupplierByCall.getItemValueString("supplySpecial"),
 	    	participateInCall: ndSupplierByCall.getItemValueString("participateInCall"),
 	    	acceptedPolicy: ndSupplierByCall.getItemValueString("acceptedPolicy") == "1" ? true : false,
 	    	reasonForNotParticipation: ndSupplierByCall.getItemValueString("reasonForNotParticipation"),
@@ -2842,6 +2906,210 @@ function getFinishedByStage(stageState) {
 	}
 }
 
+function getCallOfSupplier(idSupplierByCall) {
+	var response = {
+		supplierByCall: null,
+		errorSend: ""
+	};
+	var rules = new SectionRule();
+	try {
+        var isSupplier = true;
+        var resSupplier = getSupplierInSession(null);
+        
+        if (null == resSupplier.supplier) {
+            if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR") || getIsRol("EVALUATOR")) {
+                isSupplier = false;
+                response.supplierByCall = get(idSupplierByCall, "SupplierByCallDTO");
+                rules.setRulesToSection("supplier", rules.buildRules(true, true));
+                rules.setRulesToSection("evaluator", rules.buildRules(true, true));
+                if (getIsRol("EVALUATOR")) {
+                    var res = permissionForEvaluator(response, rules);
+                    rules = res.rules;
+                    if (res.errorSend != "") {
+                    	response.errorSend = res.errorSend;
+                    	return response;
+                    }
+                }
+                if (getIsRol("ADMINISTRATOR")) {
+                	rules.setRulesToSection("administrator", rules.buildRules(true, false));
+                }
+            } else {
+            	response.errorSend = "ROL_INVALID";
+            	return response;
+            }
+        }
+
+        if (isSupplier) {
+            var res = identifyCallToParticipate(idSupplierByCall, supplier.id, rules);
+            response.supplierByCall = res.supplierByCall;
+            if (res.errorSend != "") {
+            	response.errorSend = res.errorSend;
+        		return response;
+            }
+            
+        }
+
+        if (response.supplierByCall == null) {
+        	response.errorSend = "DONT_HAVE_SURVEY_ASSOCIED";
+    		return response;
+        }
+
+        if (response.supplierByCall != null) {
+        	var state = get(response.supplierByCall.idState, "StateDTO");
+           	if (shouldBeReadOnly(state.shortName)) {
+            	rules.setRulesToSection("supplier", rules.buildRules(true, true));           		
+           	}
+        }
+        response.rules = rules;
+
+	} catch(e){
+		println("Error en getCallOfSupplier: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
+}
+
+function permissionForEvaluator(supplierByCall, rulesParent) {
+	var response = {
+		errorSend: "",
+		rules: rulesParent
+	}
+	try {
+        var call = get(supplierByCall.idCall, "CallDTO");
+        if (!callDTO.methods.isCaducedDeadLineToMakeSurveyEvaluator) {
+            if (isFromEvaluator(supplierByCall)) {
+                rules.setRulesToSection("evaluator", rules.buildRules(true, true));
+            } else {
+            	var idStateDontPart = getStateByShortName("DONT_PARTICIPATE").id;
+            	var idStateNotStart = getStateByShortName("NOT_STARTED").id;
+            	var idStateSupplier = getStateByShortName("SUPPLIER").id;
+            	var idStateEvaluator = getStateByShortName("EVALUATOR").id;
+            	var idStateNotStartEvaluator = getStateByShortName("NOT_STARTED_EVALUATOR").id;
+                if (supplierByCall.idState == idStateDontPart
+                        && supplierByCall.idState == idStateNotStart
+                        && supplierByCall.idState == idStateSupplier) {
+                	response.rules.setRulesToSection("evaluator", rules.buildRules(true, true));
+                } else {
+                	response.rules.setRulesToSection("evaluator", rules.buildRules(false, true));
+                }
+
+                if (supplierByCall.idState == idStateEvaluator
+                        || supplierByCall.idState == idStateNotStartEvaluator) {
+                	response.rules.setRulesToSection("evaluator", rules.buildRules(true, false));
+                }
+
+            }
+        } else {
+        	response.rules.setRulesToSection("evaluator", rules.buildRules(true, true));
+        	response.errorSend("DATE_TO_MAKE_SURVEY_EVALUATOR_EXCEEDED");
+        }
+	} catch(e){
+		println("Error en permissionForEvaluator: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
+}
+
+function isFromEvaluator(supplierByCall) {
+    var isFromEvaluator = false;
+	try {
+    	if (null != supplierByCall && supplierByCall.whoEvaluate != ""
+            && supplierByCall.whoEvaluate != getNameUserInSession()) {
+        	isFromEvaluator = true;
+	    }
+
+    	return isFromEvaluator;
+	} catch(e){
+		println("Error en isFromEvaluator: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+function shouldBeReadOnly(nameCurrentState) {
+	var isReadOnly = false;
+	try {
+        if (nameCurrentState != "DONT_PARTICIPATE" && nameCurrentState != "NOT_STARTED"
+                && nameCurrentState != "SUPPLIER") {
+            isReadOnly = true;
+        }
+	} catch(e){
+		println("Error en isFromEvaluator: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+}
+
+function identifyCallToParticipate(idSupplierByCall, idSupplier, rulesParam) {
+	var response = {
+		supplierByCall: null,
+		rules: rulesParam,
+		errorSend: ""
+	};
+	try {
+		if (null != idSupplierByCall && idSupplierByCall.trim() != "") {
+		    response.supplierByCall = get(idSupplierByCall, "SupplierByCallDTO");
+		    var call = get(response.supplierByCall.idCall, "CallDTO");
+		    if (!call.methods.isCaducedDateToFinishCall) {
+		    	response.rules.setRulesToSection("supplier", rules.buildRules(true, false));
+		    } else {
+		    	response.rules.setRulesToSection("supplier", rules.buildRules(true, true));
+		    }
+		} else {
+		    var res = getCallActiveToParticipate(idSupplier, response.rules);
+		    response.supplierByCall = res.supplierByCall;
+		    response.rules = res.rules;
+		    response.errorSend = res.errorSend;
+		}
+	} catch(e){
+		println("Error en identifyCallToParticipate: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
+}
+
+function getCallActiveToParticipate(idSupplier, rulesParam) {
+	var response = {
+		supplierByCall: null,
+		rules: rulesParam,
+		errorSend: ""
+	};
+	try {
+        var vec:NotesViewEntryCollection = null;
+		var ve:NotesViewEntry = null;
+		var veAux:NotesViewEntry;
+		var ndSupplierByCall:NotesDocument;
+		var call = null;
+		
+        if (vec.getCount() > 0) {
+			ve = vec.getFirstEntry();
+			var found = false;
+			while (ve != null && !found) {
+				call = null;
+				ndSupplierByCall = ve.getDocument();
+				
+				call = get(ndSupplierByCall.getItemValueString("idCall"), "CallDTO");
+				if (!call.methods.isCaducedDateToFinishCall) {
+	                response.supplierByCall = getFieldsSupplierByCall(ndSupplierByCall);
+	                response.rules.setRulesToSection("supplier", rules.buildRules(true, false));
+	                found = true;
+	            }
+				
+				veAux = vec.getNextEntry(ve); 
+				ve.recycle();
+				ndSupplierByCall.recycle();
+				ve = veAux;
+			}
+        }
+        
+        if (null != call && call.methods.isCaducedDeadLineToMakeSurvey) {
+        	response.errorSend = "DATE_TO_MAKE_SURVEY_EXCEEDED";
+        }
+	} catch(e){
+		println("Error en getCallActiveToParticipate: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
+}
+
 /**
  * Fin de la clase SupplierByCall.
  * 
@@ -2883,6 +3151,57 @@ function calculatePercentageInAxes(summaryProgress) {
  * 
  */
 
+function getUniqueDimensionsBySurvey(idSurvey) {
+	try {
+		var response = [];
+		var responseAux = [];
+		var vwDimensionsAndCriterionsBySurveyFlat: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwDimensionsAndCriterionsBySurveyFlat");
+		var vwDimensions: NotesView = sessionAsSigner.getCurrentDatabase().getView("vwDimensions");
+		var ndQuestionDoc:NotesDocument;
+		var ndDimension:NotesDocument;
+		        
+        var vec:NotesViewEntryCollection = null;
+		var ve:NotesViewEntry = null;
+		var veAux:NotesViewEntry;
+		vec = vwDimensionsAndCriterionsBySurveyFlat.getAllEntriesByKey(idSurvey, true);
+		var objAux = {};
+		if (vec.getCount() > 0) {
+			ve = vec.getFirstEntry();
+			while (ve != null) {
+				ndQuestionDoc = ve.getDocument();
+				
+				if (!objAux.hasOwnProperty(ndQuestionDoc.getItemValueString("idDimension"))) {
+					objAux[ndQuestionDoc.getItemValueString("idDimension")] = ndQuestionDoc.getItemValueString("idDimension");
+					responseAux.push({
+						id: ndQuestionDoc.getItemValueString("idDimension")
+					});
+				}
+				
+				veAux = vec.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+			if (responseAux.length > 0) {
+				for(i in responseAux){
+					ndDimension = vwDimensions.getDocumentByKey(responseAux[i].id, true);
+					if (ndDimension) {
+						response.push({
+							id: responseAux[i].id,
+							criterions: [],
+							name: ndDimension.getItemValueString("name")
+						});
+					}
+				}
+			}
+		}
+		
+	} catch (e) {
+		println("Error en getUniqueDimensionsBySurvey: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	
+	return response;
+}
 
 function getCriterionsBySurvey(idSurvey, idDimension) {
 	try {
@@ -2950,12 +3269,9 @@ function getAllQuestionsBySurvey(idDimension, idSupplierByCall) {
 		var ndQuestion:NotesDocument;
 		var ndSupplierByCall:NotesDocument;
 		
-		println("Por aca 000")
 		if (idSupplierByCall && idSupplierByCall != "") {
-			println("Por aca 11111")
 			ndSupplierByCall = vwSuppliersByCall.getDocumentByKey(idSupplierByCall, true);
 			if (ndSupplierByCall) {
-				println("Por aca 222")
 				var filter:java.util.Vector = new java.util.Vector(2);
 		        filter.add(0, ndSupplierByCall.getItemValueString("idSurvey"));
 		        filter.add(1, idDimension);
@@ -2967,7 +3283,6 @@ function getAllQuestionsBySurvey(idDimension, idSupplierByCall) {
 				var objAux = {};
 				var options = [];
 				var answers = [];
-				println("vec.getCount() == ", vec.getCount())
 				if (vec.getCount() > 0) {
 					ve = vec.getFirstEntry();
 					while (ve != null) {
@@ -3401,14 +3716,23 @@ function resolveDTO(classDto, nd) {
 		case "AttachmentDTO":
 			fields = getFieldsAttachment(nd);
 			break;
+		case "CategoryDTO":
+			fields = getFieldsCategory(nd);
+			break;
 		case "CallDTO":
 			fields = getFieldsCall(nd);
+			break;
+		case "CityDTO":
+			fields = getFieldsCity(nd);
 			break;
 		case "CriterionDTO":
 			fields = getFieldsCriterion(nd);
 			break;
 		case "CriterionPercentDTO":
 			fields = getFieldsCriterionPercent(nd);
+			break;
+		case "DepartmentDTO":
+			fields = getFieldsDepartment(nd);
 			break;
 		case "DimensionDTO":
 			fields = getFieldsDimension(nd);
@@ -3439,6 +3763,9 @@ function resolveDTO(classDto, nd) {
 			break;
 		case "StateDTO":
 			fields = getFieldState(nd);
+			break;
+		case "SubCategoryDTO":
+			fields = getFieldSubCategory(nd);
 			break;
 		case "SupplyDTO":
 		case "SupplySpecialDTO":

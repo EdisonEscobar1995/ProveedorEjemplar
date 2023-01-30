@@ -1090,11 +1090,7 @@ function getQuestionsBySurvey() {
 			
 			var criterions = getCriterionsBySurvey(idSurvey, idDimension);
 			var questions = getAllQuestionsBySurvey(idDimension, idSupplierByCall);
-				        
-		    // var filter:java.util.Vector = new java.util.Vector(1);
-	        // filter.add(0, getIdCallByYear(year));
-	        // var callsBySupplier = getAllBy(filter, "vwSuppliersByCallIdCall", "SupplierByCallDTO");
-	        // data = getInformationFromSuppliers(listYears, callsBySupplier);
+
 			data.criterion = criterions;
 			data.questions = questions;
 		}        		
@@ -1107,6 +1103,294 @@ function getQuestionsBySurvey() {
 		}
 		if (error != ""){
 			error = "Error al obtener preguntas por encuesta: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function loadInformation() {
+	var error = "";
+	var errorSend = "";
+	var idSupplier = param.get("idSupplier") ? param.get("idSupplier") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		        
+		var resSupplier = getSupplierInSession(idSupplier);
+		if (resSupplier.errorSend != "") {
+			errorSend = resSupplier.errorSend;
+			return;
+		}
+		var supplier = resSupplier.supplier;
+        if (supplier) {
+        	data = supplier;
+        }
+        		
+	}catch(e){
+		error = e.message;
+		println("Error en loadInformation: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar informacion del proveedor: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function loadCallOfSupplier() {
+	var error = "";
+	var errorSend = "";
+	var idSupplierByCall = param.get("idSupplierByCall") ? param.get("idSupplierByCall") : "";
+	var rules = null;
+	var rulesObj = {};
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		        
+		var resSupplier = getCallOfSupplier(idSupplierByCall);
+		if (resSupplier.errorSend != "") {
+			errorSend = resSupplier.errorSend;
+			return;
+		}
+		var supplier = resSupplier.supplierByCall;
+        if (supplier) {
+        	data = supplier;
+        }
+        rules = resSupplier.rules;
+        if (rules != null) {
+        	rulesObj = rules.getObject();        	
+        }
+        		
+	}catch(e){
+		error = e.message;
+		println("Error en loadCallOfSupplier: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar convocatoria por proveedor: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: rulesObj,
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getOne(classDto) {
+	var error = "";
+	var errorSend = "";
+	var id = param.get("id") ? param.get("id") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		if (id != "") {
+			if (classDto == "CallDTO") {
+				data = get(id, classDto).fields;
+			} else {
+				data = get(id, classDto);	
+			}
+		}
+		   
+	}catch(e){
+		error = e.message;
+		println("Error en getOne: " + e.message + " - DTO: " + classDto);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar el elemento de tipo - " + clasDto + ": " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getCall() {
+	getOne("CallDTO");
+}
+
+function getState() {
+	getOne("StateDTO");
+}
+
+function getAllSubCategory() {
+	var error = "";
+	var errorSend = "";
+	var idCategory = param.get("idCategory") ? param.get("idCategory") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		if (idCategory != "") {
+			data = getAllBy(idCategory, "vwSubCategoriesByIdCategory", "SubCategoryDTO");
+		}
+		   
+	}catch(e){
+		error = e.message;
+		println("Error en getAllSubCategory: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar las subcategorias: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getAllCategory() {
+	var error = "";
+	var errorSend = "";
+	var idSupply = param.get("idSupply") ? param.get("idSupply") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		if (idSupply != "") {
+			data = getAllBy(idSupply, "vwCategoriesByIdSupply", "CategoryDTO");
+		}
+		   
+	}catch(e){
+		error = e.message;
+		println("Error en getAllCategory: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar las categorias: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getAllDepartment() {
+	var error = "";
+	var errorSend = "";
+	var idCountry = param.get("idCountry") ? param.get("idCountry") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		if (idCountry != "") {
+			data = getAllBy(idCountry, "vwDepartmentsByIdCountry", "DepartmentDTO");
+		}
+		   
+	}catch(e){
+		error = e.message;
+		println("Error en getAllDepartment: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar los departamentos: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getAllCity() {
+	var error = "";
+	var errorSend = "";
+	var idDepartment = param.get("idDepartment") ? param.get("idDepartment") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		if (idDepartment != "") {
+			data = getAllBy(idDepartment, "vwCitiesByIdDepartment", "CityDTO");
+		}
+		   
+	}catch(e){
+		error = e.message;
+		println("Error en getAllCity: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar las ciudades: " + error
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
+function getDimensionsBySurvey() {
+	var error = "";
+	var errorSend = "";
+	var idSurvey = param.get("idSurvey") ? param.get("idSurvey") : "";
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var data = {};
+		if (idSurvey != "") {
+			data = getUniqueDimensionsBySurvey(idSurvey);
+		}
+		   
+	}catch(e){
+		error = e.message;
+		println("Error en getDimensionsBySurvey: " + e.message);
+	}finally {
+		if (errorSend != "") {
+			error = errorSend;
+		}
+		if (error != ""){
+			error = "Error al cargar las dimensiones por encuesta: " + error
 		}
 		var respuesta = {
 			data: error ? null : data,

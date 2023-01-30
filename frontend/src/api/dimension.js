@@ -1,4 +1,5 @@
 import instance from './instance';
+import instanceService from './instanceService';
 
 const getDataDimensionApi = () => instance.get('Dimension?action=getAll');
 
@@ -9,7 +10,8 @@ const deleteDataDimensionApi = data => instance.get('Dimension?action=delete', {
 });
 
 function getDimensionsBySurveyApi(idSurvey) {
-  return instance.get(`Dimension?action=getDimensionsBySurvey&idSurvey=${idSurvey}`);
+  // return instance.get(`Dimension?action=getDimensionsBySurvey&idSurvey=${idSurvey}`);
+  return instanceService.get(`xaServicios.xsp?Open&action=getDimensionsBySurvey&idSurvey=${idSurvey}`);
 }
 
 export {

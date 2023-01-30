@@ -3,7 +3,10 @@ import instanceService from './instanceService';
 
 const getCallApi = () => instance.get('Call?action=getAll');
 
-const getCallByIdApi = id => instance.get('Call?action=get', {
+/* const getCallByIdApi = id => instance.get('Call?action=get', {
+  params: { id },
+}); */
+const getCallByIdApi = id => instanceService.get('xaServicios.xsp?Open&action=getCall', {
   params: { id },
 });
 
