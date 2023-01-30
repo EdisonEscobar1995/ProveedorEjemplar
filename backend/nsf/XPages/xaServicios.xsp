@@ -51,6 +51,33 @@
 			case "getQuestionsBySurvey":
 				getQuestionsBySurvey();
 			break;
+			case "loadInformation":
+				loadInformation();
+			break;
+			case "loadCallOfSupplier":
+				loadCallOfSupplier();
+			break;
+			case "getCall":
+				getCall();
+			break;
+			case "getState":
+				getState();
+			break;
+			case "getAllCategory":
+				getAllCategory();
+			break;
+			case "getAllSubCategory":
+				getAllSubCategory();
+			break;
+			case "getAllDepartment":
+				getAllDepartment();
+			break;
+			case "getDimensionsBySurvey":
+				getDimensionsBySurvey();
+			break;
+			case "getAllCity":
+				getAllCity();
+			break;
 			case "prueba":
 				prueba();
 			break;
