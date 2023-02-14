@@ -328,8 +328,8 @@ function getAttachments(ndBenefit, itemName) {
 		if (ndAttachment) {
 			attachments.push({
 				id: ndAttachment.getItemValueString("id"),
-				name: getAttachmentUrl(ndAttachment),
-				url: getFileName(ndAttachment)
+				name: getFileName(ndAttachment),
+				url: getAttachmentUrl(ndAttachment)
 			});
 		}
 	}
@@ -432,7 +432,6 @@ var SectionRule = function() {
 		readOnly: true
 	}
 	var specifictRule = {
-		administrator: rule,
 		supplier: rule,
 		evaluator: rule,
 		liberator: rule
@@ -450,7 +449,7 @@ var SectionRule = function() {
 		}
 	}
 	this.setRulesToSection = function(section, rule) {
-		this.rules[section] = rule; 
+		this.rules[section] = rule;
 	}
 }
 
@@ -1117,8 +1116,8 @@ function getAttachmentByAnswer(ndAnswer) {
 				if (ndAttachment) {
 					response.push({
 						id: ndAttachment.getItemValueString("id"),
-						name: getAttachmentUrl(ndAttachment),
-						url: getFileName(ndAttachment)
+						name: getFileName(ndAttachment),
+						url: getAttachmentUrl(ndAttachment)
 					});
 				}		
 			}	
@@ -1941,7 +1940,6 @@ function isCaducedDate(dateToCompare, today) {
 	var response = false;
 	var actualDate:NotesDateTime = session.createDateTime(today);
 	var dateCompare:NotesDateTime = dateToCompare;
-	
 	if (actualDate.timeDifference(dateCompare) > 0) {
 		response = true;
 	}
@@ -2441,7 +2439,8 @@ function getFieldsCustomer(ndCustomer) {
 	try {
 		customerDTO = {
 			idSupplier: ndCustomer.getItemValueString("idSupplier"),
-			percentageOfParticipationInSales: ndCustomer.getItemValueInteger("percentageOfParticipationInSales")
+			percentageOfParticipationInSales: ndCustomer.getItemValueInteger("percentageOfParticipationInSales"),
+			name: ndCustomer.getItemValueString("name")
 	    }
 	} catch(e){
 		println("Error en getFieldsCustomer: " + e.message);
@@ -2940,7 +2939,7 @@ function getCallOfSupplier(idSupplierByCall) {
         }
 
         if (isSupplier) {
-            var res = identifyCallToParticipate(idSupplierByCall, supplier.id, rules);
+            var res = identifyCallToParticipate(idSupplierByCall, resSupplier.supplier.id, rules);
             response.supplierByCall = res.supplierByCall;
             if (res.errorSend != "") {
             	response.errorSend = res.errorSend;
@@ -3073,11 +3072,14 @@ function getCallActiveToParticipate(idSupplier, rulesParam) {
 		errorSend: ""
 	};
 	try {
+		var vwSuppliersByCallSupplier:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallSupplier");
         var vec:NotesViewEntryCollection = null;
 		var ve:NotesViewEntry = null;
 		var veAux:NotesViewEntry;
 		var ndSupplierByCall:NotesDocument;
 		var call = null;
+		
+		vec = vwSuppliersByCallSupplier.getAllEntriesByKey(idSupplier, true);
 		
         if (vec.getCount() > 0) {
 			ve = vec.getFirstEntry();

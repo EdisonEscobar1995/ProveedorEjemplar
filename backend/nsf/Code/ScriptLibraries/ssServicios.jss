@@ -356,11 +356,10 @@ function getStatisticalProgress() {
 		error = e.message;
 		println("Error en getStatisticalProgress: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener progreso estadistico: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : summaryProgress,
@@ -408,11 +407,10 @@ function getSuppliersInCall() {
 		error = e.message;
 		println("Error en getSuppliersInCall: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener suppliers by call: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -471,11 +469,10 @@ function getParticipantsByYear() {
 		error = e.message;
 		println("Error en getParticipantsByYear: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener suppliers by year: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -517,11 +514,10 @@ function getModifiedSuppliers() {
 		error = e.message;
 		println("Error en getModifiedSuppliers: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener proveedor con cambio en el tamaño de empresa: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -563,11 +559,10 @@ function getSurveys() {
 		error = e.message;
 		println("Error en getSurveys: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener consulta de encuestas: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -661,11 +656,10 @@ function getSuppliersForSelection() {
 		error = e.message;
 		println("Error en getSuppliersForSelection: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener proveedores que pasan evaluación comité gerencial: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -770,11 +764,10 @@ function getParticipantsToManagerTeam() {
 		error = e.message;
 		println("Error en getParticipantsToManagerTeam: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener Calificación comité gerencial: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -849,11 +842,10 @@ function getMasterList() {
 		error = e.message;
 		println("Error en getMasterList: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener lsta maestra: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -999,11 +991,10 @@ function getAllSuppliesSpecial() {
 		error = e.message;
 		println("Error en getAllSuppliesSpecial: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener los suministros especiales: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1053,11 +1044,10 @@ function createCopyOfSupplieyByCallSpecial() {
 		error = e.message;
 		println("Error en createCopyOfSupplieyByCallSpecial: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error creando copia de los proveedores por convocatoria (SupplierByCallSpecial): " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1098,11 +1088,10 @@ function getQuestionsBySurvey() {
 		error = e.message;
 		println("Error en getQuestionsBySurvey: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al obtener preguntas por encuesta: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1137,11 +1126,10 @@ function loadInformation() {
 		error = e.message;
 		println("Error en loadInformation: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al cargar informacion del proveedor: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1182,11 +1170,10 @@ function loadCallOfSupplier() {
 		error = e.message;
 		println("Error en loadCallOfSupplier: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al cargar convocatoria por proveedor: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1217,12 +1204,11 @@ function getOne(classDto) {
 	}catch(e){
 		error = e.message;
 		println("Error en getOne: " + e.message + " - DTO: " + classDto);
-	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
+	}finally {		
 		if (error != ""){
 			error = "Error al cargar el elemento de tipo - " + clasDto + ": " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1257,12 +1243,11 @@ function getAllSubCategory() {
 	}catch(e){
 		error = e.message;
 		println("Error en getAllSubCategory: " + e.message);
-	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
+	}finally {		
 		if (error != ""){
 			error = "Error al cargar las subcategorias: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1290,11 +1275,10 @@ function getAllCategory() {
 		error = e.message;
 		println("Error en getAllCategory: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
-			error = "Error al cargar las categorias: " + error
+			error = "Error al cargar las subcategorias: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1322,11 +1306,10 @@ function getAllDepartment() {
 		error = e.message;
 		println("Error en getAllDepartment: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al cargar los departamentos: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1354,11 +1337,10 @@ function getAllCity() {
 		error = e.message;
 		println("Error en getAllCity: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al cargar las ciudades: " + error
+		} else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
@@ -1386,11 +1368,10 @@ function getDimensionsBySurvey() {
 		error = e.message;
 		println("Error en getDimensionsBySurvey: " + e.message);
 	}finally {
-		if (errorSend != "") {
-			error = errorSend;
-		}
 		if (error != ""){
 			error = "Error al cargar las dimensiones por encuesta: " + error
+		}else if (errorSend != "") {
+			error = errorSend;
 		}
 		var respuesta = {
 			data: error ? null : data,
