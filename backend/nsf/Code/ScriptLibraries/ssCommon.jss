@@ -653,7 +653,65 @@ var SummarySurvey = function() {
 
 ////
 
+function getSurveyStates() {
+	return {
+		DONT_PARTICIPATE: "DONT_PARTICIPATE",
+	    NOT_STARTED: "NOT_STARTED",
+	    SUPPLIER: "SUPPLIER",
+	    ENDED_SUPPLIER: "ENDED_SUPPLIER",
+	    DONT_APPLY_EVALUATOR: "DONT_APPLY_EVALUATOR",
+	    NOT_STARTED_EVALUATOR: "NOT_STARTED_EVALUATOR",
+	    EVALUATOR: "EVALUATOR",
+	    ENDED_EVALUATOR: "ENDED_EVALUATOR",
+	    DONT_APPLY_TECHNICAL_TEAM: "DONT_APPLY_TECHNICAL_TEAM",
+	    NOT_STARTED_TECHNICAL_TEAM: "NOT_STARTED_TECHNICAL_TEAM",
+	    TECHNICAL_TEAM: "TECHNICAL_TEAM",
+	    ENDED_TECHNICAL_TEAM: "ENDED_TECHNICAL_TEAM",
+	    DONT_APPLY_MANAGER_TEAM: "DONT_APPLY_MANAGER_TEAM",
+	    NOT_STARTED_MANAGER_TEAM: "NOT_STARTED_MANAGER_TEAM",
+	    MANAGER_TEAM: "MANAGER_TEAM",
+	    ENDED_MANAGER_TEAM: "ENDED_MANAGER_TEAM"
+	};
+}
 
+function getStatesByTypeReport(typeReport) {
+    var statesByTypeReport = [];
+	var surveyStates = getSurveyStates();
+	if ("SUPPLIER_EVALUATOR" == typeReport) {
+        statesByTypeReport.push(surveyStates.ENDED_SUPPLIER);
+        statesByTypeReport.push(surveyStates.DONT_APPLY_EVALUATOR);
+        statesByTypeReport.push(surveyStates.NOT_STARTED_EVALUATOR);
+        statesByTypeReport.push(surveyStates.EVALUATOR);
+        statesByTypeReport.push(surveyStates.ENDED_EVALUATOR);
+        statesByTypeReport.push(surveyStates.DONT_APPLY_TECHNICAL_TEAM);
+        statesByTypeReport.push(surveyStates.NOT_STARTED_TECHNICAL_TEAM);
+        statesByTypeReport.push(surveyStates.TECHNICAL_TEAM);
+        statesByTypeReport.push(surveyStates.ENDED_TECHNICAL_TEAM);
+        statesByTypeReport.push(surveyStates.DONT_APPLY_MANAGER_TEAM);
+        statesByTypeReport.push(surveyStates.NOT_STARTED_MANAGER_TEAM);
+        statesByTypeReport.push(surveyStates.MANAGER_TEAM);
+        statesByTypeReport.push(surveyStates.ENDED_MANAGER_TEAM);
+    } else if ("TECHNICAL_MANAGER" == typeReport) {
+        statesByTypeReport.push(surveyStates.NOT_STARTED_TECHNICAL_TEAM);
+        statesByTypeReport.push(surveyStates.TECHNICAL_TEAM);
+        statesByTypeReport.push(surveyStates.ENDED_TECHNICAL_TEAM);
+        statesByTypeReport.push(surveyStates.DONT_APPLY_MANAGER_TEAM);
+        statesByTypeReport.push(surveyStates.NOT_STARTED_MANAGER_TEAM);
+        statesByTypeReport.push(surveyStates.MANAGER_TEAM);
+        statesByTypeReport.push(surveyStates.ENDED_MANAGER_TEAM);
+    } else if ("SUPPLIER_GRAPHIC" == typeReport){
+    	statesByTypeReport.push(surveyStates.EVALUATOR);
+    	statesByTypeReport.push(surveyStates.ENDED_EVALUATOR);
+    	statesByTypeReport.push(surveyStates.NOT_STARTED_TECHNICAL_TEAM);
+    	statesByTypeReport.push(surveyStates.TECHNICAL_TEAM);
+    	statesByTypeReport.push(surveyStates.ENDED_TECHNICAL_TEAM);
+    	statesByTypeReport.push(surveyStates.NOT_STARTED_MANAGER_TEAM);
+    	statesByTypeReport.push(surveyStates.MANAGER_TEAM);
+    	statesByTypeReport.push(surveyStates.ENDED_MANAGER_TEAM);
+    }
+
+    return statesByTypeReport;
+}
 
 /**
  * Metodo de la clase Option (Opcion).
@@ -1059,7 +1117,52 @@ function getThemWithFilter(fieldsToFilter) {
     	println("Error en getThemWithFilter: " + e.message);
 		throw new HandlerGenericException(e.message);
     }
-} 
+}
+
+/**
+ * Filtra los proveedores segÃºn los campos especificados en
+ * code>fieldsToFilter</code>
+ * 
+ * @param fieldsToFilter
+ *            Mapa clave valor de los campos por los cuales se filtrarÃ¡n los
+ *            proveedores.
+ * @return ColecciÃ³n de proveedores.
+ * @throws HandlerGenericException
+ */
+function getThemWithFilterSupplier(fieldsToFilter) {
+	var response = [];
+    try {
+        var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliers");
+        currentView.FTSearch(buildCharFTSearch(fieldsToFilter), 0);
+
+        var entries:NotesViewEntryCollection = currentView.getAllEntries();
+        var ve:NotesViewEntry;
+        var veAux:NotesViewEntry;
+        if (null != entries && entries.getCount() > 0) {
+        	var nd:NotesDocument;
+        	var supplier = {}; 
+            ve = entries.getFirstEntry();
+            while (ve != null) {
+				nd = ve.getDocument();
+				
+				supplier = getFieldsSupplier(nd);
+    			if (!isObjectEmpty(supplier)) {
+    				response.push(supplier);
+    			}
+				
+				veAux = entries.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+            currentView.clear();
+        }
+        
+        return response;
+    }catch(e) {
+    	println("Error en getThemWithFilterSupplier: " + e.message);
+		throw new HandlerGenericException(e.message);
+    }
+}
 
 /**
  * Fin de la clase Question (Pregunta).
@@ -1249,12 +1352,12 @@ function setSummarySurveyByEvaluator(answer, summary) {
  * @return Mapa clave valor con los campos que se debe filtrar.
  * @throws HandlerGenericException
  */
-function identifyFieldsToFTSearch(parameters) {
+function identifyFieldsToFTSearch(parameters, FieldsKeys) {
     var fields = {};
-    var FieldsQuestion = ["idCall", "idCriterion", "idDimension"];
+    // var FieldsQuestion = ["idCall", "idCriterion", "idDimension"];
     var field;
-    for (var i in FieldsQuestion) {
-    	field = FieldsQuestion[i];
+    for (var i in FieldsKeys) {
+    	field = FieldsKeys[i];
         if (parameters.hasOwnProperty(field)) {
             var valueInField = parameters[field];
             if (null != valueInField && valueInField.trim() != "") {
@@ -1355,13 +1458,14 @@ function getAnswersForReportOfAverageGrade(idSupplierByCall, parameters) {
     };
     
     try {
-	    var fieldsToFilterQuestion = identifyFieldsToFTSearch(parameters);
+    	var FieldsQuestion = ["idCall", "idCriterion", "idDimension"];
+	    var fieldsToFilterQuestion = identifyFieldsToFTSearch(parameters, FieldsQuestion);
 	    if (!isObjectEmpty(fieldsToFilterQuestion)) {
 	        var questions = getThemWithFilter(fieldsToFilterQuestion);
 	        if (questions.length == 0) {
 	        	response.errorSend = "INFORMATION_NOT_FOUND"	
 	        } else {
-	        	response.answers = getByQuestionAndSupplierByCall(questions, idSupplierByCall);	
+	        	response.answers = getByQuestionAndSupplierByCall(questions, idSupplierByCall);
 	        }        
 	    } else {
 	        response.answers = getAsnwersByIdSupplierByCall(idSupplierByCall);
@@ -1443,6 +1547,7 @@ function buildReportOfAverageGradeBySupplier(idSupplierByCall, recordOfReport, p
 			response.errorSend = reqAnswers.errorSend;
 			return response;
 		}
+		
 		var answers = reqAnswers.answers;
 		
         var sumScoreAnsweredBySupplierNA = 0;
@@ -1610,14 +1715,13 @@ function buildReportOfAverageGradeBySupplier(idSupplierByCall, recordOfReport, p
         }
         recordOfReport.totalScoreOfSupplier = calculateTotalScore(sumScoreAnsweredBySupplier, sumExpectedScoreSupplier);
         recordOfReport.totalPercentScoreOfSupplier = percentScoreOfSupplier;
-
+        
         if (counterQuestions == sumScoreAnsweredByEvaluatorNA) {
             sumScoreAnsweredByEvaluator = SCORE_OF_NA;
             recordOfReport.expectedScoreEvaluator = SCORE_OF_NA;
         }
         recordOfReport.totalScoreOfEvaluator = calculateTotalScore(sumScoreAnsweredByEvaluator, sumExpectedScoreEvaluator);
         recordOfReport.totalPercentScoreOfEvaluator = percentScoreOfEvaluator;
-
         recordOfReport.scoreOfSupplier = sumScoreAnsweredBySupplier;
         recordOfReport.scoreOfEvaluator = sumScoreAnsweredByEvaluator;
         recordOfReport.summarySurvey = summariesSurvey;
@@ -2089,6 +2193,153 @@ function getRecordOfReport(supplierByCall, supplier, parameters) {
 		println("Error en getRecordOfReport: " + e.message);
 		throw new HandlerGenericException(e.message);
 	}
+}
+
+/**
+ * @param idCall
+ *            Identificador de la convocatoria que se va consultar.
+ * @param suppliers
+ *            CollecciÃƒÂ³n de proveedores
+ * @param parameters
+ *            Mapa clave valor de los filtros por los que se van a optener
+ *            los resultados
+ * @return CollecciÃƒÂ³n de registros del reporte
+ * @throws HandlerGenericException
+ */
+function buildReportOfAverageGradeBySupplierCall(idCall, suppliers, parameters) {
+	var response = {
+		data: [],
+		errorSend: ""
+	}
+	try {
+	    var typeReport = parameters.type;
+	    if (null != typeReport) {
+	        surveyStatesAllowed = getStatesByTypeReport(typeReport);
+	        var numSuppliers = suppliers.length;
+	        var supplierByCall = null;
+	        var supplierAux = null;
+	        for (var i=0; i<numSuppliers; i++) {
+	            supplierByCall = getByIdCallAndIdSupplierFinished(idCall, suppliers[i].id, surveyStatesAllowed);
+	            if (supplierByCall) {
+	            	supplierAux = getRecordOfReportCall(supplierByCall, suppliers[i], parameters);
+	            	if (supplierAux.errorSend != "") {
+	            		response.errorSend = supplierAux.errorSend;
+	            		i = numSuppliers;
+	            	} else {
+	            		response.data.push(supplierAux.recordOfReport);	
+	            	}
+	                
+	                var suppliersByCallSpecial = getSupplierByCallSpecialIdSupplier(suppliers[i].id); 
+	                if (suppliersByCallSpecial.length > 0) {
+	                	for (var i in suppliersByCallSpecial) {
+	                		if (suppliersByCallSpecial[i]) {
+	                        	var idSupplierByCall = supplierByCall.id;
+	                        	supplierByCall = converSupplierSpecialDtoToNormalSupplierByCall(supplySpecial, idSupplierByCall);
+	                        	if (supplierByCall) {
+	                                response.data.push(getRecordOfReportCall(supplierByCall, supplier, parameters));
+	                        	}
+	                        }
+	                	}
+	                }
+	            }
+	        }
+	    } else {
+	    	response.errorSend = "UNEXPECTED_VALUE";
+	    }
+	} catch(e){
+		println("Error en buildReportOfAverageGradeBySupplierCall: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+
+    return response;
+}
+
+function converSupplierSpecialDtoToNormalSupplierByCall(supplierByCallSpecial, idSupplierByCall) {
+	var supplierByCall = {};
+	
+	supplierByCall.id = idSupplierByCall;
+	supplierByCall.idCall = supplierByCallSpecial.idCall;
+	supplierByCall.idSurvey = supplierByCallSpecial.idSurvey;
+	supplierByCall.idSupplier = supplierByCallSpecial.idSupplier;
+	supplierByCall.participateInCall = supplierByCallSpecial.participateInCall;
+	supplierByCall.acceptedPolicy = true;
+	supplierByCall.reasonForNotParticipation = supplierByCallSpecial.reasonForNotParticipation;
+	supplierByCall.nameWhoSayDontParticipate = supplierByCallSpecial.nameWhoSayDontParticipate;
+	supplierByCall.emailWhoSayDontParticipate = supplierByCallSpecial.emailWhoSayDontParticipate;
+	supplierByCall.oldIdCompanySize = supplierByCallSpecial.oldIdCompanySize;
+	supplierByCall.idState = supplierByCallSpecial.idState;
+	supplierByCall.invitedToCall = true;
+	supplierByCall.dateAssignedToEvaluator = supplierByCallSpecial.dateAssignedToEvaluator;
+	supplierByCall.whoEvaluate = supplierByCallSpecial.whoEvaluate;
+	supplierByCall.whoEvaluateOfTechnicalTeam = supplierByCallSpecial.whoEvaluateOfTechnicalTeam;
+	supplierByCall.idsDimension = supplierByCallSpecial.idsDimension;
+	supplierByCall.isEspecial = "true";
+	supplierByCall.supplySpecial = supplierByCallSpecial.supply;
+	supplierByCall.idSupplierByCallSpecial = supplierByCallSpecial.id;
+	
+	return supplierByCall;
+}
+
+function getRecordOfReportCall(supplierByCall, supplier, parameters) {
+	var response = {
+		recordOfReport: {
+			totalPercentScoreOfSupplier: 0,
+			totalPercentScoreOfEvaluator: 0,
+			services: null,
+			totalScoreInService: 0,
+			managerAnswers: null
+		},
+		errorSend: ""
+	};
+	try {
+		var supply = get(supplier.idSupply, "SupplyDTO");
+		var category = get(supplier.idCategory);
+		var companySize = get(supplier.idCompanySize);
+		
+	    response.recordOfReport.nit = supplier.nit;
+	    response.recordOfReport.sapCode = supplier.sapCode;
+	    response.recordOfReport.name = supplier.businessName;
+	    response.recordOfReport.supply = supply.name;
+	    if (supplierByCall.isEspecial && supplierByCall.isEspecial == "true") {
+	    	recordOfReport.supply(supplierByCall.supplySpecial);
+	    }
+	    response.recordOfReport.category = category.name;
+	    response.recordOfReport.companySize = companySize.name;
+	    response.recordOfReport.idSupplier = supplierByCall.idSupplier;
+	    response.recordOfReport.idSupplierByCall = supplierByCall.id;
+	    response.recordOfReport.idState = supplierByCall.idState;
+	    response.recordOfReport.states = getAll("vwStates", "StateDTO");
+	    response.recordOfReport.whoEvaluateOfTechnicalTeam = supplierByCall.whoEvaluateOfTechnicalTeam;
+	
+	    var typeReport = parameters.type;
+	    if (!typeReport) {
+	    	response.errorSend = "UNEXPECTED_VALUE";
+	        return response;
+	    }
+	    
+	    if ("SUPPLIER_EVALUATOR" == typeReport) {
+	    	var reqRecord = buildReportOfAverageGradeBySupplier(supplierByCall.id, response.recordOfReport, parameters);
+	    	 if (reqRecord.errorSend != "") {
+	    		 response.errorSend = reqRecord.errorSend;
+	    		 return response;
+	    	 }
+	    	 response.recordOfReport = reqRecord.recordOfReport;
+	    } else {
+	        if ("TECHNICAL_MANAGER" = typeReport) {
+	            var reqRecord = buildReportOfTechnicalTeam(supplierByCall.id, response.recordOfReport, parameters);
+	        	if (reqRecord.errorSend != "") {
+    		 		response.errorSend = reqRecord.errorSend;
+    		 		return response;
+		    	}
+	        	response.recordOfReport = reqRecord.recordOfReport;
+	            response.recordOfReport = buildReportOfManagerTeam(supplierByCall.id, response.recordOfReport);
+	        }
+	    }
+	} catch(e){
+		println("Error en getRecordOfReportCall: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+    return response;
 }
 
 /**
@@ -2752,6 +3003,41 @@ function getSummaryWithSurvey(year) {
     return getInformationByYearInView(year, viewName);
 }
 
+function getSuppliersByCall(idCall) {
+	var response = null;
+	try {
+		var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallIdCall");
+	
+	    var entries:NotesViewEntryCollection = currentView.getAllDocumentsByKey(idCall, true);
+	    var ve:NotesViewEntry;
+	    var veAux:NotesViewEntry;
+	    if (null != entries && entries.getCount() > 0) {
+	    	var nd:NotesDocument;
+	    	var supplier = {};
+	        ve = entries.getFirstEntry();
+	        while (ve != null) {
+				nd = ve.getDocument();
+				
+				supplier = getFieldsSupplier(nd);
+				if (!isObjectEmpty(supplier) && supplier.id != null) {
+					response.push(supplier);
+				}
+				
+				veAux = entries.getNextEntry(ve); 
+				ve.recycle();
+				ve = veAux;
+			}
+	        currentView.clear();
+	    }
+    		
+	} catch (e) {
+		println("Error en getSuppliersByCall: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+
+	return response;
+}
+
 /**
  * Fin de la clase Supplier.
  * 
@@ -2882,6 +3168,26 @@ function getByStateInCall(idState, idCall) {
     }
 
     return result;
+}
+
+function getSupplierByCallSpecialIdSupplier(idSupplier) {
+	var response = [];
+
+	var currentView:NotesView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallSpecialByidSupplier");
+	var documents:NotesDocumentCollection = currentView.getAllDocumentsByKey(idSupplier, true);
+	if (null != documents && documents.getCount() > 0) {
+		var document:NotesDocument = documents.getFirstDocument();
+		var ndAux:NotesDocument;
+	    while (document != null) {
+	    	response.push(getFieldsSupplierByCallSpecial(document));
+	    	
+	    	ndAux = documents.getNextDocument(document);
+	    	document.recycle();
+	    	document = ndAux;
+	    }	
+	}
+	
+    return response;
 }
 
 function getFinishedByStage(stageState) {
@@ -3110,6 +3416,53 @@ function getCallActiveToParticipate(idSupplier, rulesParam) {
 		throw new HandlerGenericException(e.message);
 	}
 	return response;
+}
+
+/**
+ * Buscar la convocatoria de un proveedor en caso de estar finalizada. La
+ * bÃºsqueda debe coincidir justo con los parÃ¡metros <code>idCall</code> y
+ * <code>idSupplier</code>
+ * 
+ * @param idCall
+ *            Identificador de la convocatoria
+ * @param idSupplier
+ *            Identificador del proveedor
+ * @return Objeto con la informaciÃ³n en caso de hallar considencia en la
+ *         bÃºsqueda.
+ * @throws HandlerGenericException
+ */
+function getByIdCallAndIdSupplierFinished(idCall, idSupplier, surveyStatesAllowed) {
+    var response = null;
+    try {
+    	var currentView:NotesView;
+    	var nd:NotesDocument;
+    	var surveyStates = getSurveyStates();
+    	var filter:java.util.Vector = new java.util.Vector(3);
+    	for (var stateName in surveyStates) {
+	        if (isMember(stateName,surveyStatesAllowed)) {
+	            var idState = getStateByShortName(stateName).id;
+	
+	            if (idState) {
+	                filter.add(idSupplier);
+	                filter.add(idCall);
+	                filter.add(idState);
+	                // println("filter == " + filter);
+	                currentView = sessionAsSigner.getCurrentDatabase().getView("vwSuppliersByCallInIdSupplierAndIdCallFinished");
+		            nd = currentView.getDocumentByKey(filter, true);
+		            if (nd) {
+		               response = getFieldsSupplierByCall(nd);
+		            }
+		            filter.clear();
+	            }
+	        }
+	    }
+    } catch(e){
+		println("Error en getByIdCallAndIdSupplierFinished: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+	return response;
+
+    return response;
 }
 
 /**
@@ -3594,6 +3947,64 @@ function getAllSuppliersInCall(key) {
 	return response;
 }
 
+function getReportOfAverageGradeBySupplier(parameters) {
+	var response = {
+    	data: [],
+    	errorSend: ""
+    };
+    try {
+    	println("00000000000000")
+        if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR") || getIsRol("EVALUATOR")) {
+            var idCall = parameters.idCall;
+            var suppliers = getThemByIdCallOrFiltered(idCall, parameters);
+            println("suppliers === " + suppliers.length);
+            var reqRecord = buildReportOfAverageGradeBySupplierCall(idCall, suppliers, parameters);
+            println("reqRecord === " + reqRecord);
+            if (reqRecord.errorSend != "") {
+	    		 response.errorSend = reqRecord.errorSend;
+	    		 return response;
+	    	 }
+            response.data = reqRecord.data;
+        } else {
+            response.errorSend = "ROL_INVALID";
+	    	return response;
+        }
+		println("response.data.length == " + response.data.length);
+        if (response.data.length == 0) {
+            response.errorSend = "INFORMATION_NOT_FOUND";
+	    	return response;
+        }
+        
+        return response;
+    	
+    } catch(e){
+		println("Error en getReportOfAverageGradeBySupplier: " + e.message);
+		throw new HandlerGenericException(e.message);
+	}
+
+    return response;
+}
+
+function getThemByIdCallOrFiltered(idCall, parameters) {
+	var response = null;
+    try {
+    	var FieldsSupplier = ["idCategory", "idCompanySize", "id", "idSupply"];
+        var fieldsToFilter = identifyFieldsToFTSearch(parameters, FieldsSupplier);
+
+        if (!isObjectEmpty(fieldsToFilter)) {
+            response = getThemWithFilterSupplier(fieldsToFilter);
+        } else {
+            response = getSuppliersByCall(idCall);
+        }
+
+    } catch (e) {
+    	println("Error en getThemByIdCallOrFiltered = " + e.message);
+		throw new HandlerGenericException();
+    }
+
+    return response;
+}
+
 function getAll(currentView, classDto) {
 	var response = [];
     try {
@@ -3694,6 +4105,7 @@ function getBy(key, vista, classDto) {
 			var nd:NotesDocument = vwVista.getDocumentByKey(key, true);
 			if (nd) {
 				var fields = resolveDTO(classDto, nd);
+				response = fields; 
 			}
 		} else {
 			println("Error en getBy, vista = [" + vista + "] no definida.");

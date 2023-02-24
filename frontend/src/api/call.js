@@ -30,7 +30,20 @@ const massiveShipmentCallApi = call => instance.post('Call?action=massiveShipmen
 ); */
 const getParticipantsByYearApi = year => instanceService.get(`xaServicios.xsp?Open&action=getParticipantsByYear&year=${year || ''}`);
 
-const getResultsApi = data => instance.get(`Call?action=getResults&idCall=${data.call || ''}` +
+// const getResultsApi = data => instance.get(`Call?action=getResults&idCall=${data.call || ''}` +
+//   `&type=${data.type || ''}` +
+//   `&idSupply=${data.supply || ''}` +
+//   `&idCategory=${data.category || ''}` +
+//   `&idCompanySize=${data.companySize || ''}` +
+//   `&id=${data.supplier || ''}` +
+//   `&idDimension=${data.dimension || ''}` +
+//   `&idCriterion=${data.criterion || ''}` +
+//   `&service=${data.service || ''}` +
+//   `&item=${data.item || ''}` +
+//   `&idCountry=${data.country || ''}
+// `);
+
+const getResultsApi = data => instanceService.get(`xaServicios.xsp?Open&action=getResults&idCall=${data.call || ''}` +
   `&type=${data.type || ''}` +
   `&idSupply=${data.supply || ''}` +
   `&idCategory=${data.category || ''}` +

@@ -78,6 +78,9 @@
 			case "getAllCity":
 				getAllCity();
 			break;
+			case "getResults":
+				getResults();
+			break;
 			case "prueba":
 				prueba();
 			break;

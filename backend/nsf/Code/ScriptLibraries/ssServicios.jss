@@ -1384,6 +1384,52 @@ function getDimensionsBySurvey() {
 	}
 }
 
+function getResults() {
+	var error = "";
+	var errorSend = "";
+	var data = {};
+	try{
+		var writer = headerResponse("application/json;charset=UTF-8", {"Cache-Control" : "no-cache"});
+		var parameters = {
+			idCall: param.get("idCall") ? param.get("idCall") : "",
+			type: param.get("type") ? param.get("type") : "",		
+			idSupply: param.get("idSupply") ? param.get("idSupply") : "",
+			idCategory: param.get("idCategory") ? param.get("idCategory") : "",
+			idCompanySize: param.get("idCompanySize") ? param.get("idCompanySize") : "",
+			id: param.get("id") ? param.get("id") : "",
+			idDimension: param.get("idDimension") ? param.get("idDimension") : "",
+			idCriterion: param.get("idCriterion") ? param.get("idCriterion") : "",
+			service: param.get("service") ? param.get("service") : "",
+			item: param.get("item") ? param.get("item") : "",
+			idCountry: param.get("idCountry") ? param.get("idCountry") : ""
+		};
+		response = getReportOfAverageGradeBySupplier(parameters);
+		data = response.data;
+		
+		if (response.errorSend != "") {
+			errorSend = response.errorSend;
+		}
+		   
+	}catch(e){
+		error = e.message;
+		println("Error en getResults: " + e.message);
+	}finally {
+		if (error != ""){
+			error = "Error al cargar reporte resultados: " + error
+		}else if (errorSend != "") {
+			error = errorSend;
+		}
+		var respuesta = {
+			data: error ? null : data,
+			rules: {},
+			message: error ? error : "success",
+			status: error ? false : true
+		};
+		writer.write(toJson(respuesta));
+		footerResponse(writer)
+	}
+}
+
 function prueba() {
 	var error = "";
 	var response = "";
