@@ -378,7 +378,7 @@ function getHistory(ndBenefit) {
 function getAttachmentUrl(document) {
     var url = buildPathResource();
     url += "/vwAttachments/" + document.getUniversalID() + "/$FILE" + "/" + getFileName(document);
-
+    
     return url;
 }
 
@@ -389,6 +389,7 @@ function getFileName(document) {
 function buildPathResource() {
     var host = context.getUrl().toString().split(facesContext.getExternalContext().getRequest().getRequestURI())[0];
     var path = getWebDbName();
+    host = host.replace("http", "https");
     return host + "/" + path;
 }
 
@@ -1199,7 +1200,7 @@ function getFieldsAnswer(ndAnswer, withAttachment) {
 		    idAttachment: ndAnswer.getItemValue("idAttachment").size() > 0 ? vectorToArray(ndAnswer.getItemValue("idAttachment")) : [],
 		    attachment: withAttachment ? getAttachmentByAnswer(ndAnswer) : [],
 		    idsToDelete: [],
-		    previousAnswer: ""
+		    previousAnswer: ndAnswer.getItemValueString("previousAnswer")
 	    }
 	} catch(e){
 		println("Error en getFieldsAnswer: " + e.message);
@@ -1997,7 +1998,7 @@ function getFieldsCall(ndCall) {
 		}
 		callDTO.methods = {
 			isCaducedDateToFinishCall: isCaducedDate(nd.getItemValue("dateToFinishCall").elementAt(0), new Date()),
-			isCaducedDeadLineToMakeSurvey: isCaducedDate(nd.getItemValue("deadlineToMakeSurvey").elementAt(0), new Date()), 
+			isCaducedDeadLineToMakeSurvey: isCaducedDate(nd.getItemValue("deadlineToMakeSurvey").elementAt(0), new Date()),
 			isCaducedDeadLineToMakeSurveyEvaluator: isCaducedDate(nd.getItemValue("deadlineToMakeSurveyEvaluator").elementAt(0), new Date()),
 			isCaducedDeadLineToMakeSurveyTechnicalTeam: isCaducedDate(nd.getItemValue("deadlineToMakeSurveyTechnicalTeam").elementAt(0), new Date()),
 			isCaducedDeadLineToMakeSurveyManagerTeam: isCaducedDate(nd.getItemValue("deadlineToMakeSurveyManagerTeam").elementAt(0), new Date())
@@ -2044,6 +2045,12 @@ function isCaducedDate(dateToCompare, today) {
 	var response = false;
 	var actualDate:NotesDateTime = session.createDateTime(today);
 	var dateCompare:NotesDateTime = dateToCompare;
+	// println("str == " + str)
+	actualDate = session.createDateTime(actualDate.getDateOnly());
+	dateCompare = session.createDateTime(dateCompare.getDateOnly());
+	// println("actualDate == " + actualDate.getDateOnly())
+	// println("dateCompare == " + dateCompare.getDateOnly())
+	// println("actualDate.timeDifference(dateCompare) == " + actualDate.timeDifference(dateCompare));
 	if (actualDate.timeDifference(dateCompare) > 0) {
 		response = true;
 	}
@@ -3228,7 +3235,7 @@ function getCallOfSupplier(idSupplierByCall) {
                 rules.setRulesToSection("supplier", rules.buildRules(true, true));
                 rules.setRulesToSection("evaluator", rules.buildRules(true, true));
                 if (getIsRol("EVALUATOR")) {
-                    var res = permissionForEvaluator(response, rules);
+                    var res = permissionForEvaluator(response.supplierByCall, rules);
                     rules = res.rules;
                     if (res.errorSend != "") {
                     	response.errorSend = res.errorSend;
@@ -3280,7 +3287,7 @@ function permissionForEvaluator(supplierByCall, rulesParent) {
 		rules: rulesParent
 	}
 	try {
-        var call = get(supplierByCall.idCall, "CallDTO");
+        var callDTO = get(supplierByCall.idCall, "CallDTO");
         if (!callDTO.methods.isCaducedDeadLineToMakeSurveyEvaluator) {
             if (isFromEvaluator(supplierByCall)) {
                 rules.setRulesToSection("evaluator", rules.buildRules(true, true));
@@ -3953,13 +3960,10 @@ function getReportOfAverageGradeBySupplier(parameters) {
     	errorSend: ""
     };
     try {
-    	println("00000000000000")
         if (getIsRol("LIBERATOR") || getIsRol("ADMINISTRATOR") || getIsRol("EVALUATOR")) {
             var idCall = parameters.idCall;
             var suppliers = getThemByIdCallOrFiltered(idCall, parameters);
-            println("suppliers === " + suppliers.length);
             var reqRecord = buildReportOfAverageGradeBySupplierCall(idCall, suppliers, parameters);
-            println("reqRecord === " + reqRecord);
             if (reqRecord.errorSend != "") {
 	    		 response.errorSend = reqRecord.errorSend;
 	    		 return response;
@@ -3969,7 +3973,6 @@ function getReportOfAverageGradeBySupplier(parameters) {
             response.errorSend = "ROL_INVALID";
 	    	return response;
         }
-		println("response.data.length == " + response.data.length);
         if (response.data.length == 0) {
             response.errorSend = "INFORMATION_NOT_FOUND";
 	    	return response;

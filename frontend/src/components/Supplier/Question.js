@@ -16,6 +16,7 @@ const RadioGroup = Radio.Group;
 const TableStyle = styled(Table)`
   .ant-table-body > table .ant-table-tbody > tr > td{
     word-break: inherit;
+    max-width: 200px;
   }
 `;
 

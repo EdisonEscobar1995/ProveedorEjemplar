@@ -52,6 +52,13 @@ const getSupplierSelection = type => (
         } else {
           data = sortByField(response.data.data, 'totalScoreOfEvaluator', true);
         }
+        data.forEach((supplier) => {
+          if (supplier.totalPercentScoreOfSupplier <= 0) {
+            supplier.totalScoreOfSupplier = supplier.totalScoreOfSupplier;
+          } else {
+            supplier.totalScoreOfSupplier = supplier.totalPercentScoreOfSupplier;
+          }
+        });
         dispatch(getSupplierSelectionSuccess(data));
       }).catch((err) => {
         dispatch(getFailedRequest(err));
